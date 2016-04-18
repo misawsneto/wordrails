@@ -83,14 +83,12 @@
 	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
 	      	{{'settings.post.POST_DATE_DESC' | translate}}
 	      </div>
-      	<md-input-container class="no-margin m-b-sm w-full">
-          <label translate="settings.post.POST_DATE">Data inicial</label>
-          <input type="date" mdp-date-picker ng-model="postDate" ng-change="changePostDate()"/>
-        </md-input-container>
-        <md-input-container class="no-margin m-b-sm w-full">
-          <label translate="settings.post.POST_TIME">Hora inicial</label>
-          <input type="time" mdp-time-picker ng-model="postDate" ng-change="changePostDate()" />
-        </md-input-container>
+	      <div class="pos-rlt">
+      		<mdp-date-picker mdp-open-on-click class="w-full" ng-model="postDate"></mdp-date-picker>
+	      </div>
+	      <div class="pos-rlt">
+        	<mdp-time-picker mdp-open-on-click class="w-full" ng-model="postDate"></mdp-date-picker>
+        </div>
         <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
 					Salvar
 				</md-button>

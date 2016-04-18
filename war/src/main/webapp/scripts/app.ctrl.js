@@ -201,6 +201,23 @@ angular.module('app')
         };
 
         // ---------- /util-toast -------------
+
+        var postProcessingTemplate = '<md-dialog style="background: none!important; box-shadow:none!important">'+
+          '<md-progress-circular class="m-auto" md-mode="indeterminate" md-diameter="200"></md-progress-circular>'+
+        '</md-dialog>';
+
+        $scope.app.showLoadingProgress = function(){
+          $mdDialog.show({
+            controller: $scope.app.defaultDialog,
+            template: postProcessingTemplate,
+            parent: angular.element(document.body),
+            // targetEvent: event,
+            clickOutsideToClose:false
+            // onComplete: function(){
+
+            // }
+          })
+        }
         
         $scope.app.defaultDialog = function(scope, $mdDialog) {
           scope.app = $scope.app;

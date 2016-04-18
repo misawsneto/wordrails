@@ -8075,6 +8075,10 @@ md-switch[disabled] .md-bar {
   z-index: 6;
 }
 
+.z-index-99 {
+  z-index: 99;
+}
+
 .hbox {
   display: table;
   width: 100%;

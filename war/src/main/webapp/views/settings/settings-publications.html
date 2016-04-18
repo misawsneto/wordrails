@@ -116,11 +116,11 @@
                       </a>
                       <div class="clear font-thin">
                         <a href class="font-bold block text-md">{{publication.title}}</a>
-                        {{publication.snippet | characters:170}}
+                        {{publication.snippet | characters:220}}
                         <div class="p-t-sm font-500">
-                          <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">editar
+                          <div ui-sref="app.post({'id': publication.id})" class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple>{{'titles.EDIT' | translate}}
                           </div>
-                          <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">remover
+                          <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">{{'titles.REMOVE' | translate}}
                           </div>
                         </div>
                         <div class="m-t pull-right font-500 m-r-sm"><i class="icon mdi2-radio-tower"></i> {{app.getStationById(publication.stationId).name}}</div>

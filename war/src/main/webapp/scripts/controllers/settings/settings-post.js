@@ -20,21 +20,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	  boxHeight: 400
 	};
 
-	trix.getStations().success(function(stations){
-		$scope.stations = stations;
-		stations && (stations.length > 0) && $scope.stations.forEach(function(station){
-			getTermTree(station)	
-		})
-	}).error(function(error){
-
-	})
-
-	function getTermTree(station){
-		trix.getTermTree(null, station.categoriesTaxonomyId).success(function(categories){
-			console.log(categories);
-		});
-	}
-
 	// Must be [x, y, x2, y2, w, h]
    $scope.app.cropSelection = [100, 100, 200, 200];
 
@@ -101,8 +86,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
     }
     // -----------
 
-    if($state.params.slug)
-    	$scope.postState = 'Draft';
+    // if($state.params.slug)
+    // 	$scope.postState = 'Draft';
 
 	// ---------- time config ---------- 
 	function addMinutes(date, minutes) {
@@ -817,6 +802,22 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	// ------------- /video uploaded -------------
 
+	// -------- load post
+	
+	if($state.params.id){
+			$scope.app.showLoadingProgress();
+	 	trix.getPost($state.params.id, "postProjection").success(function(response){
+			$scope.app.editingPost = response;
+			$scope.loadPostData();
+			$mdDialog.cancel();
+		}).error(function(){
+			$scope.app.showErrorToast("error loading post")
+			$mdDialog.cancel();
+		})
+	}
+
+	// -------- /load post
+
 	$scope.getStationFromPost = function(){
 		if($scope.app.editingPost.station){
 			$scope.app.stations.forEach(function(station){
@@ -835,6 +836,12 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 				term.checked = true;
 			})
 
+		var hash = $scope.app.editingPost.featuredImageHash ? $scope.app.editingPost.featuredImageHash : $scope.app.editingPost.featuredImage.originalHash
+		setPostFeaturedImage(hash)
+		$scope.featuredImage = $scope.app.editingPost.featuredImage
+		$scope.landscape = $scope.app.editingPost.imageLandscape;
+		$scope.customizedLink.slug = $scope.app.editingPost.slug;
+
 		$scope.useHeading = $scope.app.editingPost.topper ? true:false
 		$scope.useSubtitle = $scope.app.editingPost.subtitle ? true:false
 	}
@@ -844,12 +851,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.app.editingPost = createPostStub();
 		$scope.revisions = createVersions();
 
-		var hash = $scope.app.editingPost.featuredImageHash ? $scope.app.editingPost.featuredImageHash : $scope.app.editingPost.featuredImage.originalHash
-		setPostFeaturedImage(hash)
-		$scope.featuredImage = $scope.app.editingPost.featuredImage
-		$scope.landscape = $scope.app.editingPost.imageLandscape;
-		$scope.customizedLink.slug = $scope.app.editingPost.slug;
-
 		$scope.loadPostData();
 
 		// test
@@ -858,7 +859,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		var post = preparePost($scope.app.editingPost);
 		$log.info(post)
 
-		$scope.postPost($scope.app.editingPost);
+		// $scope.postPost($scope.app.editingPost);
 	}
 
 	var preparePost = function(originalPost){
@@ -891,7 +892,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$timeout(function(){
-		test();
+		// test();
 	}, 1000);
 
 	settingsPostCtrl = $scope;
