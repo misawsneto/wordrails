@@ -166,7 +166,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if(oldVal && ('title' in oldVal) && ('body' in oldVal)){
 			// post has been edited
 
-			if(newVal.title !== oldVal.title || 
+			if(newVal && newVal.title !== oldVal.title || 
 				newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") !== oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"")){
 
 				// TODO: save draft

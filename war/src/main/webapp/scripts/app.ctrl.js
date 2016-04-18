@@ -119,8 +119,8 @@ angular.module('app')
     }
   ])
 
-  .controller('AppDataCtrl', ['$scope', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar',
-    function (             $scope,   $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar) {
+  .controller('AppDataCtrl', ['$scope', '$state', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar',
+    function (             $scope, $state, $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar) {
 
       $scope.app.goToLink = function(link){
         document.location.href = link;
@@ -347,6 +347,7 @@ angular.module('app')
           $("title").html($scope.app.network.name + " | " + ((toState.data.titleTranslate) ? $filter('translate')(toState.data.titleTranslate) : toState.data.title));
         }
 
+        $mdDialog.cancel();
       });
 
       /**
@@ -370,21 +371,6 @@ angular.module('app')
           $scope.app.showUnauthorized();
           if(fromState.abstract)
             $state.go('app.stations');
-        // }else if(toState.name == 'app.post'){
-        //   event.preventDefault();
-        //   $scope.app.showInfoToast('Você não possui permissão para criar notícias.')
-        //   if(fromState.abstract)
-        //     $state.go('app.stations');
-        // }else if( (toState.name.indexOf('app.user') > -1 && (toParams.username === "wordrails")) ||
-        //   (toState.name == 'app.publications' &&
-        //     ((!trixService.getWritableStations() || trixService.getWritableStations().length == 0) ||
-        //       ($scope.app.initData && $scope.app.initData.person && $scope.app.initData.person.username !== toParams.username))
-        //     )
-        //   ){
-        //   event.preventDefault();
-        //   $scope.app.showInfoToast('Permissão negada.')
-        //   if(fromState.abstract)
-        //     $state.go('app.stations');
         }else if(fromState.name == 'app.post'){
           if($scope.app.editingPost && $scope.app.postObjectChanged){
             if(window.confirm($filter('translate')('settings.post.messages.PAGE_CHANGE_ALERT'))){
