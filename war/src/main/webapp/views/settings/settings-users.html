@@ -266,7 +266,7 @@
 		<!-- create user -->
 	<md-button ng-hide="creating || editing"
 		id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
-		ui-sref="app.settings.users({'newUser': true})" ng-if="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+		ui-sref="app.settings.users({'newUser': true})" ng-if="app.writableStations && app.writableStations.length > 0 && app.isLogged()"
 		aria-label="Novo usuário">
 		<i class="mdi mdi-plus"></i>
 	</md-button>

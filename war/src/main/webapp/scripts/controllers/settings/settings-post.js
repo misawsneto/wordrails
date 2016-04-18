@@ -153,12 +153,13 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	// --- slug
 
 	// --- watch post change
-	
-	$scope.postObjectChanged = false;
+
+	// see app.ctrl.js	
+	$scope.app.postObjectChanged = false;
 	/**
 	 * Watch post and set the page not to change if post was edited.
-	 * The postObjectChanged flag is used here.
-	 * @see $scope.$watch('postObjectChanged'
+	 * The app.postObjectChanged flag is used here.
+	 * @see $scope.$watch('app.postObjectChanged'
 	 * @param  {[type]} true    [description]
 	 */
 	$scope.$watch('app.editingPost', function(newVal, oldVal) {
@@ -170,26 +171,15 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 				// TODO: save draft
 
-				// set post changed so $scope.watch can see postObjectChanged
-				if(!$scope.postObjectChanged){
+				// set post changed so $scope.watch can see app.postObjectChanged
+				if(!$scope.app.postObjectChanged){
 					$log.info('post changed, avoid page change...')
-					$scope.postObjectChanged = true;
+					$scope.app.postObjectChanged = true;
 				}
 			}
 		}
 	}, true);
 
-	/**
-	 * Watch value of postObjectChanged and set alert messages.
-	 * @param  boolean newVal
-	 */
-	$scope.$watch('postObjectChanged', function(newVal, oldVal){
-		if(newVal){
-			window.onbeforeunload = function(){ return $filter('translate')('settings.post.messages.PAGE_CHANGE_ALERT') };
-		}else{
-			window.onbeforeunload = null;
-		}
-	});
 
 	// --- /watch post change
 	

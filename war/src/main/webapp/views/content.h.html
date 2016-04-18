@@ -39,14 +39,14 @@
             <i class="on md b-white bottom"></i>
           </span> -->
           <div class="o-f-h pull-right md-whiteframe-z1 m-t-sm m-b-sm user-avatar rounded thumb-sm bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover text-center" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%', 'width': '46px', 'height': '46px'}">
-            <i ng-if="app.person.id == 0" class="mdi2-lock-open i-24" style="position: relative;top: -10px;"></i>
-            <i ng-if="app.person.id > 0 && !app.userImageSmall" class="mdi2-account i-24" style="position: relative;top: -10px;"></i>
+            <i ng-if="!app.isLogged()" class="mdi2-lock-open i-24" style="position: relative;top: -10px;"></i>
+            <i ng-if="app.isLogged() && !app.userImageSmall" class="mdi2-account i-24" style="position: relative;top: -10px;"></i>
           </div>
-          <span class="hidden-sm hidden-md" ng-if="app.person.id > 0">{{app.person.name}}</span>
-          <b class="caret m-r" ng-if="app.person.id > 0"></b>
+          <span class="hidden-sm hidden-md" ng-if="app.isLogged()">{{app.person.name}}</span>
+          <b class="caret m-r" ng-if="app.isLogged()"></b>
         </a>
         <!-- dropdown -->
-        <ul ng-if="app.person.id > 0" class="dropdown-menu dropdown-menu-scale o-f-h w-lg pull-right">
+        <ul ng-if="app.isLogged()" class="dropdown-menu dropdown-menu-scale o-f-h w-lg pull-right">
           <li>
             <div style="margin-top: -5px;" ng-if="app.userImageUploader" class="hidden-folded bg-cover" ng-style="{'background-image': 'url(' + app.coverImageMedium + ')'}">
               <div class="md-whiteframe-z1 m-t m-l user-avatar rounded w-64 bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}">

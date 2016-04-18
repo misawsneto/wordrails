@@ -141,16 +141,6 @@ angular.module('app')
           $scope.app.termPerspectiveView = termPerspective
         })
 
-        $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-          $rootScope.previousState = fromState.name;
-          $rootScope.currentState = toState.name;
-
-          if(toState.data && (toState.data.title || toState.titleTranslate)){
-            $("title").html($scope.app.network.name + " | " + ((toState.data.titleTranslate) ? $filter('translate')(toState.data.titleTranslate) : toState.data.title));
-          }
-
-          window.console && console.log($rootScope.currentState);
-        });
         // ---------- /util-trix -------------
         
         // ---------- util-toast -------------
@@ -332,9 +322,86 @@ angular.module('app')
         }
 
         $scope.app.applyNetworkTheme();
-      }
+      } // end of startApp
 
       startApp();
+
+      $scope.app.isLogged = function(){
+        if($scope.app.person.id === 0)
+          return false;
+        else if($scope.app.person.id > 0)
+          return true;
+      }
+
+      $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+        $rootScope.previousState = fromState.name;
+        $rootScope.currentState = toState.name;
+
+        window.console && console.log($rootScope.currentState);
+
+        if($state.includes('app.post')){
+          
+        }
+
+        if(toState.data && (toState.data.title || toState.titleTranslate)){
+          $("title").html($scope.app.network.name + " | " + ((toState.data.titleTranslate) ? $filter('translate')(toState.data.titleTranslate) : toState.data.title));
+        }
+
+      });
+
+      /**
+       * Watch value of app.postObjectChanged and set alert messages.
+       * @param  boolean newVal
+       */
+      $scope.app.postObjectChanged = false;
+      $scope.$watch('app.postObjectChanged', function(newVal, oldVal){
+        if(newVal){
+          window.onbeforeunload = function(){ return $filter('translate')('settings.post.messages.PAGE_CHANGE_ALERT') };
+        }else{
+          window.onbeforeunload = null;
+        }
+      });
+
+      // deal with unauthorized access
+      $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
+
+        if((toState.name == 'app.bookmarks' || toState.name == 'app.notifications') && !$scope.app.isLogged()){
+          event.preventDefault();
+          $scope.app.showUnauthorized();
+          if(fromState.abstract)
+            $state.go('app.stations');
+        // }else if(toState.name == 'app.post'){
+        //   event.preventDefault();
+        //   $scope.app.showInfoToast('Você não possui permissão para criar notícias.')
+        //   if(fromState.abstract)
+        //     $state.go('app.stations');
+        // }else if( (toState.name.indexOf('app.user') > -1 && (toParams.username === "wordrails")) ||
+        //   (toState.name == 'app.publications' &&
+        //     ((!trixService.getWritableStations() || trixService.getWritableStations().length == 0) ||
+        //       ($scope.app.initData && $scope.app.initData.person && $scope.app.initData.person.username !== toParams.username))
+        //     )
+        //   ){
+        //   event.preventDefault();
+        //   $scope.app.showInfoToast('Permissão negada.')
+        //   if(fromState.abstract)
+        //     $state.go('app.stations');
+        }else if(fromState.name == 'app.post'){
+          if($scope.app.editingPost && $scope.app.postObjectChanged){
+            if(window.confirm($filter('translate')('settings.post.messages.PAGE_CHANGE_ALERT'))){
+              $timeout(function(){
+                $scope.app.editingPost = null;
+              }, 2000);
+              window.onbeforeunload = null;
+            }else{
+              event.preventDefault();
+            }
+          }else if($scope.app.editingPost && $scope.app.editingPost.id){
+            $timeout(function(){
+              $scope.app.editingPost = null;
+            }, 2000);
+          }
+        }
+      })
 
       // ---------- /theming ------------------
 
