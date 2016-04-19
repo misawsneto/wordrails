@@ -158,12 +158,20 @@
                 </div>
             </div>
             <!-- News Description -->
-            <div class="news-description">
+            <div class="news-description p-t-0 p-b-sm p-h">
                 <div class="news-time" md-style="{'color': 'default.50'}">
                     <i class="fa fa-clock-o"></i> 9 min ago 
                 </div>
                 <div class="news-title" style="min-height: 66px"><a clamp="3"> {{::cell.postView.title}} </a></div>
                 <div class="news-content"><p clamp="4">{{::cell.postView.snippet}}</p></div>
+                <div class="news-comment-shares">
+                    <md-divider class="m-b-sm m-t"></md-divider>
+                    <div class="p-b-xs">
+                        <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-icon-button m-0" md-style="{'background-color': 'background.A100'}"><i class="mdi2-heart i-16" style="opacity: 0.6"></i></md-button>
+                        <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-icon-button pull-right m-r-0" md-style="{'background-color': 'background.A100'}"><i class="mdi2-share i-20" style="opacity: 0.6"></i></md-button>
+                        <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-icon-button pull-right" md-style="{'background-color': 'background.A100'}"><i class="mdi2-comment i-16" style="opacity: 0.6"></i></md-button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
