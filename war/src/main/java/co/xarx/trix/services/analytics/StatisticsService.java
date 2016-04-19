@@ -1,6 +1,5 @@
 package co.xarx.trix.services.analytics;
 
-import co.xarx.trix.domain.Person;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
@@ -129,10 +128,6 @@ public class StatisticsService {
 		return buckets;
 	}
 
-//	public String networkStats(String date, Integer postId, Integer sizeInDays){
-//
-//	}
-
 	public StatsJson postStats(String date, Integer postId, Integer sizeInDays){
 		if (sizeInDays == null || sizeInDays == 0) sizeInDays = 30;
 
@@ -157,13 +152,11 @@ public class StatisticsService {
 		return response;
 	}
 
-	public StatsJson personStats(String date, Integer sizeInDays) throws JsonProcessingException {
+	public StatsJson personStats(String date, Integer personId, Integer sizeInDays) throws JsonProcessingException {
 		Assert.notNull(date, "Invalid date. Expected yyyy-MM-dd");
-		DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+		DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC();
 
 		if (sizeInDays == null || sizeInDays == 0) sizeInDays = 30;
-
-		Person person = authService.getLoggedPerson();
 
 		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<>();
 		DateTime firstDay = dateTimeFormatter.parseDateTime(date);
@@ -171,11 +164,11 @@ public class StatisticsService {
 		Map postReadCounts, commentsCounts;
 		List<Integer> generalStatus = new ArrayList<>();
 
-		postReadCounts = countPostreadByAuthor(person.id);
-		commentsCounts = countCommentByAuthor(person.id);
-		generalStatus.add(countTotals(person.id, "nginx_access.authorId", "nginx_access"));
-		generalStatus.add(countTotals(person.id, "comment.postAuthorId", "analytics"));
-		generalStatus.add(countTotals(person.id, "recommend.postAuthorId", "analytics"));
+		postReadCounts = countPostreadByAuthor(personId);
+		commentsCounts = countCommentByAuthor(personId);
+		generalStatus.add(countTotals(personId, "nginx_access.authorId", "nginx_access"));
+		generalStatus.add(countTotals(personId, "comment.postAuthorId", "analytics"));
+		generalStatus.add(countTotals(personId, "recommend.postAuthorId", "analytics"));
 
 		stats = makeHistogram(postReadCounts, commentsCounts, firstDay, sizeInDays);
 
