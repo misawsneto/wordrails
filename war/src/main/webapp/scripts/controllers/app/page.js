@@ -12,12 +12,14 @@ app.controller('PageCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 		}
 
 		$scope.loadComments = function(cell){
-			cell.loadingComments = true;
-			$timeout(function(){
-				cell.showComments = true; 
-				$scope.reloadMasonry()
-				cell.loadingComments = false;
-			},3)
+			if(!cell.showComments){
+				cell.loadingComments = true;
+				$timeout(function(){
+					cell.showComments = true; 
+					$scope.reloadMasonry()
+					cell.loadingComments = false;
+				},500)
+			}
 		}
 
 }]);
