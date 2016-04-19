@@ -28,7 +28,7 @@ import java.util.Set;
 @JsonIgnoreProperties(value = {
 		"imageHash", "imageLargeHash", "imageMediumHash", "imageSmallHash",
 		"coverHash", "coverLargeHash", "coverMediumHash"
-}, allowGetters = true)
+}, allowGetters = true, ignoreUnknown = true)
 public class Person extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 7728358342573034233L;
@@ -78,16 +78,18 @@ public class Person extends BaseEntity implements Serializable {
 
 //	@RestResource(exported = false)
 	@ManyToOne
-	@JsonIgnore
 	public Image image;
 
 //	@RestResource(exported = false)
 	@ManyToOne
-	@JsonIgnore
 	public Image cover;
 
-	public String imageUrl;
-	public String coverUrl;
+	@Transient
+	@SdkInclude
+	public String imageOriginalHash;
+	@Transient
+	@SdkInclude
+	public String coverOriginalHash;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -154,6 +156,14 @@ public class Person extends BaseEntity implements Serializable {
 		if (cover != null) return cover.getMediumHash();
 
 		return null;
+	}
+
+	@PostLoad
+	public void postLoad(){
+		if(image != null)
+			imageOriginalHash = image.getOriginalHash();
+		if(cover != null)
+			coverOriginalHash = cover.getOriginalHash();
 	}
 
 }

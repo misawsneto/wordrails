@@ -1,0 +1,75 @@
+<!--   <div class="center-block w-xxl w-auto-xs p-v-md">
+  <div class="navbar">
+    <div class="navbar-brand m-t-lg text-center">
+      <span class="m-l inline">{{app.name}}</span>
+    </div>
+  </div>
+
+  <div class="p panel card md-whiteframe-z1 text-color m text-center">
+    <div class="m-b text-sm">
+      Sign in with your {{app.name}} Account
+    </div>
+    <form name="form" ng-submit="signin()" >
+      <md-input-container class="w-full">
+        <label for="testInput">{{'titles.USERNAME' | translate}}</label>
+        <input type="text" id="testInput" ng-model="person.username" md-autofocus>
+      </md-input-container>
+      <md-input-container class="w-full m-b-0">
+        <label for="testInput">{{'titles.PASSWORD' | translate}}</label>
+        <input type="password" id="testInput" ng-model="person.password" md-autofocus>
+      </md-input-container>
+      <md-button type="submit" class="m-0 md-accent p-h-md">Sign in</md-button>
+    </form>
+  </div>
+
+  <div class="p-v-lg text-center">
+    <div class="m-b"><button ui-sref="access.forgot-password" class="md-btn">Forgot password?</button></div>
+    <div>Do not have an account? <button ui-sref="access.signup" class="md-btn">Create an account</button></div>
+  </div>
+</div> -->
+
+<div class="center-block w-xxl w-auto-xs p-v-md m-t-lg ">
+ <md-content class="md-background-hue-1 background md-whiteframe-z2">
+    <md-progress-linear class="pos-abt top-0 left-0" ng-if="app.loading" md-mode="indeterminate"></md-progress-linear>
+    <!-- signin -->
+    <div class="text-color m text-center" ng-if="app.signState !== 'signup' && app.signState !== 'forgot'">
+      <div class="m-b-md m-t-md text-md text-u-c font-500">{{'signin_signup.SIGNIN' | translate}}</div>
+      <div class="text-center">
+        <md-button class="md-fab md-mini md-primary" style="background: #3B5999" aria-label="Use Android">
+          <i class="mdi2-facebook i-20"></i>
+        </md-button>
+        <md-button class="md-fab md-mini md-primary" style="background: #5EA9DD" aria-label="Use Android">
+          <i class="mdi2-twitter i-20"></i>
+        </md-button>
+        <md-button class="md-fab md-mini md-primary" style="background: #DC4A38" aria-label="Use Android">
+          <i class="mdi2-google-plus i-20"></i>
+        </md-button>
+        <md-button class="md-fab md-mini md-primary" style="background: #0177B5" aria-label="Use Android">
+          <i class="mdi2-linkedin i-20"></i>
+        </md-button>
+      </div>
+        <div class="p-t text-md" translate="signin_signup.OR">ou</div>
+      <form name="form" ng-submit="app.signIn(person)" class="text-md w-full">
+        <div class="p" style="padding-bottom: 0">
+          <md-input-container class="w-full m-b-0">
+            <label for="testInput">{{'titles.USERNAME' | translate}}</label>
+            <input class="p-xs" md-autofocus type="text" id="testInput" ng-model="person.username" md-autofocus>
+          </md-input-container>
+          <md-input-container class="w-full m-b-0 m-t-sm">
+            <label for="testInput">{{'titles.PASSWORD' | translate}}</label>
+            <input class="p-xs" type="password" id="testInput" ng-model="person.password">
+          </md-input-container>
+        </div>
+        <md-button type="submit" class="md-accent m-b" translate="signin_signup.SIGNIN">Sign in</md-button>
+      </form>
+      <div class="text-center">
+        <div class="">
+          <button ng-click="app.signState = 'forgot';" class="md-btn">{{'signin_signup.FORGOT' | translate}}?</button>
+        </div>
+        <div>{{'signin_signup.NOT_HAVE_AN_ACCOUNT' | translate}}?
+        <button class="md-btn" ng-click="app.signState = 'signup';" translate="signin_signup.CREATE_ACCOUNT">Create an account</button>
+        </div>
+      </div>
+    </div>
+  </md-content>
+</div>

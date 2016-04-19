@@ -8,11 +8,13 @@ import co.xarx.trix.elasticsearch.mapper.PostViewMap;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.web.rest.map.*;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,6 +27,16 @@ public class ESPostExecutorTest {
 	private ModelMapper dataMapper;
 
 	class PostSearchServiceStub implements PostSearchService {
+
+		@Override
+		public Pair searchPosts(String q, Integer personId, Integer page, Integer size, Collection<Integer> postIds) {
+			return null;
+		}
+
+		@Override
+		public Pair searchPosts(String q, Integer personId, Integer page, Integer size, boolean sortByDate) {
+			return null;
+		}
 
 		@Override
 		public List<Post> search(List<Integer> ids, Integer page, Integer size) {
@@ -43,6 +55,16 @@ public class ESPostExecutorTest {
 	}
 
 	class PostSearchServiceNullStub implements PostSearchService {
+
+		@Override
+		public Pair searchPosts(String q, Integer personId, Integer page, Integer size, Collection<Integer> postIds) {
+			return null;
+		}
+
+		@Override
+		public Pair searchPosts(String q, Integer personId, Integer page, Integer size, boolean sortByDate) {
+			return null;
+		}
 
 		@Override
 		public List<Post> search(List<Integer> ids, Integer page, Integer size) {

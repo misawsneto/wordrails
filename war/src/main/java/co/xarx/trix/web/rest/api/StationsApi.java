@@ -1,6 +1,7 @@
 package co.xarx.trix.web.rest.api;
 
 import co.xarx.trix.api.ContentResponse;
+import co.xarx.trix.domain.page.Page;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -42,15 +43,10 @@ public interface StationsApi {
 	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Station', 'read')")
 	void getStationPerspectives(@PathParam("id") @P("id") int stationId) throws ServletException, IOException;
 
-//	@GET
-//	@Path("/{stationId}/pages")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	List<Page> getPages(@PathParam("stationId") Integer stationId) throws IOException;
-
-	@PUT
-	@Path("/{stationId}/setDefaultPerspective")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	Response setDefaultPerspective(@PathParam("stationId") Integer stationId, @FormParam("perspectiveId") Integer perspectiveId);
+	@GET
+	@Path("/{stationId}/pages")
+	@Produces(MediaType.APPLICATION_JSON)
+	List<Page> getPages(@PathParam("stationId") Integer stationId) throws IOException;
 
 	@PUT
 	@Path("/{stationId}/setMainStation")
@@ -61,4 +57,14 @@ public interface StationsApi {
 	@GET
 	@Path("/stats/roles/count")
 	ContentResponse<Integer> countRolesByStationIds(@QueryParam("stationIds") List<Integer> stationIds, @QueryParam("q") String q);
+
+	@DELETE
+	@Path("/{stationId}/force")
+	public Response forceDelete(@PathParam("stationId") Integer stationId);
+
+	@PUT
+	@Path("/{stationId}/setDefaultPerspective")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response setDefaultPerspective(@PathParam("stationId") Integer stationId, @FormParam("perspectiveId")
+			Integer perspectiveId);
 }

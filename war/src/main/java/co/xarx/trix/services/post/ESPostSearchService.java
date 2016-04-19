@@ -37,6 +37,7 @@ public class ESPostSearchService implements PostSearchService {
 		this.stationPermissionService = stationPermissionService;
 	}
 
+	@Override
 	public Pair searchPosts(String q, Integer personId, Integer page, Integer size, Collection<Integer> postIds) {
 		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
 
@@ -53,6 +54,7 @@ public class ESPostSearchService implements PostSearchService {
 	}
 
 
+	@Override
 	public Pair searchPosts(String q, Integer personId, Integer page, Integer size, boolean sortByDate) {
 		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
 

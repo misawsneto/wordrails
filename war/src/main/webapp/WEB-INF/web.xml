@@ -82,6 +82,16 @@
 	<!-- Spring Data REST -->
 
 	<servlet>
+		<servlet-name>mysettings</servlet-name>
+		<jsp-file>/settings.jsp</jsp-file>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>mysettings</servlet-name>
+		<url-pattern>/settings/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>myindex</servlet-name>
 		<jsp-file>/index.jsp</jsp-file>
 	</servlet>
@@ -92,7 +102,6 @@
 		<url-pattern>/post/*</url-pattern>
 		<url-pattern>/bookmarks/*</url-pattern>
 		<url-pattern>/notifications/*</url-pattern>
-		<url-pattern>/settings/*</url-pattern>
 		<url-pattern>/publications/*</url-pattern>
 		<url-pattern>/mystats/*</url-pattern>
 		<url-pattern>/access/createnetwork</url-pattern>
@@ -253,6 +262,7 @@
 	<filter-mapping>
 		<filter-name>PersonDataFilter</filter-name>
 		<url-pattern>/index.jsp</url-pattern>
+		<url-pattern>/settings.jsp</url-pattern>
 		<url-pattern>/search/*</url-pattern>
 		<url-pattern>/post/*</url-pattern>
 		<url-pattern>/bookmarks/*</url-pattern>

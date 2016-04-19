@@ -39,26 +39,21 @@ public class PostEventHandler {
 	@Autowired
 	private ESPostRepository esPostRepository;
 
+	@Autowired
+	private PostRepository postRepository;
+
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
 		savePost(post);
 	}
 
 	public void savePost(Post post) {
-		Date now = new Date();
 		if (post.date == null) {
-			post.date = now;
+			post.date = new Date();
 		}
 
 		if (post.slug == null || post.slug.isEmpty()) {
-			String originalSlug = StringUtil.toSlug(post.title);
-			try {
-				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#").toLowerCase();
-			} catch (DataIntegrityViolationException ex) {
-				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#").toLowerCase();
-			}
-		} else {
-			post.originalSlug = post.slug;
+			post.slug = StringUtil.toSlug(post.title);
 		}
 	}
 

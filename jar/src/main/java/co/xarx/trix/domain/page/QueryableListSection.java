@@ -13,6 +13,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,9 +71,16 @@ public class QueryableListSection extends AbstractSection implements QueryableSe
 	@NotNull
 	public Integer size;
 
+	public Integer mSize;
+
 	@Override
 	public String getType() {
 		return Constants.Section.QUERYABLE_LIST;
+	}
+
+	@JsonProperty("createdAt")
+	public Date getCreatedAt(){
+		return this.createdAt;
 	}
 
 	@PrePersist

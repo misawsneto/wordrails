@@ -2,6 +2,7 @@ package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.page.Page;
+import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
@@ -13,6 +14,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -36,6 +38,10 @@ public class Station extends BaseEntity implements Serializable {
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
+
+	@Size(min = 1, max = 100)
+	@Getter(AccessLevel.NONE)
+	public String stationSlug;
 
 	@NotNull
 	@Column(columnDefinition = "boolean default false", nullable = false)
@@ -147,6 +153,31 @@ public class Station extends BaseEntity implements Serializable {
 		return writable == other.writable;
 	}
 
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_station_primary_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> primaryColors;
+
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_station_secondary_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> secondaryColors;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_station_alert_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> alertColors;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_station_background_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> backgroundColors;
+	
 	@SdkInclude
 	public String getLogoHash() {
 		if (logo != null) return logo.getOriginalHash();
@@ -155,9 +186,12 @@ public class Station extends BaseEntity implements Serializable {
 	}
 
 	@SdkInclude
-	public String getLogoMediumHash() {
-		if (logo != null) return logo.getMediumHash();
+	public String getStationSlug(){
+		if (stationSlug == null)
+			return StringUtil.toSlug(this.name);
 
-		return null;
+		return stationSlug;
 	}
+
+
 }

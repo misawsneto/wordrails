@@ -807,6 +807,12 @@
 				<version>0.9.1</version>
 			</dependency>
 
+			<dependency>
+				<groupId>org.jcodec</groupId>
+				<artifactId>jcodec</artifactId>
+				<version>0.1.9</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 </project>

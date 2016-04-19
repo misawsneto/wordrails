@@ -18,8 +18,14 @@
 	<!--</rule>-->
 
 	<rule>
+		<from>^/settings(/+.*)*$</from>
+		<to last="true">/settings.jsp</to>
+	</rule>
+
+	<rule>
 		<condition type="request-uri" operator="notequal">^/index.jsp(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/css(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/font(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/fonts(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/img(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/js(/+.*)*$</condition>
@@ -27,9 +33,12 @@
 		<condition type="request-uri" operator="notequal">^/bower_components(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/api(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/l10n(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/i18n(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/libs(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/views(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/styles(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/scripts(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/images(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/home(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/404.html$</condition>
 		<condition type="request-uri" operator="notequal">^/505.html$</condition>
