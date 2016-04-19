@@ -639,13 +639,6 @@ angular.module('app')
                 data : { title: 'Home', folded: false },
                 resolve: load(['wu.masonry', '/scripts/controllers/app/page.js'])
               })
-              .state('app.search', {
-                url: '/s?q',
-                templateUrl: '/views/pages/search.html',
-                data : { title: 'Search', folded: false },
-                resolve: load(['/scripts/controllers/app/search.js']),
-                controller: 'SearchCtrl'
-              })
               .state('app.wall', {
                 url: '/wall',
                 templateUrl: '/views/pages/dashboard.wall.html',
@@ -1025,7 +1018,15 @@ angular.module('app')
         else
           createHomeRoutes();
 
+
          $stateProvider
+        .state('app.search', {
+                url: '/s?q',
+                templateUrl: '/views/pages/search.html',
+                data : { titleTranslate: 'titles.SEARCH', title: 'Busca', folded: true },
+                resolve: load(['/scripts/controllers/app/search.js']),
+                controller: 'SearchCtrl'
+              })
           .state('access', {
             url: '/access',
             template: '<div class="md-background-default background bg-big"><div ui-view class="fade-in-down smooth"></div></div>',

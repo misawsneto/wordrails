@@ -2,4 +2,8 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
 					function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $interval, $mdSidenav, $translate, $filter, $localStorage){
 	$scope.query = $state.params.q;
 	$scope.app.search.show=false;
+
+	$scope.settings = {'tab': 'publications'}
+
+	$scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
 }]);
