@@ -13,13 +13,16 @@ import co.xarx.trix.services.InitService;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.NetworkService;
 import co.xarx.trix.services.PersonService;
+import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.StationPermissionService;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
+import co.xarx.trix.util.StatsJson;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.PersonsApi;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.apache.http.util.Asserts;
@@ -484,16 +487,24 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 		return Response.status(Status.OK).entity("{\"publicationsCounts\": " + (counts.size() > 0 ? mapper.writeValueAsString(counts.get(0)) : null) + "}").build();
 	}
 
-	@Override
-	public Response personStats(String date, Integer postId) throws IOException{
+	public Response personStats(String date, Integer postId) throws JsonProcessingException {
+		StatsJson statsJson;
+		if(postId == null){
+			Person person = authProvider.getLoggedPerson();
+			statsJson = statisticsService.personStats(date, person.getId(), null);
+		} else{
+			statsJson = statisticsService.postStats(date, postId, null);
+		}
+
+		String response = mapper.writeValueAsString(statsJson);
+		return Response.status(Status.OK).entity(response).build();
+	}
+
+//	@Override
+	public Response personStatsOld(String date, Integer postId) throws IOException{
 		if(date == null)
 			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
 
-	@GET
-	@Path("/me/oldStats")
-	@PreAuthorize("isAuthenticated()")
-	public Response personStats(@QueryParam("date") String date,
-								@QueryParam("postId") Integer postId) throws IOException {
 		org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 
 		Person person = null;
