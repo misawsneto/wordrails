@@ -158,12 +158,29 @@
                 </div>
             </div>
             <!-- News Description -->
-            <div class="news-description">
+            <div class="news-description p-t-0 p-b-sm p-h">
                 <div class="news-time" md-style="{'color': 'default.50'}">
                     <i class="fa fa-clock-o"></i> 9 min ago 
                 </div>
                 <div class="news-title" style="min-height: 66px"><a clamp="3"> {{::cell.postView.title}} </a></div>
                 <div class="news-content"><p clamp="4">{{::cell.postView.snippet}}</p></div>
+                <div class="news-comment-shares z-index-2">
+                    <md-divider class="m-b-sm m-t"></md-divider>
+                    <div class="p-b-xs">
+                        <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-icon-button m-0" md-style="{'background-color': 'background.A100'}"><i class="mdi2-heart i-16" style="opacity: 0.6"></i></md-button>
+                        
+                        <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-icon-button pull-right m-r-0" md-style="{'background-color': 'background.A100'}"><i class="mdi2-share i-20" style="opacity: 0.6"></i></md-button>
+                        
+                        <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-icon-button pull-right" md-style="{'background-color': 'background.A100'}" ng-click="loadComments(cell);"><i class="mdi2-comment i-16" style="opacity: 0.6"></i></md-button>
+                    </div>
+                </div>
+                <div class="news-comment z-index-1 animated fadeInDown" ng-if="cell.showComments" style="margin:6px -16px -8px -16px;">
+                  <md-divider class=""></md-divider>
+                    <div class="p">
+                      
+                    </div>
+                </div>
+                <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="cell.loadingComments" md-mode="indeterminate"></md-progress-linear>
             </div>
         </div>
     </div>
