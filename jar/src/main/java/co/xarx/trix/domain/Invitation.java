@@ -48,7 +48,7 @@ public class Invitation extends BaseEntity {
 
 	@PrePersist
 	void onCreate() {
-		createdAt = new Date();
+		setCreatedAt(new Date());
 	}
 
 	@PreUpdate
