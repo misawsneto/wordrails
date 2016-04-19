@@ -9,12 +9,12 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/v2/posts")
+@Produces(MediaType.APPLICATION_JSON)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public interface V2PostApi {
 
 	@GET
 	@Path("/search")
-	@Produces(MediaType.APPLICATION_JSON)
 	Response searchPosts(@QueryParam("q") String query,
 						 @QueryParam("authorId") List<Integer> authors,
 						 @QueryParam("stationId") List<Integer> stations,

@@ -1,9 +1,6 @@
 package co.xarx.trix.web.rest;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.util.Assert;
+import co.xarx.trix.api.v2.ErrorData;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -11,11 +8,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractResource {
@@ -61,5 +57,9 @@ public abstract class AbstractResource {
 		} catch (ServletException e) {
 			throw new IOException(e);
 		}
+	}
+
+	protected Response unprocessableEntity(String message) {
+		return Response.status(422).entity(new ErrorData(message)).build();
 	}
 }

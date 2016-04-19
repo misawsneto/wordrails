@@ -8,7 +8,7 @@ import co.xarx.trix.domain.page.QueryableListSection;
 import co.xarx.trix.elasticsearch.mapper.PersonMap;
 import co.xarx.trix.elasticsearch.mapper.PostMap;
 import co.xarx.trix.elasticsearch.mapper.StationMap;
-import co.xarx.trix.web.rest.map.*;
+import co.xarx.trix.config.modelmapper.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

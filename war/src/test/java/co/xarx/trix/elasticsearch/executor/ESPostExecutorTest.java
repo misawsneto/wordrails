@@ -6,7 +6,7 @@ import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.elasticsearch.mapper.PostViewMap;
 import co.xarx.trix.services.post.PostSearchService;
-import co.xarx.trix.web.rest.map.*;
+import co.xarx.trix.config.modelmapper.*;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
