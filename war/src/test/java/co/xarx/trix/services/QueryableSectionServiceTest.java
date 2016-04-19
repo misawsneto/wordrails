@@ -34,19 +34,6 @@ public class QueryableSectionServiceTest {
 		public PostStatementMock(boolean isFixed) {
 			this.isFixed = isFixed;
 		}
-
-		@Override
-		public Command build(CommandBuilder builder) {
-			return new CommandMock(isFixed);
-		}
-	}
-
-	private class CommandMock implements Command {
-		boolean isFixed;
-
-		public CommandMock(boolean isFixed) {
-			this.isFixed = isFixed;
-		}
 	}
 
 	private class ExecutorFactoryMock implements ExecutorFactory {
@@ -56,10 +43,10 @@ public class QueryableSectionServiceTest {
 		}
 	}
 
-	private class FakeExecutor implements Executor<Identifiable, CommandMock> {
+	private class FakeExecutor implements Executor<Identifiable, PostStatementMock> {
 
 		@Override
-		public List<Identifiable> execute(CommandMock command, Integer size, Integer from) {
+		public List<Identifiable> execute(PostStatementMock command, Integer size, Integer from) {
 			List<Identifiable> result = new ArrayList<>();
 			for (int i = from; i < from + size; i++) {
 				PostView pv = new PostView();
@@ -91,7 +78,7 @@ public class QueryableSectionServiceTest {
 		section = new QueryableListSection(10, fixedQueries);
 		section.setPageableQuery(new PageableQuery(pageablePS));
 
-		QueryRunner qr = new QueryRunnerService(null, new ExecutorFactoryMock());
+		QueryRunner qr = new QueryRunnerService(new ExecutorFactoryMock());
 		service = new QueryableSectionService(qr);
 	}
 

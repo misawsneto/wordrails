@@ -136,8 +136,8 @@ public class TestArtifactsFactory {
 		QueryableListSection section1 = createQueryableListSection();
 
 		PostStatement postStatement2 = new PostStatement();
-		postStatement2.setStationIds(Sets.newHashSet(11));
-		postStatement2.setRichText("fhc");
+		postStatement2.setStations(Lists.newArrayList(11));
+		postStatement2.setQuery("fhc");
 		FixedQuery fixedQuery2 = new FixedQuery(postStatement2, Lists.newArrayList(0, 1, 2, 3, 4));
 		QueryableListSection section2 = new QueryableListSection(5, Lists.newArrayList(fixedQuery2));
 		section2.setTitle("Section 2");
@@ -153,8 +153,8 @@ public class TestArtifactsFactory {
 
 	public static QueryableListSection createQueryableListSection() {
 		PostStatement postStatement1 = new PostStatement();
-		postStatement1.setStationIds(Sets.newHashSet(11));
-		postStatement1.setRichText("dilma");
+		postStatement1.setStations(Lists.newArrayList(11));
+		postStatement1.setQuery("dilma");
 
 		PageableQuery pageableQuery = new PageableQuery(postStatement1);
 

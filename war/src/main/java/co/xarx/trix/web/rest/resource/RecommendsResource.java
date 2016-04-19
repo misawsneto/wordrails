@@ -6,8 +6,8 @@ import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.services.PersonService;
+import co.xarx.trix.services.post.ESPostSearchService;
 import co.xarx.trix.services.security.AuthService;
-import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.RecommendsApi;
 import lombok.NoArgsConstructor;
@@ -21,13 +21,13 @@ import java.util.List;
 @NoArgsConstructor
 public class RecommendsResource extends AbstractResource implements RecommendsApi {
 
-	private PostSearchService postSearchService;
+	private ESPostSearchService postSearchService;
 	private PersonService personService;
 	private PersonRepository personRepository;
 	private AuthService authProvider;
 
 	@Autowired
-	public RecommendsResource(PostSearchService postSearchService, PersonService personService,
+	public RecommendsResource(ESPostSearchService postSearchService, PersonService personService,
 							  PersonRepository personRepository, AuthService authProvider) {
 		this.postSearchService = postSearchService;
 		this.personService = personService;

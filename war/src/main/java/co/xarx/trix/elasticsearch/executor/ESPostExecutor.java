@@ -1,93 +1,62 @@
 package co.xarx.trix.elasticsearch.executor;
 
-import co.xarx.trix.api.PostView;
+import co.xarx.trix.api.v2.PostData;
+import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.Executor;
-import co.xarx.trix.services.elasticsearch.ElasticSearchCommand;
-import co.xarx.trix.util.StringUtil;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rometools.utils.Lists;
-import org.elasticsearch.action.search.SearchRequestBuilder;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.common.text.Text;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.highlight.HighlightField;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
+import co.xarx.trix.domain.page.query.statement.PostStatement;
+import co.xarx.trix.services.post.PostSearchService;
+import co.xarx.trix.util.RestUtil;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component("post_executor")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ESPostExecutor implements Executor<PostView, ElasticSearchCommand> {
+public class ESPostExecutor implements Executor<PostData, PostStatement> {
 
-	@Value("${spring.data.elasticsearch.index}")
-	private String indexName;
+	private ModelMapper mapper;
+	private PostSearchService searchService;
+
 	@Autowired
-	protected Client client;
-
-	private static final String ES_TYPE = "post";
-
-	public List<PostView> execute(ElasticSearchCommand command, Integer size, Integer from) {
-		SearchRequestBuilder searchRequestBuilder = client
-				.prepareSearch(indexName)
-				.setTypes(ES_TYPE)
-				.setQuery(command.getBoolQueryBuilder())
-				.setSize(size)
-				.setFrom(from);
-
-		searchRequestBuilder.addHighlightedField(command.getHighlightedField(), 100, 4);
-		searchRequestBuilder.setHighlighterPreTags("{snippet}");
-		searchRequestBuilder.setHighlighterPostTags("{#snippet}");
-
-		if (Lists.isNotEmpty(command.getFieldSortBuilders())){
-			searchRequestBuilder.addSort(new FieldSortBuilder("_score").order(SortOrder.DESC));
-			List<FieldSortBuilder> sortBuilders = command.getFieldSortBuilders();
-			sortBuilders.stream().forEach(searchRequestBuilder::addSort);
-		}
-
-		SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
-
-		return getViews(searchResponse.getHits().hits());
+	public ESPostExecutor(ModelMapper mapper, PostSearchService searchService) {
+		this.mapper = mapper;
+		this.searchService = searchService;
 	}
 
-	public List<PostView> getViews(SearchHit... hits) {
-		List<PostView> views = new ArrayList<>();
+	@Override
+	public Page<PostData> execute(PostStatement params, Integer size, Integer from) {
+		Assert.notNull(params, "PostStatement must not be null");
+		Assert.notNull(size, "size must not be null");
+		Assert.isTrue(size > 0, "size must be higher than zero");
+		Assert.notNull(from, "from must not be null");
 
-		for (SearchHit hit : hits) {
-			try {
-				ObjectMapper objectMapper = new ObjectMapper();
-				objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-				final PostView postView = objectMapper.readValue(hit.getSourceAsString(), PostView.class);
+		int page = from / size;
+		List<Integer> ids = searchService.searchIds(params);
+		List<Post> posts = searchService.search(ids, page, size);
+		List<PostData> data = getPostDatas(posts);
 
-				Map<String, HighlightField> highlights = hit.getHighlightFields();
-				if (highlights != null && highlights.get("body") != null) {
-					StringBuilder sb = new StringBuilder();
-					for (Text fragment : highlights.get("body").getFragments()) {
-						sb.append(fragment.toString()).append(" ");
-					}
+		Pageable pageable = RestUtil.getPageable(page, size, params.getOrders());
 
-					postView.snippet = sb.toString();
-				} else {
-					postView.snippet = StringUtil.simpleSnippet(postView.body);
-				}
+		int contentSize = ids != null ? ids.size() : 0;
+		return new PageImpl(data, pageable, contentSize);
+	}
 
-				postView.snippet = StringUtil.htmlStriped(postView.snippet);
-				postView.snippet = postView.snippet.replaceAll("\\{snippet\\}", "<b>").replaceAll("\\{#snippet\\}", "</b>");
-				views.add(postView);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+	private List<PostData> getPostDatas(List<Post> posts) {
+		if(posts == null || posts.isEmpty())
+			return new ArrayList<>();
 
-		return views;
+		return posts.stream()
+				.map(post -> mapper.map(post, PostData.class))
+				.collect(Collectors.toList());
 	}
 }

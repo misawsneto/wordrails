@@ -8,7 +8,7 @@ import co.xarx.trix.domain.QPost;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.services.post.PostSearchService;
+import co.xarx.trix.services.post.ESPostSearchService;
 import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
@@ -44,7 +44,7 @@ public class PostsResource extends AbstractResource implements PostApi {
 	@Autowired
 	private AuthService authProvider;
 	@Autowired
-	private PostSearchService postSearchService;
+	private ESPostSearchService postSearchService;
 	@Autowired
 	private PostService postService;
 

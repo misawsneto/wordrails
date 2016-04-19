@@ -33,7 +33,7 @@ public class FixedQuery extends BaseEntity implements Query {
 
 	@NotNull
 	@ElementCollection
-	@JoinTable(name = "queryfixed_indexes")
+	@JoinTable(name = "queryfixed_indexes", joinColumns = @JoinColumn(name = "query_id"))
 	public List<Integer> indexes;
 
 	@JoinColumn(name = "statement_id")

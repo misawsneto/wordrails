@@ -6,8 +6,8 @@ import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.services.PersonService;
+import co.xarx.trix.services.post.ESPostSearchService;
 import co.xarx.trix.services.security.AuthService;
-import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.BookmarksApi;
 import lombok.NoArgsConstructor;
@@ -21,13 +21,13 @@ import java.util.List;
 @NoArgsConstructor
 public class BookmarksResource extends AbstractResource implements BookmarksApi {
 
-	private PostSearchService postSearchService;
+	private ESPostSearchService postSearchService;
 	private PersonRepository personRepository;
 	private PersonService personService;
 	private AuthService authProvider;
 
 	@Autowired
-	public BookmarksResource(PostSearchService postSearchService, PersonRepository personRepository,
+	public BookmarksResource(ESPostSearchService postSearchService, PersonRepository personRepository,
 							 PersonService personService, AuthService authProvider) {
 		this.postSearchService = postSearchService;
 		this.personRepository = personRepository;

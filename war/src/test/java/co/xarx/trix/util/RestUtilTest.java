@@ -1,4 +1,4 @@
-package co.xarx.trix.web.rest;
+package co.xarx.trix.util;
 
 import org.junit.Test;
 import org.springframework.data.domain.Pageable;
@@ -9,9 +9,7 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 
-public class AbstractResourceTest {
-
-	private AbstractResource resource = new AbstractResource() {};
+public class RestUtilTest {
 
 	@Test
 	public void testPageable() throws Exception {
@@ -21,7 +19,7 @@ public class AbstractResourceTest {
 		orders.add("attribute1");
 		orders.add("-attribute2");
 
-		Pageable pageable = resource.getPageable(page, size, orders);
+		Pageable pageable = RestUtil.getPageable(page, size, orders);
 
 		assertEquals(pageable.getPageNumber(), 1);
 		assertEquals(pageable.getPageSize(), 10);

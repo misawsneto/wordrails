@@ -62,28 +62,4 @@ public abstract class AbstractResource {
 			throw new IOException(e);
 		}
 	}
-
-	protected Pageable getPageable(Integer page, Integer size, List<String> order) {
-		Assert.notNull(page, "Page must not be null");
-		Assert.notNull(size, "Size must not be null");
-
-		Sort sort = null;
-
-		if (order != null && !order.isEmpty()) {
-			List<Sort.Order> orders = new ArrayList<>();
-			for (String s : order) {
-				Sort.Direction d = Sort.Direction.ASC;
-
-				if (s.charAt(0) == '-') {
-					d = Sort.Direction.DESC;
-					s = s.substring(1, s.length());
-				}
-				orders.add(new Sort.Order(d, s));
-			}
-
-			sort = new Sort(orders);
-		}
-
-		return new PageRequest(page, size, sort);
-	}
 }
