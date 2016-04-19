@@ -6620,6 +6620,11 @@ bg-none {
   height: 32px;
 }
 
+.w-36 {
+  width: 36px;
+  height: 36px;
+}
+
 .w-40 {
   width: 40px;
   height: 40px;
@@ -8547,4 +8552,8 @@ button,
       -ms-transition: background-color 300ms linear, color 300ms linear;
        -o-transition: background-color 300ms linear, color 300ms linear;
           transition: background-color 300ms linear, color 300ms linear;
+}
+
+.not-trans.md-button:not([disabled]).md-icon-button:hover {
+  background: asdf;
 }

@@ -260,6 +260,8 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
           "}" , index); index++;
         stylesheet.insertRule(".sub-section-tools .active i{color: " + color + "}", index); index++;
         stylesheet.insertRule(".slider .indicators .indicator-item.active {background-color: " + color + "}", index); index++;
+        stylesheet.insertRule(".not-trans.md-button:not([disabled]).md-icon-button:hover{ background-color: " + color + "}", index); index++
+        stylesheet.insertRule(".not-trans.md-button:not([disabled]).md-icon-button:focus{ background-color: " + color + "}", index); index++
       }
       if(cssname === 'background' && name === 'default'){
         stylesheet.insertRule(".mdp-datepicker .md-content,"+

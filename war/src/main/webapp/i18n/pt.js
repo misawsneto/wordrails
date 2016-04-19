@@ -16,6 +16,7 @@
 		"PERMISSIONS": "Permissões",
 		"PUBLICATIONS": "Publicações",
 		"COMMENTS": "Comentários",
+		"COMMENT": "Commentário",
 		"MEDIA_LIBRARY": "Biblioteca de mídia",
 		"CONFIGURATION": "Configurações",
 		"STATS": "Estatísticas",

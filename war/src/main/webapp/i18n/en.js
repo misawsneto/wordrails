@@ -16,6 +16,7 @@
 		"PERMISSIONS": "Permissions",
 		"PUBLICATIONS": "Publications",
 		"COMMENTS": "Comments",
+		"COMMENT": "Comment",
 		"MEDIA_LIBRARY": "Media library",
 		"CONFIGURATION": "Configuration",
 		"STATS": "Analytics",

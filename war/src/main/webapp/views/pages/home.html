@@ -158,10 +158,7 @@
                 </div>
             </div>
             <!-- News Description -->
-            <div class="news-description p-t-0 p-b-sm p-h">
-                <div class="news-time" md-style="{'color': 'default.50'}">
-                    <i class="fa fa-clock-o"></i> 9 min ago 
-                </div>
+            <div class="news-description p-t p-b-sm p-h">
                 <div class="news-title" style="min-height: 66px"><a clamp="3"> {{::cell.postView.title}} </a></div>
                 <div class="news-content"><p clamp="4">{{::cell.postView.snippet}}</p></div>
                 <div class="news-comment-shares z-index-2">
@@ -169,16 +166,27 @@
                     <div class="p-b-xs">
                         <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-icon-button m-0" md-style="{'background-color': 'background.A100'}"><i class="mdi2-heart i-16" style="opacity: 0.6"></i></md-button>
                         
-                        <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-icon-button pull-right m-r-0" md-style="{'background-color': 'background.A100'}"><i class="mdi2-share i-20" style="opacity: 0.6"></i></md-button>
+                        <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-icon-button pull-right m-0" md-style="{'background-color': 'background.A100'}"><i class="mdi2-share i-20" style="opacity: 0.6"></i></md-button>
                         
                         <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-icon-button pull-right" md-style="{'background-color': 'background.A100'}" ng-click="loadComments(cell);"><i class="mdi2-comment i-16" style="opacity: 0.6"></i></md-button>
                     </div>
                 </div>
                 <div class="news-comment z-index-1 animated fadeInDown" ng-if="cell.showComments" style="margin:6px -16px -8px -16px;">
                   <md-divider class=""></md-divider>
-                    <div class="p">
-                      
+
+                  <div class="p inline w-full">
+                    <div class="pull-left user-avatar rounded w-36 bg-white pos-rlt background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}" ng-class="{'md-primary-hue-1': !app.userImageSmall}">
+                      <i ng-if="!app.userImageSmall" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
                     </div>
+
+                    <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-button not-trans m-0 md-icon-button pull-right md-accent-default background">
+                      <i class="mdi2-send i-20"></i>
+                    </md-button>
+                    <div class="m-l-xxl m-r-xxl"> 
+                      <textarea msd-elastic class="text-md no-border p-t-sm" ng-keypress="reloadMasonry()" ng-change="checkEmptyComment(cell.comment);" ng-model="cell.comment" style="resize: none;" placeholder="Comentário"></textarea>
+                    </div>
+                  </div>
+
                 </div>
                 <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="cell.loadingComments" md-mode="indeterminate"></md-progress-linear>
             </div>

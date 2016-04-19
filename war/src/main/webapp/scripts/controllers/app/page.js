@@ -17,7 +17,7 @@ app.controller('PageCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 				cell.showComments = true; 
 				$scope.reloadMasonry()
 				cell.loadingComments = false;
-			},3000)
+			},3)
 		}
 
 }]);

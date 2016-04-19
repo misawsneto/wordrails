@@ -597,7 +597,7 @@ angular.module('app')
                   // }
                   return deferred.promise;
                 },
-                deps:load( ['angularFileUpload','infinite-scroll', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
+                deps:load( ['monospaced.elastic','angularFileUpload','infinite-scroll', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
               },
               url: '',
               views: {
