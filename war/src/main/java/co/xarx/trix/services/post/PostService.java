@@ -31,10 +31,6 @@ public class PostService {
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
-	private PostReadRepository postReadRepository;
-	@Autowired
-	private PersonRepository personRepository;
-	@Autowired
 	private PostConverter postConverter;
 	@Autowired
 	private AuthService authProvider;
@@ -107,27 +103,5 @@ public class PostService {
 
 			post.state = Post.STATE_PUBLISHED;
 		}
-	}
-
-	private PostRead getPostRead(Post post, Person person, String sessionId) {
-		QPostRead pr = QPostRead.postRead;
-		if (person == null) {
-			if(postReadRepository.findAll(pr.sessionid.eq(sessionId).and(pr.post.id.eq(post.id)))
-					.iterator().hasNext()) { //if anonymous user has read this post already
-				return null;
-			}
-		} else {
-			if(postReadRepository.findAll(pr.post.id.eq(post.id).and(pr.person.id.eq(person.id)))
-					.iterator().hasNext()) {
-				return null;
-			}
-		}
-
-		PostRead postRead = new PostRead();
-		postRead.person = person;
-		postRead.post = post;
-		postRead.sessionid = sessionId; // constraint fails if null
-
-		return postRead;
 	}
 }

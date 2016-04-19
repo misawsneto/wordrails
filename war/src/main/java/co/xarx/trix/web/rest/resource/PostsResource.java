@@ -259,12 +259,7 @@ public class PostsResource extends AbstractResource implements PostApi {
 	}
 
 	public StringResponse getPostBody(Integer postId){
-		Person person = authProvider.getLoggedPerson();
 		String body = postRepository.findPostBodyById(postId);
-		Post post = postRepository.findOne(postId);
-
-		String requestedSessionId = request.getRequestedSessionId();
-		postService.countPostRead(post.id, person.id, requestedSessionId);
 
 		StringResponse content = new StringResponse();
 		content.response = body;
