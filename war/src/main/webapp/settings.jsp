@@ -22,8 +22,8 @@
   <link rel="stylesheet" href="/styles/app.css" type="text/css" />
 
     <script type="text/javascript">
-        var GLOBAL_URL_HASH = "${buildNumber}"
-        var initData = ${not empty personData?personData:'\'\''};
+        var GLOBAL_URL_HASH = ${buildNumber};
+        var initData = ${personData};
     </script>
 
     <style type="text/css">
