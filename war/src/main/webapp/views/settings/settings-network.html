@@ -137,32 +137,32 @@
                     <!-- logo section -->
                     <ul class="list-group list-group-lg no-bg auto">
                       <li class="list-group-item clearfix b-n">
-                        <div class="display-t-c thumb-xl">
-                          <img ng-src="{{loginImage.link ? loginImage.link : 'img/img-stub.png'}}" class="wrapper-xxs bg-white img-responsive" alt="...">
+                        <div class="display-t-c b b-a thumb-xl">
+                          <img ng-src="{{splashImage.link ? splashImage.link : '/images/img-stub.png'}}" class="p-xs bg-white img-responsive" alt="...">
                         </div>
-                        <div class="clear display-t-c v-middle p-l">
-                          <span class="font-bold">Login</span>
-                          <small class="text-muted clear text-ellipsis">
-                          Logotipo da rede. Exibido na tela de login no Android, iOS e Web.</small>
-                          <input id="image-upload" type="file" nv-file-select="" uploader="login" name="contents" accept="image/*"/>
-                        </div>
-                      </li>
-                      <li class="list-group-item clearfix b-n">
-                        <div class="display-t-c thumb-xl">
-                          <img ng-src="{{splashImage.link ? splashImage.link : 'img/img-stub.png'}}" class="wrapper-xxs bg-white img-responsive" alt="...">
-                        </div>
-                        <div class="clear display-t-c v-middle p-l">
+                        <div class="clear display-t-c v-middle ">
                           <span class="font-bold">Splash</span> <span>(dispositivos móveis apenas)</span>
                           <small class="text-muted clear text-ellipsis">
-                          Logotipo da rede. Exibido na tela inicial dos aplicativos Android e iOS.</small>
+                          Logotipo da rede. Exibido na tela inicial dos aplicativos Android e iOS e Web.</small>
                           <input id="image-upload" type="file" nv-file-select="" uploader="splash" name="contents" accept="image/*"/>
                         </div>
                       </li>
                       <li class="list-group-item clearfix b-n">
-                        <div class="display-t-c thumb">
-                          <img ng-src="{{faviconImage.link ? faviconImage.link : 'img/img-stub.png'}}" class="wrapper-xxs bg-white img-responsive" alt="...">
+                        <div class="display-t-c b b-a thumb-md">
+                          <img ng-src="{{loginImage.link ? loginImage.link : '/images/img-stub.png'}}" class="p-xs bg-white img-responsive" alt="...">
                         </div>
-                        <div class="clear display-t-c v-middle p-l">
+                        <div class="clear display-t-c v-middle ">
+                          <span class="font-bold">Logo</span>
+                          <small class="text-muted clear text-ellipsis">
+                          Logotipo da rede.</small>
+                          <input id="image-upload" type="file" nv-file-select="" uploader="login" name="contents" accept="image/*"/>
+                        </div>
+                      </li>
+                      <li class="list-group-item clearfix b-n">
+                        <div class="display-t-c b b-a thumb">
+                          <img ng-src="{{faviconImage.link ? faviconImage.link : '/images/img-stub.png'}}" class="p-xs bg-white img-responsive" alt="...">
+                        </div>
+                        <div class="clear display-t-c v-middle ">
                           <span class="font-bold">Favicon</span> <span>(cliente web apenas)</span>
                           <small class="text-muted clear text-ellipsis">Favicon da home page. Exibido na aba do browser.</small>
                           <input id="image-upload" class="text-xs" type="file" nv-file-select="" uploader="favicon" name="contents" accept="image/*"/>
@@ -174,6 +174,32 @@
 
                 <!-- customization -->
                   <div class="md-padding min-h-400" ng-class="{'hide': settings.tab !== 'customization'}">
+
+                    <div class="m-b text-muted text-md text-u-c">{{'titles.SOCIAL_NETWORK_IDS' | translate}}</div>
+                    <div class="p-h p-t row m-b-0">
+                      <div class="col-lg-6">
+                        <md-input-container class="m-b-sm m-t-sm w-full">
+                          <label>ID do Facebook</label>
+                          <input ng-model="network.facebookAppID">
+                        </md-input-container>
+                        <md-input-container class="m-b-sm m-t-sm w-full">
+                          <label>ID do Twitter</label>
+                          <input ng-model="network.twitterAppID">
+                        </md-input-container>
+                      </div>
+                      <div class="col-lg-6">
+                        <md-input-container class="m-b-sm m-t-sm w-full">
+                          <label>ID do LinkedIn</label>
+                          <input ng-model="network.linkdedInAppID">
+                        </md-input-container>
+                        <md-input-container class="m-b-sm m-t-sm w-full">
+                          <label>ID do Google+</label>
+                          <input ng-model="network.googleAppID">
+                        </md-input-container>
+                      </div>
+                    </div>
+
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
 
                     <div class="m-b text-muted text-md text-u-c">{{'titles.SOCIAL_NETWORK_PROFILES' | translate}}</div>
                     <div class="p-h p-t row m-b-0">

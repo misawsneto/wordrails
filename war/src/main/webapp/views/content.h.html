@@ -5,7 +5,7 @@
     <a md-ink-ripple ng-click="openAside()" ng-hide="$state.current.data.child" class="navbar-item pull-left"><i class="mdi-navigation-menu i-24"></i></a>
     <!-- / -->
     <div class="navbar-header pull-left">
-      <a class="navbar-brand">
+      <a class="navbar-brand" ui-sref="app.home">
         <!-- <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve" style="
               width: 24px; height: 24px;">
             <path d="M 50 0 L 100 14 L 92 80 Z" fill="rgba(139, 195, 74, 0.5)"></path>
@@ -116,7 +116,9 @@
         </div>
         <div class="box-col v-m p-h">
           <!-- bind to app.search.content -->
-          <input class="form-control input-lg no-bg no-border" placeholder="{{'titles.SEARCH' | translate }}" ng-model="app.search.content">
+          <form ng-submit="app.goToSearch(app.search.content)">
+            <input class="form-control input-lg no-bg no-border" placeholder="{{'titles.SEARCH' | translate }}" ng-model="app.search.content">
+          </form>
         </div>
         <!-- <div class="box-col w-56 text-center">
           <a md-ink-ripple class="navbar-item inline"><i class="mdi-av-mic i-24"></i></a>
@@ -132,7 +134,7 @@
       </div>
     </md-toolbar> -->
     <md-content class="box-cell">
-      <div class="box-inner">
+      <div id="app-content" class="box-inner">
         <!-- <div id="view" class="clearfix md-whiteframe-z0 no-radius" ng-class="$state.current.data.theme ? $state.current.data.theme.primary : app.setting.theme.primary"> -->
           <!-- <div class="container m-v-md"> -->
             <!-- Page title - Bind to $state's title -->
@@ -140,7 +142,7 @@
             <!-- / -->
           <!-- </div> -->
         <!-- </div> -->
-        <div class="container p-v-lg" ui-view></div>
+        <main class="container p-v-lg" ui-view></main>
         <footer class="page-footer md-primary-hue-1 background">
           <div class="container">
             <div class="row">
@@ -187,6 +189,9 @@
         </md-button>
         <md-button class="md-fab md-mini md-primary" style="background: #DC4A38" aria-label="Use Android">
           <i class="mdi2-google-plus i-20"></i>
+        </md-button>
+        <md-button class="md-fab md-mini md-primary" style="background: #0177B5" aria-label="Use Android">
+          <i class="mdi2-linkedin i-20"></i>
         </md-button>
       </div>
         <div class="p-t text-md" translate="signin_signup.OR">ou</div>

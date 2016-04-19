@@ -72,6 +72,7 @@
 		"VIDEO": "Video",
 		"AUDIO": "Audio",
 		"SOCIAL_NETWORK_PROFILES": "Social network profiles",
+		"SOCIAL_NETWORK_IDS": "Social network App IDs",
 		"BOOKMARKS": "Bookmarks",
 		"NOTIFICATIONS": "Notifications"
 	},

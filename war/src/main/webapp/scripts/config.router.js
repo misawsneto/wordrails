@@ -597,7 +597,7 @@ angular.module('app')
                   // }
                   return deferred.promise;
                 },
-                deps:load( ['infinite-scroll', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
+                deps:load( ['angularFileUpload','infinite-scroll', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
               },
               url: '',
               views: {
@@ -629,7 +629,7 @@ angular.module('app')
                 url: '/',
                 templateUrl: '/views/pages/home.html',
                 data : { title: 'Home', folded: false },
-                resolve: load(['angularFileUpload', 'wu.masonry', '/scripts/controllers/app/page.js']),
+                resolve: load(['wu.masonry', '/scripts/controllers/app/page.js']),
                 controller: 'PageCtrl'
 
               })
@@ -637,7 +637,14 @@ angular.module('app')
                 url: '/{stationSlug}/home',
                 templateUrl: '/views/pages/home.html',
                 data : { title: 'Home', folded: false },
-                resolve: load(['angularFileUpload', 'wu.masonry', '/scripts/controllers/app/page.js'])
+                resolve: load(['wu.masonry', '/scripts/controllers/app/page.js'])
+              })
+              .state('app.search', {
+                url: '/s?q',
+                templateUrl: '/views/pages/search.html',
+                data : { title: 'Search', folded: false },
+                resolve: load(['/scripts/controllers/app/search.js']),
+                controller: 'SearchCtrl'
               })
               .state('app.wall', {
                 url: '/wall',

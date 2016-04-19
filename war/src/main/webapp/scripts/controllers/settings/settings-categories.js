@@ -17,6 +17,8 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
   $scope.showAddCategorySplash = function(parent, ev){
     $scope.parentCategory = parent;
     $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        preserveScope: true, // do not forget this if use parent scope
         controller: DialogController,
         templateUrl: 'add_category.html',
         targetEvent: ev,
@@ -34,6 +36,8 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
     $scope.app.toDeleteCategory = category;
     $scope.parentCategory = parent;
     $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        preserveScope: true, // do not forget this if use parent scope
         controller: DialogController,
         templateUrl: 'delete_category.html',
         targetEvent: ev,

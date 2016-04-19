@@ -156,30 +156,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	// see app.ctrl.js	
 	$scope.app.postObjectChanged = false;
-	/**
-	 * Watch post and set the page not to change if post was edited.
-	 * The app.postObjectChanged flag is used here.
-	 * @see $scope.$watch('app.postObjectChanged'
-	 * @param  {[type]} true    [description]
-	 */
-	$scope.$watch('app.editingPost', function(newVal, oldVal) {
-		if(oldVal && ('title' in oldVal) && ('body' in oldVal)){
-			// post has been edited
-
-			if(newVal && newVal.title !== oldVal.title || 
-				newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") !== oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"")){
-
-				// TODO: save draft
-
-				// set post changed so $scope.watch can see app.postObjectChanged
-				if(!$scope.app.postObjectChanged){
-					$log.info('post changed, avoid page change...')
-					$scope.app.postObjectChanged = true;
-				}
-			}
-		}
-	}, true);
-
 
 	// --- /watch post change
 	
@@ -189,6 +165,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		// show term alert
 		
 		$mdDialog.show({
+			scope: $scope,        // use parent scope in template
+          	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			templateUrl: 'clear-post-dialog.html',
 			parent: angular.element(document.body),
@@ -212,6 +190,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.showPostInfoDialog = function(event){
 
 		$mdDialog.show({
+			scope: $scope,        // use parent scope in template
+          	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			template: 	postInfoTemplate,
 			parent: angular.element(document.body),
@@ -376,6 +356,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.app.postFeaturedImage = $scope.postFeaturedImage;
 
 		$mdDialog.show({
+			scope: $scope,        // use parent scope in template
+          	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			template: 	postCropTemplate,
 			parent: angular.element(document.body)
@@ -452,6 +434,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.app.postFeaturedImage = $scope.postFeaturedImage;
 
 		$mdDialog.show({
+			scope: $scope,        // use parent scope in template
+          	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			template: 	postFocuspointTemplate,
 			parent: angular.element(document.body),
@@ -482,6 +466,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.app.postFeaturedImage = $scope.postFeaturedImage;
 
 		$mdDialog.show({
+			scope: $scope,        // use parent scope in template
+          	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			templateUrl: 	'geolocation-dialog.html',
 			parent: angular.element(document.body),

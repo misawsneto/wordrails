@@ -7773,6 +7773,16 @@ bg-none {
 }
 
 /* /settings-color-selector */
+#app-content {
+  display: flex;
+  min-height: calc(44vh);
+  flex-direction: column;
+}
+
+#app-content main {
+  flex: 1 0 auto;
+}
+
 /* general */
 
 /* material design icons */

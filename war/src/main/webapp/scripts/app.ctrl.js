@@ -119,8 +119,10 @@ angular.module('app')
     }
   ])
 
-  .controller('AppDataCtrl', ['$scope', '$state', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar',
-    function (             $scope, $state, $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar) {
+  .controller('AppDataCtrl', ['$scope', '$state', '$log', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdMedia',
+    function (             $scope, $state, $log, $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar, $mdMedia) {
+
+      $rootScope.$mdMedia = $mdMedia;
 
       $scope.app.goToLink = function(link){
         document.location.href = link;
@@ -362,6 +364,30 @@ angular.module('app')
           window.onbeforeunload = null;
         }
       });
+
+      /**
+       * Watch post and set the page not to change if post was edited.
+       * The app.postObjectChanged flag is used here.
+       * @see $scope.$watch('app.postObjectChanged'
+       * @param  {[type]} true    [description]
+       */
+      $scope.$watch('app.editingPost', function(newVal, oldVal) {
+        if(oldVal && ('title' in oldVal) && ('body' in oldVal)){
+          // post has been edited
+
+          if(newVal && newVal.title !== oldVal.title || 
+            newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") !== oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"")){
+
+            // TODO: save draft
+
+            // set post changed so $scope.watch can see app.postObjectChanged
+            if(!$scope.app.postObjectChanged){
+              $log.info('post changed, avoid page change...')
+              $scope.app.postObjectChanged = true;
+            }
+          }
+        }
+      }, true);
 
       // deal with unauthorized access
       $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
@@ -659,6 +685,12 @@ angular.module('app')
           minScrollbarLength: 20
         });
       });
+
+      // -------------------------- 
+      
+      $scope.app.goToSearch =function(query){
+        $state.go('app.search', {q: query});
+      }
       
       appDataCtrl = $scope;
     }
