@@ -89,7 +89,8 @@ filter {
 	#------------- get post using the post's slug -------------#
 	if[postSlug]{
 		ruby {
-			code => "require 'elasticsearch'
+			code => "
+				require 'elasticsearch'
 				client = Elasticsearch::Client.new log: false
 				result = client.search index: event['@metadata']['ES_INDEX'], body: {query:{bool:{must:[{term:{slug:event['postSlug']}}]}}}
 				if result['hits']['hits'].length > 0
@@ -108,7 +109,8 @@ filter {
 	#------------- get post using the post's id -------------#
 	if[postId] {
 		ruby {
-			code => "require 'elasticsearch'
+			code => "
+				require 'elasticsearch'
 				client = Elasticsearch::Client.new log: false
 				result = client.search index: event['@metadata']['ES_INDEX'], body: {query:{bool:{must:[{term:{id:event['postId']}},{term:{type:'post'}}]}}}
 				if result['hits']['hits'].length > 0
