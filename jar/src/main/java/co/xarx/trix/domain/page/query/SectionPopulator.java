@@ -5,7 +5,7 @@ import co.xarx.trix.domain.page.QueryableSection;
 
 import java.util.Map;
 
-public interface QueryableSectionPopulator {
+public interface SectionPopulator {
 
 	Map<Integer, Block> fetchQueries(QueryableSection section, Integer from);
 }

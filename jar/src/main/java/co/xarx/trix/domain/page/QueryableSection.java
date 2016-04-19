@@ -2,7 +2,7 @@ package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.page.query.FixedQuery;
 import co.xarx.trix.domain.page.query.PageableQuery;
-import co.xarx.trix.domain.page.query.QueryableSectionPopulator;
+import co.xarx.trix.domain.page.query.SectionPopulator;
 
 import java.util.List;
 
@@ -18,5 +18,5 @@ public interface QueryableSection extends Section {
 
 	Integer getSize();
 
-	void populate(QueryableSectionPopulator populator, Integer from);
+	void populate(SectionPopulator populator, Integer from);
 }

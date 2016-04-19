@@ -8,7 +8,7 @@ import co.xarx.trix.domain.page.*;
 import co.xarx.trix.persistence.PageRepository;
 import co.xarx.trix.persistence.SectionRepository;
 import co.xarx.trix.persistence.StationRepository;
-import co.xarx.trix.services.QueryableSectionService;
+import co.xarx.trix.services.SectionService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2PagesApi;
 import lombok.AllArgsConstructor;
@@ -34,12 +34,12 @@ public class V2PagesResource extends AbstractResource implements V2PagesApi {
 	private PageRepository pageRepository;
 	private StationRepository stationRepository;
 	private SectionRepository sectionRepository;
-	private QueryableSectionService queryableSectionService;
+	private SectionService queryableSectionService;
 	private ModelMapper mapper;
 
 	@Autowired
 	public V2PagesResource(PageRepository pageRepository, StationRepository stationRepository,
-						   SectionRepository sectionRepository, QueryableSectionService queryableSectionService,
+						   SectionRepository sectionRepository, SectionService queryableSectionService,
 						   ModelMapper mapper) {
 		this.pageRepository = pageRepository;
 		this.stationRepository = stationRepository;
@@ -60,6 +60,13 @@ public class V2PagesResource extends AbstractResource implements V2PagesApi {
 		}
 
 		return Response.ok(hals).build();
+	}
+
+	private void populateQueryableSections(Page page) {
+		page.getSectionList().stream()
+				.filter(section -> section != null)
+				.filter(section -> section instanceof QueryableSection)
+				.forEach(section -> ((QueryableListSection) section).populate(queryableSectionService, 0));
 	}
 
 	@Override
@@ -94,10 +101,10 @@ public class V2PagesResource extends AbstractResource implements V2PagesApi {
 				.entity(new IdReturn(page.getId()))
 				.build();
 	}
-
 	@AllArgsConstructor
 	class IdReturn {
 		public Integer id;
+
 	}
 
 	@Override
@@ -119,12 +126,5 @@ public class V2PagesResource extends AbstractResource implements V2PagesApi {
 		all.forEach(section -> sectionHals.add(mapper.map(section, SectionData.class)));
 
 		return Response.ok(sectionHals).build();
-	}
-
-	private void populateQueryableSections(Page page) {
-		page.getSectionList().stream()
-				.filter(section -> section != null)
-				.filter(section -> section instanceof QueryableSection)
-				.forEach(section -> ((QueryableListSection) section).populate(queryableSectionService, 0));
 	}
 }

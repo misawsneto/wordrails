@@ -23,7 +23,7 @@ public class QueryableSectionServiceTest {
 	private static final Integer PAGEABLE_ID_BASE = 10;
 	private static final Integer FIXED_ID_BASE = 100;
 
-	QueryableSectionService service;
+	SectionService service;
 	QueryableListSection section;
 	List<Integer> fixedIndexes = Lists.newArrayList(2, 8, 13, 1, 15);
 	Integer iFixed;
@@ -79,7 +79,7 @@ public class QueryableSectionServiceTest {
 		section.setPageableQuery(new PageableQuery(pageablePS));
 
 		QueryRunner qr = new QueryRunnerService(new ExecutorFactoryMock());
-		service = new QueryableSectionService(qr);
+		service = new SectionService(qr);
 	}
 
 	@Test

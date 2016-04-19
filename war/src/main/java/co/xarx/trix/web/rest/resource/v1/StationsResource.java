@@ -8,7 +8,7 @@ import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.domain.page.*;
 import co.xarx.trix.eventhandler.StationEventHandler;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.QueryableSectionService;
+import co.xarx.trix.services.SectionService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.StationsApi;
@@ -42,7 +42,7 @@ public class StationsResource extends AbstractResource implements StationsApi {
 	private PageRepository pageRepository;
 
 	@Autowired
-	private QueryableSectionService queryableSectionService;
+	private SectionService queryableSectionService;
 
 	@Override
 	public void getStations() throws ServletException, IOException {

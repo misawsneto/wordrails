@@ -2,7 +2,7 @@ package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.page.query.FixedQuery;
 import co.xarx.trix.domain.page.query.PageableQuery;
-import co.xarx.trix.domain.page.query.QueryableSectionPopulator;
+import co.xarx.trix.domain.page.query.SectionPopulator;
 import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -90,7 +90,7 @@ public class QueryableListSection extends AbstractSection implements QueryableSe
 	}
 
 	@Override
-	public void populate(QueryableSectionPopulator populator, Integer from) {
+	public void populate(SectionPopulator populator, Integer from) {
 		this.blocks = populator.fetchQueries(this, from);
 	}
 }

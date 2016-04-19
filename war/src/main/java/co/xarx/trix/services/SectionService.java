@@ -5,7 +5,7 @@ import co.xarx.trix.domain.page.QueryableSection;
 import co.xarx.trix.domain.page.query.FixedQuery;
 import co.xarx.trix.domain.page.query.PageableQuery;
 import co.xarx.trix.domain.page.query.QueryRunner;
-import co.xarx.trix.domain.page.query.QueryableSectionPopulator;
+import co.xarx.trix.domain.page.query.SectionPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,12 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
-public class QueryableSectionService implements QueryableSectionPopulator {
+public class SectionService implements SectionPopulator {
 
 	private QueryRunner queryRunner;
 
 	@Autowired
-	public QueryableSectionService(QueryRunner queryRunner) {
+	public SectionService(QueryRunner queryRunner) {
 		this.queryRunner = queryRunner;
 	}
 
