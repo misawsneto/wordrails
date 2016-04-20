@@ -2,6 +2,7 @@ package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.page.query.FixedQuery;
 import co.xarx.trix.domain.page.query.PageableQuery;
+import co.xarx.trix.domain.page.query.QueryableSectionPopulator;
 
 import java.util.List;
 
@@ -9,17 +10,13 @@ public interface QueryableSection extends Section {
 
 	PageableQuery getPageableQuery();
 
-	void setPageableQuery(PageableQuery pageableQuery);
-
 	List<FixedQuery> getFixedQueries();
 
 	void setFixedQueries(List<FixedQuery> fixedQueries);
 
 	boolean isPageable();
 
-	void setPageable(boolean pageable);
-
 	Integer getSize();
 
-	void setSize(Integer size);
+	void populate(QueryableSectionPopulator populator, Integer from);
 }

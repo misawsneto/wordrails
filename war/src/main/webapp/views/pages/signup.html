@@ -1,0 +1,33 @@
+<div class="center-block w-xxl w-auto-xs p-v-md m-t-lg ">
+  <md-content class="md-background-hue-1 background md-whiteframe-z2">
+     <div class="text-color m text-center">
+      <form name="form" class="text-md w-full">
+        <div class="p" style="padding-bottom: 0">
+          <div class="m-b-md m-t-xs text-md text-u-c font-500">{{'signin_signup.SIGNUP' | translate}}</div>
+          <md-input-container class="w-full m-b-0 m-t-sm">
+            <label for="testInput">{{'titles.NAME' | translate}}</label>
+            <input type="text" id="testInput" ng-model="person.username" md-autofocus>
+          </md-input-container>
+          <md-input-container class="w-full m-b-0 m-t-sm">
+            <label for="testInput">{{'titles.USERNAME' | translate}}</label>
+            <input type="text" id="testInput" ng-model="person.username">
+          </md-input-container>
+          <md-input-container class="w-full m-b-0 m-t-sm">
+            <label for="testInput">{{'titles.EMAIL' | translate}}</label>
+            <input type="email" id="testInput" ng-model="person.email">
+          </md-input-container>
+          <md-input-container class="w-full m-b-0 m-t-sm">
+            <label for="testInput">{{'titles.PASSWORD' | translate}}</label>
+            <input type="text" id="testInput" ng-model="person.username">
+          </md-input-container>
+        </div>
+        <md-button type="submit" class="md-accent m-b" translate="signin_signup.SIGNUP"></md-button>
+      </form>
+      <div class="text-center">
+        <div>{{'signin_signup.HAVE_AN_ACCOUNT' | translate}}?
+        <button class="md-btn" ui-sref="access.signin" translate="signin_signup.SIGNIN">Entrar</button>
+        </div>
+      </div>
+    </div>
+  </md-content>
+</div>

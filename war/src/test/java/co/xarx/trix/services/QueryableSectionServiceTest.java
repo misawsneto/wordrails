@@ -4,7 +4,6 @@ import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.Identifiable;
 import co.xarx.trix.domain.page.Block;
 import co.xarx.trix.domain.page.QueryableListSection;
-import co.xarx.trix.domain.page.QueryableSection;
 import co.xarx.trix.domain.page.query.*;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
 import com.google.common.collect.Lists;
@@ -25,7 +24,7 @@ public class QueryableSectionServiceTest {
 	private static final Integer FIXED_ID_BASE = 100;
 
 	QueryableSectionService service;
-	QueryableSection section;
+	QueryableListSection section;
 	List<Integer> fixedIndexes = Lists.newArrayList(2, 8, 13, 1, 15);
 	Integer iFixed;
 

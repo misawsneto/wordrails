@@ -7,12 +7,14 @@ import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.MobileApi;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
 
 @Component
+@NoArgsConstructor
 public class MobileResource extends AbstractResource implements MobileApi {
 
 	private AuthService authService;

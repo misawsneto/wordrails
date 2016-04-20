@@ -49,11 +49,6 @@ public interface StationsApi {
 	List<Page> getPages(@PathParam("stationId") Integer stationId) throws IOException;
 
 	@PUT
-	@Path("/{stationId}/setDefaultPerspective")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	Response setDefaultPerspective(@PathParam("stationId") Integer stationId, @FormParam("perspectiveId") Integer perspectiveId);
-
-	@PUT
 	@Path("/{stationId}/setMainStation")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -62,4 +57,14 @@ public interface StationsApi {
 	@GET
 	@Path("/stats/roles/count")
 	ContentResponse<Integer> countRolesByStationIds(@QueryParam("stationIds") List<Integer> stationIds, @QueryParam("q") String q);
+
+	@DELETE
+	@Path("/{stationId}/force")
+	public Response forceDelete(@PathParam("stationId") Integer stationId);
+
+	@PUT
+	@Path("/{stationId}/setDefaultPerspective")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response setDefaultPerspective(@PathParam("stationId") Integer stationId, @FormParam("perspectiveId")
+			Integer perspectiveId);
 }

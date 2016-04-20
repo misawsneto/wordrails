@@ -17,6 +17,7 @@ import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.NetworkApi;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NoArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Component
+@NoArgsConstructor
 public class NetworkResource extends AbstractResource implements NetworkApi {
 
 	@Autowired

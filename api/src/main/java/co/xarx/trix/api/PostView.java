@@ -78,12 +78,16 @@ public class PostView implements Serializable, Identifiable {
 	public String featuredVideoHash;
 	public String featuredAudioHash;
 
+//	public VideoDto video;
+
 	public Double lat;
 	public Double lng;
 
 	public String subheading;
 	public Date scheduledDate;
 	public boolean notify;
+
+	public ImageView featuredImage;
 
 	@Override
 	public Serializable getId() {

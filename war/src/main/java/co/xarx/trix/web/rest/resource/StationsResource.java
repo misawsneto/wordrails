@@ -6,6 +6,7 @@ import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.domain.page.*;
+import co.xarx.trix.eventhandler.StationEventHandler;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.QueryableSectionService;
 import co.xarx.trix.services.security.AuthService;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
@@ -35,8 +38,10 @@ public class StationsResource extends AbstractResource implements StationsApi {
 	private StationPerspectiveRepository stationPerspectiveRepository;
 	@Autowired
 	private QueryPersistence queryPersistence;
+
 	@Autowired
 	private PageRepository pageRepository;
+
 	@Autowired
 	private QueryableSectionService queryableSectionService;
 
@@ -79,27 +84,14 @@ public class StationsResource extends AbstractResource implements StationsApi {
 		for (Page page : pages) {
 			page.getSections().values().stream().filter(section -> section != null).filter(section -> section instanceof QueryableSection).forEach(section -> {
 				Map<Integer, Block> blocks = queryableSectionService.fetchQueries((QueryableListSection) section, 0);
-				if (section instanceof ListSection) {
-					((ListSection) section).setBlocks(blocks);
-				}
+//				if (section instanceof ListSection) {
+					((QueryableListSection) section).blocks.putAll(blocks);
+//				}
 			});
 		}
 
 
 		return Lists.newArrayList(pages);
-	}
-
-	@Override
-	public Response setDefaultPerspective(Integer stationId, Integer perspectiveId) {
-		Person person = authProvider.getLoggedPerson();
-		Station station = stationRepository.findOne(stationId);
-
-		StationRole sRole = stationRolesRepository.findByStationAndPersonId(station, person.id);
-
-		if ((person.networkAdmin || sRole.admin) && stationPerspectiveRepository.findOne(perspectiveId).stationId.equals(station.id)) {
-			queryPersistence.updateDefaultPerspective(station.id, perspectiveId);
-			return Response.status(Status.OK).build();
-		} else return Response.status(Status.UNAUTHORIZED).build();
 	}
 
 	@Override
@@ -130,5 +122,36 @@ public class StationsResource extends AbstractResource implements StationsApi {
 			throw new co.xarx.trix.exception.BadRequestException();
 		}
 		return resp;
+	}
+
+	private
+	@Autowired
+	StationEventHandler stationEventHandler;
+
+	@Override
+	public Response setDefaultPerspective(@PathParam("stationId") Integer stationId, @FormParam("perspectiveId") Integer perspectiveId) {
+		Person person = authProvider.getLoggedPerson();
+		Station station = stationRepository.findOne(stationId);
+
+		StationRole sRole =  stationRolesRepository.findByStationAndPersonId(station, person.id);
+
+		if ((person.networkAdmin || sRole.admin) && stationPerspectiveRepository.findOne(perspectiveId).stationId.equals(station.id)) {
+			queryPersistence.updateDefaultPerspective(station.id, perspectiveId);
+			return Response.status(Status.OK).build();
+		} else return Response.status(Status.UNAUTHORIZED).build();
+	}
+
+	@Override
+	public Response forceDelete(@PathParam("stationId") Integer stationId) {
+		Person person = authProvider.getLoggedPerson();
+		Station station = stationRepository.findOne(stationId);
+
+		StationRole sRole =  stationRolesRepository.findByStationAndPersonId(station, person.id);
+
+		if (sRole.admin) {
+			stationEventHandler.handleBeforeDelete(station);
+			stationRepository.delete(station.id);
+			return Response.status(Status.OK).build();
+		} else return Response.status(Status.UNAUTHORIZED).build();
 	}
 }

@@ -8,6 +8,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import java.net.URL;
 
 @Slf4j
 @Component
+@NoArgsConstructor
 public class AmazonResource extends AbstractResource implements AmazonApi {
 
 	@Value("${trix.amazon.key}")
@@ -27,6 +29,8 @@ public class AmazonResource extends AbstractResource implements AmazonApi {
 	String accessSecretKey;
 	@Value("${trix.amazon.bucket}")
 	String publicBucket;
+
+
 
 	private AmazonS3 s3() {
 		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, accessSecretKey);

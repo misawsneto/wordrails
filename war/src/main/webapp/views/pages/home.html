@@ -1,0 +1,748 @@
+<div class="m-b">
+  <div class="container">
+  <div masonry class="m-b pos-rlt animated fadeIn" reload-on-show ng-show="app.termPerspectiveView">
+    <div class="col-lg-4 col-sm-6 col-xs-12 masonry-brick" ng-repeat="cell in app.termPerspectiveView.homeRow.cells">
+        <!--  Vertical News Box -->
+        <div class="news md-whiteframe-z1 vertical z-depth-1 card">
+            <div class="">
+              <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
+              ng-style="app.getImagesPerson(cell.postView, cell.postView.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(cell.postView)}">
+                <i ng-if="!app.hasAuthorImage(cell.postView)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
+              </div>
+              <div class="inline p-t v-t font-500">
+              {{cell.postView.authorName}}
+              </div>
+              <div class="inline p-t v-t pull-right p-r-sm text-sm" style="opacity: 0.6" am-time-ago="cell.postView.date">
+              </div>
+            </div>
+            <!-- News Image -->
+            <div class="news-image o-f-h">
+                <div ng-if="app.hasImage(cell.postView);" ng-style="app.getBackgroundImage(cell.postView, 'medium')" class="zoom-hover h-full bg-cover" style="min-height: 230px;">
+                    <!-- <img class="responsive-img materialboxed" ng-src="{{cell.postView | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
+                </div>
+            </div>
+            <!-- News Description -->
+            <div class="news-description p-t p-b-sm p-h">
+                <div class="news-title" style="min-height: 66px"><a clamp="3"> {{::cell.postView.title}} </a></div>
+                <div class="news-content"><p clamp="4">{{::cell.postView.snippet}}</p></div>
+                <div class="news-comment-shares z-index-2">
+                    <md-divider class="m-b-sm m-t"></md-divider>
+                    <div class="p-b-xs">
+                        <md-button ng-click="cell.recommend = !cell.recommend" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="cell.recommend ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': cell.recommend}"><i class="mdi2-heart i-16"></i></md-button>
+
+                        <md-button ng-click="cell.bookmark = !cell.bookmark" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="cell.bookmark ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': cell.bookmark}"><i class="mdi2-bookmark i-16"></i></md-button>
+                        
+                        <md-button ng-click="showSharesPostDialog(cell)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+                        
+                        <md-button style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="loadComments(cell);"><i class="mdi2-comment i-16"></i></md-button>
+                    </div>
+                </div>
+                <div class="news-comment z-index-1 animated fadeInDown" ng-if="cell.showComments" style="margin:6px -16px -8px -16px;">
+                  <md-divider class=""></md-divider>
+
+                  <div class="p inline w-full">
+                    <div class="pull-left user-avatar rounded w-36 bg-white pos-rlt background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}" ng-class="{'md-primary-hue-1': !app.userImageSmall}">
+                      <i ng-if="!app.userImageSmall" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
+                    </div>
+
+                    <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-button not-trans m-0 md-icon-button pull-right md-accent-default background">
+                      <i class="mdi2-send i-20"></i>
+                    </md-button>
+                    <div class="m-l-xxl m-r-xxl"> 
+                      <textarea msd-elastic class="no-border p-t-sm" ng-keydown="reloadMasonry()" ng-change="checkEmptyComment(cell.comment);" ng-model="cell.comment" style="resize: none;" placeholder="{{'titles.COMMENT' | translate }}"></textarea>
+                    </div>
+                  </div>
+
+                </div>
+                <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="cell.loadingComments" md-mode="indeterminate"></md-progress-linear>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="container">
+  <div class="row m-b">
+      <div class="col l12 col m12 col s12">
+          <!-- blockquote -->
+          <div class="blockquote z-depth-1 md-accent-default background">
+              <span>Hot News:</span> Nullam Quies ante. rhoncus augue pharetra sed. Mauris tincidunt, nunc vitae tristique porta, nisi arcu pulvinar enim, in pretium mi ex quis felis. Integer pharetra sit amet ligula sit amet porttitor. Praesent condimentum augue ut ornare tempor. 
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row m-b">
+      <div class="col l6 col m6 col s12">
+          <!-- News Blog Box -->
+          <div class="news-blog z-depth-1">
+              <!-- News Blog Image -->
+              <div class="image">
+                  <img class="responsive-img" src="http://placehold.it/350x235?text=News Image" alt="news Image">
+              </div>
+              <!-- News Blog Category -->
+              <div class="news-category">
+                  <span class="purple">Life</span>
+                  <!-- Dropdown -->
+                  <div class="news-dropdown">
+                      <a class="dropdown-button" href="javascript:void(0);" data-activates="dropdown1"><i class="fa fa-ellipsis-v "></i></a>
+                      <ul id="dropdown1" class="dropdown-content">
+                          <li><a href="javascript:void(0);">Option 1</a></li>
+                          <li><a href="javascript:void(0);">Option 1</a></li>
+                          <li><a href="javascript:void(0);">Option 1</a></li>
+                      </ul>
+                  </div>
+              </div>
+              <!-- News Blog Description -->
+              <div class="news-description">
+                  <div class="news-time text-white">
+                      21 min ago 
+                  </div>
+                  <div class="news-title"> <a href="javascript:void(0);"> Netanyachu's Likud Party <br> Sweeps to Israel election. </a></div>
+                  <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus <br> non rutrum. Integer ut nisi risus In dapibus ac tellus.</p></div>
+              </div>
+          </div>
+      </div>
+      <div class="col l6 col m6 col s12">
+          <!-- News Blog Box -->
+          <div class="news-blog z-depth-1">
+              <!-- News Blog Video -->
+              <div class="video-container no-controls">
+                  <iframe src="//www.youtube.com/embed/Q8TXgCzxEnw?rel=0;autohide=1" allowfullscreen></iframe>
+              </div>
+              <!-- News Blog Category -->
+              <div class="news-category">
+                  <span class="orange">Video</span>
+                  <!-- Dropdown -->
+                  <div class="news-dropdown">
+                      <a class="dropdown-button" href="javascript:void(0);" data-activates="dropdown2"><i class="fa fa-ellipsis-v "></i></a>
+                      <ul id="dropdown2" class="dropdown-content">
+                          <li><a href="javascript:void(0);">Option 1</a></li>
+                          <li><a href="javascript:void(0);">Option 1</a></li>
+                          <li><a href="javascript:void(0);">Option 1</a></li>
+                      </ul>
+                  </div>
+              </div>
+              <!-- News Blog Description -->
+              <div class="news-description">
+                  <div class="news-time text-white">
+                      21 min ago 
+                  </div>
+                  <div class="news-title"> <a href="javascript:void(0);"> Party Sweepsto Israel <br> election Victory </a></div>
+                  <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac <br> tellus non rutrum. Integer ut nisi risus.</p></div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row m-b">
+      <div class="col l6 col m6 col s12">
+          <!-- News Blog Solid Box -->
+          <div class="news-blog md-primary-default background z-depth-1">
+              <!-- News Blog Category -->
+              <div class="news-category">
+                    <span class="md-accent-default background">More</span>
+                    <!-- Dropdown -->
+                      <div class="news-dropdown">
+                          <a class="dropdown-button" href="javascript:void(0);" data-activates="dropdown3"><i class="fa fa-ellipsis-v "></i></a>
+                          <ul id="dropdown3" class="dropdown-content">
+                              <li><a href="javascript:void(0);">Option 1</a></li>
+                              <li><a href="javascript:void(0);">Option 1</a></li>
+                              <li><a href="javascript:void(0);">Option 1</a></li>
+                          </ul>
+                      </div>
+              </div>
+              <!-- News Blog Description -->
+              <div class="news-description center-align">
+                  <div class="quote"><i class="fa fa-quote-left" md-style="{'color': 'accent.300'}"></i></div>
+                  <div class="news-title"> <a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna et bibendum leo metus vel magna.  </a></div>
+                  <div class="news-content"><p>President of ThemeLeague <br> Dark Waider</p></div>
+              </div>
+          </div>
+      </div>
+      <div class="col l6 col m6 col s12">
+          <!-- News Blog Box -->
+          <div class="news-blog z-depth-1">
+              <!-- News Blog Image -->
+              <div class="image">
+                  <img class="responsive-img" src="http://placehold.it/350x235?text=News Image" alt="news Image">
+              </div>
+              <!-- News Blog Category -->
+              <div class="news-category">
+                    <span class="green">Money</span>
+                    <!-- Dropdown -->
+                      <div class="news-dropdown">
+                          <a class="dropdown-button" href="javascript:void(0);" data-activates="dropdown4"><i class="fa fa-ellipsis-v "></i></a>
+                          <ul id="dropdown4" class="dropdown-content">
+                              <li><a href="javascript:void(0);">Option 1</a></li>
+                              <li><a href="javascript:void(0);">Option 1</a></li>
+                              <li><a href="javascript:void(0);">Option 1</a></li>
+                          </ul>
+                      </div>
+              </div>
+              <!-- News Blog Description -->
+              <div class="news-description">
+                  <div class="news-time" md-style="{'background-color': 'accent.A100'}">
+                      21 min ago 
+                  </div>
+                  <div class="news-title"> <a href="javascript:void(0);">Party Sweepsto Israel <br> election Victory</a></div>
+                  <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus <br> ac tellus non rutrum. Integer.</p></div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row m-b">
+      <div class="col l6 col m12 col s12">
+          <div class="z-depth-1">
+              <!-- Horizontal News Box -->
+              <div class="news horizontal">
+                  <div class="col l4 col m4 col s12 no-padding">
+                      <!-- News Image -->
+                      <div class="news-image">
+                          <img src="http://placehold.it/350x360?text=News Image" class="responsive-img" alt="news Image">
+                      </div>
+                  </div>
+                  <div class="col l8 col m8 col s12 no-padding">
+                      <!-- News  Description -->
+                      <div class="news-description">
+                          <div class="news-time">
+                              <i class="fa fa-clock-o"></i> 9 min ago 
+                          </div>
+                          <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna. </a></div>
+                          <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus. Mauris bibendum semper quam.</p></div>
+                      </div>
+                  </div>
+              </div>
+              
+              <!-- Horizontal News Box -->
+              <div class="news horizontal no-border">
+                  <div class="col l4 col m4 col s12 no-padding">
+                      <!-- News Image -->
+                      <div class="news-image">
+                          <img src="http://placehold.it/350x360/f5f5f5?text=News Image" class="responsive-img" alt="news Image">
+                      </div>
+                  </div>
+                  <div class="col l8 col m8 col s12 no-padding">
+                      <!-- News Description -->
+                      <div class="news-description">
+                          <div class="news-time">
+                              <i class="fa fa-clock-o"></i> 9 min ago
+                          </div>
+                          <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna.</a></div>
+                          <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus. Mauris bibendum semper quam.</p></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      
+      <div class="col l3 col m6 col s12">
+          <!-- Vertical News Box -->
+          <div class="news vertical z-depth-1">
+              <!-- News Image -->
+              <div class="news-image">
+                  <img src="http://placehold.it/350x235?text=News Image" class="responsive-img" alt="news Image">
+              </div>
+              <!-- News Description -->
+              <div class="news-description">
+                  <div class="news-time">
+                      <i class="fa fa-clock-o"></i> 9 min ago 
+                  </div>
+                  <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur. </a></div>
+                  <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus.</p></div>
+              </div>
+          </div>
+      </div>
+      
+      <div class="col l3 col m6 col s12">
+          <!-- Vertical News Box -->
+          <div class="news vertical z-depth-1">
+              <!-- News Image -->
+              <div class="news-image">
+                  <img src="http://placehold.it/350x235?text=News Image" class="responsive-img" alt="news Image">
+              </div>
+              <!-- News Description -->
+              <div class="news-description">
+                  <div class="news-time">
+                      <i class="fa fa-clock-o"></i> 9 min ago 
+                  </div>
+                  <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna leo metus vel magna. </a></div>
+                  <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum Integer.</p></div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="container">
+  <section class="section">
+      <div class="row m-b">
+          <div class="col l3 col m6 col s12">
+              <div class="col l12 col m12 col s12 no-padding">
+                  <!--  Vertical News Box -->
+                  <div class="news vertical z-depth-1 margin-bottom-20">
+                      <!-- News Image -->
+                      <div class="news-image">
+                          <img src="http://placehold.it/350x235?text=News Image" class="responsive-img" alt="news Image">
+                      </div>
+                      <!-- News Description -->
+                      <div class="news-description">
+                          <div class="news-time">
+                              <i class="fa fa-clock-o"></i> 9 min ago 
+                          </div>
+                          <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur. </a></div>
+                          <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus.</p></div>
+                      </div>
+                  </div>
+              </div>
+              <div class="col l12 col m12 col s12 no-padding">
+                  <!-- Vertical News Box -->
+                  <div class="news vertical z-depth-1">
+                      <!-- News Image -->
+                      <div class="news-image">
+                          <img src="http://placehold.it/350x235?text=News Image" class="responsive-img" alt="news Image">
+                      </div>
+                      <!-- News Description -->
+                      <div class="news-description">
+                          <div class="news-time">
+                              <i class="fa fa-clock-o"></i> 9 min ago 
+                          </div>
+                          <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna leo metus vel magna. </a></div>
+                          <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus.</p></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col l6 col m6 col s12">
+              <!-- Vertical News Box -->
+              <div class="news vertical z-depth-1">
+                  <!-- News Image -->
+                  <div class="news-image">
+                      <img src="http://placehold.it/350x236?text=News Image" class="responsive-img" alt="news Image">
+                  </div>
+                  <!-- News Description -->
+                  <div class="news-description">
+                      <div class="news-time">
+                          <i class="fa fa-clock-o"></i> 9 min ago 
+                      </div>
+                      <div class="news-title large-font"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna leo metus vel magna. </a></div>
+                      <div class="news-content">
+                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur erat velit, tristique eu molestie vitae, malesuada eget est. Vestibulum ut aliquam libero. Nunc nec risus dolor. Aliquam pellentesque eget lectus vel lobortis. Donec gravida nec tortor ac semper. Aliquam dapibus dolor et metus feugiat porta. Sed in mauris lorem. Quisque ultrices nulla dui. Praesent sollicitudin consectetur tincidunt.</p>
+                          <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In lobortis dignissim eros sed convallis. Donec et quam eros. Suspendisse a enim sit amet nisl accumsan malesuada. Maecenas sodales velit at molestie blandit. Nullam maximus tellus ante, vitae finibus lorem luctus vel. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+                          
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <div class="col l3 col m12 col s12 no-padding">
+              <div class="col l12 col m6 col s12">
+                  <!-- Vertical News Box -->
+                  <div class="news vertical z-depth-1 margin-bottom-20">
+                      <!-- News Image -->
+                      <div class="news-image">
+                          <img src="http://placehold.it/350x235?text=News Image" class="responsive-img" alt="news Image">
+                      </div>
+                      <!-- News Description -->
+                      <div class="news-description">
+                          <div class="news-time">
+                              <i class="fa fa-clock-o"></i> 9 min ago 
+                          </div>
+                          <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur. </a></div>
+                          <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus.</p></div>
+                      </div>
+                  </div>
+              </div>
+              <div class="col l12 col m6 col s12">
+                  <!-- Vertical News Box -->
+                  <div class="news vertical z-depth-1">
+                      <!-- News Image -->
+                      <div class="news-image">
+                          <img src="http://placehold.it/350x235?text=News Image" class="responsive-img" alt="news Image">
+                      </div>
+                      <!-- News Description -->
+                      <div class="news-description">
+                          <div class="news-time">
+                              <i class="fa fa-clock-o"></i> 9 min ago 
+                          </div>
+                          <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna leo metus vel magna. </a></div>
+                          <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus.</p></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+</div>
+
+<div class="container">
+  <section class="section">
+      <div class="row m-b">
+          <div class="col l9 col m12 col s12">
+              <!-- Thumbnail Slider -->
+              <div class="thumbnail-slider z-depth-1">
+                  <!-- Thumbnail Slider Category -->
+                  <ul class="tabs">
+                      <li class="tab"><a class="active" href="#News-category1">March Sadness</a></li>
+                      <li class="tab"><a href="#News-category2">Snapshot</a></li>
+                      <li class="tab"><a href="#News-category3">Terrorist Attack Donbass</a></li>
+                      <li class="tab"><a href="#News-category4">Prince Charles and Camilla visit the U.S.</a></li>
+                      <li class="tab"><a href="#News-category5">Your Take: Readers Photos of the Aurora Borealis</a></li>
+                  </ul>
+                  <!-- Thumbnail Slider 1 -->
+                  <div id="News-category1">
+                      <div class="camera_wrap camera_magenta_skin" id="camera_wrap_1">
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Thumbnail Slider 2 -->
+                  <div id="News-category2">
+                      <div class="camera_wrap camera_magenta_skin" id="camera_wrap_2">
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Thumbnail Slider 3 -->
+                  <div id="News-category3">
+                       <div class="camera_wrap camera_magenta_skin" id="camera_wrap_3">
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Thumbnail Slider 4 -->
+                  <div id="News-category4">
+                       <div class="camera_wrap camera_magenta_skin" id="camera_wrap_4">
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Thumbnail Slider 5 -->
+                  <div id="News-category5">
+                       <div class="camera_wrap camera_magenta_skin" id="camera_wrap_5">
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                          <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
+                              <div class="camera_caption fadeFromBottom"></div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col l3 col m12 col s12">
+              <!-- News Sidebar -->
+              <div class="sidbar-box z-depth-1">
+                  <div class="sidebar-title">New Stories</div>
+                  <div class="news-sidebar">
+                      <div class="news-box">
+                          <!-- News Sidebar Image -->
+                          <div class="image">
+                              <img src="http://placehold.it/350x235?text=News Image" alt="news Image">
+                          </div>
+                          <!-- News Sidebar Detail -->
+                          <div class="news-detail">
+                              <div class="news-category">
+                                  <a href="javascript:void(0);">World | 21 min ago </a>
+                              </div>
+                              <div class="news-title">
+                                  <a href="javascript:void(0);"> 5 things you need to know wenesday</a>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="news-box">
+                          <!-- News Sidebar Image -->
+                          <div class="image">
+                              <img src="http://placehold.it/350x235?text=News Image" alt="news Image">
+                          </div>
+                          <!-- News Sidebar Detail -->
+                          <div class="news-detail">
+                              <div class="news-category">
+                                  <a href="javascript:void(0);">Tech | 21 min ago </a>
+                              </div>
+                              <div class="news-title">
+                                  <a href="javascript:void(0);"> Auti-austeriry Protest Turns Violent In Germany</a>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="news-box">
+                        <!-- News Sidebar Image -->
+                          <div class="image">
+                              <img src="http://placehold.it/350x235?text=News Image" alt="news Image">
+                          </div>
+                          <!-- News Sidebar Detail -->
+                          <div class="news-detail">
+                              <div class="news-category">
+                                  <a href="javascript:void(0);">Money | 21 min ago </a>
+                              </div>
+                              <div class="news-title">
+                                  <a href="javascript:void(0);"> Flying Cars: The near Future, From SXSW</a>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="news-box">
+                        <!-- News Sidebar Image -->
+                          <div class="image">
+                              <img src="http://placehold.it/350x235?text=News Image" alt="news Image">
+                          </div>
+                          <!-- News Sidebar Detail -->
+                          <div class="news-detail">
+                              <div class="news-category">
+                                  <a href="javascript:void(0);">Life | 21 min ago </a>
+                              </div>
+                              <div class="news-title">
+                                  <a href="javascript:void(0);"> No end in Signt for California Drought</a>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="news-box">
+                          <!-- News Sidebar Image -->
+                          <div class="image">
+                              <img src="http://placehold.it/350x235?text=News Image" alt="news Image">
+                          </div>
+                          <!-- News Sidebar Detail -->
+                          <div class="news-detail">
+                              <div class="news-category">
+                                  <a href="javascript:void(0);">World | 21 min ago </a>
+                              </div>
+                              <div class="news-title">
+                                  <a href="javascript:void(0);"> Boehner Coup by Conservatives is Unlikely</a>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="news-box">
+                          <!-- News Sidebar Image -->
+                          <div class="image">
+                              <img src="http://placehold.it/350x235?text=News Image" alt="news Image">
+                          </div>
+                          <!-- News Sidebar Detail -->
+                          <div class="news-detail">
+                              <div class="news-category">
+                                  <a href="javascript:void(0);">Travel | 21 min ago </a>
+                              </div>
+                              <div class="news-title">
+                                  <a href="javascript:void(0);"> Market Reaction to fed rate talk: 3 scenarious</a>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+</div>
+</div>
+
+
+<script type="text/ng-template" id="social-share.html">
+    <md-dialog-content class="md-background-hue-1 background p-md">
+      <div class="m-b-md text-md font-500 text-center text-u-c">
+        {{'titles.SHARE' | translate}}
+      </div>
+      <div class="inline w">
+        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
+            <md-button class="md-fab md-mini md-primary inline" style="background: #3B5999" aria-label="Use Android">
+              <i class="mdi2-facebook i-24"></i>
+            </md-button>
+            <div class="font-500 text-md inline m-r">Facebook</div>
+        </div>
+        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
+            <md-button class="md-fab md-mini md-primary" style="background: #5EA9DD" aria-label="Use Android">
+              <i class="mdi2-twitter i-24"></i>
+            </md-button>
+            <div class="font-500 text-md inline m-r">Twitter</div>
+        </div>
+      </div>
+      <div class="inline w">
+        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
+            <md-button class="md-fab md-mini md-primary" style="background: #DC4A38" aria-label="Use Android">
+              <i class="mdi2-google-plus i-24"></i>
+            </md-button>
+            <div class="font-500 text-md inline m-r">Google+</div>
+        </div>
+        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
+            <md-button class="md-fab md-mini md-primary" style="background: #0177B5" aria-label="Use Android">
+              <i class="mdi2-linkedin i-24"></i>
+            </md-button>
+            <div class="font-500 text-md inline m-r">LinkedIn</div>
+        </div>
+      </div>
+    </md-dialog-content>        
+</script>

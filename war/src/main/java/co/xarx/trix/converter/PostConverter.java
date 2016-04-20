@@ -1,8 +1,8 @@
 package co.xarx.trix.converter;
 
-import co.xarx.trix.api.v2.CategoryData;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.TermView;
+import co.xarx.trix.api.v2.CategoryData;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.PostRepository;
@@ -80,8 +80,8 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			}
 
 
-			postView.authorImageUrl = post.author.imageUrl;
-			postView.authorCoverUrl = post.author.coverUrl;
+//			postView.authorImageUrl = post.author.imageUrl;
+//			postView.authorCoverUrl = post.author.coverUrl;
 			postView.authorId = post.author.id;
 			postView.authorEmail = post.author.email;
 			postView.authorTwitter = post.author.twitterHandle;
@@ -90,6 +90,18 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.terms = getTermViews(post.terms);
 		postView.externalFeaturedImgUrl = post.externalFeaturedImgUrl;
 		postView.externalVideoUrl = post.externalVideoUrl;
+
+		postView.featuredAudioHash = post.getFeaturedAudioHash();
+		postView.featuredVideoHash = post.getFeaturedVideoHash();
+
+//		Video video = post.getFeaturedVideo();
+//		if(video == null) {
+//			postView.video = new VideoDto();
+//			postView.video.identifier = video.identifier;
+//			postView.video.provider = video.identifier;
+//			postView.video.id = video.id;
+//		}
+
 		postView.readTime = post.readTime;
 		postView.state = post.state;
 		postView.scheduledDate = post.scheduledDate;

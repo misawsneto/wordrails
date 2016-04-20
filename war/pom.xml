@@ -449,6 +449,10 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.jcodec</groupId>
+			<artifactId>jcodec</artifactId>
+		</dependency>
 
 	</dependencies>
 </project>

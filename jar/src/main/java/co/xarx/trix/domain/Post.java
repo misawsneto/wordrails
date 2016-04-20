@@ -4,10 +4,10 @@ import co.xarx.trix.annotation.SdkInclude;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -93,14 +93,13 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Image featuredImage;
 
-	@RestResource(exported = false)
-	@OneToMany
-	@JoinTable(
-			name="post_video",
-			joinColumns = @JoinColumn( name="post_id"),
-			inverseJoinColumns = @JoinColumn( name="video_id")
-	)
-	public Set<Video> videos;
+	@SdkInclude
+	@ManyToOne(fetch = FetchType.EAGER)
+	public Video featuredVideo;
+
+	@SdkInclude
+	@ManyToOne(fetch = FetchType.EAGER)
+	public Audio featuredAudio;
 
 	@SdkInclude
 	@NotNull
@@ -165,8 +164,25 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Deprecated
 	public String imageTitleText;
 
+	@Getter(AccessLevel.NONE)
 	public String featuredVideoHash;
+
+	@Getter(AccessLevel.NONE)
 	public String featuredAudioHash;
+
+	public String getFeaturedVideoHash(){
+		if(featuredVideoHash != null)
+			return featuredVideoHash;
+
+		return featuredVideo != null ? (featuredVideo.file != null ? featuredVideo.file.hash : null) : null;
+	}
+
+	public String getFeaturedAudioHash(){
+		if(featuredAudioHash != null)
+			return featuredAudioHash;
+
+		return featuredAudio != null ? (featuredAudio.file != null ? featuredAudio.file.hash : null) : null;
+	}
 
 	@PrePersist
 	public void onCreate() {
