@@ -1,7 +1,9 @@
 package co.xarx.trix.domain;
 
 
+import co.xarx.trix.annotation.SdkExclude;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.javers.core.metamodel.annotation.DiffIgnore;
@@ -66,6 +68,13 @@ public class Term extends BaseEntity implements Serializable{
 
 	public Integer taxonomyId;
 	public String taxonomyName;
+
+	public String color;
+
+	@SdkExclude
+	@ManyToOne(cascade=CascadeType.MERGE)
+	@JsonIgnore
+	private Picture image;
 
 	@PrePersist
 	void onCreate(){

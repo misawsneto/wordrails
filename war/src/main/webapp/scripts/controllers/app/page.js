@@ -47,6 +47,16 @@ app.controller('PageCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 			})
 		}
 
+		// sidenav toggle
+		$scope.toggleComments = buildToggler('post-comments');
+
+		function buildToggler(navID) {
+	      return function() {
+	        $mdSidenav(navID)
+	          .toggle()
+	      }
+	    }
+
 }]);
 
 var pageCtrl = null;

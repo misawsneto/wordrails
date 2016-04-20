@@ -5,15 +5,14 @@
         <!--  Vertical News Box -->
         <div class="news md-whiteframe-z1 vertical z-depth-1 card">
             <div class="">
-              <div class="inline md-whiteframe-z1 m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
+              <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
               ng-style="app.getImagesPerson(cell.postView, cell.postView.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(cell.postView)}">
                 <i ng-if="!app.hasAuthorImage(cell.postView)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
               </div>
               <div class="inline p-t v-t font-500">
               {{cell.postView.authorName}}
               </div>
-              <div class="inline p-t v-t pull-right p-r-sm">
-              {{cell.postView.date | fromNow}}
+              <div class="inline p-t v-t pull-right p-r-sm text-sm" style="opacity: 0.6" am-time-ago="cell.postView.date">
               </div>
             </div>
             <!-- News Image -->
@@ -50,7 +49,7 @@
                       <i class="mdi2-send i-20"></i>
                     </md-button>
                     <div class="m-l-xxl m-r-xxl"> 
-                      <textarea msd-elastic class="text-md no-border p-t-sm" ng-keydown="reloadMasonry()" ng-change="checkEmptyComment(cell.comment);" ng-model="cell.comment" style="resize: none;" placeholder="Comentário"></textarea>
+                      <textarea msd-elastic class="no-border p-t-sm" ng-keydown="reloadMasonry()" ng-change="checkEmptyComment(cell.comment);" ng-model="cell.comment" style="resize: none;" placeholder="{{'titles.COMMENT' | translate }}"></textarea>
                     </div>
                   </div>
 

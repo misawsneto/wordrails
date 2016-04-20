@@ -75,6 +75,7 @@ public class Image extends BaseEntity implements Serializable {
 		POST(Size.MEDIUM, Size.LARGE),
 		COVER(Size.MEDIUM, Size.LARGE),
 		PROFILE_PICTURE(Size.SMALL, Size.MEDIUM),
+		CATEGORY(Size.MEDIUM, Size.LARGE),
 		LOGO(Size.SMALL, Size.MEDIUM);
 
 		private Set<Size> sizes; //height & width
