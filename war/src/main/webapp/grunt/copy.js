@@ -79,7 +79,8 @@ module.exports = {
                     "angular-materialize/**",
                     "angular-moment/angular-moment.min.js",
                     'perfect-scrollbar/**',
-                    'angular-perfect-scrollbar/src/angular-perfect-scrollbar.js'
+                    'angular-perfect-scrollbar/src/angular-perfect-scrollbar.js',
+                    'angularjs-socialshare/dist/angular-socialshare.min.js'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

@@ -33,6 +33,9 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
     $scope.showStationConfigDialog = function(event){
       $mdDialog.show({
         scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
         preserveScope: true, // do not forget this if use parent scope
         controller: $scope.app.defaultDialog,
         templateUrl: 'station-config-dialog.html',
@@ -98,6 +101,9 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
       $scope.app.stationObj = station;
       $mdDialog.show({
         scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
         preserveScope: true, // do not forget this if use parent scope
         controller: $scope.app.defaultDialog,
         templateUrl: 'station-remove-dialog.html',
@@ -278,6 +284,9 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   	//$scope.app.openSplash('conflicting_person.html')
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
         preserveScope: true, // do not forget this if use parent scope
         controller: DialogController,
         templateUrl: 'conflicting_person.html',
@@ -443,6 +452,9 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
     
       $mdDialog.show({
         scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
         preserveScope: true, // do not forget this if use parent scope
         controller: DialogController,
         templateUrl: 'confirm_delete_person.html',

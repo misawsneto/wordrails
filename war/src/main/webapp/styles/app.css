@@ -8553,7 +8553,3 @@ button,
        -o-transition: background-color 300ms linear, color 300ms linear;
           transition: background-color 300ms linear, color 300ms linear;
 }
-
-.not-trans.md-button:not([disabled]).md-icon-button:hover {
-  background: asdf;
-}

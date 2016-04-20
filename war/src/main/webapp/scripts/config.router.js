@@ -597,7 +597,7 @@ angular.module('app')
                   // }
                   return deferred.promise;
                 },
-                deps:load( ['monospaced.elastic','angularFileUpload','infinite-scroll', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
+                deps:load( ['720kb.socialshare','monospaced.elastic','angularFileUpload','infinite-scroll', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
               },
               url: '',
               views: {
@@ -1019,7 +1019,7 @@ angular.module('app')
           createHomeRoutes();
 
 
-         $stateProvider
+        $stateProvider
         .state('app.search', {
                 url: '/s?q',
                 templateUrl: '/views/pages/search.html',
@@ -1040,7 +1040,7 @@ angular.module('app')
                 // }
                 return deferred.promise;
               },
-              deps:load( ['angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage'] ).deps
+              deps:load( ['angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'perfect_scrollbar'] ).deps
             },
             controller: 'AppDataCtrl'
           })

@@ -180,6 +180,9 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     //$scope.app.openSplash('conflicting_person.html')
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
         preserveScope: true, // do not forget this if use parent scope
         controller: DialogController,
         templateUrl: 'conflicting_person.html',
@@ -304,6 +307,9 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   $scope.bulkChangePermissions = function(ev){
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
         preserveScope: true, // do not forget this if use parent scope
         controller: DialogController,
         templateUrl: 'bulk_change_permissions.html',
@@ -320,6 +326,9 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   $scope.openNoPersonSelected = function(ev){
       $mdDialog.show({
         scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
         preserveScope: true, // do not forget this if use parent scope
         controller: DialogController,
         templateUrl: 'confirm_no_person_selected.html',
@@ -336,6 +345,9 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     $scope.confirmBulkAction = function(ev){
       $mdDialog.show({
         scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
         preserveScope: true, // do not forget this if use parent scope
         controller: DialogController,
         templateUrl: 'confirm_bulk_action.html',

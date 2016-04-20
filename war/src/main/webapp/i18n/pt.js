@@ -75,7 +75,8 @@
 		"SOCIAL_NETWORK_PROFILES": "Perfis de redes sociais",
 		"SOCIAL_NETWORK_IDS": "IDs de aplicativos sociais",
 		"BOOKMARKS": "Minhas leituras",
-		"NOTIFICATIONS": "Notificações"
+		"NOTIFICATIONS": "Notificações",
+		"SHARE": "Compartilhar"
 	},
 	"signin_signup": {
 		"OR": "ou",

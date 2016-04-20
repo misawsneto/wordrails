@@ -166,6 +166,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			templateUrl: 'clear-post-dialog.html',
@@ -191,6 +194,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			template: 	postInfoTemplate,
@@ -357,6 +363,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			template: 	postCropTemplate,
@@ -435,6 +444,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			template: 	postFocuspointTemplate,
@@ -467,6 +479,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			templateUrl: 	'geolocation-dialog.html',
@@ -537,6 +552,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.showVideoDialog = function(){
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			templateUrl: 'video-dialog.html',
@@ -552,6 +570,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.showAudioDialog = function(){
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			templateUrl: 'audio-dialog.html',

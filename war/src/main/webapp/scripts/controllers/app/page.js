@@ -22,6 +22,31 @@ app.controller('PageCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 			}
 		}
 
+		$scope.sendComment = function(cell){
+
+		}
+
+		// --- clear post
+		$scope.showSharesPostDialog = function(event){
+			// show term alert
+			
+			$mdDialog.show({
+				scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
+      	preserveScope: true, // do not forget this if use parent scope
+				controller: $scope.app.defaultDialog,
+				templateUrl: 'social-share.html',
+				parent: angular.element(document.body),
+				targetEvent: event,
+				clickOutsideToClose:true
+				// onComplete: function(){
+
+				// }
+			})
+		}
+
 }]);
 
 var pageCtrl = null;

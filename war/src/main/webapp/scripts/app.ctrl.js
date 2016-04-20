@@ -236,6 +236,14 @@ angular.module('app')
           return ret
         }
 
+        $scope.app.getMaterialColor = function(colorA, hueA){
+          var colorValue = themeProvider._PALETTES[colorA][hueA] ?
+          themeProvider._PALETTES[colorA][hueA].value :
+          themeProvider._PALETTES[colorA]['500'].value;
+
+          return 'rgb('+colorValue.join(',')+')';
+        }
+
         // ---------- /util -------------
 
         // ---------- theming -----------
@@ -591,7 +599,7 @@ angular.module('app')
         })
       }
 
-      $scope.app.signIn = function(person){
+      $scope.app.signIn = function(person, goToHome){
         $scope.app.loading = true;
         trix.login(person.username, person.password).success(function(){
           trix.allInitData().success(function(response){
@@ -616,6 +624,11 @@ angular.module('app')
         // show term alert
         
         $mdDialog.show({
+          scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
+          preserveScope: true, // do not forget this if use parent scope
           controller: $scope.app.defaultDialog,
           templateUrl: 'signin-signup-dialog.html',
           parent: angular.element(document.body),
@@ -691,6 +704,8 @@ angular.module('app')
       $scope.app.goToSearch =function(query){
         $state.go('app.search', {q: query});
       }
+
+      $scope.actionButtonColors = $scope.app.getMaterialColor('myBackground', '700');
       
       appDataCtrl = $scope;
     }

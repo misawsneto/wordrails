@@ -11,6 +11,13 @@ angular.module('app')
           ]
       },
       {
+          name: '720kb.socialshare',
+          module: true,
+          files: [
+            '/libs/angular/angularjs-socialshare/dist/angular-socialshare.min.js',
+          ]
+      },
+      {
           name: 'perfect_scrollbar',
           module: true,
           files: [

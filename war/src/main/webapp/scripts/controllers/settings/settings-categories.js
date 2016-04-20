@@ -18,6 +18,9 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
     $scope.parentCategory = parent;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
         preserveScope: true, // do not forget this if use parent scope
         controller: DialogController,
         templateUrl: 'add_category.html',
@@ -37,6 +40,9 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
     $scope.parentCategory = parent;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
         preserveScope: true, // do not forget this if use parent scope
         controller: DialogController,
         templateUrl: 'delete_category.html',
