@@ -4,6 +4,7 @@ import co.xarx.trix.api.*;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.exception.ConflictException;
+import co.xarx.trix.util.StatsJson;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -157,5 +158,5 @@ public interface PersonsApi {
 	@GET
 	@Path("/me/stats")
 	@PreAuthorize("isAuthenticated()")
-	Response personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException;
+	StatsJson personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException;
 }
