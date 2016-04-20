@@ -12,14 +12,12 @@ import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.services.security.AuthService;
-import co.xarx.trix.util.ReadsCommentsRecommendsCount;
+import co.xarx.trix.util.StatsJson;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.NetworkApi;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.exception.ConstraintViolationException;
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
@@ -412,76 +410,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	}
 
 	@Override
-	public JsonStats networkStats(String date,
-								  String beginning,
-								  Integer postId) throws IOException {
-		if (date == null)
-			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
-
-		org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-
-		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<>();
-		DateTime firstDay = formatter.parseDateTime(date);
-		DateTime beginningDate;
-
-		int dateDiference = 30;
-
-		if (beginning != null && !beginning.isEmpty()){
-			beginningDate = formatter.parseDateTime(date);
-			dateDiference = Days.daysBetween(beginningDate.toLocalDate(), firstDay.toLocalDate()).getDays();
-		}
-
-		// create date slots
-		DateTime lastestDay = firstDay;
-		while (firstDay.minusDays(dateDiference).getMillis() < lastestDay.getMillis()){
-			stats.put(lastestDay.getMillis(), new ReadsCommentsRecommendsCount());
-			lastestDay = lastestDay.minusDays(1);
-		}
-
-		List<Object[]> postReadCounts;
-		List<Object[]> commentsCounts;
-		List<Object[]> generalStatus;
-
-		if (postId != null && postId > 0) {
-			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
-			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
-			generalStatus = postRepository.findPostStats(postId);
-		}else {
-			postReadCounts = postReadRepository.countByDate(firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
-			commentsCounts = commentRepository.countByDate(firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
-			generalStatus = networkRepository.findStats();
-		}
-
-		// check date and map counts
-		Iterator it = stats.entrySet().iterator();
-		while (it.hasNext()){
-			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
-			long key = (Long)pair.getKey();
-			for(Object[] counts: postReadCounts){
-				long dateLong = ((java.sql.Date) counts[0]).getTime();
-				long count = (long) counts[1];
-				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
-					pair.getValue().readsCount = count;
-			}
-		}
-
-		it = stats.entrySet().iterator();
-		while (it.hasNext()){
-			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
-			long key = (Long)pair.getKey();
-			for(Object[] counts: commentsCounts){
-				long dateLong = ((java.sql.Date) counts[0]).getTime();
-				long count = (long) counts[1];
-				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
-					pair.getValue().commentsCount = count;
-			}
-		}
-
-		JsonStats jsonStats = new JsonStats();
-		jsonStats.generalStatsJson = generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null;
-		jsonStats.dateStatsJson = stats;
-		return jsonStats;
+	public StatsJson networkStats(String date, String beginning, Integer postId) throws JsonProcessingException {
+		return statisticsService.networkStats(date, beginning);
 	}
-
-
 }
