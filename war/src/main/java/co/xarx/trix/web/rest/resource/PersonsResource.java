@@ -17,7 +17,6 @@ import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.StationPermissionService;
 import co.xarx.trix.util.Logger;
-import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StatsJson;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.AbstractResource;
@@ -26,8 +25,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.apache.http.util.Asserts;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,7 +40,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class PersonsResource extends AbstractResource implements PersonsApi {
@@ -487,77 +485,74 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 		return Response.status(Status.OK).entity("{\"publicationsCounts\": " + (counts.size() > 0 ? mapper.writeValueAsString(counts.get(0)) : null) + "}").build();
 	}
 
-	public Response personStats(String date, Integer postId) throws JsonProcessingException {
-		StatsJson statsJson;
+	@Override
+	public StatsJson personStats(String date, Integer postId) throws JsonProcessingException {
 		if(postId == null){
 			Person person = authProvider.getLoggedPerson();
-			statsJson = statisticsService.personStats(date, person.getId(), null);
+			return statisticsService.personStats(date, person.getId(), null);
 		} else{
-			statsJson = statisticsService.postStats(date, postId, null);
+			return statisticsService.postStats(date, postId, null);
 		}
-
-		String response = mapper.writeValueAsString(statsJson);
-		return Response.status(Status.OK).entity(response).build();
 	}
 
 //	@Override
-	public Response personStatsOld(String date, Integer postId) throws IOException{
-		if(date == null)
-			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
-
-		org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-
-		Person person = null;
-		if(postId == null || postId == 0) {
-			person = authProvider.getLoggedPerson();
-		}
-
-		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<>();
-		DateTime firstDay = formatter.parseDateTime(date);
-
-		// create date slots
-		DateTime lastestDay = firstDay;
-		while (firstDay.minusDays(30).getMillis() < lastestDay.getMillis()){
-			stats.put(lastestDay. getMillis(), new ReadsCommentsRecommendsCount());
-			lastestDay = lastestDay.minusDays(1);
-		}
-
-		List<Object[]> postReadCounts;
-		List<Object[]> commentsCounts;
-		List<Object[]> generalStatus;
-
-		if(person == null) {
-			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
-			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
-			generalStatus = postRepository.findPostStats(postId);
-		}else {
-			postReadCounts = postReadRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
-			commentsCounts = commentRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
-			generalStatus = personRepository.findPersonStats(person.id);
-		}
-
-		// check date and map counts
-		Iterator it = stats.entrySet().iterator();
-		checkDateAndMapCounts(postReadCounts, it);
-
-		it = stats.entrySet().iterator();
-		checkDateAndMapCounts(commentsCounts, it);
-
-		String generalStatsJson = mapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
-		String dateStatsJson = mapper.writeValueAsString(stats);
-		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
-	}
-
-	private void checkDateAndMapCounts(List<Object[]> countList, Iterator it) {
-		while (it.hasNext()){
-			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
-			long key = (Long)pair.getKey();
-			for(Object[] counts: countList){
-				long dateLong = ((java.sql.Date) counts[0]).getTime();
-				long count = (long) counts[1];
-				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
-					pair.getValue().commentsCount = count;
-			}
-		}
-	}
+//	public Response personStatsOld(String date, Integer postId) throws IOException{
+//		if(date == null)
+//			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
+//
+//		org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+//
+//		Person person = null;
+//		if(postId == null || postId == 0) {
+//			person = authProvider.getLoggedPerson();
+//		}
+//
+//		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<>();
+//		DateTime firstDay = formatter.parseDateTime(date);
+//
+//		// create date slots
+//		DateTime lastestDay = firstDay;
+//		while (firstDay.minusDays(30).getMillis() < lastestDay.getMillis()){
+//			stats.put(lastestDay. getMillis(), new ReadsCommentsRecommendsCount());
+//			lastestDay = lastestDay.minusDays(1);
+//		}
+//
+//		List<Object[]> postReadCounts;
+//		List<Object[]> commentsCounts;
+//		List<Object[]> generalStatus;
+//
+//		if(person == null) {
+//			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
+//			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
+//			generalStatus = postRepository.findPostStats(postId);
+//		}else {
+//			postReadCounts = postReadRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
+//			commentsCounts = commentRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
+//			generalStatus = personRepository.findPersonStats(person.id);
+//		}
+//
+//		// check date and map counts
+//		Iterator it = stats.entrySet().iterator();
+//		checkDateAndMapCounts(postReadCounts, it);
+//
+//		it = stats.entrySet().iterator();
+//		checkDateAndMapCounts(commentsCounts, it);
+//
+//		String generalStatsJson = mapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
+//		String dateStatsJson = mapper.writeValueAsString(stats);
+//		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
+//	}
+//
+//	private void checkDateAndMapCounts(List<Object[]> countList, Iterator it) {
+//		while (it.hasNext()){
+//			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
+//			long key = (Long)pair.getKey();
+//			for(Object[] counts: countList){
+//				long dateLong = ((java.sql.Date) counts[0]).getTime();
+//				long count = (long) counts[1];
+//				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
+//					pair.getValue().commentsCount = count;
+//			}
+//		}
+//	}
 }
