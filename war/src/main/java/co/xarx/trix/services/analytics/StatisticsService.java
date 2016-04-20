@@ -1,6 +1,7 @@
 package co.xarx.trix.services.analytics;
 
-import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.persistence.MobileDeviceRepository;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StatsJson;
@@ -17,6 +18,8 @@ import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogram;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,22 +35,28 @@ import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 @Service
+@lombok.Getter
+@lombok.Setter
 public class StatisticsService {
 
-	public ObjectMapper mapper;
 	private Client client;
+	public ObjectMapper mapper;
+	private int defaultInterval;
 	private String analyticsIndex;
-	private AuthService authService;
+	private DateTimeFormatter dateTimeFormatter;
+	private MobileDeviceRepository mobileDeviceRepository;
 
 	@Autowired
 	public StatisticsService(@Qualifier("objectMapper") ObjectMapper mapper,
 							 Client client,
 							 @Value("${elasticsearch.analyticsIndex}") String analyticsIndex,
-							 AuthService authService){
-		this.analyticsIndex = analyticsIndex;
-		this.authService = authService;
+							 MobileDeviceRepository mobileDeviceRepository){
 		this.mapper = mapper;
 		this.client = client;
+		this.analyticsIndex = analyticsIndex;
+		this.mobileDeviceRepository = mobileDeviceRepository;
+		this.dateTimeFormatter = getFormatter();
+		this.defaultInterval = 30;
 	}
 
 	public HashMap getPorpularNetworks(){
@@ -129,10 +138,7 @@ public class StatisticsService {
 	}
 
 	public StatsJson postStats(String date, Integer postId, Integer sizeInDays){
-		if (sizeInDays == null || sizeInDays == 0) sizeInDays = 30;
-
-		DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-		DateTime firstDay = dateTimeFormatter.parseDateTime(date);
+		Interval interval = getInterval(date, sizeInDays);
 
 		Map postReadCounts, commentsCounts;
 		List<Integer> generalStatus = new ArrayList<>();
@@ -143,7 +149,7 @@ public class StatisticsService {
 		generalStatus.add(countTotals(postId, "comment.postId", "analytics"));
 		generalStatus.add(countTotals(postId, "recomment.postId", "analytics"));
 
-		TreeMap<Long, ReadsCommentsRecommendsCount> stats = makeHistogram(postReadCounts, commentsCounts, firstDay, sizeInDays);
+		TreeMap<Long, ReadsCommentsRecommendsCount> stats = makeHistogram(postReadCounts, commentsCounts, interval);
 
 		StatsJson response = new StatsJson();
 		response.generalStatsJson = generalStatus;
@@ -153,13 +159,7 @@ public class StatisticsService {
 	}
 
 	public StatsJson personStats(String date, Integer personId, Integer sizeInDays) throws JsonProcessingException {
-		Assert.notNull(date, "Invalid date. Expected yyyy-MM-dd");
-		DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC();
-
-		if (sizeInDays == null || sizeInDays == 0) sizeInDays = 30;
-
-		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<>();
-		DateTime firstDay = dateTimeFormatter.parseDateTime(date);
+		Interval interval = getInterval(date, sizeInDays);
 
 		Map postReadCounts, commentsCounts;
 		List<Integer> generalStatus = new ArrayList<>();
@@ -170,20 +170,92 @@ public class StatisticsService {
 		generalStatus.add(countTotals(personId, "comment.postAuthorId", "analytics"));
 		generalStatus.add(countTotals(personId, "recommend.postAuthorId", "analytics"));
 
-		stats = makeHistogram(postReadCounts, commentsCounts, firstDay, sizeInDays);
-
 		StatsJson response = new StatsJson();
-		response.dateStatsJson = stats;
+		response.dateStatsJson = makeHistogram(postReadCounts, commentsCounts, interval);
 		response.generalStatsJson = generalStatus;
 
 		return response;
 	}
 
-	public TreeMap<Long, ReadsCommentsRecommendsCount> makeHistogram(Map postreads, Map comments, DateTime firstDay, int size) {
+	public StatsJson networkStats(String end, String start){
+		Interval interval = getInterval(end, start);
+
+		Map postreadCounts, commentsCounts;
+		List<Integer> generalStatus = new ArrayList<>();
+
+		String tenantId = TenantContextHolder.getCurrentTenantId();
+		Assert.hasText(tenantId, "Tenant context is required but is not available");
+
+		postreadCounts = countPostreadByTenant(tenantId);
+		commentsCounts = countCommentByTenant(tenantId);
+		generalStatus.add(countTotals(tenantId, "nginx_access.tenantId", "nginx_access"));
+		generalStatus.add(countTotals(tenantId, "comment.tenantId", "analytics"));
+		generalStatus.add(countTotals(tenantId, "recommend.tenantId", "analytics"));
+		generalStatus.add((int) (long) mobileDeviceRepository.countAndroidDevices(tenantId));
+		generalStatus.add((int) (long) mobileDeviceRepository.countAppleDevices(tenantId));
+
+		StatsJson statsJson = new StatsJson();
+		statsJson.generalStatsJson = generalStatus;
+		statsJson.dateStatsJson = makeHistogram(postreadCounts, commentsCounts, interval);
+
+		return statsJson;
+	}
+
+	public StatsJson stationStats(String end, String start, Integer statioId){
+		Interval interval = getInterval(end, start);
+
+		Map postreadCounts, commentsCounts;
+		List<Integer> generalStatus = new ArrayList<>();
+
+		postreadCounts = countPostreadByStation(statioId);
+		commentsCounts = countCommentByStation(statioId);
+		generalStatus.add(countTotals(statioId, "nginx_access.statioId", "nginx_access"));
+		generalStatus.add(countTotals(statioId, "comment.statioId", "analytics"));
+		generalStatus.add(countTotals(statioId, "recommend.statioId", "analytics"));
+
+		StatsJson statsJson = new StatsJson();
+		statsJson.generalStatsJson = generalStatus;
+		statsJson.dateStatsJson = makeHistogram(postreadCounts, commentsCounts, interval);
+
+		return statsJson;
+	}
+
+	public Interval getInterval(String end, String start){
+		Assert.notNull(end, "Invalid date. Expected yyyy-MM-dd");
+		DateTime endDate = dateTimeFormatter.parseDateTime(end);
+
+		if(start != null && !start.isEmpty()){
+			DateTime startDate = dateTimeFormatter.parseDateTime(start);
+			Assert.isTrue(endDate.isAfter(startDate), "Wrong time range. 'beginnig' should be before 'date'");
+			return new Interval(startDate, endDate);
+		}
+
+		return new Interval(endDate.minusDays(defaultInterval), endDate);
+	}
+
+	public Interval getInterval(String date, Integer size){
+		Assert.notNull(date, "Invalid date. Expected yyyy-MM-dd");
+
+		DateTime endDate = dateTimeFormatter.parseDateTime(date);
+
+		if(size == null) new Interval(endDate.minusDays(defaultInterval), endDate);
+
+		return new Interval(endDate.minusDays(size), endDate);
+	}
+
+	public DateTimeFormatter getFormatter(){
+		return DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC();
+	}
+
+	public TreeMap<Long, ReadsCommentsRecommendsCount> makeHistogram(Map postreads, Map comments, Interval interval) {
 		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<>();
 
+		DateTime firstDay = interval.getEnd();
 		DateTime lastestDay = firstDay;
-		while (firstDay.minusDays(size).getMillis() < lastestDay.getMillis()) {
+
+		int size = Days.daysBetween(interval.getStart(), interval.getEnd()).getDays();
+
+		while (firstDay.minusDays(size).isBefore(lastestDay)) {
 			ReadsCommentsRecommendsCount count = new ReadsCommentsRecommendsCount();
 			if (postreads.containsKey(lastestDay.getMillis())) {
 				count.readsCount = (long) postreads.get(lastestDay.getMillis());
@@ -215,28 +287,46 @@ public class StatisticsService {
 			hist.put(b.getKeyAsDate().toDate().getTime(), b.getDocCount());
 		}
 
-		System.out.println(search.toString());
-
 		return hist;
 	}
 
 	public Map countPostreadByAuthor(Integer authorId) {
-		return generalCounter("author_read", "nginx_access", boolQuery().must(termQuery("authorId", authorId)).must(termQuery("type", "nginx_access")), "@timestamp");
+		return generalCounter("author_read_author", "nginx_access", boolQuery().must(termQuery("authorId", authorId)).must(termQuery("type", "nginx_access")), "@timestamp");
+	}
+
+	public Map countPostreadByTenant(String tenantId){
+		return generalCounter("author_read_network", "nginx_access", boolQuery().must(termQuery("tenantId", tenantId)).must(termQuery("type", "nginx_access")), "@timestamp");
 	}
 
 	public Map countCommentByPost(Integer postId) {
 		return generalCounter("comments_count", "analytics", boolQuery().must(termQuery("postId", postId)), "date");
 	}
 
+	public Map countCommentByTenant(String tenantId){
+		return generalCounter("comments_count_tentant", "analytics", boolQuery().must(termQuery("tenantId", tenantId)), "date");
+	}
+
 	public Map<Long, Integer> countPostReadByPost(Integer postId) {
 		return generalCounter("post_read", "nginx_access", boolQuery().must(termQuery("postId", postId)).must(termQuery("_type", "nginx_access")), "@timestamp");
+	}
+
+	public Map countPostreadByStation(Integer stationId){
+		return generalCounter("post_read_station", "nginx_access", boolQuery().must(termQuery("stationId", stationId)).must(termQuery("_type", "nginx_access")), "@timestamp");
+	}
+
+	public Map countCommentByStation(Integer stationId) {
+		return generalCounter("comment_station", "analytics", boolQuery().must(termQuery("stationId", stationId)).must(termQuery("_type", "comment")), "@timestamp");
 	}
 
 	public Map countCommentByAuthor(Integer id) {
 		return generalCounter("author_comment", "analytics", boolQuery().must(termQuery("postAuthorId", id)), "date");
 	}
 
-	public int countTotals(int id, String entity, String index) {
+	public Integer countTotals(Integer id, String entity, String index) {
+		return (int) client.prepareSearch(index).setQuery(termQuery(entity, id)).execute().actionGet().getHits().getTotalHits();
+	}
+
+	public Integer countTotals(String id, String entity, String index) {
 		return (int) client.prepareSearch(index).setQuery(termQuery(entity, id)).execute().actionGet().getHits().getTotalHits();
 	}
 }
