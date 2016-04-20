@@ -71,7 +71,7 @@
   <script src="/libs/angular/angular-loading-bar/build/loading-bar.js"></script>
 
 <!-- App -->
-  <script src="/scripts/BaseTrix.js"></script>
+  <script src="/js/BaseTrix.js"></script>
   <script src="/scripts/app.js"></script>
   <script src="/libs/jquery/moment/min/moment-with-locales.min.js"></script>
   <script src="/scripts/config.js"></script>

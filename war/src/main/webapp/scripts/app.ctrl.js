@@ -435,8 +435,20 @@ angular.module('app')
         return img;
       }
 
+      $scope.app.getImagesPerson = function (post, id, size, type, bg) {
+        return $scope.app.hasAuthorImage(post) ? $filter('getImagesPerson')(id, size, type, bg) : null
+      };
+
+      $scope.app.getPostsImage =  function(id, size, bg) {
+        return $filter('getPostsImage')(id, size, bg);
+      }
+
       $scope.app.hasImage = function(post){
         return post.hash || post.hashes || post.featuredImage || post.featuredImageHash || post.imageHash;
+      }
+
+      $scope.app.hasAuthorImage = function(post){
+        return post.authorImageHash || post.authorImageSmallHash || post.authorImage || post.authorProfilePicture; 
       }
 
       $scope.app.getBackgroundImage = function(postView, size){
