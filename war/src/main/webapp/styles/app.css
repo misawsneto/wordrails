@@ -8553,3 +8553,12 @@ button,
        -o-transition: background-color 300ms linear, color 300ms linear;
           transition: background-color 300ms linear, color 300ms linear;
 }
+
+.zoom-hover {
+  transition-duration: 0.5s;
+}
+
+.zoom-hover:hover {
+  transform: scale(1.05);
+  transition-duration: 0.5s;
+}
