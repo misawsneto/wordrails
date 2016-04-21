@@ -85,16 +85,33 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
     node.name = node.editingName;
     node.taxonomy = TRIX.baseUrl + "/api/taxonomies/" + $scope.thisStation.categoriesTaxonomyId;
     var term = angular.copy(node);
-    console.log(term);
     delete term['children']
+    if(term.image && term.image.id)
+      term.image = ImageDto.getSelf(term.image);
+
     trix.putTerm(term).success(function(){
       node.editing=false;
+      updating = true;
       $scope.app.showSuccessToast('Alterações realizadas com sucesso.');
     }).error(function(){
+      updating = true;
       $timeout(function() {
         cfpLoadingBar.complete(); 
       }, 100);
     });
+  }
+
+  var updating = false;
+  $scope.changeColor = function(color, node) {
+    updating = true;
+    node.editingName = node.name;
+    $scope.updateCategory(node)
+  }
+
+  $scope.getColorButtonStyle = function(category){
+    if(category && category.color)
+      return {'background-color': category.color, color: tinycolor(category.color).isLight() ? 'rgba(0,0,0,0.9)' : 'rgba(255,255,255,0.9)' }
+    return null;
   }
 
   $scope.app.addCategory = function(newCategoryName){

@@ -11,6 +11,18 @@ angular.module('app')
     };
   })
 
+  .directive('categoryLeaf', function() {
+    return {
+      template: '<category-tree ng-repeat="node in tree"></category-tree>',
+      replace: true,
+      transclude: true,
+      restrict: 'E',
+      scope: {
+        tree: '=ngModel'
+      }
+    };
+  })
+
   .directive('node', function($compile) {
     return { 
       replace: true,
@@ -58,7 +70,7 @@ angular.module('app')
         };
 
         if (scope.node.children.length > 0) {
-          var childNode = $compile('<ul><node-tree ng-model="node.children"></node-tree></ul>')(scope)
+          var childNode = $compile('<ul><category-leaf ng-model="node.children"></category-leaf></ul>')(scope)
           elm.append(childNode);
         }
       }
@@ -112,7 +124,7 @@ angular.module('app')
         };
 
         if (scope.node.children.length > 0) {
-          var childNode = $compile('<ul><node-tree ng-model="node.children"></node-tree></ul>')(scope)
+          var childNode = $compile('<ul><category-leaf ng-model="node.children"></category-leaf></ul>')(scope)
           elm.append(childNode);
         }
       }

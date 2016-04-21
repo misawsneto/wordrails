@@ -181,6 +181,27 @@ angular.module('app')
   }
 })
 
+.filter('categoryImage', function imageLink(TRIX) {
+  return function(category, size, bg) {
+    var hash = null;
+    if(category)
+      category.id = category.id ? category.id : category.termId;
+    if(category && (category.imageHash))
+      hash = category.imageHash;
+    
+    if(hash){
+      if(bg)
+        return {'background-image': 'url( '+ TRIX.baseUrl + "/api/images/get/"+ hash  + "?size=" + size + ')'};
+      return TRIX.baseUrl + "/api/images/get/"+ hash  + "?size=" + size;
+    }else{
+      if(bg)
+        return {'background-image': 'url( '+ TRIX.baseUrl + "/images/categories/1"+getLastDigit(category.id)+".jpg" + ')'};
+      return TRIX.baseUrl + "/images/categories/1"+getLastDigit(category.id)+".jpg";
+    }
+    return null;
+  }
+})
+
 .filter('userImage', function imageLink(TRIX) {
   return function(person, size) {
     if(person && (person.imageHash || person.imageOriginalHash)){

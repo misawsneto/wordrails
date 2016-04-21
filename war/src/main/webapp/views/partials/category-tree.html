@@ -1,38 +1,53 @@
 <li class="parent_li">
- <span ng-if="!editing" class="check-term" ng-click="nodeClicked(node)">
-    <md-checkbox style="margin-top: 4px; margin-bottom: 2px;" md-no-ink aria-label="{{node.name}}" ng-model="node.checked" ng-click="node.checked = !node.checked" class="pull-left"></md-checkbox>
- </span>
- <span class="leaf box-shadow animated fadeIn" ng-class="{'w-400': node.editing}" tooltip="{{node.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
- 	<span ng-if="!node.editing">
-	 	{{node.name}} + 
+ <div class="leaf v-b card r o-f-h md-whiteframe-z1 m-0 inline  animated fadeIn" ng-class="{'w-400': node.editing}" tooltip="{{node.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
+ 	<div class="w-64 inline bg-cover v-t" ng-style="{{ node | categoryImage:'large':true}}">
+ 		
+ 	</div>
+ 	<div ng-if="!node.editing" class="p-h-sm p-b-sm m-r-sm m-t inline" >
+	 	{{node.name}}
 	    <!-- <i class="{{ switcher( isLeaf(node), '', 'fa fa-remove' ) }}"></i> -->
 	    {{showNode(node)}}
-    </span>
-    <form ng-submit="updateCategory(node)" ng-if="node.editing">
+    </div>
+    <form class="p-h-sm p-b-sm m-t inline v-t" ng-submit="updateCategory(node)" ng-if="node.editing">
     	<input style="padding:0; background-color: transparent;" ng-click="$event.stopPropagation();"
     	ng-model="node.editingName" type="text" class="no-border" placeholder="Nome da categoria" />
  	</form>
- </span>
- 	<button ng-if="editing" ng-click="showAddCategorySplash(node)"
- 	md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
- 		<md-tooltip md-direction="top">
- 			{{'settings.category.ADD_CHILD' | translate}}
- 		</md-tooltip>
- 		<i class="mdi mdi2-plus i-20" style="vertical-align: 44%; line-height: normal;"></i>
- 	</button>
- 	<button ng-if="editing" ng-click="node.editing=!node.editing; node.editingName = node.name;"
- 	md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
- 		<md-tooltip md-direction="top">
- 			{{'titles.EDIT' | translate}}
- 		</md-tooltip>
- 		<i ng-if="!node.editing" class="mdi mdi2-pencil i-20" style="vertical-align: 44%; line-height: normal;"></i>
- 		<i ng-if="node.editing" class="mdi mdi2-close i-20" style="vertical-align: 44%; line-height: normal;"></i>
- 	</button>
- 	<button ng-if="editing" md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
- 		<md-tooltip md-direction="top">
- 			{{'titles.REMOVE' | translate}}
- 		</md-tooltip>
- 		<i class="mdi mdi2-delete i-20" style="vertical-align: 44%; line-height: normal;"
- 		ng-click="showDeleteCategoryDialog(node, $event)"></i>
- 	</button>
+ 	<div class="inline p pos-abt left-0 bottom-0 right-0"></div>
+ </div>
+ 	<div class="inline p p-h-sm v-t">
+	 	<button ng-if="editing" ng-click="node.editing=!node.editing; node.editingName = node.name;"
+	 	md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
+	 		<md-tooltip md-direction="top">
+	 			{{'titles.EDIT' | translate}}
+	 		</md-tooltip>
+	 		<i ng-if="!node.editing" class="mdi mdi2-pencil i-20" style="vertical-align: 44%; line-height: normal;"></i>
+	 		<i ng-if="node.editing" class="mdi mdi2-close i-20" style="vertical-align: 44%; line-height: normal;"></i>
+	 	</button>
+	 	<button ng-if="editing" md-ink-ripple ng-style="getColorButtonStyle(node)" class="md-btn md-mini p-0 md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
+	 		<md-tooltip md-direction="top">
+	 			{{'titles.EDIT' | translate}}
+	 		</md-tooltip>
+	 		<i class="mdi mdi2-format-color-fill i-20" style="vertical-align: 15%; line-height: normal;"></i>
+	 		<spectrum-colorpicker class="opacity-0 pos-abt right-0 left-0 p-0" ng-model="node.color" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{clickoutFiresChange: true, showInput: true, showPalette: true}" on-hide="changeColor(color, node)"></spectrum-colorpicker>
+	 	</button>
+	 	<button ng-if="editing" ng-click="showDeleteCategoryDialog(node, $event)" md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
+	 		<md-tooltip md-direction="top">
+	 			{{'titles.REMOVE' | translate}}
+	 		</md-tooltip>
+	 		<i class="mdi mdi2-image i-20" style="vertical-align: 44%; line-height: normal;"></i>
+	 	</button>
+	 	<button ng-if="editing" ng-click="showAddCategorySplash(node)"
+	 	md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
+	 		<md-tooltip md-direction="top">
+	 			{{'settings.category.ADD_CHILD' | translate}}
+	 		</md-tooltip>
+	 		<i class="mdi mdi2-plus i-20" style="vertical-align: 44%; line-height: normal;"></i>
+	 	</button>
+	 	<button ng-if="editing" ng-click="showDeleteCategoryDialog(node, $event)" md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
+	 		<md-tooltip md-direction="top">
+	 			{{'titles.REMOVE' | translate}}
+	 		</md-tooltip>
+	 		<i class="mdi mdi2-delete i-20" style="vertical-align: 44%; line-height: normal;"></i>
+	 	</button>
+ 	</div>
 </li>

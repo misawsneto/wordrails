@@ -92,7 +92,7 @@ angular.module('app')
                 url: '/categories?slug',
                 templateUrl: '/views/settings/settings-categories.html',
                 data : { titleTranslate: 'titles.CATEGORIES', title: 'Categorias', folded: false },
-                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-categories.js']),
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-categories.js','angularSpectrumColorpicker']),
                 controller: 'SettingsCategoriesCtrl'
               })
 

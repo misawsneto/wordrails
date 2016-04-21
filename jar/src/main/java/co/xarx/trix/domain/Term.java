@@ -2,6 +2,7 @@ package co.xarx.trix.domain;
 
 
 import co.xarx.trix.annotation.SdkExclude;
+import co.xarx.trix.annotation.SdkInclude;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
@@ -71,10 +72,15 @@ public class Term extends BaseEntity implements Serializable{
 
 	public String color;
 
-	@SdkExclude
-	@ManyToOne(cascade=CascadeType.MERGE)
-	@JsonIgnore
-	private Picture image;
+	@ManyToOne(cascade = CascadeType.ALL)
+	public Image image;
+
+	@SdkInclude
+	public String getImageHash() {
+		if (image != null) return image.getOriginalHash();
+
+		return null;
+	}
 
 	@PrePersist
 	void onCreate(){
