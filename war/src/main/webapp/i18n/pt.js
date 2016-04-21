@@ -77,6 +77,7 @@
 		"BOOKMARKS": "Minhas leituras",
 		"NOTIFICATIONS": "Notificações",
 		"IMAGE": "Imagem",
+		"CATEGORY_COLOR": "Cor da categoria",
 		"SHARE": "Compartilhar"
 	},
 	"signin_signup": {
@@ -250,6 +251,7 @@
 			"STATION_REMOVED_SUCCESS": "Estação removida com sucesso"
 		},
 		"category": {
+			"STATION_CATEGORY": "Categorias da estação ",
 			"NEW_CATEGORY": "Nova categoria",
 			"ADD_CHILD": "Nova subcategoria",
 			"BACK_TO_STATIONS": "Voltar a lista de estações"

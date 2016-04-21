@@ -25,7 +25,7 @@
 	 	</button>
 	 	<button ng-if="editing" md-ink-ripple ng-style="getColorButtonStyle(node)" class="md-btn md-mini p-0 md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
 	 		<md-tooltip md-direction="top">
-	 			{{'titles.EDIT' | translate}}
+	 			{{'titles.CATEGORY_COLOR' | translate}}
 	 		</md-tooltip>
 	 		<i class="mdi mdi2-format-color-fill i-20" style="vertical-align: 15%; line-height: normal;"></i>
 	 		<spectrum-colorpicker class="opacity-0 pos-abt right-0 left-0 p-0" ng-model="node.color" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{clickoutFiresChange: true, showInput: true, showPalette: true}" on-hide="changeColor(color, node)"></spectrum-colorpicker>

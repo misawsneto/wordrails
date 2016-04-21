@@ -77,7 +77,8 @@
 		"BOOKMARKS": "Bookmarks",
 		"NOTIFICATIONS": "Notifications",
 		"IMAGE": "Image",
-		"SHARE": "share"
+		"CATEGORY_COLOR": "Category color",
+		"SHARE": "Share"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -151,7 +152,7 @@
 		"colors":{
 			"TEST_THEME": "Test Colors",
 			"RESET_THEME": "Reset Colors",
-			"APPLY_THEME": "Apply Cores",
+			"APPLY_THEME": "Apply Colors",
 			"APPLY_THEME_DIALOG": "<strong>Attention!</strong> Changes to colors and appearance will be applied to all devices. Do you want to continue?",
 			"TAB": "Tab",
 			"ALERT": "Alert message!"
@@ -250,6 +251,7 @@
 			"STATION_REMOVED_SUCCESS": "Station was removed"
 		},
 		"category": {
+			"STATION_CATEGORY": "Categories of ",
 			"NEW_CATEGORY": "New category",
 			"ADD_CHILD": "Add subcategory",
 			"BACK_TO_STATIONS": "Stations list"

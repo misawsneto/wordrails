@@ -639,6 +639,12 @@ angular.module('app')
                 data : { title: 'Home', folded: false },
                 resolve: load(['wu.masonry', '/scripts/controllers/app/page.js'])
               })
+              .state('app.categoryPage', {
+                url: '/{stationSlug}/cat?name',
+                templateUrl: '/views/pages/home.html',
+                data : { title: 'Home', folded: false },
+                resolve: load(['wu.masonry', '/scripts/controllers/app/page.js'])
+              })
               .state('app.wall', {
                 url: '/wall',
                 templateUrl: '/views/pages/dashboard.wall.html',
