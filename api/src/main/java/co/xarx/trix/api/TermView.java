@@ -11,5 +11,6 @@ public class TermView implements Serializable {
 	public Integer parentId;
 	public Integer taxonomyId;
 	public String imageHash;
+	public String color;
 	public List<TermView> children;
 }

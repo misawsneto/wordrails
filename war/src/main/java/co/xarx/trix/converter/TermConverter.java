@@ -26,6 +26,8 @@ public class TermConverter extends AbstractConverter<Term, TermView> {
 		if(term.taxonomy != null)
 			termView.taxonomyId = term.taxonomy.id;
 		termView.termName = term.name;
+		termView.color = term.color;
+		termView.imageHash = term.image != null ? term.image.getOriginalHash() : null;
 		
 		return termView;
 	}

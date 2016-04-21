@@ -76,6 +76,7 @@
 		"SOCIAL_NETWORK_IDS": "Social network App IDs",
 		"BOOKMARKS": "Bookmarks",
 		"NOTIFICATIONS": "Notifications",
+		"IMAGE": "Image",
 		"SHARE": "share"
 	},
 	"signin_signup": {

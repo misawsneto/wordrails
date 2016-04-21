@@ -1,6 +1,6 @@
 <li class="parent_li">
  <div class="leaf v-b card r o-f-h md-whiteframe-z1 m-0 inline  animated fadeIn" ng-class="{'w-400': node.editing}" tooltip="{{node.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
- 	<div class="w-64 inline bg-cover v-t" ng-style="{{ node | categoryImage:'large':true}}">
+ 	<div class="w-64 inline bg-cover v-t" ng-style="getCategoryImage(node)">
  		
  	</div>
  	<div ng-if="!node.editing" class="p-h-sm p-b-sm m-r-sm m-t inline" >
@@ -30,12 +30,13 @@
 	 		<i class="mdi mdi2-format-color-fill i-20" style="vertical-align: 15%; line-height: normal;"></i>
 	 		<spectrum-colorpicker class="opacity-0 pos-abt right-0 left-0 p-0" ng-model="node.color" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{clickoutFiresChange: true, showInput: true, showPalette: true}" on-hide="changeColor(color, node)"></spectrum-colorpicker>
 	 	</button>
-	 	<button ng-if="editing" ng-click="showDeleteCategoryDialog(node, $event)" md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
+	 	<div ng-if="editing" ng-click="setUploadImageCategory(node)" md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
+	 		<input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
 	 		<md-tooltip md-direction="top">
-	 			{{'titles.REMOVE' | translate}}
+	 			{{'titles.IMAGE' | translate}}
 	 		</md-tooltip>
 	 		<i class="mdi mdi2-image i-20" style="vertical-align: 44%; line-height: normal;"></i>
-	 	</button>
+	 	</div>
 	 	<button ng-if="editing" ng-click="showAddCategorySplash(node)"
 	 	md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
 	 		<md-tooltip md-direction="top">

@@ -533,7 +533,7 @@ angular.module('app')
 
       userImageUploader.onProgressItem = function(fileItem, progress) {
         cfpLoadingBar.start();
-        cfpLoadingBar.set(progress/10)
+        cfpLoadingBar.set(progress/100)
         if(progress == 100){
           cfpLoadingBar.complete()
           toastPromise = $mdToast.show(
@@ -590,7 +590,7 @@ angular.module('app')
 
       coverImageUploader.onProgressItem = function(fileItem, progress) {
         cfpLoadingBar.start();
-        cfpLoadingBar.set(progress/10)
+        cfpLoadingBar.set(progress/100)
         if(progress == 100){
           cfpLoadingBar.complete()
           toastPromise = $mdToast.show(

@@ -76,6 +76,7 @@
 		"SOCIAL_NETWORK_IDS": "IDs de aplicativos sociais",
 		"BOOKMARKS": "Minhas leituras",
 		"NOTIFICATIONS": "Notificações",
+		"IMAGE": "Imagem",
 		"SHARE": "Compartilhar"
 	},
 	"signin_signup": {
