@@ -2,8 +2,9 @@ package co.xarx.trix.web.rest.resource.v2;
 
 import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.services.post.PostSearchParams;
+import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.services.post.PostSearchService;
+import co.xarx.trix.util.RestUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2PostApi;
 import com.google.common.collect.Sets;
@@ -34,24 +35,22 @@ public class V2PostsResource extends AbstractResource implements V2PostApi {
 
 	@Override
 	public Response searchPosts(String query,
-								Integer author,
+								List<Integer> authors,
 								List<Integer> stations,
 								String state,
 								String from,
 								String until,
 								List<Integer> categories,
 								List<String> tags,
-								Integer size,
 								Integer page,
+								Integer size,
 								List<String> orders,
 								List<String> embeds) {
 
-		Pageable pageable = getPageable(page, size, orders);
+		PostStatement params = new PostStatement(query, authors, stations, state, from, until, categories, tags, orders);
 
-		PostSearchParams params = new PostSearchParams(query, author, stations, state, from, until, categories, tags);
-
-		List<Integer> ids = postSearchService.searchIds(params, pageable);
-		List<Post> posts = postSearchService.search(ids, pageable);
+		List<Integer> ids = postSearchService.searchIds(params);
+		List<Post> posts = postSearchService.search(ids, page, size);
 		List<PostData> data = posts.stream()
 				.map(post -> mapper.map(post, PostData.class))
 				.collect(Collectors.toList());
@@ -60,6 +59,7 @@ public class V2PostsResource extends AbstractResource implements V2PostApi {
 
 		removeNotEmbeddedData(embeds, data, postEmbeds);
 
+		Pageable pageable = RestUtil.getPageable(page, size, orders);
 		Page p = new PageImpl(data, pageable, ids.size());
 
 		return Response.ok().entity(p).build();

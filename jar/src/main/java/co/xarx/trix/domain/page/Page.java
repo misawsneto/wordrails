@@ -2,24 +2,18 @@ package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.Station;
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Date;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.*;
 
 
 @Getter
@@ -27,7 +21,6 @@ import java.util.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "page")
-@JsonIgnoreProperties({"updatedAt", "createdAt"})
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class Page extends BaseEntity {
 
@@ -42,6 +35,7 @@ public class Page extends BaseEntity {
 	@MapKey(name = "orderPosition")
 	private Map<Integer, AbstractSection> sections;
 
+	@NotNull
 	@ManyToOne
 	private Station station;
 

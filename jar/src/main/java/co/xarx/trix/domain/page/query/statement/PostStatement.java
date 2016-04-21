@@ -1,58 +1,58 @@
 package co.xarx.trix.domain.page.query.statement;
 
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.page.query.Command;
-import co.xarx.trix.domain.page.query.CommandBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 
-@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "statementobjectpost")
+@Table(name = "statementpost")
 @PrimaryKeyJoinColumn(name = "statement_id", referencedColumnName = "id")
 public class PostStatement extends AbstractStatement implements Statement {
 
-	@Column(name = "before_date")
-	public Date before;
-	@Column(name = "after_date")
-	public Date after;
+	private String query;
 
 	@ElementCollection
-	@JoinTable(name = "statementobjectpost_tags")
-	public Set<String> tags;
+	@JoinTable(name = "statementpost_authors", joinColumns = @JoinColumn(name = "statement_id"))
+	private List<Integer> authors;
+
 	@ElementCollection
-	@JoinTable(name = "statementobjectpost_categories")
-	public Set<Integer> categories;
+	@JoinTable(name = "statementpost_stations", joinColumns = @JoinColumn(name = "statement_id"))
+	private List<Integer> stations;
 
-	@Column(name = "author_username")
-	public String authorUsername;
+	private String state;
+	@Column(name = "from_date")
+	private String from;
+	@Column(name = "until_date")
+	private String until;
 
-	@Column(name = "all_readable_stations")
-	public boolean allReadableStations;
-
-	@NotNull
 	@ElementCollection
-	@JoinTable(name = "statementobjectpost_stations")
-	public Set<Integer> stationIds;
+	@JoinTable(name = "statementpost_categories", joinColumns = @JoinColumn(name = "statement_id"))
+	private List<Integer> categories;
 
-	@Column(name = "rich_text")
-	public String richText;
+	@ElementCollection
+	@JoinTable(name = "statementpost_tags", joinColumns = @JoinColumn(name = "statement_id"))
+	private List<String> tags;
+
+	@ElementCollection
+	@JoinTable(name = "statementpost_orders", joinColumns = @JoinColumn(name = "statement_id"))
+	private List<String> orders;
 
 	public void addStationId(Integer stationId) {
-		if(stationIds == null)
-			stationIds = new HashSet<>();
+		if (stations == null)
+			stations = new ArrayList<>();
 
-		stationIds.add(stationId);
-	}
-
-	@Override
-	public Command build(CommandBuilder builder) {
-		return builder.build(this);
+		stations.add(stationId);
 	}
 
 	@Override

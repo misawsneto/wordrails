@@ -2,9 +2,10 @@ package co.xarx.trix.services.post;
 
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.ESPerson;
 import co.xarx.trix.domain.ESPost;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.persistence.ESPersonRepository;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.StringUtil;
@@ -16,12 +17,16 @@ import org.eclipse.persistence.jpa.jpql.Assert;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.Fuzziness;
-import org.elasticsearch.index.query.*;
+import org.elasticsearch.index.query.BoolFilterBuilder;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.RangeFilterBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -40,9 +45,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.FilterBuilders.boolFilter;
-import static org.elasticsearch.index.query.FilterBuilders.rangeFilter;
-import static org.elasticsearch.index.query.FilterBuilders.termFilter;
+import static org.elasticsearch.index.query.FilterBuilders.*;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Service
@@ -185,7 +188,9 @@ public class ESPostService {
 		return mainQuery;
 	}
 
-	List<Integer> findIds(PostSearchParams p, List<FieldSortBuilder> sorts) {
+	List<Integer> findIds(PostStatement p) {
+		List<FieldSortBuilder> sorts = getSorts(p.getOrders());
+
 		BoolQueryBuilder q = getBooleanQuery(p.getQuery());
 		BoolFilterBuilder f = boolFilter();
 
@@ -193,7 +198,7 @@ public class ESPostService {
 		applyStateFilter(f, p.getState());
 		applyTypeFilter(f, Constants.ObjectType.POST);
 		applyDateFilter(f, p.getFrom(), p.getUntil());
-		applyAuthorFilter(f, p.getAuthor());
+		applyShouldFilter(f, p.getAuthors(), "authorId");
 		applyShouldFilter(f, p.getStations(), "stationId");
 		applyShouldFilter(f, p.getTags(), "tags");
 		applyShouldFilter(f, p.getCategories(), "categories");
@@ -204,6 +209,23 @@ public class ESPostService {
 		ResultsExtractor<List<Integer>> extractor = getExtractor();
 
 		return elasticsearchTemplate.query(query, extractor);
+	}
+
+	private List<FieldSortBuilder> getSorts(List<String> sort) {
+		List<FieldSortBuilder> sorts = new ArrayList<>();
+		if (sort != null) {
+			for (String s : sort) {
+				SortOrder d = SortOrder.ASC;
+
+				if (s.charAt(0) == '-') {
+					d = SortOrder.DESC;
+					s = s.substring(1, s.length());
+				}
+
+				sorts.add(new FieldSortBuilder(s).order(d));
+			}
+		}
+		return sorts;
 	}
 
 	private ResultsExtractor<List<Integer>> getExtractor() {
@@ -218,7 +240,7 @@ public class ESPostService {
 			};
 	}
 
-	private SearchQuery getSearchQuery(PostSearchParams p, List<FieldSortBuilder> sorts, BoolQueryBuilder q, BoolFilterBuilder f) {
+	private SearchQuery getSearchQuery(PostStatement p, List<FieldSortBuilder> sorts, BoolQueryBuilder q, BoolFilterBuilder f) {
 		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
 
 		if (p.getQuery() != null && !p.getQuery().isEmpty()) {
@@ -255,12 +277,6 @@ public class ESPostService {
 				boolFilter.should(termFilter(termName, term));
 			}
 			f.must(boolFilter);
-		}
-	}
-
-	private void applyAuthorFilter(BoolFilterBuilder f, Integer author) {
-		if(author != null) {
-			f.must(termFilter("authorId", author));
 		}
 	}
 
