@@ -427,7 +427,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   		return
   	else if($scope.bulkActionSelected.id == 2)
   		removeAllSelected();
-  	$scope.app.cancelModal();
+  	$scope.app.cancelDialog();
   }
 
   var removeAllSelected = function(){
@@ -443,7 +443,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   				$scope.personsRoles.splice(i, 1);
   		};
   		$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
-  		$scope.app.cancelModal();
+  		$scope.app.cancelDialog();
   	})
   }		
 

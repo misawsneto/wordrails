@@ -101,6 +101,17 @@ var trix = angular.module('trix', [])
 		return \$http.get(_config.url + "/api/terms/search/findPostsByTagAndStationId",  config)
 	};
 
+	this.findPostsByTerm = function(termId, page, size, projection) {
+        var config = {};
+        config.params = {
+            termId: termId,
+            page: page,
+            size: size,
+        }
+        config.params["projection"] = projection;
+        return \$http.get(_config.url + "/api/terms/search/findPostsByTerm",  config)
+    };
+
     this.createPerson = function(person, invitation) {
       var config = {};
       config.headers = {"Content-Type": "application/json"}

@@ -78,7 +78,8 @@
 		"NOTIFICATIONS": "Notificações",
 		"IMAGE": "Imagem",
 		"CATEGORY_COLOR": "Cor da categoria",
-		"SHARE": "Compartilhar"
+		"SHARE": "Compartilhar",
+		"DESCRIPTION": "Descrição"
 	},
 	"signin_signup": {
 		"OR": "ou",

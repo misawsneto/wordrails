@@ -14,7 +14,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
     }
   });
 
-  $scope.showAddCategorySplash = function(parent, ev){
+  $scope.showAddCategoryDialog = function(parent, ev){
     $scope.parentCategory = parent;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
@@ -34,7 +34,6 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
     });
   }
 
-  $scope.app.toDeleteCategory = null;
   $scope.showDeleteCategoryDialog = function(category, ev){
     $scope.app.toDeleteCategory = category;
     $scope.parentCategory = parent;
@@ -46,6 +45,27 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
         preserveScope: true, // do not forget this if use parent scope
         controller: DialogController,
         templateUrl: 'delete_category.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+    });
+  }
+
+  $scope.toUpdateCategory = null;
+  $scope.showCategoryDescriptionDialog = function(category, ev){
+    $scope.toUpdateCategory = category;
+    $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: DialogController,
+        templateUrl: 'category_description_dialog.html',
         targetEvent: ev,
         onComplete: function(){}
       })
@@ -93,11 +113,13 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
       category.editing=false;
       updating = true;
       $scope.app.showSuccessToast('Alterações realizadas com sucesso.');
+      $scope.app.cancelDialog();
     }).error(function(){
       updating = true;
       $timeout(function() {
         cfpLoadingBar.complete(); 
       }, 100);
+      $scope.app.cancelDialog();
     });
   }
 
@@ -117,7 +139,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
   $scope.app.addCategory = function(newCategoryName){
     if(!newCategoryName || newCategoryName.trim() == ""){
       $scope.app.showErrorToast("Categoria Inválida");
-      $scope.app.cancelModal();
+      $scope.app.cancelDialog();
       return;
     }
 

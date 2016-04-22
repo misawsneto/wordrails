@@ -81,4 +81,8 @@ public interface TermRepository extends DatabaseRepository<Term, Integer> {
 	@RestResource(exported = false)
 	@Query(value="SELECT post FROM Post post left join post.terms term where post.state = 'PUBLISHED' and post.stationId = :stationId and term.name = :tagName")
 	List<Post> findPostsByTagAndStationId(@Param("tagName") String tagName, @Param("stationId")Integer stationId, Pageable pageable);
+
+	@RestResource(exported = false)
+	@Query(value="SELECT post FROM Post post join post.terms term where post.state = 'PUBLISHED' and term.id = :termId")
+	List<Post> findPostsByTerm(@Param("termId") Integer termId, Pageable pageable);
 }

@@ -641,9 +641,31 @@ angular.module('app')
               })
               .state('app.categoryPage', {
                 url: '/{stationSlug}/cat?name',
-                templateUrl: '/views/pages/home.html',
-                data : { title: 'Home', folded: false },
-                resolve: load(['wu.masonry', '/scripts/controllers/app/page.js'])
+                templateUrl: '/views/pages/category.html',
+                data : { title: 'Category', folded: false },
+                controller: 'CategoryCtrl',
+                resolve: {
+                  category: function($stateParams, $q, trix){
+                    var deferred = $q.defer();
+                     // if(initData.person.id == 0){
+                     //   document.location.href = '/access/signin?next=/settings';
+                     // }else{
+                     //  deferred.resolve(initData);
+                     // }
+                     initData.stations.forEach(function(station){
+                        if(station.stationSlug == $stateParams.stationSlug)
+                          station.categories && station.categories.forEach(function(category){
+                            if(category.name == $stateParams.name){
+                              category.station = station;
+                              deferred.resolve(category);
+                            }
+                          })
+                     })
+                     
+                    return deferred.promise;
+                  },
+                  deps:load(['wu.masonry', '/scripts/controllers/app/category.js']).deps
+                }
               })
               .state('app.wall', {
                 url: '/wall',

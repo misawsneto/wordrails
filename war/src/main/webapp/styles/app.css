@@ -8329,6 +8329,10 @@ md-switch[disabled] .md-bar {
   text-shadow: 2px 2px 15px #000000;
 }
 
+.text-shadow-lg {
+  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
 .font-code {
   font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
@@ -8565,4 +8569,18 @@ button,
 .zoom-hover:hover {
   transform: scale(1.05);
   transition-duration: 0.5s;
+}
+
+/* .vcontainer {
+   min-height: 10em;
+   display: table-cell;
+   vertical-align: middle;
+} */
+
+.display-table {
+  display: table;
+}
+
+.display-cell {
+  display: table-cell;
 }

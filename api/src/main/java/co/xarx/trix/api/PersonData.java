@@ -7,8 +7,8 @@ public class PersonData implements Serializable {
 	private static final long serialVersionUID = 2078630211043976635L;
 	public PersonDto person;
 	public NetworkDto network;
-	public List<StationDto> stations;
-	public StationDto defaultStation;
+	public List<StationView> stations;
+	public StationView defaultStation;
 	public PersonPermissions personPermissions;
 	public List<PostView> recent;
 	public List<PostView> popular;

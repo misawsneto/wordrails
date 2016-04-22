@@ -205,7 +205,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
     trix.deletePersons(ids).success(function(){
       $scope.app.showSuccessToast('Usuário removido com sucesso.');
-      $scope.app.cancelModal();
+      $scope.app.cancelDialog();
       for (var i = $scope.persons.length - 1; i >= 0; i--) {
         if(ids.indexOf($scope.persons[i].id) > -1){
           $scope.persons.splice(i,1)
@@ -255,7 +255,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       return
     else if($scope.bulkActionSelected.id == 2)
       deletePersons();
-    $scope.app.cancelModal();
+    $scope.app.cancelDialog();
   }
 
   $scope.openBulkActionsDialog = function(ev){

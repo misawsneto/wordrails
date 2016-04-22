@@ -180,4 +180,16 @@ public class TermsResource extends AbstractResource implements TermsApi {
 		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
+
+	@Override
+	public ContentResponse<List<PostView>> findPostsByTerm(Integer termId, int page, int size, String sort) throws ServletException, IOException {
+		Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
+
+		List<Post> posts = termRepository.findPostsByTerm(termId, pageable);
+
+		ContentResponse<List<PostView>> response = new ContentResponse<>();
+		response.content = postConverter.convertToViews(posts);
+		return response;
+	}
+
 }

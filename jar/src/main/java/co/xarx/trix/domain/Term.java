@@ -75,6 +75,9 @@ public class Term extends BaseEntity implements Serializable{
 	@ManyToOne(cascade = CascadeType.ALL)
 	public Image image;
 
+	@Lob
+	public String description;
+
 	@SdkInclude
 	public String getImageHash() {
 		if (image != null) return image.getOriginalHash();

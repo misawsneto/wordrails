@@ -72,7 +72,7 @@
 </md-button>
 
 <script type="text/ng-template" id="confirm_delete_station.html">
-  <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+  <a class="splash-close-button" ng-click="app.cancelDialog()">×</a>
   <div class="splash-content text-center" ng-cloak>
     <div class="row">
       <div class="col-xs-6 col-xs-offset-3">
@@ -83,7 +83,7 @@
           <button ng-click="app.deleteStation();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
            Sim
          </button>
-         <button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
+         <button ng-click="app.cancelDialog()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
            Não
          </button>
        </div>
