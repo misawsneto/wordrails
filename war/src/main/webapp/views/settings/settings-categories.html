@@ -77,11 +77,11 @@
 					<form ng-submit="app.addCategory(newCategoryName);">
 						<div class="md-form-group float-label md-neutral-theme text-lg">
 							<md-input-container class="md-block p-b-sm" flex-gt-sm>
-		            <label>{{'settings.category.NEW_CATEGORY' | translate}}</label>
-		            <input ng-model="newCategoryName">
-		          </md-input-container>
-				    </div>
-				  </form>
+			            	<label>{{'settings.category.NEW_CATEGORY' | translate}}</label>
+			            	<input ng-model="newCategoryName" md-autofocus>
+		          			</md-input-container>
+					    </div>
+			  		</form>
 				</div>
 
 				<div class="text-center">
@@ -102,7 +102,7 @@
 						<div class="md-form-group float-label md-neutral-theme">
 							<md-input-container class="md-block m-b-0" flex-gt-sm>
 				            	<label>{{'titles.DESCRIPTION' | translate}}</label>
-				            	<textarea ng-model="toUpdateCategory.description"></textarea>
+				            	<textarea ng-model="toUpdateCategory.description" md-autofocus></textarea>
 				          	</md-input-container>
 					    </div>
 				  	</form>

@@ -114,12 +114,14 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
       updating = true;
       $scope.app.showSuccessToast('Alterações realizadas com sucesso.');
       $scope.app.cancelDialog();
+      $scope.disabled = false;
     }).error(function(){
       updating = true;
       $timeout(function() {
         cfpLoadingBar.complete(); 
       }, 100);
       $scope.app.cancelDialog();
+      $scope.disabled = false;
     });
   }
 
