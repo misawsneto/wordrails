@@ -27,10 +27,7 @@ import javax.servlet.ServletException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @NoArgsConstructor
@@ -102,12 +99,13 @@ public class TermsResource extends AbstractResource implements TermsApi {
 				roots.add(term);
 			}
 		}
+		Collections.sort(roots);
 		return roots;
 	}
 
 	private Set<Term> getChilds(Term parent, List<Term> allTerms) {
 		cleanTerm(parent);
-		parent.children = new HashSet<Term>();
+		parent.children = new TreeSet<Term>();
 		for (Term term : allTerms) {
 			if (term.parent != null && parent.id.equals(term.parent.id)) {
 				parent.children.add(term);
