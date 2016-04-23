@@ -132,12 +132,6 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
     $scope.updateCategory(category)
   }
 
-  $scope.getColorButtonStyle = function(category){
-    if(category && category.color)
-      return {'background-color': category.color, color: tinycolor(category.color).isLight() ? 'rgba(0,0,0,0.9)' : 'rgba(255,255,255,0.9)' }
-    return null;
-  }
-
   $scope.app.addCategory = function(newCategoryName){
     if(!newCategoryName || newCategoryName.trim() == ""){
       $scope.app.showErrorToast("Categoria Inválida");

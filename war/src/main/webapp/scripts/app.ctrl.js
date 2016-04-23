@@ -244,9 +244,33 @@ angular.module('app')
           return 'rgb('+colorValue.join(',')+')';
         }
 
+        $scope.app.getCategory = function(categoryId){
+          var stations = $scope.app.stations;
+          for (var i = stations.length - 1; i >= 0; i--) {
+            var categories = stations[i].categories;
+            for (var i = categories.length - 1; i >= 0; i--) {
+              (categories[i].id = categoryId)
+            }
+          }
+        }
+
+        $scope.app.getStation = function(stationId){
+          for (var i = $scope.app.stations.length - 1; i >= 0; i--) {
+            if($scope.app.stations[i] == stationId)
+              return $scope.app.stations[i];
+          }
+        }
+
         // ---------- /util -------------
 
         // ---------- theming -----------
+        
+        $scope.app.getCategoryBG = function(category){
+          if(category && category.color)
+            return {'background-color': category.color, color: tinycolor(category.color).isLight() ? 'rgba(0,0,0,0.9)' : 'rgba(255,255,255,0.9)' }
+          return null;
+        }
+
         
         // Function to calculate all colors from base
         // These colors were determined by finding all
