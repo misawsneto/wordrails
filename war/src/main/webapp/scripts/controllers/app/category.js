@@ -3,7 +3,7 @@ app.controller('CategoryCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$md
 
 	$scope.category = category;
 	$scope.postsPage = 0
-	trix.findPostsByTerm(category.termId, $scope.postsPage, 20, null).success(function(response){
+	trix.findPostsByTerm(category.termId, $scope.postsPage, 100, null).success(function(response){
       $scope.postViews = response;
       if($scope.postViews && $scope.postViews.length > 0)
         $scope.postsPage++;
