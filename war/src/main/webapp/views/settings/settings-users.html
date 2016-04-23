@@ -82,7 +82,7 @@
 											<thead>
 												<tr>
 													<th style="width:15px;">
-														<md-checkbox class="no-margin" type="checkbox" ng-model="toggleSelectValue" ng-change="toggleAll(toggleSelectValue)">
+														<md-checkbox aria-label="nothing" class="no-margin" ng-model="toggleSelectValue" ng-change="toggleAll(toggleSelectValue)">
 														</md-checkbox>
 													</th>
 													<th>usuários</th>
@@ -99,13 +99,15 @@
 											<tbody>
 												<tr ng-repeat="person in persons" ng-click="loadPerson(person)">
 													<td>
-														<md-checkbox class="no-margin p-t-sm" ng-if="person.id != app.person.id"
-														 type="checkbox" ng-model="person.selected" ng-click="app.stopPropagation($event)">
+														<md-checkbox aria-label="nothing" class="no-margin p-t-sm" ng-if="person.id != app.person.id"
+														 ng-model="person.selected" ng-true-value="true" ng-false-value="false" ng-click="app.stopPropagation($event)">
 														</md-checkbox>
 													</td>
 													<td class="clearfix">
-							              <span class="pull-left thumb-sm avatar m-r">
-															<div ng-style="{{person.id | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1"></div>
+							              <span class="pull-left thumb-sm m-r">
+															<div ng-style="app.hasProfilePicture(person) ? {{person.id | getImagesPerson:'small':'PROFILE_PICTURE':true}} : null" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(person)}">
+																<i ng-if="!app.hasProfilePicture(person)" style="line-height: 36px;" class="mdi2-account i-24"></i>
+															</div>
 							              </span>
 								              <span class="clear">
 								                <span class="text-md font-bold">{{person.name}}</span>
@@ -116,13 +118,13 @@
 													<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
 													<td class="text-center">
 														<div ng-if="person.id != app.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-														 	<md-switch class="p-t-sm no-margin" type="checkbox" ng-change="app.enableDisablePerson(person)" ng-model="person.user.enabled">
-											            	</md-switch>
+														 	<md-switch class="p-t-sm no-margin" ng-change="app.enableDisablePerson(person)" ng-model="person.user.enabled" ng-true-value="true" ng-false-value="false">
+								            	</md-switch>
 														</div>
 													</td>
 													<td class="text-center">
-														<md-checkbox class=" p-t-sm" ng-if="person.id != app.person.id" 
-														type="checkbox" ng-model="person.selected" ng-click="app.stopPropagation($event)">
+														<md-checkbox aria-label="nothing" class="p-t-sm" ng-if="person.id != app.person.id" 
+														 ng-model="person.selected" ng-click="app.stopPropagation($event)">
 														</md-checkbox>
 													</td>
 													<td>

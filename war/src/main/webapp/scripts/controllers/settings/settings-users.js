@@ -116,7 +116,6 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   }
 
   $scope.loadPerson = function(person){
-  	$state.go('app.settings.users', {'username': person.username})
   }
 
   function DialogController(scope, $mdDialog) {

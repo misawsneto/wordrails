@@ -483,6 +483,14 @@ angular.module('app')
         return post.hash || post.hashes || post.featuredImage || post.featuredImageHash || post.imageHash;
       }
 
+      $scope.app.hasProfilePicture = function(person){
+        return person.imageOriginalHash || person.imageSmallHash || person.imageHashes;
+      }
+
+      $scope.app.hasProfileCover = function(person){
+        return post.coverOriginalHash || post.coverSmallHash || post.coverHashes;
+      }
+
       $scope.app.hasAuthorImage = function(post){
         return post.authorImageHash || post.authorImageSmallHash || post.authorImage || post.authorProfilePicture; 
       }
