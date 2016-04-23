@@ -21,8 +21,8 @@ angular.module('app')
           name: 'perfect_scrollbar',
           module: true,
           files: [
-            '/libs/angular/perfect-scrollbar/js/min/perfect-scrollbar.min.js',
-            '/libs/angular/perfect-scrollbar/js/min/perfect-scrollbar.jquery.min.js',
+            '/libs/angular/perfect-scrollbar/js/perfect-scrollbar.min.js',
+            '/libs/angular/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js',
             '/libs/angular/perfect-scrollbar/css/perfect-scrollbar.min.css',
             '/libs/angular/angular-perfect-scrollbar/src/angular-perfect-scrollbar.js',
           ]

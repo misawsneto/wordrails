@@ -17,16 +17,12 @@
 				md-ink-ripple class="m-b" translate="titles.BACK"></md-button>
 			</div>
 
-			<div ng-if="$state.current.name != 'app.settings.categories'" class="panel-heading h4 wrapper-md">
+			<div class="panel-heading h4 wrapper-md">
 				<span>Categorias da estação <strong>{{stationName}}</strong></span>
 			</div>
 
-			<div ng-if="$state.current.name == 'app.settings.categories'" class="panel-heading h4 wrapper-md">
-				Categories da Rede
-			</div>
-
 			<div class="panel-body p-n" style="min-height: 100px;">
-				<div class="m-l m-t">
+				<div class="text-md text-center">
 					<button md-ink-ripple="" class="md-btn md-raised m-b btn-fw bg-white" ng-click="showAddCategoryDialog(null, $event)">
 						<i class="mdi mdi2-plus"></i> {{'settings.category.NEW_CATEGORY' | translate}}
 					</button>

@@ -261,6 +261,18 @@ angular.module('app')
           }
         }
 
+        $scope.app.fullCardCheck = function(index){
+          return index%7 == 0 && index != 0;
+        }
+
+        $scope.app.largeCardCheck = function(index){
+          return (index%3 == 0 && index != 0);
+        }
+
+        $scope.app.smallCardCheck = function(index){
+          return !(index%3 == 0 && index != 0);
+        }
+
         // ---------- /util -------------
 
         // ---------- theming -----------
