@@ -7,6 +7,8 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     return true; // true|false
   };
 
+  $scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
+
   var uploader = $scope.uploader = new FileUploader({
   	url: TRIX.baseUrl + "/api/images/upload?imageType=PROFILE_PICTURE"
   });

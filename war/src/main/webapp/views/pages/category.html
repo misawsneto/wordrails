@@ -5,7 +5,7 @@
     </div>
 </div>
 <div class="container">
-  <div masonry="{percentPosition: true, columnWidth:1}" class="m-b pos-rlt animated fadeIn" reload-on-show>
+  <div ng-if="postViews" masonry="{percentPosition: true, columnWidth:1}" class="m-b pos-rlt" reload-on-show>
     
     <div class="col-xs-12 masonry-brick" ng-class="{'col-lg-12': app.fullCardCheck($index), 'col-lg-8 col-sm-6':!app.fullCardCheck($index) && app.largeCardCheck($index, postView), 'col-lg-4 col-sm-6':!app.fullCardCheck($index) && !app.largeCardCheck($index, postView)}" ng-repeat="postView in postViews">
         

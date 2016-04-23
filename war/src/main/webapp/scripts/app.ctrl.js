@@ -262,7 +262,7 @@ angular.module('app')
         }
 
         $scope.app.fullCardCheck = function(index){
-          return index%8 == 0 || index == 0;
+          return (index%8 == 0 || index == 0) && !$scope.app.largeCardCheck(index-2) && $scope.app.largeCardCheck(index+3);
         }
 
         $scope.app.largeCardCheck = function(index){

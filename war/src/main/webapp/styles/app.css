@@ -8180,6 +8180,7 @@ md-switch[disabled] .md-bar {
 }
 
 .bg-cover {
+  background-position: 50% 50%;
   background-size: cover;
 }
 
