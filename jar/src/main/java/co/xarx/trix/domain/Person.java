@@ -91,6 +91,10 @@ public class Person extends BaseEntity implements Serializable {
 	@SdkInclude
 	public String coverOriginalHash;
 
+	@Transient
+	@SdkInclude
+	public Boolean enabled;
+
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date lastLogin;
@@ -164,6 +168,7 @@ public class Person extends BaseEntity implements Serializable {
 			imageOriginalHash = image.getOriginalHash();
 		if(cover != null)
 			coverOriginalHash = cover.getOriginalHash();
+		this.enabled = user.enabled;
 	}
 
 }

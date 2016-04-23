@@ -25,4 +25,6 @@ public interface PersonProjection {
 
 	String getImageOriginalHash();
 	String getCoverOriginalHash();
+
+	Boolean getEnabled();
 }

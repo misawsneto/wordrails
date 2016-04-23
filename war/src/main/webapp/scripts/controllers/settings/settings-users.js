@@ -18,6 +18,15 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   	uploader.uploadAll();
   };
 
+  var personActiveId = null;
+  $scope.activatePerson = function(Person){
+    personActiveId = Person.id;
+  }
+
+  $scope.isActivePerson = function(person){
+    return personActiveId == person.id
+  }
+
   $scope.app.lastSettingState = "app.settings.users";
 
   $scope.selectedPerson = null;
@@ -138,21 +147,21 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     if(person)
       $scope.pe.enableDisablePerson = person;
 
-    if(!$scope.pe.enableDisablePerson.user.enabled)
+    if(!$scope.pe.enableDisablePerson.enabled)
       trix.disablePerson($scope.pe.enableDisablePerson.id).success(function(){
         $scope.app.showSuccessToast('Usuário desativado.');
-        $scope.pe.enableDisablePerson.user.enabled = false;
+        $scope.pe.enableDisablePerson.enabled = false;
       }).error(function(){
         $scope.app.showErrorToast('Erro ao alterar usuário.');
-        $scope.pe.enableDisablePerson.user.enabled = !$scope.pe.enableDisablePerson.user.enabled;
+        $scope.pe.enableDisablePerson.enabled = !$scope.pe.enableDisablePerson.enabled;
       })
     else
       trix.enablePerson($scope.pe.enableDisablePerson.id).success(function(){
         $scope.app.showSuccessToast('Usuário ativado.');
-        $scope.pe.enableDisablePerson.user.enabled = true;
+        $scope.pe.enableDisablePerson.enabled = true;
       }).error(function(){
         $scope.app.showErrorToast('Erro ao alterar usuário.');
-        $scope.pe.enableDisablePerson.user.enabled = !$scope.pe.enableDisablePerson.user.enabled;
+        $scope.pe.enableDisablePerson.enabled = !$scope.pe.enableDisablePerson.enabled;
       })
   }
 
@@ -285,7 +294,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         $mdDialog.cancel();
         $scope.persons.forEach(function(person, index){
           if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
-            person.user.enabled = true;
+            person.enabled = true;
         });
       }).error(function(){
         $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
@@ -297,7 +306,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         $mdDialog.cancel();
         $scope.persons.forEach(function(person, index){
           if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
-            person.user.enabled = false;
+            person.enabled = false;
         });
       }).error(function(){
         $scope.app.showSuccessToast('Houve um problema ao executar a operação.');

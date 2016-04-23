@@ -49,19 +49,6 @@
                      </md-menu-content>
                     </md-menu>
                   </div>
-                  <div class="m-b-lg text-u-c">
-                    Filtar por data
-                  </div>
-                  <div class="text-center">
-                    <md-input-container style="width: 140px" class="no-margin m-b-sm">
-                      <label translate="titles.START_DATE">Data inicial</label>
-                      <input type="date" mdp-date-picker ng-model="filter.initialDate" />
-                    </md-input-container>
-                    <md-input-container style="width: 140px" class="no-margin m-b-sm">
-                      <label translate="titles.END_DATE">Data final</label>
-                      <input type="date" mdp-date-picker ng-model="filter.finalDate" />
-                    </md-input-container>
-                  </div>
                 <!-- -->
                 </div>
               </div>
@@ -97,7 +84,7 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr ng-repeat="person in persons" ng-click="loadPerson(person)">
+												<tr ng-repeat="person in persons" class="b-l-3x b-l-s b-c-t" ng-click="activatePerson(person); loadPerson(person);" ng-style="person.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" ng-class="{'b-l-primary': isActivePerson(person)}">
 													<td>
 														<md-checkbox aria-label="nothing" class="no-margin p-t-sm" ng-if="person.id != app.person.id"
 														 ng-model="person.selected" ng-true-value="true" ng-false-value="false" ng-click="app.stopPropagation($event)">
@@ -117,14 +104,14 @@
 													<td class="text-center" ng-if="!person.lastLogin"> - </td>
 													<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
 													<td class="text-center">
-														<div ng-if="person.id != app.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-														 	<md-switch class="p-t-sm no-margin" ng-change="app.enableDisablePerson(person)" ng-model="person.user.enabled" ng-true-value="true" ng-false-value="false">
+														<div ng-if="person.id != app.person.id" class="hidden-sm" ng-click="app.stopPropagation($event)">
+														 	<md-switch class="p-t-sm no-margin" ng-change="app.enableDisablePerson(person)" ng-model="person.enabled" ng-true-value="true" ng-false-value="false">
 								            	</md-switch>
 														</div>
 													</td>
 													<td class="text-center">
 														<md-checkbox aria-label="nothing" class="p-t-sm" ng-if="person.id != app.person.id" 
-														 ng-model="person.selected" ng-click="app.stopPropagation($event)">
+														 ng-model="person.admin" ng-click="app.stopPropagation($event)">
 														</md-checkbox>
 													</td>
 													<td>

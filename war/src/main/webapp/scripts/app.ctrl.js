@@ -91,7 +91,7 @@ angular.module('app')
       }
 
       $scope.app.rgb2hex = rgb2hex;
-      $scope.app.hex = rgb2hex;
+      $scope.app.hex = hex;
 
       $rootScope.$on('$stateChangeSuccess', openPage);
 
@@ -242,6 +242,16 @@ angular.module('app')
           themeProvider._PALETTES[colorA]['500'].value;
 
           return 'rgb('+colorValue.join(',')+')';
+        }
+
+        $scope.app.getMaterialBGColor = function(colorA, hueA, alpha){
+          var colorValue = themeProvider._PALETTES[colorA][hueA] ?
+          themeProvider._PALETTES[colorA][hueA].value :
+          themeProvider._PALETTES[colorA]['500'].value;
+
+          var bgColor = !alpha ? 'rgb('+colorValue.join(',')+')' : 'rgba('+colorValue.join(',')+ ','+ alpha +')'
+
+          return {'background-color': bgColor, 'color': tinycolor($scope.app.rgb2hex(colorValue)).isLight() ? 'rgba(0,0,0,0.9)' : 'rgba(255,255,255,0.9)'};
         }
 
         $scope.app.getCategory = function(categoryId){

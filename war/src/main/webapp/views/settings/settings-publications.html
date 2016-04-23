@@ -109,9 +109,9 @@
     max-height: 100%;">
                 <div class="min-h-400" ng-class="{'hide': settings.tab !== 'publications'}">
                   <ul class="list-group bg-t">
-                    <li class="no-border-radius list-group-item no-bg b-l-2x r-0" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in publications" ng-click="activatePublication(publication);" style="cursor: inherit;">
+                    <li class="no-border-radius list-group-item no-bg b-l-2x r-0" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in publications" ng-click="activatePublication(publication);" style="cursor: inherit;" ng-style="publication.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null">
                       <div href class="pull-left w-56 p-l-sm p-t-lg">
-                        <md-checkbox></md-checkbox>
+                        <md-checkbox ng-model="publication.selected" ng-true-value="true" ng-false-value="false"></md-checkbox>
                       </div>
                       <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
                         <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
