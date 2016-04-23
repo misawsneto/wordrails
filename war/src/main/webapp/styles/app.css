@@ -6113,6 +6113,16 @@ bg-none {
   padding-bottom: 32px;
 }
 
+.p-v-xl {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.p-v-xxl {
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
 .p-h-xs {
   padding-right: 4px;
   padding-left: 4px;
@@ -6136,6 +6146,16 @@ bg-none {
 .p-h-lg {
   padding-right: 32px;
   padding-left: 32px;
+}
+
+.p-h-xl {
+  padding-right: 40px;
+  padding-left: 40px;
+}
+
+.p-h-xxl {
+  padding-right: 48px;
+  padding-left: 48px;
 }
 
 .p-t {
