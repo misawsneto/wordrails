@@ -356,11 +356,11 @@ angular.module('app')
             {'500': '#333333', '50': '#b8b8b8', '100': '#919191', '200': '#757575', '300': '#525252', '400': '#424242', '600': '#242424', '700': '#141414', '800': '#050505', '900': '#000000', 'A100': '#b8b8b8', 'A200': '#919191', 'A400': '#424242', 'A700': '#141414', 'contrastDefaultColor': 'light', 'contrastDarkColors': '50 100 A100 A200'}
           }
           
-          themeProvider.definePalette('myPrimary', $scope.app.network.primaryColors);
-          themeProvider.definePalette('myAccent', $scope.app.network.secondaryColors);
-          themeProvider.definePalette('myWarn', $scope.app.network.alertColors);
+          themeProvider.definePalette('myPrimary', angular.copy($scope.app.network.primaryColors));
+          themeProvider.definePalette('myAccent', angular.copy($scope.app.network.secondaryColors));
+          themeProvider.definePalette('myWarn', angular.copy($scope.app.network.alertColors));
           if($scope.app.network.backgroundColors && $scope.app.network.backgroundColors['50'])
-            themeProvider.definePalette('myBackground', $scope.app.network.backgroundColors);
+            themeProvider.definePalette('myBackground', angular.copy($scope.app.network.backgroundColors));
           else
             themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject(computeColors($scope.app.network.backgroundColor)))
     
@@ -774,8 +774,9 @@ angular.module('app')
       $scope.actionButtonColors = $scope.app.getMaterialColor('myBackground', '700');
       
       appDataCtrl = $scope;
-    }
-  ]);
+      window.console && console.log(initData.network.primaryColors)
+    
+  }]);
 
 var appDataCtrl = null;
 

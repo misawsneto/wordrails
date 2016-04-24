@@ -119,6 +119,9 @@ public class Network extends BaseEntity implements Serializable {
 	
 	@OneToOne
 	public Image loginImage;
+
+	@OneToOne
+	public Image logoImage;
 	
 	@Column(columnDefinition = "varchar(255) default 'D'", nullable = false)
 	public String defaultReadMode;
@@ -222,6 +225,13 @@ public class Network extends BaseEntity implements Serializable {
 	@SdkInclude
 	public String getLoginImageHash() {
 		if (loginImage != null) return loginImage.getOriginalHash();
+
+		return null;
+	}
+
+	@SdkInclude
+	public String getLogoImageHash() {
+		if (logoImage != null) return logoImage.getOriginalHash();
 
 		return null;
 	}

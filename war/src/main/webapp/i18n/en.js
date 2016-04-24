@@ -79,7 +79,8 @@
 		"IMAGE": "Image",
 		"CATEGORY_COLOR": "Category color",
 		"SHARE": "Share",
-		"DESCRIPTION": "Description"
+		"DESCRIPTION": "Description",
+		"UPLOAD": "Upload image"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -148,7 +149,13 @@
 				"GOOGLE": "Google Analytics - Tracking ID",
 				"FLURRY": "Flurry - API Key",
 				"CUSTOM_DOMAIN": "Custom domain"
-			}
+			},
+			"SPLASH": "Splash", 
+			"SPLASH_DEFINITION": "Background image for login screen on the Android and iOS apps and the Web.",
+			"NETWORK_LOGO": "Logo",
+			"NETWORK_LOGO_DEFINITION": "Network logo",
+			"NETWORK_FAVICON": "Favicon(web client only)",
+			"NETWORK_FAVICON_DEFINITION": "Favicon for the web page shown on browser tabs."
 		},
 		"colors":{
 			"TEST_THEME": "Test Colors",

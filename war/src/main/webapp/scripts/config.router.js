@@ -161,14 +161,6 @@ angular.module('app')
                 data : { title: 'Dashboard', folded: false },
                 resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js'])
               })
-              .state('app.theming', {
-                url: '/theming',
-                templateUrl: '/views/pages/dashboard.theming.html',
-                data : { title: 'Theme builder', folded: false },
-                resolve: load(['angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
-                    '/styles/theming.css']),
-                controller: 'ColorGeneratorCtrl'
-              })
               .state('app.pagebuilder', {
                 url: '/pagebuilder',
                 templateUrl: '/views/settings/settings-pagebuilder.html',
@@ -197,14 +189,6 @@ angular.module('app')
                     '/styles/theming.css', '/libs/jquery/slimScroll/jquery.slimscroll.min.js']),
                 controller: 'ColorGeneratorCtrl'
               })
-              // .state('app.colors', {
-              //   url: '/colors',
-              //   templateUrl: '/views/settings/settings-colors.html',
-              //   data : { titleTranslate: 'titles.THEMING', title: 'Aparência', folded: false },
-              //   resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
-              //       '/styles/theming.css', '/libs/jquery/slimScroll/jquery.slimscroll.min.js']),
-              //   controller: 'ColorGeneratorCtrl'
-              // })
               .state('app.analysis', {
                 url: '/analysis',
                 templateUrl: '/views/pages/dashboard.analysis.html',

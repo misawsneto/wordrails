@@ -70,7 +70,7 @@ public class Image extends BaseEntity implements Serializable {
 	public enum Type {
 
 		FAVICON(Size.FAVICON),
-		SPLASH(Size.MEDIUM),
+		SPLASH(Size.MEDIUM,Size.LARGE),
 		LOGIN(Size.MEDIUM),
 		POST(Size.MEDIUM, Size.LARGE),
 		COVER(Size.MEDIUM, Size.LARGE),

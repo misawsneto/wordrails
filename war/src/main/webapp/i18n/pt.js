@@ -79,7 +79,8 @@
 		"IMAGE": "Imagem",
 		"CATEGORY_COLOR": "Cor da categoria",
 		"SHARE": "Compartilhar",
-		"DESCRIPTION": "Descrição"
+		"DESCRIPTION": "Descrição",
+		"UPLOAD": "Selecionar imagem"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -148,7 +149,13 @@
 				"GOOGLE": "Google Analytics - Tracking ID",
 				"FLURRY": "Flurry - API Key",
 				"CUSTOM_DOMAIN": "Domínio personalizado"
-			}
+			},
+			"SPLASH": "Splash", 
+			"SPLASH_DEFINITION": "Imagem da tela inicial e login dos aplicativos Android, iOS e Web.",
+			"NETWORK_LOGO": "Logotipo",
+			"NETWORK_LOGO_DEFINITION": "Logotipo da rede",
+			"NETWORK_FAVICON": "Favicon(cliente web apenas)",
+			"NETWORK_FAVICON_DEFINITION": "Favicon da home page e exibido na aba de browsers."
 		},
 		"colors":{
 			"TEST_THEME": "Testar Cores",

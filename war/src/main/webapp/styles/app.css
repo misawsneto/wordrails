@@ -8438,6 +8438,10 @@ md-switch[disabled] .md-bar {
   color: #444;
 }
 
+.display-t-c {
+  display: table-cell;
+}
+
 /* /general */
 
 /* toast */
