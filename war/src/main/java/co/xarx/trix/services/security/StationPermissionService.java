@@ -1,9 +1,9 @@
 package co.xarx.trix.services.security;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.config.security.Permissions;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.persistence.StationRepository;
-import co.xarx.trix.config.security.Permissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.acls.domain.CumulativePermission;
@@ -38,14 +38,19 @@ public class StationPermissionService {
 	}
 
 	public List<Integer> findStationsWithPermission() {
-		List<Integer> result = new ArrayList<>();
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		List<Integer> stationIds = stationRepository.findIds(TenantContextHolder.getCurrentTenantId());
-		List<Integer> stationIdsWithPermission = stationIds.stream().filter(stationId -> permissionEvaluator.hasPermission(auth, stationId, Station.class.getName(), READ)).collect(Collectors.toList());
-		result.addAll(stationIdsWithPermission);
 
-		return result;
+		return getIdsOfStationsWithPermissions(auth, stationIds);
+	}
+
+	private List<Integer> getIdsOfStationsWithPermissions(Authentication auth, List<Integer> stationIds) {
+		return stationIds.stream()
+				.filter(stationId ->
+						permissionEvaluator.hasPermission(auth, stationId, Station.class.getName(), READ)
+				)
+				.collect(Collectors.toList());
 	}
 
 	public void updateStationsPermissions(List<String> usernames, List<Integer> stationIds, boolean publisher, boolean editor, boolean admin) {
