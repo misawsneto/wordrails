@@ -8,6 +8,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Method;
+
 @Aspect
 @Component
 public class ProfilerAspect {
@@ -17,11 +19,11 @@ public class ProfilerAspect {
 	@Around("@annotation(timeIt)")
 	public Object profile(ProceedingJoinPoint pjp, TimeIt timeIt) throws Throwable {
 		long start = System.currentTimeMillis();
-		log.debug("@ profile - Calling method " + ((MethodSignature)pjp.getSignature()).getMethod());
+		Method method = ((MethodSignature) pjp.getSignature()).getMethod();
 		Object output = pjp.proceed();
 		long finish = System.currentTimeMillis();
 		long elapsedTime = finish - start;
-		log.debug("@ profile - Finishing method at " + finish + " - Elapsed time: " + elapsedTime);
+		log.debug("@ profile - Method " + method + "\n\t Elapsed time: " + elapsedTime);
 		return output;
 	}
 
