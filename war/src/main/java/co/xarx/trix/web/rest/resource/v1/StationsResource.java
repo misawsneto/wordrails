@@ -1,6 +1,6 @@
 package co.xarx.trix.web.rest.resource.v1;
 
-import co.xarx.trix.annotations.TimeIt;
+import co.xarx.trix.annotation.TimeIt;
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Station;
