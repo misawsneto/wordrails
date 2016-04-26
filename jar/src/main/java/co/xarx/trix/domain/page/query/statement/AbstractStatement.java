@@ -1,7 +1,11 @@
 package co.xarx.trix.domain.page.query.statement;
 
 import co.xarx.trix.domain.BaseEntity;
+import co.xarx.trix.domain.page.ContainerSection;
+import co.xarx.trix.domain.page.LinkSection;
+import co.xarx.trix.domain.page.QueryableListSection;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +23,10 @@ import java.util.Set;
 @Table(name = "statement")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
+@JsonSubTypes({
+		@JsonSubTypes.Type(value = PostStatement.class, name = "PostStatement"),
+		@JsonSubTypes.Type(value = SortedStatement.class, name = "SortedStatement")
+})
 public abstract class AbstractStatement extends BaseEntity implements Statement, SortedStatement {
 
 	@Id

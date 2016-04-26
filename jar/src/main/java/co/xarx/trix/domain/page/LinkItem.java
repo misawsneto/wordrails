@@ -21,10 +21,6 @@ public class LinkItem extends BaseEntity implements Serializable {
 		DIVIDER,PAGE,CATEGORY,STATION,POST
 	};
 
-	@NotNull
-	@Range(min = 0)
-	public Integer orderPosition;
-
 	@Id
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)

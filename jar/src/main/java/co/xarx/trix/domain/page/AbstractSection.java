@@ -33,7 +33,8 @@ import java.util.Map;
 		property = "sectionType")
 @JsonSubTypes({
 		@JsonSubTypes.Type(value = QueryableListSection.class, name = "QueryableListSection"),
-		@JsonSubTypes.Type(value = ContainerSection.class, name = "ContainerSection")
+		@JsonSubTypes.Type(value = ContainerSection.class, name = "ContainerSection"),
+		@JsonSubTypes.Type(value = LinkSection.class, name = "LinkSection")
 })
 public abstract class AbstractSection extends BaseEntity implements Section, Serializable {
 

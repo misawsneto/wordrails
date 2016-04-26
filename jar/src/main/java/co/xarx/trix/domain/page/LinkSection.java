@@ -17,33 +17,28 @@ import java.util.Map;
  */
 @lombok.Getter @lombok.Setter
 @Entity
-public class LinkSection {// extends AbstractSection implements Serializable {
+public class LinkSection extends AbstractSection implements Serializable {
 	private static final long serialVersionUID = 5468718930497246401L;
-
-	@Id
-	@Setter(AccessLevel.NONE)
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Integer id;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "linkedsection_linkitem",
 			joinColumns = @JoinColumn(name = "linksection_id"),
 			inverseJoinColumns = @JoinColumn(name = "linkitem_id"))
-	@MapKey(name = "orderPosition")
+	@MapKeyJoinColumn(name = "list_index", referencedColumnName = "list_index", nullable = false)
 	private Map<Integer, LinkItem> linkItems;
 //
-//	@Override
-//	public String getType() {
-//		return Constants.Section.LINK;
-//	}
-//
-//	@Override
-//	@JsonProperty("blocks")
-//	public List<Block> getBlocks() {
-//		ArrayList <Block> blocks = new ArrayList<Block>();
-//		for (LinkItem item :linkItems.values()){
-//			blocks.add(new BlockImpl<>(item, LinkItem.class));
-//		}
-//		return blocks;
-//	}
+	@Override
+	public String getType() {
+		return Constants.Section.LINK;
+	}
+
+	@Override
+	@JsonProperty("blocks")
+	public List<Block> getBlocks() {
+		ArrayList <Block> blocks = new ArrayList<Block>();
+		for (LinkItem item :linkItems.values()){
+			blocks.add(new BlockImpl<>(item, LinkItem.class));
+		}
+		return blocks;
+	}
 }
