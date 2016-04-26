@@ -70,8 +70,7 @@ public class StationEventHandler {
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
 		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged.networkAdmin){
-			if(station.stationPerspectives == null || station.stationPerspectives.size() == 0 
-					&& station.network != null){
+			if(station.stationPerspectives == null || station.stationPerspectives.size() == 0){
 				Set<StationPerspective> perspectives = new HashSet<StationPerspective>(1);
 				
 				//Perspective Default

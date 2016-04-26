@@ -2,6 +2,7 @@ package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.annotation.SdkInclude;
+import co.xarx.trix.domain.page.ContainerSection;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
@@ -46,8 +47,8 @@ public class Network extends BaseEntity implements Serializable {
 	@Size(min=1, max=100)
 	public String trackingId;
 
-	@OneToMany(mappedBy="network", cascade=CascadeType.REMOVE)
-	public Set<Station> stations;
+//	@OneToMany(mappedBy="network", cascade=CascadeType.REMOVE)
+//	public Set<Station> stations;
 
 	@ManyToMany
 	public Set<Taxonomy> taxonomies;
@@ -56,6 +57,15 @@ public class Network extends BaseEntity implements Serializable {
 	public Set<Taxonomy> ownedTaxonomies;
 
 	public boolean allowSignup;
+
+	@OneToOne(fetch = FetchType.EAGER)
+	public ContainerSection header;
+
+	@OneToOne(fetch = FetchType.EAGER)
+	public ContainerSection sidemenu;
+
+	@OneToOne(fetch = FetchType.EAGER)
+	public ContainerSection footer;
 
 	@OneToOne
 	@SdkExclude

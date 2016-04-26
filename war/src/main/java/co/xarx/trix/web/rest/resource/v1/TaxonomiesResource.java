@@ -41,29 +41,29 @@ public class TaxonomiesResource extends AbstractResource implements TaxonomiesAp
 		forward();
 	}
 
-	@Override
-	public Response getTaxonomiesToEdit(Integer networkId) throws IOException {
-		List<Taxonomy> taxonomies = null;
-
-		Network network = networkRepository.findOne(networkId);
-		if(network != null){
-			Person personLogged = authProvider.getLoggedPerson();
-			if(personLogged.networkAdmin){
-				taxonomies = taxonomyRepository.findNetworkOrStationTaxonomies(networkId);
-			}else{
-				List<StationRole> stationRoles = stationRolesRepository.findByPersonIdAndNetworkId(personLogged.id, network.id);
-				List<Integer> stationsIds = new ArrayList<>(stationRoles.size());
-				stationsIds.addAll(stationRoles.stream()
-						.filter(stationRole -> stationRole.admin)
-						.map(stationRole -> stationRole.station.id)
-						.collect(Collectors.toList()));
-				if(!stationsIds.isEmpty()){
-					taxonomies = taxonomyRepository.findByStationsIds(stationsIds);
-				}
-			}
-		}
-		return Response.ok().entity(objectMapper.writeValueAsString(taxonomies)).build();
-	}
+//	@Override
+//	public Response getTaxonomiesToEdit(Integer networkId) throws IOException {
+//		List<Taxonomy> taxonomies = null;
+//
+//		Network network = networkRepository.findOne(networkId);
+//		if(network != null){
+//			Person personLogged = authProvider.getLoggedPerson();
+//			if(personLogged.networkAdmin){
+//				taxonomies = taxonomyRepository.findNetworkOrStationTaxonomies(networkId);
+//			}else{
+//				List<StationRole> stationRoles = stationRolesRepository.findByPersonIdAndNetworkId(personLogged.id, network.id);
+//				List<Integer> stationsIds = new ArrayList<>(stationRoles.size());
+//				stationsIds.addAll(stationRoles.stream()
+//						.filter(stationRole -> stationRole.admin)
+//						.map(stationRole -> stationRole.station.id)
+//						.collect(Collectors.toList()));
+//				if(!stationsIds.isEmpty()){
+//					taxonomies = taxonomyRepository.findByStationsIds(stationsIds);
+//				}
+//			}
+//		}
+//		return Response.ok().entity(objectMapper.writeValueAsString(taxonomies)).build();
+//	}
 
 	@Override
 	public List<Taxonomy> getCategories(Integer stationId) throws IOException {

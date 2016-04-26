@@ -50,11 +50,11 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 	$scope.app.lastSettingState = "app.settings.network";
 	$scope.network = angular.copy($scope.app.network)
 
-	$scope.logoImage = {
-		link: $scope.app.network.logoHash ? TRIX.baseUrl + "/api/images/get/" + $scope.app.network.logoHash + "?size=large" : null}
-
 	$scope.splashImage = {
-		link: $scope.app.network.splashHash ? TRIX.baseUrl + "/api/images/get/" + $scope.app.network.splashHash + "?size=large" : null}
+		link: $scope.app.network.splashImageHash ? TRIX.baseUrl + "/api/images/get/" + $scope.app.network.splashImageHash + "?size=large" : null}
+
+	$scope.logoImage = {
+		link: $scope.app.network.logoImageHash ? TRIX.baseUrl + "/api/images/get/" + $scope.app.network.logoImageHash + "?size=medium" : null}
 
 	$scope.faviconImage = {
 		link: $scope.app.network.faviconHash ? TRIX.baseUrl + "/api/images/get/" + $scope.app.network.faviconHash + "?size=large" : null}

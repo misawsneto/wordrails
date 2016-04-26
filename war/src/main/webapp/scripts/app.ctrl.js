@@ -130,7 +130,6 @@ angular.module('app')
 
       function startApp(){
 
-        //window.console && console.log(appData);
         // ---------- util -------------
         // ---------- util-trix -------------
         $scope.app = angular.extend($scope.app, appData)
@@ -271,12 +270,12 @@ angular.module('app')
           }
         }
 
-        $scope.app.fullCardCheck = function(index){
-          return (index%8 == 0 || index == 0) && !$scope.app.largeCardCheck(index-2) && $scope.app.largeCardCheck(index+3);
+        $scope.app.fullCardCheck = function(index, post){
+          return $scope.app.hasImage(post) && (index%8 == 0 || index == 0) && !$scope.app.largeCardCheck(index-2, post) && $scope.app.largeCardCheck(index+3, post);
         }
 
-        $scope.app.largeCardCheck = function(index){
-          return (index%3 == 0 && index != 0) && !$scope.app.fullCardCheck(index + 1)
+        $scope.app.largeCardCheck = function(index, post){
+          return $scope.app.hasImage(post) && (index%3 == 0 && index != 0) && !$scope.app.fullCardCheck(index + 1, post)
         }
 
         $scope.app.smallCardCheck = function(index){
@@ -490,7 +489,10 @@ angular.module('app')
       }
 
       $scope.app.hasImage = function(post){
-        return post.hash || post.hashes || post.featuredImage || post.featuredImageHash || post.imageHash;
+        if(post)
+          return post.hash || post.hashes || post.featuredImage || post.featuredImageHash || post.imageHash;
+        else 
+          false;
       }
 
       $scope.app.hasProfilePicture = function(person){
@@ -774,8 +776,6 @@ angular.module('app')
       $scope.actionButtonColors = $scope.app.getMaterialColor('myBackground', '700');
       
       appDataCtrl = $scope;
-      window.console && console.log(initData.network.primaryColors)
-    
   }]);
 
 var appDataCtrl = null;

@@ -322,6 +322,26 @@ var trix = angular.module('trix', [])
 	  return \$http.get(_config.url + "/api/posts/search/networkPosts", config)
 	}
 
+	this.searchPosts = function(query,authors,stations,state,from,until,categories,tags,page,size,orders,
+	embeds){
+		var config = {
+            "params": {
+                "query": query,
+                "authors": authors,
+                "stations": stations,
+                "state": state,
+                "from": from,
+                "until": until,
+                "categories": categories,
+                "tags": tags,
+                "page": page,
+                "size": size,
+                "orders": orders
+            }
+        }
+        return \$http.get(_config.url + "/api/v2/posts/search", config)
+	}
+
 	this.searchBookmarks = function(query, _page, _size) {
 		var config = {
 		"params": {

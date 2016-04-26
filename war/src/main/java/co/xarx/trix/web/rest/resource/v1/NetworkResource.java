@@ -269,7 +269,6 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 			station.main = true;
 //			station.networks = new HashSet<Network>();
 //			station.networks.add(network);
-			station.network  = network;
 			station.visibility = Station.UNRESTRICTED;
 			station.writable = false;
 

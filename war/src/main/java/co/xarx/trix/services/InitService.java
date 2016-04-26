@@ -21,9 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class InitService {
@@ -93,17 +91,19 @@ public class InitService {
 		PersonPermissions personPermissions = new PersonPermissions();
 
 
-//		List<StationDto> stationDtos = new ArrayList<>();
 		List<StationView> stationViews = new ArrayList<>();
 		List<Station> stations = stationRepository.findByPersonId(person.id);
 		for (Station station : stations) {
-//			stationDto. termRepo
 			StationView stationView = modelMapper.map(station, StationView.class);
 			List<Term> terms = termRepository.findByTaxonomyId(station.categoriesTaxonomyId);
 			stationView.categories = termConverter.convertToViews(terms);
-//			StationDto stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes("UTF-8"), StationDto.class);
 //			stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
 //			stationDtos.add(stationDto);
+			Set<String> perspectives = new HashSet<>();
+			for (String perspective: stationView.stationPerspectives) {
+				perspectives.add(baseUrl + "/api/stationPerspectives/" + perspective);
+			}
+			stationView.stationPerspectives = perspectives;
 			stationViews.add(stationView);
 		}
 

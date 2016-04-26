@@ -11,6 +11,14 @@ angular.module('app')
           ]
       },
       {
+          name: 'digitalfondue.dftabmenu',
+          module: true,
+          files: [
+            '/libs/angular/df-tab-menu/build/df-tab-menu.min.js',
+            '/libs/angular/df-tab-menu/css/df-tab-menu.css'
+          ]
+      },
+      {
           name: '720kb.socialshare',
           module: true,
           files: [

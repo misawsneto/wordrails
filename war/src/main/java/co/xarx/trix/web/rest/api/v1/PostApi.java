@@ -145,4 +145,8 @@ public interface PostApi {
 															   @QueryParam("page") int page,
 															   @QueryParam("size") int size) throws
 			ServletException, IOException;
+
+	@GET
+	@Path("/search/findPostsByIds")
+	ContentResponse<List<PostView>> findPostsByIds(@QueryParam("ids") List<Integer> ids);
 }
