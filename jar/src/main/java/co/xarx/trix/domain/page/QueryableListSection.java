@@ -56,12 +56,14 @@ public class QueryableListSection extends AbstractSection implements QueryableSe
 	@Getter(AccessLevel.NONE)
 	public Map<Integer, Block> blocks;
 
+	@Override
 	@JsonProperty("blocks")
 	public List<Block> getBlocks() {
-		if(blocks == null)
-			blocks = new HashMap<>();
-
-		return new ArrayList(blocks.values());
+		ArrayList <Block> blocks = new ArrayList<Block>();
+		for (FixedQuery item :fixedQueries){
+			blocks.add(new BlockImpl<>(item, FixedQuery.class));
+		}
+		return blocks;
 	}
 
 	@NotNull

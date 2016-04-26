@@ -7,9 +7,9 @@
 <div class="container">
   <div ng-if="postViews" masonry="{percentPosition: true, columnWidth:1}" class="m-b pos-rlt" reload-on-show>
     
-    <div class="col-xs-12 masonry-brick" ng-class="{'col-lg-12': app.fullCardCheck($index), 'col-lg-8 col-sm-6':!app.fullCardCheck($index) && app.largeCardCheck($index, postView), 'col-lg-4 col-sm-6':!app.fullCardCheck($index) && !app.largeCardCheck($index, postView)}" ng-repeat="postView in postViews">
+    <div class="col-xs-12 masonry-brick" ng-class="{'col-lg-12': app.fullCardCheck($index, postView), 'col-lg-8 col-sm-6':!app.fullCardCheck($index, postView) && app.largeCardCheck($index, postView), 'col-lg-4 col-sm-6':!app.fullCardCheck($index, postView) && !app.largeCardCheck($index, postView)}" ng-repeat="postView in postViews">
         
-        <div class="h-500 pos-rlt o-f-h md-whiteframe-z2 m-b-md" ng-if="app.fullCardCheck($index)">
+        <div class="h-500 pos-rlt o-f-h md-whiteframe-z2 m-b-md" ng-if="app.fullCardCheck($index, postView)">
           <div ng-style="app.getBackgroundImage(postView, 'large')" class="h-full bg-cover md-primary-default background">
             <div class="color-1 p black-grad-inverse">
               <md-button ng-click="recommend = !recommend" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="recommend ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': recommend}"><i class="mdi2-heart i-16"></i></md-button>
@@ -34,7 +34,7 @@
         </div>
 
         <!--  Vertical News Box -->
-        <div class="news md-whiteframe-z1 vertical z-depth-1 card" ng-if="!app.fullCardCheck($index)">
+        <div class="news md-whiteframe-z1 vertical z-depth-1 card" ng-if="!app.fullCardCheck($index, postView)">
             <div class="">
               <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
               ng-style="app.getImagesPerson(postView, postView.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(postView)}">

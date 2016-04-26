@@ -124,7 +124,6 @@ public class TestArtifactsFactory {
 		station.logo = createImage(Image.Type.LOGIN);
 		station.defaultPerspectiveId = 7;
 		station.categoriesTaxonomyId = 140;
-		station.tagsTaxonomyId = 183;
 		return station;
 	}
 

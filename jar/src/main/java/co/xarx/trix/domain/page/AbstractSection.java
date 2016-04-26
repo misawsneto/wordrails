@@ -1,5 +1,6 @@
 package co.xarx.trix.domain.page;
 
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -47,6 +48,7 @@ public abstract class AbstractSection extends BaseEntity implements Section, Ser
 
 	@NotNull
 	@Enumerated(EnumType.STRING)
+	@SdkExclude
 	public Style style;
 
 	@NotNull
@@ -55,6 +57,7 @@ public abstract class AbstractSection extends BaseEntity implements Section, Ser
 
 	@NotNull
 	@ManyToOne
+	@SdkExclude
 	public Page page;
 
 	@ElementCollection(fetch = FetchType.EAGER)
