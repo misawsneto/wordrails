@@ -16,6 +16,7 @@ import co.xarx.trix.services.PersonService;
 import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.StationPermissionService;
+import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.StatsJson;
 import co.xarx.trix.util.StringUtil;
@@ -189,16 +190,16 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	@Override
 	@Deprecated
 	public Response putRegId(String regId, Integer networkId, Double lat, Double lng) {
-		return updateMobile(regId, lat, lng, MobileDevice.Type.ANDROID);
+		return updateMobile(regId, lat, lng, Constants.MobilePlatform.ANDROID);
 	}
 
 	@Override
 	@Deprecated
 	public Response putToken(String token, Integer networkId, Double lat, Double lng) {
-		return updateMobile(token, lat, lng, MobileDevice.Type.APPLE);
+		return updateMobile(token, lat, lng, Constants.MobilePlatform.APPLE);
 	}
 
-	private Response updateMobile(String token, Double lat, Double lng, MobileDevice.Type type) {
+	private Response updateMobile(String token, Double lat, Double lng, Constants.MobilePlatform type) {
 		Person person = authProvider.getLoggedPerson();
 		Logger.info("Updating " + type.toString() + " device " + token + " for person " + person.id);
 		mobileService.updateDevice(person, token, lat, lng, type);

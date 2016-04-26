@@ -56,4 +56,9 @@ public final class Constants {
 		public static final String STATE_PUBLISHED = "PUBLISHED";
 		public static final String STATE_SCHEDULED = "SCHEDULED";
 	}
+
+	public enum MobilePlatform {
+		ANDROID,
+		APPLE
+	}
 }

@@ -1,9 +1,9 @@
 package co.xarx.trix.web.rest.resource;
 
-import co.xarx.trix.domain.MobileDevice;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.MobileApi;
@@ -28,10 +28,10 @@ public class MobileResource extends AbstractResource implements MobileApi {
 
 	@Override
 	public Response updateLocation(String token, String device, Double lat, Double lng) {
-		return updateMobile(token, lat, lng, device.equals("apple") ? MobileDevice.Type.APPLE : MobileDevice.Type.ANDROID);
+		return updateMobile(token, lat, lng, device.equals("apple") ? Constants.MobilePlatform.APPLE : Constants.MobilePlatform.ANDROID);
 	}
 
-	private Response updateMobile(String token, Double lat, Double lng, MobileDevice.Type type) {
+	private Response updateMobile(String token, Double lat, Double lng, Constants.MobilePlatform type) {
 		Person person = authService.getLoggedPerson();
 		Logger.info("Updating " + type.toString() + " device " + token + " for person " + person.id);
 		mobileService.updateDevice(person, token, lat, lng, type);
