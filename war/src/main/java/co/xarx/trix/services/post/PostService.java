@@ -8,6 +8,7 @@ import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,8 +65,8 @@ public class PostService {
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		Network network = networkRepository.findByTenantId(tenantId); //this should be removed in next android releases
 
-		Collection appleDevices = mobileService.getDeviceCodes(mobileDevices, MobileDevice.Type.APPLE);
-		Collection androidDevices = mobileService.getDeviceCodes(mobileDevices, MobileDevice.Type.ANDROID);
+		Collection appleDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.APPLE);
+		Collection androidDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.ANDROID);
 
 		NotificationView notification = getCreatePostNotification(post, network.id);
 		List<Notification> notifications = mobileService.sendNotifications(post, notification, androidDevices, appleDevices);
