@@ -454,5 +454,15 @@
 			<artifactId>jcodec</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>es.arcadiaconsulting.appstorestats</groupId>
+			<artifactId>appstoresstats-android</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>es.arcadiaconsulting.appstorestats</groupId>
+			<artifactId>appstoresstats-ios</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>
