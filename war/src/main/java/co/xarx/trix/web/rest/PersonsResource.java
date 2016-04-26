@@ -782,10 +782,10 @@ public class PersonsResource {
 			Pageable pageable = new PageRequest(0, 10);
 			//			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
 
-			List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
-			List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
-			personData.popular = postConverter.convertToViews(popular);
-			personData.recent = postConverter.convertToViews(recent);
+//			List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
+//			List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
+			personData.popular = null;
+			personData.recent = null;
 
 
 			if(setAttributes != null && setAttributes){

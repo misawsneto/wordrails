@@ -10,6 +10,9 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 			$scope.tabs[index] = true;
 		}
 
+    $scope.app.loadRecent();
+    $scope.app.loadPopular();
+
 		if(!$scope.app.termPerspectiveView)
 			$scope.app.termPerspectiveView = initTermPerspective;
 		

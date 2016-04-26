@@ -118,12 +118,16 @@ angular.module('app')
       })
     }
 
+    $scope.app.loadPopular = loadPopular;
+
     function loadRecent(){
       trix.findRecentPosts($scope.app.currentStation.id, 0, 10)
       .success(function(response){
         $scope.app.initData.recent = response
       })
     }
+
+    $scope.app.loadRecent = loadRecent;
 
     $scope.app.stopPropagation = function($event){
       $event.stopPropagation();
@@ -153,8 +157,8 @@ angular.module('app')
       if(!dontChangePage)
         $state.go('app.stations')
 
-      loadPopular();
-      loadRecent();
+      // loadPopular();
+      // loadRecent();
       $scope.app.checkIfLogged();
 
       $scope.app.closeSelectStation();
