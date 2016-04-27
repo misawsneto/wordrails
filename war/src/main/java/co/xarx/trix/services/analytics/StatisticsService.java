@@ -1,10 +1,13 @@
 package co.xarx.trix.services.analytics;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.domain.PublishedApp;
 import co.xarx.trix.persistence.MobileDeviceRepository;
+import co.xarx.trix.persistence.PublishedAppRepository;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StatsJson;
+import co.xarx.trix.util.StoreStatsData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -41,22 +44,25 @@ public class StatisticsService {
 
 	private Client client;
 	public ObjectMapper mapper;
-	private int defaultInterval;
 	private String analyticsIndex;
 	private DateTimeFormatter dateTimeFormatter;
 	private MobileDeviceRepository mobileDeviceRepository;
+	private PublishedAppRepository appRepository;
+
+	private static int defaultInterval = 30;
 
 	@Autowired
-	public StatisticsService(@Qualifier("objectMapper") ObjectMapper mapper,
-							 Client client,
+	public StatisticsService(Client client,
+							 MobileDeviceRepository mobileDeviceRepository,
+							 @Qualifier("objectMapper") ObjectMapper mapper,
 							 @Value("${elasticsearch.analyticsIndex}") String analyticsIndex,
-							 MobileDeviceRepository mobileDeviceRepository){
+							 PublishedAppRepository appRepository){
 		this.mapper = mapper;
 		this.client = client;
+		this.appRepository = appRepository;
 		this.analyticsIndex = analyticsIndex;
-		this.mobileDeviceRepository = mobileDeviceRepository;
 		this.dateTimeFormatter = getFormatter();
-		this.defaultInterval = 30;
+		this.mobileDeviceRepository = mobileDeviceRepository;
 	}
 
 	public HashMap getPorpularNetworks(){
@@ -198,20 +204,38 @@ public class StatisticsService {
 		statsJson.generalStatsJson = generalStatus;
 		statsJson.dateStatsJson = makeHistogram(postreadCounts, commentsCounts, interval);
 
+		statsJson.androidStore = getAndroidStats();
+		statsJson.iosStore = getIosStats();
+
 		return statsJson;
 	}
 
-	public StatsJson stationStats(String end, String start, Integer statioId){
+	private StoreStatsData getIosStats() {
+		String tenant = TenantContextHolder.getCurrentTenantId();
+		PublishedApp ios = appRepository.findByTenantIdAndType(tenant, Constants.MobilePlatform.APPLE);
+
+		return new StoreStats(ios).getStoreStats();
+
+	}
+
+	private StoreStatsData getAndroidStats() {
+		String tenant = TenantContextHolder.getCurrentTenantId();
+		PublishedApp android = appRepository.findByTenantIdAndType(tenant, Constants.MobilePlatform.ANDROID);
+
+		return new StoreStats(android).getStoreStats();
+	}
+
+	public StatsJson stationStats(String end, String start, Integer stationId){
 		Interval interval = getInterval(end, start);
 
 		Map postreadCounts, commentsCounts;
 		List<Integer> generalStatus = new ArrayList<>();
 
-		postreadCounts = countPostreadByStation(statioId);
-		commentsCounts = countCommentByStation(statioId);
-		generalStatus.add(countTotals(statioId, "nginx_access.statioId", "nginx_access"));
-		generalStatus.add(countTotals(statioId, "comment.statioId", "analytics"));
-		generalStatus.add(countTotals(statioId, "recommend.statioId", "analytics"));
+		postreadCounts = countPostreadByStation(stationId);
+		commentsCounts = countCommentByStation(stationId);
+		generalStatus.add(countTotals(stationId, "nginx_access.stationId", "nginx_access"));
+		generalStatus.add(countTotals(stationId, "comment.stationId", "analytics"));
+		generalStatus.add(countTotals(stationId, "recommend.stationId", "analytics"));
 
 		StatsJson statsJson = new StatsJson();
 		statsJson.generalStatsJson = generalStatus;

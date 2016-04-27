@@ -6,4 +6,6 @@ import java.util.TreeMap;
 public class StatsJson {
 	public List<Integer> generalStatsJson;
 	public TreeMap<Long, ReadsCommentsRecommendsCount> dateStatsJson;
+	public StoreStatsData iosStore;
+	public StoreStatsData androidStore;
 }
