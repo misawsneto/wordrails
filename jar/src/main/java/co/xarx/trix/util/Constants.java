@@ -58,7 +58,7 @@ public final class Constants {
 	}
 
 	public enum MobilePlatform {
-		ANDROID,
-		APPLE
+		APPLE,
+		ANDROID
 	}
 }
