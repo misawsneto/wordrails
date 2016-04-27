@@ -1,6 +1,6 @@
 package co.xarx.trix.aspect;
 
-import co.xarx.trix.annotations.IgnoreMultitenancy;
+import co.xarx.trix.annotation.IgnoreMultitenancy;
 import co.xarx.trix.aspect.annotations.AccessGroup;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.MultiTenantEntity;

@@ -17,9 +17,9 @@ public interface TaxonomiesApi {
 	@Path("/search/findNetworkCategories")
 	void findNetworkCategories() throws IOException;
 
-	@GET
-	@Path("/networks/{networkId}/taxonomiesToEdit")
-	Response getTaxonomiesToEdit(@PathParam("networkId") Integer networkId) throws IOException;
+//	@GET
+//	@Path("/networks/{networkId}/taxonomiesToEdit")
+//	Response getTaxonomiesToEdit(@PathParam("networkId") Integer networkId) throws IOException;
 
 	@GET
 	@Path("/allCategories")

@@ -21,7 +21,7 @@ import java.util.Set;
 @Table(uniqueConstraints = {
 		@UniqueConstraint(columnNames={"taxonomy_id","name_parent"})
 })
-public class Term extends BaseEntity implements Serializable{
+public class Term extends BaseEntity implements Serializable, Comparable<Term>{
 	private static final long serialVersionUID = 7891255759575029731L;
 
 	@Id
@@ -75,6 +75,9 @@ public class Term extends BaseEntity implements Serializable{
 	@ManyToOne(cascade = CascadeType.ALL)
 	public Image image;
 
+	@Lob
+	public String description;
+
 	@SdkInclude
 	public String getImageHash() {
 		if (image != null) return image.getOriginalHash();
@@ -121,5 +124,19 @@ public class Term extends BaseEntity implements Serializable{
 		return "Term{" +
 				"name='" + name + '\'' +
 				'}';
+	}
+
+	@Override
+	public int compareTo(Term o) {
+		if(this.id != null &&  o.id != null)
+			return Integer.compare(this.id, o.id);
+		else if(this.id == null && o.id != null)
+			return 1;
+		else if(this.id != null && o.id == null)
+			return -1;
+		else if(this.id == null && o.id == null)
+			return 1;
+
+		else return 0;
 	}
 }

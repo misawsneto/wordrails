@@ -22,4 +22,9 @@ public interface PersonProjection {
 	String getImageMediumHash();
 
 	String getImageSmallHash();
+
+	String getImageOriginalHash();
+	String getCoverOriginalHash();
+
+	Boolean getEnabled();
 }

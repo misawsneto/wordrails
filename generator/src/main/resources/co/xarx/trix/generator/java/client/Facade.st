@@ -146,6 +146,24 @@ public class $facade$ {
 		});
 	}
 
+	public List<PostView> findPostsByTerm(Integer termId, int page, int size){
+    		return _facade.findPostsByTerm(termId, page, size).content;
+    	}
+
+    public void findPostsByTerm(Integer termId, int page, int size, final Callback<List<PostView\>\> _callback){
+        _facade.findPostsByTerm(termId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+            @Override
+            public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
+                _callback.success(_t.content, _response);
+            }
+
+            @Override
+            public void failure(RetrofitError _error) {
+                _callback.failure(_error);
+            }
+        });
+    }
+
 	public List<PostView> findStationPostsByTags(String tags, Integer stationId, int page, int size){
         return _facade.findStationPostsByTags(tags, stationId, page, size).content;
     }

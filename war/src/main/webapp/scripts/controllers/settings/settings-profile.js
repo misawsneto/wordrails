@@ -15,10 +15,11 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 	// -------------------  ---------------
 
 	$interval(function(){
-  	var sidenav = $mdSidenav('edit-profile')
-  	if(sidenav && !sidenav.isOpen())
-  		$scope.editingPerson = angular.copy($scope.app.person);
-  	
+    if($state.includes('app.profile')){
+      var sidenav = $mdSidenav('edit-profile')
+      if(sidenav && !sidenav.isOpen())
+        $scope.editingPerson = angular.copy($scope.app.person);
+    }	
    }, 500);
 
   $scope.editingPerson = angular.copy($scope.app.person);

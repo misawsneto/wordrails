@@ -194,9 +194,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
-          closeTo: {
-            bottom: 1500
-          },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			template: 	postInfoTemplate,
@@ -363,9 +360,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
-          closeTo: {
-            bottom: 1500
-          },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			template: 	postCropTemplate,
@@ -444,9 +438,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
-          closeTo: {
-            bottom: 1500
-          },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			template: 	postFocuspointTemplate,

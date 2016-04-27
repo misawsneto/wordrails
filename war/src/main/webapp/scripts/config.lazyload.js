@@ -11,6 +11,14 @@ angular.module('app')
           ]
       },
       {
+          name: 'digitalfondue.dftabmenu',
+          module: true,
+          files: [
+            '/libs/angular/df-tab-menu/build/df-tab-menu.min.js',
+            '/libs/angular/df-tab-menu/css/df-tab-menu.css'
+          ]
+      },
+      {
           name: '720kb.socialshare',
           module: true,
           files: [
@@ -21,8 +29,8 @@ angular.module('app')
           name: 'perfect_scrollbar',
           module: true,
           files: [
-            '/libs/angular/perfect-scrollbar/js/min/perfect-scrollbar.min.js',
-            '/libs/angular/perfect-scrollbar/js/min/perfect-scrollbar.jquery.min.js',
+            '/libs/angular/perfect-scrollbar/js/perfect-scrollbar.min.js',
+            '/libs/angular/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js',
             '/libs/angular/perfect-scrollbar/css/perfect-scrollbar.min.css',
             '/libs/angular/angular-perfect-scrollbar/src/angular-perfect-scrollbar.js',
           ]

@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 import org.apache.http.util.Asserts;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

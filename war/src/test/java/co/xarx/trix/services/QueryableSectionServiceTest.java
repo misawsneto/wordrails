@@ -46,11 +46,11 @@ public class QueryableSectionServiceTest {
 	private class FakeExecutor implements Executor<Identifiable, PostStatementMock> {
 
 		@Override
-		public List<Identifiable> execute(PostStatementMock command, Integer size, Integer from) {
+		public List<Identifiable> execute(PostStatementMock statement, Integer size, Integer from) {
 			List<Identifiable> result = new ArrayList<>();
 			for (int i = from; i < from + size; i++) {
 				PostView pv = new PostView();
-				if (command.isFixed) {
+				if (statement.isFixed) {
 					pv.setPostId(fixedIndexes.get(iFixed++) + FIXED_ID_BASE);
 				} else {
 					pv.setPostId(i + PAGEABLE_ID_BASE);

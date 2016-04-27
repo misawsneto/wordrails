@@ -6113,6 +6113,16 @@ bg-none {
   padding-bottom: 32px;
 }
 
+.p-v-xl {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.p-v-xxl {
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
 .p-h-xs {
   padding-right: 4px;
   padding-left: 4px;
@@ -6136,6 +6146,16 @@ bg-none {
 .p-h-lg {
   padding-right: 32px;
   padding-left: 32px;
+}
+
+.p-h-xl {
+  padding-right: 40px;
+  padding-left: 40px;
+}
+
+.p-h-xxl {
+  padding-right: 48px;
+  padding-left: 48px;
 }
 
 .p-t {
@@ -6760,8 +6780,20 @@ bg-none {
   height: 300px;
 }
 
+.h-350 {
+  height: 350px;
+}
+
 .h-400 {
   height: 400px;
+}
+
+.h-450 {
+  height: 450px;
+}
+
+.h-500 {
+  height: 500px;
 }
 
 .h-m-500 {
@@ -8176,6 +8208,7 @@ md-switch[disabled] .md-bar {
 }
 
 .bg-cover {
+  background-position: 50% 50%;
   background-size: cover;
 }
 
@@ -8325,8 +8358,30 @@ md-switch[disabled] .md-bar {
 
 }
 
+.black-grad-inverse {
+  background: #333;
+  /* For browsers that do not support gradients */
+
+  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 100%);
+  /* For Safari 5.1 to 6.0 */
+
+  background: -o-linear-gradient(bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 100%);
+  /* For Opera 11.1 to 12.0 */
+
+  background: -moz-linear-gradient(bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 100%);
+  /* For Firefox 3.6 to 15 */
+
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 100%);
+  /* Standard syntax */
+
+}
+
 .icon-text-shadow {
   text-shadow: 2px 2px 15px #000000;
+}
+
+.text-shadow-lg {
+  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .font-code {
@@ -8376,6 +8431,23 @@ md-switch[disabled] .md-bar {
 
 .opacity-0 {
   opacity: 0;
+}
+
+.b-l-s {
+  border-left-style: solid;
+}
+
+.b-c-t {
+  border-right-color: transparent;
+  border-left-color: transparent;
+}
+
+.text-dark {
+  color: #444;
+}
+
+.display-t-c {
+  display: table-cell;
 }
 
 /* /general */
@@ -8565,4 +8637,56 @@ button,
 .zoom-hover:hover {
   transform: scale(1.05);
   transition-duration: 0.5s;
+}
+
+/* .vcontainer {
+   min-height: 10em;
+   display: table-cell;
+   vertical-align: middle;
+} */
+
+.display-table {
+  display: table;
+}
+
+.display-cell {
+  display: table-cell;
+}
+
+.m-h-230 {
+  min-height: 230px;
+}
+
+.m-h-325 {
+  min-height: 325px;
+}
+
+.custom-header .nav-lines > li {
+  opacity: 1!important;
+}
+
+.df-tab-menu-dropdown {
+  background-color: white!important;
+  border: none!important;
+}
+
+.df-tab-menu-dropdown li {
+  font-size: 14px;
+}
+
+.df-tab-menu-dropdown li a:hover {
+  background-color: rgba(31, 31, 31, 0.1) !important;
+}
+
+.df-tab-menu-dropdown li a {
+  color: #333!important;
+}
+
+.df-tab-menu > li > a {
+  height: inherit!important;
+}
+
+.df-tab-menu {
+  text-transform: none!important;
+  background: transparent!important;
 }

@@ -1,6 +1,6 @@
 package co.xarx.trix.web.rest.resource.v1;
 
-import co.xarx.trix.annotations.IgnoreMultitenancy;
+import co.xarx.trix.annotation.IgnoreMultitenancy;
 import co.xarx.trix.api.PersonPermissions;
 import co.xarx.trix.api.StationPermission;
 import co.xarx.trix.api.ThemeView;
@@ -269,7 +269,6 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 			station.main = true;
 //			station.networks = new HashSet<Network>();
 //			station.networks.add(network);
-			station.network  = network;
 			station.visibility = Station.UNRESTRICTED;
 			station.writable = false;
 

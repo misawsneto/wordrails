@@ -32,22 +32,6 @@ public class ContainerSection extends AbstractSection {
 	@MapKeyJoinColumn(name = "list_index", referencedColumnName = "list_index", nullable = false)
 	public Map<Integer, AbstractSection> children;
 
-	public String orientation = Constants.Layout.SECTION_HORIZONTAL_ORIENTATION;
-
-	@Min(value = 1)
-	@Max(value = 100)
-	private Integer pctSize;
-
-	private Integer topMargin;
-	private Integer leftMargin;
-	private Integer bottomMargin;
-	private Integer rightMargin;
-
-	private Integer topPadding;
-	private Integer leftPadding;
-	private Integer bottomPadding;
-	private Integer rightPadding;
-
 	@JsonProperty("blocks")
 	public List<Block> getBlocks() {
 		if (children == null)

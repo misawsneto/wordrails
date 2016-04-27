@@ -257,4 +257,12 @@ public class PostsResource extends AbstractResource implements PostApi {
 		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
+
+	@Override
+	public ContentResponse<List<PostView>> findPostsByIds(List<Integer> ids) {
+		List<Post> posts = postRepository.findAll(ids);
+		ContentResponse<List<PostView>> response = new ContentResponse<>();
+		response.content = postConverter.convertToViews(posts);
+		return response;
+	}
 }

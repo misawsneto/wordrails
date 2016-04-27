@@ -91,7 +91,7 @@ angular.module('app')
       }
 
       $scope.app.rgb2hex = rgb2hex;
-      $scope.app.hex = rgb2hex;
+      $scope.app.hex = hex;
 
       $rootScope.$on('$stateChangeSuccess', openPage);
 
@@ -130,7 +130,6 @@ angular.module('app')
 
       function startApp(){
 
-        //window.console && console.log(appData);
         // ---------- util -------------
         // ---------- util-trix -------------
         $scope.app = angular.extend($scope.app, appData)
@@ -244,9 +243,55 @@ angular.module('app')
           return 'rgb('+colorValue.join(',')+')';
         }
 
+        $scope.app.getMaterialBGColor = function(colorA, hueA, alpha){
+          var colorValue = themeProvider._PALETTES[colorA][hueA] ?
+          themeProvider._PALETTES[colorA][hueA].value :
+          themeProvider._PALETTES[colorA]['500'].value;
+
+          var bgColor = !alpha ? 'rgb('+colorValue.join(',')+')' : 'rgba('+colorValue.join(',')+ ','+ alpha +')'
+
+          return {'background-color': bgColor, 'color': tinycolor($scope.app.rgb2hex(colorValue)).isLight() ? 'rgba(0,0,0,0.9)' : 'rgba(255,255,255,0.9)'};
+        }
+
+        $scope.app.getCategory = function(categoryId){
+          var stations = $scope.app.stations;
+          for (var i = stations.length - 1; i >= 0; i--) {
+            var categories = stations[i].categories;
+            for (var i = categories.length - 1; i >= 0; i--) {
+              (categories[i].id = categoryId)
+            }
+          }
+        }
+
+        $scope.app.getStation = function(stationId){
+          for (var i = $scope.app.stations.length - 1; i >= 0; i--) {
+            if($scope.app.stations[i] == stationId)
+              return $scope.app.stations[i];
+          }
+        }
+
+        $scope.app.fullCardCheck = function(index, post){
+          return $scope.app.hasImage(post) && (index%8 == 0 || index == 0) && !$scope.app.largeCardCheck(index-2, post) && $scope.app.largeCardCheck(index+3, post);
+        }
+
+        $scope.app.largeCardCheck = function(index, post){
+          return $scope.app.hasImage(post) && (index%3 == 0 && index != 0) && !$scope.app.fullCardCheck(index + 1, post)
+        }
+
+        $scope.app.smallCardCheck = function(index){
+          return !$scope.app.largeCardCheck(index);
+        }
+
         // ---------- /util -------------
 
         // ---------- theming -----------
+        
+        $scope.app.getCategoryBG = function(category){
+          if(category && category.color)
+            return {'background-color': category.color, color: tinycolor(category.color).isLight() ? 'rgba(0,0,0,0.9)' : 'rgba(255,255,255,0.9)' }
+          return null;
+        }
+
         
         // Function to calculate all colors from base
         // These colors were determined by finding all
@@ -310,11 +355,11 @@ angular.module('app')
             {'500': '#333333', '50': '#b8b8b8', '100': '#919191', '200': '#757575', '300': '#525252', '400': '#424242', '600': '#242424', '700': '#141414', '800': '#050505', '900': '#000000', 'A100': '#b8b8b8', 'A200': '#919191', 'A400': '#424242', 'A700': '#141414', 'contrastDefaultColor': 'light', 'contrastDarkColors': '50 100 A100 A200'}
           }
           
-          themeProvider.definePalette('myPrimary', $scope.app.network.primaryColors);
-          themeProvider.definePalette('myAccent', $scope.app.network.secondaryColors);
-          themeProvider.definePalette('myWarn', $scope.app.network.alertColors);
+          themeProvider.definePalette('myPrimary', angular.copy($scope.app.network.primaryColors));
+          themeProvider.definePalette('myAccent', angular.copy($scope.app.network.secondaryColors));
+          themeProvider.definePalette('myWarn', angular.copy($scope.app.network.alertColors));
           if($scope.app.network.backgroundColors && $scope.app.network.backgroundColors['50'])
-            themeProvider.definePalette('myBackground', $scope.app.network.backgroundColors);
+            themeProvider.definePalette('myBackground', angular.copy($scope.app.network.backgroundColors));
           else
             themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject(computeColors($scope.app.network.backgroundColor)))
     
@@ -444,7 +489,18 @@ angular.module('app')
       }
 
       $scope.app.hasImage = function(post){
-        return post.hash || post.hashes || post.featuredImage || post.featuredImageHash || post.imageHash;
+        if(post)
+          return post.hash || post.hashes || post.featuredImage || post.featuredImageHash || post.imageHash;
+        else 
+          false;
+      }
+
+      $scope.app.hasProfilePicture = function(person){
+        return person.imageOriginalHash || person.imageSmallHash || person.imageHashes;
+      }
+
+      $scope.app.hasProfileCover = function(person){
+        return post.coverOriginalHash || post.coverSmallHash || post.coverHashes;
       }
 
       $scope.app.hasAuthorImage = function(post){
@@ -720,8 +776,7 @@ angular.module('app')
       $scope.actionButtonColors = $scope.app.getMaterialColor('myBackground', '700');
       
       appDataCtrl = $scope;
-    }
-  ]);
+  }]);
 
 var appDataCtrl = null;
 

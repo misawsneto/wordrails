@@ -18,6 +18,17 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CategoryData implements Serializable, Identifiable {
 
-	private Integer id;
-	private String name;
+	public CategoryData(Integer id, String name){
+		this.id = id;
+		this.name = name;
+	}
+
+	public Integer parentId;
+
+	public java.lang.Integer id;
+	public java.lang.String color;
+	public java.lang.String imageHash;
+	public java.lang.String name;
+	public java.lang.String description;
+	public java.lang.Integer taxonomyId;
 }
