@@ -32,16 +32,18 @@
           <i class="mdi-social-person-outline i-24 p-h-sm"></i>
         </a>
       </li> -->
-      <li class="dropdown m-r-lg" ng-if="!app.search.show" md-ink-ripple>
+      <li class="dropdown m-r-lg" ng-if="!app.search.show">
         <a href class="dropdown-toggle clear" data-toggle="dropdown" ng-click="app.signInButton()">
           <!-- <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
             <img src="/images/a0.jpg" alt="...">
             <i class="on md b-white bottom"></i>
           </span> -->
-          <div class="o-f-h pull-right md-whiteframe-z1 m-t-sm m-b-sm user-avatar rounded thumb-sm bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover text-center" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%', 'width': '46px', 'height': '46px'}">
-            <i ng-if="!app.isLogged()" class="mdi2-lock-open i-24" style="position: relative;top: -10px;"></i>
-            <i ng-if="app.isLogged() && !app.userImageSmall" class="mdi2-account i-24" style="position: relative;top: -10px;"></i>
+          <div ng-if="app.isLogged()" class="o-f-h pull-right md-whiteframe-z1 m-t-sm m-b-sm user-avatar rounded thumb-sm bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover text-center" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%', 'width': '46px', 'height': '46px'}">
+            <i ng-if="!app.userImageSmall" class="mdi2-account i-24" style="position: relative;top: -10px;"></i>
           </div>
+          <md-button ng-if="!app.isLogged()" class="md-primary-hue-1 background">
+            {{'signin_signup.SIGNIN' | translate}}
+          </md-button>
           <span class="hidden-sm hidden-md" ng-if="app.isLogged()">{{app.person.name}}</span>
           <b class="caret m-r" ng-if="app.isLogged()"></b>
         </a>
