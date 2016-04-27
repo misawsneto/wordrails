@@ -1,6 +1,7 @@
 package co.xarx.trix.persistence;
 
 import co.xarx.trix.domain.MobileDevice;
+import co.xarx.trix.util.Constants;
 import org.hibernate.annotations.NamedQuery;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +29,8 @@ public interface MobileDeviceRepository extends DatabaseRepository<MobileDevice,
 	@RestResource(exported = false)
 	@Query("select count(*) from MobileDevice md where md.type = 1 and tenantId = :tenantId")
 	Object countAppleDevices(@Param("tenantId") String tenantId);
+
+	@RestResource(exported = false)
+	@Query("SELECT count(*) FROM MobileDevice md WHERE md.type = :type AND (date(md.updatedAt) >= date(:start) AND date(md.updatedAt) <= date(:end)) AND md.tenantId = :tenantId")
+	Object countActiveDevices(@Param("tenantId") String tenantId, @Param("type") Constants.MobilePlatform type, @Param("start") String start, @Param("end") String end);
 }

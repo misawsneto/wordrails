@@ -10,6 +10,9 @@ import co.xarx.trix.util.StatsJson;
 import co.xarx.trix.util.StoreStatsData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.arcadiaconsulting.appstoresstats.android.console.AndroidStoreStats;
+import es.arcadiaconsulting.appstoresstats.common.CommonStatsData;
+import es.arcadiaconsulting.appstoresstats.ios.console.IOSStoreStats;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
@@ -43,13 +46,14 @@ import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 public class StatisticsService {
 
 	private Client client;
-	public ObjectMapper mapper;
+	private ObjectMapper mapper;
 	private String analyticsIndex;
 	private DateTimeFormatter dateTimeFormatter;
-	private MobileDeviceRepository mobileDeviceRepository;
 	private PublishedAppRepository appRepository;
+	private MobileDeviceRepository mobileDeviceRepository;
 
-	private static int defaultInterval = 30;
+	private static int MONTH_INTERVAL = 30;
+	private static int WEEK_INTERVAL = 7;
 
 	@Autowired
 	public StatisticsService(Client client,
@@ -204,25 +208,85 @@ public class StatisticsService {
 		statsJson.generalStatsJson = generalStatus;
 		statsJson.dateStatsJson = makeHistogram(postreadCounts, commentsCounts, interval);
 
-		statsJson.androidStore = getAndroidStats();
-		statsJson.iosStore = getIosStats();
+		statsJson.androidStore = getAndroidStats(interval);
+		statsJson.iosStore = getIosStats(interval);
 
 		return statsJson;
 	}
 
-	private StoreStatsData getIosStats() {
+	private StoreStatsData getIosStats(Interval interval) {
 		String tenant = TenantContextHolder.getCurrentTenantId();
 		PublishedApp ios = appRepository.findByTenantIdAndType(tenant, Constants.MobilePlatform.APPLE);
 
-		return new StoreStats(ios).getStoreStats();
+		return getAppStats(ios, interval);
 
 	}
 
-	private StoreStatsData getAndroidStats() {
+	private StoreStatsData getAndroidStats(Interval interval) {
 		String tenant = TenantContextHolder.getCurrentTenantId();
 		PublishedApp android = appRepository.findByTenantIdAndType(tenant, Constants.MobilePlatform.ANDROID);
 
-		return new StoreStats(android).getStoreStats();
+		return getAppStats(android, interval);
+	}
+
+	public StoreStatsData getAppStats(PublishedApp publishedApp, Interval interval){
+		CommonStatsData stats;
+//		CommonStatsData periodStats;
+//		CommonStatsData android = fetchAndroid.getFullStatsForApp("mobile@xarx.co", "X@rxM0b!l3", "com.wordrails.sportclubdorecife", null, "XARX");
+//		this.ios = fetchIOs.getFullStatsForApp("ac@adrielcafe.com", "X@rxtr1x", "SPORTCLUBDORECIFE", "86672524", null);
+
+		if (publishedApp.getType().equals(Constants.MobilePlatform.ANDROID)) {
+			AndroidStoreStats fetchAndroid = new AndroidStoreStats();
+			stats = fetchAndroid.getFullStatsForApp(
+					publishedApp.getPublisherEmail(),
+					publishedApp.getPublisherPassword(),
+					publishedApp.getPackageName(), null,
+					publishedApp.getPublisherPublicName());
+
+//			periodStats = fetchAndroid.getStatsForApp(
+//					publishedApp.getPublisherEmail(),
+//					publishedApp.getPublisherPassword(),
+//					publishedApp.getPackageName(),
+//					interval.getStart().toDate(),
+//					interval.getEnd().toDate(), null,
+//					publishedApp.getPublisherPublicName());
+		} else {
+			IOSStoreStats fetchIos = new IOSStoreStats();
+			stats = fetchIos.getFullStatsForApp(
+					publishedApp.getPublisherEmail(),
+					publishedApp.getPublisherPassword(),
+					publishedApp.getSku(),
+					publishedApp.getVendorId(), null);
+
+//			periodStats = fetchIos.getStatsForApp(
+//					publishedApp.getPublisherEmail(),
+//					publishedApp.getPublisherPassword(),
+//					publishedApp.getPackageName(),
+//					interval.getStart().toDate(),
+//					interval.getEnd().toDate(),
+//					publishedApp.getVendorId(), null);
+		}
+
+		StoreStatsData appStats = new StoreStatsData();
+		appStats.averageRaiting = stats.getAverageRate();
+		appStats.downloads = stats.getDownloadsNumber();
+		appStats.currentInstallations = stats.getCurrentInstallationsNumber();
+//		appStats.monthlyDownloads = periodStats.getDownloadsNumber();
+
+		Interval week = getInterval(interval.getEnd(), WEEK_INTERVAL);
+		Interval month = getInterval(interval.getEnd(), MONTH_INTERVAL);
+
+		appStats.weeklyActiveUsers = getActiveUserByInterval(week, publishedApp.getType());
+		appStats.monthlyActiveUsers = getActiveUserByInterval(month, publishedApp.getType());
+
+		return appStats;
+	}
+
+	public Integer getActiveUserByInterval(Interval interval, Constants.MobilePlatform type){
+		return (int) (long) mobileDeviceRepository.countActiveDevices(
+				TenantContextHolder.getCurrentTenantId(),
+				type, interval.getStart().toString(),
+				interval.getEnd().toString());
 	}
 
 	public StatsJson stationStats(String end, String start, Integer stationId){
@@ -254,7 +318,12 @@ public class StatisticsService {
 			return new Interval(startDate, endDate);
 		}
 
-		return new Interval(endDate.minusDays(defaultInterval), endDate);
+		return new Interval(endDate.minusDays(MONTH_INTERVAL), endDate);
+	}
+
+	public Interval getInterval(DateTime endDate, Integer size) {
+		if (size == null) new Interval(endDate.minusDays(MONTH_INTERVAL), endDate);
+		return new Interval(endDate.minusDays(size), endDate);
 	}
 
 	public Interval getInterval(String date, Integer size){
@@ -262,7 +331,7 @@ public class StatisticsService {
 
 		DateTime endDate = dateTimeFormatter.parseDateTime(date);
 
-		if(size == null) new Interval(endDate.minusDays(defaultInterval), endDate);
+		if(size == null) new Interval(endDate.minusDays(MONTH_INTERVAL), endDate);
 
 		return new Interval(endDate.minusDays(size), endDate);
 	}

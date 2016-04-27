@@ -1,9 +1,10 @@
 package co.xarx.trix.util;
 
 public class StoreStatsData {
-	public String platform;
-	public Integer ratingNumber;
 	public float averageRaiting;
-	public Integer downloadsNumber;
-	public Integer currentInstallationsNumber;
+	public Integer downloads;
+	public Integer currentInstallations;
+	public Integer weeklyActiveUsers;
+	public Integer monthlyActiveUsers;
+	public Integer monthlyDownloads;
 }
