@@ -24,9 +24,9 @@ import java.awt.*;
 @lombok.Getter
 @lombok.Setter
 public class Tinycolor {
-	public Color rgb;
-	public float[] hsl;
-	public float alpha;
+	private Color rgb;
+	private float[] hsl;
+	private float alpha;
 
 	public Tinycolor(String hex) {
 		this(Color.decode(hex));
@@ -39,8 +39,8 @@ public class Tinycolor {
 	 */
 	public Tinycolor(Color rgb) {
 		this.rgb = rgb;
-		hsl = fromRGB(rgb);
-		alpha = rgb.getAlpha() / 255.0f;
+		this.hsl = fromRGB(rgb);
+		this.alpha = rgb.getAlpha() / 255.0f;
 	}
 
 	/**
@@ -51,9 +51,9 @@ public class Tinycolor {
 	 * @param s is the Saturation percentage between 0 - 100
 	 * @param l is the Lumanance percentage between 0 - 100
 	 */
-	public Tinycolor(float h, float s, float l) {
-		this(h, s, l, 1.0f);
-	}
+//	public Tinycolor(float h, float s, float l) {
+//		this(h, s, l, 1.0f);
+//	}
 
 	/**
 	 * Create a HSLColor object using individual HSL values.
@@ -63,11 +63,11 @@ public class Tinycolor {
 	 * @param l     the Lumanance percentage between 0 - 100
 	 * @param alpha the alpha value between 0 - 1
 	 */
-	public Tinycolor(float h, float s, float l, float alpha) {
-		hsl = new float[]{h, s, l};
-		this.alpha = alpha;
-		rgb = toRGB(hsl, alpha);
-	}
+//	public Tinycolor(float h, float s, float l, float alpha) {
+//		hsl = new float[]{h, s, l};
+//		this.alpha = alpha;
+//		rgb = toRGB(hsl, alpha);
+//	}
 
 	/**
 	 * Create a HSLColor object using an an array containing the
@@ -231,11 +231,11 @@ public class Tinycolor {
 	}
 
 	public String toString() {
-		return toHexString();
+		return toHexString() + "  " + toStringHsl();
 	}
 
 	public String toHexString(){
-		return "#" + Integer.toHexString(getRGB().getRGB()).toUpperCase().substring(2);
+		return "#" + Integer.toHexString(getRGB().getRGB()).substring(2);
 	}
 
 	/**
@@ -317,8 +317,6 @@ public class Tinycolor {
 	 * @returns the RGB Color object
 	 */
 	public static Color toRGB(float h, float s, float l) {
-//		System.out.println(h  + " " + s + " " + l);
-
 		return toRGB(h, s, l, 1.0f);
 	}
 
@@ -332,6 +330,7 @@ public class Tinycolor {
 	 * @returns the RGB Color object
 	 */
 	public static Color toRGB(float h, float s, float l, float alpha) {
+//		System.out.println(h + " " + s + " " + l);
 		if (s < 0.0f || s > 100.0f) {
 			String message = "Color parameter outside of expected range - Saturation";
 			throw new IllegalArgumentException(message);
@@ -393,19 +392,20 @@ public class Tinycolor {
 	}
 
 	public Tinycolor lighten(float amount) {
-		float[] hsl = getHSL();
+		float[] tempHsl = getHSL();
+		tempHsl[2] += amount;
 
-		hsl[2] += amount;
-
-		return new Tinycolor(toRGB(hsl[0], hsl[1], hsl[2]));
+		this.hsl = fromRGB(getRGB());
+		return new Tinycolor(toRGB(tempHsl));
 	}
 
 	public Tinycolor darken(float amount) {
-		float[] hsl = getHSL();
+		float[] tempHsl = getHSL();
 
-		hsl[2] -= amount;
+		tempHsl[2] -= amount;
 
-		return new Tinycolor(toRGB(hsl[0], hsl[1], hsl[2]));
+		this.hsl = fromRGB(getRGB());
+		return new Tinycolor(toRGB(tempHsl));
 	}
 
 	public int getBrightness(){
