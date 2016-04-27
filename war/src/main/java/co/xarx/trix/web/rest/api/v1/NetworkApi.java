@@ -1,6 +1,6 @@
 package co.xarx.trix.web.rest.api.v1;
 
-import co.xarx.trix.annotations.IgnoreMultitenancy;
+import co.xarx.trix.annotation.IgnoreMultitenancy;
 import co.xarx.trix.api.PersonPermissions;
 import co.xarx.trix.api.ThemeView;
 import co.xarx.trix.domain.Network;
