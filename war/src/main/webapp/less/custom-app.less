@@ -322,6 +322,7 @@
 
 .bg-cover{
   background-size: cover;
+  background-position: 50% 50%
 }
 
 /* focus point */
@@ -455,7 +456,16 @@
   background: linear-gradient(to top, rgba(0,0,0,0.77), rgba(0,0,0,0)95%); /* Standard syntax */
 }
 
+.black-grad-inverse {
+  background: #333; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(top, rgba(0,0,0,0.50), rgba(0,0,0,0) 100%); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(bottom, rgba(0,0,0,0.50), rgba(0,0,0,0) 100%); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(bottom, rgba(0,0,0,0.50), rgba(0,0,0,0) 100%); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to bottom, rgba(0,0,0,0.50), rgba(0,0,0,0) 100%); /* Standard syntax */
+}
+
 .icon-text-shadow{text-shadow:2px 2px 15px #000}
+.text-shadow-lg{text-shadow:2px 4px 8px rgba(0, 0, 0, 0.5)}
 .font-code{font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;}
 
 #cover-image-button #image-button #image-upload {
@@ -495,6 +505,27 @@
   -moz-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
+}
+
+.opacity-0{
+	opacity: 0;
+}
+
+.b-l-s{
+	border-left-style: solid;
+}
+
+.b-c-t{
+    border-right-color: transparent;
+    border-left-color: transparent;
+}
+
+.text-dark{
+	color: #444;
+}
+
+.display-t-c{
+	display:table-cell;
 }
 
 /* /general */
@@ -629,7 +660,6 @@ footer.page-footer .footer-crt{
 	background-color: rgba(31,31,31,0.5);
 }
 /* /materialize override */
-
 #loading-bar .peg, #loading-bar .bar{height:4px!important;}
 
 .animate-bg, md-toolbar, md-content, md-button, md-tabs-wrapper, button, .md-button, 
@@ -647,3 +677,25 @@ footer.page-footer .footer-crt{
 
 .zoom-hover { transition-duration: 0.5s; }
 .zoom-hover:hover { transform: scale(1.05); transition-duration: 0.5s; }
+
+/* .vcontainer {
+   min-height: 10em;
+   display: table-cell;
+   vertical-align: middle;
+} */
+
+.display-table { display: table; }
+.display-cell { display: table-cell; }
+
+.m-h-230{min-height: 230px;}
+.m-h-325{min-height: 325px;}
+
+.custom-header .nav-lines > li {
+	opacity: 1!important;
+}
+.df-tab-menu-dropdown{background-color: white!important; border:none!important;}
+.df-tab-menu-dropdown li {font-size: 14px;}
+.df-tab-menu-dropdown li a:hover{background-color:rgba(31,31,31,0.1)!important;}
+.df-tab-menu-dropdown li a{color: #333!important;}
+.df-tab-menu > li > a {height: inherit!important;}
+.df-tab-menu {background: transparent!important; text-transform: none!important;}

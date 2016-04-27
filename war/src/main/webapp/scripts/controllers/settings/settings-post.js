@@ -194,9 +194,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
-          closeTo: {
-            bottom: 1500
-          },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			template: 	postInfoTemplate,
@@ -309,7 +306,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	uploader.onProgressItem = function(fileItem, progress) {
 		cfpLoadingBar.start();
-		cfpLoadingBar.set(progress/10)
+		cfpLoadingBar.set(progress/100)
 		if(progress == 100){
 			cfpLoadingBar.complete()
 			toastPromise = $mdToast.show(
@@ -363,9 +360,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
-          closeTo: {
-            bottom: 1500
-          },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			template: 	postCropTemplate,
@@ -444,9 +438,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
-          closeTo: {
-            bottom: 1500
-          },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
 			template: 	postFocuspointTemplate,
@@ -723,7 +714,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	auploader.onProgressItem = function(fileItem, progress) {
 		$scope.audioProcessing = true;
 		cfpLoadingBar.start();
-		cfpLoadingBar.set(progress/10)
+		cfpLoadingBar.set(progress/100)
 		if(progress == 100){
 			cfpLoadingBar.complete()
 			toastPromise = $mdToast.show(
@@ -780,7 +771,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	vuploader.onProgressItem = function(fileItem, progress) {
 		$scope.videoProcessing = true;
 		cfpLoadingBar.start();
-		cfpLoadingBar.set(progress/10)
+		cfpLoadingBar.set(progress/100)
 		if(progress == 100){
 			cfpLoadingBar.complete()
 			toastPromise = $mdToast.show(

@@ -9,7 +9,12 @@ public class TermView implements Serializable {
 	public Integer termId;
 	public String termName;
 	public Integer parentId;
-	public Integer taxonomyId;
-	public String imageHash;
-	public List<TermView> children;
+
+	public java.lang.Integer id;
+	public java.lang.String color;
+	public java.lang.String imageHash;
+	public java.lang.String name;
+	public java.lang.String description;
+	public java.lang.Integer taxonomyId;
+
 }

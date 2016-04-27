@@ -52,14 +52,14 @@ public class Person extends BaseEntity implements Serializable {
 	@Column(name = "post_id")
 	public List<Integer> bookmarkPosts;
 
-	@OrderColumn(name = "order")
+	@OrderColumn(name = "list_order")
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "person_recommend",
 			joinColumns = @JoinColumn(name = "person_id")
 
 	)
 	@Column(name = "post_id")
-	public Set<Integer> recommendPosts;
+	public List<Integer> recommendPosts;
 
 	public boolean networkAdmin = false;
 
@@ -90,6 +90,10 @@ public class Person extends BaseEntity implements Serializable {
 	@Transient
 	@SdkInclude
 	public String coverOriginalHash;
+
+	@Transient
+	@SdkInclude
+	public Boolean enabled;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -164,6 +168,7 @@ public class Person extends BaseEntity implements Serializable {
 			imageOriginalHash = image.getOriginalHash();
 		if(cover != null)
 			coverOriginalHash = cover.getOriginalHash();
+		this.enabled = user.enabled;
 	}
 
 }

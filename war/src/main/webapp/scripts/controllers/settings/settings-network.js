@@ -7,17 +7,17 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
 
 		function buildToggler(navID) {
-	      return function() {
-	        $mdSidenav(navID)
-	          .toggle()
-	          .then(function () {
-	            $log.debug("toggle " + navID + " is done");
-	          });
-	      }
-	    }
+      return function() {
+        $mdSidenav(navID)
+          .toggle()
+          .then(function () {
+            $log.debug("toggle " + navID + " is done");
+          });
+      }
+    }
 
-	    $scope.toggleLeft = buildDelayedToggler('left');
-	        /**
+    $scope.toggleLeft = buildDelayedToggler('left');
+    /**
      * Supplies a function that will continue to operate until the
      * time is up.
      */
@@ -33,71 +33,72 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
         }, wait || 10);
       };
     }
-	    /**
-	     * Build handler to open/close a SideNav; when animation finishes
-	     * report completion in console
-	     */
-	    function buildDelayedToggler(navID) {
-	      return debounce(function() {
-	        $mdSidenav(navID)
-	          .toggle()
-	          .then(function () {
-	            $log.debug("toggle " + navID + " is done");
-	          });
-	      }, 200);
-	    }
+    /**
+     * Build handler to open/close a SideNav; when animation finishes
+     * report completion in console
+     */
+    function buildDelayedToggler(navID) {
+      return debounce(function() {
+        $mdSidenav(navID)
+          .toggle()
+          .then(function () {
+            $log.debug("toggle " + navID + " is done");
+          });
+      }, 200);
+    }
 
-		$scope.app.lastSettingState = "app.settings.network";
-		$scope.network = angular.copy($scope.app.network)
+	$scope.app.lastSettingState = "app.settings.network";
+	$scope.network = angular.copy($scope.app.network)
 
-		$scope.loginImage = {
-			link: $scope.network.loginImageId ? TRIX.baseUrl + "/api/files/" + $scope.network.loginImageId + "/contents" : null}
+	$scope.splashImage = {
+		link: $scope.app.network.splashImageHash ? TRIX.baseUrl + "/api/images/get/" + $scope.app.network.splashImageHash + "?size=large" : null}
 
-		$scope.splashImage = {
-			link: $scope.network.splashImageId ? TRIX.baseUrl + "/api/files/" + $scope.network.splashImageId + "/contents" : null}
+	$scope.logoImage = {
+		link: $scope.app.network.logoImageHash ? TRIX.baseUrl + "/api/images/get/" + $scope.app.network.logoImageHash + "?size=medium" : null}
 
-		$scope.faviconImage = {
-			link: $scope.network.faviconId ? TRIX.baseUrl + "/api/files/" + $scope.network.faviconId + "/contents" : null}
+	$scope.faviconImage = {
+		link: $scope.app.network.faviconHash ? TRIX.baseUrl + "/api/images/get/" + $scope.app.network.faviconHash + "?size=large" : null}
 
 
 	FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
 	    return true; // true|false
 	};
 
-	var login = $scope.login = new FileUploader({
-		url: TRIX.baseUrl + "/api/images/upload?imageType=LOGIN"
-	});
 
 	var splash = $scope.splash = new FileUploader({
 		url: TRIX.baseUrl + "/api/images/upload?imageType=SPLASH"
 	});
 
-	var favicon = $scope.favicon = new FileUploader({
-		url: TRIX.baseUrl + "/api/files/contents/simple"
+	var logo = $scope.logo = new FileUploader({
+		url: TRIX.baseUrl + "/api/images/upload?imageType=LOGO"
 	});
 
-	login.onAfterAddingFile = function(fileItem) {
-		$scope.loginImage = null;
-		login.uploadAll();
+	var favicon = $scope.favicon = new FileUploader({
+		url: TRIX.baseUrl + "/api/images/upload?imageType=FAVICON"
+	});
+
+	logo.onAfterAddingFile = function(fileItem) {
+		$scope.logoImage = null;
+		logo.uploadAll();
 	};
 
-	login.onSuccessItem = function(fileItem, response, status, headers) {
+	logo.onSuccessItem = function(fileItem, response, status, headers) {
 		if(response.filelink){
-			$scope.loginImage = response;
+			$scope.logoImage = response;
 			$mdToast.hide();
 		}
 	};
 
-	login.onErrorItem = function(fileItem, response, status, headers) {
+	logo.onErrorItem = function(fileItem, response, status, headers) {
 		if(status == 413)
 			$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
 		else
 			$scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
 	}
 
-	login.onProgressItem = function(fileItem, progress) {
+	logo.onProgressItem = function(fileItem, progress) {
 		cfpLoadingBar.start();
-		cfpLoadingBar.set(progress/10)
+		cfpLoadingBar.set(progress/100)
 		if(progress == 100){
 			cfpLoadingBar.complete()
 			toastPromise = $mdToast.show(
@@ -130,7 +131,7 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
 	splash.onProgressItem = function(fileItem, progress) {
 		cfpLoadingBar.start();
-		cfpLoadingBar.set(progress/10)
+		cfpLoadingBar.set(progress/100)
 		if(progress == 100){
 			cfpLoadingBar.complete()
 			toastPromise = $mdToast.show(
@@ -162,7 +163,7 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
 	favicon.onProgressItem = function(fileItem, progress) {
 		cfpLoadingBar.start();
-		cfpLoadingBar.set(progress/10)
+		cfpLoadingBar.set(progress/100)
 		if(progress == 100){
 			cfpLoadingBar.complete()
 			toastPromise = $mdToast.show(
@@ -176,41 +177,24 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
 
 	$scope.saveChanges = function(){
-		trix.putNetwork($scope.network).success(function(response){
-			$scope.app.getInitData();
-			$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
-		})
-
-		if($scope.loginImage && $scope.loginImage.imageId){
-			// var loginImage = { original: TRIX.baseUrl + "/api/files/" + $scope.loginImage.id }
-			// trix.postImage(loginImage).success(function(imageId){
-				var myLoginImage = TRIX.baseUrl + "/api/images/" + $scope.loginImage.imageId;
-				$scope.network.loginImage = myLoginImage;
-				trix.putNetwork($scope.network).success(function(){
-					$scope.app.initData.network.loginImageId = $scope.loginImage.id
-				})
-			// })
+		$scope.disabled = true;
+		if($scope.logoImage && $scope.logoImage.id){
+			$scope.network.logoImage = ImageDto.getSelf($scope.logoImage)
 		}
-		if($scope.splashImage && $scope.splashImage.imageId){
-			// var splashImage = { original: TRIX.baseUrl + "/api/files/" + $scope.splashImage.id }
-			// trix.postImage(splashImage).success(function(imageId){
-				var mySplashImage = TRIX.baseUrl + "/api/images/" + $scope.splashImage.imageId;
-				$scope.network.splashImage = mySplashImage;
-				trix.putNetwork($scope.network).success(function(){
-					$scope.app.initData.network.splashImageId = $scope.splashImage.id
-				})
-			// })
+		if($scope.splashImage && $scope.splashImage.id){
+			$scope.network.splashImage = ImageDto.getSelf($scope.splashImage)
 		}
 		if($scope.faviconImage && $scope.faviconImage.id){
-			var favicon = { original: TRIX.baseUrl + "/api/files/" + $scope.faviconImage.id }
-			trix.postImage(favicon).success(function(imageId){
-				var myFavicon = TRIX.baseUrl + "/api/images/" + imageId;
-				$scope.network.favicon = myFavicon;
-				trix.putNetwork($scope.network).success(function(){
-					$scope.app.initData.network.faviconImageId = $scope.faviconImage.id
-				})
-			})
+			$scope.network.favicon = ImageDto.getSelf($scope.faviconImage)
 		}
+
+		trix.putNetwork($scope.network).success(function(response){
+			$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
+			$scope.disabled = false;
+
+		}).error(function(){
+			$scope.disabled = false;
+		})
 	}
 
 	$scope.setLanguage = function(languageRef){

@@ -109,7 +109,10 @@
     max-height: 100%;">
                 <div class="min-h-400" ng-class="{'hide': settings.tab !== 'publications'}">
                   <ul class="list-group bg-t">
-                    <li class="no-border-radius list-group-item no-bg b-l-2x r-0" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in publications" ng-click="activatePublication(publication);" style="cursor: inherit;">
+                    <li class="no-border-radius list-group-item no-bg b-l-2x r-0" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in publications" ng-click="activatePublication(publication);" style="cursor: inherit;" ng-style="publication.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null">
+                      <div href class="pull-left w-56 p-l-sm p-t-lg">
+                        <md-checkbox ng-model="publication.selected" ng-true-value="true" ng-false-value="false"></md-checkbox>
+                      </div>
                       <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
                         <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
                         </div>
@@ -125,7 +128,8 @@
                         </div>
                         <div class="m-t pull-right font-500 m-r-sm"><i class="icon mdi2-radio-tower"></i> {{app.getStationById(publication.stationId).name}}</div>
                         <div class="list-group-item b-n p-sm p-t-sm no-padding-h inline">
-                          <a href class="pull-left m-r-sm"><div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1"></div></a>
+                          <a href class="pull-left m-r-sm">
+                          <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1"></div></a>
                           <div class="clear font-normal p-xs">
                             <a href class="font-500 block">{{publication.authorName}}</a>
                           </div>
@@ -135,19 +139,6 @@
                   </ul> 
                 </div>
                 <!-- end of network configurations -->
-                <!-- domain and analytics -->
-                <div class="md-padding min-h-400" ng-class="{'hide': settings.tab !== 'scheduled'}">
-                  <ul class="list-group bg-t">
-                    <li class="list-group-item" ng-repeat="scheduled in scheduleds">
-                      <a href class="pull-left w-40 m-r"><img src="/images/a1.jpg" class="img-responsive img-circle"></a>
-                      <div class="clear">
-                        <a href class="font-bold block">{{scheduled.title}}</a>
-                        {{scheduled.snippet | characters:170}}
-                      </div>
-                    </li>
-                  </ul> 
-                </div>
-                <!-- /domain and analytics -->
 
                 <!-- logos -->
                 <div class="min-h-400"  ng-class="{'hide': settings.tab !== 'drafts'}">
@@ -179,12 +170,7 @@
                 </div>
                 <!-- /logo section -->
 
-                <!-- footer -->
-                <div class="md-padding min-h-400"  ng-class="{'hide': settings.tab !== 'trash'}">
-                </div>
-                <!-- /footer -->
 
-              </div>
             </div>
           </div>
         </div>

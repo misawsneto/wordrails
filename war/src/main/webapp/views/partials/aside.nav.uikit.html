@@ -1,24 +1,63 @@
 <nav ui-nav>
   <ul class="nav m-t">
     <li ui-sref-active="active">
-      <a md-ink-ripple ui-sref="app.dashboard">
-        <i class="icon mdi2-view-grid i-20"></i>
-        <span class="font-normal" translate="settings.aside.DASHBOARD">Painel de administração</span>
-      </a>
-    </li>
-    <li ui-sref-active="active">
       <a md-ink-ripple ng-click="app.goToLink('/')">
         <i class="icon mdi2-home i-20"></i>
         <span class="font-normal" translate="settings.pages.HOME_PAGE">Página principal</span>
       </a>
     </li>
+    <li ui-sref-active="active">
+      <a md-ink-ripple ui-sref="app.dashboard">
+        <i class="icon mdi2-view-grid i-20"></i>
+        <span class="font-normal" translate="settings.aside.DASHBOARD">Painel de administração</span>
+      </a>
+    </li>
+  </ul>
+  <ul class="nav">
+    <li ui-sref-active="active">
+      <a md-ink-ripple ui-sref="app.profile">
+        <i class="icon mdi2-account-circle i-20"></i>
+        <span translate="settings.aside.MY_PROFILE">My Profile</span>
+      </a>
+    </li>
+    <li ui-sref-active="active">
+      <a md-ink-ripple ui-sref="app.bookmarks">
+        <i class="icon mdi-action-bookmark i-20"></i>
+        <span translate="titles.BOOKMARKS">Bookmarks</span>
+      </a>
+    </li>
+    <li>
+      <a md-ink-ripple ng-click="app.signOut();">
+        <i class="icon mdi2-logout i-20"></i>
+        <span translate="header.navbar.LOGOUT">Logout</span>
+      </a>
+    </li>
+    <!-- <li class="m-v-sm b-b b"></li> -->
+    <!-- <li>
+      <a md-ink-ripple ui-fullscreen>
+        <i class="icon mdi-navigation-fullscreen i-24"></i>
+        <span>Fullscreen</span>
+      </a>
+    </li>
+    <li>
+      <div class="nav-item">
+        <label class="md-check">
+          <input type="checkbox" ng-model="app.setting.asideFolded">
+          <i class="{{app.setting.theme.accent}} no-icon"></i>
+          <span class="hidden-folded">Folded aside</span>
+        </label>
+      </div>
+    </li> -->
+    <!-- <li class="p p-v-sm hidden-folded">
+      <div ng-include="'views/partials/aside.setting.html'"></div>
+    </li> -->
   </ul>
   <ul class="nav">
     <li class="m-v-sm b-b b"></li>
     <li class="nav-header m-v-sm hidden-folded" translate="settings.aside.CONTENT">
       Conteúdo
     </li>
-    <li>
+    <li ui-sref-active="active">
       <a md-ink-ripple ui-sref="app.post">
         <i class="icon mdi-editor-mode-edit i-20"></i>
         <span translate="titles.NEW_POST">Nova publicação</span>

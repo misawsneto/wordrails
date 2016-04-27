@@ -76,7 +76,11 @@
 		"SOCIAL_NETWORK_IDS": "Social network App IDs",
 		"BOOKMARKS": "Bookmarks",
 		"NOTIFICATIONS": "Notifications",
-		"SHARE": "share"
+		"IMAGE": "Image",
+		"CATEGORY_COLOR": "Category color",
+		"SHARE": "Share",
+		"DESCRIPTION": "Description",
+		"UPLOAD": "Upload image"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -145,12 +149,18 @@
 				"GOOGLE": "Google Analytics - Tracking ID",
 				"FLURRY": "Flurry - API Key",
 				"CUSTOM_DOMAIN": "Custom domain"
-			}
+			},
+			"SPLASH": "Splash", 
+			"SPLASH_DEFINITION": "Background image for login screen on the Android and iOS apps and the Web.",
+			"NETWORK_LOGO": "Logo",
+			"NETWORK_LOGO_DEFINITION": "Network logo",
+			"NETWORK_FAVICON": "Favicon(web client only)",
+			"NETWORK_FAVICON_DEFINITION": "Favicon for the web page shown on browser tabs."
 		},
 		"colors":{
 			"TEST_THEME": "Test Colors",
 			"RESET_THEME": "Reset Colors",
-			"APPLY_THEME": "Apply Cores",
+			"APPLY_THEME": "Apply Colors",
 			"APPLY_THEME_DIALOG": "<strong>Attention!</strong> Changes to colors and appearance will be applied to all devices. Do you want to continue?",
 			"TAB": "Tab",
 			"ALERT": "Alert message!"
@@ -249,6 +259,7 @@
 			"STATION_REMOVED_SUCCESS": "Station was removed"
 		},
 		"category": {
+			"STATION_CATEGORY": "Categories of ",
 			"NEW_CATEGORY": "New category",
 			"ADD_CHILD": "Add subcategory",
 			"BACK_TO_STATIONS": "Stations list"

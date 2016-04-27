@@ -14,6 +14,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -75,9 +76,6 @@ public class Station extends BaseEntity implements Serializable {
 	@Column(columnDefinition = "varchar(255) default '#5C78B0'")
 	public String primaryColor = "#5C78B0";
 
-	@ManyToOne
-	public Network network;
-
 	@RestResource(exported = false)
 	@OneToMany(mappedBy = "station", cascade = CascadeType.REMOVE)
 	public Set<StationRole> personsStationRoles;
@@ -99,8 +97,6 @@ public class Station extends BaseEntity implements Serializable {
 	public Set<Taxonomy> ownedTaxonomies;
 
 	public Integer categoriesTaxonomyId;
-
-	public Integer tagsTaxonomyId;
 
 	public int postsTitleSize;
 
@@ -153,26 +149,26 @@ public class Station extends BaseEntity implements Serializable {
 		return writable == other.writable;
 	}
 
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection()
 	@JoinTable(name = "palette_station_primary_color", joinColumns = @JoinColumn(name = "station_id"))
 	@MapKeyColumn(name = "name", nullable = false, length = 100)
 	@Column(name = "color", nullable = false, length = 100)
 	public Map<String, String> primaryColors;
 
 
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection()
 	@JoinTable(name = "palette_station_secondary_color", joinColumns = @JoinColumn(name = "station_id"))
 	@MapKeyColumn(name = "name", nullable = false, length = 100)
 	@Column(name = "color", nullable = false, length = 100)
 	public Map<String, String> secondaryColors;
 
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection()
 	@JoinTable(name = "palette_station_alert_color", joinColumns = @JoinColumn(name = "station_id"))
 	@MapKeyColumn(name = "name", nullable = false, length = 100)
 	@Column(name = "color", nullable = false, length = 100)
 	public Map<String, String> alertColors;
 
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection()
 	@JoinTable(name = "palette_station_background_color", joinColumns = @JoinColumn(name = "station_id"))
 	@MapKeyColumn(name = "name", nullable = false, length = 100)
 	@Column(name = "color", nullable = false, length = 100)

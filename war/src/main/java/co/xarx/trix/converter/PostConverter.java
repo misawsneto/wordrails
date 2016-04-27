@@ -44,7 +44,10 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		if (post.terms != null && !post.terms.isEmpty()) {
 			postView.categories = new HashSet<>();
 			for (Term term : post.terms) {
-				postView.categories.add(new CategoryData(term.id, term.name));
+				CategoryData category = new CategoryData(term.id, term.name);
+				category.color = term.color;
+				category.imageHash = term.getImageHash();
+				postView.categories.add(category);
 			}
 		}
 

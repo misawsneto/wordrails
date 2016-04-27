@@ -80,7 +80,8 @@ module.exports = {
                     "angular-moment/angular-moment.min.js",
                     'perfect-scrollbar/**',
                     'angular-perfect-scrollbar/src/angular-perfect-scrollbar.js',
-                    'angularjs-socialshare/dist/angular-socialshare.min.js'
+                    'angularjs-socialshare/dist/angular-socialshare.min.js',
+                    'df-tab-menu/**'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

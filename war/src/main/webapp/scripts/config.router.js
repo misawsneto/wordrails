@@ -92,7 +92,7 @@ angular.module('app')
                 url: '/categories?slug',
                 templateUrl: '/views/settings/settings-categories.html',
                 data : { titleTranslate: 'titles.CATEGORIES', title: 'Categorias', folded: false },
-                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-categories.js']),
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-categories.js','angularSpectrumColorpicker']),
                 controller: 'SettingsCategoriesCtrl'
               })
 
@@ -161,19 +161,11 @@ angular.module('app')
                 data : { title: 'Dashboard', folded: false },
                 resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js'])
               })
-              .state('app.theming', {
-                url: '/theming',
-                templateUrl: '/views/pages/dashboard.theming.html',
-                data : { title: 'Theme builder', folded: false },
-                resolve: load(['angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
-                    '/styles/theming.css']),
-                controller: 'ColorGeneratorCtrl'
-              })
               .state('app.pagebuilder', {
                 url: '/pagebuilder',
                 templateUrl: '/views/settings/settings-pagebuilder.html',
                 data : { title: 'Page Builder', folded: true },
-                resolve: load(['wu.masonry', 'ui.ace'])
+                resolve: load(['wu.masonry', 'ui.ace', 'digitalfondue.dftabmenu'])
               })
               .state('app.pagebuilder.list', {
                 url: '/list',
@@ -197,14 +189,27 @@ angular.module('app')
                     '/styles/theming.css', '/libs/jquery/slimScroll/jquery.slimscroll.min.js']),
                 controller: 'ColorGeneratorCtrl'
               })
-              // .state('app.colors', {
-              //   url: '/colors',
-              //   templateUrl: '/views/settings/settings-colors.html',
-              //   data : { titleTranslate: 'titles.THEMING', title: 'Aparência', folded: false },
-              //   resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
-              //       '/styles/theming.css', '/libs/jquery/slimScroll/jquery.slimscroll.min.js']),
-              //   controller: 'ColorGeneratorCtrl'
-              // })
+              .state('app.pagebuilder.header', {
+                url: '/header',
+                templateUrl: '/views/settings/settings-pagebuilder-header.html',
+                data : { title: 'Header', folded: true },
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js']),
+                controller: 'PageBuilderHeaderCtrl'
+              })
+              .state('app.pagebuilder.sidemenu', {
+                url: '/header',
+                templateUrl: '/views/settings/settings-pagebuilder-sidemenu.html',
+                data : { title: 'Sidemenu', folded: true },
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js']),
+                controller: 'PageBuilderSidemenuCtrl'
+              })
+              .state('app.pagebuilder.footer', {
+                url: '/header',
+                templateUrl: '/views/settings/settings-pagebuilder-footer.html',
+                data : { title: 'Page Builder', folded: true },
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js']),
+                controller: 'PageBuilderFooterCtrl'
+              })
               .state('app.analysis', {
                 url: '/analysis',
                 templateUrl: '/views/pages/dashboard.analysis.html',
@@ -597,7 +602,7 @@ angular.module('app')
                   // }
                   return deferred.promise;
                 },
-                deps:load( ['720kb.socialshare','monospaced.elastic','angularFileUpload','infinite-scroll', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
+                deps:load( ['digitalfondue.dftabmenu','720kb.socialshare','monospaced.elastic','angularFileUpload','infinite-scroll', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
               },
               url: '',
               views: {
@@ -638,6 +643,34 @@ angular.module('app')
                 templateUrl: '/views/pages/home.html',
                 data : { title: 'Home', folded: false },
                 resolve: load(['wu.masonry', '/scripts/controllers/app/page.js'])
+              })
+              .state('app.categoryPage', {
+                url: '/{stationSlug}/cat?name',
+                templateUrl: '/views/pages/category.html',
+                data : { title: 'Category', folded: false },
+                controller: 'CategoryCtrl',
+                resolve: {
+                  category: function($stateParams, $q, trix){
+                    var deferred = $q.defer();
+                     // if(initData.person.id == 0){
+                     //   document.location.href = '/access/signin?next=/settings';
+                     // }else{
+                     //  deferred.resolve(initData);
+                     // }
+                     initData.stations.forEach(function(station){
+                        if(station.stationSlug == $stateParams.stationSlug)
+                          station.categories && station.categories.forEach(function(category){
+                            if(category.name == $stateParams.name){
+                              category.station = station;
+                              deferred.resolve(category);
+                            }
+                          })
+                     })
+                     
+                    return deferred.promise;
+                  },
+                  deps:load(['wu.masonry', '/scripts/controllers/app/category.js']).deps
+                }
               })
               .state('app.wall', {
                 url: '/wall',
@@ -1027,6 +1060,25 @@ angular.module('app')
                 resolve: load(['/scripts/controllers/app/search.js']),
                 controller: 'SearchCtrl'
               })
+        .state('app.bookmarks', {
+            url: '/@{username}/bookmarks',
+            templateUrl: '/views/pages/category.html',
+            data : { title: 'Category', folded: false },
+            controller: 'BookmarksCtrl',
+            resolve: {
+
+              person: function($stateParams, $q, trix){
+                if(initData.person.id == 0){
+                  document.location.href = '/access/signin';
+                }else if(initData.person.username !== $stateParams.username){
+                  document.location.href = '/';
+                }else{
+                  document.location.href = '/404';
+                }
+              },
+              deps:load(['wu.masonry', '/scripts/controllers/app/bookmarks.js']).deps
+            }
+          })
           .state('access', {
             url: '/access',
             template: '<div class="md-background-default background bg-big"><div ui-view class="fade-in-down smooth"></div></div>',

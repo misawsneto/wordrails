@@ -27,12 +27,12 @@ public interface StationRolesRepository extends DatabaseRepository<StationRole, 
 	@RestResource(exported=false)
 	List<StationRole> findByStation(Station station);
 
-	@Query("select role from StationRole role " +
-			"join role.person person " +
-			"join role.station station " +
-			"where person.id = :personId and :networkId = station.network.id")
-	@RestResource(exported=false)
-	List<StationRole> findByPersonIdAndNetworkId(@Param("personId") Integer personId, @Param("networkId") Integer networkId);
+//	@Query("select role from StationRole role " +
+//			"join role.person person " +
+//			"join role.station station " +
+//			"where person.id = :personId and :networkId = station.network.id")
+//	@RestResource(exported=false)
+//	List<StationRole> findByPersonIdAndNetworkId(@Param("personId") Integer personId, @Param("networkId") Integer networkId);
 
 	@Query("SELECT str FROM StationRole str WHERE str.station.id in (:stationIds) order by str.person.id desc")
 	List<StationRole> findRolesByStationIds(@Param("stationIds") List<Integer> stationIds, Pageable pageable);

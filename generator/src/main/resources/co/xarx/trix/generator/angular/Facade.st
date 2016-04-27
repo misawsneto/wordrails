@@ -101,6 +101,17 @@ var trix = angular.module('trix', [])
 		return \$http.get(_config.url + "/api/terms/search/findPostsByTagAndStationId",  config)
 	};
 
+	this.findPostsByTerm = function(termId, page, size, projection) {
+        var config = {};
+        config.params = {
+            termId: termId,
+            page: page,
+            size: size,
+        }
+        config.params["projection"] = projection;
+        return \$http.get(_config.url + "/api/terms/search/findPostsByTerm",  config)
+    };
+
     this.createPerson = function(person, invitation) {
       var config = {};
       config.headers = {"Content-Type": "application/json"}
@@ -309,6 +320,26 @@ var trix = angular.module('trix', [])
 			config.params = angular.extend(config.params, params);
 
 	  return \$http.get(_config.url + "/api/posts/search/networkPosts", config)
+	}
+
+	this.searchPosts = function(query,authors,stations,state,from,until,categories,tags,page,size,orders,
+	embeds){
+		var config = {
+            "params": {
+                "query": query,
+                "authors": authors,
+                "stations": stations,
+                "state": state,
+                "from": from,
+                "until": until,
+                "categories": categories,
+                "tags": tags,
+                "page": page,
+                "size": size,
+                "orders": orders
+            }
+        }
+        return \$http.get(_config.url + "/api/v2/posts/search", config)
 	}
 
 	this.searchBookmarks = function(query, _page, _size) {

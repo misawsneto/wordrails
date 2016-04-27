@@ -70,12 +70,14 @@ public class Image extends BaseEntity implements Serializable {
 	public enum Type {
 
 		FAVICON(Size.FAVICON),
-		SPLASH(Size.MEDIUM),
+		SPLASH(Size.MEDIUM,Size.LARGE),
 		LOGIN(Size.MEDIUM),
 		POST(Size.MEDIUM, Size.LARGE),
 		COVER(Size.MEDIUM, Size.LARGE),
 		PROFILE_PICTURE(Size.SMALL, Size.MEDIUM),
 		CATEGORY(Size.MEDIUM, Size.LARGE),
+		VIDEO(Size.MEDIUM, Size.LARGE),
+		AUDIO(Size.MEDIUM, Size.LARGE),
 		LOGO(Size.SMALL, Size.MEDIUM);
 
 		private Set<Size> sizes; //height & width

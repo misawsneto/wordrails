@@ -76,7 +76,11 @@
 		"SOCIAL_NETWORK_IDS": "IDs de aplicativos sociais",
 		"BOOKMARKS": "Minhas leituras",
 		"NOTIFICATIONS": "Notificações",
-		"SHARE": "Compartilhar"
+		"IMAGE": "Imagem",
+		"CATEGORY_COLOR": "Cor da categoria",
+		"SHARE": "Compartilhar",
+		"DESCRIPTION": "Descrição",
+		"UPLOAD": "Selecionar imagem"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -145,7 +149,13 @@
 				"GOOGLE": "Google Analytics - Tracking ID",
 				"FLURRY": "Flurry - API Key",
 				"CUSTOM_DOMAIN": "Domínio personalizado"
-			}
+			},
+			"SPLASH": "Splash", 
+			"SPLASH_DEFINITION": "Imagem da tela inicial e login dos aplicativos Android, iOS e Web.",
+			"NETWORK_LOGO": "Logotipo",
+			"NETWORK_LOGO_DEFINITION": "Logotipo da rede",
+			"NETWORK_FAVICON": "Favicon(cliente web apenas)",
+			"NETWORK_FAVICON_DEFINITION": "Favicon da home page e exibido na aba de browsers."
 		},
 		"colors":{
 			"TEST_THEME": "Testar Cores",
@@ -249,6 +259,7 @@
 			"STATION_REMOVED_SUCCESS": "Estação removida com sucesso"
 		},
 		"category": {
+			"STATION_CATEGORY": "Categorias da estação ",
 			"NEW_CATEGORY": "Nova categoria",
 			"ADD_CHILD": "Nova subcategoria",
 			"BACK_TO_STATIONS": "Voltar a lista de estações"

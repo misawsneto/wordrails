@@ -192,7 +192,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 
   uploader.onProgressItem = function(fileItem, progress) {
   	cfpLoadingBar.start();
-  	cfpLoadingBar.set(progress/10)
+  	cfpLoadingBar.set(progress/100)
   	if(progress == 100){
   		cfpLoadingBar.complete()
   		toastPromise = $mdToast.show(
@@ -427,7 +427,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   		return
   	else if($scope.bulkActionSelected.id == 2)
   		removeAllSelected();
-  	$scope.app.cancelModal();
+  	$scope.app.cancelDialog();
   }
 
   var removeAllSelected = function(){
@@ -443,7 +443,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   				$scope.personsRoles.splice(i, 1);
   		};
   		$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
-  		$scope.app.cancelModal();
+  		$scope.app.cancelDialog();
   	})
   }		
 

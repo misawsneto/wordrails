@@ -1,12 +1,15 @@
 package co.xarx.trix.api.v2;
 
-/**
- * Created by misael on 4/15/2016.
- */
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ErrorData {
-	public ErrorData(){};
-	public ErrorData(String error){
-		this.error = error;
-	}
-	public String error;
+
+	private String message;
 }

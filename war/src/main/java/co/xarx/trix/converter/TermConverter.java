@@ -20,12 +20,16 @@ public class TermConverter extends AbstractConverter<Term, TermView> {
 	@Override
 	public TermView convertTo(Term term) {
 		TermView termView = new TermView();
-		termView.termId = term.id;
+		termView.termId = termView.id = term.id;
 		if(term.parent != null)
 			termView.parentId = term.parent.id;
 		if(term.taxonomy != null)
 			termView.taxonomyId = term.taxonomy.id;
 		termView.termName = term.name;
+		termView.name = term.name;
+		termView.color = term.color;
+		termView.description = term.description;
+		termView.imageHash = term.image != null ? term.image.getOriginalHash() : null;
 		
 		return termView;
 	}

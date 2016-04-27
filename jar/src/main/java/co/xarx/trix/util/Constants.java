@@ -23,6 +23,7 @@ public final class Constants {
 	public static class Section {
 		public static final String QUERYABLE_LIST = "queryable_list";
 		public static final String CONTAINER = "container";
+		public static final String LINK = "link_list";
 
 		public static final String VERTICAL_LIST = "vertical_list";
 	}

@@ -1,6 +1,7 @@
 package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkExclude;
+import co.xarx.trix.annotation.SdkInclude;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -30,10 +31,16 @@ public class Audio extends BaseEntity implements Serializable {
 
 	public String title;
 
-	@SdkExclude
-	@ManyToOne(cascade=CascadeType.MERGE)
-	@JsonIgnore
-	private Picture cover;
+	@SdkInclude
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	public Image image;
+
+	@SdkInclude
+	public String getImageHash() {
+		if (image != null) return image.getOriginalHash();
+
+		return null;
+	}
 
 	@NotNull
 	@SdkExclude

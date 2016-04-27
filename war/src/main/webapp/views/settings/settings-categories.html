@@ -17,17 +17,13 @@
 				md-ink-ripple class="m-b" translate="titles.BACK"></md-button>
 			</div>
 
-			<div ng-if="$state.current.name != 'app.settings.categories'" class="panel-heading h4 wrapper-md">
+			<div class="panel-heading h4 wrapper-md">
 				<span>Categorias da estação <strong>{{stationName}}</strong></span>
 			</div>
 
-			<div ng-if="$state.current.name == 'app.settings.categories'" class="panel-heading h4 wrapper-md">
-				Categories da Rede
-			</div>
-
 			<div class="panel-body p-n" style="min-height: 100px;">
-				<div class="m-l m-t">
-					<button md-ink-ripple="" class="md-btn md-raised m-b btn-fw bg-white" ng-click="showAddCategorySplash(null, $event)">
+				<div class="text-md text-center">
+					<button md-ink-ripple="" class="md-btn md-raised m-b btn-fw bg-white" ng-click="showAddCategoryDialog(null, $event)">
 						<i class="mdi mdi2-plus"></i> {{'settings.category.NEW_CATEGORY' | translate}}
 					</button>
 				</div>
@@ -77,15 +73,39 @@
 					<form ng-submit="app.addCategory(newCategoryName);">
 						<div class="md-form-group float-label md-neutral-theme text-lg">
 							<md-input-container class="md-block p-b-sm" flex-gt-sm>
-		            <label>{{'settings.category.NEW_CATEGORY' | translate}}</label>
-		            <input ng-model="newCategoryName">
-		          </md-input-container>
-				    </div>
-				  </form>
+			            	<label>{{'settings.category.NEW_CATEGORY' | translate}}</label>
+			            	<input ng-model="newCategoryName" md-autofocus>
+		          			</md-input-container>
+					    </div>
+			  		</form>
 				</div>
 
 				<div class="text-center">
 					<md-button ng-click="app.addCategory(newCategoryName); disabled = true;" ng-disabled="disabled" md-ink-ripple style="font-size:16px;" class="">{{'actions.CREATE' | translate}}</md-button>
+					<md-button ng-click="cancel()" md-ink-ripple style="font-size:16px;" class="">{{'titles.CANCEL' | translate}}</md-button>
+				</div>
+			</div>
+		</md-content>
+	</md-dialog>
+</script>
+
+<script type="text/ng-template" id="category_description_dialog.html">
+	<md-dialog aria-label="Category Description Dialog">
+		<md-content role="document" class="md-background-hue-1 background">
+			<div class="p-xs">
+				<div class="md-dialog-content-body text-md p-r p-l w-400 p-t">
+					<form ng-submit="updateCategory(toUpdateCategory);">
+						<div class="md-form-group float-label md-neutral-theme">
+							<md-input-container class="md-block m-b-0" flex-gt-sm>
+				            	<label>{{'titles.DESCRIPTION' | translate}}</label>
+				            	<textarea ng-model="toUpdateCategory.description" md-autofocus></textarea>
+				          	</md-input-container>
+					    </div>
+				  	</form>
+				</div>
+
+				<div class="text-center">
+					<md-button ng-click="updateCategory(toUpdateCategory); disabled = true;" ng-disabled="disabled" md-ink-ripple style="font-size:16px;" class="">{{'actions.UPDATE' | translate}}</md-button>
 					<md-button ng-click="cancel()" md-ink-ripple style="font-size:16px;" class="">{{'titles.CANCEL' | translate}}</md-button>
 				</div>
 			</div>

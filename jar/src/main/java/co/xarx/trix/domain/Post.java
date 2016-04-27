@@ -127,7 +127,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Column(updatable = false)
 	public int commentsCount = 0;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany()
 	public Set<Term> terms;
 
 	@ElementCollection(fetch = FetchType.EAGER)

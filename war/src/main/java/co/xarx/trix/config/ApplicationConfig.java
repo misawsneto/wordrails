@@ -1,16 +1,13 @@
 package co.xarx.trix.config;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.elasticsearch.mapper.PersonMap;
-import co.xarx.trix.elasticsearch.mapper.PostMap;
-import co.xarx.trix.elasticsearch.mapper.PostViewMap;
-import co.xarx.trix.elasticsearch.mapper.StationMap;
+import co.xarx.trix.elasticsearch.mapper.*;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.notification.APNSClient;
 import co.xarx.trix.services.notification.GCMClient;
 import co.xarx.trix.services.notification.MobileNotificationSender;
 import co.xarx.trix.services.TenantProvider;
-import co.xarx.trix.web.rest.map.*;
+import co.xarx.trix.config.modelmapper.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.Sender;
 import org.modelmapper.ModelMapper;
@@ -84,6 +81,7 @@ public class ApplicationConfig {
 		modelMapper.addMappings(new PageDataMap());
 		modelMapper.addMappings(new PostViewMap());
 		modelMapper.addMappings(new VideoDataMap());
+		modelMapper.addMappings(new StationViewMap());
 		return modelMapper;
 	}
 

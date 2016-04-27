@@ -1,7 +1,32 @@
 angular.module('app')
+  .directive('eventFocus', function(focus) {
+    return function(scope, elem, attr) {
+      elem.on(attr.eventFocus, function() {
+        focus(attr.eventFocusId);
+      });
+
+      // Removes bound events in the element itself
+      // when the scope is destroyed
+      scope.$on('$destroy', function() {
+        elem.off(attr.eventFocus);
+      });
+    };
+  })
   .directive('nodeTree', function() {
     return {
       template: '<node ng-repeat="node in tree"></node>',
+      replace: true,
+      transclude: true,
+      restrict: 'E',
+      scope: {
+        tree: '=ngModel'
+      }
+    };
+  })
+
+  .directive('categoryLeaf', function() {
+    return {
+      template: '<category-tree ng-repeat="node in tree"></category-tree>',
       replace: true,
       transclude: true,
       restrict: 'E',
@@ -58,7 +83,7 @@ angular.module('app')
         };
 
         if (scope.node.children.length > 0) {
-          var childNode = $compile('<ul><node-tree ng-model="node.children"></node-tree></ul>')(scope)
+          var childNode = $compile('<ul><category-leaf ng-model="node.children"></category-leaf></ul>')(scope)
           elm.append(childNode);
         }
       }
@@ -112,7 +137,7 @@ angular.module('app')
         };
 
         if (scope.node.children.length > 0) {
-          var childNode = $compile('<ul><node-tree ng-model="node.children"></node-tree></ul>')(scope)
+          var childNode = $compile('<ul><category-leaf ng-model="node.children"></category-leaf></ul>')(scope)
           elm.append(childNode);
         }
       }

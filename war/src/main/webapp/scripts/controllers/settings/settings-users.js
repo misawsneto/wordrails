@@ -7,6 +7,8 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     return true; // true|false
   };
 
+  $scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
+
   var uploader = $scope.uploader = new FileUploader({
   	url: TRIX.baseUrl + "/api/images/upload?imageType=PROFILE_PICTURE"
   });
@@ -15,6 +17,15 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   	$scope.app.editingPost.uploadedImage = null;
   	uploader.uploadAll();
   };
+
+  var personActiveId = null;
+  $scope.activatePerson = function(Person){
+    personActiveId = Person.id;
+  }
+
+  $scope.isActivePerson = function(person){
+    return personActiveId == person.id
+  }
 
   $scope.app.lastSettingState = "app.settings.users";
 
@@ -114,7 +125,6 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   }
 
   $scope.loadPerson = function(person){
-  	$state.go('app.settings.users', {'username': person.username})
   }
 
   function DialogController(scope, $mdDialog) {
@@ -137,21 +147,21 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     if(person)
       $scope.pe.enableDisablePerson = person;
 
-    if(!$scope.pe.enableDisablePerson.user.enabled)
+    if(!$scope.pe.enableDisablePerson.enabled)
       trix.disablePerson($scope.pe.enableDisablePerson.id).success(function(){
         $scope.app.showSuccessToast('Usuário desativado.');
-        $scope.pe.enableDisablePerson.user.enabled = false;
+        $scope.pe.enableDisablePerson.enabled = false;
       }).error(function(){
         $scope.app.showErrorToast('Erro ao alterar usuário.');
-        $scope.pe.enableDisablePerson.user.enabled = !$scope.pe.enableDisablePerson.user.enabled;
+        $scope.pe.enableDisablePerson.enabled = !$scope.pe.enableDisablePerson.enabled;
       })
     else
       trix.enablePerson($scope.pe.enableDisablePerson.id).success(function(){
         $scope.app.showSuccessToast('Usuário ativado.');
-        $scope.pe.enableDisablePerson.user.enabled = true;
+        $scope.pe.enableDisablePerson.enabled = true;
       }).error(function(){
         $scope.app.showErrorToast('Erro ao alterar usuário.');
-        $scope.pe.enableDisablePerson.user.enabled = !$scope.pe.enableDisablePerson.user.enabled;
+        $scope.pe.enableDisablePerson.enabled = !$scope.pe.enableDisablePerson.enabled;
       })
   }
 
@@ -205,7 +215,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
     trix.deletePersons(ids).success(function(){
       $scope.app.showSuccessToast('Usuário removido com sucesso.');
-      $scope.app.cancelModal();
+      $scope.app.cancelDialog();
       for (var i = $scope.persons.length - 1; i >= 0; i--) {
         if(ids.indexOf($scope.persons[i].id) > -1){
           $scope.persons.splice(i,1)
@@ -255,7 +265,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       return
     else if($scope.bulkActionSelected.id == 2)
       deletePersons();
-    $scope.app.cancelModal();
+    $scope.app.cancelDialog();
   }
 
   $scope.openBulkActionsDialog = function(ev){
@@ -284,7 +294,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         $mdDialog.cancel();
         $scope.persons.forEach(function(person, index){
           if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
-            person.user.enabled = true;
+            person.enabled = true;
         });
       }).error(function(){
         $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
@@ -296,7 +306,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         $mdDialog.cancel();
         $scope.persons.forEach(function(person, index){
           if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
-            person.user.enabled = false;
+            person.enabled = false;
         });
       }).error(function(){
         $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
