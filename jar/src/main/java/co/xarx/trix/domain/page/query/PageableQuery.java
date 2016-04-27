@@ -27,6 +27,7 @@ public class PageableQuery extends BaseEntity implements Query {
 		this.objectStatement = objectStatement;
 	}
 
+
 	@Id
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)

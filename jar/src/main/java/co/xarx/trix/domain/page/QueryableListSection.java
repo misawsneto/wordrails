@@ -3,7 +3,6 @@ package co.xarx.trix.domain.page;
 import co.xarx.trix.domain.page.query.FixedQuery;
 import co.xarx.trix.domain.page.query.PageableQuery;
 import co.xarx.trix.domain.page.query.SectionPopulator;
-import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
@@ -13,9 +12,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +36,13 @@ public class QueryableListSection extends AbstractSection implements QueryableSe
 		this.size = size;
 		this.fixedQueries = query;
 	}
+
+	public QueryableListSection(Integer size, PageableQuery query, List<FixedQuery> fixedQueries) {
+		this.size = size;
+		this.pageableQuery = query;
+		this.fixedQueries = fixedQueries;
+	}
+
 
 	@JsonIgnore
 	@JoinTable(name = "sectionqueryablelist_queryfixed",
@@ -76,8 +81,8 @@ public class QueryableListSection extends AbstractSection implements QueryableSe
 	public Integer mSize;
 
 	@Override
-	public String getType() {
-		return Constants.Section.QUERYABLE_LIST;
+	public Type getType() {
+		return Type.QUERYABLE;
 	}
 
 	@JsonProperty("createdAt")

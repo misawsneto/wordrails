@@ -1,4 +1,4 @@
-package co.xarx.trix.api.v2.save;
+package co.xarx.trix.api.v2.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

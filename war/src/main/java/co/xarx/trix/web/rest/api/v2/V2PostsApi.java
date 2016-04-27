@@ -11,7 +11,7 @@ import java.util.List;
 @Path("/v2/posts")
 @Produces(MediaType.APPLICATION_JSON)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public interface V2PostApi {
+public interface V2PostsApi {
 
 	@GET
 	@Path("/search")

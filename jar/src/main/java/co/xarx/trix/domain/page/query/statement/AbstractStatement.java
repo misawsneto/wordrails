@@ -32,17 +32,17 @@ public abstract class AbstractStatement extends BaseEntity implements Statement,
 	@Id
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Integer id;
+	private Integer id;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "statement_sorts", joinColumns = @JoinColumn(name = "statement_id"))
 	@MapKeyColumn(name = "sort_attribute", nullable = false, length = 100)
 	@Column(name = "is_asc", nullable = false)
-	public Map<String, Boolean> sorts;
+	private Map<String, Boolean> sorts;
 
 	@ElementCollection
 	@JoinTable(name = "statement_exceptions", joinColumns = @JoinColumn(name = "statement_id"))
-	public Set<Serializable> exceptionIds;
+	private Set<Serializable> exceptionIds;
 
 	public AbstractStatement() {
 		sorts = new HashMap<>();

@@ -1,6 +1,6 @@
 package co.xarx.trix.web.rest.resource.v2;
 
-import co.xarx.trix.api.v2.save.SavePageRequest;
+import co.xarx.trix.api.v2.request.SavePageRequest;
 import co.xarx.trix.web.rest.InMemoryRestServer;
 import co.xarx.trix.web.rest.api.v2.V2PagesApi;
 import org.junit.Before;

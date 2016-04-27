@@ -16,12 +16,12 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
-public class SectionService implements SectionPopulator {
+public class SectionPopulatorService implements SectionPopulator {
 
 	private QueryRunner queryRunner;
 
 	@Autowired
-	public SectionService(QueryRunner queryRunner) {
+	public SectionPopulatorService(QueryRunner queryRunner) {
 		this.queryRunner = queryRunner;
 	}
 
