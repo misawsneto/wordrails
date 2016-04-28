@@ -1,6 +1,7 @@
 package co.xarx.trix.web.rest.resource.v1;
 
 import co.xarx.trix.api.*;
+import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.PersonEventHandler;
@@ -18,7 +19,6 @@ import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.StationPermissionService;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.Logger;
-import co.xarx.trix.util.StatsJson;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
@@ -489,7 +489,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
-	public StatsJson personStats(String date, Integer postId) throws JsonProcessingException {
+	public StatsData personStats(String date, Integer postId) throws JsonProcessingException {
 		if(postId == null){
 			Person person = authProvider.getLoggedPerson();
 			return statisticsService.personStats(date, person.getId(), null);

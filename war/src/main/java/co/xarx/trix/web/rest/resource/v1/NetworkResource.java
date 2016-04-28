@@ -12,7 +12,6 @@ import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.services.security.AuthService;
-import co.xarx.trix.util.StatsJson;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.NetworkApi;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -411,7 +410,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	}
 
 	@Override
-	public StatsJson networkStats(String date, String beginning, Integer postId) throws JsonProcessingException {
-		return statisticsService.networkStats(date, beginning);
+	public Response networkStats(String date, String beginning, Integer postId) throws JsonProcessingException {
+		return Response.status(Status.OK).entity(objectMapper.writeValueAsString(statisticsService.networkStats(date, beginning))).build();
 	}
 }
