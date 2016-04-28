@@ -780,6 +780,7 @@ angular.module('app')
       $scope.actionButtonColors = $scope.app.getMaterialColor('myBackground', '700');
       
       appDataCtrl = $scope;
+      $scope.app.date = new Date();
   }]);
 
 var appDataCtrl = null;

@@ -165,8 +165,26 @@
           </div>
           <div class="footer-crt md-primary-default background">
             <div class="container ">
-            © 2014 Copyright Text
-            <a class="right" href="#!">More Links</a>
+              <div class="inline">
+                © {{ app.date | date:'yyyy'}} Copyright
+              </div>
+              <div class="inline w-lg p-h-lg text-center">
+                <a ng-if="app.network.facebookLink" class="m-h-sm" ng-href="app.network.facebookLink" target="_blank">
+                  <i class="i-24 mdi2-facebook-box"></i>
+                </a>
+                <a ng-if="app.network.facebookLink" class="m-h-sm" ng-href="app.network.twitterLink" target="_blank">
+                  <i class="i-24 mdi2-twitter"></i>
+                </a>
+                <a ng-if="app.network.youtubeLink" class="m-h-sm" ng-href="app.network.youtubeLink" target="_blank">
+                  <i class="i-24 fa fa-youtube"></i>
+                </a>
+                <a ng-if="app.network.googlePlusLink" class="m-h-sm" ng-href="app.network.googlePlusLink" target="_blank">
+                  <i class="i-24 mdi2-google-plus"></i>
+                </a>
+              </div>
+              <div class="inline pull-right">
+                <a class="right" href="#!">More Links</a>
+              </div>
             </div>
           </div>
         </footer>
