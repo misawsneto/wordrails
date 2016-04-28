@@ -7,7 +7,6 @@ import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
-import co.xarx.trix.util.StatsJson;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.ws.rs.*;
@@ -45,7 +44,7 @@ public interface NetworkApi {
 	@GET
 	@Path("/stats")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	StatsJson networkStats(@QueryParam("date") String date,
+	Response networkStats(@QueryParam("date") String date,
 						   @QueryParam("beggining") String beginning,
 						   @QueryParam("postId") Integer postId) throws IOException;
 	
