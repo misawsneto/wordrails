@@ -80,7 +80,9 @@
 		"CATEGORY_COLOR": "Category color",
 		"SHARE": "Share",
 		"DESCRIPTION": "Description",
-		"UPLOAD": "Upload image"
+		"UPLOAD": "Upload image",
+		"NEW_USERS": "New users",
+		"LATEST_POSTS": "Latest posts"
 	},
 	"signin_signup": {
 		"OR": "or",
