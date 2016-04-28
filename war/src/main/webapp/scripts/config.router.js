@@ -1081,7 +1081,7 @@ angular.module('app')
           })
           .state('access', {
             url: '/access',
-            template: '<div class="md-background-default background bg-big"><div ui-view class="fade-in-down smooth"></div></div>',
+            template: '<div class="bg-big" ng-class="{\'md-background-default background\': !app.network.splashImageHash}"><div ui-view class="fade-in-down smooth"></div></div>',
             resolve: {
               appData: function($stateParams, $q, trix){
                 var deferred = $q.defer();

@@ -225,6 +225,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     })
   }
 
+
   $scope.toggleAll = function(toggleSelectValue){
 
   	if(toggleSelectValue && $scope.persons){
@@ -269,7 +270,6 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   }
 
   $scope.openBulkActionsDialog = function(ev){
-    $scope.pe.bulkActionSelected = $scope.bulkActionSelected;
 
     if($scope.bulkActionSelected == 4){
       
@@ -286,32 +286,32 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   		$scope.confirmBulkAction(ev)
   }
 
-  $scope.pe.activateDeactivateUsers = function(){
+  $scope.enablePersons = trix.enablePersons(ids).success(function(){
     ids = getSelectedPersonIds();
-    if($scope.bulkActionSelected == 2)
-      trix.enablePersons(ids).success(function(){
-        $scope.app.showSuccessToast('Usuários ativados.');
-        $mdDialog.cancel();
-        $scope.persons.forEach(function(person, index){
-          if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
-            person.enabled = true;
-        });
-      }).error(function(){
-        $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
-        $mdDialog.cancel();
-      })
-    if($scope.bulkActionSelected == 3)
-      trix.disablePersons(ids).success(function(){
-        $scope.app.showSuccessToast('Usuário desativados.');
-        $mdDialog.cancel();
-        $scope.persons.forEach(function(person, index){
-          if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
-            person.enabled = false;
-        });
-      }).error(function(){
-        $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
-        $mdDialog.cancel();
-      })
+    $scope.app.showSuccessToast('Usuários ativados.');
+    $mdDialog.cancel();
+    $scope.persons.forEach(function(person, index){
+      if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
+        person.enabled = true;
+    });
+  }).error(function(){
+    $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
+    $mdDialog.cancel();
+  })
+
+  $scope.disablePersons = function(){
+    ids = getSelectedPersonIds();
+    trix.disablePersons(ids).success(function(){
+      $scope.app.showSuccessToast('Usuário desativados.');
+      $mdDialog.cancel();
+      $scope.persons.forEach(function(person, index){
+        if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
+          person.enabled = false;
+      });
+    }).error(function(){
+      $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
+      $mdDialog.cancel();
+    })
   }
 
   $scope.bulkChangePermissions = function(ev){

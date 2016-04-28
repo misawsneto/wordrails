@@ -6,7 +6,7 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 		$scope.settings = {'tab': 'settings'}
 
 
-		function buildToggler(navID) {
+	function buildToggler(navID) {
       return function() {
         $mdSidenav(navID)
           .toggle()
@@ -50,14 +50,23 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 	$scope.app.lastSettingState = "app.settings.network";
 	$scope.network = angular.copy($scope.app.network)
 
-	$scope.splashImage = {
-		link: $scope.app.network.splashImageHash ? TRIX.baseUrl + "/api/images/get/" + $scope.app.network.splashImageHash + "?size=large" : null}
+	if($scope.app.network.splashImageHash){
+		$scope.splashImage = {
+		link: $scope.app.network.splashImageHash ? TRIX.baseUrl + "/api/images/get/" + $scope.app.network.splashImageHash + "?size=large" : null,
+		id: $scope.app.network.splashImageId}
+	}
 
-	$scope.logoImage = {
-		link: $scope.app.network.logoImageHash ? TRIX.baseUrl + "/api/images/get/" + $scope.app.network.logoImageHash + "?size=medium" : null}
+	if($scope.app.network.logoImageHash){
+		$scope.logoImage = {
+		link: $scope.app.network.logoImageHash ? TRIX.baseUrl + "/api/images/get/" + $scope.app.network.logoImageHash + "?size=medium" : null,
+		id: $scope.app.network.logoImageId}
+	}
 
-	$scope.faviconImage = {
-		link: $scope.app.network.faviconHash ? TRIX.baseUrl + "/api/images/get/" + $scope.app.network.faviconHash + "?size=large" : null}
+	if($scope.app.network.faviconHash){
+		$scope.faviconImage = {
+		link: $scope.app.network.faviconHash ? TRIX.baseUrl + "/api/images/get/" + $scope.app.network.faviconHash + "?size=favicon" : null,
+		id: $scope.app.network.faviconId}
+	}
 
 
 	FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
@@ -175,18 +184,35 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 		}
 	};
 
+	$scope.removeSplash = function(){
+		$scope.splashImage = null;
+	}
+
+	$scope.removeLogo = function(){
+		$scope.logoImage = null;
+	}
+
+	$scope.removeFavicon = function(){
+		$scope.faviconImage = null;
+	}
+
 
 	$scope.saveChanges = function(){
 		$scope.disabled = true;
 		if($scope.logoImage && $scope.logoImage.id){
 			$scope.network.logoImage = ImageDto.getSelf($scope.logoImage)
-		}
+		}else
+			$scope.network.logoImage = null;
+
 		if($scope.splashImage && $scope.splashImage.id){
 			$scope.network.splashImage = ImageDto.getSelf($scope.splashImage)
-		}
+		}else
+			$scope.network.splashImage = null;
+
 		if($scope.faviconImage && $scope.faviconImage.id){
 			$scope.network.favicon = ImageDto.getSelf($scope.faviconImage)
-		}
+		}else
+			$scope.network.favicon = null;
 
 		trix.putNetwork($scope.network).success(function(response){
 			$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
@@ -212,6 +238,8 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 				break;
 		}
 	}
+
+	settingsNetworkCtrl	= $scope;
 }])
 
 app.controller('NetworkStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', 'TRIX',
@@ -632,5 +660,7 @@ app.controller('NetworkStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', 
 	$timeout(function() {
 		init();
 	}, 50);
-	
+
 }])
+
+var settingsNetworkCtrl = null;

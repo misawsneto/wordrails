@@ -68,10 +68,6 @@ public class InitService {
 
 			Pageable pageable = new PageRequest(0, 10);
 
-			List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
-			List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
-			personData.popular = postConverter.convertToViews(popular);
-			personData.recent = postConverter.convertToViews(recent);
 		} else {
 			personData.noVisibleStation = true;
 		}
@@ -124,6 +120,11 @@ public class InitService {
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);
+		initData.network.logoImageId = network.getLogoImageId();
+		initData.network.loginImageId = network.getLoginImageId();
+		initData.network.splashImageId = network.getSplashImageId();
+		initData.network.faviconId = network.getFaviconId();
+
 
 		initData.stations = stationViews;
 		initData.personPermissions = personPermissions;
