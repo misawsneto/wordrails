@@ -33,7 +33,7 @@ public class PostAspect {
 
 		if (post.state.equals(Post.STATE_PUBLISHED)) {
 			//post = findOne(post.getId()); //do it again so modelmapper don't cry... stupid framework
-			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
+			elasticSearchService.saveIndex(post, ESPost.class);
 		} else {
 			esPostRepository.delete(post.getId());
 		}

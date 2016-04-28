@@ -65,7 +65,7 @@ public class PostEventHandler {
 			if (post.notify)
 				postService.sendNewPostNotification(post);
 
-			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
+			elasticSearchService.saveIndex(post, ESPost.class);
 		}
 	}
 
@@ -74,7 +74,7 @@ public class PostEventHandler {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
 			schedulerService.schedule(post.id, post.scheduledDate);
 		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
-			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
+			elasticSearchService.saveIndex(post, ESPost.class);
 		}
 	}
 

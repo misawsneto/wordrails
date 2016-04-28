@@ -813,6 +813,18 @@
 				<version>0.1.9</version>
 			</dependency>
 
+			<dependency>
+				<groupId>es.arcadiaconsulting.appstorestats</groupId>
+				<artifactId>appstoresstats-android</artifactId>
+				<version>1.0.9</version>
+			</dependency>
+
+			<dependency>
+				<groupId>es.arcadiaconsulting.appstorestats</groupId>
+				<artifactId>appstoresstats-ios</artifactId>
+				<version>1.0.9</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 </project>

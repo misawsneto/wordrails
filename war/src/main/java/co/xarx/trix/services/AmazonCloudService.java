@@ -47,7 +47,7 @@ public class AmazonCloudService {
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		if (tenantId == null || tenantId.isEmpty())
 			throw new OperationNotSupportedException("This request is invalid because no Tenant ID was set");
-		return "http://" + cloudfrontUrl + "/" + tenantId + "/images/" + fileName;
+		return "https://" + cloudfrontUrl + "/" + tenantId + "/images/" + fileName;
 	}
 
 	public String getPublicFileURL(String fileName, String diretory) throws IOException {
@@ -61,7 +61,7 @@ public class AmazonCloudService {
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		if(tenantId == null || tenantId.isEmpty())
 			throw new OperationNotSupportedException("This request is invalid because no Tenant ID was set");
-		return "http://" + cloudfrontUrl + "/" + tenantId + "/apk/" + fileName;
+		return "https://" + cloudfrontUrl + "/" + tenantId + "/apk/" + fileName;
 	}
 
 	public String uploadAPK(java.io.File file, Long lenght, String mime, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
