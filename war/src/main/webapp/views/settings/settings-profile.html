@@ -5,27 +5,27 @@
   </md-toolbar>
   <md-content layout-padding class="p-l-sm p-r-sm">
     <div>
-      <md-input-container class="w-full m-b-0">
+      <md-input-container class="w-xxl m-b-0">
         <label for="testInput">{{'titles.EDIT_PROFILE' | translate}}</label>
         <input type="text" id="testInput" ng-model="editingPerson.name" md-autofocus>
       </md-input-container>
-      <md-input-container class="w-full m-b-0">
+      <md-input-container class="w-xxl m-b-0">
         <label for="testInput">{{'settings.profile.NAME' | translate}}</label>
         <input type="text" id="testInput" ng-model="editingPerson.username" md-autofocus>
       </md-input-container>
-      <md-input-container class="w-full m-b-0">
+      <md-input-container class="w-xxl m-b-0">
         <label for="testInput">{{'settings.profile.EMAIL' | translate}}</label>
         <input type="text" id="testInput" ng-model="editingPerson.email" md-autofocus>
       </md-input-container>
-      <md-input-container class="w-full m-b-0">
+      <md-input-container class="w-xxl m-b-0">
         <label for="testInput">{{'settings.profile.PASSWORD' | translate}}</label>
         <input type="password" id="testInput" ng-model="editingPerson.password" md-autofocus>
       </md-input-container>
-      <md-input-container class="w-full m-b-0" ng-class="{'animated fadeIn': editingPerson.password, 'hide': !editingPerson.password}">
+      <md-input-container class="w-xxl m-b-0" ng-class="{'animated fadeIn': editingPerson.password, 'hide': !editingPerson.password}">
         <label for="testInput">{{'settings.profile.CONFIRM_PASSWORD' | translate}}</label>
         <input type="password" id="testInput" ng-model="editingPerson.passwordConfirm" md-autofocus>
       </md-input-container>
-      <md-input-container class="w-full m-b-0">
+      <md-input-container class="w-xxl m-b-0">
         <label for="testInput">{{'settings.profile.BIOGRAPHY' | translate}}</label>
         <textarea type="text" id="testInput" columns="1" ng-model="editingPerson.bio" md-autofocus></textarea>
       </md-input-container>
@@ -211,66 +211,67 @@
   <i class="mdi-editor-mode-edit i-24"></i>
 </md-button>
 
-<script type="text/ng-template" id="person-config-dialog.html">
+<script type="text/ng-template" id="edit-profile-dialog.html">
   <md-dialog-content layout="row" layout-wrap>
     <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center" layout="column">
       <div class="w-lg">
 
-        <div ng-if="app.editingStation" class="text-center p w-full" translate="settings.station.STATION_SETTINGS"></div>
-        <div ng-if="app.newStation" class="text-center p w-full" translate="settings.station.NEW_STATION"></div>
+        <div class="text-center p w-full" translate="titles.EDIT_PROFILE"></div>
 
         <div class="text-center p p-t-lg w-full m-t-lg">
           <i class="mdi mdi2-account text-4x"></i>
         </div>
 
         <div class="pos-abt bottom-0 text-center w-full p-t p-b">
-          <md-button ng-click="app.cancelDialog();" class="m-0">
+          <md-button ng-click="cancel()" class="m-0">
             {{'titles.CANCEL' | translate}}
           </md-button>
-          <md-button ng-click="app.updateStation(app.stationObj); disabled = true;" ng-disabled="disabled" class="m-0" ng-if="app.editingStation">
+          <md-button ng-click="saveProfile(editingPerson)" ng-disabled="disabled" class="m-0">
             {{'titles.SAVE' | translate}}
-          </md-button>
-          <md-button ng-click="app.createStation(app.stationObj); disabled = true;" ng-disabled="disabled" class="m-0" ng-if="app.newStation">
-            {{'actions.CREATE' | translate}}
           </md-button>
         </div>
       </div>
     </md-toolbar>
-    <div class="col-400 scrollable md-background-hue-1 background">
-      <md-content layout-padding class="p-l-sm p-r-sm">
-        <div>
-          <md-input-container class="w-full m-b-0">
+    <div class="p w-x col-400 scrollable md-background-hue-1 background">
+        <div class="pos-rlt p">
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'titles.EDIT_PROFILE' | translate}}</label>
             <input type="text" id="testInput" ng-model="editingPerson.name" md-autofocus>
           </md-input-container>
-          <md-input-container class="w-full m-b-0">
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.NAME' | translate}}</label>
             <input type="text" id="testInput" ng-model="editingPerson.username" md-autofocus>
           </md-input-container>
-          <md-input-container class="w-full m-b-0">
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.EMAIL' | translate}}</label>
             <input type="text" id="testInput" ng-model="editingPerson.email" md-autofocus>
           </md-input-container>
-          <md-input-container class="w-full m-b-0">
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.PASSWORD' | translate}}</label>
             <input type="password" id="testInput" ng-model="editingPerson.password" md-autofocus>
           </md-input-container>
-          <md-input-container class="w-full m-b-0" ng-class="{'animated fadeIn': editingPerson.password, 'hide': !editingPerson.password}">
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0" ng-class="{'animated fadeIn': editingPerson.password, 'hide': !editingPerson.password}">
             <label for="testInput">{{'settings.profile.CONFIRM_PASSWORD' | translate}}</label>
             <input type="password" id="testInput" ng-model="editingPerson.passwordConfirm" md-autofocus>
           </md-input-container>
-          <md-input-container class="w-full m-b-0">
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.BIOGRAPHY' | translate}}</label>
             <textarea type="text" id="testInput" columns="1" ng-model="editingPerson.bio" md-autofocus></textarea>
           </md-input-container>
+          </div>
         </div>
-        <md-button class="pull-right" ng-click="saveProfile(editingPerson)">
-          {{'titles.SAVE' | translate}}
-        </md-button>
-        <md-button class="pull-right" ng-click="cancelEditProfile()">
-          {{'titles.CANCEL' | translate}}
-        </md-button>
-      </md-content>
+      </div>
     </div>
   </md-dialog-content>
 </script>

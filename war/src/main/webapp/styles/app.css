@@ -8671,7 +8671,7 @@ button,
 }
 
 .df-tab-menu-dropdown li {
-  font-size: 14px;
+  font-size: 14px!important;
 }
 
 .df-tab-menu-dropdown li a:hover {
