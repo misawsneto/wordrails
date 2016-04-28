@@ -123,15 +123,43 @@ public class Network extends BaseEntity implements Serializable {
 
 	@OneToOne
 	public Image favicon;
+
+	@SdkInclude
+	public Integer getFaviconId(){
+		if(favicon != null)
+			return favicon.getId();
+		return null;
+	}
 	
 	@OneToOne
 	public Image splashImage;
+
+	@SdkInclude
+	public Integer getSplashImageId(){
+		if(splashImage != null)
+			return splashImage.getId();
+		return null;
+	}
 	
 	@OneToOne
 	public Image loginImage;
 
+	@SdkInclude
+	public Integer getLoginImageId(){
+		if(splashImage != null)
+			return loginImage.getId();
+		return null;
+	}
+
 	@OneToOne
 	public Image logoImage;
+
+	@SdkInclude
+	public Integer getLogoImageId(){
+		if(logoImage != null)
+			return logoImage.getId();
+		return null;
+	}
 	
 	@Column(columnDefinition = "varchar(255) default 'D'", nullable = false)
 	public String defaultReadMode;
