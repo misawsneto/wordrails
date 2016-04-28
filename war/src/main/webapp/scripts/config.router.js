@@ -159,7 +159,8 @@ angular.module('app')
                 url: '/dashboard',
                 templateUrl: '/views/pages/dashboard.html',
                 data : { title: 'Dashboard', folded: false },
-                resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js'])
+                resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js', '/scripts/controllers/settings/settings-dashboard.js']),
+                controller: 'DashboardCtrl'
               })
               .state('app.pagebuilder', {
                 url: '/pagebuilder',
