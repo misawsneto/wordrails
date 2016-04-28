@@ -7916,6 +7916,17 @@ bg-none {
   background-color: transparent!important;
 }
 
+mdp-date-picker button,
+mdp-time-picker button {
+  display: none!important;
+}
+
+mdp-date-picker md-input-container,
+mdp-time-picker md-input-container {
+  width: 100%!important;
+  margin: 0!important;
+}
+
 /* /material datepicker */
 
 /* material override */
@@ -8384,6 +8395,14 @@ md-switch[disabled] .md-bar {
   text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
 }
 
+.text-shadow-md {
+  text-shadow: 2px 3px 5px rgba(0, 0, 0, 0.6);
+}
+
+.text-shadow-sm {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
 .font-code {
   font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
@@ -8671,7 +8690,7 @@ button,
 }
 
 .df-tab-menu-dropdown li {
-  font-size: 14px;
+  font-size: 14px!important;
 }
 
 .df-tab-menu-dropdown li a:hover {

@@ -4,7 +4,9 @@
 <html lang="en" class="md-background-default background">
 <head>
   <meta charset="utf-8" />
-  <title>Materil | Angular Material Design Admin Template</title>
+    <title>${networkName}</title>
+    ${requestedEntityMetas}
+    <link rel="shortcut icon" href="${faviconLink}" type="image/x-icon" />
   <meta name="description" content="material, material design, angular material, app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 

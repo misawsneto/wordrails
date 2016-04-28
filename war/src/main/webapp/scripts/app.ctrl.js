@@ -472,10 +472,10 @@ angular.module('app')
 
       // ---------- imageHelper -----------
       
-      $scope.getBackgroundImage = function(postView, size){
-        var img = $filter('bgImageLink')(postView, size);
-        if(postView.externalVideoUrl){
-          img = $filter('videoThumb')(postView.externalVideoUrl);
+      $scope.getBackgroundImage = function(object, size){
+        var img = $filter('bgImageLink')(object, size);
+        if(object.externalVideoUrl){
+          img = $filter('videoThumb')(object.externalVideoUrl);
         }
         return img;
       }
@@ -507,8 +507,12 @@ angular.module('app')
         return post.authorImageHash || post.authorImageSmallHash || post.authorImage || post.authorProfilePicture; 
       }
 
-      $scope.app.getBackgroundImage = function(postView, size){
-        return $scope.getBackgroundImage(postView, size);
+      $scope.app.getSplash = function(){
+        return $scope.app.getBackgroundImage({imageHash: $scope.app.network.splashImageHash}, 'large');
+      }
+
+      $scope.app.getBackgroundImage = function(object, size){
+        return $scope.getBackgroundImage(object, size);
       }
 
       $scope.app.userImageSmall = null
@@ -776,6 +780,7 @@ angular.module('app')
       $scope.actionButtonColors = $scope.app.getMaterialColor('myBackground', '700');
       
       appDataCtrl = $scope;
+      $scope.app.date = new Date();
   }]);
 
 var appDataCtrl = null;

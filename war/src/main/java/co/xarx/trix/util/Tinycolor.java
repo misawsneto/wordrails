@@ -1,6 +1,12 @@
 package co.xarx.trix.util;
 
+import com.google.common.base.Joiner;
+
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * The HSLColor class provides methods to manipulate HSL (Hue, Saturation
@@ -332,18 +338,32 @@ public class Tinycolor {
 	public static Color toRGB(float h, float s, float l, float alpha) {
 //		System.out.println(h + " " + s + " " + l);
 		if (s < 0.0f || s > 100.0f) {
-			String message = "Color parameter outside of expected range - Saturation";
-			throw new IllegalArgumentException(message);
+			if(s < 0) {
+				s = 0;
+			}
+			if(s > 100) {
+				s = 100;
+			}
+//			String message = "Color parameter outside of expected range - Saturation";
+//			throw new IllegalArgumentException(message);
 		}
 
 		if (l < 0.0f || l > 100.0f) {
-			String message = "Color parameter outside of expected range - Luminance";
-			throw new IllegalArgumentException(message);
+			if(l < 0)
+				l = 0;
+			if(l > 100)
+				l = 100;
+//			String message = "Color parameter outside of expected range - Luminance";
+//			throw new IllegalArgumentException(message);
 		}
 
 		if (alpha < 0.0f || alpha > 1.0f) {
-			String message = "Color parameter outside of expected range - Alpha";
-			throw new IllegalArgumentException(message);
+			if(alpha < 0)
+				alpha = 0;
+			if(alpha > 1)
+				alpha = 1;
+//			String message = "Color parameter outside of expected range - Alpha";
+//			throw new IllegalArgumentException(message);
 		}
 
 		//  Formula needs all values between 0 - 1.
@@ -418,5 +438,39 @@ public class Tinycolor {
 
 	public boolean isLight(){
 		return !isDark();
+	}
+
+	public static Map<String, String> getPalette(String hex){
+		Tinycolor color = new Tinycolor(hex);
+		Map testPallete = new HashMap();
+
+		Map<String, String> palette = new TreeMap<String, String>();
+		palette.put("500", color.toHexString());
+		palette.put("50", color.lighten(52).toHexString());
+		palette.put("100", color.lighten(37).toHexString());
+		palette.put("200", color.lighten(26).toHexString());
+		palette.put("300", color.lighten(12).toHexString());
+		palette.put("400", color.lighten(6).toHexString());
+		palette.put("600", color.darken(6).toHexString());
+		palette.put("700", color.darken(12).toHexString());
+		palette.put("800", color.darken(18).toHexString());
+		palette.put("900", color.darken(24).toHexString());
+		palette.put("A100", color.lighten(52).toHexString());
+		palette.put("A200", color.lighten(37).toHexString());
+		palette.put("A400", color.lighten(6).toHexString());
+		palette.put("A700", color.darken(12).toHexString());
+
+		ArrayList<String> contrasts = new ArrayList<String>();
+
+		for(Map.Entry<String, String> entry: palette.entrySet()){
+			Tinycolor tc = new Tinycolor(entry.getValue());
+			if(tc.isLight())
+				contrasts.add(entry.getKey());
+		}
+
+		palette.put("contrastDarkColors", Joiner.on(" ").join(contrasts));
+		palette.put("contrastDefaultColor", "light");
+
+		return palette;
 	}
 }

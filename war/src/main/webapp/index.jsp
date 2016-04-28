@@ -4,7 +4,9 @@
 <html lang="en" class="md-background-default background">
 <head>
   <meta charset="utf-8" />
-  <title>Materil | Angular Material Design Admin Template</title>
+    <title>${networkName}</title>
+    ${requestedEntityMetas}
+    <link rel="shortcut icon" href="${faviconLink}" type="image/x-icon" />
   <meta name="description" content="material, material design, angular material, app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
@@ -36,7 +38,7 @@
 
 </head>
 <body ng-app="app">
-  <div class="app" ui-view ng-controller="AppCtrl"></div>
+  <div class="app" ui-view ng-controller="AppCtrl" ng-class="{'bg-cover': $state.includes('access')}" ng-style="$state.includes('access') && app.network.splashImageHash ? app.getSplash() : null"></div>
 <!-- jQuery -->
   <script src="/libs/jquery/jquery/dist/jquery.js"></script>
   <script src="/libs/jquery/bootstrap/dist/js/bootstrap.js"></script>

@@ -5,7 +5,7 @@
     <a md-ink-ripple ng-click="openAside()" ng-hide="$state.current.data.child" class="navbar-item pull-left"><i class="mdi-navigation-menu i-24"></i></a>
     <!-- / -->
     <div class="navbar-header pull-left">
-      <a class="navbar-brand" ui-sref="app.home">
+      <a class="navbar-brand" ng-href="/" target="_self">
         <!-- <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve" style="
               width: 24px; height: 24px;">
             <path d="M 50 0 L 100 14 L 92 80 Z" fill="rgba(139, 195, 74, 0.5)"></path>
@@ -32,16 +32,18 @@
           <i class="mdi-social-person-outline i-24 p-h-sm"></i>
         </a>
       </li> -->
-      <li class="dropdown m-r-lg" ng-if="!app.search.show" md-ink-ripple>
+      <li class="dropdown m-r-lg" ng-if="!app.search.show">
         <a href class="dropdown-toggle clear" data-toggle="dropdown" ng-click="app.signInButton()">
           <!-- <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
             <img src="/images/a0.jpg" alt="...">
             <i class="on md b-white bottom"></i>
           </span> -->
-          <div class="o-f-h pull-right md-whiteframe-z1 m-t-sm m-b-sm user-avatar rounded thumb-sm bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover text-center" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%', 'width': '46px', 'height': '46px'}">
-            <i ng-if="!app.isLogged()" class="mdi2-lock-open i-24" style="position: relative;top: -10px;"></i>
-            <i ng-if="app.isLogged() && !app.userImageSmall" class="mdi2-account i-24" style="position: relative;top: -10px;"></i>
+          <div ng-if="app.isLogged()" class="o-f-h pull-right md-whiteframe-z1 m-t-sm m-b-sm user-avatar rounded thumb-sm bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover text-center" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%', 'width': '46px', 'height': '46px'}">
+            <i ng-if="!app.userImageSmall" class="mdi2-account i-24" style="position: relative;top: -10px;"></i>
           </div>
+          <md-button ng-if="!app.isLogged()" class="md-primary-hue-1 background">
+            {{'signin_signup.SIGNIN' | translate}}
+          </md-button>
           <span class="hidden-sm hidden-md" ng-if="app.isLogged()">{{app.person.name}}</span>
           <b class="caret m-r" ng-if="app.isLogged()"></b>
         </a>
@@ -65,13 +67,13 @@
             </div>
           </li>
           <li md-ink-ripple>
-            <a ng-click="app.goToLink('/settings/profile');">
+            <a ng-href="/settings/profile" target="_self">
               <i class="icon m-r i-16 mdi2-account-circle"></i>
               {{'settings.aside.MY_PROFILE' | translate}}
             </a>
           </li>
           <li md-ink-ripple>
-            <a ng-click="app.goToLink('/settings');">
+            <a ng-href="/settings" target="_self">
               <i class="icon m-r i-16 mdi2-settings"></i>
               {{'titles.SETTINGS' | translate}}
             </a>
@@ -163,8 +165,26 @@
           </div>
           <div class="footer-crt md-primary-default background">
             <div class="container ">
-            © 2014 Copyright Text
-            <a class="right" href="#!">More Links</a>
+              <div class="inline">
+                © {{ app.date | date:'yyyy'}} Copyright
+              </div>
+              <div class="inline w-lg p-h-lg text-center">
+                <a ng-if="app.network.facebookLink" class="m-h-sm" ng-href="app.network.facebookLink" target="_blank">
+                  <i class="i-24 mdi2-facebook-box"></i>
+                </a>
+                <a ng-if="app.network.facebookLink" class="m-h-sm" ng-href="app.network.twitterLink" target="_blank">
+                  <i class="i-24 mdi2-twitter"></i>
+                </a>
+                <a ng-if="app.network.youtubeLink" class="m-h-sm" ng-href="app.network.youtubeLink" target="_blank">
+                  <i class="i-24 fa fa-youtube"></i>
+                </a>
+                <a ng-if="app.network.googlePlusLink" class="m-h-sm" ng-href="app.network.googlePlusLink" target="_blank">
+                  <i class="i-24 mdi2-google-plus"></i>
+                </a>
+              </div>
+              <div class="inline pull-right">
+                <a class="right" href="#!">More Links</a>
+              </div>
             </div>
           </div>
         </footer>
@@ -181,17 +201,17 @@
     <div class="text-color m text-center" ng-if="app.signState !== 'signup' && app.signState !== 'forgot'">
       <div class="m-b-md m-t-md text-md text-u-c font-500">{{'signin_signup.SIGNIN' | translate}}</div>
       <div class="text-center">
-        <md-button class="md-fab md-mini md-primary" style="background: #3B5999" aria-label="Use Android">
-          <i class="mdi2-facebook i-24"></i>
+        <md-button class="md-fab md-mini" style="background: #3B5999" aria-label="Use Android">
+          <i class="mdi2-facebook i-24 text-white"></i>
         </md-button>
-        <md-button class="md-fab md-mini md-primary" style="background: #5EA9DD" aria-label="Use Android">
-          <i class="mdi2-twitter i-24"></i>
+        <md-button class="md-fab md-mini" style="background: #5EA9DD" aria-label="Use Android">
+          <i class="mdi2-twitter i-24 text-white"></i>
         </md-button>
-        <md-button class="md-fab md-mini md-primary" style="background: #DC4A38" aria-label="Use Android">
-          <i class="mdi2-google-plus i-24"></i>
+        <md-button class="md-fab md-mini" style="background: #DC4A38" aria-label="Use Android">
+          <i class="mdi2-google-plus text-white i-24"></i>
         </md-button>
-        <md-button class="md-fab md-mini md-primary" style="background: #0177B5" aria-label="Use Android">
-          <i class="mdi2-linkedin i-24"></i>
+        <md-button class="md-fab md-mini" style="background: #0177B5" aria-label="Use Android">
+          <i class="mdi2-linkedin i-24 text-white"></i>
         </md-button>
       </div>
         <div class="p-t text-md" translate="signin_signup.OR">ou</div>

@@ -215,7 +215,7 @@
           {{primaryPalette.name}}
           </div>
           <span flex></span>
-              <spectrum-colorpicker ng-model="primaryPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{clickoutFiresChange: true, showInput: true, showPalette: true}" ng-change="calcPalette(0);"></spectrum-colorpicker>
+              <spectrum-colorpicker ng-model="primaryPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{preferredFormat: 'hex', clickoutFiresChange: true, showInput: true, showPalette: true}" ng-change="calcPalette(0);"></spectrum-colorpicker>
         </div>
         <md-list flex class="palette-colors spaced">
             <md-list-item class="light-canvas" ng-repeat="color in primaryPalette.colors | filter: baseColorFilter | orderByBase:'name'">
@@ -228,7 +228,7 @@
                       </a>
                       <div class="palette-color-mutators">
                           <!-- Removed lighten and darken buttons until saturation issues are worked out. -->
-                          <spectrum-colorpicker ng-model="color.hex" format="'hex'" ng-change="app.setThemeTesting(false);" options="{clickoutFiresChange: true, showInput: true, showPalette: true}"></spectrum-colorpicker>
+                          <spectrum-colorpicker ng-model="color.hex" format="'hex'" ng-change="app.setThemeTesting(false);" options="{preferredFormat: 'hex', clickoutFiresChange: true, showInput: true, showPalette: true}"></spectrum-colorpicker>
                       </div>
                       <div class="palette-color-contrast" ng-click="color.darkContrast = !color.darkContrast">
                         <md-tooltip>{{'settings.CONTRAST' | translate}}</md-tooltip>
@@ -247,7 +247,7 @@
           {{accentPalette.name}}
           </div>
           <span flex></span>
-              <spectrum-colorpicker ng-model="accentPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{clickoutFiresChange: true, showInput: true, showPalette: true}" ng-change="calcPalette(1)"></spectrum-colorpicker>
+              <spectrum-colorpicker ng-model="accentPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{preferredFormat: 'hex', clickoutFiresChange: true, showInput: true, showPalette: true}" ng-change="calcPalette(1)"></spectrum-colorpicker>
         </div>
         <md-list flex class="palette-colors spaced">
             <md-list-item class="light-canvas" ng-repeat="color in accentPalette.colors | filter: baseColorFilter | orderByAccent:'name'">
@@ -260,7 +260,7 @@
                       </a>
                       <div class="palette-color-mutators">
                           <!-- Removed lighten and darken buttons until saturation issues are worked out. -->
-                          <spectrum-colorpicker ng-model="color.hex" format="'hex'" ng-change="app.setThemeTesting(false);" options="{clickoutFiresChange: true, showInput: true, showPalette: true}"></spectrum-colorpicker>
+                          <spectrum-colorpicker ng-model="color.hex" format="'hex'" ng-change="app.setThemeTesting(false);" options="{preferredFormat: 'hex', clickoutFiresChange: true, showInput: true, showPalette: true}"></spectrum-colorpicker>
                       </div>
                       <div class="palette-color-contrast" ng-click="color.darkContrast = !color.darkContrast">
                         <md-tooltip>Toggle contrast</md-tooltip>
@@ -279,7 +279,7 @@
           {{warnPalette.name}}
           </div>
           <span flex></span>
-              <spectrum-colorpicker ng-model="warnPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{clickoutFiresChange: true, showInput: true, showPalette: true}" ng-change="calcPalette(2)"></spectrum-colorpicker>
+              <spectrum-colorpicker ng-model="warnPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{preferredFormat: 'hex', clickoutFiresChange: true, showInput: true, showPalette: true}" ng-change="calcPalette(2)"></spectrum-colorpicker>
         </div>
         <md-list flex class="palette-colors spaced">
             <md-list-item class="light-canvas" ng-repeat="color in warnPalette.colors | filter: baseColorFilter | orderByBase:'name'">

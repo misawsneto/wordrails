@@ -129,6 +129,8 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
   	themeProvider.definePalette('myWarn', $scope.app.makeColorsJsonObject($scope.palettes[2].colors));
   	themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject($scope.computeColors($scope.backgroundPalette)))
 
+  	console.log($scope.app.makeColorsJsonObject($scope.palettes[0].colors));
+
   	var themeName = $scope.editingThemeName = $filter('generateRandom')(4,"aA");
   	themeProvider.theme(themeName)
   	
