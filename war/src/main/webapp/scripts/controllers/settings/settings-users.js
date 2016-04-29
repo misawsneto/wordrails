@@ -286,21 +286,23 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   		$scope.confirmBulkAction(ev)
   }
 
-  $scope.enablePersons = trix.enablePersons(ids).success(function(){
+  $scope.enablePersons = function(){
     ids = getSelectedPersonIds();
-    $scope.app.showSuccessToast('Usuários ativados.');
-    $mdDialog.cancel();
-    $scope.persons.forEach(function(person, index){
-      if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
-        person.enabled = true;
-    });
-  }).error(function(){
-    $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
-    $mdDialog.cancel();
-  })
+    trix.enablePersons(ids).success(function(){
+      $scope.app.showSuccessToast('Usuários ativados.');
+      $mdDialog.cancel();
+      $scope.persons.forEach(function(person, index){
+        if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
+          person.enabled = true;
+      });
+    }).error(function(){
+      $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
+      $mdDialog.cancel();
+    })
+  }
 
   $scope.disablePersons = function(){
-    ids = getSelectedPersonIds();
+    var ids = getSelectedPersonIds();
     trix.disablePersons(ids).success(function(){
       $scope.app.showSuccessToast('Usuário desativados.');
       $mdDialog.cancel();
@@ -314,7 +316,9 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     })
   }
 
-  $scope.bulkChangePermissions = function(ev){
+  $scope.func = null;
+  $scope.bulkChangePermissions = function(ev, func){
+    $scope.func = func;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
           closeTo: {

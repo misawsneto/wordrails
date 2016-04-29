@@ -180,6 +180,15 @@
 			"FOOTER": "Footer",
 			"HEADER": "Header"
 		},
+		"users": {
+			"ENABLE_ALL_SELECTED": "Enable all selected",
+			"DISABLE_ALL_SELECTED": "Disaple all selected",
+			"PERMISSIONS_OF_ALL_SELECTED": "Change permissions of selected users",
+			"INVITE_USERS": "Invite users",
+			"ADD_USERS": "Invite users",
+			"REDIFINE_PASSWORD": "Redifine password",
+			"EDIT_PROFILE": "Edit profile"			
+		},
 		"post": {
 			"menu":{
 				"INFO": "Post informations",

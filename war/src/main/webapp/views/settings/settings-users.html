@@ -40,7 +40,7 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr ng-repeat="person in persons" class="b-l-3x b-l-s b-c-t" ng-click="activatePerson(person); loadPerson(person);" ng-style="person.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" ng-class="{'b-l-primary': isActivePerson(person)}">
+												<tr ng-repeat="person in persons" class="b-l-3x b-l-s b-c-t" 	ng-style="person.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" ng-class="{'b-l-primary': isActivePerson(person)}">
 													<td>
 														<md-checkbox aria-label="nothing" class="no-margin p-t-sm" ng-if="person.id != app.person.id"
 														 ng-model="person.selected" ng-true-value="true" ng-false-value="false" ng-click="app.stopPropagation($event)">
@@ -72,8 +72,18 @@
 													</td>
 													<td>
 														<div ng-if="person.id != app.person.id" class="p-t-sm dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-															<a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-navigation-more-vert mdi" dropdown-toggle>
-															</a>
+															<!-- <a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-navigation-more-vert mdi" dropdown-toggle>
+															</a> -->
+															<ul class="list-inline">
+								                <li class="dropdown">
+								                  <a href data-toggle="dropdown" class="dropdown-toggle r-50 i-24 mdi-navigation-more-vert mdi" dropdown-toggle>
+																	</a>
+								                  <ul class="dropdown-menu dropdown-menu-scale pull-right pull-up top text-color">
+								                    <li><a href>{{'settings.users.REDIFINE_PASSWORD' | translate}}</a></li>
+								                    <li><a href>{{'settings.users.EDIT_PROFILE' | translate}}</a></li>
+								                  </ul>
+								                </li>
+								              </ul>
 															<!-- dropdown -->
 															<ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
 																<li > <a href> Reconfigurar a senha </a> </li>
@@ -115,31 +125,31 @@
 	  <md-fab-actions>
 	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
 	    	<md-tooltip md-direction="left">
-	      	{{'settings.post.TOGGLE_LANDSCAPE' | translate}}
+	      	{{'settings.users.ADD_USERS' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi i-20 mdi2-plus text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="showImageCropDialog()">
+	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangePermissions($event, enablePersons())">
 	    	<md-tooltip md-direction="left">
-	      	{{'settings.post.CROP_IMAGE' | translate}}
+	      	{{'settings.users.ENABLE_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-account-check i-20 text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="showImageCropDialog()">
+	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangePermissions($event, disablePersons())">
 	    	<md-tooltip md-direction="left">
-	      	{{'settings.post.CROP_IMAGE' | translate}}
+	      	{{'settings.users.DISABLE_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-account-off i-20 text-dark"></i>
 	    </md-button>
 	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showImageFocuspointDialog();">
 	    	<md-tooltip md-direction="left">
-	      	{{'settings.post.FOUCUS_POINT' | translate}}
+	      	{{'settings.users.PERMISSIONS_OF_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-key-variant i-20 text-dark"></i>
 	    </md-button>
 	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="removeFeaturedImage()">
 	    	<md-tooltip md-direction="left">
-	      	{{'settings.post.REMOVE_FEATURED_IMAGE' | translate}}
+	      	{{'settings.users.INVITE_USERS' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-email i-20 text-dark"></i>
 	    </md-button>

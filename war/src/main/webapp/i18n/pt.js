@@ -180,6 +180,15 @@
 			"FOOTER": "Rodapé",
 			"HEADER": "Menu superior"
 		},
+		"users": {
+			"ENABLE_ALL_SELECTED": "Ativar usuários selecionados",
+			"DISABLE_ALL_SELECTED": "Desativar usuários selecionados",
+			"PERMISSIONS_OF_ALL_SELECTED": "Alterar permissões de usuário selecionados",
+			"INVITE_USERS": "Convidar usuários",
+			"ADD_USERS": "Adicionar usuários",
+			"REDIFINE_PASSWORD": "Redefinir senha",
+			"EDIT_PROFILE": "Editar perfil"			
+		},
 		"post": {
 			"menu":{
 				"INFO": "Informações",
