@@ -194,6 +194,8 @@
 				"PUBLICATION_MSG": "O conteúdo será publicado ao clicar em Publicar.",
 				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada minuto uma vez que o título, conteúdo, estações e categorias sejam inseridos. As versões da publicação pode ser visualizado no menu \"Opções de publicação\"."
 			},
+			"ACTIVATE_DEACTIVATE_HEADING": "Ativar/Desativar chapéu",
+			"ACTIVATE_DEACTIVATE_SUBTITLE": "Ativar/Desativar subtítulo",
 			"DETAILS": "Detalhes",
 			"REVISIONS": "Revisões",
 			"OPTIONS": "Opções de publicação",
