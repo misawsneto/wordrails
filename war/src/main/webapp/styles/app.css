@@ -8709,3 +8709,14 @@ button,
   text-transform: none!important;
   background: transparent!important;
 }
+
+#users-table > tbody > tr > td,
+#users-table > tfoot > tr > td,
+#users-table > tbody > tr > th,
+#users-table > tfoot > tr > th {
+  padding: 10px 16px;
+}
+
+#users-table > thead > tr > th {
+  padding: 16px;
+}

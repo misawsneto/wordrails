@@ -21,6 +21,8 @@ public interface PersonRepository extends DatabaseRepository<Person, Integer> {
 	@Cacheable(value = "person", key = "#p0")
 	Person findByUsername(@Param("username") String username);
 
+	Person findByUsernameAndTenantId(@Param("username") String username, @Param("tenantId") String tenantId);
+
 	@RestResource(exported = false)
 	Person findByEmail(@Param("email") String email);
 

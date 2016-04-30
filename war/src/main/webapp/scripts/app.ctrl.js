@@ -485,7 +485,10 @@ angular.module('app')
       }
 
       $scope.app.getImagesPerson = function (post, id, size, type, bg) {
-        return $scope.app.hasAuthorImage(post) ? $filter('getImagesPerson')(id, size, type, bg) : null
+        if(post)
+          return $scope.app.hasAuthorImage(post) ? $filter('getImagesPerson')(id, size, type, bg) : null;
+        else
+          return $filter('getImagesPerson')(id, size, type, bg);
       };
 
       $scope.app.getPostsImage =  function(id, size, bg) {

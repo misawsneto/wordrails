@@ -407,4 +407,141 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       
     }
     // ---------- /add user funcs ----------
+
+    $scope.editingPerson = null;
+    $scope.showEditProfile = function(event, person){
+      // show term alert
+      $scope.editingPerson = person;
+      $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'edit-person-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+    }    
+
+    // ------- user edit image ----------
+    var personImageUploader = $scope.personImageUploader = new FileUploader({
+        url: TRIX.baseUrl + "/api/images/upload?imageType=PROFILE_PICTURE"
+      });
+
+      $scope.uploadedImage = null;
+      personImageUploader.onAfterAddingFile = function(fileItem) {
+        $scope.uploadedImage = null;
+        personImageUploader.uploadAll();
+      };
+
+      personImageUploader.onSuccessItem = function(fileItem, response, status, headers) {
+        if(response.filelink){
+          $scope.uploadedUserImage = response;
+          trix.getPerson($scope.app.person.id).success(function(personResponse){
+            
+            personResponse.image = TRIX.baseUrl + "/api/images/" + $scope.uploadedUserImage.id
+
+            trix.putPerson(personResponse).success(function(){
+              $scope.app.person.imageHash = response.hash
+              setUserImage($scope.app.person)
+            })
+
+          })
+          $mdToast.hide();
+        }
+      };
+
+      personImageUploader.onErrorItem = function(fileItem, response, status, headers) {
+        if(status == 413)
+          $scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
+        else
+          $scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+      }
+
+      $scope.clearImage = function(){ 
+        $scope.uploadedImage = null;
+        personImageUploader.clearQueue();
+        personImageUploader.cancelAll()
+        $scope.checkLandscape();
+        $scope.postCtrl.imageHasChanged = true;
+      }
+
+      personImageUploader.onProgressItem = function(fileItem, progress) {
+        cfpLoadingBar.start();
+        cfpLoadingBar.set(progress/100)
+        if(progress == 100){
+          cfpLoadingBar.complete()
+          toastPromise = $mdToast.show(
+            $mdToast.simple()
+            .content('Processando...')
+            .position('top right')
+            .hideDelay(false)
+            );
+        }
+      };
+
+      // cover upload
+      var personCoverUploader = $scope.personCoverUploader = new FileUploader({
+        url: TRIX.baseUrl + "/api/images/upload?imageType=COVER"
+      });
+
+      $scope.uploadedImage = null;
+      personCoverUploader.onAfterAddingFile = function(fileItem) {
+        $scope.uploadedImage = null;
+        personCoverUploader.uploadAll();
+      };
+
+      personCoverUploader.onSuccessItem = function(fileItem, response, status, headers) {
+         if(response.filelink){
+          $scope.uploadedCoverImage = response;
+          trix.getPerson($scope.app.person.id).success(function(personResponse){
+            
+            personResponse.cover = TRIX.baseUrl + "/api/images/" + $scope.uploadedCoverImage.id
+
+            trix.putPerson(personResponse).success(function(){
+              $scope.app.person.coverHash = response.hash
+              setCoverImage($scope.app.person)
+            })
+
+          })
+          $mdToast.hide();
+        }
+      };
+
+      personCoverUploader.onErrorItem = function(fileItem, response, status, headers) {
+        if(status == 413)
+          $scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
+        else
+          $scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+      }
+
+      $scope.clearImage = function(){ 
+        $scope.uploadedImage = null;
+        personCoverUploader.clearQueue();
+        personCoverUploader.cancelAll()
+        $scope.checkLandscape();
+        $scope.postCtrl.imageHasChanged = true;
+      }
+
+      personCoverUploader.onProgressItem = function(fileItem, progress) {
+        cfpLoadingBar.start();
+        cfpLoadingBar.set(progress/100)
+        if(progress == 100){
+          cfpLoadingBar.complete()
+          toastPromise = $mdToast.show(
+            $mdToast.simple()
+            .content('Processando...')
+            .position('top right')
+            .hideDelay(false)
+            );
+        }
+      };
+
+      // ------------- /user edit image -------------
 }])

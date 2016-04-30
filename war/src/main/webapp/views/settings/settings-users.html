@@ -22,7 +22,7 @@
     			<!-- search results -->
                 <div class="min-h-400">
                   <div class="table-responsive o-visible text-base" infinite-scroll="paginate()" infinite-scroll-container="'#search-results'">
-										<table class="table b-t b-light">
+										<table id="users-table" class="table b-t b-light">
 											<thead>
 												<tr>
 													<th style="width:15px;">
@@ -30,11 +30,11 @@
 														</md-checkbox>
 													</th>
 													<th>usuários</th>
-													<th class="text-center">último login</th>
-													<th style="max-width:115px;" class="text-center">
+													<th style="min-width:170px;" class="text-center display-t-c v-m no-padding">último login</th>
+													<th style="min-width:110px;" class="text-center display-t-c v-m no-padding">
 														ativar/desativar
 													</th>
-													<th style="max-width:115px;" class="text-center">
+													<th style="min-width:100px;" class="text-center display-t-c v-m no-padding">
 														administrador
 													</th>
 													<th style="width:30px;"></th>
@@ -42,12 +42,12 @@
 											</thead>
 											<tbody>
 												<tr ng-repeat="person in persons" class="b-l-3x b-l-s b-c-t" 	ng-style="person.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" ng-class="{'b-l-primary': isActivePerson(person)}">
-													<td>
-														<md-checkbox aria-label="nothing" class="no-margin p-t-sm" ng-if="person.id != app.person.id"
+													<td class="display-t-c v-m">
+														<md-checkbox aria-label="nothing" class="no-margin" ng-if="person.id != app.person.id"
 														 ng-model="person.selected" ng-true-value="true" ng-false-value="false" ng-click="app.stopPropagation($event)">
 														</md-checkbox>
 													</td>
-													<td class="clearfix">
+													<td class="display-t-c v-m clearfix">
 							              <span class="pull-left thumb-sm m-r">
 															<div ng-style="app.hasProfilePicture(person) ? {{person.id | getImagesPerson:'small':'PROFILE_PICTURE':true}} : null" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(person)}">
 																<i ng-if="!app.hasProfilePicture(person)" style="line-height: 36px;" class="mdi2-account i-24"></i>
@@ -58,21 +58,21 @@
 								                <div class="text-muted clear text-ellipsis">{{person.username}} | {{person.email}}</div>
 								              </span>
 													</td>
-													<td class="text-center" ng-if="!person.lastLogin"> - </td>
-													<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
-													<td class="text-center">
+													<td class="display-t-c v-m text-center" ng-if="!person.lastLogin"> - </td>
+													<td class="display-t-c v-m text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
+													<td class="display-t-c v-m text-center">
 														<div ng-if="person.id != app.person.id" class="hidden-sm" ng-click="app.stopPropagation($event)">
-														 	<md-switch class="p-t-sm no-margin" ng-change="app.enableDisablePerson(person)" ng-model="person.enabled" ng-true-value="true" ng-false-value="false">
+														 	<md-switch class="no-margin" ng-change="app.enableDisablePerson(person)" ng-model="person.enabled" ng-true-value="true" ng-false-value="false">
 								            	</md-switch>
 														</div>
 													</td>
-													<td class="text-center">
-														<md-checkbox aria-label="nothing" class="p-t-sm" ng-if="person.id != app.person.id" 
+													<td class="display-t-c v-m text-center">
+														<md-checkbox aria-label="nothing" class="no-margin" ng-if="person.id != app.person.id" 
 														 ng-model="person.admin" ng-click="app.stopPropagation($event)">
 														</md-checkbox>
 													</td>
-													<td>
-														<div ng-if="person.id != app.person.id" class="p-t-sm dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
+													<td class="display-t-c v-m">
+														<div ng-if="person.id != app.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
 															<!-- <a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-navigation-more-vert mdi" dropdown-toggle>
 															</a> -->
 															<ul class="list-inline">
@@ -81,7 +81,7 @@
 																	</a>
 								                  <ul class="dropdown-menu dropdown-menu-scale pull-right pull-up top text-color">
 								                    <li><a href>{{'settings.users.REDIFINE_PASSWORD' | translate}}</a></li>
-								                    <li><a href>{{'settings.users.EDIT_PROFILE' | translate}}</a></li>
+								                    <li><a href ng-click="showEditProfile($event, person);">{{'settings.users.EDIT_PROFILE' | translate}}</a></li>
 								                  </ul>
 								                </li>
 								              </ul>
@@ -156,3 +156,87 @@
 	    </md-button>
 	  </md-fab-actions>
 	</md-fab-speed-dial>
+
+
+<script type="text/ng-template" id="edit-person-dialog.html">
+  <md-dialog-content layout="row" layout-wrap>
+    <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center" layout="column">
+      <div class="w-lg">
+
+        <div class="text-center p w-full" translate="titles.EDIT_PROFILE"></div>
+
+        <div class="text-center p p-t-lg w-full m-t-lg">
+          <!-- <i class="mdi mdi2-account text-4x"></i> -->
+          <div class="md-whiteframe-z1 m-t m-l user-avatar rounded w-96 bg-white inline pos-rlt md-primary-default background text-center bg-cover" ng-style="{'background-image': 'url(  {{editingPerson | userImage: 'medium'}} )'}">
+            <i ng-if="!editingPerson.imageHash" class="mdi2-account i-60" style="top: 16%;position: relative;"></i>
+            <!-- image profile upload -->
+            <div class="profile-image-button rounded o-f-h w-96 text-center pos-abt top-0" style="background-color: rgba(0,0,0,0.7)">
+              <i class="mdi2-pencil i-52 text-white image-edit" style="opacity: 0.92; position: relative; top: 24%"></i>
+              <input class="image-upload" style="height: 96px;" type="file" nv-file-select="" uploader="personImageUploader" name="contents" accept="image/*">
+            </div>
+            <!-- /image profile upload -->
+          </div>
+        </div>
+
+        <div class="pos-abt bottom-0 text-center w-full p-t p-b">
+          <md-button ng-click="cancel()" class="m-0">
+            {{'titles.CANCEL' | translate}}
+          </md-button>
+          <md-button ng-click="saveProfile(editingPerson)" ng-disabled="disabled" class="m-0">
+            {{'titles.SAVE' | translate}}
+          </md-button>
+        </div>
+      </div>
+    </md-toolbar>
+    <div class="p w-x col-400 scrollable md-background-hue-1 background">
+        <div class="pos-rlt p">
+        	<div ng-if="personImageUploader" ng-style="{'background-image': 'url(  {{editingPerson | coverImage: 'medium'}} )'}" style="margin: -32px -32px 32px -32px" class="hidden-folded bg-cover m-b-md md-whiteframe-z1">
+	          <div class="m-b-xxl p-lg"></div>
+	          <div class="p-v-sm p-h black-grad m-t text-white">
+	            <div class="block" style="opacity:0.92">
+	              <span class="block font-bold">{{editingPerson.name}}</span>
+	              <span class="text-sm">{{editingPerson.email}}</span>
+	            </div>
+	          </div>
+	        </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.NAME' | translate}}</label>
+            <input type="text" ng-model="editingPerson.name" md-autofocus>
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.USERNAME' | translate}}</label>
+            <input type="text" ng-model="editingPerson.username" >
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.EMAIL' | translate}}</label>
+            <input type="text" ng-model="editingPerson.email" >
+          </md-input-container>
+          </div>
+          <div class="">
+          <!-- <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.PASSWORD' | translate}} ({{'titles.OPTIONAL' | translate}})</label>
+            <input type="password" ng-model="editingPerson.password" >
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0" ng-class="{'animated fadeIn': editingPerson.password, 'hide': !editingPerson.password}">
+            <label for="testInput">{{'settings.profile.CONFIRM_PASSWORD' | translate}}</label>
+            <input type="password" ng-model="editingPerson.passwordConfirm" >
+          </md-input-container> -->
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.BIOGRAPHY' | translate}}</label>
+            <textarea type="text" columns="1" ng-model="editingPerson.bio" ></textarea>
+          </md-input-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </md-dialog-content>
+</script>

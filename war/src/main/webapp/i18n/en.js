@@ -82,7 +82,8 @@
 		"DESCRIPTION": "Description",
 		"UPLOAD": "Upload image",
 		"NEW_USERS": "New users",
-		"LATEST_POSTS": "Latest posts"
+		"LATEST_POSTS": "Latest posts",
+		"OPTIONAL": "optional"
 	},
 	"signin_signup": {
 		"OR": "or",
