@@ -1,4 +1,10 @@
 <div class="m-b p-h-xl">
+
+  <div ng-if="noBookmarks" class="text-center text-3x m-t-xxl" style="opacity: 0.5">
+    <div>{{'titles.NO_BOOKMARKS' | translate}}</div>
+    <i class="i-72 mdi2-bookmark"></i>
+  </div>
+
   <div masonry class="m-b pos-rlt animated fadeIn" reload-on-show ng-if="postViews && postViews.length > 0">
     <div class="col-lg-4 col-sm-6 col-xs-12 masonry-brick" ng-repeat="postView in postViews">
         <!--  Vertical News Box -->

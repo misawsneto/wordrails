@@ -20,9 +20,9 @@
             <div class="cell-inner p-r-sm p-l-sm">
               <div id="search-results" class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z2 " style="overflow: auto; max-height: 100%;">
     			<!-- search results -->
-                <div class="min-h-400">
+                <div class="h-full">
                   <div class="table-responsive o-visible text-base" infinite-scroll="paginate()" infinite-scroll-container="'#search-results'">
-										<table id="users-table" class="table b-t b-light">
+										<table id="users-table" class="table b-t b-light m-b-xxl">
 											<thead>
 												<tr>
 													<th style="width:15px;">
@@ -100,6 +100,18 @@
 									</div> 
                 </div>
               </div>
+              <div ng-if="personsCount && persons" class="md-whiteframe-z1 text-sm md-background-hue-1 background pos-abt bottom-0 z-index-5" style="width: calc(100% - 16px)">
+              	<md-divider></md-divider>
+              	<div class="p-sm font-code">
+                	{{'titles.TOTAL' | translate}}: {{personsCount}} 
+                	<span>
+                		| {{'titles.SHOWING' | translate}}: {{persons.length}}
+              		</span>
+                	<span ng-if="getSelectedPersonIds().length > 0" >
+                		| {{'titles.SELECTED' | translate}}: {{getSelectedPersonIds().length}}
+              		</span>
+              	</div>
+               </div>
               <!-- /search results -->
             </div>
           </div>
@@ -117,38 +129,38 @@
     <i class="mdi-editor-mode-edit i-24"></i>
   </md-button> -->
 
-	<md-fab-speed-dial md-open="openImageOptions" md-direction="up" class="md-scale pos-fix right-0 bottom-0 m-r-lg m-b-md">
+	<md-fab-speed-dial md-direction="up" class="md-scale pos-fix right-0 bottom-0 m-r-lg m-b-md">
 	  <md-fab-trigger>
 	    <md-button aria-label="Add..." class="md-fab md-accent">
 	    	<i class="mdi mdi2-menu i-24"></i>
 	    </md-button>
 	  </md-fab-trigger>
 	  <md-fab-actions>
-	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
+	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showAddUserDialog($event)">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.ADD_USERS' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi i-20 mdi2-plus text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangePermissions($event, enablePersons())">
+	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'enablePersons')">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.ENABLE_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-account-check i-20 text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangePermissions($event, disablePersons())">
+	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'disablePersons')">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.DISABLE_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-account-off i-20 text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showImageFocuspointDialog();">
+	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" >
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.PERMISSIONS_OF_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-key-variant i-20 text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="removeFeaturedImage()">
+	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" >
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.INVITE_USERS' | translate}}
 	  		</md-tooltip>
@@ -239,4 +251,97 @@
       </div>
     </div>
   </md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="add-profile-dialog.html">
+  <md-dialog-content layout="row" layout-wrap>
+    <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center" layout="column">
+      <div class="w-lg">
+
+        <div class="text-center p w-full" translate="titles.ADD_PERSON"></div>
+
+        <div class="text-center p p-t-lg w-full m-t-lg">
+          <i class="mdi mdi2-account text-4x"></i>
+        </div>
+
+        <div class="pos-abt bottom-0 text-center w-full p-t p-b">
+          <md-button ng-click="cancel()" class="m-0">
+            {{'titles.CANCEL' | translate}}
+          </md-button>
+          <md-button ng-click="saveProfile(addingPerson)" ng-disabled="disabled" class="m-0">
+            {{'titles.SAVE' | translate}}
+          </md-button>
+        </div>
+      </div>
+    </md-toolbar>
+    <div class="p w-x col-400 scrollable md-background-hue-1 background">
+        <div class="pos-rlt p">
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.NAME' | translate}}</label>
+            <input type="text" id="testInput" ng-model="addingPerson.name" md-autofocus>
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.USERNAME' | translate}}</label>
+            <input type="text" id="testInput" ng-model="addingPerson.username" >
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.EMAIL' | translate}}</label>
+            <input type="text" id="testInput" ng-model="addingPerson.email" >
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.PASSWORD' | translate}}</label>
+            <input type="password" id="testInput" ng-model="addingPerson.password" >
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.CONFIRM_PASSWORD' | translate}}</label>
+            <input type="password" id="testInput" ng-model="addingPerson.passwordConfirm" >
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.BIOGRAPHY' | translate}}</label>
+            <textarea type="text" id="testInput" columns="1" ng-model="addingPerson.bio"></textarea>
+          </md-input-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="bulk_change_access_dialog.html">
+	<md-dialog aria-label="change action">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+        <div ng-if="enableOrDisableOption === 'enablePersons'" class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{'settings.users.ENABLE_ALL_SELECTED_MSG' | translate}}?
+        </div>
+
+        <div ng-if="enableOrDisableOption === 'disablePersons'" class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{'settings.users.DISABLE_ALL_SELECTED_MSG' | translate}}?
+        </div>
+
+        <div class="text-center">
+          <md-button ng-if="enableOrDisableOption === 'enablePersons'" ng-click="enablePersons(); disabled = true;" ng-disabled="disabled">
+            {{'titles.YES' | translate}}
+          </md-button>
+          <md-button ng-if="enableOrDisableOption === 'disablePersons'" ng-click="disablePersons(); disabled = true;" ng-disabled="disabled">
+            {{'titles.YES' | translate}}
+          </md-button>
+          <md-button ng-click="cancel()">
+            {{'titles.NO' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
 </script>

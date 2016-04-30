@@ -9,9 +9,11 @@ app.controller('BookmarksCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$m
 						if(pid == postView.id)
 							$scope.postViews.push(postView)
 					})
-					$rootScope.$broadcast('masonry.reload');
 				})
+				if($scope.postViews && $scope.postViews.length > 0)
+					$rootScope.$broadcast('masonry.reload');
 			})
-		}
+		}else
+			$scope.noBookmarks = true;
 
 }]);

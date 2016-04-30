@@ -83,7 +83,12 @@
 		"UPLOAD": "Selecionar imagem",
 		"NEW_USERS": "Novos usuários",
 		"LATEST_POSTS": "Últimas publicações",
-		"OPTIONAL": "opcional"
+		"OPTIONAL": "opcional",
+		"NO_BOOKMARKS": "Você não possui leituras",
+		"ADD_PERSON": "Crie um novo usuário",
+		"TOTAL": "Total",
+		"SHOWING": "Exibidos",
+		"SELECTED": "Selecionado"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -188,7 +193,9 @@
 			"INVITE_USERS": "Convidar usuários",
 			"ADD_USERS": "Adicionar usuários",
 			"REDIFINE_PASSWORD": "Redefinir senha",
-			"EDIT_PROFILE": "Editar perfil"			
+			"EDIT_PROFILE": "Editar perfil",
+			"ENABLE_ALL_SELECTED_MSG": "Tem certeza que deseja ativar todos os usuários selecionados",
+			"DISABLE_ALL_SELECTED_MSG": "Tem certeza que deseja desativar todos os usuários selecionados"
 		},
 		"post": {
 			"menu":{

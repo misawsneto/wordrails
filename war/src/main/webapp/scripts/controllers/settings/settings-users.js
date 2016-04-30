@@ -58,6 +58,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   $scope.window = 20
 
 
+  $scope.personsCount = 0;
   trix.countPersonsByNetwork().success(function(response){
     $scope.personsCount = response;
   })
@@ -87,7 +88,6 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   }
 
   var getPersonsError = function(response){
-
   }
 
   var getPersonsSuccess = function(response){
@@ -234,6 +234,8 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     return ret;
   }
 
+  $scope.getSelectedPersonIds = getSelectedPersonIds;
+
   $scope.selectBulkAction = function(bulkActionSelected){
     $scope.bulkActionSelected = bulkActionSelected;
   }
@@ -269,7 +271,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       $scope.app.showSuccessToast('Usuários ativados.');
       $mdDialog.cancel();
       $scope.persons.forEach(function(person, index){
-        if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
+        if(ids.indexOf(person.id) > -1 && person.id != $scope.app.person.id)
           person.enabled = true;
       });
     }).error(function(){
@@ -284,7 +286,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       $scope.app.showSuccessToast('Usuário desativados.');
       $mdDialog.cancel();
       $scope.persons.forEach(function(person, index){
-        if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
+        if(ids.indexOf(person.id) > -1 && person.id != $scope.app.person.id)
           person.enabled = false;
       });
     }).error(function(){
@@ -293,17 +295,18 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     })
   }
 
-  $scope.func = null;
-  $scope.bulkChangePermissions = function(ev, func){
-    $scope.func = func;
+  $scope.enableOrDisableOption = null;
+  // $scope.bulkChangePermissions = function(ev, func){
+  $scope.bulkChangeAccess = function(ev, enableOrDisableOption){
+    $scope.enableOrDisableOption = enableOrDisableOption;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
           closeTo: {
             bottom: 1500
           },
         preserveScope: true, // do not forget this if use parent scope
-        controller: DialogController,
-        templateUrl: 'bulk_change_permissions.html',
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'bulk_change_access_dialog.html',
         targetEvent: ev,
         onComplete: function(){}
       })
@@ -321,7 +324,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
             bottom: 1500
           },
         preserveScope: true, // do not forget this if use parent scope
-        controller: DialogController,
+        controller: $scope.app.defaultDialog,
         templateUrl: 'confirm_no_person_selected.html',
         targetEvent: ev,
         onComplete: function(){}
@@ -340,7 +343,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
             bottom: 1500
           },
         preserveScope: true, // do not forget this if use parent scope
-        controller: DialogController,
+        controller: $scope.app.defaultDialog,
         templateUrl: 'confirm_bulk_action.html',
         targetEvent: ev,
         onComplete: function(){}
@@ -390,12 +393,6 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       })
     }
 
-    // ---------- add user funcs ----------
-    $scope.showAddUserDialog = function(){
-
-    }
-    // ---------- /add user funcs ----------
-
     // ---------- invite users funcs ----------
     $scope.showInviteUserDialog = function(){
       
@@ -403,8 +400,23 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     // ---------- /invite users funcs ----------
 
     // ---------- add user funcs ----------
-    $scope.showAddUserDialog = function(){
-      
+    $scope.showAddUserDialog = function(event){
+       // show term alert
+      $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'add-profile-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
     }
     // ---------- /add user funcs ----------
 

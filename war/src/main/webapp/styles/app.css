@@ -4191,6 +4191,16 @@ nav .nav-header:focus {
   vertical-align: -59%;
 }
 
+.i-64 {
+  font-size: 64px;
+  vertical-align: -63%;
+}
+
+.i-72 {
+  font-size: 72px;
+  vertical-align: -71%;
+}
+
 .ui-icon {
   display: inline-block;
   height: 1em;

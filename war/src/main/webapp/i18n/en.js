@@ -83,7 +83,12 @@
 		"UPLOAD": "Upload image",
 		"NEW_USERS": "New users",
 		"LATEST_POSTS": "Latest posts",
-		"OPTIONAL": "optional"
+		"OPTIONAL": "optional",
+		"NO_BOOKMARKS": "You do not have bookmarks",
+		"ADD_PERSON": "Create a new user",
+		"TOTAL": "Total",
+		"SHOWING": "Showing",
+		"SELECTED": "Selected"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -188,7 +193,9 @@
 			"INVITE_USERS": "Invite users",
 			"ADD_USERS": "Invite users",
 			"REDIFINE_PASSWORD": "Redifine password",
-			"EDIT_PROFILE": "Edit profile"			
+			"EDIT_PROFILE": "Edit profile",
+			"ENABLE_ALL_SELECTED_MSG": "Are you sure you want to enable all selected users",
+			"DISABLE_ALL_SELECTED_MSG": "Are you sure you want to disable all selected users"
 		},
 		"post": {
 			"menu":{
