@@ -10,17 +10,18 @@
       <div class="vbox p-t-lg p-r-xxl p-l-xxl">
       
         <div class="search-with-filter m-r-sm m-l-sm p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
-          <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
+        	<form ng-submit="doSearch()">
+          	<input placeholder="{{'titles.SEARCH' | translate }}" ng-model="search" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
+        	</form>
         </div>
         <!-- /search -->
         <div class="row-row">
           <div class="cell">
             <div class="cell-inner p-r-sm p-l-sm">
-              <div class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z2 " style="overflow: auto;
-    max-height: 100%;">
+              <div id="search-results" class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z2 " style="overflow: auto; max-height: 100%;">
     			<!-- search results -->
                 <div class="min-h-400">
-                  <div class="table-responsive o-visible text-base">
+                  <div class="table-responsive o-visible text-base" infinite-scroll="paginate()" infinite-scroll-container="'#search-results'">
 										<table class="table b-t b-light">
 											<thead>
 												<tr>

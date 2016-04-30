@@ -5,6 +5,7 @@ import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.util.StatsJson;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -159,4 +160,12 @@ public interface PersonsApi {
 	@Path("/me/stats")
 	@PreAuthorize("isAuthenticated()")
 	StatsJson personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException;
+
+	@GET
+	@Path("/search/findPersons")
+	@PreAuthorize("isAuthenticated()")
+	/**
+	 * {@link co.xarx.trix.persistence.PersonRepository#findPersons(String, Pageable)}
+	 */
+	void findPersons() throws IOException;
 }

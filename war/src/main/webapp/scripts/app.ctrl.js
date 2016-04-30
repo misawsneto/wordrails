@@ -282,6 +282,10 @@ angular.module('app')
           return !$scope.app.largeCardCheck(index);
         }
 
+        $scope.app.getCategoryLink = function(stationSlug, categoryName){
+          return '/'+stationSlug+'/cat?name='+categoryName;
+        }
+
         // ---------- /util -------------
 
         // ---------- theming -----------
@@ -784,6 +788,12 @@ angular.module('app')
   }]);
 
 var appDataCtrl = null;
+
+String.prototype.trim = function(){
+  var str = this;
+  str = str.replace(/^\s+|\s+$/g, '');
+  return str;
+}
 
 String.prototype.toSlug = function(){
   var str = this;

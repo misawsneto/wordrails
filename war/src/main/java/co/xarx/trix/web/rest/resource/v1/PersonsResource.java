@@ -558,4 +558,13 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 //			}
 //		}
 //	}
+
+
+	@Override
+	/**
+	 * {@link co.xarx.trix.persistence.PersonRepository#findPersons(String, Pageable)}
+	 */
+	public void findPersons() throws IOException {
+		forward();
+	}
 }

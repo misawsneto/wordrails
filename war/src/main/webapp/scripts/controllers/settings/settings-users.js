@@ -1,14 +1,13 @@
 app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog){
 
-    $scope.pe = {};
-    $scope.pe.adminStations = angular.copy($scope.app.adminStations);
-   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
+  FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
   };
 
   $scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
 
+  // ------------- person file upload
   var uploader = $scope.uploader = new FileUploader({
   	url: TRIX.baseUrl + "/api/images/upload?imageType=PROFILE_PICTURE"
   });
@@ -18,150 +17,128 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   	uploader.uploadAll();
   };
 
+  // ------------ person file upload
+
   var personActiveId = null;
-  $scope.activatePerson = function(Person){
-    personActiveId = Person.id;
-  }
+  // $scope.activatePerson = function(Person){
+  //   personActiveId = Person.id;
+  // }
 
-  $scope.isActivePerson = function(person){
-    return personActiveId == person.id
-  }
+  // $scope.isActivePerson = function(person){
+  //   return personActiveId == person.id
+  // }
 
-  $scope.app.lastSettingState = "app.settings.users";
 
-  $scope.selectedPerson = null;
+  // if($state.params.newUser){
+  // 	$scope.person = {
+  // 		name: '',
+  // 		username: '',
+  // 		password: '',
+  // 		email: '',
+  // 		emailNotification: true
+  // 	}
+  // 	$scope.editing = false;
+  // 	$scope.creating = true;
+  // }else if($state.params.username){
+  // 	$scope.editing = true;
+  // 	$scope.creating = false;
+  // 	trix.findByUsername($state.params.username, 'personProjection').success(function(response){
+  // 		$scope.selectedPerson = response.persons[0];
+  // 	})
+  // }else{
+  // 	$scope.editing = false;
+  // 	$scope.creating = false;
+  // }
 
-  $scope.stations = $scope.app.stations;
-  $scope.person = $scope.app.person;
-
-  if($state.params.newUser){
-  	$scope.person = {
-  		name: '',
-  		username: '',
-  		password: '',
-  		email: '',
-  		emailNotification: true
-  	}
-  	$scope.editing = false;
-  	$scope.creating = true;
-  }else if($state.params.username){
-  	$scope.editing = true;
-  	$scope.creating = false;
-  	trix.findByUsername($state.params.username, 'personProjection').success(function(response){
-  		$scope.selectedPerson = response.persons[0];
-  	})
-  }else{
-  	$scope.editing = false;
-  	$scope.creating = false;
-  }
-
-  $scope.bulkActions = [
-    {name:'Convites', id:4},
-    {name:'Alterar permissões', id:1},
-    {name:'Ativar usuários', id:2},
-    {name:'Desativar usuários', id:3}
-  ]
-
-  $scope.bulkActionSelected = null;
-
+  // -------- users pagination ---------
   $scope.page = 0;
   var loading = false;
   $scope.allLoaded = false;
   $scope.beginning = true;
   $scope.window = 20
 
-  if(!$scope.editing && !$scope.creating){
-    $scope.showProgress = true;
-  	trix.getPersons($scope.page, $scope.window, null, 'personProjection').success(function(response){
-  		$scope.persons = response.persons;
-      $scope.showProgress = false;
-  	});
-  }
 
   trix.countPersonsByNetwork().success(function(response){
     $scope.personsCount = response;
   })
 
-  $scope.paginate = function(direction){
-    var page = 0;
-    if(!direction)
-      return;
+  var useSearchField = false
+  $scope.doSearch = function(){
+    if($scope.search || ($scope.search && $scope.search.trim()))
+      useSearchField = true;
+    $scope.persons = [];
+    $scope.showProgress = false;
+    $scope.page = 0;
+    loading = false
+    $scope.allLoaded = false
+    $scope.paginate()
+  }
 
-    if(direction == 'left'){
-      page = $scope.page-1;
-      $scope.allLoaded = false;
-    }
-    else if(direction == 'right'){
-      page = $scope.page+1;
-      $scope.beginning = false;
-    }
-
-    if(page < 0){
-      return;
-    }
-
-    if(!$scope.allLoaded){
-      $scope.showProgress = true;
-      trix.getPersons(page, $scope.window, null, 'personProjection').success(function(response){
-        if((!response.persons || response.persons.length == 0) && direction == 'right'){
-          $scope.allLoaded = true;
-        }else{
-          if(!$scope.persons && response.persons)
-            $scope.persons = response.persons;
-          else if(response.persons && response.persons.length > 0){
-            $scope.persons = response.persons;
-            $scope.page = page;
-          }
-
-          if($scope.page == 0)
-            $scope.beginning = true;
-
-          if((($scope.page * $scope.window) + $scope.persons.length) == $scope.personsCount)
-            $scope.allLoaded = true;
-        }
-        $scope.showProgress = false;
-      }); 
+  $scope.paginate = function(){
+    if(!loading){
+      loading = true;
+      if(!$scope.allLoaded && !useSearchField){
+        $scope.showProgress = true;
+        trix.getPersons($scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess).error(getPersonsError); 
+      }else if(!$scope.allLoaded && useSearchField){
+        trix.findPersons($scope.search, $scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess).error(getPersonsError); 
+      }
     }
   }
+
+  var getPersonsError = function(response){
+
+  }
+
+  var getPersonsSuccess = function(response){
+      if(!$scope.persons || !$scope.persons.length){
+        $scope.persons = [];
+      }
+      
+      if(response.persons && response.persons.length > 0){
+        response.persons.forEach(function(p){
+          $scope.persons.push(p);
+        })
+        $scope.page++;
+      }else{
+        $scope.allLoaded = true;
+      }
+
+    $scope.showProgress = false;
+    loading = false;
+  }
+
+  $scope.showProgress = true;
+  // get initial users
+  trix.getPersons($scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess);
+
+  // -------- /users pagination ---------
 
   $scope.loadPerson = function(person){
+    trix.getPerson(person.id, 'personProjection').success(function(personProjection){
+
+    })
   }
-
-  function DialogController(scope, $mdDialog) {
-    scope.app = $scope.app;
-    scope.pe = $scope.pe;
-    scope.thisStation = $scope.thisStation;
-
-    scope.hide = function() {
-      $mdDialog.hide();
-    };
-
-    scope.cancel = function() {
-      $mdDialog.cancel();
-    };
-
-    // check if user has permisstion to write
-  };
 
   $scope.app.enableDisablePerson = function(person){
     if(person)
-      $scope.pe.enableDisablePerson = person;
+      $scope.enableDisablePerson = person;
 
-    if(!$scope.pe.enableDisablePerson.enabled)
-      trix.disablePerson($scope.pe.enableDisablePerson.id).success(function(){
+    if(!$scope.enableDisablePerson.enabled)
+      trix.disablePerson($scope.enableDisablePerson.id).success(function(){
         $scope.app.showSuccessToast('Usuário desativado.');
-        $scope.pe.enableDisablePerson.enabled = false;
+        $scope.enableDisablePerson.enabled = false;
       }).error(function(){
         $scope.app.showErrorToast('Erro ao alterar usuário.');
-        $scope.pe.enableDisablePerson.enabled = !$scope.pe.enableDisablePerson.enabled;
+        $scope.enableDisablePerson.enabled = !$scope.enableDisablePerson.enabled;
       })
     else
-      trix.enablePerson($scope.pe.enableDisablePerson.id).success(function(){
+      trix.enablePerson($scope.enableDisablePerson.id).success(function(){
         $scope.app.showSuccessToast('Usuário ativado.');
-        $scope.pe.enableDisablePerson.enabled = true;
+        $scope.enableDisablePerson.enabled = true;
       }).error(function(){
         $scope.app.showErrorToast('Erro ao alterar usuário.');
-        $scope.pe.enableDisablePerson.enabled = !$scope.pe.enableDisablePerson.enabled;
+        $scope.enableDisablePerson.enabled = !$scope.enableDisablePerson.enabled;
       })
   }
 
@@ -194,7 +171,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
             bottom: 1500
           },
         preserveScope: true, // do not forget this if use parent scope
-        controller: DialogController,
+        controller: $scope.app.defaultDialog,
         templateUrl: 'conflicting_person.html',
         targetEvent: ev,
         onComplete: function(){}
@@ -375,7 +352,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       });
     }
 
-    $scope.pe.applyPermissions = function(stations, permissions){
+    $scope.applyPermissions = function(stations, permissions){
       var stationRoleUpdates = {stationsIds: [], personsIds: []};
       stationRoleUpdates.personsIds = getSelectedPersonIds();
 
@@ -412,4 +389,22 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         $mdDialog.cancel();
       })
     }
+
+    // ---------- add user funcs ----------
+    $scope.showAddUserDialog = function(){
+
+    }
+    // ---------- /add user funcs ----------
+
+    // ---------- invite users funcs ----------
+    $scope.showInviteUserDialog = function(){
+      
+    }
+    // ---------- /invite users funcs ----------
+
+    // ---------- add user funcs ----------
+    $scope.showAddUserDialog = function(){
+      
+    }
+    // ---------- /add user funcs ----------
 }])

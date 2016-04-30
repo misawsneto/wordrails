@@ -497,6 +497,14 @@ var trix = angular.module('trix', [])
 		return \$http.get(_config.url + "/api/taxonomies/allCategories",  config)
 	};
 
+	this.findPostsByIds = function(ids){
+		var config = {};
+        config.params = {
+            ids: ids
+        }
+        return \$http.get(_config.url + "/api/v2/posts/findPostsByIds",  config)
+	}
+
 	this.recoverPassword = function(email) {
 	  var config = {};
 	  config.headers = {"Content-Type": "application/x-www-form-urlencoded"}

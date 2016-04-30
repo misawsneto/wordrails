@@ -1,8 +1,12 @@
 package co.xarx.trix.web.rest.resource.v2;
 
+import co.xarx.trix.api.ContentResponse;
+import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.v2.PostData;
+import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
+import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.util.RestUtil;
 import co.xarx.trix.web.rest.AbstractResource;
@@ -32,6 +36,12 @@ public class V2PostsResource extends AbstractResource implements V2PostApi {
 	private PostSearchService postSearchService;
 	@Autowired
 	private ModelMapper mapper;
+
+	@Autowired
+	private PostRepository postRepository;
+
+	@Autowired
+	private PostConverter postConverter;
 
 	@Override
 	public Response searchPosts(String query,
@@ -79,5 +89,13 @@ public class V2PostsResource extends AbstractResource implements V2PostApi {
 				}
 			}
 		}
+	}
+
+	@Override
+	public ContentResponse<List<PostView>> findPostsByIds(List<Integer> ids) {
+		List<Post> posts = postRepository.findAll(ids);
+		ContentResponse<List<PostView>> response = new ContentResponse<>();
+		response.content = postConverter.convertToViews(posts);
+		return response;
 	}
 }
