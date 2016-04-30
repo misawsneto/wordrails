@@ -75,7 +75,7 @@
 														<div ng-if="person.id != app.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
 															<!-- <a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-navigation-more-vert mdi" dropdown-toggle>
 															</a> -->
-															<ul class="list-inline">
+															<ul class="list-inline no-margin">
 								                <li class="dropdown">
 								                  <a href data-toggle="dropdown" class="dropdown-toggle r-50 i-24 mdi-navigation-more-vert mdi" dropdown-toggle>
 																	</a>
@@ -339,6 +339,47 @@
           </md-button>
           <md-button ng-click="cancel()">
             {{'titles.NO' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>
+
+<script type="text/ng-template" id="change_password_dialog.html">
+	<md-dialog aria-label="change action">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+
+        <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{'settings.users.SET_PASSWORD' | translate}}?
+        </div>
+
+        <div class="text-center">
+          <md-button ng-click="confirm(); disabled = true;" ng-disabled="disabled">
+            {{'titles.CONFIRM' | translate}}
+          </md-button>
+          <md-button ng-click="cancel()">
+            {{'titles.NO' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>
+
+<script type="text/ng-template" id="no_person_selected_dialog.html">
+	<md-dialog aria-label="change action">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+
+        <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{'settings.users.NO_PERSON_SELETED' | translate}}.
+        </div>
+
+        <div class="text-center">
+          <md-button ng-click="cancel()">
+            {{'titles.CANCEL' | translate}}
           </md-button>
         <div>
       </div>

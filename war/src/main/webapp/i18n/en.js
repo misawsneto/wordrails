@@ -26,6 +26,7 @@
 		"SUBDOMAIN": "Subdomain",
 		"THEMING": "Appearance",
 		"SEARCH": "Search",
+		"CONFIRM": "Confirm",
 		"YES": "Yes",
 		"NO": "No",
 		"BACK": "Back",
@@ -195,7 +196,9 @@
 			"REDIFINE_PASSWORD": "Redifine password",
 			"EDIT_PROFILE": "Edit profile",
 			"ENABLE_ALL_SELECTED_MSG": "Are you sure you want to enable all selected users",
-			"DISABLE_ALL_SELECTED_MSG": "Are you sure you want to disable all selected users"
+			"DISABLE_ALL_SELECTED_MSG": "Are you sure you want to disable all selected users",
+			"NO_PERSON_SELETED": "Select user by enabling the checkbox before performing this action",
+			"SET_PASSWORD": "Change password"
 		},
 		"post": {
 			"menu":{

@@ -26,6 +26,7 @@
 		"SUBDOMAIN": "Subdomínio",
 		"THEMING": "Aparência",
 		"SEARCH": "Buscar",
+		"CONFIRM": "Confirmar",
 		"YES": "Sim",
 		"NO": "Não",
 		"BACK": "Voltar",
@@ -195,7 +196,9 @@
 			"REDIFINE_PASSWORD": "Redefinir senha",
 			"EDIT_PROFILE": "Editar perfil",
 			"ENABLE_ALL_SELECTED_MSG": "Tem certeza que deseja ativar todos os usuários selecionados",
-			"DISABLE_ALL_SELECTED_MSG": "Tem certeza que deseja desativar todos os usuários selecionados"
+			"DISABLE_ALL_SELECTED_MSG": "Tem certeza que deseja desativar todos os usuários selecionados",
+			"NO_PERSON_SELETED": "Selecione usuários antes de executar esta ação",
+			"SET_PASSWORD": "Definição de senha"
 		},
 		"post": {
 			"menu":{

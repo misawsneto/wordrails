@@ -267,6 +267,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
   $scope.enablePersons = function(){
     ids = getSelectedPersonIds();
+
     trix.enablePersons(ids).success(function(){
       $scope.app.showSuccessToast('Usuários ativados.');
       $mdDialog.cancel();
@@ -282,6 +283,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
   $scope.disablePersons = function(){
     var ids = getSelectedPersonIds();
+
     trix.disablePersons(ids).success(function(){
       $scope.app.showSuccessToast('Usuário desativados.');
       $mdDialog.cancel();
@@ -295,9 +297,35 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     })
   }
 
+  var showNoPersonSelectedDialog = function(event){
+    $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'no_person_selected_dialog.html',
+        targetEvent: event,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+    });
+  }
+
   $scope.enableOrDisableOption = null;
   // $scope.bulkChangePermissions = function(ev, func){
   $scope.bulkChangeAccess = function(ev, enableOrDisableOption){
+      ids = getSelectedPersonIds();
+      if(!ids || !ids.length){
+        showNoPersonSelectedDialog(ev);
+        return;
+      }
+
+
     $scope.enableOrDisableOption = enableOrDisableOption;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
