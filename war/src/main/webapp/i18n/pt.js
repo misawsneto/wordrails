@@ -198,7 +198,8 @@
 			"ENABLE_ALL_SELECTED_MSG": "Tem certeza que deseja ativar todos os usuários selecionados",
 			"DISABLE_ALL_SELECTED_MSG": "Tem certeza que deseja desativar todos os usuários selecionados",
 			"NO_PERSON_SELETED": "Selecione usuários antes de executar esta ação",
-			"SET_PASSWORD": "Definição de senha"
+			"SET_PASSWORD": "Definição de senha",
+			"SET_PASSWORD_MSG": "Insira uma nova senha para este usuário e confirme para mudar a senha. O usuário receberá um email com a nova senha."
 		},
 		"post": {
 			"menu":{
@@ -301,7 +302,8 @@
 			"EMAIL": "Email",
 			"PASSWORD": "Senha",
 			"CONFIRM_PASSWORD": "Confirmar senha",
-			"BIOGRAPHY": "Biografia"
+			"BIOGRAPHY": "Biografia",
+			"PASSWORDS_DONT_MATCH": "A senha e a confirmação não são correspondentes."
 		}
 	},
 	"messages": {

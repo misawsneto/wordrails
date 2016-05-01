@@ -1,5 +1,5 @@
-app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog',
-	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog){
+app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog', '$mdToast', '$filter',
+	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog, $mdToast, $filter){
 
   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
@@ -97,18 +97,18 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
     if(!$scope.enableDisablePerson.enabled)
       trix.disablePerson($scope.enableDisablePerson.id).success(function(){
-        $scope.app.showSuccessToast('Usuário desativado.');
+        $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
         $scope.enableDisablePerson.enabled = false;
       }).error(function(){
-        $scope.app.showErrorToast('Erro ao alterar usuário.');
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
         $scope.enableDisablePerson.enabled = !$scope.enableDisablePerson.enabled;
       })
     else
       trix.enablePerson($scope.enableDisablePerson.id).success(function(){
-        $scope.app.showSuccessToast('Usuário ativado.');
+        $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
         $scope.enableDisablePerson.enabled = true;
       }).error(function(){
-        $scope.app.showErrorToast('Erro ao alterar usuário.');
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
         $scope.enableDisablePerson.enabled = !$scope.enableDisablePerson.enabled;
       })
   }
@@ -117,14 +117,14 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     ids = getSelectedPersonIds();
 
     trix.enablePersons(ids).success(function(){
-      $scope.app.showSuccessToast('Usuários ativados.');
+      $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
       $mdDialog.cancel();
       $scope.persons.forEach(function(person, index){
         if(ids.indexOf(person.id) > -1 && person.id != $scope.app.person.id)
           person.enabled = true;
       });
     }).error(function(){
-      $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
+      $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
       $mdDialog.cancel();
     })
   }
@@ -133,14 +133,14 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     var ids = getSelectedPersonIds();
 
     trix.disablePersons(ids).success(function(){
-      $scope.app.showSuccessToast('Usuário desativados.');
+      $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
       $mdDialog.cancel();
       $scope.persons.forEach(function(person, index){
         if(ids.indexOf(person.id) > -1 && person.id != $scope.app.person.id)
           person.enabled = false;
       });
     }).error(function(){
-      $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
+      $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
       $mdDialog.cancel();
     })
   }
@@ -178,7 +178,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
   $scope.createPerson = function(ev){
     trix.createPerson($scope.person).success(function(response){
-      $scope.app.showSuccessToast('Alterações realizadas com sucesso.')
+      $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
       $scope.selectedPerson = response;
       $scope.editingPersonLoaded = true;
       $scope.editing = true;
@@ -189,7 +189,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         $scope.app.conflictingData = data;
         $scope.openConflictingUserSplash(ev)
       }else
-        $scope.app.showErrorToast('Dados inválidos. Tente novamente')
+      $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
       
       $timeout(function() {
         cfpLoadingBar.complete(); 
@@ -261,25 +261,6 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       });
     }
 
-    $scope.confirmBulkAction = function(ev){
-      $mdDialog.show({
-        scope: $scope,        // use parent scope in template
-          closeTo: {
-            bottom: 1500
-          },
-        preserveScope: true, // do not forget this if use parent scope
-        controller: $scope.app.defaultDialog,
-        templateUrl: 'confirm_bulk_action.html',
-        targetEvent: ev,
-        onComplete: function(){}
-      })
-      .then(function(answer) {
-      //$scope.alert = 'You said the information was "' + answer + '".';
-      }, function() {
-      //$scope.alert = 'You cancelled the dialog.';
-      });
-    }
-
     $scope.applyPermissions = function(stations, permissions){
       var stationRoleUpdates = {stationsIds: [], personsIds: []};
       stationRoleUpdates.personsIds = getSelectedPersonIds();
@@ -310,10 +291,10 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       }
 
       trix.updateStationRoles(stationRoleUpdates).success(function(){
-        $scope.app.showSuccessToast('Permissões atualizadas.');
+        $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
         $mdDialog.cancel();
       }).error(function(){
-        $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
         $mdDialog.cancel();
       })
     }
@@ -348,7 +329,9 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     $scope.editingPerson = null;
     $scope.showEditProfile = function(event, person){
       // show term alert
-      $scope.editingPerson = person;
+      $scope.editingPerson = angular.copy(person);
+      $scope.uploadedUserImage = null;
+      $scope.uploadedCoverImage = null;
       $mdDialog.show({
         scope: $scope,        // use parent scope in template
         closeTo: {
@@ -368,117 +351,207 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
     // ------- user edit image ----------
     var personImageUploader = $scope.personImageUploader = new FileUploader({
-        url: TRIX.baseUrl + "/api/images/upload?imageType=PROFILE_PICTURE"
-      });
+      url: TRIX.baseUrl + "/api/images/upload?imageType=PROFILE_PICTURE"
+    });
 
+    $scope.uploadedImage = null;
+    personImageUploader.onAfterAddingFile = function(fileItem) {
       $scope.uploadedImage = null;
-      personImageUploader.onAfterAddingFile = function(fileItem) {
-        $scope.uploadedImage = null;
-        personImageUploader.uploadAll();
-      };
+      personImageUploader.uploadAll();
+    };
 
-      personImageUploader.onSuccessItem = function(fileItem, response, status, headers) {
-        if(response.filelink){
-          $scope.uploadedUserImage = response;
-          trix.getPerson($scope.app.person.id).success(function(personResponse){
-            
-            personResponse.image = TRIX.baseUrl + "/api/images/" + $scope.uploadedUserImage.id
-
-            trix.putPerson(personResponse).success(function(){
-              $scope.app.person.imageHash = response.hash
-              setUserImage($scope.app.person)
-            })
-
-          })
-          $mdToast.hide();
-        }
-      };
-
-      personImageUploader.onErrorItem = function(fileItem, response, status, headers) {
-        if(status == 413)
-          $scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
-        else
-          $scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+    personImageUploader.onSuccessItem = function(fileItem, response, status, headers) {
+      if(response.filelink){
+        $scope.uploadedUserImage = response;
+        $scope.editingPerson.imageHash = response.hash;
+        $mdToast.hide();
       }
+    };
 
-      $scope.clearImage = function(){ 
-        $scope.uploadedImage = null;
-        personImageUploader.clearQueue();
-        personImageUploader.cancelAll()
-        $scope.checkLandscape();
-        $scope.postCtrl.imageHasChanged = true;
-      }
+    personImageUploader.onErrorItem = function(fileItem, response, status, headers) {
+      if(status == 413)
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+      else
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+    }
 
-      personImageUploader.onProgressItem = function(fileItem, progress) {
-        cfpLoadingBar.start();
-        cfpLoadingBar.set(progress/100)
-        if(progress == 100){
-          cfpLoadingBar.complete()
-          toastPromise = $mdToast.show(
-            $mdToast.simple()
-            .content('Processando...')
-            .position('top right')
-            .hideDelay(false)
-            );
-        }
-      };
-
-      // cover upload
-      var personCoverUploader = $scope.personCoverUploader = new FileUploader({
-        url: TRIX.baseUrl + "/api/images/upload?imageType=COVER"
-      });
-
+    $scope.clearImage = function(){ 
       $scope.uploadedImage = null;
-      personCoverUploader.onAfterAddingFile = function(fileItem) {
-        $scope.uploadedImage = null;
-        personCoverUploader.uploadAll();
-      };
+      personImageUploader.clearQueue();
+      personImageUploader.cancelAll()
+      $scope.checkLandscape();
+      $scope.postCtrl.imageHasChanged = true;
+    }
 
-      personCoverUploader.onSuccessItem = function(fileItem, response, status, headers) {
-         if(response.filelink){
-          $scope.uploadedCoverImage = response;
-          trix.getPerson($scope.app.person.id).success(function(personResponse){
-            
-            personResponse.cover = TRIX.baseUrl + "/api/images/" + $scope.uploadedCoverImage.id
+    personImageUploader.onProgressItem = function(fileItem, progress) {
+      cfpLoadingBar.start();
+      cfpLoadingBar.set(progress/100)
+      if(progress == 100){
+        cfpLoadingBar.complete()
+        toastPromise = $mdToast.show(
+          $mdToast.simple()
+          .content('Processando...')
+          .position('top right')
+          .hideDelay(false)
+          );
+      }
+    };
 
-            trix.putPerson(personResponse).success(function(){
-              $scope.app.person.coverHash = response.hash
-              setCoverImage($scope.app.person)
-            })
+    // cover upload
+    var personCoverUploader = $scope.personCoverUploader = new FileUploader({
+      url: TRIX.baseUrl + "/api/images/upload?imageType=COVER"
+    });
 
+    $scope.uploadedImage = null;
+    personCoverUploader.onAfterAddingFile = function(fileItem) {
+      $scope.uploadedImage = null;
+      personCoverUploader.uploadAll();
+    };
+
+    personCoverUploader.onSuccessItem = function(fileItem, response, status, headers) {
+       if(response.filelink){
+        $scope.uploadedCoverImage = response;
+        $scope.editingPerson.coverHash = response.hash;
+        $mdToast.hide();
+      }
+    };
+
+    personCoverUploader.onErrorItem = function(fileItem, response, status, headers) {
+      if(status == 413)
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+      else
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+    }
+
+    $scope.clearImage = function(){ 
+      $scope.uploadedImage = null;
+      personCoverUploader.clearQueue();
+      personCoverUploader.cancelAll()
+      $scope.checkLandscape();
+      $scope.postCtrl.imageHasChanged = true;
+    }
+
+    personCoverUploader.onProgressItem = function(fileItem, progress) {
+      cfpLoadingBar.start();
+      cfpLoadingBar.set(progress/100)
+      if(progress == 100){
+        cfpLoadingBar.complete()
+        toastPromise = $mdToast.show(
+          $mdToast.simple()
+          .content('Processando...')
+          .position('top right')
+          .hideDelay(false)
+          );
+      }
+    };
+
+    // ------------- /user edit image -------------
+
+    $scope.saveProfile = function(person){
+      // console.log(person)
+      // $mdDialog.cancel();
+      if($scope.uploadedUserImage && $scope.uploadedUserImage.id)
+        person.image = TRIX.baseUrl + "/api/images/" + $scope.uploadedUserImage.id
+      if($scope.uploadedCoverImage && $scope.uploadedCoverImage.id)
+        person.cover = TRIX.baseUrl + "/api/images/" + $scope.uploadedCoverImage.id
+
+      var personAuth = {
+        id: person.id,
+        username: person.username,
+        password: null,
+        passwordConfirm: null,
+        email: person.email
+      }
+
+      // ---- update person auth data
+      trix.updatePersonAuthData(personAuth).success(function(){
+
+        // ---- update person object
+        trix.putPerson(person).success(function(){
+          $scope.persons.forEach(function(p){
+            if(p.id == person.id)
+              angular.extend(p,person);
           })
-          $mdToast.hide();
-        }
-      };
+          $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+          $mdDialog.cancel();
+          // ---- /update person object
+        }).error(function(){
+          $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+          $mdDialog.cancel();
+        })
 
-      personCoverUploader.onErrorItem = function(fileItem, response, status, headers) {
-        if(status == 413)
-          $scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
-        else
-          $scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+      // ---- /update person auth data
+      }).error(function(){
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+        $mdDialog.cancel();
+      })
+
+    }
+
+    $scope.changePasswordDialog = function(event, person){
+      $scope.editingPerson = angular.copy(person);
+      $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'change_password_dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+    }
+
+    $scope.changePassword = function(){
+
+      var person = angular.copy($scope.editingPerson);
+
+      if(!$scope.newPassword || !$scope.newPassword.trim() || $scope.newPassword !== $scope.newPasswordConfirm){
+        $mdDialog.cancel();
+        $scope.disabled = false;
+        $scope.app.showSimpleDialog($filter('translate')('settings.profile.PASSWORDS_DONT_MATCH') + "")
+        return;
       }
 
-      $scope.clearImage = function(){ 
-        $scope.uploadedImage = null;
-        personCoverUploader.clearQueue();
-        personCoverUploader.cancelAll()
-        $scope.checkLandscape();
-        $scope.postCtrl.imageHasChanged = true;
+      var personAuth = {
+        id: person.id,
+        username: person.username,
+        password: $scope.newPassword,
+        passwordConfirm: $scope.newPasswordConfirm,
+        email: person.email
       }
+       // ---- update person auth data
+      trix.updatePersonAuthData(personAuth).success(function(){
 
-      personCoverUploader.onProgressItem = function(fileItem, progress) {
-        cfpLoadingBar.start();
-        cfpLoadingBar.set(progress/100)
-        if(progress == 100){
-          cfpLoadingBar.complete()
-          toastPromise = $mdToast.show(
-            $mdToast.simple()
-            .content('Processando...')
-            .position('top right')
-            .hideDelay(false)
-            );
-        }
-      };
+        // ---- update person object
+        trix.putPerson(person).success(function(){
+          $scope.persons.forEach(function(p){
+            if(p.id == person.id)
+              angular.extend(p,person);
+          })
+          $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+          $mdDialog.cancel();
+          $scope.disabled = false;
+          // ---- /update person object
+        }).error(function(){
+          $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+          $mdDialog.cancel();
+          $scope.disabled = false;
+        })
 
-      // ------------- /user edit image -------------
+      // ---- /update person auth data
+      }).error(function(){
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+        $mdDialog.cancel();
+        $scope.disabled = false;
+      })
+
+      $scope.newPassword = null;
+      $scope.newPasswordConfirm = null;
+    }
 }])

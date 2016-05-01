@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -172,6 +173,51 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 		personRepository.save(loadedPerson);
 
 		authProvider.updateLoggedPerson(loadedPerson.user);
+
+		return Response.status(Status.OK).build();
+	}
+
+	@Override
+	@Transactional
+	public Response updateAuthData(PersonAuthDto person){
+
+		Person loadedPerson = personRepository.findOne(person.id);
+
+		if(person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
+			throw new BadRequestException("Password no equal");
+
+		if((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
+			throw new BadRequestException("Invalid Password");
+
+		if(!StringUtil.isEmailAddr(person.email))
+			throw new BadRequestException("Not email");
+
+		if(person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN
+				(person.username + ".com"))
+			throw new BadRequestException("Invalid username");
+
+
+		loadedPerson.email = person.email;
+
+		User user = null;
+		if(!person.username.equals(loadedPerson.username)){
+			loadedPerson.user.username = person.username;
+			loadedPerson.username = person.username;
+			user = userRepository.findOne(loadedPerson.user.id);
+			user.username = person.username;
+			userRepository.save(user);
+			personRepository.save(loadedPerson);
+		}
+
+		if((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)){
+			loadedPerson.user.password = person.password;
+			user = userRepository.findOne(loadedPerson.user.id);
+			user.password = person.password;
+			userRepository.save(user);
+			personRepository.save(loadedPerson);
+		}
+
+		personRepository.save(loadedPerson);
 
 		return Response.status(Status.OK).build();
 	}

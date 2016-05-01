@@ -69,3 +69,23 @@
   </div>
   <!-- / -->
 </div>
+
+
+<script type="text/ng-template" id="simple_dialog.html">
+  <md-dialog aria-label="change action">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+
+        <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{app.simpleDialogMessage}}
+        </div>
+
+        <div class="text-center">
+          <md-button ng-click="cancel()">
+            {{'titles.CANCEL' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>

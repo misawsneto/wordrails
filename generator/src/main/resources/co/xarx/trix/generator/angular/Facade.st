@@ -161,6 +161,11 @@ var trix = angular.module('trix', [])
 		return \$http.put(_config.url + "/api/persons/update", person, config)
 	}
 
+	this.updatePersonAuthData = function(person){
+        var config = {"headers": {"Content-Type": "application/json"}}
+        return \$http.put(_config.url + "/api/persons/authDataUpdate", person, config)
+    }
+
 	this.enablePerson = function(personId){
 		var config = {"headers": {"Content-Type": "application/json"}}
 		return \$http.put(_config.url + "/api/persons/" + personId + "/enable", {}, config)

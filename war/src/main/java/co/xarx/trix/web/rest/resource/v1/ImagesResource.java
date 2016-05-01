@@ -147,14 +147,14 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 		if(StringUtils.isEmpty(hash))
 			return Response.status(Response.Status.NO_CONTENT).build();
 
-		response.setHeader("Pragma", "public");
-		response.setHeader("Cache-Control", "max-age=2592000");
-
-		Calendar c = Calendar.getInstance();
-		c.setTime(new Date());
-		c.add(Calendar.DATE, 30);
-		String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format(c.getTime());
-		response.setHeader("Expires", o);
+//		response.setHeader("Pragma", "public");
+//		response.setHeader("Cache-Control", "max-age=2592000");
+//
+//		Calendar c = Calendar.getInstance();
+//		c.setTime(new Date());
+//		c.add(Calendar.DATE, 30);
+//		String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format(c.getTime());
+//		response.setHeader("Expires", o);
 
 		response.sendRedirect(amazonCloudService.getPublicImageURL(hash));
 		return Response.ok().build();

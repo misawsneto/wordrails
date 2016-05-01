@@ -30,6 +30,14 @@ public interface PersonsApi {
 		public List<StationRole> stationsRole;
 	}
 
+	public static class PersonAuthDto {
+		public Integer id;
+		public String username;
+		public String email;
+		public String password;
+		public String passwordConfirm;
+	}
+
 	@GET
 	@Path("/")
 	@Transactional
@@ -49,6 +57,12 @@ public interface PersonsApi {
 	@Path("/update")
 	@Transactional
 	Response update(Person person);
+
+	@PUT
+	@Path("/authDataUpdate")
+	@Transactional
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	Response updateAuthData(PersonAuthDto person);
 
 	@PUT
 	@Path("/{id}")
