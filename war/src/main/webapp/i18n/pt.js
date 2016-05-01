@@ -303,7 +303,7 @@
 			"PASSWORD": "Senha",
 			"CONFIRM_PASSWORD": "Confirmar senha",
 			"BIOGRAPHY": "Biografia",
-			"PASSWORDS_DONT_MATCH": "A senha e a confirmação não são correspondentes."
+			"PASSWORDS_DONT_MATCH": "A senha é inválida ou senha e confirmação não são correspondentes."
 		}
 	},
 	"messages": {

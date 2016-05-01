@@ -303,7 +303,7 @@
 			"PASSWORD": "Password",
 			"CONFIRM_PASSWORD": "Confirm password",
 			"BIOGRAPHY": "Biography",
-			"PASSWORDS_DONT_MATCH": "The password and confirmation don't match"
+			"PASSWORDS_DONT_MATCH": "The password is invalido or passowrd and confirmation don't match"
 		}
 	},
 	"messages": {

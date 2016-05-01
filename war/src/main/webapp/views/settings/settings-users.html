@@ -22,7 +22,7 @@
     			<!-- search results -->
                 <div class="h-full">
                   <div class="table-responsive o-visible text-base" infinite-scroll="paginate()" infinite-scroll-container="'#search-results'">
-										<table id="users-table" class="table b-t b-light m-b-xxl">
+										<table id="users-table" class="table b-t b-light" style="margin-bottom: 80px">
 											<thead>
 												<tr>
 													<th style="width:15px;">
@@ -268,7 +268,7 @@
           <md-button ng-click="cancel()" class="m-0">
             {{'titles.CANCEL' | translate}}
           </md-button>
-          <md-button ng-click="saveProfile(addingPerson)" ng-disabled="disabled" class="m-0">
+          <md-button ng-click="createPerson(addingPerson)" ng-disabled="disabled" class="m-0">
             {{'titles.SAVE' | translate}}
           </md-button>
         </div>
@@ -370,7 +370,7 @@
         </div>
 
         <div class="text-center">
-          <md-button ng-click="changePassword(); disabled = true;" ng-disabled="disabled">
+          <md-button ng-click="changePassword();" ng-disabled="disabled">
             {{'titles.CONFIRM' | translate}}
           </md-button>
           <md-button ng-click="cancel()">

@@ -176,27 +176,6 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     });
   }
 
-  $scope.createPerson = function(ev){
-    trix.createPerson($scope.person).success(function(response){
-      $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
-      $scope.selectedPerson = response;
-      $scope.editingPersonLoaded = true;
-      $scope.editing = true;
-      $scope.creating = false;
-      $state.go('app.settings.users', {'username': response.username}, {location: 'replace', inherit: false, notify: false, reload: false})
-    }).error(function(data, status, headers, config){
-      if(status == 409){
-        $scope.app.conflictingData = data;
-        $scope.openConflictingUserSplash(ev)
-      }else
-      $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
-      
-      $timeout(function() {
-        cfpLoadingBar.complete(); 
-      }, 100);
-    });
-  }
-
   $scope.toggleAll = function(toggleSelectValue){
 
   	if(toggleSelectValue && $scope.persons){
@@ -485,7 +464,31 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
         $mdDialog.cancel();
       })
+    }
 
+    $scope.addingPerson = null;
+    $scope.createPerson = function(){
+      trix.createPerson($scope.addingPerson).success(function(response){
+        $mdDialog.cancel();
+        $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+        $scope.personsCount++;
+        $scope.allLoaded = false;
+        if($scope.persons.length < 20 || $scope.persons.length%20 > 0){
+          trix.getPerson(response.id, 'personProjection').success(function(p){
+            $scope.persons.push(p)
+          })
+        }
+      }).error(function(data, status, headers, config){
+        if(status == 409){
+          $scope.app.conflictingData = data;
+          $scope.openConflictingUserSplash(ev)
+        }else
+          $scope.app.showErrorToast('Dados inválidos. Tente novamente')
+        $timeout(function() {
+          cfpLoadingBar.complete(); 
+        }, 100);
+        $mdDialog.cancel();
+      });
     }
 
     $scope.changePasswordDialog = function(event, person){
@@ -507,13 +510,15 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       })
     }
 
+    $scope.disabled = false;
     $scope.changePassword = function(){
 
+      $scope.disabled = true;
       var person = angular.copy($scope.editingPerson);
 
       if(!$scope.newPassword || !$scope.newPassword.trim() || $scope.newPassword !== $scope.newPasswordConfirm){
-        $mdDialog.cancel();
         $scope.disabled = false;
+        $mdDialog.cancel();
         $scope.app.showSimpleDialog($filter('translate')('settings.profile.PASSWORDS_DONT_MATCH') + "")
         return;
       }
