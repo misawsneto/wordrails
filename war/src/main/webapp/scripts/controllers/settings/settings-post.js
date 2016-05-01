@@ -171,7 +171,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
           },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
-			templateUrl: 'edit-profile-dialog.html',
+			templateUrl: 'clear-post-dialog.html',
 			parent: angular.element(document.body),
 			targetEvent: event,
 			clickOutsideToClose:true

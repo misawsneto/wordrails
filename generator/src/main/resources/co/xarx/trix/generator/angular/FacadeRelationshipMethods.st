@@ -1,6 +1,7 @@
 FacadeRelationshipMethods(entity, relationship) ::=
 
-<<$if(relationship.collection)$
+<</*-------------------------- Relationship -----------------------------------------------*/
+$if(relationship.collection)$
 if (this.get$entity.name$$relationship.nameUppercase$) {
 	console.log("get$entity.name$$relationship.nameUppercase$");
 }

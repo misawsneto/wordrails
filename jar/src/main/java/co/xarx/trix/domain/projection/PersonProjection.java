@@ -3,6 +3,8 @@ package co.xarx.trix.domain.projection;
 import co.xarx.trix.domain.Person;
 import org.springframework.data.rest.core.config.Projection;
 
+import java.util.Date;
+
 
 @Projection(types = Person.class)
 public interface PersonProjection {
@@ -25,6 +27,12 @@ public interface PersonProjection {
 
 	String getImageOriginalHash();
 	String getCoverOriginalHash();
+
+	Date getLastLogin();
+
+	String getImageHash();
+	String getCoverHash();
+	String getBio();
 
 	Boolean getEnabled();
 }

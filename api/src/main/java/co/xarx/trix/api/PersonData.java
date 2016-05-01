@@ -1,6 +1,7 @@
 package co.xarx.trix.api;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 public class PersonData implements Serializable {
@@ -12,6 +13,8 @@ public class PersonData implements Serializable {
 	public PersonPermissions personPermissions;
 	public List<PostView> recent;
 	public List<PostView> popular;
+
+	public Date lastLogin;
 
 	public String imageHash;
 	public String coverHash;

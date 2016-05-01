@@ -100,13 +100,7 @@ app.controller('GeoLocationCtrl', ['$scope', 'leafletData', '$log', '$timeout', 
         $scope.drawnItems = drawnItems;
 
         drawnItems.addTo(map);
-/*        
-        // Init the map with the saved elements
-        for (var i = 0; i < $scope.savedItems.length; i++) {
-            layer = new L.GeoJSON($scope.savedItems[i].geoJSON);
-            drawnItems.addLayer(layer);
-        }
-*/
+
         map.on('draw:created', function (e) {
             var layer = e.layer;
             if($scope.app.network.primaryColors)

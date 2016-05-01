@@ -1,14 +1,13 @@
-app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog',
-	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog){
+app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog', '$mdToast', '$filter',
+	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog, $mdToast, $filter){
 
-    $scope.pe = {};
-    $scope.pe.adminStations = angular.copy($scope.app.adminStations);
-   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
+  FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
   };
 
   $scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
 
+  // ------------- person file upload
   var uploader = $scope.uploader = new FileUploader({
   	url: TRIX.baseUrl + "/api/images/upload?imageType=PROFILE_PICTURE"
   });
@@ -18,184 +17,155 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   	uploader.uploadAll();
   };
 
-  var personActiveId = null;
-  $scope.activatePerson = function(Person){
-    personActiveId = Person.id;
-  }
+  // ------------ person file upload
 
-  $scope.isActivePerson = function(person){
-    return personActiveId == person.id
-  }
 
-  $scope.app.lastSettingState = "app.settings.users";
-
-  $scope.selectedPerson = null;
-
-  $scope.stations = $scope.app.stations;
-  $scope.person = $scope.app.person;
-
-  if($state.params.newUser){
-  	$scope.person = {
-  		name: '',
-  		username: '',
-  		password: '',
-  		email: '',
-  		emailNotification: true
-  	}
-  	$scope.editing = false;
-  	$scope.creating = true;
-  }else if($state.params.username){
-  	$scope.editing = true;
-  	$scope.creating = false;
-  	trix.findByUsername($state.params.username, 'personProjection').success(function(response){
-  		$scope.selectedPerson = response.persons[0];
-  	})
-  }else{
-  	$scope.editing = false;
-  	$scope.creating = false;
-  }
-
-  $scope.bulkActions = [
-    {name:'Convites', id:4},
-    {name:'Alterar permissões', id:1},
-    {name:'Ativar usuários', id:2},
-    {name:'Desativar usuários', id:3}
-  ]
-
-  $scope.bulkActionSelected = null;
-
+  // -------- users pagination ---------
   $scope.page = 0;
   var loading = false;
   $scope.allLoaded = false;
   $scope.beginning = true;
   $scope.window = 20
 
-  if(!$scope.editing && !$scope.creating){
-    $scope.showProgress = true;
-  	trix.getPersons($scope.page, $scope.window, null, 'personProjection').success(function(response){
-  		$scope.persons = response.persons;
-      $scope.showProgress = false;
-  	});
-  }
 
+  $scope.personsCount = 0;
   trix.countPersonsByNetwork().success(function(response){
     $scope.personsCount = response;
   })
 
-  $scope.paginate = function(direction){
-    var page = 0;
-    if(!direction)
-      return;
+  var useSearchField = false
+  $scope.doSearch = function(){
+    if($scope.search || ($scope.search && $scope.search.trim()))
+      useSearchField = true;
+    $scope.persons = [];
+    $scope.showProgress = false;
+    $scope.page = 0;
+    loading = false
+    $scope.allLoaded = false
+    $scope.paginate()
+  }
 
-    if(direction == 'left'){
-      page = $scope.page-1;
-      $scope.allLoaded = false;
-    }
-    else if(direction == 'right'){
-      page = $scope.page+1;
-      $scope.beginning = false;
-    }
-
-    if(page < 0){
-      return;
-    }
-
-    if(!$scope.allLoaded){
-      $scope.showProgress = true;
-      trix.getPersons(page, $scope.window, null, 'personProjection').success(function(response){
-        if((!response.persons || response.persons.length == 0) && direction == 'right'){
-          $scope.allLoaded = true;
-        }else{
-          if(!$scope.persons && response.persons)
-            $scope.persons = response.persons;
-          else if(response.persons && response.persons.length > 0){
-            $scope.persons = response.persons;
-            $scope.page = page;
-          }
-
-          if($scope.page == 0)
-            $scope.beginning = true;
-
-          if((($scope.page * $scope.window) + $scope.persons.length) == $scope.personsCount)
-            $scope.allLoaded = true;
-        }
-        $scope.showProgress = false;
-      }); 
+  $scope.paginate = function(){
+    if(!loading){
+      loading = true;
+      if(!$scope.allLoaded && !useSearchField){
+        $scope.showProgress = true;
+        trix.getPersons($scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess).error(getPersonsError); 
+      }else if(!$scope.allLoaded && useSearchField){
+        trix.findPersons($scope.search, $scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess).error(getPersonsError); 
+      }
     }
   }
+
+  var getPersonsError = function(response){
+  }
+
+  var getPersonsSuccess = function(response){
+      if(!$scope.persons || !$scope.persons.length){
+        $scope.persons = [];
+      }
+      
+      if(response.persons && response.persons.length > 0){
+        response.persons.forEach(function(p){
+          $scope.persons.push(p);
+        })
+        $scope.page++;
+      }else{
+        $scope.allLoaded = true;
+      }
+
+    $scope.showProgress = false;
+    loading = false;
+  }
+
+  $scope.showProgress = true;
+  // get initial users
+  trix.getPersons($scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess);
+
+  // -------- /users pagination ---------
 
   $scope.loadPerson = function(person){
+    trix.getPerson(person.id, 'personProjection').success(function(personProjection){
+
+    })
   }
 
-  function DialogController(scope, $mdDialog) {
-    scope.app = $scope.app;
-    scope.pe = $scope.pe;
-    scope.thisStation = $scope.thisStation;
-
-    scope.hide = function() {
-      $mdDialog.hide();
-    };
-
-    scope.cancel = function() {
-      $mdDialog.cancel();
-    };
-
-    // check if user has permisstion to write
-  };
-
+  // ------------ enable / disable person ---------
   $scope.app.enableDisablePerson = function(person){
     if(person)
-      $scope.pe.enableDisablePerson = person;
+      $scope.enableDisablePerson = person;
 
-    if(!$scope.pe.enableDisablePerson.enabled)
-      trix.disablePerson($scope.pe.enableDisablePerson.id).success(function(){
-        $scope.app.showSuccessToast('Usuário desativado.');
-        $scope.pe.enableDisablePerson.enabled = false;
+    if(!$scope.enableDisablePerson.enabled)
+      trix.disablePerson($scope.enableDisablePerson.id).success(function(){
+        $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+        $scope.enableDisablePerson.enabled = false;
       }).error(function(){
-        $scope.app.showErrorToast('Erro ao alterar usuário.');
-        $scope.pe.enableDisablePerson.enabled = !$scope.pe.enableDisablePerson.enabled;
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+        $scope.enableDisablePerson.enabled = !$scope.enableDisablePerson.enabled;
       })
     else
-      trix.enablePerson($scope.pe.enableDisablePerson.id).success(function(){
-        $scope.app.showSuccessToast('Usuário ativado.');
-        $scope.pe.enableDisablePerson.enabled = true;
+      trix.enablePerson($scope.enableDisablePerson.id).success(function(){
+        $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+        $scope.enableDisablePerson.enabled = true;
       }).error(function(){
-        $scope.app.showErrorToast('Erro ao alterar usuário.');
-        $scope.pe.enableDisablePerson.enabled = !$scope.pe.enableDisablePerson.enabled;
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+        $scope.enableDisablePerson.enabled = !$scope.enableDisablePerson.enabled;
       })
   }
 
-  $scope.createPerson = function(ev){
-    trix.createPerson($scope.person).success(function(response){
-      $scope.app.showSuccessToast('Alterações realizadas com sucesso.')
-      $scope.selectedPerson = response;
-      $scope.editingPersonLoaded = true;
-      $scope.editing = true;
-      $scope.creating = false;
-      $state.go('app.settings.users', {'username': response.username}, {location: 'replace', inherit: false, notify: false, reload: false})
-    }).error(function(data, status, headers, config){
-      if(status == 409){
-        $scope.app.conflictingData = data;
-        $scope.openConflictingUserSplash(ev)
-      }else
-        $scope.app.showErrorToast('Dados inválidos. Tente novamente')
-      
-      $timeout(function() {
-        cfpLoadingBar.complete(); 
-      }, 100);
-    });
+  $scope.enablePersons = function(){
+    ids = getSelectedPersonIds();
+
+    trix.enablePersons(ids).success(function(){
+      $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+      $mdDialog.cancel();
+      $scope.persons.forEach(function(person, index){
+        if(ids.indexOf(person.id) > -1 && person.id != $scope.app.person.id)
+          person.enabled = true;
+      });
+    }).error(function(){
+      $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+      $mdDialog.cancel();
+    })
   }
 
-  $scope.openConflictingUserSplash = function(ev){
-    //$scope.app.openSplash('conflicting_person.html')
+  $scope.disablePersons = function(){
+    var ids = getSelectedPersonIds();
+
+    trix.disablePersons(ids).success(function(){
+      $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+      $mdDialog.cancel();
+      $scope.persons.forEach(function(person, index){
+        if(ids.indexOf(person.id) > -1 && person.id != $scope.app.person.id)
+          person.enabled = false;
+      });
+    }).error(function(){
+      $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+      $mdDialog.cancel();
+    })
+  }
+
+
+  // ------------ enable / disable person ---------
+  
+  $scope.enableOrDisableOption = null;
+  // $scope.bulkChangePermissions = function(ev, func){
+    $scope.bulkChangeAccess = function(ev, enableOrDisableOption){
+      ids = getSelectedPersonIds();
+      if(!ids || !ids.length){
+        showNoPersonSelectedDialog(ev);
+        return;
+    }
+
+    $scope.enableOrDisableOption = enableOrDisableOption;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
           closeTo: {
             bottom: 1500
           },
         preserveScope: true, // do not forget this if use parent scope
-        controller: DialogController,
-        templateUrl: 'conflicting_person.html',
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'bulk_change_access_dialog.html',
         targetEvent: ev,
         onComplete: function(){}
       })
@@ -206,46 +176,40 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     });
   }
 
-  var deletePersons = function(){
-    var ids = []
-    $scope.persons.forEach(function(person, index){
-      if(person.selected)
-        ids.push(person.id)
+  $scope.createPerson = function(ev){
+    trix.createPerson($scope.person).success(function(response){
+      $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+      $scope.selectedPerson = response;
+      $scope.editingPersonLoaded = true;
+      $scope.editing = true;
+      $scope.creating = false;
+      $state.go('app.settings.users', {'username': response.username}, {location: 'replace', inherit: false, notify: false, reload: false})
+    }).error(function(data, status, headers, config){
+      if(status == 409){
+        $scope.app.conflictingData = data;
+        $scope.openConflictingUserSplash(ev)
+      }else
+      $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+      
+      $timeout(function() {
+        cfpLoadingBar.complete(); 
+      }, 100);
     });
-
-    trix.deletePersons(ids).success(function(){
-      $scope.app.showSuccessToast('Usuário removido com sucesso.');
-      $scope.app.cancelDialog();
-      for (var i = $scope.persons.length - 1; i >= 0; i--) {
-        if(ids.indexOf($scope.persons[i].id) > -1){
-          $scope.persons.splice(i,1)
-          $scope.personsCount--;
-        }
-      };
-    })
   }
-
 
   $scope.toggleAll = function(toggleSelectValue){
 
   	if(toggleSelectValue && $scope.persons){
   		$scope.persons.forEach(function(person, index){
-  			person.selected = true;
+        if(person.id != $scope.app.person.id)
+  			 person.selected = true;
   		}); 
   	}else if($scope.persons){
   		$scope.persons.forEach(function(person, index){
-  			person.selected = false;
+        if(person.id != $scope.app.person.id)
+    			person.selected = false;
   		}); 
   	}
-  }
-
-  function noPersonSelected(){
-  	var ret = true
-  	$scope.persons.forEach(function(person, index){
-  		if(person.selected)
-  			ret = false;
-  	});
-  	return ret;
   }
 
   function getSelectedPersonIds(){
@@ -257,73 +221,18 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     return ret;
   }
 
-  $scope.selectBulkAction = function(bulkActionSelected){
-    $scope.bulkActionSelected = bulkActionSelected;
-  }
+  $scope.getSelectedPersonIds = getSelectedPersonIds;
 
-  $scope.app.applyBulkActions = function(){
-    if($scope.bulkActionSelected.id == 0)
-      return
-    else if($scope.bulkActionSelected.id == 2)
-      deletePersons();
-    $scope.app.cancelDialog();
-  }
-
-  $scope.openBulkActionsDialog = function(ev){
-
-    if($scope.bulkActionSelected == 4){
-      
-      return;
-    }
-
-  	if(noPersonSelected())
-  		$scope.openNoPersonSelected(ev);
-  	else if($scope.bulkActionSelected == 0)
-  		return null;
-    else if($scope.bulkActionSelected == 1)
-      $scope.bulkChangePermissions(ev);
-  	else if($scope.bulkActionSelected == 2 || $scope.bulkActionSelected == 3)
-  		$scope.confirmBulkAction(ev)
-  }
-
-  $scope.enablePersons = trix.enablePersons(ids).success(function(){
-    ids = getSelectedPersonIds();
-    $scope.app.showSuccessToast('Usuários ativados.');
-    $mdDialog.cancel();
-    $scope.persons.forEach(function(person, index){
-      if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
-        person.enabled = true;
-    });
-  }).error(function(){
-    $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
-    $mdDialog.cancel();
-  })
-
-  $scope.disablePersons = function(){
-    ids = getSelectedPersonIds();
-    trix.disablePersons(ids).success(function(){
-      $scope.app.showSuccessToast('Usuário desativados.');
-      $mdDialog.cancel();
-      $scope.persons.forEach(function(person, index){
-        if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
-          person.enabled = false;
-      });
-    }).error(function(){
-      $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
-      $mdDialog.cancel();
-    })
-  }
-
-  $scope.bulkChangePermissions = function(ev){
+  var showNoPersonSelectedDialog = function(event){
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
           closeTo: {
             bottom: 1500
           },
         preserveScope: true, // do not forget this if use parent scope
-        controller: DialogController,
-        templateUrl: 'bulk_change_permissions.html',
-        targetEvent: ev,
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'no_person_selected_dialog.html',
+        targetEvent: event,
         onComplete: function(){}
       })
       .then(function(answer) {
@@ -340,7 +249,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
             bottom: 1500
           },
         preserveScope: true, // do not forget this if use parent scope
-        controller: DialogController,
+        controller: $scope.app.defaultDialog,
         templateUrl: 'confirm_no_person_selected.html',
         targetEvent: ev,
         onComplete: function(){}
@@ -352,26 +261,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       });
     }
 
-    $scope.confirmBulkAction = function(ev){
-      $mdDialog.show({
-        scope: $scope,        // use parent scope in template
-          closeTo: {
-            bottom: 1500
-          },
-        preserveScope: true, // do not forget this if use parent scope
-        controller: DialogController,
-        templateUrl: 'confirm_bulk_action.html',
-        targetEvent: ev,
-        onComplete: function(){}
-      })
-      .then(function(answer) {
-      //$scope.alert = 'You said the information was "' + answer + '".';
-      }, function() {
-      //$scope.alert = 'You cancelled the dialog.';
-      });
-    }
-
-    $scope.pe.applyPermissions = function(stations, permissions){
+    $scope.applyPermissions = function(stations, permissions){
       var stationRoleUpdates = {stationsIds: [], personsIds: []};
       stationRoleUpdates.personsIds = getSelectedPersonIds();
 
@@ -401,11 +291,267 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       }
 
       trix.updateStationRoles(stationRoleUpdates).success(function(){
-        $scope.app.showSuccessToast('Permissões atualizadas.');
+        $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
         $mdDialog.cancel();
       }).error(function(){
-        $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
         $mdDialog.cancel();
       })
+    }
+
+    // ---------- invite users funcs ----------
+    $scope.showInviteUserDialog = function(){
+      
+    }
+    // ---------- /invite users funcs ----------
+
+    // ---------- add user funcs ----------
+    $scope.showAddUserDialog = function(event){
+       // show term alert
+      $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'add-profile-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+    }
+    // ---------- /add user funcs ----------
+
+    $scope.editingPerson = null;
+    $scope.showEditProfile = function(event, person){
+      // show term alert
+      $scope.editingPerson = angular.copy(person);
+      $scope.uploadedUserImage = null;
+      $scope.uploadedCoverImage = null;
+      $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'edit-person-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+    }    
+
+    // ------- user edit image ----------
+    var personImageUploader = $scope.personImageUploader = new FileUploader({
+      url: TRIX.baseUrl + "/api/images/upload?imageType=PROFILE_PICTURE"
+    });
+
+    $scope.uploadedImage = null;
+    personImageUploader.onAfterAddingFile = function(fileItem) {
+      $scope.uploadedImage = null;
+      personImageUploader.uploadAll();
+    };
+
+    personImageUploader.onSuccessItem = function(fileItem, response, status, headers) {
+      if(response.filelink){
+        $scope.uploadedUserImage = response;
+        $scope.editingPerson.imageHash = response.hash;
+        $mdToast.hide();
+      }
+    };
+
+    personImageUploader.onErrorItem = function(fileItem, response, status, headers) {
+      if(status == 413)
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+      else
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+    }
+
+    $scope.clearImage = function(){ 
+      $scope.uploadedImage = null;
+      personImageUploader.clearQueue();
+      personImageUploader.cancelAll()
+      $scope.checkLandscape();
+      $scope.postCtrl.imageHasChanged = true;
+    }
+
+    personImageUploader.onProgressItem = function(fileItem, progress) {
+      cfpLoadingBar.start();
+      cfpLoadingBar.set(progress/100)
+      if(progress == 100){
+        cfpLoadingBar.complete()
+        toastPromise = $mdToast.show(
+          $mdToast.simple()
+          .content('Processando...')
+          .position('top right')
+          .hideDelay(false)
+          );
+      }
+    };
+
+    // cover upload
+    var personCoverUploader = $scope.personCoverUploader = new FileUploader({
+      url: TRIX.baseUrl + "/api/images/upload?imageType=COVER"
+    });
+
+    $scope.uploadedImage = null;
+    personCoverUploader.onAfterAddingFile = function(fileItem) {
+      $scope.uploadedImage = null;
+      personCoverUploader.uploadAll();
+    };
+
+    personCoverUploader.onSuccessItem = function(fileItem, response, status, headers) {
+       if(response.filelink){
+        $scope.uploadedCoverImage = response;
+        $scope.editingPerson.coverHash = response.hash;
+        $mdToast.hide();
+      }
+    };
+
+    personCoverUploader.onErrorItem = function(fileItem, response, status, headers) {
+      if(status == 413)
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+      else
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+    }
+
+    $scope.clearImage = function(){ 
+      $scope.uploadedImage = null;
+      personCoverUploader.clearQueue();
+      personCoverUploader.cancelAll()
+      $scope.checkLandscape();
+      $scope.postCtrl.imageHasChanged = true;
+    }
+
+    personCoverUploader.onProgressItem = function(fileItem, progress) {
+      cfpLoadingBar.start();
+      cfpLoadingBar.set(progress/100)
+      if(progress == 100){
+        cfpLoadingBar.complete()
+        toastPromise = $mdToast.show(
+          $mdToast.simple()
+          .content('Processando...')
+          .position('top right')
+          .hideDelay(false)
+          );
+      }
+    };
+
+    // ------------- /user edit image -------------
+
+    $scope.saveProfile = function(person){
+      // console.log(person)
+      // $mdDialog.cancel();
+      if($scope.uploadedUserImage && $scope.uploadedUserImage.id)
+        person.image = TRIX.baseUrl + "/api/images/" + $scope.uploadedUserImage.id
+      if($scope.uploadedCoverImage && $scope.uploadedCoverImage.id)
+        person.cover = TRIX.baseUrl + "/api/images/" + $scope.uploadedCoverImage.id
+
+      var personAuth = {
+        id: person.id,
+        username: person.username,
+        password: null,
+        passwordConfirm: null,
+        email: person.email
+      }
+
+      // ---- update person auth data
+      trix.updatePersonAuthData(personAuth).success(function(){
+
+        // ---- update person object
+        trix.putPerson(person).success(function(){
+          $scope.persons.forEach(function(p){
+            if(p.id == person.id)
+              angular.extend(p,person);
+          })
+          $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+          $mdDialog.cancel();
+          // ---- /update person object
+        }).error(function(){
+          $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+          $mdDialog.cancel();
+        })
+
+      // ---- /update person auth data
+      }).error(function(){
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+        $mdDialog.cancel();
+      })
+
+    }
+
+    $scope.changePasswordDialog = function(event, person){
+      $scope.editingPerson = angular.copy(person);
+      $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'change_password_dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+    }
+
+    $scope.changePassword = function(){
+
+      var person = angular.copy($scope.editingPerson);
+
+      if(!$scope.newPassword || !$scope.newPassword.trim() || $scope.newPassword !== $scope.newPasswordConfirm){
+        $mdDialog.cancel();
+        $scope.disabled = false;
+        $scope.app.showSimpleDialog($filter('translate')('settings.profile.PASSWORDS_DONT_MATCH') + "")
+        return;
+      }
+
+      var personAuth = {
+        id: person.id,
+        username: person.username,
+        password: $scope.newPassword,
+        passwordConfirm: $scope.newPasswordConfirm,
+        email: person.email
+      }
+       // ---- update person auth data
+      trix.updatePersonAuthData(personAuth).success(function(){
+
+        // ---- update person object
+        trix.putPerson(person).success(function(){
+          $scope.persons.forEach(function(p){
+            if(p.id == person.id)
+              angular.extend(p,person);
+          })
+          $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+          $mdDialog.cancel();
+          $scope.disabled = false;
+          // ---- /update person object
+        }).error(function(){
+          $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+          $mdDialog.cancel();
+          $scope.disabled = false;
+        })
+
+      // ---- /update person auth data
+      }).error(function(){
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+        $mdDialog.cancel();
+        $scope.disabled = false;
+      })
+
+      $scope.newPassword = null;
+      $scope.newPasswordConfirm = null;
     }
 }])

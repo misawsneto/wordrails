@@ -4191,6 +4191,16 @@ nav .nav-header:focus {
   vertical-align: -59%;
 }
 
+.i-64 {
+  font-size: 64px;
+  vertical-align: -63%;
+}
+
+.i-72 {
+  font-size: 72px;
+  vertical-align: -71%;
+}
+
 .ui-icon {
   display: inline-block;
   height: 1em;
@@ -8708,4 +8718,15 @@ button,
 .df-tab-menu {
   text-transform: none!important;
   background: transparent!important;
+}
+
+#users-table > tbody > tr > td,
+#users-table > tfoot > tr > td,
+#users-table > tbody > tr > th,
+#users-table > tfoot > tr > th {
+  padding: 10px 16px;
+}
+
+#users-table > thead > tr > th {
+  padding: 16px;
 }

@@ -159,7 +159,8 @@ angular.module('app')
                 url: '/dashboard',
                 templateUrl: '/views/pages/dashboard.html',
                 data : { title: 'Dashboard', folded: false },
-                resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js'])
+                resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js', '/scripts/controllers/settings/settings-dashboard.js']),
+                controller: 'DashboardCtrl'
               })
               .state('app.pagebuilder', {
                 url: '/pagebuilder',
@@ -1062,19 +1063,23 @@ angular.module('app')
               })
         .state('app.bookmarks', {
             url: '/@{username}/bookmarks',
-            templateUrl: '/views/pages/category.html',
-            data : { title: 'Category', folded: false },
+            templateUrl: '/views/pages/bookmarks.html',
+            data : { title: 'Bookmarks', folded: false },
             controller: 'BookmarksCtrl',
             resolve: {
 
               person: function($stateParams, $q, trix){
+                var deferred = $q.defer();
                 if(initData.person.id == 0){
                   document.location.href = '/access/signin';
                 }else if(initData.person.username !== $stateParams.username){
                   document.location.href = '/';
+                }else if(initData.person.username === $stateParams.username){
+                  deferred.resolve(initData.person.bookmarkPosts)
                 }else{
                   document.location.href = '/404';
                 }
+                return deferred.promise;
               },
               deps:load(['wu.masonry', '/scripts/controllers/app/bookmarks.js']).deps
             }
