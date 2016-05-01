@@ -19,36 +19,6 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
   // ------------ person file upload
 
-  var personActiveId = null;
-  // $scope.activatePerson = function(Person){
-  //   personActiveId = Person.id;
-  // }
-
-  // $scope.isActivePerson = function(person){
-  //   return personActiveId == person.id
-  // }
-
-
-  // if($state.params.newUser){
-  // 	$scope.person = {
-  // 		name: '',
-  // 		username: '',
-  // 		password: '',
-  // 		email: '',
-  // 		emailNotification: true
-  // 	}
-  // 	$scope.editing = false;
-  // 	$scope.creating = true;
-  // }else if($state.params.username){
-  // 	$scope.editing = true;
-  // 	$scope.creating = false;
-  // 	trix.findByUsername($state.params.username, 'personProjection').success(function(response){
-  // 		$scope.selectedPerson = response.persons[0];
-  // 	})
-  // }else{
-  // 	$scope.editing = false;
-  // 	$scope.creating = false;
-  // }
 
   // -------- users pagination ---------
   $scope.page = 0;
@@ -120,6 +90,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     })
   }
 
+  // ------------ enable / disable person ---------
   $scope.app.enableDisablePerson = function(person){
     if(person)
       $scope.enableDisablePerson = person;
@@ -140,129 +111,6 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         $scope.app.showErrorToast('Erro ao alterar usuário.');
         $scope.enableDisablePerson.enabled = !$scope.enableDisablePerson.enabled;
       })
-  }
-
-  $scope.createPerson = function(ev){
-    trix.createPerson($scope.person).success(function(response){
-      $scope.app.showSuccessToast('Alterações realizadas com sucesso.')
-      $scope.selectedPerson = response;
-      $scope.editingPersonLoaded = true;
-      $scope.editing = true;
-      $scope.creating = false;
-      $state.go('app.settings.users', {'username': response.username}, {location: 'replace', inherit: false, notify: false, reload: false})
-    }).error(function(data, status, headers, config){
-      if(status == 409){
-        $scope.app.conflictingData = data;
-        $scope.openConflictingUserSplash(ev)
-      }else
-        $scope.app.showErrorToast('Dados inválidos. Tente novamente')
-      
-      $timeout(function() {
-        cfpLoadingBar.complete(); 
-      }, 100);
-    });
-  }
-
-  $scope.openConflictingUserSplash = function(ev){
-    //$scope.app.openSplash('conflicting_person.html')
-    $mdDialog.show({
-        scope: $scope,        // use parent scope in template
-          closeTo: {
-            bottom: 1500
-          },
-        preserveScope: true, // do not forget this if use parent scope
-        controller: $scope.app.defaultDialog,
-        templateUrl: 'conflicting_person.html',
-        targetEvent: ev,
-        onComplete: function(){}
-      })
-      .then(function(answer) {
-      //$scope.alert = 'You said the information was "' + answer + '".';
-      }, function() {
-      //$scope.alert = 'You cancelled the dialog.';
-    });
-  }
-
-  var deletePersons = function(){
-    var ids = []
-    $scope.persons.forEach(function(person, index){
-      if(person.selected)
-        ids.push(person.id)
-    });
-
-    trix.deletePersons(ids).success(function(){
-      $scope.app.showSuccessToast('Usuário removido com sucesso.');
-      $scope.app.cancelDialog();
-      for (var i = $scope.persons.length - 1; i >= 0; i--) {
-        if(ids.indexOf($scope.persons[i].id) > -1){
-          $scope.persons.splice(i,1)
-          $scope.personsCount--;
-        }
-      };
-    })
-  }
-
-
-  $scope.toggleAll = function(toggleSelectValue){
-
-  	if(toggleSelectValue && $scope.persons){
-  		$scope.persons.forEach(function(person, index){
-  			person.selected = true;
-  		}); 
-  	}else if($scope.persons){
-  		$scope.persons.forEach(function(person, index){
-  			person.selected = false;
-  		}); 
-  	}
-  }
-
-  function noPersonSelected(){
-  	var ret = true
-  	$scope.persons.forEach(function(person, index){
-  		if(person.selected)
-  			ret = false;
-  	});
-  	return ret;
-  }
-
-  function getSelectedPersonIds(){
-    var ret = []
-    $scope.persons.forEach(function(person, index){
-      if(person.selected)
-        ret.push(person.id);
-    });
-    return ret;
-  }
-
-  $scope.getSelectedPersonIds = getSelectedPersonIds;
-
-  $scope.selectBulkAction = function(bulkActionSelected){
-    $scope.bulkActionSelected = bulkActionSelected;
-  }
-
-  $scope.app.applyBulkActions = function(){
-    if($scope.bulkActionSelected.id == 0)
-      return
-    else if($scope.bulkActionSelected.id == 2)
-      deletePersons();
-    $scope.app.cancelDialog();
-  }
-
-  $scope.openBulkActionsDialog = function(ev){
-
-    if($scope.bulkActionSelected == 4){
-      
-      return;
-    }
-
-  	if(noPersonSelected())
-  		$scope.openNoPersonSelected(ev);
-  	else if($scope.bulkActionSelected == 0)
-  		return null;
-    else if($scope.bulkActionSelected == 1)
-      $scope.bulkChangePermissions(ev);
-  	else if($scope.bulkActionSelected == 2 || $scope.bulkActionSelected == 3)
-  		$scope.confirmBulkAction(ev)
   }
 
   $scope.enablePersons = function(){
@@ -297,34 +145,17 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     })
   }
 
-  var showNoPersonSelectedDialog = function(event){
-    $mdDialog.show({
-        scope: $scope,        // use parent scope in template
-          closeTo: {
-            bottom: 1500
-          },
-        preserveScope: true, // do not forget this if use parent scope
-        controller: $scope.app.defaultDialog,
-        templateUrl: 'no_person_selected_dialog.html',
-        targetEvent: event,
-        onComplete: function(){}
-      })
-      .then(function(answer) {
-      //$scope.alert = 'You said the information was "' + answer + '".';
-      }, function() {
-      //$scope.alert = 'You cancelled the dialog.';
-    });
-  }
 
+  // ------------ enable / disable person ---------
+  
   $scope.enableOrDisableOption = null;
   // $scope.bulkChangePermissions = function(ev, func){
-  $scope.bulkChangeAccess = function(ev, enableOrDisableOption){
+    $scope.bulkChangeAccess = function(ev, enableOrDisableOption){
       ids = getSelectedPersonIds();
       if(!ids || !ids.length){
         showNoPersonSelectedDialog(ev);
         return;
-      }
-
+    }
 
     $scope.enableOrDisableOption = enableOrDisableOption;
     $mdDialog.show({
@@ -336,6 +167,72 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         controller: $scope.app.defaultDialog,
         templateUrl: 'bulk_change_access_dialog.html',
         targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+    });
+  }
+
+  $scope.createPerson = function(ev){
+    trix.createPerson($scope.person).success(function(response){
+      $scope.app.showSuccessToast('Alterações realizadas com sucesso.')
+      $scope.selectedPerson = response;
+      $scope.editingPersonLoaded = true;
+      $scope.editing = true;
+      $scope.creating = false;
+      $state.go('app.settings.users', {'username': response.username}, {location: 'replace', inherit: false, notify: false, reload: false})
+    }).error(function(data, status, headers, config){
+      if(status == 409){
+        $scope.app.conflictingData = data;
+        $scope.openConflictingUserSplash(ev)
+      }else
+        $scope.app.showErrorToast('Dados inválidos. Tente novamente')
+      
+      $timeout(function() {
+        cfpLoadingBar.complete(); 
+      }, 100);
+    });
+  }
+
+  $scope.toggleAll = function(toggleSelectValue){
+
+  	if(toggleSelectValue && $scope.persons){
+  		$scope.persons.forEach(function(person, index){
+        if(person.id != $scope.app.person.id)
+  			 person.selected = true;
+  		}); 
+  	}else if($scope.persons){
+  		$scope.persons.forEach(function(person, index){
+        if(person.id != $scope.app.person.id)
+    			person.selected = false;
+  		}); 
+  	}
+  }
+
+  function getSelectedPersonIds(){
+    var ret = []
+    $scope.persons.forEach(function(person, index){
+      if(person.selected)
+        ret.push(person.id);
+    });
+    return ret;
+  }
+
+  $scope.getSelectedPersonIds = getSelectedPersonIds;
+
+  var showNoPersonSelectedDialog = function(event){
+    $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'no_person_selected_dialog.html',
+        targetEvent: event,
         onComplete: function(){}
       })
       .then(function(answer) {
