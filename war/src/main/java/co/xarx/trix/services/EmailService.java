@@ -147,11 +147,11 @@ import java.util.Set;
 		scopes.put("networkNameColor", networkNameColor);
 
 		if (invitation.person != null && invitation.person.user != null) {
-			scopes.put("plainPassword", invitation.person.user.password);
 			scopes.put("name", invitation.getPerson().getName());
 		}
 
 		if (invitation.sendPlainPassword) {
+			scopes.put("plainPassword", invitation.person.user.password);
 			scopes.put("link", "http://" + network.getRealDomain());
 		} else {
 			scopes.put("link", invitation.getInvitationUrl());
