@@ -297,7 +297,10 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         templateUrl: 'add-profile-dialog.html',
         parent: angular.element(document.body),
         targetEvent: event,
-        clickOutsideToClose:true
+        clickOutsideToClose:true,
+        onRemoving: function(){
+          $scope.addingPerson = null;
+        }
         // onComplete: function(){
 
         // }
@@ -478,16 +481,19 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
             $scope.persons.push(p)
           })
         }
+        $scope.addingPerson = null;
       }).error(function(data, status, headers, config){
         if(status == 409){
-          $scope.app.conflictingData = data;
-          $scope.openConflictingUserSplash(ev)
-        }else
+          if(data.message.indexOf('username') > -1)
+            $scope.app.showErrorToast($filter('translate')('settings.users.USERNAME_IN_USE'))
+          if(data.message.indexOf('email') > -1)
+            $scope.app.showErrorToast($filter('translate')('settings.users.EMAIL_IN_USE'))
+        }else{
           $scope.app.showErrorToast('Dados inválidos. Tente novamente')
-        $timeout(function() {
-          cfpLoadingBar.complete(); 
-        }, 100);
-        $mdDialog.cancel();
+          $mdDialog.cancel();
+          $scope.addingPerson = null;
+        }
+        
       });
     }
 

@@ -199,7 +199,9 @@
 			"DISABLE_ALL_SELECTED_MSG": "Are you sure you want to disable all selected users",
 			"NO_PERSON_SELETED": "Select user by enabling the checkbox before performing this action",
 			"SET_PASSWORD": "Change password",
-			"SET_PASSWORD_MSG": "Insert a new password for the user and confirm in order to reset the user's password. The user will reseave an email with the new password."
+			"SET_PASSWORD_MSG": "Insert a new password for the user and confirm in order to reset the user's password. The user will reseave an email with the new password.",
+			"USERNAME_IN_USE": "Username is already in use. Please use another username and try again.",
+			"EMAIL_IN_USE": "Email is already in use. Please use another email and try again."
 		},
 		"post": {
 			"menu":{
