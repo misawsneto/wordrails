@@ -2,9 +2,7 @@ package co.xarx.trix.web.rest.mapper;
 
 import co.xarx.trix.api.v2.QueryableSectionData;
 import co.xarx.trix.domain.page.QueryableListSection;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
+import org.mapstruct.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -42,4 +40,7 @@ public interface QueryableSectionMapper {
 			@Mapping(target = "pageableQuery", source = "pageableQuery")
 	})
 	QueryableListSection asEntity(QueryableSectionData dto);
+
+	@InheritConfiguration(name = "asEntity")
+	void updateEntity(QueryableSectionData dto, @MappingTarget QueryableListSection entity);
 }

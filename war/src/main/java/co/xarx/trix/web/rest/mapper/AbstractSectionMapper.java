@@ -15,7 +15,7 @@ public class AbstractSectionMapper {
 	@Autowired
 	private QueryableSectionMapper queryableSectionMapper;
 
-	public AbstractSection asEntity(SectionData sectionData) {
+	public AbstractSection asAbstractEntity(SectionData sectionData) {
 		if (sectionData instanceof ContainerSectionData) {
 			return containerSectionMapper.asEntity((ContainerSectionData) sectionData);
 		} else if (sectionData instanceof QueryableSectionData) {
