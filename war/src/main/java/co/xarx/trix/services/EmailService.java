@@ -120,6 +120,7 @@ import java.util.Set;
 		scopes.put("inviterName", inviter.getName());
 		scopes.put("inviterEmail", inviter.getEmail());
 		scopes.put("networkNameColor", networkNameColor);
+		if(invitation.sendPlainPassword) scopes.put("plainPassword", invitation.person.user.password);
 
 		StringWriter writer = new StringWriter();
 		MustacheFactory mf = new DefaultMustacheFactory();
