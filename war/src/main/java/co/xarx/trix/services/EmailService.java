@@ -121,7 +121,7 @@ import java.util.Set;
 			String subject = network.name + " - Convite enviado por " + inviter.getName();
 			sendSimpleMail(invitation.person.email, subject, emailBody);
 		}catch (Exception e){
-			log.info(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -160,7 +160,29 @@ import java.util.Set;
 		return scopes;
 	}
 
-	public void sendInvitation(Network network, Invitation invitation, Person loggedPerson) {
+	public void sendInvitation(Network network, Invitation invitation, Person inviter, String emailTemplate) {
+		try {
+			String template = emailTemplate;
+			//notifyPersonCreation(network, invitation, template, inviter);
+			StringWriter writer = new StringWriter();
+			MustacheFactory mf = new DefaultMustacheFactory();
+			Mustache mustache = mf.compile(new StringReader(template), "invitation-email");
 
+			Map scopes = parseTemplateData(invitation, network, inviter);
+			scopes.put("link", "http://" + network.getRealDomain() + "/access/signup?invitation=" + invitation.hash);
+
+			try{
+				mustache.execute(writer, scopes);
+				writer.flush();
+
+				String emailBody = writer.toString();
+				String subject = network.name + " - Convite enviado por " + inviter.getName();
+				sendSimpleMail(invitation.email, subject, emailBody);
+			}catch (Exception e){
+				log.error(e.getMessage(), e);
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 }

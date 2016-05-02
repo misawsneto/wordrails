@@ -79,7 +79,7 @@ public class PersonService {
 	 */
 	public List<Person> invite(PersonsApi.PersonInvitationDto dto){
 		if(dto.emails == null || dto.emails.size() == 0 || dto.emailTemplate == null){
-			throw new BadRequestException("Invalid emails");
+			throw new BadRequestException("Invalid emails or temaplte");
 		}
 
 		List<Person> persons = personRepository.findByEmailIn(dto.emails);
@@ -98,8 +98,9 @@ public class PersonService {
 
 		for(String email: dto.emails){
 			Invitation invitation = new Invitation(network.getRealDomain(), false);
+			invitation.email = email;
 			invitationRepository.save(invitation);
-			emailService.sendInvitation(network, invitation, authService.getLoggedPerson());
+			emailService.sendInvitation(network, invitation, authService.getLoggedPerson(), dto.emailTemplate);
 		}
 
 		return persons;
