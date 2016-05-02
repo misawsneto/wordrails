@@ -201,7 +201,9 @@
 			"SET_PASSWORD": "Definição de senha",
 			"SET_PASSWORD_MSG": "Insira uma nova senha para este usuário e confirme para mudar a senha. O usuário receberá um email com a nova senha.",
 			"USERNAME_IN_USE": "Usuário já está sendo usado. Por favor use outro usuário e tente novamente.",
-			"EMAIL_IN_USE": "Email já está sendo usado. Por favor use outro email e tente novamente."
+			"EMAIL_IN_USE": "Email já está sendo usado. Por favor use outro email e tente novamente.",
+			"REQUIRED_FIELDS": "Nome, usuário e email são campos obrigatórios.",
+			"OPTIONAL_PASSWORD": "A senha é opcional e caso não fornecida será gerado automáticamente e enviada por email."
 		},
 		"post": {
 			"menu":{

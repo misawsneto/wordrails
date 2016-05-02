@@ -7,6 +7,7 @@ import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.StationRolesRepository;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
+import co.xarx.trix.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,9 @@ public class PersonService {
 		} else if (personRepository.findOne(QPerson.person.email.eq(email)) != null) {
 			throw new AlreadyExistsException("User with email " + email + " already exists");
 		}
+
+		if(password == null || "".equals(password))
+			StringUtil.generateRandomString(6,"aA#");
 
 		Person person = new Person();
 		person.name = name;

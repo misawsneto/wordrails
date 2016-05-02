@@ -1,5 +1,5 @@
-app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog', '$mdToast', '$filter',
-	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog, $mdToast, $filter){
+app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog', '$mdToast', '$filter', '$translate',
+	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog, $mdToast, $filter, $translate){
 
   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
@@ -210,7 +210,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
           },
         preserveScope: true, // do not forget this if use parent scope
         controller: $scope.app.defaultDialog,
-        templateUrl: 'no_person_selected_dialog.html',
+        templateUrl: 'no-person-selected-dialog.html',
         targetEvent: event,
         onComplete: function(){}
       })
@@ -278,14 +278,9 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       })
     }
 
-    // ---------- invite users funcs ----------
-    $scope.showInviteUserDialog = function(){
-      
-    }
-    // ---------- /invite users funcs ----------
-
     // ---------- add user funcs ----------
     $scope.showAddUserDialog = function(event){
+      $scope.addingPerson = null;
        // show term alert
       $mdDialog.show({
         scope: $scope,        // use parent scope in template
@@ -297,10 +292,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         templateUrl: 'add-profile-dialog.html',
         parent: angular.element(document.body),
         targetEvent: event,
-        clickOutsideToClose:true,
-        onRemoving: function(){
-          $scope.addingPerson = null;
-        }
+        clickOutsideToClose:true
         // onComplete: function(){
 
         // }
@@ -471,6 +463,19 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
     $scope.addingPerson = null;
     $scope.createPerson = function(){
+      if(!$scope.addingPerson || !$scope.addingPerson.name || !$scope.addingPerson.name.trim() ||
+        !$scope.addingPerson.username || !$scope.addingPerson.username.trim() ||
+        !$scope.addingPerson.email || !$scope.addingPerson.email.trim()){
+
+        $scope.app.showErrorToast($filter('translate')('settings.users.REQUIRED_FIELDS'))
+        return;
+      }
+
+      if($scope.addingPerson.password && $scope.addingPerson.password.trim() && ($scope.newPassword !== $scope.newPasswordConfirm)){
+        $scope.app.showSimpleDialog($filter('translate')('settings.profile.PASSWORDS_DONT_MATCH') + "")
+        return;
+      }
+
       trix.createPerson($scope.addingPerson).success(function(response){
         $mdDialog.cancel();
         $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
@@ -565,4 +570,95 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       $scope.newPassword = null;
       $scope.newPasswordConfirm = null;
     }
+
+    // -------- invitation -------
+
+    // ---------- invite users funcs ----------
+    $scope.showInviteUserDialog = function(event){
+      $scope.invitations = [];
+       // show term alert
+      $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'invitation-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true,
+        escapeToClose: false
+        // onComplete: function(){
+
+        // }
+      })
+      $timeout(function(){
+        $(".fr-box a").each(function(){
+          if($(this).html() === 'Unlicensed Froala Editor')
+            $(this).remove();
+        });
+      }, 1);
+    }
+    // ---------- /invite users funcs ----------
+
+    $scope.email = {body: '<div>'+
+'<div class="block-box">'+
+'<h3>Modes</h3>'+
+'<p><a href="/wysiwyg-editor/docs/examples/edit-in-popup" title="Edit in Popup">Edit in Popup</a></p>'+
+'<p><a href="/wysiwyg-editor/docs/examples/full-featured" title="Full Featured">Full Featured</a></p>'+
+'<p><a href="/wysiwyg-editor/docs/examples/full-page" title="Full Page">Full Page</a></p>'+
+'<p><a href="/wysiwyg-editor/docs/examples/iframe" title="Iframe">Iframe</a></p>'+
+'<p><a href="/wysiwyg-editor/docs/examples/init-on-button" title="Init On Button">Init On Button</a></p>'+
+'<p><a href="/wysiwyg-editor/docs/examples/init-on-click" title="Init On Click">Init On Click</a></p>'+
+'<p><a href="/wysiwyg-editor/docs/examples/inline" title="Inline">Inline</a></p>'+
+'<p><a href="/wysiwyg-editor/docs/examples/inline-two-instances" title="Inline Two Instances">Inline Two Instances</a></p>'+
+'<p><a href="/wysiwyg-editor/docs/examples/textarea" title="Textarea">Textarea</a></p>'+
+'</div>'+
+'</div>'};
+    var lang = $translate.use();
+    $scope.froalaOptions = {
+    toolbarInline: false,
+      heightMin: 200,
+      language: (lang == 'en' ? 'en_gb' : lang == 'pt' ? 'pt_br' : null),
+      fontSizeDefaultSelection: '18',
+    // Set the image upload parameter.
+        imageUploadParam: 'contents',
+
+        // Set the image upload URL.
+        imageUploadURL: '/api/images/upload?imageType=POST',
+
+        // Set request type.
+        imageUploadMethod: 'POST',
+
+        // Set max image size to 5MB.
+        imageMaxSize: 8 * 1024 * 1024,
+
+        // Allow to upload PNG and JPG.
+        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+
+        // Set the file upload parameter.
+        fileUploadParam: 'contents',
+
+        // Set the file upload URL.
+        fileUploadURL: '/api/files/upload/doc',
+
+        // Set request type.
+        fileUploadMethod: 'POST',
+
+        // Set max file size to 20MB.
+        fileMaxSize: 20 * 1024 * 1024,
+
+        // Allow to upload any file.
+        fileAllowedTypes: ['*'],
+
+        toolbarInline: false,
+        toolbarSticky: false,
+        toolbarInline: true,
+        charCounterCount: false,
+        toolbarContainer: '#email-template',
+      }
+
+    // -------- /invitation -------
+    
 }])
