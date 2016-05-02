@@ -147,14 +147,18 @@
                           <small class="text-muted clear text-ellipsis">
                           {{'settings.network.SPLASH_DEFINITION' | translate}}</small>
                           <!-- <input type="file" nv-file-select="" uploader="splash" name="contents" accept="image/*"/> -->
-                          <div aria-label="menu" md-ink-ripple class="md-btn m-t-sm" ng-click="loadImageConfigFromStorage();">
+                          <div ng-if="!splashImage.link" aria-label="menu" md-ink-ripple class="md-btn m-t-sm" ng-click="loadImageConfigFromStorage();">
                             <input id="image-upload" type="file" nv-file-select="" uploader="splash" name="contents" accept="image/*"/>
                             <md-tooltip md-direction="top">
                               {{'actions.UPLOAD_IMAGE' | translate}}
                             </md-tooltip>
-                            <!-- <i class="mdi mdi2-image-area i-20" style="vertical-align: 20%"></i> -->
+                            <!-- <i class="mdi mdi2-image-area i-20 v-m icon" style="vertical-align: 20%"></i> -->
                             {{'titles.UPLOAD' | translate}}
                           </div>
+                          <md-button class="md-mini m-0" ng-if="splashImage.link" ng-click="removeSplash();">
+                            <i class="mdi2-delete i-20 v-m icon"></i>
+                            {{'titles.REMOVE' | translate}}
+                          </md-button>
                         </div>
                       </li>
                       <li class="list-group-item clearfix b-n">
@@ -168,14 +172,18 @@
                           <small class="text-muted clear text-ellipsis">
                           {{'settings.network.NETWORK_LOGO_DEFINITION' | translate}}</small>
                           <!-- <input type="file" nv-file-select="" uploader="login" name="contents" accept="image/*"/> -->
-                          <div aria-label="menu" md-ink-ripple class="md-btn m-t-sm" ng-click="loadImageConfigFromStorage();">
+                          <div ng-if="!logoImage.link" aria-label="menu" md-ink-ripple class="md-btn m-t-sm" ng-click="loadImageConfigFromStorage();">
                             <input id="image-upload" type="file" nv-file-select="" uploader="logo" name="contents" accept="image/*"/>
                             <md-tooltip md-direction="top">
                               {{'actions.UPLOAD_IMAGE' | translate}}
                             </md-tooltip>
-                            <!-- <i class="mdi mdi2-image-area i-20" style="vertical-align: 20%"></i> -->
+                            <!-- <i class="mdi mdi2-image-area i-20 v-m icon" style="vertical-align: 20%"></i> -->
                             {{'titles.UPLOAD' | translate}}
                           </div>
+                          <md-button class="md-mini m-0" ng-if="logoImage.link" ng-click="removeLogo();">
+                            <i class="mdi2-delete i-20 v-m icon"></i>
+                            {{'titles.REMOVE' | translate}}
+                          </md-button>
                         </div>
                       </li>
                       <li class="list-group-item clearfix b-n">
@@ -188,14 +196,18 @@
                           <span class="font-bold">{{'settings.network.NETWORK_FAVICON' | translate}}</span>
                           <small class="text-muted clear text-ellipsis">{{'settings.network.NETWORK_FAVICON_DEFINITION' | translate}}</small>
                           <!-- <input class="text-xs" type="file" nv-file-select="" uploader="favicon" name="contents" accept="image/*"/> -->
-                          <div aria-label="menu" md-ink-ripple class="md-btn m-t-sm" ng-click="loadImageConfigFromStorage();">
+                          <div ng-if="!faviconImage.link" aria-label="menu" md-ink-ripple class="md-btn m-t-sm" ng-click="loadImageConfigFromStorage();">
                             <input id="image-upload" type="file" nv-file-select="" uploader="favicon" name="contents" accept="image/*"/>
                             <md-tooltip md-direction="top">
                               {{'actions.UPLOAD_IMAGE' | translate}}
                             </md-tooltip>
-                            <!-- <i class="mdi mdi2-image-area i-20" style="vertical-align: 20%"></i> -->
+                            <!-- <i class="mdi mdi2-image-area i-20 v-m icon" style="vertical-align: 20%"></i> -->
                             {{'titles.UPLOAD' | translate}}
                           </div>
+                          <md-button class="md-mini m-0" ng-if="faviconImage.link" ng-click="removeFavicon()">
+                            <i class="mdi2-delete i-20 v-m icon"></i>
+                            {{'titles.REMOVE' | translate}}
+                          </md-button>
                         </div>
                       </li>
                     </ul>

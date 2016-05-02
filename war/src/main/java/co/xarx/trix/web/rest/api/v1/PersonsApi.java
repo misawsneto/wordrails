@@ -4,6 +4,8 @@ import co.xarx.trix.api.*;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.exception.ConflictException;
+import co.xarx.trix.util.StatsJson;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,11 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public interface PersonsApi {
 
+	public static class PersonInviteDto {
+		String emailTemplate;
+		public List<String> emails;
+	}
+
 	public static class PersonCreateDto {
 		public String name;
 		public String username;
@@ -26,6 +33,14 @@ public interface PersonsApi {
 		public String password;
 		public boolean emailNotification;
 		public List<StationRole> stationsRole;
+	}
+
+	public static class PersonAuthDto {
+		public Integer id;
+		public String username;
+		public String email;
+		public String password;
+		public String passwordConfirm;
 	}
 
 	@GET
@@ -47,6 +62,12 @@ public interface PersonsApi {
 	@Path("/update")
 	@Transactional
 	Response update(Person person);
+
+	@PUT
+	@Path("/authDataUpdate")
+	@Transactional
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	Response updateAuthData(PersonAuthDto person);
 
 	@PUT
 	@Path("/{id}")
@@ -105,6 +126,11 @@ public interface PersonsApi {
 	@Path("/create")
 	Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException;
 
+	@POST
+	@Path("/invitePerson")
+	Response invitePerson(PersonInviteDto dto) throws ConflictException, BadRequestException, IOException;
+
+
 	@GET
 	@Path("/stats/count")
 	ContentResponse<Integer> countPersonsByNetwork(@QueryParam("q") String q);
@@ -157,5 +183,13 @@ public interface PersonsApi {
 	@GET
 	@Path("/me/stats")
 	@PreAuthorize("isAuthenticated()")
-	Response personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException;
+	StatsJson personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException;
+
+	@GET
+	@Path("/search/findPersons")
+	@PreAuthorize("isAuthenticated()")
+	/**
+	 * {@link co.xarx.trix.persistence.PersonRepository#findPersons(String, Pageable)}
+	 */
+	void findPersons() throws IOException;
 }

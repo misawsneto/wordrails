@@ -5,7 +5,7 @@
       </md-button>
     </div>
 
-    <div class="pull-left w-xl" data-ng-init="allTags = [{'item' : 'first', 'name' : 'first'}, {'item' : 'second', 'name' : 'second'}, {'item' : 'third', 'name' : 'third'}, {'item' : 'fourth', 'name' : 'fourth'}]">
+    <div class="pull-left w-xl m-t-lg" data-ng-init="allTags = [{'item' : 'first', 'name' : 'first'}, {'item' : 'second', 'name' : 'second'}, {'item' : 'third', 'name' : 'third'}, {'item' : 'fourth', 'name' : 'fourth'}]">
       <ul style="margin:0;padding:0">
         <li data-ng-repeat="tag in allTags">menu-item: <input data-ng-model="tag.item">, name: <input data-ng-model="tag.name"> <button data-ng-click="allTags.splice($index, 1)">delete</button>
       </ul>

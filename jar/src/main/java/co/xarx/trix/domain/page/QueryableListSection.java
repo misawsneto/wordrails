@@ -85,9 +85,10 @@ public class QueryableListSection extends AbstractSection implements QueryableSe
 		return Type.QUERYABLE;
 	}
 
+	@Override
 	@JsonProperty("createdAt")
 	public Date getCreatedAt(){
-		return this.createdAt;
+		return super.getCreatedAt();
 	}
 
 	@PrePersist

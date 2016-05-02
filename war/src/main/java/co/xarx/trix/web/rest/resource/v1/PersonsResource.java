@@ -13,20 +13,20 @@ import co.xarx.trix.services.InitService;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.NetworkService;
 import co.xarx.trix.services.PersonService;
+import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.StationPermissionService;
+import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.Logger;
-import co.xarx.trix.util.ReadsCommentsRecommendsCount;
+import co.xarx.trix.util.StatsJson;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import lombok.NoArgsConstructor;
 import org.apache.http.util.Asserts;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +42,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @NoArgsConstructor
@@ -78,6 +79,8 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	private InitService initService;
 	@Autowired
 	private StationPermissionService stationPermissionService;
+	@Autowired
+	private StatisticsService statisticsService;
 
 	@Autowired
 	@Qualifier("objectMapper")
@@ -175,6 +178,51 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 
 	@Override
 	@Transactional
+	public Response updateAuthData(PersonAuthDto person){
+
+		Person loadedPerson = personRepository.findOne(person.id);
+
+		if(person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
+			throw new BadRequestException("Password no equal");
+
+		if((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
+			throw new BadRequestException("Invalid Password");
+
+		if(!StringUtil.isEmailAddr(person.email))
+			throw new BadRequestException("Not email");
+
+		if(person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN
+				(person.username + ".com"))
+			throw new BadRequestException("Invalid username");
+
+
+		loadedPerson.email = person.email;
+
+		User user = null;
+		if(!person.username.equals(loadedPerson.username)){
+			loadedPerson.user.username = person.username;
+			loadedPerson.username = person.username;
+			user = userRepository.findOne(loadedPerson.user.id);
+			user.username = person.username;
+			userRepository.save(user);
+			personRepository.save(loadedPerson);
+		}
+
+		if((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)){
+			loadedPerson.user.password = person.password;
+			user = userRepository.findOne(loadedPerson.user.id);
+			user.password = person.password;
+			userRepository.save(user);
+			personRepository.save(loadedPerson);
+		}
+
+		personRepository.save(loadedPerson);
+
+		return Response.status(Status.OK).build();
+	}
+
+	@Override
+	@Transactional
 	public void updatePerson(Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
@@ -187,16 +235,16 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	@Override
 	@Deprecated
 	public Response putRegId(String regId, Integer networkId, Double lat, Double lng) {
-		return updateMobile(regId, lat, lng, MobileDevice.Type.ANDROID);
+		return updateMobile(regId, lat, lng, Constants.MobilePlatform.ANDROID);
 	}
 
 	@Override
 	@Deprecated
 	public Response putToken(String token, Integer networkId, Double lat, Double lng) {
-		return updateMobile(token, lat, lng, MobileDevice.Type.APPLE);
+		return updateMobile(token, lat, lng, Constants.MobilePlatform.APPLE);
 	}
 
-	private Response updateMobile(String token, Double lat, Double lng, MobileDevice.Type type) {
+	private Response updateMobile(String token, Double lat, Double lng, Constants.MobilePlatform type) {
 		Person person = authProvider.getLoggedPerson();
 		Logger.info("Updating " + type.toString() + " device " + token + " for person " + person.id);
 		mobileService.updateDevice(person, token, lat, lng, type);
@@ -285,8 +333,8 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
-	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException{
-		Person person = personService.create(dto.name, dto.username, dto.password, dto.email, dto.emailNotification, dto.stationsRole);
+	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
+		Person person = personService.create(dto.name, dto.username, dto.password, dto.email, dto.stationsRole);
 
 		if (person != null) {
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
@@ -294,6 +342,13 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			throw new BadRequestException();
 		}
 	}
+
+	@Override
+	public Response invitePerson(PersonInviteDto dto) throws ConflictException, BadRequestException, IOException {
+		personService.invite(dto);
+		return Response.status(Status.CREATED).build();
+	}
+
 
 	@Override
 	public ContentResponse<Integer> countPersonsByNetwork(@QueryParam("q") String q){
@@ -486,63 +541,82 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
-	public Response personStats(String date, Integer postId) throws IOException{
-		if(date == null)
-			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
-
-		org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-
-		Person person = null;
-		if(postId == null || postId == 0) {
-			person = authProvider.getLoggedPerson();
+	public StatsJson personStats(String date, Integer postId) throws JsonProcessingException {
+		if(postId == null){
+			Person person = authProvider.getLoggedPerson();
+			return statisticsService.personStats(date, person.getId(), null);
+		} else{
+			return statisticsService.postStats(date, postId, null);
 		}
-
-		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<>();
-		DateTime firstDay = formatter.parseDateTime(date);
-
-		// create date slots
-		DateTime lastestDay = firstDay;
-		while (firstDay.minusDays(30).getMillis() < lastestDay.getMillis()){
-			stats.put(lastestDay. getMillis(), new ReadsCommentsRecommendsCount());
-			lastestDay = lastestDay.minusDays(1);
-		}
-
-		List<Object[]> postReadCounts;
-		List<Object[]> commentsCounts;
-		List<Object[]> generalStatus;
-
-		if(person == null) {
-			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
-			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
-			generalStatus = postRepository.findPostStats(postId);
-		}else {
-			postReadCounts = postReadRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
-			commentsCounts = commentRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
-			generalStatus = personRepository.findPersonStats(person.id);
-		}
-
-		// check date and map counts
-		Iterator it = stats.entrySet().iterator();
-		checkDateAndMapCounts(postReadCounts, it);
-
-		it = stats.entrySet().iterator();
-		checkDateAndMapCounts(commentsCounts, it);
-
-		String generalStatsJson = mapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
-		String dateStatsJson = mapper.writeValueAsString(stats);
-		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
 	}
 
-	private void checkDateAndMapCounts(List<Object[]> countList, Iterator it) {
-		while (it.hasNext()){
-			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
-			long key = (Long)pair.getKey();
-			for(Object[] counts: countList){
-				long dateLong = ((java.sql.Date) counts[0]).getTime();
-				long count = (long) counts[1];
-				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
-					pair.getValue().commentsCount = count;
-			}
-		}
+//	@Override
+//	public Response personStatsOld(String date, Integer postId) throws IOException{
+//		if(date == null)
+//			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
+//
+//		org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+//
+//		Person person = null;
+//		if(postId == null || postId == 0) {
+//			person = authProvider.getLoggedPerson();
+//		}
+//
+//		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<>();
+//		DateTime firstDay = formatter.parseDateTime(date);
+//
+//		// create date slots
+//		DateTime lastestDay = firstDay;
+//		while (firstDay.minusDays(30).getMillis() < lastestDay.getMillis()){
+//			stats.put(lastestDay. getMillis(), new ReadsCommentsRecommendsCount());
+//			lastestDay = lastestDay.minusDays(1);
+//		}
+//
+//		List<Object[]> postReadCounts;
+//		List<Object[]> commentsCounts;
+//		List<Object[]> generalStatus;
+//
+//		if(person == null) {
+//			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
+//			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
+//			generalStatus = postRepository.findPostStats(postId);
+//		}else {
+//			postReadCounts = postReadRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
+//			commentsCounts = commentRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
+//			generalStatus = personRepository.findPersonStats(person.id);
+//		}
+//
+//		// check date and map counts
+//		Iterator it = stats.entrySet().iterator();
+//		checkDateAndMapCounts(postReadCounts, it);
+//
+//		it = stats.entrySet().iterator();
+//		checkDateAndMapCounts(commentsCounts, it);
+//
+//		String generalStatsJson = mapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
+//		String dateStatsJson = mapper.writeValueAsString(stats);
+//		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
+//	}
+//
+//	private void checkDateAndMapCounts(List<Object[]> countList, Iterator it) {
+//		while (it.hasNext()){
+//			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
+//			long key = (Long)pair.getKey();
+//			for(Object[] counts: countList){
+//				long dateLong = ((java.sql.Date) counts[0]).getTime();
+//				long count = (long) counts[1];
+//				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
+//					pair.getValue().commentsCount = count;
+//			}
+//		}
+//	}
+
+
+	@Override
+	/**
+	 * {@link co.xarx.trix.persistence.PersonRepository#findPersons(String, Pageable)}
+	 */
+	public void findPersons() throws IOException {
+		forward();
 	}
 }

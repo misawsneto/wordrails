@@ -76,6 +76,10 @@
 		background-color: transparent!important;
 	}
 
+	mdp-date-picker button, mdp-time-picker button{display: none!important;}
+
+	mdp-date-picker md-input-container, mdp-time-picker md-input-container {width: 100%!important; margin: 0!important;}
+
 	/* /material datepicker */
 
 	/* material override */
@@ -466,6 +470,8 @@
 
 .icon-text-shadow{text-shadow:2px 2px 15px #000}
 .text-shadow-lg{text-shadow:2px 4px 8px rgba(0, 0, 0, 0.5)}
+.text-shadow-md{text-shadow:2px 3px 5px rgba(0, 0, 0, 0.6)}
+.text-shadow-sm{text-shadow:1px 1px 3px rgba(0, 0, 0, 0.7)}
 .font-code{font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;}
 
 #cover-image-button #image-button #image-upload {
@@ -694,8 +700,16 @@ footer.page-footer .footer-crt{
 	opacity: 1!important;
 }
 .df-tab-menu-dropdown{background-color: white!important; border:none!important;}
-.df-tab-menu-dropdown li {font-size: 14px;}
+.df-tab-menu-dropdown li {font-size: 14px!important;}
 .df-tab-menu-dropdown li a:hover{background-color:rgba(31,31,31,0.1)!important;}
 .df-tab-menu-dropdown li a{color: #333!important;}
 .df-tab-menu > li > a {height: inherit!important;}
 .df-tab-menu {background: transparent!important; text-transform: none!important;}
+
+#users-table > tbody > tr > td, #users-table > tfoot > tr > td, #users-table > tbody > tr > th, #users-table > tfoot > tr > th{
+	padding: 10px 16px;
+}
+
+#users-table > thead > tr > th{
+	padding: 16px;
+}

@@ -75,22 +75,14 @@
                     Filtar por data
                   </div>
                   <div class="text-center">
-                    <md-input-container style="width: 140px" class="no-margin m-b-sm">
-                      <label translate="titles.START_DATE">Data inicial</label>
-                      <input type="date" mdp-date-picker ng-model="filter.initialDate" />
-                    </md-input-container>
-                    <md-input-container style="width: 140px" class="no-margin m-b-sm">
-                      <label translate="titles.END_DATE">Data final</label>
-                      <input type="date" mdp-date-picker ng-model="filter.finalDate" />
-                    </md-input-container>
-                    <!-- <md-input-container style="width: 140px" class="no-margin m-b-sm">
-                      <label translate="titles.START_TIME">Hora inicial</label>
-                      <input type="time" mdp-time-picker ng-model="filter.initialTime" />
-                    </md-input-container>
-                    <md-input-container style="width: 140px" class="no-margin m-b-sm">
-                      <label translate="titles.END_TIME">Hora final</label>
-                      <input type="time" mdp-time-picker ng-model="filter.finalTime" />
-                    </md-input-container> -->
+                    <div class="pos-rlt no-margin m-b-sm inline" style="width: 140px">
+                      <mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'titles.START_DATE' | translate}}" ng-model="filter.initialDate">
+                      </mdp-date-picker>
+                    </div>
+                    <div class="pos-rlt no-margin m-b-sm inline" style="width: 140px">
+                      <mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'titles.END_DATE' | translate}}" ng-model="filter.finalDate">
+                      </mdp-time-picker>
+                    </div>
                   </div>
                 <!-- -->
                 </div>
@@ -100,28 +92,6 @@
           <!-- /dropdown -->
         </div>
         <!-- /search -->
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
-        <div class="p-xxl"></div>
         <div class="p-r-sm p-l-sm">
           <div class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z2 " style="overflow: auto;
   max-height: 100%;">

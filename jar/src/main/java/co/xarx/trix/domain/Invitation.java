@@ -15,9 +15,10 @@ import java.util.UUID;
 //@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "network_id"}))
 public class Invitation extends BaseEntity {
 
-	public Invitation(String baseUrl){
+	public Invitation(String baseUrl, boolean sendPlainPassword){
 		this.hash = UUID.randomUUID().toString();
 		this.invitationUrl = "http://" + baseUrl + "/invitation?hash=" + hash;
+		this.sendPlainPassword = sendPlainPassword;
 	}
 
 	@Id
@@ -32,7 +33,9 @@ public class Invitation extends BaseEntity {
 	@Transient
 	public String invitationUrl;
 
-	@NotNull
+	@Transient
+	public boolean sendPlainPassword;
+
 	@OneToOne
 	@JoinColumn(name = "person_id")
 	public Person person;
@@ -48,11 +51,11 @@ public class Invitation extends BaseEntity {
 
 	@PrePersist
 	void onCreate() {
-		createdAt = new Date();
+		setCreatedAt(new Date());
 	}
 
 	@PreUpdate
 	void onUpdate() {
-		updatedAt = new Date();
+		setUpdatedAt(new Date());
 	}
 }

@@ -38,13 +38,13 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
-	public Date updatedAt;
+	private Date updatedAt;
 
 	@DiffIgnore
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
-	public Date createdAt;
+	private Date createdAt;
 
 	@Version
 	@JsonIgnore

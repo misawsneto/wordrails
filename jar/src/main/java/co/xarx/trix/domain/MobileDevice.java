@@ -1,5 +1,6 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.util.Constants;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -12,11 +13,6 @@ import javax.persistence.*;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId", "deviceCode"}))
 public class MobileDevice extends BaseEntity {
-
-	public enum Type {
-		ANDROID,
-		APPLE
-	}
 
 	@Id
 	@Setter(AccessLevel.NONE)
@@ -41,7 +37,7 @@ public class MobileDevice extends BaseEntity {
 	public boolean active;
 
 	@RestResource(exported = false)
-	public Type type;
+	public Constants.MobilePlatform type;
 
 	@Override
 	public String toString() {

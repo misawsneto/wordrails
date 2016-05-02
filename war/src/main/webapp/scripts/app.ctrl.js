@@ -142,6 +142,26 @@ angular.module('app')
           $scope.app.termPerspectiveView = termPerspective
         })
 
+        $scope.app.showSimpleDialog = function(message){
+          $scope.app.simpleDialogMessage = message;
+          // show term alert
+          
+          $mdDialog.show({
+            scope: $scope,        // use parent scope in template
+            closeTo: {
+              bottom: 1500
+            },
+            preserveScope: true, // do not forget this if use parent scope
+            controller: $scope.app.defaultDialog,
+            templateUrl: 'simple_dialog.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose:true
+            // onComplete: function(){
+
+            // }
+          })
+        }
+
         // ---------- /util-trix -------------
         
         // ---------- util-toast -------------
@@ -169,7 +189,7 @@ angular.module('app')
 
         $scope.app.showErrorToast = function(content) {
           $mdToast.show({
-            template: '<md-toast class="md-warn-default"><div class="md-toast-content">'+content+'</div></md-toast>',
+            template: '<md-toast class="md-warn-default"><div class="md-toast-content"><i class="mdi2-close-circle i-28 p-r"></i>'+content+'</div></md-toast>',
             hideDelay: 3000,
             position: $scope.getToastPosition()
           });
@@ -177,7 +197,7 @@ angular.module('app')
 
         $scope.app.showSuccessToast = function(content) {
           $mdToast.show({
-            template: '<md-toast class="md-toast-success"><div class="md-toast-content">'+content+'</div></md-toast>',
+            template: '<md-toast class="md-toast-success"><div class="md-toast-content"><i class="mdi2-check-circle i-28 p-r"></i>'+content+'</div></md-toast>',
             hideDelay: 3000,
             position: $scope.getToastPosition()
           });
@@ -185,7 +205,7 @@ angular.module('app')
 
         $scope.app.showInfoToast = function(content) {
           $mdToast.show({
-            template: '<md-toast class="md-toast-info"><div class="md-toast-content">'+content+'</div></md-toast>',
+            template: '<md-toast class="md-toast-info"><div class="md-toast-content"><i class="mdi2-info-circle i-28 p-r"></i>'+content+'</div></md-toast>',
             hideDelay: 3000,
             position: $scope.getToastPosition()
           });
@@ -280,6 +300,10 @@ angular.module('app')
 
         $scope.app.smallCardCheck = function(index){
           return !$scope.app.largeCardCheck(index);
+        }
+
+        $scope.app.getCategoryLink = function(stationSlug, categoryName){
+          return '/'+stationSlug+'/cat?name='+categoryName;
         }
 
         // ---------- /util -------------
@@ -472,16 +496,19 @@ angular.module('app')
 
       // ---------- imageHelper -----------
       
-      $scope.getBackgroundImage = function(postView, size){
-        var img = $filter('bgImageLink')(postView, size);
-        if(postView.externalVideoUrl){
-          img = $filter('videoThumb')(postView.externalVideoUrl);
+      $scope.getBackgroundImage = function(object, size){
+        var img = $filter('bgImageLink')(object, size);
+        if(object.externalVideoUrl){
+          img = $filter('videoThumb')(object.externalVideoUrl);
         }
         return img;
       }
 
       $scope.app.getImagesPerson = function (post, id, size, type, bg) {
-        return $scope.app.hasAuthorImage(post) ? $filter('getImagesPerson')(id, size, type, bg) : null
+        if(post)
+          return $scope.app.hasAuthorImage(post) ? $filter('getImagesPerson')(id, size, type, bg) : null;
+        else
+          return $filter('getImagesPerson')(id, size, type, bg);
       };
 
       $scope.app.getPostsImage =  function(id, size, bg) {
@@ -496,19 +523,23 @@ angular.module('app')
       }
 
       $scope.app.hasProfilePicture = function(person){
-        return person.imageOriginalHash || person.imageSmallHash || person.imageHashes;
+        return person.imageOriginalHash || person.imageSmallHash || person.imageHash;
       }
 
       $scope.app.hasProfileCover = function(person){
-        return post.coverOriginalHash || post.coverSmallHash || post.coverHashes;
+        return post.coverOriginalHash || post.coverMediumHash || post.coverHash;
       }
 
       $scope.app.hasAuthorImage = function(post){
         return post.authorImageHash || post.authorImageSmallHash || post.authorImage || post.authorProfilePicture; 
       }
 
-      $scope.app.getBackgroundImage = function(postView, size){
-        return $scope.getBackgroundImage(postView, size);
+      $scope.app.getSplash = function(){
+        return $scope.app.getBackgroundImage({imageHash: $scope.app.network.splashImageHash}, 'large');
+      }
+
+      $scope.app.getBackgroundImage = function(object, size){
+        return $scope.getBackgroundImage(object, size);
       }
 
       $scope.app.userImageSmall = null
@@ -527,6 +558,13 @@ angular.module('app')
         $scope.app.coverImageSmall = $filter('coverImage')(person, 'small')
         $scope.app.coverImageMedium = $filter('coverImage')(person, 'medium')
         $scope.app.coverImageLarge = $filter('coverImage')(person, 'large')
+      }
+
+      $scope.app.getUserImage = function(person, size, type, bg){
+        if(person.imageHash)
+          return $filter('getImagesPerson')(person.id, size, type, bg)
+        else
+          return null;
       }
       
 
@@ -776,9 +814,16 @@ angular.module('app')
       $scope.actionButtonColors = $scope.app.getMaterialColor('myBackground', '700');
       
       appDataCtrl = $scope;
+      $scope.app.date = new Date();
   }]);
 
 var appDataCtrl = null;
+
+String.prototype.trim = function(){
+  var str = this;
+  str = str.replace(/^\s+|\s+$/g, '');
+  return str;
+}
 
 String.prototype.toSlug = function(){
   var str = this;

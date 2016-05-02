@@ -8,6 +8,7 @@ import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.MobileDeviceRepository;
 import co.xarx.trix.services.notification.MobileNotificationSender;
 import co.xarx.trix.services.notification.NotificationService;
+import co.xarx.trix.util.Constants;
 import com.mysema.commons.lang.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,7 +44,7 @@ public class MobileService {
 		this.androidNS = androidNS;
 	}
 
-	public Collection<String> getDeviceCodes(List<MobileDevice> mobileDevices, MobileDevice.Type type) {
+	public Collection<String> getDeviceCodes(List<MobileDevice> mobileDevices, Constants.MobilePlatform type) {
 		Set<String> deviceCodes = new HashSet<>();
 		mobileDevices.stream().forEach(device -> {
 			if (type.equals(device.type)) {
@@ -91,7 +92,7 @@ public class MobileService {
 		return notifications;
 	}
 
-	public void updateDevice(Person person, String deviceCode, Double lat, Double lng, MobileDevice.Type type) {
+	public void updateDevice(Person person, String deviceCode, Double lat, Double lng, Constants.MobilePlatform type) {
 		Assert.hasText(deviceCode, "Device code must not be empty");
 
 		MobileDevice device = mobileDeviceRepository.findOne(QMobileDevice.mobileDevice.deviceCode.eq(deviceCode));
@@ -102,7 +103,7 @@ public class MobileService {
 	}
 
 	public MobileDevice getMobileDevice(Person person, String deviceCode,
-										Double lat, Double lng, MobileDevice.Type type, MobileDevice device) {
+										Double lat, Double lng, Constants.MobilePlatform type, MobileDevice device) {
 		if (person != null && person.id == 0) {
 			person = null;
 		}

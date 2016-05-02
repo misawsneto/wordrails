@@ -10,18 +10,19 @@
       <div class="vbox p-t-lg p-r-xxl p-l-xxl">
       
         <div class="search-with-filter m-r-sm m-l-sm p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
-          <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
+        	<form ng-submit="doSearch()">
+          	<input placeholder="{{'titles.SEARCH' | translate }}" ng-model="search" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
+        	</form>
         </div>
         <!-- /search -->
         <div class="row-row">
           <div class="cell">
             <div class="cell-inner p-r-sm p-l-sm">
-              <div class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z2 " style="overflow: auto;
-    max-height: 100%;">
+              <div id="search-results" class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z2 " style="overflow: auto; max-height: 100%;">
     			<!-- search results -->
-                <div class="min-h-400">
-                  <div class="table-responsive o-visible text-base">
-										<table class="table b-t b-light">
+                <div class="h-full">
+                  <div class="table-responsive o-visible text-base" infinite-scroll="paginate()" infinite-scroll-container="'#search-results'">
+										<table id="users-table" class="table b-t b-light" style="margin-bottom: 80px">
 											<thead>
 												<tr>
 													<th style="width:15px;">
@@ -29,26 +30,26 @@
 														</md-checkbox>
 													</th>
 													<th>usuários</th>
-													<th class="text-center">último login</th>
-													<th style="max-width:115px;" class="text-center">
+													<th style="min-width:170px;" class="text-center display-t-c v-m no-padding">último login</th>
+													<th style="min-width:110px;" class="text-center display-t-c v-m no-padding">
 														ativar/desativar
 													</th>
-													<th style="max-width:115px;" class="text-center">
+													<th style="min-width:100px;" class="text-center display-t-c v-m no-padding">
 														administrador
 													</th>
 													<th style="width:30px;"></th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr ng-repeat="person in persons" class="b-l-3x b-l-s b-c-t" ng-click="activatePerson(person); loadPerson(person);" ng-style="person.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" ng-class="{'b-l-primary': isActivePerson(person)}">
-													<td>
-														<md-checkbox aria-label="nothing" class="no-margin p-t-sm" ng-if="person.id != app.person.id"
+												<tr ng-repeat="person in persons" class="b-l-3x b-l-s b-c-t" 	ng-style="person.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" ng-class="{'b-l-primary': isActivePerson(person)}">
+													<td class="display-t-c v-m">
+														<md-checkbox aria-label="nothing" class="no-margin" ng-if="person.id != app.person.id"
 														 ng-model="person.selected" ng-true-value="true" ng-false-value="false" ng-click="app.stopPropagation($event)">
 														</md-checkbox>
 													</td>
-													<td class="clearfix">
+													<td class="display-t-c v-m clearfix">
 							              <span class="pull-left thumb-sm m-r">
-															<div ng-style="app.hasProfilePicture(person) ? {{person.id | getImagesPerson:'small':'PROFILE_PICTURE':true}} : null" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(person)}">
+															<div ng-style="app.getUserImage(person, 'small', 'PROFILE_PICTURE', true)" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(person)}">
 																<i ng-if="!app.hasProfilePicture(person)" style="line-height: 36px;" class="mdi2-account i-24"></i>
 															</div>
 							              </span>
@@ -57,23 +58,33 @@
 								                <div class="text-muted clear text-ellipsis">{{person.username}} | {{person.email}}</div>
 								              </span>
 													</td>
-													<td class="text-center" ng-if="!person.lastLogin"> - </td>
-													<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
-													<td class="text-center">
+													<td class="display-t-c v-m text-center" ng-if="!person.lastLogin"> - </td>
+													<td class="display-t-c v-m text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
+													<td class="display-t-c v-m text-center">
 														<div ng-if="person.id != app.person.id" class="hidden-sm" ng-click="app.stopPropagation($event)">
-														 	<md-switch class="p-t-sm no-margin" ng-change="app.enableDisablePerson(person)" ng-model="person.enabled" ng-true-value="true" ng-false-value="false">
+														 	<md-switch class="no-margin" ng-change="app.enableDisablePerson(person)" ng-model="person.enabled" ng-true-value="true" ng-false-value="false">
 								            	</md-switch>
 														</div>
 													</td>
-													<td class="text-center">
-														<md-checkbox aria-label="nothing" class="p-t-sm" ng-if="person.id != app.person.id" 
+													<td class="display-t-c v-m text-center">
+														<md-checkbox aria-label="nothing" class="no-margin" ng-if="person.id != app.person.id" 
 														 ng-model="person.admin" ng-click="app.stopPropagation($event)">
 														</md-checkbox>
 													</td>
-													<td>
-														<div ng-if="person.id != app.person.id" class="p-t-sm dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-															<a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-navigation-more-vert mdi" dropdown-toggle>
-															</a>
+													<td class="display-t-c v-m">
+														<div ng-if="person.id != app.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
+															<!-- <a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-navigation-more-vert mdi" dropdown-toggle>
+															</a> -->
+															<ul class="list-inline no-margin">
+								                <li class="dropdown">
+								                  <a href data-toggle="dropdown" class="dropdown-toggle r-50 i-24 mdi-navigation-more-vert mdi" dropdown-toggle>
+																	</a>
+								                  <ul class="dropdown-menu dropdown-menu-scale pull-right pull-up top text-color">
+								                    <li><a ng-click="changePasswordDialog($event, person)">{{'settings.users.REDIFINE_PASSWORD' | translate}}</a></li>
+								                    <li><a href ng-click="showEditProfile($event, person);">{{'settings.users.EDIT_PROFILE' | translate}}</a></li>
+								                  </ul>
+								                </li>
+								              </ul>
 															<!-- dropdown -->
 															<ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
 																<li > <a href> Reconfigurar a senha </a> </li>
@@ -89,6 +100,18 @@
 									</div> 
                 </div>
               </div>
+              <div ng-if="personsCount && persons" class="md-whiteframe-z1 text-sm md-background-hue-1 background pos-abt bottom-0 z-index-5" style="width: calc(100% - 16px)">
+              	<md-divider></md-divider>
+              	<div class="p-sm font-code">
+                	{{'titles.TOTAL' | translate}}: {{personsCount}} 
+                	<span>
+                		| {{'titles.SHOWING' | translate}}: {{persons.length}}
+              		</span>
+                	<span ng-if="getSelectedPersonIds().length > 0" >
+                		| {{'titles.SELECTED' | translate}}: {{getSelectedPersonIds().length}}
+              		</span>
+              	</div>
+               </div>
               <!-- /search results -->
             </div>
           </div>
@@ -98,33 +121,6 @@
   </div>
 </div>
 
-<!-- <md-sidenav class="md-background-hue-1 w-xl background md-sidenav-right md-whiteframe-z2 theming" md-component-id="advanced-search"> -->
-<script type="text/ng-template" id="advanced-search-popover.html">
-    <!-- primary -->
-  <div id="advanced-search-popover" class="m-h-auto md-background-default background p w-400 default-bg" style="margin-left: -106px;">
-    <!-- <time-date-picker orientation="true" class="m-h-auto" ng-model="dateValue"></time-date-picker> -->
-    <md-content>
-      <md-input-container style="width: 140px" class="no-margin m-b-sm">
-        <label translate="titles.START_DATE">Data inicial</label>
-        <input type="date" mdp-date-picker ng-model="currentDate1" />
-      </md-input-container>
-      <md-input-container style="width: 140px" class="no-margin m-b-sm">
-        <label translate="titles.START_TIME">Hora inicial</label>
-        <input type="time" mdp-time-picker ng-model="currentTime1" />
-      </md-input-container>
-      <!-- -->
-      <md-input-container style="width: 140px" class="no-margin m-b-sm">
-        <label translate="titles.END_DATE">Data final</label>
-        <input type="date" mdp-date-picker ng-model="currentDate2" />
-      </md-input-container>
-      <md-input-container style="width: 140px" class="no-margin m-b-sm">
-        <label translate="titles.END_TIME">Hora final</label>
-        <input type="time" mdp-time-picker ng-model="currentTime2" />
-      </md-input-container>
-    <!-- -->
-    </md-content>
-  </div>
-</script>
   <!-- /background -->
 <!-- </md-sidenav> -->
   
@@ -133,42 +129,301 @@
     <i class="mdi-editor-mode-edit i-24"></i>
   </md-button> -->
 
-	<md-fab-speed-dial md-open="openImageOptions" md-direction="up" class="md-scale pos-fix right-0 bottom-0 m-r-lg m-b-md">
+	<md-fab-speed-dial md-direction="up" class="md-scale pos-fix right-0 bottom-0 m-r-lg m-b-md">
 	  <md-fab-trigger>
 	    <md-button aria-label="Add..." class="md-fab md-accent">
 	    	<i class="mdi mdi2-menu i-24"></i>
 	    </md-button>
 	  </md-fab-trigger>
 	  <md-fab-actions>
-	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
+	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showAddUserDialog($event)">
 	    	<md-tooltip md-direction="left">
-	      	{{'settings.post.TOGGLE_LANDSCAPE' | translate}}
+	      	{{'settings.users.ADD_USERS' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi i-20 mdi2-plus text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="showImageCropDialog()">
+	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'enablePersons')">
 	    	<md-tooltip md-direction="left">
-	      	{{'settings.post.CROP_IMAGE' | translate}}
+	      	{{'settings.users.ENABLE_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-account-check i-20 text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="showImageCropDialog()">
+	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'disablePersons')">
 	    	<md-tooltip md-direction="left">
-	      	{{'settings.post.CROP_IMAGE' | translate}}
+	      	{{'settings.users.DISABLE_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-account-off i-20 text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showImageFocuspointDialog();">
+	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" >
 	    	<md-tooltip md-direction="left">
-	      	{{'settings.post.FOUCUS_POINT' | translate}}
+	      	{{'settings.users.PERMISSIONS_OF_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-key-variant i-20 text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="removeFeaturedImage()">
+	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showInviteUserDialog($event);">
 	    	<md-tooltip md-direction="left">
-	      	{{'settings.post.REMOVE_FEATURED_IMAGE' | translate}}
+	      	{{'settings.users.INVITE_USERS' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-email i-20 text-dark"></i>
 	    </md-button>
 	  </md-fab-actions>
 	</md-fab-speed-dial>
+
+
+<script type="text/ng-template" id="edit-person-dialog.html">
+  <md-dialog-content layout="row" layout-wrap>
+    <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center" layout="column">
+      <div class="w-lg">
+
+        <div class="text-center p w-full" translate="titles.EDIT_PROFILE"></div>
+
+        <div class="text-center p p-t-lg w-full m-t-lg">
+          <!-- <i class="mdi mdi2-account text-4x"></i> -->
+          <div class="md-whiteframe-z1 m-t m-l user-avatar rounded w-96 bg-white inline pos-rlt md-primary-default background text-center bg-cover" ng-style="app.getBackgroundImage(editingPerson, 'medium')" bstyle="{'background-image': 'url(  {{editingPerson | userImage: 'medium'}} )'}">
+            <i ng-if="!editingPerson.imageHash" class="mdi2-account i-60" style="top: 16%;position: relative;"></i>
+            <!-- image profile upload -->
+            <div class="profile-image-button rounded o-f-h w-96 text-center pos-abt top-0" style="background-color: rgba(0,0,0,0.7)">
+              <i class="mdi2-pencil i-48 text-white image-edit" style="opacity: 0.92; position: relative; top: 24%"></i>
+              <input class="image-upload" style="height: 96px;" type="file" nv-file-select="" uploader="personImageUploader" name="contents" accept="image/*">
+            </div>
+            <!-- /image profile upload -->
+          </div>
+        </div>
+
+        <div class="pos-abt bottom-0 text-center w-full p-t p-b">
+          <md-button ng-click="cancel()" class="m-0">
+            {{'titles.CANCEL' | translate}}
+          </md-button>
+          <md-button ng-click="saveProfile(editingPerson)" ng-disabled="disabled" class="m-0">
+            {{'titles.SAVE' | translate}}
+          </md-button>
+        </div>
+      </div>
+    </md-toolbar>
+    <div class="p w-x col-400 scrollable md-background-hue-1 background">
+        <div class="pos-rlt p">
+        	<div ng-if="personImageUploader" ng-style="{'background-image': 'url(  {{editingPerson | coverImage: 'medium'}} )'}" style="margin: -32px -32px 32px -32px" class="hidden-folded bg-cover m-b-md md-whiteframe-z1">
+	          <div class="m-b-xxl p-lg"></div>
+	          <div class="p-v-sm p-h black-grad m-t text-white">
+	            <div class="block" style="opacity:0.92">
+	              <span class="block font-bold">{{editingPerson.name}}</span>
+	              <span class="text-sm">{{editingPerson.email}}</span>
+	            </div>
+	          </div>
+	        </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.NAME' | translate}}</label>
+            <input type="text" ng-model="editingPerson.name" md-autofocus>
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.USERNAME' | translate}}</label>
+            <input type="text" ng-model="editingPerson.username" >
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.EMAIL' | translate}}</label>
+            <input type="text" ng-model="editingPerson.email" >
+          </md-input-container>
+          </div>
+          <div class="">
+          <!-- <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.PASSWORD' | translate}} ({{'titles.OPTIONAL' | translate}})</label>
+            <input type="password" ng-model="editingPerson.password" >
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0" ng-class="{'animated fadeIn': editingPerson.password, 'hide': !editingPerson.password}">
+            <label for="testInput">{{'settings.profile.CONFIRM_PASSWORD' | translate}}</label>
+            <input type="password" ng-model="editingPerson.passwordConfirm" >
+          </md-input-container> -->
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.BIOGRAPHY' | translate}}</label>
+            <textarea type="text" columns="1" ng-model="editingPerson.bio" ></textarea>
+          </md-input-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="add-profile-dialog.html">
+  <md-dialog-content layout="row" layout-wrap>
+    <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center" layout="column">
+      <div class="w-lg">
+
+        <div class="text-center p w-full" translate="titles.ADD_PERSON"></div>
+
+        <div class="text-center p p-t-lg w-full m-t-lg">
+          <i class="mdi mdi2-account text-4x"></i>
+        </div>
+
+        <div class="pos-abt bottom-0 text-center w-full p-t p-b">
+          <md-button ng-click="cancel()" class="m-0">
+            {{'titles.CANCEL' | translate}}
+          </md-button>
+          <md-button ng-click="createPerson(addingPerson)" ng-disabled="disabled" class="m-0">
+            {{'titles.SAVE' | translate}}
+          </md-button>
+        </div>
+      </div>
+    </md-toolbar>
+    <div class="p w-x col-400 scrollable md-background-hue-1 background">
+        <div class="pos-rlt p">
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.NAME' | translate}}</label>
+            <input type="text" id="testInput" ng-model="addingPerson.name" md-autofocus>
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.USERNAME' | translate}}</label>
+            <input type="text" id="testInput" ng-model="addingPerson.username" >
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.EMAIL' | translate}}</label>
+            <input type="text" id="testInput" ng-model="addingPerson.email" >
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.PASSWORD' | translate}}</label>
+            <input type="password" id="testInput" ng-model="addingPerson.password" >
+            <small class="text-xs">{{'settings.users.OPTIONAL_PASSWORD' | translate}}</small>
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.CONFIRM_PASSWORD' | translate}}</label>
+            <input type="password" id="testInput" ng-model="addingPerson.passwordConfirm" >
+          </md-input-container>
+          </div>
+          <div class="">
+          <md-input-container class="w-xxl m-b-0">
+            <label for="testInput">{{'settings.profile.BIOGRAPHY' | translate}}</label>
+            <textarea type="text" id="testInput" columns="1" ng-model="addingPerson.bio"></textarea>
+          </md-input-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="bulk_change_access_dialog.html">
+	<md-dialog aria-label="change action">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+        <div ng-if="enableOrDisableOption === 'enablePersons'" class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{'settings.users.ENABLE_ALL_SELECTED_MSG' | translate}}?
+        </div>
+
+        <div ng-if="enableOrDisableOption === 'disablePersons'" class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{'settings.users.DISABLE_ALL_SELECTED_MSG' | translate}}?
+        </div>
+
+        <div class="text-center">
+          <md-button ng-if="enableOrDisableOption === 'enablePersons'" ng-click="enablePersons(); disabled = true;" ng-disabled="disabled">
+            {{'titles.YES' | translate}}
+          </md-button>
+          <md-button ng-if="enableOrDisableOption === 'disablePersons'" ng-click="disablePersons(); disabled = true;" ng-disabled="disabled">
+            {{'titles.YES' | translate}}
+          </md-button>
+          <md-button ng-click="cancel()">
+            {{'titles.NO' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>
+
+<script type="text/ng-template" id="change_password_dialog.html">
+	<md-dialog aria-label="change action">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+
+        <div class="md-dialog-content-body w-xxl p m-b">
+          {{'settings.users.SET_PASSWORD_MSG' | translate}}
+        </div>
+
+        <div class="p-t p-h">
+          <md-input-container class="no-margin w-full">
+            <label>{{'settings.profile.PASSWORD' | translate}}</label>
+            <input type="password" ng-model="newPassword"></input>
+          </md-input-container>
+        </div>
+
+        <div class="p-h">
+          <md-input-container class="no-margin w-full">
+            <label>{{'settings.profile.CONFIRM_PASSWORD' | translate}}</label>
+            <input type="password" ng-model="newPasswordConfirm"></input>
+          </md-input-container>
+        </div>
+
+        <div class="text-center">
+          <md-button ng-click="changePassword();" ng-disabled="disabled">
+            {{'titles.CONFIRM' | translate}}
+          </md-button>
+          <md-button ng-click="cancel()">
+            {{'titles.CANCEL' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>
+
+<script type="text/ng-template" id="no-person-selected-dialog.html">
+	<md-dialog aria-label="change action">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+
+        <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{'settings.users.NO_PERSON_SELETED' | translate}}.
+        </div>
+
+        <div class="text-center">
+          <md-button ng-click="cancel()">
+            {{'titles.CANCEL' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>
+
+<script type="text/ng-template" id="invitation-dialog.html">
+  <md-dialog aria-label="change action">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs w-600" id="email-template">
+        <div class="p-h pos-rlt">
+          <div class="m-b">
+            <md-chips ng-model="invitations" placeholder="Emails" secondary-placeholder="+Email" readonly="false"></md-chips>
+          </div>
+          <div class="m-b">
+            <textarea id="texteditor" froala="froalaOptions" class="md-whiteframe-z1" ng-model="email.body"></textarea>
+          </div>
+        </div>
+        <div class="text-right p-b-xs">
+          <div class="p-h p-b-xs"><md-divider></md-divider></div>
+          <md-button class="md-raised md-primary p-h md-whiteframe-z2" >
+            <i class="icon mdi2-send i-14 m-r-sm"></i>{{'titles.SEND' | translate}}
+          </md-button>
+          <md-button ng-click="cancel()">
+            {{'titles.CANCEL' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>

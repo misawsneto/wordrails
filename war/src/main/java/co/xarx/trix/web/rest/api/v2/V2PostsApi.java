@@ -1,5 +1,7 @@
 package co.xarx.trix.web.rest.api.v2;
 
+import co.xarx.trix.api.ContentResponse;
+import co.xarx.trix.api.PostView;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -27,4 +29,8 @@ public interface V2PostsApi {
 						 @QueryParam("size") @DefaultValue("10") Integer size,
 						 @QueryParam("order") List<String> orders,
 						 @QueryParam("embed") List<String> embeds);
+
+	@GET
+	@Path("/findPostsByIds")
+	ContentResponse<List<PostView>> findPostsByIds (@QueryParam("ids") List<Integer> ids);
 }

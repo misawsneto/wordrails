@@ -2,25 +2,44 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $interval, $mdSidenav, $translate, $filter, $localStorage, ngJcropConfig){
 
   // --- profile settings ----------
-	$scope.showEditProfile = function(ev){
-  	$scope.editingPerson = angular.copy($scope.app.person);
-  	$mdSidenav('edit-profile').toggle();
-  }
+	// $scope.showEditProfile = function(ev){
+ //  	$scope.editingPerson = angular.copy($scope.app.person);
+ //  	$mdSidenav('edit-profile').toggle();
+ //  }
 
-  $scope.cancelEditProfile = function(){
-  	$scope.editingPerson = angular.copy($scope.app.person);
-  	$mdSidenav('edit-profile').close()
+ //  $scope.cancelEditProfile = function(){
+ //  	$scope.editingPerson = angular.copy($scope.app.person);
+ //  	$mdSidenav('edit-profile').close()
+ //  }
+
+    $scope.showEditProfile = function(event){
+      // show term alert
+      $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'edit-profile-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
   }
 
 	// -------------------  ---------------
 
-	$interval(function(){
-    if($state.includes('app.profile')){
-      var sidenav = $mdSidenav('edit-profile')
-      if(sidenav && !sidenav.isOpen())
-        $scope.editingPerson = angular.copy($scope.app.person);
-    }	
-   }, 500);
+	// $interval(function(){
+ //    if($state.includes('app.profile')){
+ //      var sidenav = $mdSidenav('edit-profile')
+ //      if(sidenav && !sidenav.isOpen())
+ //        $scope.editingPerson = angular.copy($scope.app.person);
+ //    }	
+ //   }, 500);
 
   $scope.editingPerson = angular.copy($scope.app.person);
 
@@ -48,6 +67,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
   		$scope.person = $scope.app.person = $scope.editingPerson;
 			$scope.app.showSuccessToast('Alterações realizadas com sucesso')
 			$scope.editingPerson = angular.copy($scope.app.person);
+      $mdDialog.cancel();
   	});
   }
 
@@ -115,28 +135,28 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
       
     $scope.$watch('settings.tab', function(){
       if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){
-        trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, 'DRAFT', $scope.app.publicationsCtrl.page, 10).success(function(response){
-          $scope.drafts = response.posts;
-          $scope.firstLoad = true;
-        })
+        // trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, 'DRAFT', $scope.app.publicationsCtrl.page, 10).success(function(response){
+        //   $scope.drafts = response.posts;
+        //   $scope.firstLoad = true;
+        // })
       }
       if(/*$state.params.type == "publications"*/ $scope.settings.tab == "publications"){
-        trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, 'PUBLISHED', $scope.app.publicationsCtrl.page, 10).success(function(response){
-          $scope.publications = response.posts;
-          $scope.firstLoad = true;
-        })
+        // trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, 'PUBLISHED', $scope.app.publicationsCtrl.page, 10).success(function(response){
+        //   $scope.publications = response.posts;
+        //   $scope.firstLoad = true;
+        // })
       }
       if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "scheduled"){
-        trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, 'SCHEDULED', $scope.app.publicationsCtrl.page, 10).success(function(response){
-          $scope.scheduleds = response.posts;
-          $scope.firstLoad = true;
-        })
+        // trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, 'SCHEDULED', $scope.app.publicationsCtrl.page, 10).success(function(response){
+        //   $scope.scheduleds = response.posts;
+        //   $scope.firstLoad = true;
+        // })
       }
       if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "trash"){
-        trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, 'TRASH', $scope.app.publicationsCtrl.page, 10).success(function(response){
-          $scope.scheduleds = response.posts;
-          $scope.firstLoad = true;
-        })
+        // trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, 'TRASH', $scope.app.publicationsCtrl.page, 10).success(function(response){
+        //   $scope.scheduleds = response.posts;
+        //   $scope.firstLoad = true;
+        // })
       }
     });
 

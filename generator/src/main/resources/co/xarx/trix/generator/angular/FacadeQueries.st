@@ -1,6 +1,6 @@
 FacadeQueries(entity, query) ::=
 
-<<
+<</*-------------------------- Queries -----------------------------------------------*/
 if (this.$query.name$) {
 	window.console && console.log("$query.name$");
 }

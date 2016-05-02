@@ -84,10 +84,10 @@
 	      	{{'settings.post.POST_DATE_DESC' | translate}}
 	      </div>
 	      <div class="pos-rlt">
-      		<mdp-date-picker mdp-open-on-click class="w-full" ng-model="postDate"></mdp-date-picker>
+      		<mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.POST_DATE' | translate}}" ng-model="postDate"></mdp-date-picker>
 	      </div>
 	      <div class="pos-rlt">
-        	<mdp-time-picker mdp-open-on-click class="w-full" ng-model="postDate"></mdp-date-picker>
+        	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.POST_TIME' | translate}}" ng-model="postDate"></mdp-date-picker>
         </div>
         <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
 					Salvar
@@ -114,14 +114,12 @@
 	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
 	      	{{'settings.post.SCHEDULED_DATE_DESC' | translate}}
 	      </div>
-      	<md-input-container class="no-margin m-b-sm w-full">
-          <label translate="settings.post.SCHEDULED_DATE">Data inicial</label>
-          <input type="date" mdp-date-picker ng-model="postScheduleDate" ng-change="changeScheduleDate(postScheduleDate);" />
-        </md-input-container>
-        <md-input-container class="no-margin m-b-sm w-full">
-          <label translate="settings.post.SCHEDULED_TIME">Hora inicial</label>
-          <input type="time" mdp-time-picker ng-model="postScheduleDate" ng-change="changeScheduleTime(postScheduleDate);" />
-        </md-input-container>
+      	<div class="pos-rlt">
+      		<mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.SCHEDULED_DATE' | translate}}" ng-model="postScheduleDate"></mdp-date-picker>
+	      </div>
+	      <div class="pos-rlt">
+        	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.SCHEDULED_TIME' | translate}}" ng-model="postScheduleDate"></mdp-date-picker>
+        </div>
         <md-button class="pull-right font-bold no-margin" translate="titles.SAVE" ng-click="showScheduleTime();">
 					Salvar
 				</md-button>
@@ -147,14 +145,20 @@
 	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
 	      	{{'settings.post.DELETE_DATE_DESC' | translate}}
 	      </div>
-      	<md-input-container class="no-margin m-b-sm w-full">
+  	<!-- <md-input-container class="no-margin m-b-sm w-full">
           <label translate="settings.post.DELETE_DATE">Data inicial</label>
           <input type="date" mdp-date-picker ng-model="postDeleteDate" ng-change="changeDeleteDate();"/>
         </md-input-container>
         <md-input-container class="no-margin m-b-sm w-full">
           <label translate="settings.post.DELETE_TIME">Hora inicial</label>
           <input type="time" mdp-time-picker ng-model="postDeleteDate" ng-change="changeDeleteDate();"/>
-        </md-input-container>
+        </md-input-container> -->
+        <div class="pos-rlt">
+      		<mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.DELETE_DATE' | translate}}" ng-model="postDeleteDate"></mdp-date-picker>
+	      </div>
+	      <div class="pos-rlt">
+        	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.DELETE_TIME' | translate}}" ng-model="postDeleteDate"></mdp-date-picker>
+        </div>
         <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
 					Salvar
 				</md-button>
@@ -361,36 +365,106 @@
 							</div>
 
 							<!-- main content -->
-							<div class="block-800 m-auto p-r p-l" ng-class="{'animated zoomIn': zoomActive}">
+							<div class="block-800 m-auto p-r p-l" style="margin-top: 32px;" ng-class="{'animated zoomIn': zoomActive}">
 								<!-- media buttons -->
-								<div class="media-speed-dial p" ng-if="showFeaturedMediaSelector()">
+
+								<!-- <div class="media-speed-dial p" ng-if="showFeaturedMediaSelector()">
 									<div class="lock-size" layout="row" layout-align="center center">
-							      <div aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm" ng-click="loadImageConfigFromStorage();">
+															      <div aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm" ng-click="loadImageConfigFromStorage();">
 											<input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
-						      		<md-tooltip md-direction="top">
+														      		<md-tooltip md-direction="top">
 								      	{{'settings.post.INSERT_FEATURED_IMAGE' | translate}}
 								  		</md-tooltip>
 									    <i class="mdi mdi2-image-area i-20" style="vertical-align: 20%"></i>
 									  </div>
-
-							      <div ng-click="showVideoDialog()" aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm">
+								
+															      <div ng-click="showVideoDialog()" aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm">
 									  	<md-tooltip md-direction="top">
 								      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
 								  		</md-tooltip>
 									    <i class="mdi mdi2-video i-20" style="vertical-align: 20%"></i>
 									  </div>
-
+								
 									  <div ng-click="showAudioDialog($event)" aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm">
 									  	<md-tooltip md-direction="top">
 								      	{{'settings.post.INSERT_FEATURED_AUDIO' | translate}}
 								  		</md-tooltip>
 									    <i class="mdi mdi2-headphones i-20" style="vertical-align: 20%"></i>
 									  </div>
-							    </div>
+															    </div>
 								</div>
 								<!-- /media buttons -->
 								<textarea rows="1" ng-if="useHeading" msd-elastic ng-model="app.editingPost.topper" placeholder="{{'titles.HEADING' | translate }}" class="w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
 				      	</textarea>
+
+								<!-- ng-mouseenter="openPlusOptions=true" ng-mouseleave="openPlusOptions=false" -->
+				      	<md-fab-speed-dial md-open="openPlusOptions"  md-direction="down" class="md-scale md-hover-full m-b-sm pull-right pos-abt z-index-1" style="margin-left: -80px;">
+								  <md-fab-trigger>
+								    <md-button aria-label="Add..." class="md-fab md-accent md-mini">
+								    	<i class="mdi mdi2-plus i-20"></i>
+								    </md-button>
+								  </md-fab-trigger>
+								  <md-fab-actions>
+
+							      <div aria-label="menu" md-ink-ripple ng-if="showFeaturedMediaSelector()" class="md-background-hue-3 background md-btn m-auto md-fab md-raised md-mini md-fab" ng-click="loadImageConfigFromStorage();" style="margin-bottom:2px;margin-left:8px;margin-right:8px;margin-top:10px;">
+											<input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
+							      		<md-tooltip md-direction="right">
+									      	{{'settings.post.INSERT_FEATURED_IMAGE' | translate}}
+									  		</md-tooltip>
+									    	<i class="mdi mdi2-image-area i-20" style="vertical-align: 20%"></i>
+									  </div>
+
+									  <md-button ng-if="!showFeaturedMediaSelector()" ng-disabled="!showFeaturedMediaSelector()" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
+								    	<md-tooltip md-direction="right">
+								      	{{'settings.post.INSERT_FEATURED_IMAGE' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi i-20 mdi2-image-area text-dark"></i>
+								    </md-button>
+
+								    <div aria-label="menu" md-ink-ripple ng-if="showFeaturedMediaSelector()" class="md-background-hue-3 background md-btn m-auto md-fab md-raised md-mini md-fab" ng-click="showVideoDialog($event)" style="margin-bottom:2px;margin-left:8px;margin-right:8px;margin-top:10px;">
+							      		<md-tooltip md-direction="right">
+									      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
+									  		</md-tooltip>
+									    	<i class="mdi mdi2-video i-20" style="vertical-align: 20%"></i>
+									  </div>
+
+									  <md-button ng-if="!showFeaturedMediaSelector()" ng-disabled="!showFeaturedMediaSelector()" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
+								    	<md-tooltip md-direction="right">
+								      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi i-20 mdi2-video text-dark"></i>
+								    </md-button>
+
+								    <div aria-label="menu" md-ink-ripple ng-if="showFeaturedMediaSelector()" class="md-background-hue-3 background md-btn m-auto md-fab md-raised md-mini md-fab" ng-click="showAudioDialog($event)" style="margin-bottom:2px;margin-left:8px;margin-right:8px;margin-top:10px;">
+							      		<md-tooltip md-direction="right">
+									      	{{'settings.post.INSERT_FEATURED_AUDIO' | translate}}
+									  		</md-tooltip>
+									    	<i class="mdi mdi2-headphones i-20" style="vertical-align: 20%"></i>
+									  </div>
+
+									  <md-button ng-if="!showFeaturedMediaSelector()" ng-disabled="!showFeaturedMediaSelector()" aria-label="Add Group" class="md-fab md-raised md-mini md-raised" ng-click="toggleLandscape();">
+								    	<md-tooltip md-direction="right">
+								      	{{'settings.post.INSERT_FEATURED_AUDIO' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi i-20 mdi2-headphones text-dark"></i>
+								    </md-button>
+
+								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="useHeading = !useHeading">
+								    	<md-tooltip md-direction="right">
+								      	{{'settings.post.ACTIVATE_DEACTIVATE_HEADING' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi i-20 text-dark mdi2-format-quote"></i>
+								    </md-button>
+
+								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="useSubtitle = !useSubtitle">
+								    	<md-tooltip md-direction="right">
+								      	{{'settings.post.ACTIVATE_DEACTIVATE_SUBTITLE' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi i-20 text-dark mdi2-format-size"></i>
+								    </md-button>
+								
+								  </md-fab-actions>
+								</md-fab-speed-dial>
 
 				      	<textarea rows="1" msd-elastic ng-model="app.editingPost.title" placeholder="{{'titles.TITLE' | translate }}" class="font-500 h1 w-full ph-dk p-sm r" style="resize: none; background: transparent; border: none;"
 				      	ng-class="{'m-b-sm': (useHeading || useSubtitle), 'm-b': !(useHeading || useSubtitle)}">
@@ -788,3 +862,4 @@
 	  <!-- /audio upload menu -->
 	</md-dialog-content>
 </script>
+
