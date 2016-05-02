@@ -26,6 +26,7 @@
 		"SUBDOMAIN": "Subdomain",
 		"THEMING": "Appearance",
 		"SEARCH": "Search",
+		"CONFIRM": "Confirm",
 		"YES": "Yes",
 		"NO": "No",
 		"BACK": "Back",
@@ -82,7 +83,13 @@
 		"DESCRIPTION": "Description",
 		"UPLOAD": "Upload image",
 		"NEW_USERS": "New users",
-		"LATEST_POSTS": "Latest posts"
+		"LATEST_POSTS": "Latest posts",
+		"OPTIONAL": "optional",
+		"NO_BOOKMARKS": "You do not have bookmarks",
+		"ADD_PERSON": "Create a new user",
+		"TOTAL": "Total",
+		"SHOWING": "Showing",
+		"SELECTED": "Selected"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -180,6 +187,20 @@
 			"FOOTER": "Footer",
 			"HEADER": "Header"
 		},
+		"users": {
+			"ENABLE_ALL_SELECTED": "Enable all selected",
+			"DISABLE_ALL_SELECTED": "Disaple all selected",
+			"PERMISSIONS_OF_ALL_SELECTED": "Change permissions of selected users",
+			"INVITE_USERS": "Invite users",
+			"ADD_USERS": "Invite users",
+			"REDIFINE_PASSWORD": "Redifine password",
+			"EDIT_PROFILE": "Edit profile",
+			"ENABLE_ALL_SELECTED_MSG": "Are you sure you want to enable all selected users",
+			"DISABLE_ALL_SELECTED_MSG": "Are you sure you want to disable all selected users",
+			"NO_PERSON_SELETED": "Select user by enabling the checkbox before performing this action",
+			"SET_PASSWORD": "Change password",
+			"SET_PASSWORD_MSG": "Insert a new password for the user and confirm in order to reset the user's password. The user will reseave an email with the new password."
+		},
 		"post": {
 			"menu":{
 				"INFO": "Post informations",
@@ -194,6 +215,8 @@
 				"PUBLICATION_MSG": "The content will be published when you click Publish.",
 				"AUTO_SAVE_MSG": "Drafts will be saved automatically every minute once the title, content, station and categories are set. All publication versions can be accessed through the \"Publication options\" menu."
 			},
+			"ACTIVATE_DEACTIVATE_HEADING": "Activate/Deactivate heading",
+			"ACTIVATE_DEACTIVATE_SUBTITLE": "Activate/Deactivate subtitle",
 			"DETAILS": "Details",
 			"REVISIONS": "Revisions",
 			"OPTIONS": "Publication options",
@@ -279,7 +302,8 @@
 			"EMAIL": "Email",
 			"PASSWORD": "Password",
 			"CONFIRM_PASSWORD": "Confirm password",
-			"BIOGRAPHY": "Biography"
+			"BIOGRAPHY": "Biography",
+			"PASSWORDS_DONT_MATCH": "The password and confirmation don't match"
 		}
 	},
 	"messages": {

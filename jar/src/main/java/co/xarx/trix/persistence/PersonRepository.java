@@ -21,8 +21,14 @@ public interface PersonRepository extends DatabaseRepository<Person, Integer> {
 	@Cacheable(value = "person", key = "#p0")
 	Person findByUsername(@Param("username") String username);
 
+	Person findByUsernameAndTenantId(@Param("username") String username, @Param("tenantId") String tenantId);
+
 	@RestResource(exported = false)
 	Person findByEmail(@Param("email") String email);
+
+	@RestResource(exported = true)
+	@Query("select p from Person p where username like %:usernameOrEmailOrName% OR email like %:usernameOrEmailOrName% OR name like %:usernameOrEmailOrName%")
+	List<Person> findPersons(@Param("usernameOrEmailOrName") String usernameOrEmail, Pageable pageable);
 
 	@RestResource(exported = false)
 	@Query("select (select count(*) from PostRead pr where pr.post.author.id = p.id), " +

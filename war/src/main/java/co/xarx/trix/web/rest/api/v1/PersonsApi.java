@@ -5,6 +5,7 @@ import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.exception.ConflictException;
+import co.xarx.trix.util.StatsJson;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,14 @@ public interface PersonsApi {
 		public List<StationRole> stationsRole;
 	}
 
+	public static class PersonAuthDto {
+		public Integer id;
+		public String username;
+		public String email;
+		public String password;
+		public String passwordConfirm;
+	}
+
 	@GET
 	@Path("/")
 	@Transactional
@@ -48,6 +57,12 @@ public interface PersonsApi {
 	@Path("/update")
 	@Transactional
 	Response update(Person person);
+
+	@PUT
+	@Path("/authDataUpdate")
+	@Transactional
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	Response updateAuthData(PersonAuthDto person);
 
 	@PUT
 	@Path("/{id}")
@@ -158,5 +173,13 @@ public interface PersonsApi {
 	@GET
 	@Path("/me/stats")
 	@PreAuthorize("isAuthenticated()")
-	StatsData personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException;
+	StatsJson personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException;
+
+	@GET
+	@Path("/search/findPersons")
+	@PreAuthorize("isAuthenticated()")
+	/**
+	 * {@link co.xarx.trix.persistence.PersonRepository#findPersons(String, Pageable)}
+	 */
+	void findPersons() throws IOException;
 }
