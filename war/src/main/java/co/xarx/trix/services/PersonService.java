@@ -69,7 +69,7 @@ public class PersonService {
 		return bookmarkInserted;
 	}
 
-	public void invite(PersonsApi.PersonInvitateDto dto){
+	public void invite(PersonsApi.PersonInviteDto dto){
 		//Todo
 	}
 
@@ -113,6 +113,6 @@ public class PersonService {
 
 		invitationRepository.save(invitation);
 
-		emailService.sendNetworkInvitation(network, invitation, authService.getLoggedPerson());
+		emailService.notifyPersonCreation(network, invitation, authService.getLoggedPerson());
 	}
 }
