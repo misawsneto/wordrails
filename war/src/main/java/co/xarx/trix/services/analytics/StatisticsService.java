@@ -345,10 +345,7 @@ public class StatisticsService {
 	}
 
 	public Interval getInterval(String date, Integer size){
-		Assert.notNull(date, "Invalid date. Expected yyyy-MM-dd");
-		DateTime endDate = dateTimeFormatter.parseDateTime(date);
-
-		return new Interval(endDate.minusDays(size != null ? size : MONTH_INTERVAL), endDate);
+		return getInterval(date != null ? dateTimeFormatter.parseDateTime(date) : new DateTime(), size);
 	}
 
 	public DateTimeFormatter getFormatter(){
