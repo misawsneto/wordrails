@@ -71,6 +71,7 @@
 		"PASSWORD": "Senha",
 		"HELP": "Ajuda",
 		"SEND": "Enviar",
+		"SEND_INVITE": "Enviar convite",
 		"VIDEO": "Vídeo",
 		"AUDIO": "Áudio",
 		"SOCIAL_NETWORK_PROFILES": "Perfis de redes sociais",

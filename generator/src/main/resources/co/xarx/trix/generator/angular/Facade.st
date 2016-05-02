@@ -532,6 +532,10 @@ var trix = angular.module('trix', [])
         return \$http.get(_config.url + "/api/web/" + stationId + "/pages")
     }
 
+    this.getInvitationTemplate = function() {
+        return \$http.get(_config.url + "/api/networks/invitationTemplate")
+    }
+
     this.forceDeleteStation = function(stationId) {
         return \$http.delete(_config.url + "/api/stations/" + stationId + "/force")
     }

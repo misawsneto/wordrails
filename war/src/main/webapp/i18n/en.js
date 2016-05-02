@@ -71,6 +71,7 @@
 		"PASSWORD": "Password",
 		"HELP": "Help",
 		"SEND": "Send",
+		"SEND_INVITE": "Send invite",
 		"VIDEO": "Video",
 		"AUDIO": "Audio",
 		"SOCIAL_NETWORK_PROFILES": "Social network profiles",
