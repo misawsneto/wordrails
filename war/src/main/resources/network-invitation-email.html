@@ -318,30 +318,25 @@
 
                                         <!-- text -->
 
-                                        <tr>
-                                            <td style="font-family: arial, Helvetica, sans-serif;font-size: 14px;color: rgb(102, 102, 102);text-align: left;line-height: 24px;position: relative;border-collapse: collapse;">
-                                                Olá {{name}},
-                                            </td>
-                                        </tr>
-
                                         <!-- text -->
 
                                         <!-- text -->
 
-                                        {{#network.invitationMessage}}
+                                        <!--{{#network.invitationMessage}}-->
+                                        <!--<tr>-->
+                                            <!--<td style="font-family: arial, Helvetica, sans-serif;font-size: 14px;color: rgb(102, 102, 102);text-align: left;line-height: 24px;position: relative;border-collapse: collapse;">-->
+                                                <!--{{{network.invitationMessage}}}-->
+                                            <!--</td>-->
+                                        <!--</tr>-->
+                                        <!--{{/network.invitationMessage}}-->
+                                        <!--{{^network.invitationMessage}}-->
                                         <tr>
                                             <td style="font-family: arial, Helvetica, sans-serif;font-size: 14px;color: rgb(102, 102, 102);text-align: left;line-height: 24px;position: relative;border-collapse: collapse;">
-                                                {{{network.invitationMessage}}}
+                                                <!--{{inviterName}} convidou-lhe para participar da rede <strong class="uc" style="text-transform: uppercase;">{{networkName}}</strong>-->
+																								{{invitationTemplate}}
                                             </td>
                                         </tr>
-                                        {{/network.invitationMessage}}
-                                        {{^network.invitationMessage}}
-                                        <tr>
-                                            <td style="font-family: arial, Helvetica, sans-serif;font-size: 14px;color: rgb(102, 102, 102);text-align: left;line-height: 24px;position: relative;border-collapse: collapse;">
-                                                {{inviterName}} convidou-lhe para participar da rede <strong class="uc" style="text-transform: uppercase;">{{networkName}}</strong>.
-                                            </td>
-                                        </tr>
-                                        {{/network.invitationMessage}}
+                                        <!--{{/network.invitationMessage}}-->
 
 
 
@@ -369,15 +364,20 @@
 
                                         <!-- content -->
 
-                                        <tr>
-                                            <td style="font-family: arial, Helvetica, sans-serif;font-size: 14px;color: rgb(149, 165, 166);text-align: center;line-height: 30px;position: relative;border-collapse: collapse;">
-                                                <!--    Para definir sua senha, clique no botão abaixo: -->
-                                                Para confirmar o convite, por favor, acesse:
-                                            </td>
-                                        </tr>
+                                        <!--<tr>-->
+                                            <!--<td style="font-family: arial, Helvetica, sans-serif;font-size: 14px;color: rgb(149, 165, 166);text-align: center;line-height: 30px;position: relative;border-collapse: collapse;">-->
+                                                <!--&lt;!&ndash;    Para definir sua senha, clique no botão abaixo: &ndash;&gt;-->
+                                                <!--Clique para acessar:-->
+                                            <!--</td>-->
+                                        <!--</tr>-->
                                         <!-- End of content -->
 
                                         <!-- Spacing -->
+
+																				<tr>
+																					<td width="100%" height="20" style="font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;border-collapse: collapse;">
+																					</td>
+																				</tr>
 
                                         <tr>
                                             <td width="100%" height="20" style="font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;border-collapse: collapse;">
@@ -398,9 +398,9 @@
                                                                 <tr>
                                                                     <td style="border-collapse: collapse;">
                                                                         <span style="color: #ffffff; font-weight: 300;">
-                                                                            <a style="color: #ffffff; text-align:center;text-decoration: none;" href="{{invitationUrl}}">
+                                                                            <a style="color: #ffffff; text-align:center;text-decoration: none;" href="{{link}}">
                                                                                 <!-- Defina sua senha -->
-                                                                                {{networkName}}
+                                                                                CLIQUE AQUI
                                                                             </a></span>
                                                                     </td>
                                                                 </tr>
@@ -422,11 +422,11 @@
                                         </tr>
                                         <!-- Spacing -->
 
-                                        <tr>
-                                            <td style="font-family: arial, Helvetica, sans-serif;font-size: 14px;color: rgb(102, 102, 102);text-align: center;line-height: 30px;position: relative;border-collapse: collapse;">
-                                                Para mais informações, entre em contato com o administrador da {{networkName}}: {{inviterName}}, {{inviterEmail}}
-                                            </td>
-                                        </tr>
+                                        <!--<tr>-->
+                                            <!--<td style="font-family: arial, Helvetica, sans-serif;font-size: 14px;color: rgb(102, 102, 102);text-align: center;line-height: 30px;position: relative;border-collapse: collapse;">-->
+                                                <!--Para mais informações, entre em contato com o administrador da {{networkName}}: {{inviterName}}, {{inviterEmail}}-->
+                                            <!--</td>-->
+                                        <!--</tr>-->
 
                                         <tr>
                                             <td width="100%" height="30" style="font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;border-collapse: collapse;">
@@ -434,11 +434,11 @@
                                         </tr>
                                         <!-- Spacing -->
 
-                                        <tr>
-                                            <td style="font-family: arial, Helvetica, sans-serif;font-size: 14px;color: rgb(149, 165, 166);text-align: center;line-height: 30px;position: relative;border-collapse: collapse;">
-                                                <a href="http://xarx.co">TRIX</a> - Nossas histórias em rede móvel, em tempo real!
-                                            </td>
-                                        </tr>
+                                        <!--<tr>-->
+                                            <!--<td style="font-family: arial, Helvetica, sans-serif;font-size: 14px;color: rgb(149, 165, 166);text-align: center;line-height: 30px;position: relative;border-collapse: collapse;">-->
+                                                <!--<a href="http://xarx.co">TRIX</a> - Nossas histórias em rede móvel, em tempo real!-->
+                                            <!--</td>-->
+                                        <!--</tr>-->
 
                                         </tbody>
                                     </table>
@@ -517,46 +517,46 @@
 
 <!-- start of footermenu -->
 
-<table width="100%" bgcolor="#f6f4f5" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" class="emhide" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-    <tbody>
-    <tr>
-        <td style="border-collapse: collapse;">
-            <table width="580" bgcolor="#ffffff" cellpadding="0" cellspacing="0" border="0" align="center" class="devicewidth" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                <tbody>
-                <tr>
-                    <td style="border-collapse: collapse;">
-                        <table width="540" cellpadding="0" cellspacing="0" border="0" align="center" class="devicewidth" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                            <tbody>
-                            <tr>
-                                <td align="center" valign="middle" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;color: rgb(153, 153, 153);text-align: center;line-height: 24px;position: relative;border-collapse: collapse;" class="menu">
-                                    <a style="text-decoration: none; color: #999999;" href="http://xarx.co">Política de privacidade</a>
-                                </td>
-                                <td align="center" valign="middle" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;color: rgb(153, 153, 153);text-align: center;line-height: 24px;position: relative;border-collapse: collapse;" class="menu">
-                                    <a style="text-decoration: none; color: #999999;" href="mailto:help@xarx.co">Suporte</a>
-                                </td>
-                                <td width="20" style="border-collapse: collapse;">
-                                </td>
-                                <td align="center" valign="middle" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;color: rgb(153, 153, 153);text-align: center;line-height: 24px;position: relative;border-collapse: collapse;" class="menu">
-                                    <a style="text-decoration: none; color: #999999;" href="http://xarx.co">Sobre</a>
-                                </td>
-                                <td width="20" style="border-collapse: collapse;">
-                                </td>
-                                <td align="center" valign="middle" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;color: rgb(153, 153, 153);text-align: center;line-height: 24px;position: relative;border-collapse: collapse;" class="menu">
-                                    <a style="text-decoration: none; color: #999999;" href="http://xarx.co/#contact">Contatos</a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <!-- End of Menu -->
+<!--<table width="100%" bgcolor="#f6f4f5" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" class="emhide" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">-->
+    <!--<tbody>-->
+    <!--<tr>-->
+        <!--<td style="border-collapse: collapse;">-->
+            <!--<table width="580" bgcolor="#ffffff" cellpadding="0" cellspacing="0" border="0" align="center" class="devicewidth" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">-->
+                <!--<tbody>-->
+                <!--<tr>-->
+                    <!--<td style="border-collapse: collapse;">-->
+                        <!--<table width="540" cellpadding="0" cellspacing="0" border="0" align="center" class="devicewidth" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">-->
+                            <!--<tbody>-->
+                            <!--<tr>-->
+                                <!--<td align="center" valign="middle" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;color: rgb(153, 153, 153);text-align: center;line-height: 24px;position: relative;border-collapse: collapse;" class="menu">-->
+                                    <!--<a style="text-decoration: none; color: #999999;" href="http://xarx.co">Política de privacidade</a>-->
+                                <!--</td>-->
+                                <!--<td align="center" valign="middle" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;color: rgb(153, 153, 153);text-align: center;line-height: 24px;position: relative;border-collapse: collapse;" class="menu">-->
+                                    <!--<a style="text-decoration: none; color: #999999;" href="mailto:help@xarx.co">Suporte</a>-->
+                                <!--</td>-->
+                                <!--<td width="20" style="border-collapse: collapse;">-->
+                                <!--</td>-->
+                                <!--<td align="center" valign="middle" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;color: rgb(153, 153, 153);text-align: center;line-height: 24px;position: relative;border-collapse: collapse;" class="menu">-->
+                                    <!--<a style="text-decoration: none; color: #999999;" href="http://xarx.co">Sobre</a>-->
+                                <!--</td>-->
+                                <!--<td width="20" style="border-collapse: collapse;">-->
+                                <!--</td>-->
+                                <!--<td align="center" valign="middle" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;color: rgb(153, 153, 153);text-align: center;line-height: 24px;position: relative;border-collapse: collapse;" class="menu">-->
+                                    <!--<a style="text-decoration: none; color: #999999;" href="http://xarx.co/#contact">Contatos</a>-->
+                                <!--</td>-->
+                            <!--</tr>-->
+                            <!--</tbody>-->
+                        <!--</table>-->
+                        <!--&lt;!&ndash; End of Menu &ndash;&gt;-->
 
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </td>
-    </tr>
-    </tbody>
-</table>
+                    <!--</td>-->
+                <!--</tr>-->
+                <!--</tbody>-->
+            <!--</table>-->
+        <!--</td>-->
+    <!--</tr>-->
+    <!--</tbody>-->
+<!--</table>-->
 <!-- end of footermenu -->
 
 <!-- Start of postfooter -->
