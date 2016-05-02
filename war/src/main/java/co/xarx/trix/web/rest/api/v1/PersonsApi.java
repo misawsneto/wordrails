@@ -22,7 +22,7 @@ import java.util.List;
 public interface PersonsApi {
 
 	public static class PersonInvitateDto {
-		String emailTemplate;
+		public String emailTemplate;
 		public List<String> emails;
 	}
 

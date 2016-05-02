@@ -40,6 +40,9 @@ public class Invitation extends BaseEntity {
 	@JoinColumn(name = "person_id")
 	public Person person;
 
+	@Lob
+	public String email;
+
 	public boolean multipleUser = false;
 
 	public boolean active = true;

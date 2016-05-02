@@ -137,4 +137,8 @@ import java.util.Set;
 			log.info(e.getMessage());
 		}
 	}
+
+	public void sendInvitation(Network network, Invitation invitation, Person loggedPerson) {
+
+	}
 }
