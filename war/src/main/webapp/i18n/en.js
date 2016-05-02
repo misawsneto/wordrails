@@ -201,7 +201,9 @@
 			"SET_PASSWORD": "Change password",
 			"SET_PASSWORD_MSG": "Insert a new password for the user and confirm in order to reset the user's password. The user will reseave an email with the new password.",
 			"USERNAME_IN_USE": "Username is already in use. Please use another username and try again.",
-			"EMAIL_IN_USE": "Email is already in use. Please use another email and try again."
+			"EMAIL_IN_USE": "Email is already in use. Please use another email and try again.",
+			"REQUIRED_FIELDS": "Name, username and email are required.",
+			"OPTIONAL_PASSWORD": "Password is optional and if not provided a random password will be generated and sent via email."
 		},
 		"post": {
 			"menu":{
