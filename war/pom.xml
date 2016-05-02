@@ -65,6 +65,35 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.bsc.maven</groupId>
+				<artifactId>maven-processor-plugin</artifactId>
+				<version>2.2.4</version>
+				<configuration>
+					<defaultOutputDirectory>
+						${project.build.directory}/generated-sources
+					</defaultOutputDirectory>
+					<processors>
+						<processor>org.mapstruct.ap.MappingProcessor</processor>
+					</processors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>process</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>process</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.mapstruct</groupId>
+						<artifactId>mapstruct-processor</artifactId>
+						<version>1.0.0.Final</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 		</plugins>
 
 		<pluginManagement>
@@ -442,6 +471,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
@@ -452,6 +482,11 @@
 		<dependency>
 			<groupId>org.jcodec</groupId>
 			<artifactId>jcodec</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-jdk8</artifactId>
 		</dependency>
 
 	</dependencies>

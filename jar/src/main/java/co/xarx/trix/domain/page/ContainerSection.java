@@ -1,10 +1,8 @@
 package co.xarx.trix.domain.page;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,7 +20,6 @@ public class ContainerSection extends AbstractSection {
 
 	private static final long serialVersionUID = 2651202755256597015L;
 
-	@Setter(AccessLevel.NONE)
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "sectioncontainer_children", joinColumns = @JoinColumn(name = "container_id"))
 	@MapKeyJoinColumn(name = "list_index", referencedColumnName = "list_index", nullable = false)

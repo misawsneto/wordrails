@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,17 @@ public class SectionData implements Serializable, Identifiable {
 	private String title;
 	private String type;
 	private String style;
-	private Map<String, String> properties;
+	private Map<String, String> properties = new HashMap<>();
+	private String orientation;
+	private Integer topMargin;
+	private Integer leftMargin;
+	private Integer bottomMargin;
+	private Integer rightMargin;
+	private Integer topPadding;
+	private Integer leftPadding;
+	private Integer bottomPadding;
+	private Integer rightPadding;
+	private Integer orderPosition;
+	private Integer pctSize;
 	private List<BlockData> blocks;
 }

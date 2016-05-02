@@ -1,7 +1,6 @@
 package co.xarx.trix.services.page;
 
-import co.xarx.trix.api.v2.request.SaveSectionsRequest;
-import co.xarx.trix.domain.Post;
+import co.xarx.trix.api.v2.*;
 import co.xarx.trix.domain.page.AbstractSection;
 import co.xarx.trix.domain.page.ContainerSection;
 import co.xarx.trix.domain.page.QueryableListSection;
@@ -10,7 +9,6 @@ import co.xarx.trix.domain.page.query.FixedQuery;
 import co.xarx.trix.domain.page.query.PageableQuery;
 import co.xarx.trix.domain.page.query.statement.AbstractStatement;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
-import lombok.val;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,21 +26,21 @@ public class SectionFactory {
 		this.mapper = mapper;
 	}
 
-	public AbstractSection getSection(SaveSectionsRequest.Section sectionRequest) {
+	public AbstractSection getSection(SectionData sectionRequest) {
 		AbstractSection section = null;
 
 		if(sectionRequest.getType().equals(Section.Type.CONTAINER.toString())) {
-			val sr = (SaveSectionsRequest.ContainerSection) sectionRequest;
+			ContainerSectionData sr = (ContainerSectionData) sectionRequest;
 			ContainerSection containerSection = new ContainerSection();
-			for (SaveSectionsRequest.Section ch : sr.getChildren().values()) {
+			for (SectionData ch : sr.getChildren().values()) {
 				containerSection.addChild(getSection(ch));
 			}
 
 			section = containerSection;
 		} else if (sectionRequest.getType().equals(Section.Type.QUERYABLE.toString())) {
-			val sr = (SaveSectionsRequest.QueryableSection) sectionRequest;
-			val pageableQuery = getPageableQuery(sr.getPageableQuery());
-			val fixedQueries = getFixedQueries(sr.getFixedQueries());
+			QueryableSectionData sr = (QueryableSectionData) sectionRequest;
+			PageableQuery pageableQuery = getPageableQuery(sr.getPageableQuery());
+			List<FixedQuery> fixedQueries = getFixedQueries(sr.getFixedQueries());
 
 			section = new QueryableListSection(sr.getSize(), pageableQuery, fixedQueries);
 		}
@@ -52,7 +50,7 @@ public class SectionFactory {
 		return section;
 	}
 
-	private void setDefaultAttributes(SaveSectionsRequest.Section sr, AbstractSection section) {
+	private void setDefaultAttributes(SectionData sr, AbstractSection section) {
 		if (sr.getStyle() != null) {
 			section.setStyle(Section.Style.valueOf(sr.getStyle().toUpperCase()));
 		}
@@ -63,9 +61,9 @@ public class SectionFactory {
 		section.setRightMargin(sr.getRightMargin());
 	}
 
-	private List<FixedQuery> getFixedQueries(List<SaveSectionsRequest.FixedQuery> queryRequests) {
+	private List<FixedQuery> getFixedQueries(List<FixedQueryData> queryRequests) {
 		List<FixedQuery> result = new ArrayList<>();
-		for (SaveSectionsRequest.FixedQuery queryRequest : queryRequests) {
+		for (FixedQueryData queryRequest : queryRequests) {
 			AbstractStatement statement = getStatement(queryRequest.getStatement());
 			result.add(new FixedQuery(statement, queryRequest.getIndexes()));
 		}
@@ -73,13 +71,13 @@ public class SectionFactory {
 		return result;
 	}
 
-	private PageableQuery getPageableQuery(SaveSectionsRequest.PageableQuery queryRequest) {
+	private PageableQuery getPageableQuery(PageableQueryData queryRequest) {
 		AbstractStatement statement = getStatement(queryRequest.getStatement());
 		return new PageableQuery(statement);
 	}
 
-	private AbstractStatement getStatement(SaveSectionsRequest.Statement statementRequest) {
-		if(statementRequest.getType().equals(Post.class)) {
+	private AbstractStatement getStatement(AbstractStatementData statementRequest) {
+		if(statementRequest instanceof PostStatementData) {
 			return mapper.map(statementRequest, PostStatement.class);
 		}
 

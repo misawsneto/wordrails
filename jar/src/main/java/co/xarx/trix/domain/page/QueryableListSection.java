@@ -20,7 +20,7 @@ import java.util.Map;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Table(name = "sectionqueryablelist")
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
 public class QueryableListSection extends AbstractSection implements QueryableSection {

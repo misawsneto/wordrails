@@ -67,6 +67,7 @@ public abstract class AbstractSection extends BaseEntity implements Section, Ser
 	@Column(name = "value", nullable = false)
 	public Map<String, String> properties;
 
+	@SdkExclude
 	public Orientation orientation = Orientation.HORIZONTAL;
 
 	@Min(value = 1)

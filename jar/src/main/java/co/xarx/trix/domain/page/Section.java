@@ -9,30 +9,15 @@ import java.util.Map;
 public interface Section extends Identifiable {
 
 	enum Style {
-		CARROUSEL, VERTICAL_LIST, HORIZONTAL_LIST, GRID;
-
-		@Override
-		public String toString() {
-			return super.toString().toLowerCase();
-		}
+		CARROUSEL, VERTICAL_LIST, HORIZONTAL_LIST, GRID
 	}
 
 	enum Orientation {
-		HORIZONTAL, VERTICAL;
-
-		@Override
-		public String toString() {
-			return super.toString().toLowerCase();
-		}
+		HORIZONTAL, VERTICAL
 	}
 
 	enum Type {
-		QUERYABLE, CONTAINER, LINK;
-
-		@Override
-		public String toString() {
-			return super.toString().toLowerCase();
-		}
+		QUERYABLE, CONTAINER, LINK
 	}
 
 	Map<String, String> getProperties();
