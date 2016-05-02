@@ -112,15 +112,18 @@ import java.util.Set;
 		scopes.put("networkName", network.name);
 		scopes.put("primaryColor", "rgb(" + c1.getRed() + ", " + c1.getGreen() + ", " + c1.getBlue() + " )");
 		scopes.put("secondaryColor", "rgb(" + c2.getRed() + ", " + c2.getGreen() + ", " + c2.getBlue() + " )");
-		scopes.put("link", "http://" + network.getRealDomain());
-		scopes.put("invitationUrl", invitation.getInvitationUrl());
-		scopes.put("networkSubdomain", network.getTenantId());
 		scopes.put("network", network);
-		scopes.put("hash", invitation.getHash());
 		scopes.put("inviterName", inviter.getName());
 		scopes.put("inviterEmail", inviter.getEmail());
 		scopes.put("networkNameColor", networkNameColor);
-		if(invitation.sendPlainPassword) scopes.put("plainPassword", invitation.person.user.password);
+
+		if(invitation.person != null && invitation.person.user != null) scopes.put("plainPassword", invitation.person.user.password);
+
+		if(invitation.sendPlainPassword){
+			scopes.put("link", "http://" + network.getRealDomain());
+		} else {
+			scopes.put("link", invitation.getInvitationUrl());
+		}
 
 		StringWriter writer = new StringWriter();
 		MustacheFactory mf = new DefaultMustacheFactory();
