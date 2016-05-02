@@ -41,6 +41,7 @@ public interface NetworkApi {
 	@Path("/publicationsCount")
 	Response publicationsCount() throws IOException;
 
+
 	@GET
 	@Path("/stats")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
