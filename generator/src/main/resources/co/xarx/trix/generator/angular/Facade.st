@@ -516,6 +516,12 @@ var trix = angular.module('trix', [])
 	  return \$http.post(_config.url + "/api/auth/forgotPassword", \$.param({"email": email}), config)
 	}
 
+	this.invitePeople = function(invitation) {
+      var config = {};
+      config.headers = {"Content-Type": "application/json"}
+      return \$http.post(_config.url + "/api/persons/invitePerson", invitation, config)
+    }
+
 	this.updatePassword = function(hash, password) {
 	  var config = {};
 	  config.headers = {"Content-Type": "application/x-www-form-urlencoded"}

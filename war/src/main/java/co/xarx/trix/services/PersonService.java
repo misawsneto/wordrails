@@ -77,7 +77,7 @@ public class PersonService {
 	 * @param dto
 	 * @return conflicting person
 	 */
-	public List<Person> invite(PersonsApi.PersonInvitateDto dto){
+	public List<Person> invite(PersonsApi.PersonInvitationDto dto){
 		if(dto.emails == null || dto.emails.size() == 0 || dto.emailTemplate == null){
 			throw new BadRequestException("Invalid emails");
 		}
@@ -145,6 +145,6 @@ public class PersonService {
 
 		invitationRepository.save(invitation);
 
-		emailService.sendNetworkInvitation(network, invitation, authService.getLoggedPerson());
+		emailService.notifyPersonCreation(network, invitation, authService.getLoggedPerson());
 	}
 }

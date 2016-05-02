@@ -659,6 +659,16 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         toolbarContainer: '#email-template',
       }
 
+      $scope.invitatePeople = function(){
+        var invitation = {
+          emailTemplate: $scope.email.body,
+          emails: angular.copy($scope.invitations)
+        }
+        trix.invitePeople(invitation).success(function(conflicts){
+
+        })
+      }
+
     // -------- /invitation -------
     
 }])
