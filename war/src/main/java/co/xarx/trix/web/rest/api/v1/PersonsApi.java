@@ -182,7 +182,7 @@ public interface PersonsApi {
 	@GET
 	@Path("/me/stats")
 	@PreAuthorize("isAuthenticated()")
-	StatsJson personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException;
+	StatsData personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException;
 
 	@GET
 	@Path("/search/findPersons")
