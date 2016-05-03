@@ -103,7 +103,7 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'angularFileUpload', '/scripts/controllers/settings/settings-users.js?']);
+                        return $ocLazyLoad.load(['angularFileUpload', 'angularFileUpload', '/scripts/controllers/settings/settings-users.js?', 'froala']);
                     }]
                   },
                   controller:'SettingsUsersCtrl'

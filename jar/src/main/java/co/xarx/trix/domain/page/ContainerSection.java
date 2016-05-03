@@ -1,18 +1,15 @@
 package co.xarx.trix.domain.page;
 
-import co.xarx.trix.util.Constants;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -23,10 +20,6 @@ public class ContainerSection extends AbstractSection {
 
 	private static final long serialVersionUID = 2651202755256597015L;
 
-	@ManyToOne
-	@JsonBackReference("parent")
-	public ContainerSection parent;
-
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "sectioncontainer_children", joinColumns = @JoinColumn(name = "container_id"))
 	@MapKeyJoinColumn(name = "list_index", referencedColumnName = "list_index", nullable = false)
@@ -35,9 +28,13 @@ public class ContainerSection extends AbstractSection {
 	@JsonProperty("blocks")
 	public List<Block> getBlocks() {
 		if (children == null)
-			children = new HashMap<>();
+			return new ArrayList<>();
 
-		return new ArrayList(children.values());
+		return children
+				.values()
+				.stream()
+				.map(s -> new BlockImpl<Section>(s, Section.class))
+				.collect(Collectors.toList());
 	}
 
 	public void setMargin(Integer margin) {
@@ -54,8 +51,15 @@ public class ContainerSection extends AbstractSection {
 		this.setRightPadding(padding);
 	}
 
+	public void addChild(AbstractSection section) {
+		if (children == null)
+			children = new HashMap<>();
+
+		children.put(children.size(), section);
+	}
+
 	@Override
-	public String getType() {
-		return Constants.Section.CONTAINER;
+	public Type getType() {
+		return Type.CONTAINER;
 	}
 }

@@ -5,6 +5,8 @@ import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.page.Block;
 import co.xarx.trix.domain.page.query.statement.AbstractStatement;
 import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -14,9 +16,9 @@ import java.util.Map;
 
 
 @SdkExclude
-@lombok.Getter
-@lombok.Setter
-@lombok.NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "queryfixed")
 public class FixedQuery extends BaseEntity implements Query {

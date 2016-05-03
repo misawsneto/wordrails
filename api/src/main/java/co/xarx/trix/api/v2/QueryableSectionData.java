@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,4 +18,6 @@ public class QueryableSectionData extends SectionData {
 
 	public boolean pageable;
 	public Integer size;
+	private List<FixedQueryData> fixedQueries = new ArrayList<>();
+	private PageableQueryData pageableQuery;
 }

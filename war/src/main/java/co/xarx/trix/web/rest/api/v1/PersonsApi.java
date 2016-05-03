@@ -20,6 +20,11 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public interface PersonsApi {
 
+	public static class PersonInvitationDto {
+		public String emailTemplate;
+		public List<String> emails;
+	}
+
 	public static class PersonCreateDto {
 		public String name;
 		public String username;
@@ -119,6 +124,11 @@ public interface PersonsApi {
 	@POST
 	@Path("/create")
 	Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException;
+
+	@POST
+	@Path("/invitePerson")
+	Response invitePerson(PersonInvitationDto dto) throws ConflictException, BadRequestException, IOException;
+
 
 	@GET
 	@Path("/stats/count")

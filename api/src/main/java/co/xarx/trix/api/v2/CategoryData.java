@@ -25,10 +25,10 @@ public class CategoryData implements Serializable, Identifiable {
 
 	public Integer parentId;
 
-	public java.lang.Integer id;
-	public java.lang.String color;
-	public java.lang.String imageHash;
-	public java.lang.String name;
-	public java.lang.String description;
-	public java.lang.Integer taxonomyId;
+	public Integer id;
+	public String color;
+	public String imageHash;
+	public String name;
+	public String description;
+	public Integer taxonomyId;
 }
