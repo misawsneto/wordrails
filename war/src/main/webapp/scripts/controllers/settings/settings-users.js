@@ -1,5 +1,5 @@
-app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog', '$mdToast', '$filter', '$translate',
-	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog, $mdToast, $filter, $translate){
+app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog', '$mdToast', '$filter', '$translate', '$mdConstant',
+	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog, $mdToast, $filter, $translate, $mdConstant){
 
   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
@@ -610,58 +610,68 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     var lang = $translate.use();
 
     $scope.froalaOptions = {
-    toolbarInline: false,
       heightMin: 200,
       language: (lang == 'en' ? 'en_gb' : lang == 'pt' ? 'pt_br' : null),
       fontSizeDefaultSelection: '18',
-    // Set the image upload parameter.
-        imageUploadParam: 'contents',
+  // Set the image upload parameter.
+      imageUploadParam: 'contents',
 
-        // Set the image upload URL.
-        imageUploadURL: '/api/images/upload?imageType=POST',
+      // Set the image upload URL.
+      imageUploadURL: '/api/images/upload?imageType=POST',
 
-        // Set request type.
-        imageUploadMethod: 'POST',
+      // Set request type.
+      imageUploadMethod: 'POST',
 
-        // Set max image size to 5MB.
-        imageMaxSize: 8 * 1024 * 1024,
+      // Set max image size to 5MB.
+      imageMaxSize: 8 * 1024 * 1024,
 
-        // Allow to upload PNG and JPG.
-        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+      // Allow to upload PNG and JPG.
+      imageAllowedTypes: ['jpeg', 'jpg', 'png'],
 
-        // Set the file upload parameter.
-        fileUploadParam: 'contents',
+      // Set the file upload parameter.
+      fileUploadParam: 'contents',
 
-        // Set the file upload URL.
-        fileUploadURL: '/api/files/upload/doc',
+      // Set the file upload URL.
+      fileUploadURL: '/api/files/upload/doc',
 
-        // Set request type.
-        fileUploadMethod: 'POST',
+      // Set request type.
+      fileUploadMethod: 'POST',
 
-        // Set max file size to 20MB.
-        fileMaxSize: 20 * 1024 * 1024,
+      // Set max file size to 20MB.
+      fileMaxSize: 20 * 1024 * 1024,
 
-        // Allow to upload any file.
-        fileAllowedTypes: ['*'],
+      // Allow to upload any file.
+      fileAllowedTypes: ['*'],
 
-        toolbarInline: false,
-        toolbarSticky: false,
-        toolbarInline: true,
-        toolbarVisibleWithoutSelection: true,
-        charCounterCount: false,
-        toolbarContainer: '#email-template',
-      }
+      toolbarInline: false,
+      toolbarButtons: ["bold", "italic", "underline", "|", "fontSize", "color", "align", "formatOL", "formatUL", "|", "html"],
+      toolbarButtonsMD: ["bold", "italic", "underline", "|", "fontSize", "color", "align", "formatOL", "formatUL", "|", "html"],
+      toolbarButtonsSM: ["bold", "italic", "underline", "|", "fontSize", "color", "align", "formatOL", "formatUL", "|", "html"],
+      toolbarButtonsXS: ["bold", "italic", "underline", "|", "fontSize", "color", "align", "formatOL", "formatUL", "|", "html"],
+      charCounterCount: false,
+      height: 300
+    }
 
       $scope.invitatePeople = function(){
         var invitation = {
-          emailTemplate: $scope.email.body,
+          emailTemplate: $scope.invitationTemplate,
           emails: angular.copy($scope.invitations)
         }
         trix.invitePeople(invitation).success(function(conflicts){
-
+          $scope.app.showSuccessToast($filter('translate')('settings.users.INVITATIONS_SENT'))
+          $mdDialog.cancel();
         })
       }
 
     // -------- /invitation -------
     
+    $scope.$mdConstant = $mdConstant.KEY_CODE;
+    $scope.separatorKeys = []
+    for(prop in $mdConstant.KEY_CODE){
+      $scope.separatorKeys.push($mdConstant.KEY_CODE[prop]);
+    }
+
+    settingsUsersCtrl = $scope;
 }])
+
+var settingsUsersCtrl = settingsUsersCtrl

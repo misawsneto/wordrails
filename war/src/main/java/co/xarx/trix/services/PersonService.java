@@ -96,6 +96,11 @@ public class PersonService {
 
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 
+		dto.emailTemplate = dto.emailTemplate.replaceAll("\\&\\#123;\\&\\#123;", "{{");
+		dto.emailTemplate = dto.emailTemplate.replaceAll("\\&\\#125;\\&\\#125;", "}}");
+		dto.emailTemplate = dto.emailTemplate.replaceAll("\\%7B\\%7B", "{{");
+		dto.emailTemplate = dto.emailTemplate.replaceAll("\\%7D\\%7D", "}}");
+
 		for(String email: dto.emails){
 			Invitation invitation = new Invitation(network.getRealDomain(), false);
 			invitation.email = email;
