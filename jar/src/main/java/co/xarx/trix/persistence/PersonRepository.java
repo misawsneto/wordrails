@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
+import java.util.Collection;
 import java.util.List;
 
 @RepositoryRestResource(exported = true, excerptProjection = PersonProjection.class)
@@ -21,8 +22,17 @@ public interface PersonRepository extends DatabaseRepository<Person, Integer> {
 	@Cacheable(value = "person", key = "#p0")
 	Person findByUsername(@Param("username") String username);
 
+	Person findByUsernameAndTenantId(@Param("username") String username, @Param("tenantId") String tenantId);
+
 	@RestResource(exported = false)
 	Person findByEmail(@Param("email") String email);
+
+	@RestResource(exported = false)
+	List<Person> findByEmailIn(@Param("emails") Collection<String> emails);
+
+	@RestResource(exported = true)
+	@Query("select p from Person p where username like %:usernameOrEmailOrName% OR email like %:usernameOrEmailOrName% OR name like %:usernameOrEmailOrName%")
+	List<Person> findPersons(@Param("usernameOrEmailOrName") String usernameOrEmail, Pageable pageable);
 
 	@RestResource(exported = false)
 	@Query("select (select count(*) from PostRead pr where pr.post.author.id = p.id), " +

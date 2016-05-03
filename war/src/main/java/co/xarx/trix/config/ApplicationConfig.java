@@ -74,14 +74,16 @@ public class ApplicationConfig {
 		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostMap());
 		modelMapper.addMappings(new StationMap());
+		modelMapper.addMappings(new CategoryDataMap());
 		modelMapper.addMappings(new PictureDataMap());
 		modelMapper.addMappings(new ImageDataMap());
+		modelMapper.addMappings(new PostImageDataMap());
 		modelMapper.addMappings(new PersonDataMap());
 		modelMapper.addMappings(new PostDataMap());
 		modelMapper.addMappings(new PageDataMap());
-		modelMapper.addMappings(new PostViewMap());
 		modelMapper.addMappings(new VideoDataMap());
 		modelMapper.addMappings(new StationViewMap());
+		modelMapper.addMappings(new PostViewMap());
 		return modelMapper;
 	}
 

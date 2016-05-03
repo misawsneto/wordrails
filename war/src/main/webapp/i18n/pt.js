@@ -26,6 +26,7 @@
 		"SUBDOMAIN": "Subdomínio",
 		"THEMING": "Aparência",
 		"SEARCH": "Buscar",
+		"CONFIRM": "Confirmar",
 		"YES": "Sim",
 		"NO": "Não",
 		"BACK": "Voltar",
@@ -70,6 +71,7 @@
 		"PASSWORD": "Senha",
 		"HELP": "Ajuda",
 		"SEND": "Enviar",
+		"SEND_INVITE": "Enviar convite",
 		"VIDEO": "Vídeo",
 		"AUDIO": "Áudio",
 		"SOCIAL_NETWORK_PROFILES": "Perfis de redes sociais",
@@ -82,7 +84,13 @@
 		"DESCRIPTION": "Descrição",
 		"UPLOAD": "Selecionar imagem",
 		"NEW_USERS": "Novos usuários",
-		"LATEST_POSTS": "Últimas publicações"
+		"LATEST_POSTS": "Últimas publicações",
+		"OPTIONAL": "opcional",
+		"NO_BOOKMARKS": "Você não possui leituras",
+		"ADD_PERSON": "Crie um novo usuário",
+		"TOTAL": "Total",
+		"SHOWING": "Exibidos",
+		"SELECTED": "Selecionado"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -180,6 +188,24 @@
 			"FOOTER": "Rodapé",
 			"HEADER": "Menu superior"
 		},
+		"users": {
+			"ENABLE_ALL_SELECTED": "Ativar usuários selecionados",
+			"DISABLE_ALL_SELECTED": "Desativar usuários selecionados",
+			"PERMISSIONS_OF_ALL_SELECTED": "Alterar permissões de usuário selecionados",
+			"INVITE_USERS": "Convidar usuários",
+			"ADD_USERS": "Adicionar usuários",
+			"REDIFINE_PASSWORD": "Redefinir senha",
+			"EDIT_PROFILE": "Editar perfil",
+			"ENABLE_ALL_SELECTED_MSG": "Tem certeza que deseja ativar todos os usuários selecionados",
+			"DISABLE_ALL_SELECTED_MSG": "Tem certeza que deseja desativar todos os usuários selecionados",
+			"NO_PERSON_SELETED": "Selecione usuários antes de executar esta ação",
+			"SET_PASSWORD": "Definição de senha",
+			"SET_PASSWORD_MSG": "Insira uma nova senha para este usuário e confirme para mudar a senha. O usuário receberá um email com a nova senha.",
+			"USERNAME_IN_USE": "Usuário já está sendo usado. Por favor use outro usuário e tente novamente.",
+			"EMAIL_IN_USE": "Email já está sendo usado. Por favor use outro email e tente novamente.",
+			"REQUIRED_FIELDS": "Nome, usuário e email são campos obrigatórios.",
+			"OPTIONAL_PASSWORD": "A senha é opcional e caso não fornecida será gerado automáticamente e enviada por email."
+		},
 		"post": {
 			"menu":{
 				"INFO": "Informações",
@@ -194,6 +220,8 @@
 				"PUBLICATION_MSG": "O conteúdo será publicado ao clicar em Publicar.",
 				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada minuto uma vez que o título, conteúdo, estações e categorias sejam inseridos. As versões da publicação pode ser visualizado no menu \"Opções de publicação\"."
 			},
+			"ACTIVATE_DEACTIVATE_HEADING": "Ativar/Desativar chapéu",
+			"ACTIVATE_DEACTIVATE_SUBTITLE": "Ativar/Desativar subtítulo",
 			"DETAILS": "Detalhes",
 			"REVISIONS": "Revisões",
 			"OPTIONS": "Opções de publicação",
@@ -279,7 +307,8 @@
 			"EMAIL": "Email",
 			"PASSWORD": "Senha",
 			"CONFIRM_PASSWORD": "Confirmar senha",
-			"BIOGRAPHY": "Biografia"
+			"BIOGRAPHY": "Biografia",
+			"PASSWORDS_DONT_MATCH": "A senha é inválida ou senha e confirmação não são correspondentes."
 		}
 	},
 	"messages": {

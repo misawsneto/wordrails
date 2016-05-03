@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.acls.model.AlreadyExistsException;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
@@ -58,6 +59,8 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 			status = Status.CONFLICT;
 		} else if (throwable instanceof BadRequestException) {
 			status = Status.BAD_REQUEST;
+		}else if (throwable instanceof AlreadyExistsException){
+			status = Status.CONFLICT;
 		} else if (throwable instanceof ClientErrorException) {
 			status = Status.fromStatusCode(((ClientErrorException) throwable).getResponse().getStatus());
 		} else {

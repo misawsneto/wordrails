@@ -47,7 +47,15 @@ public interface NetworkApi {
 	Response networkStats(@QueryParam("date") String date,
 						   @QueryParam("beggining") String beginning,
 						   @QueryParam("postId") Integer postId) throws IOException;
-	
+
+	@GET
+	@Path("/invitationTemplate")
+	/**
+	 * Get the default invitation html template taking in to account the invitationMessage set by the admin at
+	 * configuration screen.
+	 */
+	Response getNetworkInvitationTemplate() throws IOException;
+
 	public class NetworkCreateDto extends Network {
 		public String newSubdomain;
 		public Person person;

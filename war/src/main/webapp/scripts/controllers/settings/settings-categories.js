@@ -22,7 +22,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
             bottom: 1500
           },
         preserveScope: true, // do not forget this if use parent scope
-        controller: DialogController,
+        controller: $scope.app.defaultDialog,
         templateUrl: 'add_category.html',
         targetEvent: ev,
         onComplete: function(){}
@@ -43,7 +43,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
             bottom: 1500
           },
         preserveScope: true, // do not forget this if use parent scope
-        controller: DialogController,
+        controller: $scope.app.defaultDialog,
         templateUrl: 'delete_category.html',
         targetEvent: ev,
         onComplete: function(){}
@@ -64,7 +64,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
             bottom: 1500
           },
         preserveScope: true, // do not forget this if use parent scope
-        controller: DialogController,
+        controller: $scope.app.defaultDialog,
         templateUrl: 'category_description_dialog.html',
         targetEvent: ev,
         onComplete: function(){}
@@ -75,21 +75,6 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
       //$scope.alert = 'You cancelled the dialog.';
     });
   }
-
-  function DialogController(scope, $mdDialog) {
-    scope.app = $scope.app;
-    scope.pe = $scope.pe;
-
-    scope.hide = function() {
-      $mdDialog.hide();
-    };
-
-    scope.cancel = function() {
-      $mdDialog.cancel();
-    };
-
-    // check if user has permisstion to write
-  };
 
   $scope.app.deleteCategory = function(){
     trix.deleteTerm($scope.app.toDeleteCategory.id).success(function(){

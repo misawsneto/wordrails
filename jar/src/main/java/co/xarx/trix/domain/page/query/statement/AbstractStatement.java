@@ -1,9 +1,6 @@
 package co.xarx.trix.domain.page.query.statement;
 
 import co.xarx.trix.domain.BaseEntity;
-import co.xarx.trix.domain.page.ContainerSection;
-import co.xarx.trix.domain.page.LinkSection;
-import co.xarx.trix.domain.page.QueryableListSection;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import lombok.AccessLevel;
@@ -32,17 +29,17 @@ public abstract class AbstractStatement extends BaseEntity implements Statement,
 	@Id
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Integer id;
+	private Integer id;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "statement_sorts", joinColumns = @JoinColumn(name = "statement_id"))
 	@MapKeyColumn(name = "sort_attribute", nullable = false, length = 100)
 	@Column(name = "is_asc", nullable = false)
-	public Map<String, Boolean> sorts;
+	private Map<String, Boolean> sorts;
 
 	@ElementCollection
 	@JoinTable(name = "statement_exceptions", joinColumns = @JoinColumn(name = "statement_id"))
-	public Set<Serializable> exceptionIds;
+	private Set<Serializable> exceptionIds;
 
 	public AbstractStatement() {
 		sorts = new HashMap<>();

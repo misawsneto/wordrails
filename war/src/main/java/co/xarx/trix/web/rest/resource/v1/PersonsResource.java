@@ -178,6 +178,51 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 
 	@Override
 	@Transactional
+	public Response updateAuthData(PersonAuthDto person){
+
+		Person loadedPerson = personRepository.findOne(person.id);
+
+		if(person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
+			throw new BadRequestException("Password no equal");
+
+		if((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
+			throw new BadRequestException("Invalid Password");
+
+		if(!StringUtil.isEmailAddr(person.email))
+			throw new BadRequestException("Not email");
+
+		if(person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN
+				(person.username + ".com"))
+			throw new BadRequestException("Invalid username");
+
+
+		loadedPerson.email = person.email;
+
+		User user = null;
+		if(!person.username.equals(loadedPerson.username)){
+			loadedPerson.user.username = person.username;
+			loadedPerson.username = person.username;
+			user = userRepository.findOne(loadedPerson.user.id);
+			user.username = person.username;
+			userRepository.save(user);
+			personRepository.save(loadedPerson);
+		}
+
+		if((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)){
+			loadedPerson.user.password = person.password;
+			user = userRepository.findOne(loadedPerson.user.id);
+			user.password = person.password;
+			userRepository.save(user);
+			personRepository.save(loadedPerson);
+		}
+
+		personRepository.save(loadedPerson);
+
+		return Response.status(Status.OK).build();
+	}
+
+	@Override
+	@Transactional
 	public void updatePerson(Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
@@ -288,8 +333,8 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
-	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException{
-		Person person = personService.create(dto.name, dto.username, dto.password, dto.email, dto.emailNotification, dto.stationsRole);
+	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
+		Person person = personService.create(dto.name, dto.username, dto.password, dto.email, dto.stationsRole);
 
 		if (person != null) {
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
@@ -297,6 +342,14 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			throw new BadRequestException();
 		}
 	}
+
+	@Override
+	public Response invitePerson(PersonsApi.PersonInvitationDto dto) throws ConflictException, BadRequestException,
+			IOException {
+		personService.invite(dto);
+		return Response.status(Status.CREATED).build();
+	}
+
 
 	@Override
 	public ContentResponse<Integer> countPersonsByNetwork(@QueryParam("q") String q){
@@ -558,4 +611,13 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 //			}
 //		}
 //	}
+
+
+	@Override
+	/**
+	 * {@link co.xarx.trix.persistence.PersonRepository#findPersons(String, Pageable)}
+	 */
+	public void findPersons() throws IOException {
+		forward();
+	}
 }

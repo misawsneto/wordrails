@@ -161,6 +161,11 @@ var trix = angular.module('trix', [])
 		return \$http.put(_config.url + "/api/persons/update", person, config)
 	}
 
+	this.updatePersonAuthData = function(person){
+        var config = {"headers": {"Content-Type": "application/json"}}
+        return \$http.put(_config.url + "/api/persons/authDataUpdate", person, config)
+    }
+
 	this.enablePerson = function(personId){
 		var config = {"headers": {"Content-Type": "application/json"}}
 		return \$http.put(_config.url + "/api/persons/" + personId + "/enable", {}, config)
@@ -497,11 +502,25 @@ var trix = angular.module('trix', [])
 		return \$http.get(_config.url + "/api/taxonomies/allCategories",  config)
 	};
 
+	this.findPostsByIds = function(ids){
+		var config = {};
+        config.params = {
+            ids: ids
+        }
+        return \$http.get(_config.url + "/api/v2/posts/findPostsByIds",  config)
+	}
+
 	this.recoverPassword = function(email) {
 	  var config = {};
 	  config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
 	  return \$http.post(_config.url + "/api/auth/forgotPassword", \$.param({"email": email}), config)
 	}
+
+	this.invitePeople = function(invitation) {
+      var config = {};
+      config.headers = {"Content-Type": "application/json"}
+      return \$http.post(_config.url + "/api/persons/invitePerson", invitation, config)
+    }
 
 	this.updatePassword = function(hash, password) {
 	  var config = {};
@@ -511,6 +530,10 @@ var trix = angular.module('trix', [])
 
     this.getAllStationPages = function(stationId) {
         return \$http.get(_config.url + "/api/web/" + stationId + "/pages")
+    }
+
+    this.getInvitationTemplate = function() {
+        return \$http.get(_config.url + "/api/networks/invitationTemplate")
     }
 
     this.forceDeleteStation = function(stationId) {

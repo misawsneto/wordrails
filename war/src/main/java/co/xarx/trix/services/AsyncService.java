@@ -40,7 +40,7 @@ public class AsyncService {
 	@Transactional
 	public void updatePersonLastLoginDate(String tenantId, String username) {
 		TenantContextHolder.setCurrentTenantId(tenantId);
-		Person person = personRepository.findByUsername(username);
+		Person person = personRepository.findByUsernameAndTenantId(username, tenantId);
 		if (person != null) {
 			person.lastLogin = new Date();
 			personRepository.save(person);
