@@ -5,6 +5,7 @@ import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.elasticsearch.mapper.PostViewMap;
+import co.xarx.trix.elasticsearch.mapper.StationViewMap;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.config.modelmapper.*;
 import com.google.common.collect.Lists;
@@ -80,11 +81,15 @@ public class ESPostExecutorTest {
 	@Before
 	public void setUp() throws Exception {
 		dataMapper = new ModelMapper();
+		dataMapper.addMappings(new CategoryDataMap());
 		dataMapper.addMappings(new PictureDataMap());
 		dataMapper.addMappings(new ImageDataMap());
+		dataMapper.addMappings(new PostImageDataMap());
 		dataMapper.addMappings(new PersonDataMap());
 		dataMapper.addMappings(new PostDataMap());
 		dataMapper.addMappings(new PageDataMap());
+		dataMapper.addMappings(new VideoDataMap());
+		dataMapper.addMappings(new StationViewMap());
 		dataMapper.addMappings(new PostViewMap());
 
 		postExecutor = new ESPostExecutor(dataMapper, new PostSearchServiceStub());

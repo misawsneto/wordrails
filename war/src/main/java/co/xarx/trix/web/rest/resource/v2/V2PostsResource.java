@@ -10,7 +10,7 @@ import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.util.RestUtil;
 import co.xarx.trix.web.rest.AbstractResource;
-import co.xarx.trix.web.rest.api.v2.V2PostApi;
+import co.xarx.trix.web.rest.api.v2.V2PostsApi;
 import com.google.common.collect.Sets;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @NoArgsConstructor
-public class V2PostsResource extends AbstractResource implements V2PostApi {
+public class V2PostsResource extends AbstractResource implements V2PostsApi {
 
 	@Autowired
 	private PostSearchService postSearchService;

@@ -1,14 +1,15 @@
 package co.xarx.trix.util;
 
 import co.xarx.trix.TestArtifactsFactory;
-import co.xarx.trix.api.v2.*;
+import co.xarx.trix.api.v2.ImageData;
+import co.xarx.trix.api.v2.PersonData;
+import co.xarx.trix.api.v2.PictureData;
+import co.xarx.trix.api.v2.PostData;
+import co.xarx.trix.config.modelmapper.*;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.domain.page.Page;
-import co.xarx.trix.domain.page.QueryableListSection;
 import co.xarx.trix.elasticsearch.mapper.PersonMap;
 import co.xarx.trix.elasticsearch.mapper.PostMap;
 import co.xarx.trix.elasticsearch.mapper.StationMap;
-import co.xarx.trix.config.modelmapper.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,9 +28,11 @@ public class ModelMapperTest {
 	@Before
 	public void setUp() throws Exception {
 		modelMapper = new ModelMapper();
+
 		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostMap());
 		modelMapper.addMappings(new StationMap());
+		modelMapper.addMappings(new CategoryDataMap());
 		modelMapper.addMappings(new PictureDataMap());
 		modelMapper.addMappings(new ImageDataMap());
 		modelMapper.addMappings(new PostImageDataMap());
@@ -106,22 +109,6 @@ public class ModelMapperTest {
 		PictureData data = modelMapper.map(pic, PictureData.class);
 
 		assertEquals(pic.getFile().getHash(), data.getHash());
-	}
-
-	@Test
-	public void testSectionToSectionDataMapping() throws Exception {
-		QueryableListSection section = TestArtifactsFactory.createQueryableListSection();
-		QueryableSectionData data = modelMapper.map(section, QueryableSectionData.class);
-
-		assertEquals(section.getId(), data.getId());
-	}
-
-	@Test
-	public void testPageToPageDataMapping() throws Exception {
-		Page pic = TestArtifactsFactory.createPage();
-		PageData data = modelMapper.map(pic, PageData.class);
-
-		assertEquals(pic.getId(), data.getId());
 	}
 
 	@After

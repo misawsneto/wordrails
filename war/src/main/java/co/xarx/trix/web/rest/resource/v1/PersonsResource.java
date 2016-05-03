@@ -32,7 +32,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -334,8 +333,8 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
-	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException{
-		Person person = personService.create(dto.name, dto.username, dto.password, dto.email, dto.emailNotification, dto.stationsRole);
+	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
+		Person person = personService.create(dto.name, dto.username, dto.password, dto.email, dto.stationsRole);
 
 		if (person != null) {
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
@@ -343,6 +342,14 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			throw new BadRequestException();
 		}
 	}
+
+	@Override
+	public Response invitePerson(PersonsApi.PersonInvitationDto dto) throws ConflictException, BadRequestException,
+			IOException {
+		personService.invite(dto);
+		return Response.status(Status.CREATED).build();
+	}
+
 
 	@Override
 	public ContentResponse<Integer> countPersonsByNetwork(@QueryParam("q") String q){
