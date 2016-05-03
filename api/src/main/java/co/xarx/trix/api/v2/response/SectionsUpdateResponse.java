@@ -2,7 +2,7 @@ package co.xarx.trix.api.v2.response;
 
 import java.util.List;
 
-public class SaveSectionsResponse {
+public class SectionsUpdateResponse {
 
 	public List<Section> sections;
 

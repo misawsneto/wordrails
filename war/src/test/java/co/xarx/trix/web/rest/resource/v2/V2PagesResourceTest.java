@@ -1,6 +1,6 @@
 package co.xarx.trix.web.rest.resource.v2;
 
-import co.xarx.trix.api.v2.request.SavePageRequest;
+import co.xarx.trix.api.v2.request.PageUpdateRequest;
 import co.xarx.trix.web.rest.InMemoryRestServer;
 import co.xarx.trix.web.rest.api.v2.V2PagesApi;
 import org.junit.Before;
@@ -27,9 +27,9 @@ public class V2PagesResourceTest {
 	@Test
 	@Ignore
 	public void testCreatePage() throws Exception {
-		SavePageRequest pageRequest = new SavePageRequest();
+		PageUpdateRequest pageRequest = new PageUpdateRequest();
 		pageRequest.setTitle("dummy title");
-		Entity<SavePageRequest> json = Entity.json(pageRequest);
+		Entity<PageUpdateRequest> json = Entity.json(pageRequest);
 
 		Response response = server
 				.newRequest("/v2/stations/20/pages").request()

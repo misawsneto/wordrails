@@ -39,7 +39,7 @@ public class ESPostSearchService implements PostSearchService {
 
 	@Override
 	public Pair searchPosts(String q, Integer personId, Integer page, Integer size, Collection<Integer> postIds) {
-		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
+		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithReadPermission();
 
 		if (CollectionUtils.isEmpty(stationsWithPermission) || CollectionUtils.isEmpty(postIds)) {
 			return new ImmutablePair<Integer, List<PostView>>(0, new ArrayList<>());
@@ -56,7 +56,7 @@ public class ESPostSearchService implements PostSearchService {
 
 	@Override
 	public Pair searchPosts(String q, Integer personId, Integer page, Integer size, boolean sortByDate) {
-		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
+		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithReadPermission();
 
 		if (CollectionUtils.isEmpty(stationsWithPermission)) {
 			return new ImmutablePair<Integer, List<PostView>>(0, new ArrayList<>());

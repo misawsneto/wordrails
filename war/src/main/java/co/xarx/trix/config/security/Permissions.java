@@ -12,4 +12,8 @@ public final class Permissions extends BasePermission {
 	}
 
 	public static final Permission MODERATION = new Permissions(1 << 5, 'M'); // 32
+
+	public static boolean containsPermission(Permission cumulativePermission, Permission singlePermission) {
+		return (cumulativePermission.getMask() & singlePermission.getMask()) == singlePermission.getMask();
+	}
 }
