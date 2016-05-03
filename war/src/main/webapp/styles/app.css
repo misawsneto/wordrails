@@ -6750,6 +6750,10 @@ bg-none {
   width: 800px;
 }
 
+.w-700 {
+  width: 700px;
+}
+
 .w-600 {
   width: 600px;
 }
@@ -6804,6 +6808,14 @@ bg-none {
 
 .h-500 {
   height: 500px;
+}
+
+.h-m-300 {
+  max-height: 300px;
+}
+
+.h-m-400 {
+  max-height: 400px;
 }
 
 .h-m-500 {

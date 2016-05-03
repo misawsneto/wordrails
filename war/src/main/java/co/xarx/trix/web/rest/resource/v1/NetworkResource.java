@@ -3,6 +3,7 @@ package co.xarx.trix.web.rest.resource.v1;
 import co.xarx.trix.annotation.IgnoreMultitenancy;
 import co.xarx.trix.api.PersonPermissions;
 import co.xarx.trix.api.StationPermission;
+import co.xarx.trix.api.StringResponse;
 import co.xarx.trix.api.ThemeView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
@@ -420,9 +421,14 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	}
 
 	@Override
-	public Response getNetworkInvitationTemplate() throws IOException {
+	/**
+	 * Get the default invitation html template taking in to account the invitationMessage set by the admin at
+	 * configuration screen.
+	 */
+	public StringResponse getNetworkInvitationTemplate() throws IOException {
 		String template = networkService.getNetworkInvitationTemplate();
-		response.setHeader("Content-Type", MediaType.TEXT_HTML);
-		return Response.status(Status.OK).entity(template + "").build();
+		StringResponse stringResponse = new StringResponse();
+		stringResponse.response = template;
+		return stringResponse;
 	}
 }

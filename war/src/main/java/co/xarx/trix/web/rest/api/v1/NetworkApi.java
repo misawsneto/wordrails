@@ -2,6 +2,7 @@ package co.xarx.trix.web.rest.api.v1;
 
 import co.xarx.trix.annotation.IgnoreMultitenancy;
 import co.xarx.trix.api.PersonPermissions;
+import co.xarx.trix.api.StringResponse;
 import co.xarx.trix.api.ThemeView;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
@@ -55,7 +56,7 @@ public interface NetworkApi {
 	 * Get the default invitation html template taking in to account the invitationMessage set by the admin at
 	 * configuration screen.
 	 */
-	Response getNetworkInvitationTemplate() throws IOException;
+	StringResponse getNetworkInvitationTemplate() throws IOException;
 
 	public class NetworkCreateDto extends Network {
 		public String newSubdomain;

@@ -575,6 +575,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
     // ---------- invite users funcs ----------
     $scope.showInviteUserDialog = function(event){
+      $scope.invitationTemplate = angular.copy($scope.originalInvitationTemplate);
       $scope.invitations = [];
        // show term alert
       $mdDialog.show({
@@ -587,7 +588,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         templateUrl: 'invitation-dialog.html',
         parent: angular.element(document.body),
         targetEvent: event,
-        clickOutsideToClose:true,
+        clickOutsideToClose:false,
         escapeToClose: false
         // onComplete: function(){
 
@@ -602,21 +603,12 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     }
     // ---------- /invite users funcs ----------
 
-    $scope.email = {body: '<div>'+
-'<div class="block-box">'+
-'<h3>Modes</h3>'+
-'<p><a href="/wysiwyg-editor/docs/examples/edit-in-popup" title="Edit in Popup">Edit in Popup</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/full-featured" title="Full Featured">Full Featured</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/full-page" title="Full Page">Full Page</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/iframe" title="Iframe">Iframe</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/init-on-button" title="Init On Button">Init On Button</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/init-on-click" title="Init On Click">Init On Click</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/inline" title="Inline">Inline</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/inline-two-instances" title="Inline Two Instances">Inline Two Instances</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/textarea" title="Textarea">Textarea</a></p>'+
-'</div>'+
-'</div>'};
+    trix.getInvitationTemplate().success(function(invitationTemplate){
+      $scope.originalInvitationTemplate = invitationTemplate.response
+    })
+
     var lang = $translate.use();
+
     $scope.froalaOptions = {
     toolbarInline: false,
       heightMin: 200,
@@ -655,6 +647,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         toolbarInline: false,
         toolbarSticky: false,
         toolbarInline: true,
+        toolbarVisibleWithoutSelection: true,
         charCounterCount: false,
         toolbarContainer: '#email-template',
       }
