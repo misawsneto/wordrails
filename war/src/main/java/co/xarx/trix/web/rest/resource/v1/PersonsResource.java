@@ -32,7 +32,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -547,7 +546,8 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	@Override
 	/**
 	 * {@link co.xarx.trix.persistence.PersonRepository#findPersons(String, Pageable)}
-	 */ public void findPersons() throws IOException {
+	 */
+	public void findPersons() throws IOException {
 		forward();
 	}
 }

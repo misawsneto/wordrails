@@ -5,36 +5,41 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.Map;
 
 @Path("/stats")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface StatsApi {
 
-	@GET
-	@Path("/me")
-	@PreAuthorize("isAuthenticated()")
-	StatsData personStats(@QueryParam("date") String date) throws IOException;
+//	@GET
+//	@Path("/me")
+//	@PreAuthorize("isAuthenticated()")
+//	StatsData personStats(@QueryParam("end") String end) throws IOException;
 
 	@GET
 	@Path("/post")
 	@PreAuthorize("isAuthenticated()")
-	StatsData postStats(@QueryParam("date") String date, @QueryParam("beggining") String beginning, @QueryParam("postId") Integer postId) throws IOException;
+	StatsData postStats(@QueryParam("end") String end, @QueryParam("start") String start, @QueryParam("postId") Integer postId) throws IOException;
 
 	@GET
 	@Path("/author")
 	@PreAuthorize("isAuthenticated()")
-	StatsData authorStats(@QueryParam("date") String date, @QueryParam("beggining") String beginning, @QueryParam("authorId") Integer authorId) throws IOException;
+	StatsData authorStats(@QueryParam("end") String end, @QueryParam("start") String start, @QueryParam("authorId") Integer authorId) throws IOException;
 
 	@GET
 	@Path("/network")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	Response networkStats(@QueryParam("date") String date, @QueryParam("beggining") String beginning) throws IOException;
+	StatsData networkStats(@QueryParam("end") String end, @QueryParam("start") String start) throws IOException;
 
 	@GET
-	@Path("/network")
+	@Path("/station")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	Response stationStats(@QueryParam("date") String date, @QueryParam("beggining") String beginning, @QueryParam("stationId") Integer stationId) throws IOException;
+	StatsData stationStats(@QueryParam("end") String end, @QueryParam("start") String start, @QueryParam("stationId") Integer stationId) throws IOException;
+
+	@GET
+	@Path("/storage")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	Map<String, Integer> getNetworkUsedSpace();
 }
