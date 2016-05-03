@@ -17,7 +17,7 @@ public class Invitation extends BaseEntity {
 
 	public Invitation(String baseUrl, boolean sendPlainPassword){
 		this.hash = UUID.randomUUID().toString();
-		this.invitationUrl = "http://" + baseUrl + "/invitation?hash=" + hash;
+		this.invitationUrl = "http://" + baseUrl + "/access/invitation?hash=" + hash;
 		this.sendPlainPassword = sendPlainPassword;
 	}
 
@@ -39,6 +39,9 @@ public class Invitation extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name = "person_id")
 	public Person person;
+
+	@Lob
+	public String email;
 
 	public boolean multipleUser = false;
 

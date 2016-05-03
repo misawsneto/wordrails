@@ -6750,6 +6750,10 @@ bg-none {
   width: 800px;
 }
 
+.w-700 {
+  width: 700px;
+}
+
 .w-600 {
   width: 600px;
 }
@@ -6804,6 +6808,14 @@ bg-none {
 
 .h-500 {
   height: 500px;
+}
+
+.h-m-300 {
+  max-height: 300px;
+}
+
+.h-m-400 {
+  max-height: 400px;
 }
 
 .h-m-500 {
@@ -8086,6 +8098,10 @@ md-switch[disabled] .md-bar {
   overflow: visible!important;
 }
 
+.o-f-a {
+  overflow: auto!important;
+}
+
 .o-f-h {
   overflow: hidden;
 }
@@ -8729,4 +8745,13 @@ button,
 
 #users-table > thead > tr > th {
   padding: 16px;
+}
+
+#email-template .fr-view table td,
+#email-template .fr-view table th {
+  border: none!important;
+}
+
+#email-template .md-chips.md-focused {
+  box-shadow: none!important;
 }

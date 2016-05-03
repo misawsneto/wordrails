@@ -57,9 +57,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
         // Allow to upload any file.
         fileAllowedTypes: ['*'],
-
-        toolbarInline: false,
-        toolbarSticky: false
     }
 
     $scope.showFeaturedMediaSelector = function(){

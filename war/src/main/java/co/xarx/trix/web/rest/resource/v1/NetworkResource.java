@@ -3,6 +3,7 @@ package co.xarx.trix.web.rest.resource.v1;
 import co.xarx.trix.annotation.IgnoreMultitenancy;
 import co.xarx.trix.api.PersonPermissions;
 import co.xarx.trix.api.StationPermission;
+import co.xarx.trix.api.StringResponse;
 import co.xarx.trix.api.ThemeView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
@@ -10,6 +11,7 @@ import co.xarx.trix.eventhandler.PostEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.persistence.*;
+import co.xarx.trix.services.NetworkService;
 import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.util.StatsJson;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 
 import javax.validation.ConstraintViolation;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
@@ -67,6 +70,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	private RowRepository rowRepository;
 	@Autowired
 	private StatisticsService statisticsService;
+	@Autowired
+	private NetworkService networkService;
 
 	@Override
 	public void putNetwork(Integer id) throws IOException {
@@ -413,5 +418,17 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	@Override
 	public StatsJson networkStats(String date, String beginning, Integer postId) throws JsonProcessingException {
 		return statisticsService.networkStats(date, beginning);
+	}
+
+	@Override
+	/**
+	 * Get the default invitation html template taking in to account the invitationMessage set by the admin at
+	 * configuration screen.
+	 */
+	public StringResponse getNetworkInvitationTemplate() throws IOException {
+		String template = networkService.getNetworkInvitationTemplate();
+		StringResponse stringResponse = new StringResponse();
+		stringResponse.response = template;
+		return stringResponse;
 	}
 }

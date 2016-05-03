@@ -121,14 +121,14 @@ import java.util.Set;
 			String subject = network.name + " - Convite enviado por " + inviter.getName();
 			sendSimpleMail(invitation.person.email, subject, emailBody);
 		}catch (Exception e){
-			log.info(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
 	}
 
 	public Map parseTemplateData(Invitation invitation, Network network, Person inviter){
-		Color c1 = Color.decode(network.mainColor);
-		Color c2 = Color.decode(network.navbarColor);
-		Integer bgColor = Integer.parseInt(network.backgroundColor.replace("#", ""), 16);
+		Color c1 = Color.decode(network.primaryColors.get("500"));
+		Color c2 = Color.decode(network.secondaryColors.get("300"));
+		Integer bgColor = Integer.parseInt(network.backgroundColors.get("500").replace("#", ""), 16);
 		Integer referenceColor = Integer.parseInt("ffffff", 16);
 
 		String networkNameColor = (bgColor > referenceColor / 2) ? "black" : "white";
@@ -158,5 +158,31 @@ import java.util.Set;
 		}
 
 		return scopes;
+	}
+
+	public void sendInvitation(Network network, Invitation invitation, Person inviter, String emailTemplate) {
+		try {
+			String template = emailTemplate;
+			//notifyPersonCreation(network, invitation, template, inviter);
+			StringWriter writer = new StringWriter();
+			MustacheFactory mf = new DefaultMustacheFactory();
+			Mustache mustache = mf.compile(new StringReader(template), "invitation-email");
+
+			Map scopes = parseTemplateData(invitation, network, inviter);
+			scopes.put("link", "http://" + network.getRealDomain() + "/access/signup?invitation=" + invitation.hash);
+
+			try{
+				mustache.execute(writer, scopes);
+				writer.flush();
+
+				String emailBody = writer.toString();
+				String subject = network.name + " - Convite enviado por " + inviter.getName();
+				sendSimpleMail(invitation.email, subject, emailBody);
+			}catch (Exception e){
+				log.error(e.getMessage(), e);
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 }

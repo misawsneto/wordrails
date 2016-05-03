@@ -344,7 +344,8 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
-	public Response invitePerson(PersonInviteDto dto) throws ConflictException, BadRequestException, IOException {
+	public Response invitePerson(PersonsApi.PersonInvitationDto dto) throws ConflictException, BadRequestException,
+			IOException {
 		personService.invite(dto);
 		return Response.status(Status.CREATED).build();
 	}

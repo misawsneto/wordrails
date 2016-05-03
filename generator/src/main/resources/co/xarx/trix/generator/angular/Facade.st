@@ -516,6 +516,12 @@ var trix = angular.module('trix', [])
 	  return \$http.post(_config.url + "/api/auth/forgotPassword", \$.param({"email": email}), config)
 	}
 
+	this.invitePeople = function(invitation) {
+      var config = {};
+      config.headers = {"Content-Type": "application/json"}
+      return \$http.post(_config.url + "/api/persons/invitePerson", invitation, config)
+    }
+
 	this.updatePassword = function(hash, password) {
 	  var config = {};
 	  config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
@@ -524,6 +530,10 @@ var trix = angular.module('trix', [])
 
     this.getAllStationPages = function(stationId) {
         return \$http.get(_config.url + "/api/web/" + stationId + "/pages")
+    }
+
+    this.getInvitationTemplate = function() {
+        return \$http.get(_config.url + "/api/networks/invitationTemplate")
     }
 
     this.forceDeleteStation = function(stationId) {

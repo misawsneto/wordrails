@@ -1,6 +1,8 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
+import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.InvitationRepository;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.PersonRepository;
@@ -15,6 +17,7 @@ import org.springframework.security.acls.model.AlreadyExistsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -69,8 +72,43 @@ public class PersonService {
 		return bookmarkInserted;
 	}
 
-	public void invite(PersonsApi.PersonInviteDto dto){
-		//Todo
+	/**
+	 *
+	 * @param dto
+	 * @return conflicting person
+	 */
+	public List<Person> invite(PersonsApi.PersonInvitationDto dto){
+		if(dto.emails == null || dto.emails.size() == 0 || dto.emailTemplate == null){
+			throw new BadRequestException("Invalid emails or temaplte");
+		}
+
+		List<Person> persons = personRepository.findByEmailIn(dto.emails);
+
+		if(persons != null && persons.size() > 0){
+			for (Iterator<String> iterator = dto.emails.iterator(); iterator.hasNext();) {
+				String email = iterator.next();
+				for (Person p: persons) {
+					if (p.email.equals(email))
+						iterator.remove();
+				}
+			}
+		}
+
+		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+
+		dto.emailTemplate = dto.emailTemplate.replaceAll("\\&\\#123;\\&\\#123;", "{{");
+		dto.emailTemplate = dto.emailTemplate.replaceAll("\\&\\#125;\\&\\#125;", "}}");
+		dto.emailTemplate = dto.emailTemplate.replaceAll("\\%7B\\%7B", "{{");
+		dto.emailTemplate = dto.emailTemplate.replaceAll("\\%7D\\%7D", "}}");
+
+		for(String email: dto.emails){
+			Invitation invitation = new Invitation(network.getRealDomain(), false);
+			invitation.email = email;
+			invitationRepository.save(invitation);
+			emailService.sendInvitation(network, invitation, authService.getLoggedPerson(), dto.emailTemplate);
+		}
+
+		return persons;
 	}
 
 	public Person create(String name, String username, String password, String email, List<StationRole> stationsRole) {

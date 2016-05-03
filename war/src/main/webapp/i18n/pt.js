@@ -71,6 +71,7 @@
 		"PASSWORD": "Senha",
 		"HELP": "Ajuda",
 		"SEND": "Enviar",
+		"SEND_INVITE": "Enviar convite",
 		"VIDEO": "Vídeo",
 		"AUDIO": "Áudio",
 		"SOCIAL_NETWORK_PROFILES": "Perfis de redes sociais",
@@ -203,7 +204,8 @@
 			"USERNAME_IN_USE": "Usuário já está sendo usado. Por favor use outro usuário e tente novamente.",
 			"EMAIL_IN_USE": "Email já está sendo usado. Por favor use outro email e tente novamente.",
 			"REQUIRED_FIELDS": "Nome, usuário e email são campos obrigatórios.",
-			"OPTIONAL_PASSWORD": "A senha é opcional e caso não fornecida será gerado automáticamente e enviada por email."
+			"OPTIONAL_PASSWORD": "A senha é opcional e caso não fornecida será gerado automáticamente e enviada por email.",
+			"INVITATIONS_SENT": "Convites enviados com sucesso"
 		},
 		"post": {
 			"menu":{

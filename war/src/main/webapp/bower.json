@@ -102,6 +102,7 @@
     "angular-perfect-scrollbar": "^0.0.4",
     "satellizer": "^0.14.0",
     "angularjs-socialshare": "2.1.2",
-    "angular-socialshare": "angularjs-socialshare#^2.1.4"
+    "angular-socialshare": "angularjs-socialshare#^2.1.4",
+    "angular-deckgrid": "^0.5.0"
   }
 }

@@ -71,6 +71,7 @@
 		"PASSWORD": "Password",
 		"HELP": "Help",
 		"SEND": "Send",
+		"SEND_INVITE": "Send invite",
 		"VIDEO": "Video",
 		"AUDIO": "Audio",
 		"SOCIAL_NETWORK_PROFILES": "Social network profiles",
@@ -203,7 +204,8 @@
 			"USERNAME_IN_USE": "Username is already in use. Please use another username and try again.",
 			"EMAIL_IN_USE": "Email is already in use. Please use another email and try again.",
 			"REQUIRED_FIELDS": "Name, username and email are required.",
-			"OPTIONAL_PASSWORD": "Password is optional and if not provided a random password will be generated and sent via email."
+			"OPTIONAL_PASSWORD": "Password is optional and if not provided a random password will be generated and sent via email.",
+			"INVITATIONS_SENT": "Invitations were sent"
 		},
 		"post": {
 			"menu":{
