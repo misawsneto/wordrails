@@ -162,7 +162,15 @@ import java.util.Set;
 
 	public void sendInvitation(Network network, Invitation invitation, Person inviter, String emailTemplate) {
 		try {
-			String template = emailTemplate;
+
+			String headerTemplateFile = "complete-subscription-email.html";
+			String filePath = new ClassPathResource(headerTemplateFile).getFile().getAbsolutePath();
+
+			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+			String headerTemplate = new String(bytes, Charset.forName("UTF-8"));
+
+
+			String template = headerTemplate.replaceAll("\\{\\{\body\\}\\}", emailTemplate) ;
 			//notifyPersonCreation(network, invitation, template, inviter);
 			StringWriter writer = new StringWriter();
 			MustacheFactory mf = new DefaultMustacheFactory();

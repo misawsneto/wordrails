@@ -128,6 +128,10 @@ angular.module('app')
         document.location.href = link;
       }
 
+      $scope.app.goToState = function(state){
+        $state.go(state);
+      }
+
       function startApp(){
 
         // ---------- util -------------

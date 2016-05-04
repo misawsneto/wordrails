@@ -58,70 +58,73 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
 	    $scope.app.publicationsCtrl = {page: 0, firstLoad: false};
 
-			
-		$scope.$watch('settings.tab', function(){
-			if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){
-		// trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
-			// 'publicationType': 'DRAFT', sortByDate: true}).success(function(response){
-				trix.getPersonNetworkPostsByState(null, 'DRAFT', $scope.app.publicationsCtrl.page, 10).success(function(response){
-					$scope.drafts = response;
-					$scope.firstLoad = true;
-				})
-			}
-			if(/*$state.params.type == "publications"*/ $scope.settings.tab == "publications"){
-				trix.getPersonNetworkPostsByState(null, 'PUBLISHED', $scope.app.publicationsCtrl.page, 10).success(function(response){
-					$scope.publications = response;
-					$scope.firstLoad = true;
-				})
-			}
-			if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "scheduled"){
-				trix.getPersonNetworkPostsByState(null, 'SCHEDULED', $scope.app.publicationsCtrl.page, 10).success(function(response){
-					$scope.scheduleds = response;
-					$scope.firstLoad = true;
-				})
-			}
-			if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "trash"){
-				trix.getPersonNetworkPostsByState(null, 'TRASH', $scope.app.publicationsCtrl.page, 10).success(function(response){
-					$scope.scheduleds = response;
-					$scope.firstLoad = true;
-				})
-			}
-		});
+	
+	$scope.drafts = [];
+	$scope.publications = [];
+	$scope.scheduleds = [];
+	$scope.trash = [];
+	
+	$scope.$watch('settings.tab', function(){
+		if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){
+	// trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
+		// 'publicationType': 'DRAFT', sortByDate: true}).success(function(response){
+			trix.getPersonNetworkPostsByState(null, 'DRAFT', $scope.app.publicationsCtrl.page, 10).success(function(response){
+				$scope.drafts = response;
+				$scope.firstLoad = true;
+			})
+		}
+		if(/*$state.params.type == "publications"*/ $scope.settings.tab == "publications"){
+			trix.getPersonNetworkPostsByState(null, 'PUBLISHED', $scope.app.publicationsCtrl.page, 10).success(function(response){
+				$scope.publications = response;
+				$scope.firstLoad = true;
+			})
+		}
+		if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "scheduled"){
+			trix.getPersonNetworkPostsByState(null, 'SCHEDULED', $scope.app.publicationsCtrl.page, 10).success(function(response){
+				$scope.scheduleds = response;
+				$scope.firstLoad = true;
+			})
+		}
+		if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "trash"){
+			trix.getPersonNetworkPostsByState(null, 'TRASH', $scope.app.publicationsCtrl.page, 10).success(function(response){
+				$scope.trash = response;
+				$scope.firstLoad = true;
+			})
+		}
+	});
 
-$scope.$on('POST_REMOVED', function(event, postId){
-	if($scope.app.publicationsCtrl && $scope.publications){
-		for (var i = $scope.publications.length - 1; i >= 0; i--) {
-			if(postId == $scope.publications[i].postId)
-				$scope.publications.splice(i,1)
-		};
-	}
-})
+	$scope.$on('POST_REMOVED', function(event, postId){
+		if($scope.app.publicationsCtrl && $scope.publications){
+			for (var i = $scope.publications.length - 1; i >= 0; i--) {
+				if(postId == $scope.publications[i].postId)
+					$scope.publications.splice(i,1)
+			};
+		}
+	})
 
-$scope.paginate = function(){
+	$scope.paginate = function(){
 
-	if(!$scope.publications || $scope.publications.length == 0)
-		return;
+		if(!$scope.publications || $scope.publications.length == 0)
+			return;
 
-	if($scope.allLoaded)
-		return;
+		if($scope.allLoaded)
+			return;
 
- 	if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){
-    type = 'DRAFT'
-  }
-  if(/*$state.params.type == "publications"*/ $scope.settings.tab == "publications"){
-    type = 'PUBLISHED'
-  }
-  if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "scheduled"){
-    type = 'SCHEDULED'
-  }
-  if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "trash"){
-    type = 'TRASH'
-  }
+	 	if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){
+	    type = 'DRAFT'
+	  }
+	  if(/*$state.params.type == "publications"*/ $scope.settings.tab == "publications"){
+	    type = 'PUBLISHED'
+	  }
+	  if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "scheduled"){
+	    type = 'SCHEDULED'
+	  }
+	  if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "trash"){
+	    type = 'TRASH'
+	  }
 
-	if(!$scope.loadingPage){
-		$scope.loadingPage = true;
-			/*trix.searchPosts(null, $scope.app.publicationsCtrl.page + 1, 10, {'personId': $scope.app.getLoggedPerson().id,
-				'publicationType': type, sortByDate: true}).success(function(response){*/
+		if(!$scope.loadingPage){
+			$scope.loadingPage = true;
 
 			trix.getPersonNetworkPostsByState(null, type, $scope.app.publicationsCtrl.page+1, 10).success(function(response){
 				var posts = response;
@@ -220,7 +223,73 @@ $scope.paginate = function(){
 		return draftActiveId == draft.id
 	}
 
+	// -------- toggle all
+	
+	$scope.toggleAll = function(toggleSelectValue){
+
+  	if(toggleSelectValue && $scope.publications){
+  		$scope.publications.forEach(function(publication, index){
+  			 publication.selected = true;
+  		}); 
+  	}else if($scope.publications){
+  		$scope.publications.forEach(function(publication, index){
+    			publication.selected = false;
+  		}); 
+  	}
+
+  }
+
+	// -------- /toggle all
+
 	settingsPublicationsCtrl = $scope;
+
+	$scope.getTotalPublicationCount = function(){
+		if($scope.settings.tab == "drafts"){
+		}
+		if($scope.settings.tab == "publications"){
+		}
+		if($scope.settings.tab == "scheduled"){
+		}
+		if($scope.settings.tab == "trash"){
+		}
+	}
+
+	$scope.getShowingPublicationsLength = function(){
+		if($scope.settings.tab == "drafts"){
+		}
+		if($scope.settings.tab == "publications"){
+			return $scope.publications && $scope.publications.length ? $scope.publications.length : 0;
+		}
+		if($scope.settings.tab == "scheduled"){
+		}
+		if($scope.settings.tab == "trash"){
+		}
+	}
+
+	$scope.getSelectedPublicationsIds = function(){
+		if($scope.settings.tab == "drafts"){
+			return getSelectedPublicationIds('drafts');
+		}
+		if($scope.settings.tab == "publications"){
+			return getSelectedPublicationIds('publications');
+		}
+		if($scope.settings.tab == "scheduled"){
+			return getSelectedPublicationIds('scheduled');
+		}
+		if($scope.settings.tab == "trash"){
+			return getSelectedPublicationIds('trash');
+		}
+		return null;
+	}
+
+	var getSelectedPublicationIds = function(type){
+		var ret = []
+    $scope[type].forEach(function(pub, index){
+      if(pub.selected)
+        ret.push(pub.id);
+    });
+    return ret;
+	}
 
 }]);
 

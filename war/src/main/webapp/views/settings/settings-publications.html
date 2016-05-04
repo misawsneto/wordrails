@@ -100,7 +100,16 @@
               <div class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z2 " style="overflow: auto;
     max-height: 100%;">
                 <div class="min-h-400" ng-class="{'hide': settings.tab !== 'publications'}">
-                  <ul class="list-group bg-t">
+                  <ul class="list-group bg-t m-b-lg">
+                    <li class="no-border-radius list-group-item no-bg r-0 p p-h-md b-l-2x">
+                      <div class="inline display-t-c v-m">
+                        <md-checkbox aria-label="nothing" class="no-margin" ng-model="toggleSelectValue" ng-change="toggleAll(toggleSelectValue)">
+                        </md-checkbox>
+                      </div>
+                      <div class="inline display-t-c v-m p-l font-bold">
+                        {{'titles.SELECT_ALL' | translate}}
+                      </div>
+                    </li>
                     <li class="no-border-radius list-group-item no-bg b-l-2x r-0" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in publications" ng-click="activatePublication(publication);" style="cursor: inherit;" ng-style="publication.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null">
                       <div href class="pull-left w-56 p-l-sm p-t-lg">
                         <md-checkbox ng-model="publication.selected" ng-true-value="true" ng-false-value="false"></md-checkbox>
@@ -113,13 +122,15 @@
                         <a href class="font-bold block text-md">{{publication.title}}</a>
                         {{publication.snippet | characters:220}}
                         <div class="p-t-sm font-500">
-                          <div ui-sref="app.post({'id': publication.id})" class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple>{{'titles.EDIT' | translate}}
-                          </div>
+                          <a ui-sref="app.post({'id': publication.id})" target="_blank" class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple>{{'titles.EDIT' | translate}}
+                          </a>
                           <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">{{'titles.REMOVE' | translate}}
                           </div>
                         </div>
-                        <div class="m-t pull-right font-500 m-r-sm"><i class="icon mdi2-radio-tower"></i> {{app.getStationById(publication.stationId).name}}</div>
-                        <div class="list-group-item b-n p-sm inline">
+                        <div class="m-t-sm pull-right font-500 m-r-sm">
+                          <i class="icon mdi2-radio-tower"></i> {{app.getStationById(publication.stationId).name}}
+                        </div>
+                        <div class="list-group-item b-n p-sm inline p-b-0">
                           <a href class="pull-left m-r-sm">
                             <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1 text-center md-primary-hue-1 background">
                               <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-16" style="top: 16%;position: relative;"></i>
@@ -170,12 +181,12 @@
             <div  class="md-whiteframe-z1 text-sm md-background-hue-1 background pos-abt bottom-0 z-index-5" style="width: calc(100% - 16px)">
               <md-divider></md-divider>
               <div class="p-sm font-code">
-                {{'titles.TOTAL' | translate}}: {{personsCount}} 
+                {{'titles.TOTAL' | translate}}: {{getTotalPublicationCount}} 
                 <span>
-                  | {{'titles.SHOWING' | translate}}: {{persons.length}}
+                  | {{'titles.SHOWING' | translate}}: {{getShowingPublicationsLength()}}
                 </span>
-                <span ng-if="getSelectedPersonIds().length > 0" >
-                  | {{'titles.SELECTED' | translate}}: {{getSelectedPersonIds().length}}
+                <span ng-if="getSelectedPublicationsIds().length > 0" >
+                  | {{'titles.SELECTED' | translate}}: {{getSelectedPublicationsIds().length}}
                 </span>
               </div>
              </div>
@@ -187,7 +198,60 @@
 </div>
 
   
-  <md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg"
+  <!-- <md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xl m-b-md"
     ui-sref="app.post">
     <i class="mdi-editor-mode-edit i-24"></i>
-  </md-button>
+  </md-button> -->
+
+  <md-fab-speed-dial md-direction="up" class="md-scale pos-fix right-0 bottom-0 m-r-lg m-b-md">
+    <md-fab-trigger>
+      <md-button aria-label="Add..." class="md-fab md-accent">
+        <i class="mdi mdi2-menu i-24"></i>
+      </md-button>
+    </md-fab-trigger>
+    <md-fab-actions>
+      <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ui-sref="app.post">
+        <md-tooltip md-direction="left">
+          {{'titles.NEW_POST' | translate}}
+        </md-tooltip>
+        <i class="mdi i-20 mdi-editor-mode-edit text-dark"></i>
+      </md-button>
+      <!-- <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="toggleAll(false)">
+        <md-tooltip md-direction="left">
+          {{'titles.DESELECT_ALL' | translate}}
+        </md-tooltip>
+        <i class="mdi mdi2-checkbox-multiple-blank-outline i-20 text-dark"></i>
+      </md-button>
+      <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="toggleAll(true)">
+        <md-tooltip md-direction="left">
+          {{'titles.SELECT_ALL' | translate}}
+        </md-tooltip>
+        <i class="mdi mdi2-checkbox-multiple-marked-outline i-20 text-dark"></i>
+      </md-button> -->
+      <md-button aria-label="Add Group" class="md-fab md-raised md-mini" >
+        <md-tooltip md-direction="left">
+          {{'settings.post.ADD_TAGS' | translate}}
+        </md-tooltip>
+        <i class="mdi mdi2-tag-multiple i-20 text-dark"></i>
+      </md-button>
+      <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-disabled="settings.tab == 'trash'">
+        <md-tooltip md-direction="left">
+          {{'settings.post.TRASH_ALL' | translate}}
+        </md-tooltip>
+        <i class="mdi mdi2-delete-variant i-20 text-dark"></i>
+      </md-button>
+      <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-disabled="settings.tab == 'drafts'">
+        <md-tooltip md-direction="left">
+          {{'settings.post.DRAFT_ALL' | translate}}
+        </md-tooltip>
+        <i class="mdi mdi2-file-outline i-20 text-dark"></i>
+      </md-button>
+      <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-disabled="settings.tab == 'publications'">
+        <md-tooltip md-direction="left">
+          {{'settings.post.PUBLISH_ALL' | translate}}
+        </md-tooltip>
+        <i class="mdi mdi2-send i-20 text-dark"></i>
+      </md-button>
+    </md-fab-actions>
+  </md-fab-speed-dial>
+

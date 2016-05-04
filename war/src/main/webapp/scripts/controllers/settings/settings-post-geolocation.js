@@ -104,7 +104,10 @@ app.controller('GeoLocationCtrl', ['$scope', 'leafletData', '$log', '$timeout', 
         map.on('draw:created', function (e) {
             var layer = e.layer;
             if($scope.app.network.primaryColors)
-              layer.options.color = $scope.app.rgb2hex($scope.app.network.primaryColors['300'].value)
+                if($scope.app.network.primaryColors['300'].value)
+                    layer.options.color = $scope.app.rgb2hex($scope.app.network.primaryColors['300'].value)
+                else
+                    layer.options.color = $scope.app.network.primaryColors['300'];
 
             drawnItems.addLayer(layer);
 

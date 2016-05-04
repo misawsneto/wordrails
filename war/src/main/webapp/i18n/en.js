@@ -90,7 +90,9 @@
 		"ADD_PERSON": "Create a new user",
 		"TOTAL": "Total",
 		"SHOWING": "Showing",
-		"SELECTED": "Selected"
+		"SELECTED": "Selected",
+		"SELECT_ALL": "Select all",
+		"DESELECT_ALL": "Deselect all"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -267,7 +269,11 @@
 			"TOGGLE_LANDSCAPE": "On/off landscape (image)",
 			"SHOW_VERSION": "Show version",
 			"CONTRAST": "Contrast",
-			"SELECT_STATION": "Select a station and categories for indexing your publication"
+			"SELECT_STATION": "Select a station and categories for indexing your publication",
+			"ADD_TAGS": "Adicioanr tags",
+			"PUBLISH_ALL": "Publish all",
+			"DRAFT_ALL": "Move to drafts",
+			"TRASH_ALL": "Move to trash"
 		},
 		"station": {
 			"STATION_SETTINGS": "Station settings",

@@ -90,7 +90,9 @@
 		"ADD_PERSON": "Crie um novo usuário",
 		"TOTAL": "Total",
 		"SHOWING": "Exibidos",
-		"SELECTED": "Selecionado"
+		"SELECTED": "Selecionado",
+		"SELECT_ALL": "Selecionar todos",
+		"DESELECT_ALL": "Desselecionar todos"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -267,7 +269,11 @@
 			"TOGGLE_LANDSCAPE": "Ligar/desligar modo paisagem (imagem)",
 			"SHOW_VERSION": "Exibir versão",
 			"CONTRAST": "Contraste",
-			"SELECT_STATION": "Selecione uma estação e categorias para indexar sua publicação"
+			"SELECT_STATION": "Selecione uma estação e categorias para indexar sua publicação",
+			"ADD_TAGS": "Adicionar tags",
+			"PUBLISH_ALL": "Publicar todos",
+			"DRAFT_ALL": "Mover para rascunhos",
+			"TRASH_ALL": "Mover para a lixeira"
 		},
 		"station": {
 			"STATION_SETTINGS": "Configurações de estação",
