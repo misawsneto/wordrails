@@ -1,5 +1,6 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.util.Logger;
@@ -235,30 +236,74 @@ public class EmailService {
 		return scopes;
 	}
 
-	public void createPerson(String email, String username, String name, String tenantId, List<Integer> stationIds){
-		QPerson qp = QPerson.person;
-		Person person = personRepository.findOne(qp.username.eq(username).and(qp.tenantId.eq(tenantId)));
-		Person person1 = personRepository.findOne(qp.email.eq(email).and(qp.tenantId.eq(tenantId)));
+	public List<Person> checkConflicts(Map<String, String> persons, String tenantId, List<Integer> stationIds){
+		Collection<String> usernames = new ArrayList<>();
 
-		if(person1 != null){
-			if(person1.user.password == null) {
-				person1.user.password = StringUtil.generateRandomString(6, "a#");
-			}
-
-			for(Integer stationId: stationIds){
-				if(!stationRepository.findByPersonId(person1.id).contains(stationRepository.findOne(stationId))){
-					StationRole role = new StationRole();
-					role.tenantId = tenantId;
-					role.station = stationRepository.findOne(stationId);
-					role.person = person1;
-					stationRolesRepository.save(role);
-				}
-			}
-			personRepository.save(person1);
-			return;
+		for(String email: persons.keySet()){
+			usernames.add(email.split("@")[0]);
 		}
 
-		if(person != null){
+		Collection<String> emails = persons.keySet();
+
+		QPerson qp = QPerson.person;
+		Iterable<Person> validateUsername = personRepository.findAll(qp.username.in(usernames).and(qp.tenantId.eq(tenantId)));
+		Iterable<Person> validateEmails = personRepository.findAll(qp.email.in(emails).and(qp.tenantId.eq(tenantId)));
+
+		Set<Person> conflicts = new HashSet<>();
+		validateEmails.forEach(person -> conflicts.add(person));
+		validateUsername.forEach(person -> conflicts.add(person));
+		List<Person> invitees = new ArrayList<Person>();
+
+		for (Person person : conflicts) {
+			if(person.user.password != null) continue;
+
+			person.user.password = StringUtil.generateRandomString(6, "a#");
+			List<StationRole> roles = resolvePermissions(person, stationIds);
+			personRepository.save(person);
+			stationRolesRepository.save(roles);
+			invitees.add(person);
+		}
+
+		for(Map.Entry<String, String> entry : persons.entrySet()){
+			if(checkConflict(entry.getValue(), entry.getKey(), conflicts)) continue;;
+			invitees.add(createPerson(entry.getKey(), entry.getValue(), stationIds));
+		}
+
+		return invitees;
+	}
+
+	public List<StationRole> resolvePermissions(Person person, List<Integer> stationIds){
+		List<StationRole> stationRoles = new ArrayList<>();
+		List<Station> stations = stationRepository.findByPersonId(person.id);
+
+		for(Integer stationid: stationIds){
+			Station s = stationRepository.findOne(stationid);
+			if(stations.contains(s)) continue;
+
+			StationRole stationRole = new StationRole();
+			stationRole.person = person;
+			stationRole.station = s;
+			stationRole.tenantId = TenantContextHolder.getCurrentTenantId();
+			stationRoles.add(stationRole);
+		}
+		return stationRoles;
+	}
+
+	public boolean checkConflict(String username, String email, Set<Person> persons){
+		for(Person person: persons){
+			if(person.username.equals(username) || person.email.equals(email)) return true;
+		}
+		return false;
+	}
+
+	public Person createPerson(String email, String name, List<Integer> stationIds){
+		Person person = new Person();
+		User user = new User();
+
+		QPerson qp = QPerson.person;
+		String username = email.split("@")[0];
+
+		if(personRepository.findOne(qp.username.eq(username)) != null){
 			for(int i = 1; ; i++){
 				if(personRepository.findOne(qp.username.eq(username + String.valueOf(i))) != null){
 					continue;
@@ -268,53 +313,105 @@ public class EmailService {
 			}
 		}
 
-		person = new Person();
-		person.email = email;
-		person.name = name;
-		person.username = username;
-		person.tenantId = tenantId;
-		person.password = StringUtil.generateRandomString(6, "a#");
-
-		User user = new User();
-		user.password = person.password;
-		user.username = person.username;
-		user.tenantId = tenantId;
+		user.username = username;
 		user.enabled = true;
+		user.password = StringUtil.generateRandomString(6, "a#");
+		user.tenantId = TenantContextHolder.getCurrentTenantId();
 
-		List<StationRole> stationRoles = new ArrayList<>();
-		for(Integer stationId: stationIds){
-			Station station = stationRepository.findOne(stationId);
-
-			StationRole stationRole = new StationRole();
-			stationRole.person = person;
-			stationRole.station = station;
-			stationRole.tenantId = tenantId;
-			stationRoles.add(stationRole);
-
-			UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.USER, station);
-			authority.tenantId = tenantId;
-			authority.user = user;
-			user.addAuthority(authority);
-		}
-
+		person.name = name;
 		person.user = user;
+		person.username = username;
+		person.email = email;
+
+		userRepository.save(user);
 		personRepository.save(person);
-		stationRolesRepository.save(stationRoles);
+		stationRolesRepository.save(resolvePermissions(person, stationIds));
+
+		return person;
 	}
 
-	public void createPersonBatch(Map<String, String> invitees, String tenantId, List<Integer> stations){
-		for(Map.Entry<String, String> invitee: invitees.entrySet()){
-			createPerson(invitee.getKey(), invitee.getKey().split("@")[0], invitee.getValue(), tenantId, stations);
-//			if(p != null) personRepository.save(p);
-		}
-	}
+//	public void createPerson(String email, String username, String name, String tenantId, List<Integer> stationIds){
+//
+//
+//		if(person1 != null){
+//			if(person1.user.password == null) {
+//				person1.user.password = StringUtil.generateRandomString(6, "a#");
+//			}
+//
+//			for(Integer stationId: stationIds){
+//				if(!stationRepository.findByPersonId(person1.id).contains(stationRepository.findOne(stationId))){
+//					StationRole role = new StationRole();
+//					role.tenantId = tenantId;
+//					role.station = stationRepository.findOne(stationId);
+//					role.person = person1;
+//					stationRolesRepository.save(role);
+//				}
+//			}
+//			personRepository.save(person1);
+//			return;
+//		}
+//
+//		if(person != null){
+//			for(int i = 1; ; i++){
+//				if(personRepository.findOne(qp.username.eq(username + String.valueOf(i))) != null){
+//					continue;
+//				}
+//				username += String.valueOf(i);
+//				break;
+//			}
+//		}
+//
+//		person = new Person();
+//		person.email = email;
+//		person.name = name;
+//		person.username = username;
+//		person.tenantId = tenantId;
+//		person.password = StringUtil.generateRandomString(6, "a#");
+//
+//		User user = new User();
+//		user.password = person.password;
+//		user.username = person.username;
+//		user.tenantId = tenantId;
+//		user.enabled = true;
+//
+//		List<StationRole> stationRoles = new ArrayList<>();
+//		for(Integer stationId: stationIds){
+//			Station station = stationRepository.findOne(stationId);
+//
+//			StationRole stationRole = new StationRole();
+//			stationRole.person = person;
+//			stationRole.station = station;
+//			stationRole.tenantId = tenantId;
+//			stationRoles.add(stationRole);
+//
+//			UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.USER, station);
+//			authority.tenantId = tenantId;
+//			authority.user = user;
+//			user.addAuthority(authority);
+//		}
+//
+//		person.user = user;
+//		personRepository.save(person);
+//		stationRolesRepository.save(stationRoles);
+//	}
+//
+//	public void createPersonBatch(Map<String, String> invitees, String tenantId, List<Integer> stations){
+//		for(Map.Entry<String, String> invitee: invitees.entrySet()){
+//			createPerson(invitee.getKey(), invitee.getKey().split("@")[0], invitee.getValue(), tenantId, stations);
+////			if(p != null) personRepository.save(p);
+//		}
+//	}
 
 	public void batchInvitation(Map<String, String> invitees, String tenantId, String subject, List<Integer> stations){
-		createPersonBatch(invitees, tenantId, stations);
-		for(String email: invitees.keySet()){
-			QPerson qp = QPerson.person;
-			Person invitee = personRepository.findOne(QPerson.person.email.eq(email).and(qp.tenantId.eq(tenantId)));
-			sendSimpleMail(invitee.getEmail(), subject,formatMessage(invitee.getName(), invitee.user.username, invitee.user.password));
+//		createPersonBatch(invitees, tenantId, stations);
+//		for(String email: invitees.keySet()){
+//			QPerson qp = QPerson.person;
+//			Person invitee = personRepository.findOne(QPerson.person.email.eq(email).and(qp.tenantId.eq(tenantId)));
+//			Date d = invitee.getCreatedAt();
+//		}
+		List<Person> persons = checkConflicts(invitees, tenantId, stations);
+		for(Person person: persons){
+			sendSimpleMail(person.getEmail(), subject, formatMessage(person.getName(), person.user.username, person.user.password));
 		}
 	}
 }

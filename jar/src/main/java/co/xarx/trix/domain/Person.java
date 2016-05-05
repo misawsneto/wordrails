@@ -15,7 +15,6 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
@@ -138,4 +137,15 @@ public class Person extends BaseEntity implements Serializable {
 		return null;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (id != null) return id.equals(((Person)obj).id);
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		if(id != null) return id;
+		return super.hashCode();
+	}
 }
