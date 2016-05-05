@@ -288,11 +288,11 @@
           <div class="cell">
             <div class="cell-inner">
 
-              <div id="post-image-container" data-img="{{postLoaded.postFeaturedImage}}" class="pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md h-250" ng-if="postLoaded.postFeaturedImage"  ng-class="{'w-full ': landscape, 'block-800': !landscape}"
+              <div id="post-image-container" data-img="{{postLoaded.postFeaturedImage}}" class="pos-rlt m-h-auto bg-cover md-whiteframe-z2 h-250" ng-if="postLoaded.postFeaturedImage"  ng-class="{'w-full ': landscape, 'block-800': !landscape}"
               ng-style="{'background-image': 'url(' + postLoaded.postFeaturedImage + ')', 'background-position': app.imgToolsProps.x + '% ' + app.imgToolsProps.y + '%'}">
               </div>
 
-              <div ng-if="postLoaded.useVideo" class="block-800 h-400 animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md">
+              <div ng-if="postLoaded.useVideo" class="block-800 h-400 animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2">
                 <embed-video width=800 height=400 iframe-id="video1" api="1" player_id="video1" ng-href="{{app.videoUrl}}"></embed-video>
                 <md-button ng-click="removeVideo();" class="md-fab md-accent md-raised md-mini pos-abt right-0 bottom-0 m-r m-b-xxl ">
                   <md-tooltip md-direction="top">
@@ -302,7 +302,7 @@
                 </md-button>
               </div>
   
-              <div ng-if="useUploadedVideo" class="block-800 h-400 animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md">
+              <div ng-if="useUploadedVideo" class="block-800 h-400 animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2">
                 <videogular md-prevent-menu-close vg-theme="videos.theme">
                   <vg-media vg-src="videos.sources" vg-type="video">
                   </vg-media>
@@ -331,7 +331,7 @@
                 </md-button>
               </div>
 
-              <div ng-if="useUploadedAudio" class="block-800 animated2x zoomIn pos-rlt m-h-auto  m-b-md">
+              <div ng-if="useUploadedAudio" class="block-800 animated2x zoomIn pos-rlt m-h-auto">
                 <!-- audio player -->
                   <div class="text-center p-md text-5x m-b-xl">
                     <i class="mdi2-headphones"></i>
@@ -364,7 +364,8 @@
                   <i class="mdi mdi2-delete i-20"></i>
                 </md-button>
               </div>
-
+              <div class="p text-lg">{{postLoaded.title}}</div>
+              <div class="p-h p-t-xs">{{app.getLocalTime(postLoaded.date)}}</div>
               <div class="p pos-rlt" ng-bind-html="postLoaded.body">
               </div> 
             </div>
