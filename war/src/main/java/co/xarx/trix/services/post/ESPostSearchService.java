@@ -78,13 +78,19 @@ public class ESPostSearchService implements PostSearchService {
 	@Override
 	public List<Post> search(List<Integer> ids, Integer page, Integer size) {
 		int from = size * page;
+		ArrayList<Post> emptyResult = new ArrayList<>();
 		if(ids.isEmpty())
-			return null;
+			return emptyResult;
 		else if(ids.size() < size)
 			size = ids.size();
 		List<Integer> idsToGetFromDB = ids.subList(from, from + size);
 
-		return postRepository.findAll(idsToGetFromDB);
+		List<Post> result = postRepository.findAll(idsToGetFromDB);
+
+		if(result == null)
+			return emptyResult;
+
+		return result;
 	}
 
 	@Override

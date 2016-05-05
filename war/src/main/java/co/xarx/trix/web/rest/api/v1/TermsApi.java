@@ -64,4 +64,9 @@ public interface TermsApi {
 													@QueryParam("size") int size,
 													@QueryParam("sort") String sort) throws ServletException,
 			IOException;
+
+	@GET
+	@Path("/search/findPostsByCategory")
+	public ContentResponse<List<PostView>> findPostsByCategory(@QueryParam("categoryName") String categoryName,
+															   @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size);
 }

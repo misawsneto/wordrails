@@ -16,7 +16,7 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
       }
     }
 
-    $scope.toggleLeft = buildDelayedToggler('left');
+    
     /**
      * Supplies a function that will continue to operate until the
      * time is up.
