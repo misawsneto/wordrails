@@ -27,6 +27,6 @@ public class PostMap<T extends Post> extends PropertyMap<T, ESPost> {
 		map().setFeaturedImageCaption(source.getFeaturedImage().getCaption());
 		map().setFeaturedImageCredits(source.getFeaturedImage().getCredits());
 		map().setFeaturedImageTitle(source.getFeaturedImage().getTitle());
-		using(new TermToIntegerConverter()).map(source.terms, destination.categories);
+		using(new TermToIntegerConverter()).map(source.getTerms(), destination.categories);
 	}
 }

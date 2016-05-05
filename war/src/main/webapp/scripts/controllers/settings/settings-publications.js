@@ -63,7 +63,7 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 	$scope.publications = [];
 	$scope.scheduleds = [];
 	$scope.trash = [];
-	
+
 	$scope.$watch('settings.tab', function(){
 		if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){
 	// trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
@@ -91,6 +91,8 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 				$scope.firstLoad = true;
 			})
 		}
+
+		trix.searchPosts('', null, null, 'PUBLISHED', null, null, null, null, 0, 10, null, null)
 	});
 
 	$scope.$on('POST_REMOVED', function(event, postId){

@@ -60,7 +60,7 @@ public class ESStartupIndexerService {
 
 			List<MultiTenantEntity> stations = new ArrayList(stationRepository.findAll());
 			List<MultiTenantEntity> people = new ArrayList(personRepository.findAll());
-			List<MultiTenantEntity> posts = Lists.newArrayList(postRepository.findAll(QPost.post.state.eq(Post.STATE_PUBLISHED)));
+			List<MultiTenantEntity> posts = Lists.newArrayList(postRepository.findPostWithJoins());
 
 			mapThenSave(stations, ESStation.class, esStationRepository);
 			mapThenSave(posts, ESPost.class, esPostRepository);
