@@ -96,7 +96,7 @@
     "ng-videosharing-embed": "^0.3.4",
     "wavesurfer-angular": "^1.0.1",
     "angular-clamp": "*",
-    "angular-moment": "^0.10.3",
+    "angular-moment": "1.0.0-beta.6",
     "angular-materialize": "^0.1.4",
     "perfect-scrollbar": "^0.6.11",
     "angular-perfect-scrollbar": "^0.0.4",

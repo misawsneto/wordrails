@@ -92,7 +92,8 @@
 		"SHOWING": "Exibidos",
 		"SELECTED": "Selecionado",
 		"SELECT_ALL": "Selecionar todos",
-		"DESELECT_ALL": "Desselecionar todos"
+		"DESELECT_ALL": "Desselecionar todos",
+		"AT": "em"
 	},
 	"signin_signup": {
 		"OR": "ou",

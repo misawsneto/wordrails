@@ -110,7 +110,7 @@
                         {{'titles.SELECT_ALL' | translate}}
                       </div>
                     </li>
-                    <li class="no-border-radius list-group-item no-bg b-l-2x r-0" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in publications" ng-click="activatePublication(publication);" style="cursor: inherit;" ng-style="publication.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null">
+                    <li class="no-border-radius list-group-item no-bg b-l-2x r-0 fade-in-hover-container" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in publications" ng-click="activatePublication(publication);" style="cursor: inherit;" ng-style="publication.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null">
                       <div href class="pull-left w-56 p-l-sm p-t-lg">
                         <md-checkbox ng-model="publication.selected" ng-true-value="true" ng-false-value="false"></md-checkbox>
                       </div>
@@ -119,18 +119,26 @@
                         </div>
                       </a>
                       <div class="clear font-thin">
-                        <a href class="font-bold block text-md">{{publication.title}}</a>
-                        {{publication.snippet | characters:220}}
+                        <md-button class="md-icon-button pos-abt right-0 top-0 m-t fade-in-hover-el" aria-label="More" style="margin: 8px 16px 0 0;" ng-click="showPost(publication.id)">
+                          <i class="i-20 mdi2-format-float-left"></i>
+                        </md-button>
+                        <div class="m-r-xxl">
+                          <a href class="font-bold block text-md">{{publication.title}}</a>
+                          <div  class="text-sm font-normal p-v-sm">
+                            {{app.getLocalTime(publication.date)}}
+                          </div>
+                          {{publication.snippet | characters:220}}
+                        </div>
                         <div class="p-t-sm font-500">
                           <a ui-sref="app.post({'id': publication.id})" target="_blank" class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple>{{'titles.EDIT' | translate}}
                           </a>
                           <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">{{'titles.REMOVE' | translate}}
                           </div>
                         </div>
-                        <div class="m-t-sm pull-right font-500 m-r-sm">
+                        <div class="m-t-sm pull-right font-500 m-r-sm text-md">
                           <i class="icon mdi2-radio-tower"></i> {{app.getStationById(publication.stationId).name}}
                         </div>
-                        <div class="list-group-item b-n p-sm inline p-b-0">
+                        <div class="list-group-item b-n p-sm inline p-b-0 v-m">
                           <a href class="pull-left m-r-sm">
                             <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1 text-center md-primary-hue-1 background">
                               <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-16" style="top: 16%;position: relative;"></i>
@@ -138,6 +146,24 @@
                           </a>
                           <div class="clear font-normal p-xs">
                             <a href class="font-500 block">{{publication.authorName}}</a>
+                          </div>
+                        </div>
+                        <div class="pull-right m-r font-normal fade-in-hover-el">
+                          <div class="inline v-m p-sm m-l opacity-07" ng-click="showComments(publication.id)">
+                            {{publication.commentsCount}}
+                            <i class="mdi2-comment-multiple-outline i-20"></i>
+                          </div>
+                          <div class="inline v-m p-sm opacity-07">
+                            {{publication.recommendsCount}}
+                            <i class="mdi2-heart i-20"></i>
+                          </div>
+                          <div class="inline v-m p-sm opacity-07">
+                            {{publication.bookmarksCount}}
+                            <i class="mdi2-bookmark i-20"></i>
+                          </div>
+                          <div class="inline v-m p-sm opacity-07 m-r-lg">
+                            {{publication.readsCount}}
+                            <i class="mdi2-eye i-20"></i>
                           </div>
                         </div>
                       </div>
@@ -255,3 +281,33 @@
     </md-fab-actions>
   </md-fab-speed-dial>
 
+<md-sidenav class="md-background-hue-1 background md-sidenav-right md-whiteframe-z2 w-400" md-component-id="post-comments">
+  <md-toolbar class="md-theme-light">
+    <h1 class="md-toolbar-tools" translate="titles.COMMENTS"></h1>
+  </md-toolbar>
+  <md-content class="pos-abt bottom-0 right-0 left-0 md-background-default background" style="top:64px">
+      <div id="post-comments-sidebar" class="vbox">
+        <div class="row-row">
+          <div class="cell">
+            <div class="cell-inner">
+
+
+            </div>
+          </div>
+        </div>
+        <div class="p inline w-full pos-rlt">
+          <div class="pull-left user-avatar rounded w-36 bg-white pos-rlt background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}" ng-class="{'md-primary-hue-1': !app.userImageSmall}">
+            <i ng-if="!app.userImageSmall" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
+          </div>
+
+          <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-button not-trans m-0 md-icon-button pull-right md-accent-default background">
+            <i class="mdi2-send i-20"></i>
+          </md-button>
+          <div class="m-l-xxl m-r-xxl"> 
+            <textarea style="max-height: 200px;" msd-elastic class="no-border p-t-sm" ng-model="newComment" style="resize: none;" placeholder="{{'titles.COMMENT' | translate }}"></textarea>
+          </div>
+        </div>
+      </div>
+
+    </md-content>
+</md-sidenav>

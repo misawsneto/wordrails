@@ -8377,6 +8377,22 @@ md-switch[disabled] .md-bar {
   display: block!important;
 }
 
+.fade-in-hover-container .fade-in-hover-el {
+  opacity: 0;
+  -webkit-transition: all 0.2s ease-in-out;
+     -moz-transition: all 0.2s ease-in-out;
+       -o-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+}
+
+.fade-in-hover-container:hover .fade-in-hover-el {
+  opacity: 1;
+  -webkit-transition: all 0.2s ease-in-out;
+     -moz-transition: all 0.2s ease-in-out;
+       -o-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+}
+
 .black-grad {
   background: #333;
   /* For browsers that do not support gradients */
@@ -8474,8 +8490,32 @@ md-switch[disabled] .md-bar {
           transition: all 0.2s ease-in-out;
 }
 
-.opacity-0 {
-  opacity: 0;
+.opacity-03 {
+  opacity: 0.3;
+}
+
+.opacity-04 {
+  opacity: 0.4;
+}
+
+.opacity-05 {
+  opacity: 0.5;
+}
+
+.opacity-06 {
+  opacity: 0.6;
+}
+
+.opacity-07 {
+  opacity: 0.7;
+}
+
+.opacity-08 {
+  opacity: 0.8;
+}
+
+.opacity-09 {
+  opacity: 0.9;
 }
 
 .b-l-s {

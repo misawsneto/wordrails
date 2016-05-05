@@ -293,6 +293,27 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
     return ret;
 	}
 
+	// sidenav toggle
+		$scope.toggleComments = buildToggler('post-comments');
+
+		function buildToggler(navID) {
+	    return function() {
+	      $mdSidenav(navID)
+	        .toggle()
+	    }
+	  }
+
+	  $scope.showComments = function(id){
+	  	$scope.loadingComments = true;
+	  	$scope.toggleComments();
+	  }
+
+	  $scope.showComments = function(id){
+	  	$scope.loadingPost = true;
+	  	$scope.togglePosts();
+	  }
+
+
 }]);
 
 var settingsPublicationsCtrl = null;
