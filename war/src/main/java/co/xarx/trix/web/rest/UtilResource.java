@@ -1,9 +1,11 @@
 package co.xarx.trix.web.rest;
 
 
+import co.xarx.trix.services.EmailService;
 import co.xarx.trix.services.MobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -13,6 +15,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Path("/util")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -33,6 +39,8 @@ public class UtilResource {
 
 	@Autowired
 	private MobileService gcmService;
+	@Autowired
+	private EmailService emailService;
 
 	@GET
 	@Path("/testNotification")
@@ -56,5 +64,24 @@ public class UtilResource {
 //			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
 		return Response.status(Response.Status.OK).build();
+	}
+
+	@GET
+	@Path("/inviteUsers")
+	@Transactional
+	public Response inviteNewUsers(){
+		Map emails = new HashMap<>();
+		List<Integer> stations = new ArrayList<>();
+
+		stations.add(11);
+		stations.add(13);
+
+		emails.put("jonas.agx@gmail.com", "Jonas Xavier");
+		emails.put("jonas@xarx.co", "Jonas Xavier");
+		emails.put("rafael@xarx.co", "Rafael Gamma");
+
+		emailService.batchInvitation(emails, "demo", "Aplicativo AMATRA-2 - Orientações para download", stations);
+
+		return Response.ok().build();
 	}
 }
