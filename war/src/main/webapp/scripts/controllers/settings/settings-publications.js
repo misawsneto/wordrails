@@ -1,7 +1,5 @@
-app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$translate', '$mdSidenav',
-	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix , FileUploader, TRIX, cfpLoadingBar, $mdToast, $translate, $mdSidenav){
-
-		$scope.toggleAdvancedSearch = buildToggler('advanced-search');
+app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$translate', '$mdSidenav', '$filter',
+	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix , FileUploader, TRIX, cfpLoadingBar, $mdToast, $translate, $mdSidenav, $filter){
 
 		$scope.settings = {'tab': 'publications'}
 
@@ -14,55 +12,53 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 		$scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
 
 		function buildToggler(navID) {
-	      return function() {
-	        $mdSidenav(navID)
-	          .toggle()
-	          .then(function () {
-	            $log.debug("toggle " + navID + " is done");
-	          });
-	      }
-	    }
+      return function() {
+        $mdSidenav(navID)
+          .toggle()
+          .then(function () {
+            $log.debug("toggle " + navID + " is done");
+          });
+      }
+    }
 
-	    $scope.toggleLeft = buildDelayedToggler('left');
+      /**
+     * Supplies a function that will continue to operate until the
+     * time is up.
+     */
+    function debounce(func, wait, context) {
+      var timer;
+      return function debounced() {
+        var context = $scope,
+            args = Array.prototype.slice.call(arguments);
+        $timeout.cancel(timer);
+        timer = $timeout(function() {
+          timer = undefined;
+          func.apply(context, args);
+        }, wait || 10);
+      };
+    }
 
-        /**
-	     * Supplies a function that will continue to operate until the
-	     * time is up.
-	     */
-	    function debounce(func, wait, context) {
-	      var timer;
-	      return function debounced() {
-	        var context = $scope,
-	            args = Array.prototype.slice.call(arguments);
-	        $timeout.cancel(timer);
-	        timer = $timeout(function() {
-	          timer = undefined;
-	          func.apply(context, args);
-	        }, wait || 10);
-	      };
-	    }
+    /**
+     * Build handler to open/close a SideNav; when animation finishes
+     * report completion in console
+     */
+    function buildDelayedToggler(navID) {
+      return debounce(function() {
+        $mdSidenav(navID)
+          .toggle()
+          .then(function () {
+            $log.debug("toggle " + navID + " is done");
+          });
+      }, 200);
+    }
 
-	    /**
-	     * Build handler to open/close a SideNav; when animation finishes
-	     * report completion in console
-	     */
-	    function buildDelayedToggler(navID) {
-	      return debounce(function() {
-	        $mdSidenav(navID)
-	          .toggle()
-	          .then(function () {
-	            $log.debug("toggle " + navID + " is done");
-	          });
-	      }, 200);
-	    }
-
-	    $scope.app.publicationsCtrl = {page: 0, firstLoad: false};
+    $scope.app.publicationsCtrl = {page: 0, firstLoad: false};
 
 	
-	$scope.drafts = [];
-	$scope.publications = [];
-	$scope.scheduleds = [];
-	$scope.trash = [];
+		$scope.drafts = [];
+		$scope.publications = [];
+		$scope.scheduleds = [];
+		$scope.trash = [];
 
 	$scope.$watch('settings.tab', function(){
 		if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){
@@ -159,10 +155,42 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 	$scope.beginning = true;
 	$scope.window = 20
 
+	// sidenav toggle
+	$scope.toggleComments = buildToggler('post-comments');
+	$scope.togglePost = buildToggler('post-summary');
+
+	$scope.postFeaturedImage = null
+	var setPostFeaturedImage = function(hash){
+		$scope.postLoaded.postFeaturedImage = $filter('imageLink')({imageHash: hash}, 'large')
+	}
+
+  $scope.showPost = function(id){
+  	$scope.togglePost();
+  	$scope.postLoaded = null;
+  	$scope.loadingComments = true;
+  	trix.getPost(id, 'postProjection').success(function(response){
+  		$scope.postLoaded = response;
+  		$scope.loadingComments = false;
+
+  		if($scope.postLoaded.terms)
+			$scope.postLoaded.terms.forEach(function(term){
+				term.checked = true;
+			})
+
+			var hash = $scope.postLoaded.featuredImage ? $scope.postLoaded.featuredImage.originalHash : null;
+			setPostFeaturedImage(hash)
+			$scope.postLoaded.featuredImage = $scope.postLoaded.featuredImage
+			$scope.postLoaded.landscape = $scope.postLoaded.imageLandscape;
+
+			$scope.postLoaded.useHeading = $scope.postLoaded.topper ? true:false
+			$scope.postLoaded.useSubtitle = $scope.postLoaded.subtitle ? true:false
+  	})
+  }
+
 	$scope.showComments = function(postId){
-		$scope.toggleCommentsSidebar();
+		$scope.toggleComments();
 		$scope.comments = []
-		$scope.loadingComments = true
+		$scope.loadingComments = true;
 		if(postId)
 			trix.findPostCommentsOrderByDate(postId, $scope.page, $scope.window, null, 'commentProjection').success(function(response){
 				$scope.comments = response.comments;
@@ -173,9 +201,9 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 			})
 	}
 
-	$scope.toggleCommentsSidebar = function(){
-	  $mdSidenav('comments-list').toggle();
-	}
+	// $scope.toggleCommentsSidebar = function(){
+	//   $mdSidenav('comments-list').toggle();
+	// }
 
 	$scope.createComment = function(){
 		var comment = {}
@@ -292,27 +320,6 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
     });
     return ret;
 	}
-
-	// sidenav toggle
-		$scope.toggleComments = buildToggler('post-comments');
-
-		function buildToggler(navID) {
-	    return function() {
-	      $mdSidenav(navID)
-	        .toggle()
-	    }
-	  }
-
-	  $scope.showComments = function(id){
-	  	$scope.loadingComments = true;
-	  	$scope.toggleComments();
-	  }
-
-	  $scope.showComments = function(id){
-	  	$scope.loadingPost = true;
-	  	$scope.togglePosts();
-	  }
-
 
 }]);
 
