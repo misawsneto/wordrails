@@ -21,4 +21,9 @@ public class VideosResource extends AbstractResource implements VideosApi {
 	public void getVideo(int videoId) throws ServletException, IOException {
 		forward();
 	}
+
+	@Override
+	public void postVideo() throws ServletException, IOException {
+		forward();
+	}
 }
