@@ -1,13 +1,14 @@
 package co.xarx.trix.services.analytics;
 
+import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.PublishedApp;
+import co.xarx.trix.persistence.FileRepository;
 import co.xarx.trix.persistence.MobileDeviceRepository;
 import co.xarx.trix.persistence.PublishedAppRepository;
 import co.xarx.trix.util.Constants;
-import co.xarx.trix.util.ReadsCommentsRecommendsCount;
-import co.xarx.trix.util.StatsJson;
-import co.xarx.trix.util.StoreStatsData;
+import co.xarx.trix.api.v2.ReadsCommentsRecommendsCountData;
+import co.xarx.trix.api.v2.StoreStatsData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.arcadiaconsulting.appstoresstats.android.console.AndroidStoreStats;
@@ -51,6 +52,7 @@ public class StatisticsService {
 	private DateTimeFormatter dateTimeFormatter;
 	private PublishedAppRepository appRepository;
 	private MobileDeviceRepository mobileDeviceRepository;
+	private FileRepository fileRepository;
 
 	private static int MONTH_INTERVAL = 30;
 	private static int WEEK_INTERVAL = 7;
@@ -60,13 +62,14 @@ public class StatisticsService {
 							 MobileDeviceRepository mobileDeviceRepository,
 							 @Qualifier("objectMapper") ObjectMapper mapper,
 							 @Value("${elasticsearch.analyticsIndex}") String analyticsIndex,
-							 PublishedAppRepository appRepository){
+							 PublishedAppRepository appRepository, FileRepository fileRepository){
 		this.mapper = mapper;
 		this.client = client;
 		this.appRepository = appRepository;
 		this.analyticsIndex = analyticsIndex;
 		this.dateTimeFormatter = getFormatter();
 		this.mobileDeviceRepository = mobileDeviceRepository;
+		this.fileRepository = fileRepository;
 	}
 
 	public HashMap getPorpularNetworks(){
@@ -147,7 +150,7 @@ public class StatisticsService {
 		return buckets;
 	}
 
-	public StatsJson postStats(String date, Integer postId, Integer sizeInDays){
+	public StatsData postStats(String date, Integer postId, Integer sizeInDays){
 		Interval interval = getInterval(date, sizeInDays);
 
 		Map postReadCounts, commentsCounts;
@@ -159,16 +162,16 @@ public class StatisticsService {
 		generalStatus.add(countTotals(postId, "comment.postId", "analytics"));
 		generalStatus.add(countTotals(postId, "recomment.postId", "analytics"));
 
-		TreeMap<Long, ReadsCommentsRecommendsCount> stats = makeHistogram(postReadCounts, commentsCounts, interval);
+		TreeMap<Long, ReadsCommentsRecommendsCountData> stats = makeHistogram(postReadCounts, commentsCounts, interval);
 
-		StatsJson response = new StatsJson();
+		StatsData response = new StatsData();
 		response.generalStatsJson = generalStatus;
 		response.dateStatsJson = stats;
 
 		return response;
 	}
 
-	public StatsJson personStats(String date, Integer personId, Integer sizeInDays) throws JsonProcessingException {
+	public StatsData personStats(String date, Integer personId, Integer sizeInDays) throws JsonProcessingException {
 		Interval interval = getInterval(date, sizeInDays);
 
 		Map postReadCounts, commentsCounts;
@@ -180,14 +183,14 @@ public class StatisticsService {
 		generalStatus.add(countTotals(personId, "comment.postAuthorId", "analytics"));
 		generalStatus.add(countTotals(personId, "recommend.postAuthorId", "analytics"));
 
-		StatsJson response = new StatsJson();
+		StatsData response = new StatsData();
 		response.dateStatsJson = makeHistogram(postReadCounts, commentsCounts, interval);
 		response.generalStatsJson = generalStatus;
 
 		return response;
 	}
 
-	public StatsJson networkStats(String end, String start){
+	public StatsData networkStats(String end, String start){
 		Interval interval = getInterval(end, start);
 
 		Map postreadCounts, commentsCounts;
@@ -204,17 +207,29 @@ public class StatisticsService {
 		generalStatus.add((int) (long) mobileDeviceRepository.countAndroidDevices(tenantId));
 		generalStatus.add((int) (long) mobileDeviceRepository.countAppleDevices(tenantId));
 
-		StatsJson statsJson = new StatsJson();
-		statsJson.generalStatsJson = generalStatus;
-		statsJson.dateStatsJson = makeHistogram(postreadCounts, commentsCounts, interval);
+		StatsData StatsData = new StatsData();
+		StatsData.generalStatsJson = generalStatus;
+		StatsData.dateStatsJson = makeHistogram(postreadCounts, commentsCounts, interval);
 
-		statsJson.androidStore = getAndroidStats(interval);
-		statsJson.iosStore = getIosStats(interval);
+		StatsData.androidStore = getAndroidStats(interval);
+		StatsData.iosStore = getIosStats(interval);
 
-		return statsJson;
+		StatsData.fileSpace = getFileStats();
+
+		return StatsData;
 	}
 
-	private StoreStatsData getIosStats(Interval interval) {
+	public Map getFileStats(){
+		List<Object[]> mimeSums = fileRepository.sumFilesSizeByMime(TenantContextHolder.getCurrentTenantId());
+		Map map = new HashMap<>();
+
+		mimeSums.stream().filter(tuple -> tuple[0] != null && tuple[1] != null)
+				.forEach(tuple -> map.put((String) tuple[0], (int) (long) tuple[1]));
+
+		return map;
+	}
+
+	public StoreStatsData getIosStats(Interval interval) {
 		String tenant = TenantContextHolder.getCurrentTenantId();
 		PublishedApp ios = appRepository.findByTenantIdAndType(tenant, Constants.MobilePlatform.APPLE);
 
@@ -222,7 +237,7 @@ public class StatisticsService {
 
 	}
 
-	private StoreStatsData getAndroidStats(Interval interval) {
+	public StoreStatsData getAndroidStats(Interval interval) {
 		String tenant = TenantContextHolder.getCurrentTenantId();
 		PublishedApp android = appRepository.findByTenantIdAndType(tenant, Constants.MobilePlatform.ANDROID);
 
@@ -289,7 +304,7 @@ public class StatisticsService {
 				interval.getEnd().toString());
 	}
 
-	public StatsJson stationStats(String end, String start, Integer stationId){
+	public StatsData stationStats(String end, String start, Integer stationId){
 		Interval interval = getInterval(end, start);
 
 		Map postreadCounts, commentsCounts;
@@ -301,11 +316,11 @@ public class StatisticsService {
 		generalStatus.add(countTotals(stationId, "comment.stationId", "analytics"));
 		generalStatus.add(countTotals(stationId, "recommend.stationId", "analytics"));
 
-		StatsJson statsJson = new StatsJson();
-		statsJson.generalStatsJson = generalStatus;
-		statsJson.dateStatsJson = makeHistogram(postreadCounts, commentsCounts, interval);
+		StatsData StatsData = new StatsData();
+		StatsData.generalStatsJson = generalStatus;
+		StatsData.dateStatsJson = makeHistogram(postreadCounts, commentsCounts, interval);
 
-		return statsJson;
+		return StatsData;
 	}
 
 	public Interval getInterval(String end, String start){
@@ -328,20 +343,17 @@ public class StatisticsService {
 
 	public Interval getInterval(String date, Integer size){
 		Assert.notNull(date, "Invalid date. Expected yyyy-MM-dd");
-
 		DateTime endDate = dateTimeFormatter.parseDateTime(date);
 
-		if(size == null) new Interval(endDate.minusDays(MONTH_INTERVAL), endDate);
-
-		return new Interval(endDate.minusDays(size), endDate);
+		return new Interval(endDate.minusDays(size != null ? size : MONTH_INTERVAL), endDate);
 	}
 
 	public DateTimeFormatter getFormatter(){
 		return DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC();
 	}
 
-	public TreeMap<Long, ReadsCommentsRecommendsCount> makeHistogram(Map postreads, Map comments, Interval interval) {
-		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<>();
+	public TreeMap<Long, ReadsCommentsRecommendsCountData> makeHistogram(Map postreads, Map comments, Interval interval) {
+		TreeMap<Long, ReadsCommentsRecommendsCountData> stats = new TreeMap<>();
 
 		DateTime firstDay = interval.getEnd();
 		DateTime lastestDay = firstDay;
@@ -349,7 +361,7 @@ public class StatisticsService {
 		int size = Days.daysBetween(interval.getStart(), interval.getEnd()).getDays();
 
 		while (firstDay.minusDays(size).isBefore(lastestDay)) {
-			ReadsCommentsRecommendsCount count = new ReadsCommentsRecommendsCount();
+			ReadsCommentsRecommendsCountData count = new ReadsCommentsRecommendsCountData();
 			if (postreads.containsKey(lastestDay.getMillis())) {
 				count.readsCount = (long) postreads.get(lastestDay.getMillis());
 			}

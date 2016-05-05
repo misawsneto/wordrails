@@ -1,6 +1,7 @@
 package co.xarx.trix.web.rest.resource.v1;
 
 import co.xarx.trix.api.*;
+import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.PersonEventHandler;
@@ -18,7 +19,6 @@ import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.StationPermissionService;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.Logger;
-import co.xarx.trix.util.StatsJson;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
@@ -542,7 +542,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
-	public StatsJson personStats(String date, Integer postId) throws JsonProcessingException {
+	public StatsData personStats(String date, Integer postId) throws JsonProcessingException {
 		if(postId == null){
 			Person person = authProvider.getLoggedPerson();
 			return statisticsService.personStats(date, person.getId(), null);
@@ -550,68 +550,6 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			return statisticsService.postStats(date, postId, null);
 		}
 	}
-
-//	@Override
-//	public Response personStatsOld(String date, Integer postId) throws IOException{
-//		if(date == null)
-//			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
-//
-//		org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-//
-//		Person person = null;
-//		if(postId == null || postId == 0) {
-//			person = authProvider.getLoggedPerson();
-//		}
-//
-//		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<>();
-//		DateTime firstDay = formatter.parseDateTime(date);
-//
-//		// create date slots
-//		DateTime lastestDay = firstDay;
-//		while (firstDay.minusDays(30).getMillis() < lastestDay.getMillis()){
-//			stats.put(lastestDay. getMillis(), new ReadsCommentsRecommendsCount());
-//			lastestDay = lastestDay.minusDays(1);
-//		}
-//
-//		List<Object[]> postReadCounts;
-//		List<Object[]> commentsCounts;
-//		List<Object[]> generalStatus;
-//
-//		if(person == null) {
-//			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
-//			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
-//			generalStatus = postRepository.findPostStats(postId);
-//		}else {
-//			postReadCounts = postReadRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
-//			commentsCounts = commentRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
-//			generalStatus = personRepository.findPersonStats(person.id);
-//		}
-//
-//		// check date and map counts
-//		Iterator it = stats.entrySet().iterator();
-//		checkDateAndMapCounts(postReadCounts, it);
-//
-//		it = stats.entrySet().iterator();
-//		checkDateAndMapCounts(commentsCounts, it);
-//
-//		String generalStatsJson = mapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
-//		String dateStatsJson = mapper.writeValueAsString(stats);
-//		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
-//	}
-//
-//	private void checkDateAndMapCounts(List<Object[]> countList, Iterator it) {
-//		while (it.hasNext()){
-//			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
-//			long key = (Long)pair.getKey();
-//			for(Object[] counts: countList){
-//				long dateLong = ((java.sql.Date) counts[0]).getTime();
-//				long count = (long) counts[1];
-//				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
-//					pair.getValue().commentsCount = count;
-//			}
-//		}
-//	}
-
 
 	@Override
 	/**
