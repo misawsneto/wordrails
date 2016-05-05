@@ -187,14 +187,13 @@ public class EmailService {
 				"Senha:	<b>{{password}}</b><br>" +
 				"<br>" +
 				"<b>Para iOS (iPhone)</b><br>" +
-				"<br>" +
 				"1- Clique no link para download: https://itunes.apple.com/us/app/satya/id1095437609?ls=1&mt=8<br>" +
 				"2- Após instalar, abra o app. Vai aparecer a página inicial de SATYA<br>" +
 				"3- Clique do lado esquerdo (nas três barrinhas) e aparecerá um menu. Vá em entrar e digite seu login e senha<br>" +
 				"4- Após se logar, na mesma barra de menu à esquerda vai estar a opção para acessar a Estação AMATRA-2<br>" +
 				"5- Basta permanecer logado, que o app vai sempre abrir na AMATRA-2<br>" +
 				"<br>" +
-				"<p>Android (Samsung, Motorola e outros modelos Android)</b><br>" +
+				"<p><b>Android (Samsung, Motorola e outros modelos Android)</b><br>" +
 				"1- Clique no link para download: https://play.google.com/store/apps/details?id=co.xarx.satya<br>" +
 				"2- Após instalar, abra o app. Vai aparecer a página inicial de SATYA<br>" +
 				"3- Clique do lado esquerdo (nas três barrinhas) e aparecerá um menu. Vá em entrar e digite o login e senha abaixo:<br>" +
@@ -242,8 +241,8 @@ public class EmailService {
 		Person person1 = personRepository.findOne(qp.email.eq(email).and(qp.tenantId.eq(tenantId)));
 
 		if(person1 != null){
-			if(person1.password == null) {
-				person1.password = StringUtil.generateRandomString(6, "a#");
+			if(person1.user.password == null) {
+				person1.user.password = StringUtil.generateRandomString(6, "a#");
 			}
 
 			for(Integer stationId: stationIds){
@@ -315,7 +314,7 @@ public class EmailService {
 		for(String email: invitees.keySet()){
 			QPerson qp = QPerson.person;
 			Person invitee = personRepository.findOne(QPerson.person.email.eq(email).and(qp.tenantId.eq(tenantId)));
-			sendSimpleMail(invitee.getEmail(), subject,formatMessage(invitee.getName(), invitee.username, invitee.password));
+			sendSimpleMail(invitee.getEmail(), subject,formatMessage(invitee.getName(), invitee.user.username, invitee.user.password));
 		}
 	}
 }
