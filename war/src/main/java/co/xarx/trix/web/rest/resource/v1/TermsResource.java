@@ -168,18 +168,6 @@ public class TermsResource extends AbstractResource implements TermsApi {
 	}
 
 	@Override
-	public ContentResponse<List<PostView>> findPostsByTagAndStationId(String tagName, Integer stationId,
-																	  int page, int size) throws ServletException, IOException {
-		Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
-
-		List<Post> posts = termRepository.findPostsByTagAndStationId(tagName, stationId, pageable);
-
-		ContentResponse<List<PostView>> response = new ContentResponse<>();
-		response.content = postConverter.convertToViews(posts);
-		return response;
-	}
-
-	@Override
 	public ContentResponse<List<PostView>> findPostsByTerm(Integer termId, int page, int size, String sort) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
 
@@ -193,7 +181,7 @@ public class TermsResource extends AbstractResource implements TermsApi {
 	public ContentResponse<List<PostView>> findPostsByCategory(String categoryName, Integer stationId, int page, int size) {
 		Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
 
-		List<Post> posts = termRepository.findPostsByTagAndStationId(categoryName, stationId, pageable);
+		List<Post> posts = termRepository.findPostsByCategoryAndStationId(categoryName, stationId, pageable);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);

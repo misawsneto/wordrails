@@ -49,13 +49,6 @@ public interface TermsApi {
 	ContentResponse<List<TermView>> getAllTerms(@QueryParam("taxonomyId") Integer taxonomyId,
 												@QueryParam("perspectiveId") Integer perspectiveId) throws IOException;
 
-	@GET
-	@Path("/search/findPostsByTagAndStationId")
-	@PreAuthorize("permitAll()")
-	ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tagName") String tagName,
-															   @QueryParam("stationId") Integer stationId,
-															   @QueryParam("page") int page,
-															   @QueryParam("size") int size) throws ServletException, IOException;
 
 	@GET
 	@Path("/search/findPostsByTerm")
@@ -67,6 +60,7 @@ public interface TermsApi {
 
 	@GET
 	@Path("/search/findPostsByCategory")
+	@PreAuthorize("permitAll()")
 	public ContentResponse<List<PostView>> findPostsByCategory(@QueryParam("categoryName") String categoryName,
 															   @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size);
 }
