@@ -154,4 +154,8 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@RestResource(exported = true)
 	List<Post> findByAuthorUsernameAndStateOrderByDateDesc(@Param("username") String username, @Param("state") String
 			state, Pageable pageable);
+
+	@RestResource(exported = false)
+	@Query("SELECT post from Post post join fetch post.terms terms")
+	List<Post> findPostWithJoins();
 }

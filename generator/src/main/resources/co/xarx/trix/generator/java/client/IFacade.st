@@ -124,7 +124,8 @@ interface I$facade$ {
 	@PUT("/posts/{postId}/convert")
 	@FormUrlEncoded
 	void convertPost(@Path("postId") Integer postId, @Field("state") String state, Callback<ContentResponse<PostView\>\> _callback);
-		
+
+	/*
 	@GET("/posts/search/networkPosts")
 	ContentResponse<SearchView\> searchPosts(@Query("query") String q, @Query("stationIds") String sIds, @Query("personId") Integer pId,
 			@Query("publicationType") String pt, @Query("noHighlight") Boolean nh, @Query("sortByDate") Boolean sd,
@@ -134,7 +135,18 @@ interface I$facade$ {
 	void searchPosts(@Query("query") String q, @Query("stationIds") String sIds, @Query("personId") Integer pId,
 			@Query("publicationType") String pt, @Query("noHighlight") Boolean nh, @Query("sortByDate") Boolean sd,
 			@Query("page") Integer p, @Query("size") Integer s, Callback<ContentResponse<SearchView\>\> _callback);
-		
+			*/
+
+	@GET("/posts/search/networkPosts")
+    ContentResponse<SearchView\> searchPosts(@Query("q") String q, @Query("authorId") List<Integer> aIds, @Query("q")
+    			List<Integer\> sIds, String st, String from, String until, List<Integer\> cIds, List<String\> tags,
+    			Integer page, Integer size, List<String\> orders, List<String\> embeds);
+
+    @GET("/posts/search/networkPosts")
+    void searchPosts(String q, List<Integer\> aIds, List<Integer\> sIds, String st, String from, String until,
+                 List<Integer\> cIds, List<String\> tags, Integer page, Integer size, List<String\> orders,
+                 List<String\> embeds, Callback<ContentResponse<SearchView\>\> _callback);
+
 	@GET("/bookmarks/searchBookmarks")
 	ContentResponse<List<PostView\>\> searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size);
 	

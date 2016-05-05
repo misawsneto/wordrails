@@ -1,6 +1,6 @@
 package co.xarx.trix.web.rest.api.v2;
 
-import co.xarx.trix.api.v2.request.SavePageRequest;
+import co.xarx.trix.api.v2.request.PageUpdateRequest;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -23,7 +23,7 @@ public interface V2PagesApi {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@PreAuthorize("hasPermission(#sid, 'co.xarx.trix.domain.Station', 'administration')")
 	Response postPage(@PathParam("stationId") @P("sid") Integer stationId,
-					 SavePageRequest pageRequest) throws IOException;
+					 PageUpdateRequest pageRequest) throws IOException;
 
 	@PUT
 	@Path("/{pageId}")
@@ -31,5 +31,5 @@ public interface V2PagesApi {
 	@PreAuthorize("hasPermission(#sid, 'co.xarx.trix.domain.Station', 'administration')")
 	Response putPage(@PathParam("stationId") @P("sid") Integer stationId,
 					 @PathParam("pageId") Integer pageId,
-					 SavePageRequest pageRequest) throws IOException;
+					 PageUpdateRequest pageRequest) throws IOException;
 }

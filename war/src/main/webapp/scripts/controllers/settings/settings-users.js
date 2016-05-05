@@ -1,5 +1,5 @@
-app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog', '$mdToast', '$filter', '$translate',
-	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog, $mdToast, $filter, $translate){
+app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog', '$mdToast', '$filter', '$translate', '$mdConstant',
+	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog, $mdToast, $filter, $translate, $mdConstant){
 
   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
@@ -575,6 +575,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
     // ---------- invite users funcs ----------
     $scope.showInviteUserDialog = function(event){
+      $scope.invitationTemplate = angular.copy($scope.originalInvitationTemplate);
       $scope.invitations = [];
        // show term alert
       $mdDialog.show({
@@ -587,7 +588,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         templateUrl: 'invitation-dialog.html',
         parent: angular.element(document.body),
         targetEvent: event,
-        clickOutsideToClose:true,
+        clickOutsideToClose:false,
         escapeToClose: false
         // onComplete: function(){
 
@@ -602,73 +603,75 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     }
     // ---------- /invite users funcs ----------
 
-    $scope.email = {body: '<div>'+
-'<div class="block-box">'+
-'<h3>Modes</h3>'+
-'<p><a href="/wysiwyg-editor/docs/examples/edit-in-popup" title="Edit in Popup">Edit in Popup</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/full-featured" title="Full Featured">Full Featured</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/full-page" title="Full Page">Full Page</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/iframe" title="Iframe">Iframe</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/init-on-button" title="Init On Button">Init On Button</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/init-on-click" title="Init On Click">Init On Click</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/inline" title="Inline">Inline</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/inline-two-instances" title="Inline Two Instances">Inline Two Instances</a></p>'+
-'<p><a href="/wysiwyg-editor/docs/examples/textarea" title="Textarea">Textarea</a></p>'+
-'</div>'+
-'</div>'};
+    trix.getInvitationTemplate().success(function(invitationTemplate){
+      $scope.originalInvitationTemplate = invitationTemplate.response
+    })
+
     var lang = $translate.use();
+
     $scope.froalaOptions = {
-    toolbarInline: false,
       heightMin: 200,
       language: (lang == 'en' ? 'en_gb' : lang == 'pt' ? 'pt_br' : null),
       fontSizeDefaultSelection: '18',
-    // Set the image upload parameter.
-        imageUploadParam: 'contents',
+  // Set the image upload parameter.
+      imageUploadParam: 'contents',
 
-        // Set the image upload URL.
-        imageUploadURL: '/api/images/upload?imageType=POST',
+      // Set the image upload URL.
+      imageUploadURL: '/api/images/upload?imageType=POST',
 
-        // Set request type.
-        imageUploadMethod: 'POST',
+      // Set request type.
+      imageUploadMethod: 'POST',
 
-        // Set max image size to 5MB.
-        imageMaxSize: 8 * 1024 * 1024,
+      // Set max image size to 5MB.
+      imageMaxSize: 8 * 1024 * 1024,
 
-        // Allow to upload PNG and JPG.
-        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+      // Allow to upload PNG and JPG.
+      imageAllowedTypes: ['jpeg', 'jpg', 'png'],
 
-        // Set the file upload parameter.
-        fileUploadParam: 'contents',
+      // Set the file upload parameter.
+      fileUploadParam: 'contents',
 
-        // Set the file upload URL.
-        fileUploadURL: '/api/files/upload/doc',
+      // Set the file upload URL.
+      fileUploadURL: '/api/files/upload/doc',
 
-        // Set request type.
-        fileUploadMethod: 'POST',
+      // Set request type.
+      fileUploadMethod: 'POST',
 
-        // Set max file size to 20MB.
-        fileMaxSize: 20 * 1024 * 1024,
+      // Set max file size to 20MB.
+      fileMaxSize: 20 * 1024 * 1024,
 
-        // Allow to upload any file.
-        fileAllowedTypes: ['*'],
+      // Allow to upload any file.
+      fileAllowedTypes: ['*'],
 
-        toolbarInline: false,
-        toolbarSticky: false,
-        toolbarInline: true,
-        charCounterCount: false,
-        toolbarContainer: '#email-template',
-      }
+      toolbarInline: false,
+      toolbarButtons: ["bold", "italic", "underline", "|", "fontSize", "color", "align", "formatOL", "formatUL", "|", "html"],
+      toolbarButtonsMD: ["bold", "italic", "underline", "|", "fontSize", "color", "align", "formatOL", "formatUL", "|", "html"],
+      toolbarButtonsSM: ["bold", "italic", "underline", "|", "fontSize", "color", "align", "formatOL", "formatUL", "|", "html"],
+      toolbarButtonsXS: ["bold", "italic", "underline", "|", "fontSize", "color", "align", "formatOL", "formatUL", "|", "html"],
+      charCounterCount: false,
+      height: 300
+    }
 
       $scope.invitatePeople = function(){
         var invitation = {
-          emailTemplate: $scope.email.body,
+          emailTemplate: $scope.invitationTemplate,
           emails: angular.copy($scope.invitations)
         }
         trix.invitePeople(invitation).success(function(conflicts){
-
+          $scope.app.showSuccessToast($filter('translate')('settings.users.INVITATIONS_SENT'))
+          $mdDialog.cancel();
         })
       }
 
     // -------- /invitation -------
     
+    $scope.$mdConstant = $mdConstant.KEY_CODE;
+    $scope.separatorKeys = []
+    for(prop in $mdConstant.KEY_CODE){
+      $scope.separatorKeys.push($mdConstant.KEY_CODE[prop]);
+    }
+
+    settingsUsersCtrl = $scope;
 }])
+
+var settingsUsersCtrl = settingsUsersCtrl

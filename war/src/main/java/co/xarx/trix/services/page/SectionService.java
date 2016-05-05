@@ -1,7 +1,7 @@
 package co.xarx.trix.services.page;
 
 import co.xarx.trix.api.v2.SectionData;
-import co.xarx.trix.api.v2.request.SaveSectionsRequest;
+import co.xarx.trix.api.v2.request.SectionsUpdateRequest;
 import co.xarx.trix.domain.page.AbstractSection;
 import co.xarx.trix.domain.page.Page;
 import co.xarx.trix.persistence.SectionRepository;
@@ -27,9 +27,9 @@ public class SectionService {
 
 
 	@Transactional
-	public List<Integer> saveSections(Page page, SaveSectionsRequest saveSectionsRequest) {
+	public List<Integer> saveSections(Page page, SectionsUpdateRequest sectionsUpdateRequest) {
 		List<Integer> ids = new ArrayList<>();
-		for (SectionData sectionData : saveSectionsRequest.getSections()) {
+		for (SectionData sectionData : sectionsUpdateRequest.getSections()) {
 			AbstractSection section = sectionMapper.asAbstractEntity(sectionData);
 			section.setPage(page);
 			section = sectionRepository.save(section);

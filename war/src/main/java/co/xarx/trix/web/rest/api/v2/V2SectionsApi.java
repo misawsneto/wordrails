@@ -1,6 +1,6 @@
 package co.xarx.trix.web.rest.api.v2;
 
-import co.xarx.trix.api.v2.request.SaveSectionsRequest;
+import co.xarx.trix.api.v2.request.SectionsUpdateRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.ws.rs.*;
@@ -24,5 +24,5 @@ public interface V2SectionsApi {
 	@Path("/")
 	Response postSections(@PathParam("stationId") Integer stationId,
 						  @PathParam("pageId") Integer pageId,
-						  SaveSectionsRequest saveSectionsRequest) throws IOException;
+						  SectionsUpdateRequest sectionsUpdateRequest) throws IOException;
 }

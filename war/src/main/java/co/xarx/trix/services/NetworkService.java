@@ -88,7 +88,8 @@ public class NetworkService {
 			String filePath = new ClassPathResource(templateFile).getFile().getAbsolutePath();
 			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
 			String template = new String(bytes, Charset.forName("UTF-8"));
-			template.replaceAll("{{invitationTemplate}}", network.invitationMessage);
+			template = 	template.replaceAll("\\{\\{invitationTemplate}}", network.invitationMessage);
+			return template;
 		}catch (Exception e){
 			e.printStackTrace();
 		}

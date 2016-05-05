@@ -34,6 +34,8 @@ public class ElasticSearchConfig {
 	private String user;
 	@Value("${spring.data.elasticsearch.password}")
 	private String password;
+	@Value("${spring.data.elasticsearch.shield.enabled}")
+	private boolean shieldEnabled;
 
 	@Bean
 	public FactoryBean executorFactory() {
@@ -46,10 +48,16 @@ public class ElasticSearchConfig {
 
 	@Bean
 	public Client elasticSearchClient() {
-		Settings settings = ImmutableSettings.settingsBuilder()
-				.put("cluster.name", cluster)
-				.put("shield.user", user + ":" + password)
-				.build();
+
+		ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder().put("cluster.name", cluster);
+
+		Settings settings = null;
+
+		if(shieldEnabled)
+			settings = builder.put("shield.user", user + ":" + password).build();
+		else
+			settings = builder.build();
+
 		return new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress(host, port));
 	}
 

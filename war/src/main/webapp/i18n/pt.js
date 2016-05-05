@@ -90,7 +90,10 @@
 		"ADD_PERSON": "Crie um novo usuário",
 		"TOTAL": "Total",
 		"SHOWING": "Exibidos",
-		"SELECTED": "Selecionado"
+		"SELECTED": "Selecionado",
+		"SELECT_ALL": "Selecionar todos",
+		"DESELECT_ALL": "Desselecionar todos",
+		"AT": "em"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -204,7 +207,8 @@
 			"USERNAME_IN_USE": "Usuário já está sendo usado. Por favor use outro usuário e tente novamente.",
 			"EMAIL_IN_USE": "Email já está sendo usado. Por favor use outro email e tente novamente.",
 			"REQUIRED_FIELDS": "Nome, usuário e email são campos obrigatórios.",
-			"OPTIONAL_PASSWORD": "A senha é opcional e caso não fornecida será gerado automáticamente e enviada por email."
+			"OPTIONAL_PASSWORD": "A senha é opcional e caso não fornecida será gerado automáticamente e enviada por email.",
+			"INVITATIONS_SENT": "Convites enviados com sucesso"
 		},
 		"post": {
 			"menu":{
@@ -266,7 +270,11 @@
 			"TOGGLE_LANDSCAPE": "Ligar/desligar modo paisagem (imagem)",
 			"SHOW_VERSION": "Exibir versão",
 			"CONTRAST": "Contraste",
-			"SELECT_STATION": "Selecione uma estação e categorias para indexar sua publicação"
+			"SELECT_STATION": "Selecione uma estação e categorias para indexar sua publicação",
+			"ADD_TAGS": "Adicionar tags",
+			"PUBLISH_ALL": "Publicar todos",
+			"DRAFT_ALL": "Mover para rascunhos",
+			"TRASH_ALL": "Mover para a lixeira"
 		},
 		"station": {
 			"STATION_SETTINGS": "Configurações de estação",

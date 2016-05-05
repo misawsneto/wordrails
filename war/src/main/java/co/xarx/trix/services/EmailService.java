@@ -126,9 +126,9 @@ import java.util.Set;
 	}
 
 	public Map parseTemplateData(Invitation invitation, Network network, Person inviter){
-		Color c1 = Color.decode(network.mainColor);
-		Color c2 = Color.decode(network.navbarColor);
-		Integer bgColor = Integer.parseInt(network.backgroundColor.replace("#", ""), 16);
+		Color c1 = Color.decode(network.primaryColors.get("500"));
+		Color c2 = Color.decode(network.secondaryColors.get("300"));
+		Integer bgColor = Integer.parseInt(network.backgroundColors.get("500").replace("#", ""), 16);
 		Integer referenceColor = Integer.parseInt("ffffff", 16);
 
 		String networkNameColor = (bgColor > referenceColor / 2) ? "black" : "white";
@@ -162,7 +162,15 @@ import java.util.Set;
 
 	public void sendInvitation(Network network, Invitation invitation, Person inviter, String emailTemplate) {
 		try {
-			String template = emailTemplate;
+
+			String headerTemplateFile = "complete-subscription-email.html";
+			String filePath = new ClassPathResource(headerTemplateFile).getFile().getAbsolutePath();
+
+			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+			String headerTemplate = new String(bytes, Charset.forName("UTF-8"));
+
+
+			String template = headerTemplate.replaceAll("\\{\\{\body\\}\\}", emailTemplate) ;
 			//notifyPersonCreation(network, invitation, template, inviter);
 			StringWriter writer = new StringWriter();
 			MustacheFactory mf = new DefaultMustacheFactory();
