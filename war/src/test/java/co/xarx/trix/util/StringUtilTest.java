@@ -56,7 +56,8 @@ public class StringUtilTest {
 	public void testIsEmailAddr() throws Exception {
 		Map<String, Boolean> testEmails = new HashMap<>();
 		batchEmails.forEach((email, isValid) -> {
-			testEmails.put(email, StringUtil.isEmailAddr(email));
+			testEmails.put(email, StringUtil.isEmailAddr(email)
+			);
 			if(testEmails.get(email) != isValid){
 				System.out.println(email + " " + testEmails.get(email) + " " + isValid);
 			}
