@@ -34,7 +34,7 @@
       <div class="vbox p-t-lg p-r-xxl">
       
         <div class="search-with-filter m-r-sm m-l-sm p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
-          <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
+          <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t" ng-model="searchQuery">
 
           <!-- dropdown filter -->
           <div class="pos-abt top-0 right-0 m-t pull-right" uib-dropdown auto-close="disabled" is-open="advancedMenuOpen">
@@ -149,7 +149,7 @@
                           </div>
                         </div>
                         <div class="pull-right m-r font-normal fade-in-hover-el">
-                          <div class="inline v-m p-sm m-l opacity-07" ng-click="showComments(publication.id)">
+                          <div class="inline v-m p-sm m-l opacity-07" ng-click="showComments(publication)">
                             {{publication.commentsCount}}
                             <i class="mdi2-comment-multiple-outline i-20"></i>
                           </div>
@@ -364,7 +364,7 @@
                   <i class="mdi mdi2-delete i-20"></i>
                 </md-button>
               </div>
-              <div class="p text-lg">{{postLoaded.title}}</div>
+              <div class="p text-lg l-h-1x">{{postLoaded.title}}</div>
               <div class="p-h p-t-xs">{{app.getLocalTime(postLoaded.date)}}</div>
               <div class="p pos-rlt" ng-bind-html="postLoaded.body">
               </div> 
@@ -382,9 +382,27 @@
     <md-content class="pos-abt bottom-0 right-0 left-0 md-background-default background" style="top:64px">
         <div id="post-comments-sidebar" class="vbox">
           <div class="row-row">
-            <div class="cell">
+            <div id="comment-list" class="cell">
               <div class="cell-inner">
-
+                <ul infinite-scroll="paginateComments()" infinite-scroll-container="'#comment-list'">
+                  <li ng-repeat="comment in comments">
+                    <div class="p-sm pos-rlt">
+                      <div class="display-t-c inline p-h-xs">
+                        <div ng-style="app.getUserImage(comment.author, 'small', 'PROFILE_PICTURE', true)" style="height: 34px;" class="bg-cover img-responsive img-circle thumb-xs md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(comment.author)}">
+                          <i ng-if="!app.hasProfilePicture(comment.author)" style="line-height: 36px;" class="mdi2-account i-20"></i>
+                        </div>
+                      </div>
+                      <div class="p-l-sm display-t-c v-m inline text-sm">
+                        <span class="text-base font-bold">{{comment.author.name}}</span><br>
+                        {{comment.body}}
+                      </div>
+                      <div class="p-h-sm text-right">
+                        <span am-time-ago="comment.date" class="text-xxs"></span>
+                      </div>
+                    </div>
+                    <md-divider></md-divider>
+                  </li>
+                </ul>
 
               </div>
             </div>
@@ -394,7 +412,7 @@
               <i ng-if="!app.userImageSmall" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
             </div>
 
-            <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-button not-trans m-0 md-icon-button pull-right md-accent-default background">
+            <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-button not-trans m-0 md-icon-button pull-right md-accent-default background" ng-click="postComment(postLoaded, newComment)">
               <i class="mdi2-send i-16"></i>
             </md-button>
             <div class="m-l-xxl m-r-xxl"> 

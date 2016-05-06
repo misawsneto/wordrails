@@ -61,35 +61,48 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 		$scope.trash = [];
 
 	$scope.$watch('settings.tab', function(){
-		if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){
-	// trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
-		// 'publicationType': 'DRAFT', sortByDate: true}).success(function(response){
-			trix.getPersonNetworkPostsByState(null, 'DRAFT', $scope.app.publicationsCtrl.page, 10).success(function(response){
-				$scope.drafts = response;
-				$scope.firstLoad = true;
-			})
-		}
-		if(/*$state.params.type == "publications"*/ $scope.settings.tab == "publications"){
-			trix.getPersonNetworkPostsByState(null, 'PUBLISHED', $scope.app.publicationsCtrl.page, 10).success(function(response){
-				$scope.publications = response;
-				$scope.firstLoad = true;
-			})
-		}
-		if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "scheduled"){
-			trix.getPersonNetworkPostsByState(null, 'SCHEDULED', $scope.app.publicationsCtrl.page, 10).success(function(response){
-				$scope.scheduleds = response;
-				$scope.firstLoad = true;
-			})
-		}
-		if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "trash"){
-			trix.getPersonNetworkPostsByState(null, 'TRASH', $scope.app.publicationsCtrl.page, 10).success(function(response){
-				$scope.trash = response;
-				$scope.firstLoad = true;
-			})
-		}
-
-		trix.searchPosts('', null, null, 'PUBLISHED', null, null, null, null, 0, 10, null, null)
+	// 	if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){
+	// // trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
+	// 	// 'publicationType': 'DRAFT', sortByDate: true}).success(function(response){
+	// 		trix.getPersonNetworkPostsByState(null, 'DRAFT', $scope.app.publicationsCtrl.page, $scope.window).success(function(response){
+	// 			$scope.drafts = response;
+	// 			$scope.firstLoad = true;
+	// 		})
+	// 	}
+	// 	if(/*$state.params.type == "publications"*/ $scope.settings.tab == "publications"){
+	// 		trix.getPersonNetworkPostsByState(null, 'PUBLISHED', $scope.app.publicationsCtrl.page, $scope.window).success(function(response){
+	// 			$scope.publications = response;
+	// 			$scope.firstLoad = true;
+	// 		})
+	// 	}
+	// 	if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "scheduled"){
+	// 		trix.getPersonNetworkPostsByState(null, 'SCHEDULED', $scope.app.publicationsCtrl.page, $scope.window).success(function(response){
+	// 			$scope.scheduleds = response;
+	// 			$scope.firstLoad = true;
+	// 		})
+	// 	}
+	// 	if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "trash"){
+	// 		trix.getPersonNetworkPostsByState(null, 'TRASH', $scope.app.publicationsCtrl.page, $scope.window).success(function(response){
+	// 			$scope.trash = response;
+	// 			$scope.firstLoad = true;
+	// 		})
+	// 	}
+		trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, $scope.app.publicationsCtrl.page, $scope.window, '-date', null, true).success(function(response){
+			response.reverse();
+			$scope.publications = response;
+		})
 	});
+
+	var tabToState = function(){
+		if($scope.settings.tab === 'publications')
+			return 'PUBLISHED';
+		if($scope.settings.tab === 'scheduled')
+			return 'SCHEDULED';
+		if($scope.settings.tab === 'drafts')
+			return 'DRAFT';
+		if($scope.settings.tab === 'trash')
+			return 'TRASH';
+	}
 
 	$scope.$on('POST_REMOVED', function(event, postId){
 		if($scope.app.publicationsCtrl && $scope.publications){
@@ -150,10 +163,10 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 	}
 
 	$scope.page = 0;
-	$scope.loadingComments = true
+	$scope.loadingComments = false
 	$scope.allLoaded = false;
 	$scope.beginning = true;
-	$scope.window = 20
+	$scope.window = 40
 
 	// sidenav toggle
 	$scope.toggleComments = buildToggler('post-comments');
@@ -167,10 +180,8 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
   $scope.showPost = function(id){
   	$scope.togglePost();
   	$scope.postLoaded = null;
-  	$scope.loadingComments = true;
   	trix.getPost(id, 'postProjection').success(function(response){
   		$scope.postLoaded = response;
-  		$scope.loadingComments = false;
 
   		if($scope.postLoaded.terms)
 			$scope.postLoaded.terms.forEach(function(term){
@@ -187,18 +198,31 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
   	})
   }
 
-	$scope.showComments = function(postId){
+	$scope.showComments = function(post){
 		$scope.toggleComments();
 		$scope.comments = []
-		$scope.loadingComments = true;
-		if(postId)
-			trix.findPostCommentsOrderByDate(postId, $scope.page, $scope.window, null, 'commentProjection').success(function(response){
-				$scope.comments = response.comments;
-				$scope.loadingComments = false
+		$scope.postLoaded = post;
+		$scope.commentsPage = 0;
+		$scope.loadingComments = false
+		$scope.paginateComments();
+	}
+
+	$scope.paginateComments = function(){
+		if(!$scope.loadingComments && $scope.postLoaded && $scope.postLoaded.id){
+			$scope.loadingComments = true;
+			trix.findPostCommentsOrderByDate($scope.postLoaded.id, $scope.commentsPage, $scope.window, null, 'commentProjection').success(function(response){
+				if(response.comments && response.comments.length > 0){
+					response.comments.forEach(function(comment){
+						$scope.comments.push(comment);
+					})
+					$scope.loadingComments = false
+					$scope.commentsPage ++;
+				}
 			}).error(function(){
 				$scope.comments = null;
 				$scope.loadingComments = false
-			})
+			})	
+		}
 	}
 
 	// $scope.toggleCommentsSidebar = function(){
@@ -319,6 +343,30 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
         ret.push(pub.id);
     });
     return ret;
+	}
+
+	$scope.newComment = '';
+	$scope.postComment = function(post, body){
+		var comment = {
+			post: PostDto.getSelf(post),
+			author: PersonDto.getSelf($scope.app.person),
+			body: body
+		}
+		trix.postComment(comment).success(function(response){
+			var c = {
+				post: post,
+				author: $scope.app.person,
+				body: body,
+				date: new Date()
+			}
+
+			if(!$scope.comments || !$scope.comments.length)
+				$scope.comments = [];
+
+			$scope.comments.unshift(c);
+			post.commentsCount++;
+			$scope.newComment = '';
+		})
 	}
 
 }]);

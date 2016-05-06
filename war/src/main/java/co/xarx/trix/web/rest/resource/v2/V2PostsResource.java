@@ -9,6 +9,7 @@ import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.util.RestUtil;
+import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2PostsApi;
 import com.google.common.collect.Sets;
@@ -53,15 +54,22 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 								Integer page,
 								Integer size,
 								List<String> orders,
-								List<String> embeds) {
+								List<String> embeds,
+								boolean snippet) {
 
 		PostStatement params = new PostStatement(query, authors, stations, state, from, until, categories, tags, orders);
 
 		List<Integer> ids = postSearchService.searchIds(params);
 		List<Post> posts = postSearchService.search(ids, page, size);
 		List<PostData> data = posts.stream()
-				.map(post -> mapper.map(post, PostData.class))
-				.collect(Collectors.toList());
+				.map(post -> mapper.map(post, PostData.class)).collect(Collectors.toList());
+
+		if(snippet && data != null)
+			data.forEach(postData -> {
+				postData.setSnippet(StringUtil.simpleSnippet(postData.getBody()));
+				postData.setBody(null);
+			});
+
 
 		Set<String> postEmbeds = Sets.newHashSet("video", "image", "audio", "author", "categories");
 

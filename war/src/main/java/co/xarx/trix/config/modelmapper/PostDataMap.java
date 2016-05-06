@@ -28,6 +28,9 @@ public class PostDataMap extends PropertyMap<Post, PostData> {
 		map(source.getImageCaptionText(), destination.getImage().getCaption());
 		map(source.getImageCreditsText(), destination.getImage().getCredits());
 		map(source.isImageLandscape(), destination.getImage().isLandscape());
+		map(source.getStationId(), destination.getStationId());
+		map(source.getAuthor().getImageHash(), destination.getAuthorImageHash());
+		map(source.getAuthor().getCoverHash(), destination.getAuthorCoverHash());
 
 		map().setNotified(source.isNotify());
 		using(new TermToIntegerConverter()).map(source.getTerms(), destination.getCategoriesIds());

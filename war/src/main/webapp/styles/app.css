@@ -8494,6 +8494,10 @@ md-switch[disabled] .md-bar {
           transition: all 0.2s ease-in-out;
 }
 
+.opacity-0 {
+  opacity: 0;
+}
+
 .opacity-03 {
   opacity: 0.3;
 }

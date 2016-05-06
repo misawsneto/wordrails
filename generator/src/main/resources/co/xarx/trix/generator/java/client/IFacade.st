@@ -138,14 +138,17 @@ interface I$facade$ {
 			*/
 
 	@GET("/posts/search/networkPosts")
-    ContentResponse<SearchView\> searchPosts(@Query("q") String q, @Query("authorId") List<Integer> aIds, @Query("q")
-    			List<Integer\> sIds, String st, String from, String until, List<Integer\> cIds, List<String\> tags,
-    			Integer page, Integer size, List<String\> orders, List<String\> embeds);
+    ContentResponse<SearchView\> searchPosts(@Query("q") String q, @Query("authorId") List<Integer> aIds, @Query
+    ("stationId") List<Integer\> sIds, @Query("state") String st, @Query("from") String from, @Query("until") String
+    until, @Query("categoryId") List<Integer\> cIds, @Query("tag") List<String\> tags, @Query("page") Integer page,
+    @Query("size") Integer size, @Query("order") List<String\> orders, @Query("embed") List<String\> embeds);
 
     @GET("/posts/search/networkPosts")
-    void searchPosts(String q, List<Integer\> aIds, List<Integer\> sIds, String st, String from, String until,
-                 List<Integer\> cIds, List<String\> tags, Integer page, Integer size, List<String\> orders,
-                 List<String\> embeds, Callback<ContentResponse<SearchView\>\> _callback);
+    void searchPosts(@Query("q") String q, @Query("authorId") List<Integer\> aIds, @Query("stationId") List<Integer\>
+    sIds, @Query("state") String st, @Query("from") String from, @Query("until") String until, @Query("categoryId")
+    List<Integer\> cIds, @Query("tag") List<String\> tags, @Query("page") Integer page, @Query("size") Integer size,
+    @Query("order") List<String\> orders, @Query("embed") List<String\> embeds,
+    Callback<ContentResponse<SearchView\>\> _callback);
 
 	@GET("/bookmarks/searchBookmarks")
 	ContentResponse<List<PostView\>\> searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size);

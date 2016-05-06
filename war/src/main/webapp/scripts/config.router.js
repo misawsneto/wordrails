@@ -1122,7 +1122,7 @@ angular.module('app')
                 // }
                 return deferred.promise;
               },
-              deps:load( ['angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'perfect_scrollbar'] ).deps
+              deps:load( ['angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'perfect_scrollbar', 'angularMoment'] ).deps
             },
             controller: 'AppDataCtrl'
           })

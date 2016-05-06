@@ -25,8 +25,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.froalaOptions = {
 		toolbarInline: false,
-      heightMin: 200,
-      language: (lang == 'en' ? 'en_gb' : lang == 'pt' ? 'pt_br' : null),
+	      heightMin: 200,
+	      language: (lang == 'en' ? 'en_gb' : lang == 'pt' ? 'pt_br' : null),
 	  	fontSizeDefaultSelection: '18',
 		// Set the image upload parameter.
         imageUploadParam: 'contents',
@@ -57,6 +57,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
         // Allow to upload any file.
         fileAllowedTypes: ['*'],
+        toolbarSticky: false
     }
 
     $scope.showFeaturedMediaSelector = function(){
@@ -821,7 +822,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 				term.checked = true;
 			})
 
-		var hash = $scope.app.editingPost.featuredImageHash ? $scope.app.editingPost.featuredImageHash : $scope.app.editingPost.featuredImage.originalHash
+		var hash = $scope.app.editingPost.featuredImageHash ? $scope.app.editingPost.featuredImageHash : $scope.app.editingPost.imageHash ? $scope.app.editingPost.imageHash : $scope.app.editingPost.featuredImage.originalHash;
 		setPostFeaturedImage(hash)
 		$scope.featuredImage = $scope.app.editingPost.featuredImage
 		$scope.landscape = $scope.app.editingPost.imageLandscape;

@@ -327,8 +327,8 @@ var trix = angular.module('trix', [])
 	  return \$http.get(_config.url + "/api/posts/search/networkPosts", config)
 	}
 
-	this.searchPosts = function(query,authors,stations,state,from,until,categories,tags,page,size,orders,
-	embeds){
+	this.searchPosts = function(query,authors,stations,state,from,until,categories,tags,page,size,order,
+	embed, snippet){
 		var config = {
             "params": {
                 "query": query,
@@ -341,7 +341,9 @@ var trix = angular.module('trix', [])
                 "tags": tags,
                 "page": page,
                 "size": size,
-                "orders": orders
+                "order": order,
+                "embed": embed,
+                "snippet": snippet
             }
         }
         return \$http.get(_config.url + "/api/v2/posts/search", config)
