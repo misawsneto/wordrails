@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.awt.*;
 import java.io.StringReader;
@@ -297,6 +298,8 @@ public class EmailService {
 	}
 
 	public Person createPerson(String email, String name, List<Integer> stationIds){
+		Assert.isTrue(StringUtil.isEmailAddr(email), "Emails address wrong format " + email);
+
 		Person person = new Person();
 		User user = new User();
 
@@ -329,78 +332,6 @@ public class EmailService {
 
 		return person;
 	}
-
-//	public void createPerson(String email, String username, String name, String tenantId, List<Integer> stationIds){
-//
-//
-//		if(person1 != null){
-//			if(person1.user.password == null) {
-//				person1.user.password = StringUtil.generateRandomString(6, "a#");
-//			}
-//
-//			for(Integer stationId: stationIds){
-//				if(!stationRepository.findByPersonId(person1.id).contains(stationRepository.findOne(stationId))){
-//					StationRole role = new StationRole();
-//					role.tenantId = tenantId;
-//					role.station = stationRepository.findOne(stationId);
-//					role.person = person1;
-//					stationRolesRepository.save(role);
-//				}
-//			}
-//			personRepository.save(person1);
-//			return;
-//		}
-//
-//		if(person != null){
-//			for(int i = 1; ; i++){
-//				if(personRepository.findOne(qp.username.eq(username + String.valueOf(i))) != null){
-//					continue;
-//				}
-//				username += String.valueOf(i);
-//				break;
-//			}
-//		}
-//
-//		person = new Person();
-//		person.email = email;
-//		person.name = name;
-//		person.username = username;
-//		person.tenantId = tenantId;
-//		person.password = StringUtil.generateRandomString(6, "a#");
-//
-//		User user = new User();
-//		user.password = person.password;
-//		user.username = person.username;
-//		user.tenantId = tenantId;
-//		user.enabled = true;
-//
-//		List<StationRole> stationRoles = new ArrayList<>();
-//		for(Integer stationId: stationIds){
-//			Station station = stationRepository.findOne(stationId);
-//
-//			StationRole stationRole = new StationRole();
-//			stationRole.person = person;
-//			stationRole.station = station;
-//			stationRole.tenantId = tenantId;
-//			stationRoles.add(stationRole);
-//
-//			UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.USER, station);
-//			authority.tenantId = tenantId;
-//			authority.user = user;
-//			user.addAuthority(authority);
-//		}
-//
-//		person.user = user;
-//		personRepository.save(person);
-//		stationRolesRepository.save(stationRoles);
-//	}
-//
-//	public void createPersonBatch(Map<String, String> invitees, String tenantId, List<Integer> stations){
-//		for(Map.Entry<String, String> invitee: invitees.entrySet()){
-//			createPerson(invitee.getKey(), invitee.getKey().split("@")[0], invitee.getValue(), tenantId, stations);
-////			if(p != null) personRepository.save(p);
-//		}
-//	}
 
 	public void batchInvitation(Map<String, String> invitees, String tenantId, String subject, List<Integer> stations){
 //		createPersonBatch(invitees, tenantId, stations);
