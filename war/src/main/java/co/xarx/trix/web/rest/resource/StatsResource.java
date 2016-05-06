@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -41,5 +42,10 @@ public class StatsResource extends AbstractResource implements StatsApi {
 	@Override
 	public Map<String, Integer> getNetworkUsedSpace() {
 		return statisticsService.getFileStats();
+	}
+
+	@Override
+	public Map<Integer, Integer> countReadsByPostIds(List<Integer> postIds) {
+		return statisticsService.countPostReads(postIds);
 	}
 }

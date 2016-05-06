@@ -233,6 +233,12 @@ public class StatisticsService {
 		return StatsData;
 	}
 
+	public Map countPostReads(List<Integer> postIds){
+		Map postReads = new HashMap<Integer, Integer>();
+		postIds.forEach( postId -> postReads.put(postId, countTotals(postId, "nginx_access.postId", nginxAccessIndex)));
+		return postReads;
+	}
+
 	public Map getFileStats(){
 		List<Object[]> mimeSums = fileRepository.sumFilesSizeByMime(TenantContextHolder.getCurrentTenantId());
 		Map map = new HashMap<>();

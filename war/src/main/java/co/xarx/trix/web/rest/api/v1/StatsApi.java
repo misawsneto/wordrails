@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Path("/stats")
@@ -42,4 +43,8 @@ public interface StatsApi {
 	@Path("/storage")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Map<String, Integer> getNetworkUsedSpace();
+
+	@POST
+	@Path("/countPostReads")
+	Map<Integer, Integer> countReadsByPostIds(List<Integer> postIds);
 }
