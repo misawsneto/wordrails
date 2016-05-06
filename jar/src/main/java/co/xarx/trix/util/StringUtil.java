@@ -1,6 +1,7 @@
 package co.xarx.trix.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -51,12 +52,8 @@ public class StringUtil {
 	}
 
 	public static boolean isEmailAddr(String emailAddr) {
-		try {
-			Matcher matcher = EMAIL_PATTERN.matcher(emailAddr);
-			return matcher.matches();
-		} catch (Exception e) {
-		}
-		return false;
+		EmailValidator ev = EmailValidator.getInstance(false);
+		return ev.isValid(emailAddr);
 	}
 
 	public static boolean isFQDN(String fqdnVal) {
