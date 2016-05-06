@@ -36,10 +36,8 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	private PostSearchService postSearchService;
 	@Autowired
 	private ModelMapper mapper;
-
 	@Autowired
 	private PostRepository postRepository;
-
 	@Autowired
 	private PostConverter postConverter;
 

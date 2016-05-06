@@ -75,8 +75,6 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
   // --- publications ----------
 
-      $scope.toggleAdvancedSearch = buildToggler('advanced-search');
-
     $scope.settings = {'tab': 'publications'}
 
     $scope.dateValue = new Date();
@@ -97,7 +95,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
         }
       }
 
-      $scope.toggleLeft = buildDelayedToggler('left');
+      
 
         /**
        * Supplies a function that will continue to operate until the

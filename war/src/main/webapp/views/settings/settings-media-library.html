@@ -1,0 +1,191 @@
+<div class="pos-abt top-0 bottom-0 left-0 right-0">
+  <div class="hbox">
+    <div ng-if="$mdMedia('gt-sm')" class="col w text-md font-500" ng-class="{'w-lg': $mdMedia('gt-md')}">
+      <div class="vbox p-t-lg">
+        <div class="row-row">
+          <div class="cell o-f-v">
+            <div class="cell-inner p">
+              <ul class="settings-list text-muted m-t-xxl pos-rlt">
+                <li ng-class="{'active': settings.tab === 'publications'}">
+                  <a ng-click="settings.tab = 'publications'" md-ink-ripple class="settings-items"><span translate='titles.PUBLICATIONS'></span></a>
+                </li>
+                <li ng-class="{'active': settings.tab === 'users'}">
+                  <a ng-click="settings.tab = 'users'" md-ink-ripple class="settings-items"><span translate='titles.USERS'></span></a>
+                </li>
+                <li ng-class="{'active': settings.tab === 'drafts'}">
+                  <a ng-click="settings.tab = 'drafts'" md-ink-ripple class="settings-items"><span translate='titles.CATEGORIES'></span></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="vbox">
+
+        <div class="row-row">
+        <div class="cell">
+        <div class="cell-inner">
+
+        <div ng-class="{'p-h-xxl m-r-lg': $mdMedia('gt-sm')}">
+
+        <div class="m-t-lg search-with-filter m-r-sm m-l-sm p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
+          <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t" ng-model="query">
+
+          <!-- dropdown filter -->
+          <div class="pos-abt top-0 right-0 m-t pull-right" uib-dropdown auto-close="disabled" is-open="advancedMenuOpen">
+            <md-button uib-dropdown-toggle class="md-icon-button" aria-label="More" popover-trigger="click">
+              <i class="icon mdi-content-filter-list i-24" md-style="{'color': 'default'}" ></i>
+            </md-button>
+            <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="dropdown-menu-scale pull-right advanced-search-menu m-h-auto p-sm w-400 default-bg">
+                <!-- <time-date-picker orientation="true" class="m-h-auto" ng-model="dateValue"></time-date-picker> -->
+              <div class="arrow"></div>
+              <div>
+                <div class="pull-right">
+                  <a ng-click="advancedMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+                </div>
+                <div class="p-sm">
+                  <div class="m-b-sm text-u-c">
+                    Filtar por estação
+                  </div>
+                  <div class="m-b">
+                    <md-menu>
+                      <!-- Trigger element is a md-button with an icon -->
+                     <md-button ng-click="$mdOpenMenu($event)" class="md-button text-u-c" aria-label="Open sample menu">
+                       <!-- <md-icon md-font-set="material-icons" class="ng-scope ng-isolate-scope material-icons"> phone </md-icon> -->
+                       <i class="mdi mdi2-radio-tower"></i>
+                        {{'titles.STATIONS' | translate}}
+                     </md-button>
+                     <md-menu-content class="w-lg">
+                      <div class="p">
+                       <ul class="list-unstyled">
+                         <li ng-repeat="perm in stationsPermissions">
+                          <md-checkbox ng-model="perm.filter" aria-label="{{perm.stationName}}">
+                           {{ perm.stationName }}
+                           </md-checkbox>
+                         </li>
+                       </ul>
+                      </div>
+                     </md-menu-content>
+                    </md-menu>
+                  </div>
+                  <div class="m-b-lg text-u-c">
+                    Filtar por data
+                  </div>
+                  <div class="text-center">
+                    <div class="pos-rlt no-margin m-b-sm inline" style="width: 140px">
+                      <mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'titles.START_DATE' | translate}}" ng-model="filter.initialDate">
+                      </mdp-date-picker>
+                    </div>
+                    <div class="pos-rlt no-margin m-b-sm inline" style="width: 140px">
+                      <mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'titles.END_DATE' | translate}}" ng-model="filter.finalDate">
+                      </mdp-time-picker>
+                    </div>
+                  </div>
+                <!-- -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /dropdown -->
+        </div>
+        <!-- /search -->
+        <div class="p-r-sm p-l-sm">
+          <div class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z2 " style="overflow: auto;
+  max-height: 100%;">
+            <div class="" ng-class="{'hide': settings.tab !== 'publications'}">
+              <ul class="list-group bg-t m-0">
+                <li class="no-border-radius list-group-item no-bg b-l-2x r-0" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in publications" ng-click="activatePublication(publication);" style="cursor: inherit;">
+                  <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
+                    <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
+                    </div>
+                  </a>
+                  <div class="clear font-thin">
+                    <a href class="font-bold block text-md">{{publication.title}}</a>
+                    {{publication.snippet | characters:220}}
+                    <div class="p-t-sm font-500">
+                      <div ui-sref="app.post({'id': publication.id})" class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple>{{'titles.EDIT' | translate}}
+                      </div>
+                      <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">{{'titles.REMOVE' | translate}}
+                      </div>
+                    </div>
+                    <div class="m-t pull-right font-500 m-r-sm"><i class="icon mdi2-radio-tower"></i> {{app.getStationById(publication.stationId).name}}</div>
+                    <div class="list-group-item b-n p-sm p-t-sm no-padding-h inline">
+                      <a href class="pull-left m-r-sm"><div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1"></div></a>
+                      <div class="clear font-normal p-xs">
+                        <a href class="font-500 block">{{publication.authorName}}</a>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul> 
+            </div>
+            <!-- end of network configurations -->
+            <!-- domain and analytics -->
+            <div class="" ng-class="{'hide': settings.tab !== 'scheduled'}">
+              <ul class="list-group bg-t m-0">
+                <li class="list-group-item" ng-repeat="scheduled in scheduleds">
+                  <a href class="pull-left w-40 m-r"><img src="/images/a1.jpg" class="img-responsive img-circle"></a>
+                  <div class="clear">
+                    <a href class="font-bold block">{{scheduled.title}}</a>
+                    {{scheduled.snippet | characters:170}}
+                  </div>
+                </li>
+              </ul> 
+            </div>
+            <!-- /domain and analytics -->
+
+            <!-- logos -->
+            <div class=""  ng-class="{'hide': settings.tab !== 'drafts'}">
+              <ul class="list-group bg-t m-0">
+                <li class="no-border-radius list-group-item no-bg b-l-2x r-0" ng-class="{'b-l-primary': isActiveDraft(draft)}" ng-repeat="draft in drafts" ng-click="activateDraft(draft)" style="cursor: inherit;">
+                  <a href class="pull-left m-r" ng-if="app.hasImage(draft)" style="height: 96px;">
+                    <div ng-style="app.getBackgroundImage(draft, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
+                    </div>
+                  </a>
+                  <div class="clear font-thin">
+                    <a href class="font-bold block text-md">{{draft.title}}</a>
+                    {{draft.snippet | characters:170}}
+                    <div class="p-t-sm font-500">
+                      <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">editar
+                      </div>
+                      <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">remover
+                      </div>
+                    </div>
+                    <div class="m-t pull-right font-500 m-r-sm"><i class="icon mdi2-radio-tower"></i> {{app.getStationById(draft.stationId).name}}</div>
+                    <div class="list-group-item b-n p-sm p-t-sm no-padding-h inline">
+                      <a href class="pull-left m-r-sm"><img src="/images/a1.jpg" class="img-responsive img-circle thumb-xxs md-whiteframe-z1"></a>
+                      <div class="clear font-normal p-xs">
+                        <a href class="font-500 block">{{draft.authorName}}</a>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul> 
+            </div>
+            <!-- /logo section -->
+
+            <!-- footer -->
+            <div class="md-padding "  ng-class="{'hide': settings.tab !== 'trash'}">
+            </div>
+            <!-- /footer -->
+
+          </div>
+        </div>
+      
+        </div>
+
+        </div>
+        </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <md-sidenav class="md-background-hue-1 w-xl background md-sidenav-right md-whiteframe-z2 theming" md-component-id="advanced-search"> -->
+  <!-- /background -->
+<!-- </md-sidenav> -->

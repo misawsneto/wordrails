@@ -1,5 +1,7 @@
 package co.xarx.trix.services.security;
 
+import co.xarx.trix.api.v2.PermissionData;
+import co.xarx.trix.api.v2.StationPermissionData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.config.security.Permissions;
 import co.xarx.trix.domain.Station;
@@ -7,7 +9,6 @@ import co.xarx.trix.persistence.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.acls.domain.CumulativePermission;
-import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.*;
 import org.springframework.security.core.Authentication;
@@ -15,21 +16,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import static co.xarx.trix.config.security.Permissions.*;
 import static org.springframework.security.acls.domain.BasePermission.READ;
 
 @Service
 public class StationPermissionService {
 
-	private MutableAclService aclService;
+	private AccessControlListService aclService;
 	private StationRepository stationRepository;
 	private PermissionEvaluator permissionEvaluator;
 
 	@Autowired
-	public StationPermissionService(MutableAclService aclService,
+	public StationPermissionService(AccessControlListService aclService,
 									StationRepository stationRepository,
 									PermissionEvaluator permissionEvaluator) {
 		this.aclService = aclService;
@@ -37,15 +39,15 @@ public class StationPermissionService {
 		this.permissionEvaluator = permissionEvaluator;
 	}
 
-	public List<Integer> findStationsWithPermission() {
+	public List<Integer> findStationsWithReadPermission() {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		List<Integer> stationIds = stationRepository.findIds(TenantContextHolder.getCurrentTenantId());
 
-		return getIdsOfStationsWithPermissions(auth, stationIds);
+		return getIdsOfStationsWithReadPermissions(auth, stationIds);
 	}
 
-	private List<Integer> getIdsOfStationsWithPermissions(Authentication auth, List<Integer> stationIds) {
+	private List<Integer> getIdsOfStationsWithReadPermissions(Authentication auth, List<Integer> stationIds) {
 		return stationIds.stream()
 				.filter(stationId ->
 						permissionEvaluator.hasPermission(auth, stationId, Station.class.getName(), READ)
@@ -62,7 +64,7 @@ public class StationPermissionService {
 		permission.set(Permissions.READ);
 
 		if (editor) {
-			permission.set(Permissions.MODERATION);
+			permission.set(MODERATION);
 			permission.set(Permissions.CREATE);
 			permission.set(Permissions.WRITE);
 			permission.set(Permissions.DELETE);
@@ -74,11 +76,11 @@ public class StationPermissionService {
 			permission.set(Permissions.ADMINISTRATION);
 		}
 
-		List<MutableAcl> acls = findAcls(stationIds);
-		for (MutableAcl acl : acls) {
+		Map<ObjectIdentity, MutableAcl> acls = aclService.findAcls(stationIds);
+		for (MutableAcl acl : acls.values()) {
 			List<AccessControlEntry> entries = acl.getEntries();
 			for (String username : usernames) {
-				AccessControlEntry ace = findAce(entries, username, acl.getObjectIdentity());
+				AccessControlEntry ace = aclService.findAce(entries, username);
 				if(ace == null) {
 					Sid sid = new PrincipalSid(username);
 					acl.insertAce(acl.getEntries().size(), permission, sid, true);
@@ -91,37 +93,32 @@ public class StationPermissionService {
 		}
 	}
 
-	private AccessControlEntry findAce(List<AccessControlEntry> entries, String username, ObjectIdentity objectIdentity) {
-		for (AccessControlEntry entry : entries) {
-			if(entry.getAcl().getObjectIdentity().equals(objectIdentity) && entry.getSid().equals(new PrincipalSid(username))) {
-				return entry;
+	public StationPermissionData getPermissions(Integer stationId) {
+		MutableAcl acl = aclService.findAcl(stationId);
+
+		StationPermissionData result = new StationPermissionData();
+		result.setStationId(stationId);
+		for (AccessControlEntry ace : acl.getEntries()) {
+			boolean isNotUserPermission = !(ace.getSid() instanceof PrincipalSid);
+			if(isNotUserPermission) {
+				continue;
 			}
+			String username = ((PrincipalSid) ace.getSid()).getPrincipal();
+
+			Permission p = ace.getPermission();
+			PermissionData permissionData = aclService.getPermissionData(p);
+
+			StationPermissionData.Permission entry = result.new Permission(username, permissionData);
+
+			result.getUserPermissions().add(entry);
 		}
 
-		return null;
-	}
-
-	private List<MutableAcl> findAcls(List<Integer> stationIds) {
-		List<MutableAcl> acls = new ArrayList<>();
-		for (Integer stationId : stationIds) {
-			ObjectIdentity oi = new ObjectIdentityImpl(Station.class, stationId);
-
-			MutableAcl acl;
-			try {
-				acl = (MutableAcl) aclService.readAclById(oi);
-			} catch (NotFoundException e) {
-				acl = aclService.createAcl(oi);
-			}
-
-			acls.add(acl);
-		}
-
-		return acls;
+		return result;
 	}
 
 	public void deleteStationPermissions(List<String> usernames, List<Integer> stationIds) {
-		List<MutableAcl> acls = findAcls(stationIds);
-		for (MutableAcl acl : acls) {
+		Map<ObjectIdentity, MutableAcl> acls = aclService.findAcls(stationIds);
+		for (MutableAcl acl : acls.values()) {
 			for (int i = 0; i < acl.getEntries().size(); i++) {
 				AccessControlEntry ace = acl.getEntries().get(i);
 				if (usernames.contains(ace.getSid().toString())) {

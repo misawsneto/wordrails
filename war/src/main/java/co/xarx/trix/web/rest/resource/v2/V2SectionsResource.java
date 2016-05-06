@@ -1,7 +1,7 @@
 package co.xarx.trix.web.rest.resource.v2;
 
 import co.xarx.trix.api.v2.SectionData;
-import co.xarx.trix.api.v2.request.SaveSectionsRequest;
+import co.xarx.trix.api.v2.request.SectionsUpdateRequest;
 import co.xarx.trix.domain.page.AbstractSection;
 import co.xarx.trix.domain.page.Page;
 import co.xarx.trix.domain.page.QAbstractSection;
@@ -60,13 +60,13 @@ public class V2SectionsResource extends AbstractResource implements V2SectionsAp
 	}
 
 	@Override
-	public Response postSections(Integer stationId, Integer pageId, SaveSectionsRequest saveSectionsRequest) throws IOException {
+	public Response postSections(Integer stationId, Integer pageId, SectionsUpdateRequest sectionsUpdateRequest) throws IOException {
 		Page page = pageService.findPage(stationId, pageId);
 		if (page == null) {
 			return unprocessableEntity("Page of id " + pageId + " in station " + stationId + " could not be found");
 		}
 
-		List<Integer> ids = sectionService.saveSections(page, saveSectionsRequest);
+		List<Integer> ids = sectionService.saveSections(page, sectionsUpdateRequest);
 
 		return Response.ok(ids).build();
 	}

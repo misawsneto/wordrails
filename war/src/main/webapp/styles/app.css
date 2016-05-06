@@ -6750,6 +6750,10 @@ bg-none {
   width: 800px;
 }
 
+.w-700 {
+  width: 700px;
+}
+
 .w-600 {
   width: 600px;
 }
@@ -6786,6 +6790,10 @@ bg-none {
   height: 200px;
 }
 
+.h-250 {
+  height: 250px;
+}
+
 .h-300 {
   height: 300px;
 }
@@ -6804,6 +6812,14 @@ bg-none {
 
 .h-500 {
   height: 500px;
+}
+
+.h-m-300 {
+  max-height: 300px;
+}
+
+.h-m-400 {
+  max-height: 400px;
 }
 
 .h-m-500 {
@@ -8086,6 +8102,10 @@ md-switch[disabled] .md-bar {
   overflow: visible!important;
 }
 
+.o-f-a {
+  overflow: auto!important;
+}
+
 .o-f-h {
   overflow: hidden;
 }
@@ -8361,6 +8381,22 @@ md-switch[disabled] .md-bar {
   display: block!important;
 }
 
+.fade-in-hover-container .fade-in-hover-el {
+  opacity: 0;
+  -webkit-transition: all 0.2s ease-in-out;
+     -moz-transition: all 0.2s ease-in-out;
+       -o-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+}
+
+.fade-in-hover-container:hover .fade-in-hover-el {
+  opacity: 1;
+  -webkit-transition: all 0.2s ease-in-out;
+     -moz-transition: all 0.2s ease-in-out;
+       -o-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+}
+
 .black-grad {
   background: #333;
   /* For browsers that do not support gradients */
@@ -8458,8 +8494,32 @@ md-switch[disabled] .md-bar {
           transition: all 0.2s ease-in-out;
 }
 
-.opacity-0 {
-  opacity: 0;
+.opacity-03 {
+  opacity: 0.3;
+}
+
+.opacity-04 {
+  opacity: 0.4;
+}
+
+.opacity-05 {
+  opacity: 0.5;
+}
+
+.opacity-06 {
+  opacity: 0.6;
+}
+
+.opacity-07 {
+  opacity: 0.7;
+}
+
+.opacity-08 {
+  opacity: 0.8;
+}
+
+.opacity-09 {
+  opacity: 0.9;
 }
 
 .b-l-s {
@@ -8729,4 +8789,30 @@ button,
 
 #users-table > thead > tr > th {
   padding: 16px;
+}
+
+#email-template .fr-view table td,
+#email-template .fr-view table th {
+  border: none!important;
+}
+
+#email-template .md-chips.md-focused {
+  box-shadow: none!important;
+}
+
+#email-template .fr-toolbar {
+  border-top: none!important;
+  border-radius: 0!important;
+}
+
+.shadow-top {
+  -webkit-box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.12), 0 -1px 2px rgba(0, 0, 0, 0.24);
+          box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.12), 0 -1px 2px rgba(0, 0, 0, 0.24);
+}
+
+#post-summary-sidebar img {
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+  border: 0;
 }

@@ -278,7 +278,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 																 int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
-		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
+		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithReadPermission();
 
 		List<Post> posts = postRepository.findPostByPersonIdAndStations(personId, stationsWithPermission, pageable);
 
@@ -301,7 +301,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			person = personRepository.findOne(personId);
 		}
 
-		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
+		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithReadPermission();
 
 		List<Post> posts = postRepository.findPostByPersonIdAndStationsAndState(person.id, state, stationsWithPermission, pageable);
 

@@ -90,7 +90,10 @@
 		"ADD_PERSON": "Create a new user",
 		"TOTAL": "Total",
 		"SHOWING": "Showing",
-		"SELECTED": "Selected"
+		"SELECTED": "Selected",
+		"SELECT_ALL": "Select all",
+		"DESELECT_ALL": "Deselect all",
+		"AT": "at"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -204,7 +207,8 @@
 			"USERNAME_IN_USE": "Username is already in use. Please use another username and try again.",
 			"EMAIL_IN_USE": "Email is already in use. Please use another email and try again.",
 			"REQUIRED_FIELDS": "Name, username and email are required.",
-			"OPTIONAL_PASSWORD": "Password is optional and if not provided a random password will be generated and sent via email."
+			"OPTIONAL_PASSWORD": "Password is optional and if not provided a random password will be generated and sent via email.",
+			"INVITATIONS_SENT": "Invitations were sent"
 		},
 		"post": {
 			"menu":{
@@ -266,7 +270,11 @@
 			"TOGGLE_LANDSCAPE": "On/off landscape (image)",
 			"SHOW_VERSION": "Show version",
 			"CONTRAST": "Contrast",
-			"SELECT_STATION": "Select a station and categories for indexing your publication"
+			"SELECT_STATION": "Select a station and categories for indexing your publication",
+			"ADD_TAGS": "Adicioanr tags",
+			"PUBLISH_ALL": "Publish all",
+			"DRAFT_ALL": "Move to drafts",
+			"TRASH_ALL": "Move to trash"
 		},
 		"station": {
 			"STATION_SETTINGS": "Station settings",

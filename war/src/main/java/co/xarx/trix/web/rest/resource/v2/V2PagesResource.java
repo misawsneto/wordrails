@@ -1,7 +1,7 @@
 package co.xarx.trix.web.rest.resource.v2;
 
 import co.xarx.trix.api.v2.PageData;
-import co.xarx.trix.api.v2.request.SavePageRequest;
+import co.xarx.trix.api.v2.request.PageUpdateRequest;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.page.Page;
 import co.xarx.trix.domain.page.QueryableListSection;
@@ -70,7 +70,7 @@ public class V2PagesResource extends AbstractResource implements V2PagesApi {
 	}
 
 	@Override
-	public Response postPage(Integer stationId, SavePageRequest pageRequest) throws IOException {
+	public Response postPage(Integer stationId, PageUpdateRequest pageRequest) throws IOException {
 		Page page = mapper.map(pageRequest, Page.class);
 		Station station = stationRepository.findOne(stationId);
 
@@ -84,7 +84,7 @@ public class V2PagesResource extends AbstractResource implements V2PagesApi {
 	}
 
 	@Override
-	public Response putPage(Integer stationId, Integer pageId, SavePageRequest pageRequest) throws IOException {
+	public Response putPage(Integer stationId, Integer pageId, PageUpdateRequest pageRequest) throws IOException {
 		Page page = pageRepository.findOne(pageId);
 
 		if(page == null) {
