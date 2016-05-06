@@ -300,32 +300,50 @@
 </script>
 
 <md-sidenav class="md-background-hue-1 background md-sidenav-right md-whiteframe-z2 w-400" md-component-id="post-comments">
-  <md-toolbar class="md-theme-light">
-    <h1 class="md-toolbar-tools" translate="titles.COMMENTS"></h1>
-  </md-toolbar>
-  <md-content class="pos-abt bottom-0 right-0 left-0 md-background-default background" style="top:64px">
-      <div id="post-comments-sidebar" class="vbox">
-        <div class="row-row">
-          <div class="cell">
-            <div class="cell-inner">
+    <md-toolbar class="md-theme-light">
+      <h1 class="md-toolbar-tools" translate="titles.COMMENTS"></h1>
+    </md-toolbar>
+    <md-content class="pos-abt bottom-0 right-0 left-0 md-background-default background" style="top:64px">
+        <div id="post-comments-sidebar" class="vbox">
+          <div class="row-row">
+            <div id="comment-list" class="cell">
+              <div class="cell-inner">
+                <ul infinite-scroll="app.paginateComments()" infinite-scroll-container="'#comment-list'">
+                  <li ng-repeat="comment in app.comments">
+                    <div class="p-sm pos-rlt">
+                      <div class="display-t-c inline p-h-xs">
+                        <div ng-style="app.getUserImage(comment.author, 'small', 'PROFILE_PICTURE', true)" style="height: 34px;" class="bg-cover img-responsive img-circle thumb-xs md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(comment.author)}">
+                          <i ng-if="!app.hasProfilePicture(comment.author)" style="line-height: 36px;" class="mdi2-account i-20"></i>
+                        </div>
+                      </div>
+                      <div class="p-l-sm display-t-c v-m inline text-sm">
+                        <span class="text-base font-bold">{{comment.author.name}}</span><br>
+                        {{comment.body}}
+                      </div>
+                      <div class="p-h-sm text-right">
+                        <span am-time-ago="comment.date" class="text-xxs"></span>
+                      </div>
+                    </div>
+                    <md-divider></md-divider>
+                  </li>
+                </ul>
 
+              </div>
+            </div>
+          </div>
+          <div class="p inline w-full pos-rlt">
+            <div class="pull-left user-avatar rounded w-36 bg-white pos-rlt background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}" ng-class="{'md-primary-hue-1': !app.userImageSmall}">
+              <i ng-if="!app.userImageSmall" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
+            </div>
 
+            <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-button not-trans m-0 md-icon-button pull-right md-accent-default background" ng-click="app.postComment(app.postLoaded, app.newComment)">
+              <i class="mdi2-send i-16"></i>
+            </md-button>
+            <div class="m-l-xxl m-r-xxl"> 
+              <textarea style="max-height: 200px;" msd-elastic class="no-border p-t-sm" ng-model="app.newComment" style="resize: none;" placeholder="{{'titles.COMMENT' | translate }}"></textarea>
             </div>
           </div>
         </div>
-        <div class="p inline w-full pos-rlt">
-          <div class="pull-left user-avatar rounded w-36 bg-white pos-rlt background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}" ng-class="{'md-primary-hue-1': !app.userImageSmall}">
-            <i ng-if="!app.userImageSmall" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
-          </div>
 
-          <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-button not-trans m-0 md-icon-button pull-right md-accent-default background">
-            <i class="mdi2-send i-20"></i>
-          </md-button>
-          <div class="m-l-xxl m-r-xxl"> 
-            <textarea style="max-height: 200px;" msd-elastic class="no-border p-t-sm" ng-model="newComment" style="resize: none;" placeholder="{{'titles.COMMENT' | translate }}"></textarea>
-          </div>
-        </div>
-      </div>
-
-    </md-content>
-</md-sidenav>
+      </md-content>
+  </md-sidenav>

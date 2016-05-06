@@ -122,6 +122,10 @@ angular.module('app')
   .controller('AppDataCtrl', ['$scope', '$state', '$log', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdMedia', 'amMoment',
     function (             $scope, $state, $log, $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar, $mdMedia, amMoment) {
 
+      $scope.reloadMasonry = function(){
+        $rootScope.$broadcast('masonry.reload');
+      }
+
       $rootScope.$mdMedia = $mdMedia;
       amMoment.changeLocale('pt');
       $scope.app.getLocalTime = function(date){
@@ -823,6 +827,158 @@ angular.module('app')
       
       appDataCtrl = $scope;
       $scope.app.date = new Date();
+
+      // --------------------------
+      
+      // --------- generic comment tab
+      
+      function buildToggler(navID) {
+        return function() {
+          $mdSidenav(navID)
+            .toggle()
+            .then(function () {
+              $log.debug("toggle " + navID + " is done");
+            });
+        }
+      }
+
+      $scope.app.page = 0;
+      $scope.app.loadingComments = false
+      $scope.app.commentsAllLoaded = false;
+      $scope.app.window = 10;
+
+      // sidenav toggle
+      $scope.app.toggleComments = buildToggler('post-comments');
+
+      $scope.app.showComments = function(post){
+        post.id = post.id?post.id:post.postId
+        $scope.app.toggleComments();
+        $scope.app.comments = []
+        $scope.app.postLoaded = post;
+        $scope.app.commentsPage = 0;
+        $scope.app.loadingComments = false
+        $scope.app.paginateComments();
+      }
+
+      $scope.app.paginateComments = function(){
+        if(!$scope.app.loadingComments && $scope.app.postLoaded && $scope.app.postLoaded.id && !$scope.app.commentsAllLoaded){
+          $scope.app.loadingComments = true;
+          trix.findPostCommentsOrderByDate($scope.app.postLoaded.id, $scope.app.commentsPage, $scope.app.window, null, 'commentProjection').success(function(response){
+            if(response.comments && response.comments.length > 0){
+              response.comments.forEach(function(comment){
+                $scope.app.comments.push(comment);
+              })
+              $scope.app.commentsPage ++;
+            }else{
+              $scope.app.commentsAllLoaded = true
+            }
+            $scope.app.loadingComments = false
+          }).error(function(){
+            $scope.app.comments = null;
+            $scope.app.loadingComments = false
+          })  
+        }
+      }
+
+      $scope.app.loadComments = function(post){
+
+        if(post.showComments)
+          return;
+
+        post.showComments = true; 
+        $scope.reloadMasonry();
+
+        post.page = 0;
+        post.loadingComments = false
+        post.commentsAllLoaded = false;
+        post.window = 10;
+        post.comments = []
+        post.commentsPage = 0;
+        post.loadingComments = false
+
+        post.paginateComments = function(post){
+          if(!post.loadingComments && post.id && !post.commentsAllLoaded){
+            post.loadingComments = true;
+            trix.findPostCommentsOrderByDate(post.id, post.commentsPage, post.window, null, 'commentProjection').success(function(response){
+              if(response.comments && response.comments.length > 0){
+                response.comments.forEach(function(comment){
+                  post.comments.push(comment);
+                })
+                post.commentsPage ++;
+              }else{
+                post.commentsAllLoaded = true
+              }
+              post.loadingComments = false
+              $scope.reloadMasonry();
+            }).error(function(){
+              post.comments = null;
+              post.loadingComments = false
+            })  
+          }
+        }
+
+        post.paginateComments(post);
+
+        post.newComment = '';
+        post.postComment = function(postObj, body){
+          postObj.newComment = '';
+          var comment = {
+            post: PostDto.getSelf(postObj),
+            author: PersonDto.getSelf($scope.app.person),
+            body: body
+          }
+          trix.postComment(comment).success(function(response){
+            var c = {
+              post: postObj,
+              author: $scope.app.person,
+              body: body,
+              date: new Date()
+            }
+
+            if(!post.comments || !post.comments.length)
+              post.comments = [];
+
+            post.comments.unshift(c);
+            post.commentsCount++;
+          })
+        }
+      }
+
+      $scope.app.commentFocused = false;
+      $scope.app.commentFocus = function(){
+        $scope.app.commentFocused = true;
+      }
+      $scope.app.commentBlur = function(){
+        $scope.app.commentFocused = false;
+      }
+
+
+      $scope.app.newComment = '';
+      $scope.app.postComment = function(post, body){
+        var comment = {
+          post: PostDto.getSelf(post),
+          author: PersonDto.getSelf($scope.app.person),
+          body: body
+        }
+        trix.postComment(comment).success(function(response){
+          var c = {
+            post: post,
+            author: $scope.app.person,
+            body: body,
+            date: new Date()
+          }
+
+          if(!$scope.app.comments || !$scope.app.comments.length)
+            $scope.app.comments = [];
+
+          $scope.app.comments.unshift(c);
+          post.commentsCount++;
+          $scope.app.newComment = '';
+        })
+      }
+
+      // --------- /generic comment tab
+
   }]);
 
 var appDataCtrl = null;

@@ -6814,6 +6814,14 @@ bg-none {
   height: 500px;
 }
 
+.h-m-100 {
+  max-height: 100px;
+}
+
+.h-m-200 {
+  max-height: 200px;
+}
+
 .h-m-300 {
   max-height: 300px;
 }

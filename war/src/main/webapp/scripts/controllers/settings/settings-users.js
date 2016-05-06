@@ -649,7 +649,8 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       toolbarButtonsSM: ["bold", "italic", "underline", "|", "fontSize", "color", "align", "formatOL", "formatUL", "|", "html"],
       toolbarButtonsXS: ["bold", "italic", "underline", "|", "fontSize", "color", "align", "formatOL", "formatUL", "|", "html"],
       charCounterCount: false,
-      height: 300
+      height: 300,
+      toolbarSticky: false
     }
 
       $scope.invitatePeople = function(){

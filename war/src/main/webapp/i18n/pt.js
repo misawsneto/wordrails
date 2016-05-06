@@ -93,7 +93,8 @@
 		"SELECTED": "Selecionado",
 		"SELECT_ALL": "Selecionar todos",
 		"DESELECT_ALL": "Desselecionar todos",
-		"AT": "em"
+		"AT": "em",
+		"SHOW_ALL": "Mais"
 	},
 	"signin_signup": {
 		"OR": "ou",
