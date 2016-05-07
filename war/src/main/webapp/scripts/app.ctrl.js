@@ -898,7 +898,7 @@ angular.module('app')
 
         post.paginateComments = function(post){
           if(!post.loadingComments && post.id && !post.commentsAllLoaded){
-            post.loadingComments = true;
+            post.loadingComments = post.loadingBar = true;
             trix.findPostCommentsOrderByDate(post.id, post.commentsPage, post.window, null, 'commentProjection').success(function(response){
               if(response.comments && response.comments.length > 0){
                 response.comments.forEach(function(comment){
@@ -909,7 +909,19 @@ angular.module('app')
                 post.commentsAllLoaded = true
               }
               post.loadingComments = false
+
+              $timeout(function(){
+                post.loadingBar = false;
+              }, Math.floor((Math.random() * 500) + 100));
+
               $scope.reloadMasonry();
+              $timeout(function(){
+                $('#comment-list-' + post.id).perfectScrollbar({
+                  wheelSpeed: 1,
+                  wheelPropagation: true,
+                  minScrollbarLength: 20
+                });
+              }, 100);
             }).error(function(){
               post.comments = null;
               post.loadingComments = false
@@ -940,6 +952,14 @@ angular.module('app')
 
             post.comments.unshift(c);
             post.commentsCount++;
+            $scope.reloadMasonry();
+            $timeout(function(){
+                $('#comment-list-' + post.id).perfectScrollbar({
+                  wheelSpeed: 1,
+                  wheelPropagation: true,
+                  minScrollbarLength: 20
+                });
+              }, 100);
           })
         }
       }

@@ -30,7 +30,7 @@
             <div class="news-description p-t p-b-sm p-h">
                 <div class="news-title" style="min-height: 66px"><a clamp="3"> {{::cell.postView.title}} </a></div>
                 <div class="news-content"><p clamp="4">{{::cell.postView.snippet}}</p></div>
-                <div class="news-comment-shares z-index-2">
+                <div class="news-comment-shares">
                     <md-divider class="m-b-sm m-t"></md-divider>
                     <div class="p-b-xs">
                         <md-button ng-click="cell.recommend = !cell.recommend" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="cell.recommend ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': cell.recommend}"><i class="mdi2-heart i-16"></i></md-button>
@@ -46,12 +46,12 @@
                         <md-button style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="app.loadComments(cell.postView);"><i class="mdi2-comment i-16"></i></md-button>
                     </div>
                 </div>
-                <div class="news-comment z-index-1 animated fadeInDown" ng-if="cell.postView.showComments" style="margin:6px -16px -8px -16px;">
+                <div class="news-comment animated fadeInDown" ng-if="cell.postView.showComments" style="margin:6px -16px -8px -16px;">
 
                   <md-divider class=""></md-divider>
 
-                  <div id="comment-list-{{cell.postView.id}}" class="comment-list h-m-200 o-f-a">
-                    <ul infinite-scroll="cell.postView.paginateComments(cell.postView)" class="m-0" infinite-scroll-container="'#comment-list-' + cell.postView.id">
+                  <div wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" id="comment-list-{{cell.postView.id}}" class="comment-list h-m-200 o-f-a scroller" style="overflow-y: hidden; position: relative;">
+                    <ul infinite-scroll="cell.postView.paginateComments(cell.postView)" class="m-0" infinite-scroll-container="'#comment-list-' + cell.postView.id" infinite-scroll-distance="1">
                       <li ng-repeat="comment in cell.postView.comments">
                         <div class="p-sm pos-rlt">
                           <div class="display-t-c inline p-h-xs">
@@ -88,7 +88,7 @@
                   </div>
 
                 </div>
-                <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="cell.postView.loadingComments" md-mode="indeterminate"></md-progress-linear>
+                <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="cell.postView.loadingBar" md-mode="indeterminate"></md-progress-linear>
             </div>
         </div>
     </div>
