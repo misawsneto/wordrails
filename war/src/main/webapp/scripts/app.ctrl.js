@@ -1022,7 +1022,10 @@ angular.module('app')
       // --------- generic bookmark
 
       $scope.app.isBookmarked = function(post){
-        return $scope.app.person.bookmarkPosts.indexOf(post.id) > -1;
+        if($scope.app.person.bookmarkPosts)
+          return $scope.app.person.bookmarkPosts.indexOf(post.id) > -1;
+        else
+          return false
       }
 
       $scope.bookmarkApply = false;
@@ -1038,6 +1041,8 @@ angular.module('app')
                 }
               }
             }else{
+              if(!$scope.app.person.bookmarkPosts)
+                $scope.app.person.bookmarkPosts = [];
               $scope.app.person.bookmarkPosts.push(post.id)
             }
             $mdDialog.cancel();
@@ -1049,7 +1054,10 @@ angular.module('app')
       // --------- generic recommend
 
       $scope.app.isRecommended = function(post){
-        return $scope.app.person.recommendPosts.indexOf(post.id) > -1;
+        if($scope.app.person.recommendPosts)
+          return $scope.app.person.recommendPosts.indexOf(post.id) > -1;
+        else
+          return false;
       }
 
       $scope.recommendApply = false;
@@ -1066,6 +1074,8 @@ angular.module('app')
                 }
               }
             }else{
+              if(!$scope.app.person.recommendPosts)
+                $scope.app.person.recommendPosts = []
               $scope.app.person.recommendPosts.push(post.id)
               post.recommendsCount++;
             }
