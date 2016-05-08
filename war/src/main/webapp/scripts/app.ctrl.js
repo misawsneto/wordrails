@@ -845,7 +845,7 @@ angular.module('app')
       $scope.app.page = 0;
       $scope.app.loadingComments = false
       $scope.app.commentsAllLoaded = false;
-      $scope.app.window = 10;
+      $scope.app.window = 20;
 
       // sidenav toggle
       $scope.app.toggleComments = buildToggler('post-comments');
@@ -856,7 +856,7 @@ angular.module('app')
         $scope.app.comments = []
         $scope.app.postLoaded = post;
         $scope.app.commentsPage = 0;
-        $scope.app.loadingComments = false
+        $scope.app.loadingComments = $scope.app.commentsAllLoaded = false
         $scope.app.paginateComments();
       }
 
@@ -891,7 +891,7 @@ angular.module('app')
         post.page = 0;
         post.loadingComments = false
         post.commentsAllLoaded = false;
-        post.window = 10;
+        post.window = 20;
         post.comments = []
         post.commentsPage = 0;
         post.loadingComments = false
@@ -919,7 +919,7 @@ angular.module('app')
                 $('#comment-list-' + post.id).perfectScrollbar({
                   wheelSpeed: 1,
                   wheelPropagation: true,
-                  minScrollbarLength: 20
+                  minScrollbarLength: 40
                 });
               }, 100);
             }).error(function(){
@@ -957,7 +957,7 @@ angular.module('app')
                 $('#comment-list-' + post.id).perfectScrollbar({
                   wheelSpeed: 1,
                   wheelPropagation: true,
-                  minScrollbarLength: 20
+                  minScrollbarLength: 40
                 });
               }, 100);
           })
@@ -994,6 +994,26 @@ angular.module('app')
           $scope.app.comments.unshift(c);
           post.commentsCount++;
           $scope.app.newComment = '';
+        })
+      }
+
+      $scope.app.showSharesPostDialog = function(event){
+        // show term alert
+        
+        $mdDialog.show({
+          scope: $scope,        // use parent scope in template
+            closeTo: {
+              bottom: 1500
+            },
+          preserveScope: true, // do not forget this if use parent scope
+          controller: $scope.app.defaultDialog,
+          templateUrl: 'social-share-dialog.html',
+          parent: angular.element(document.body),
+          targetEvent: event,
+          clickOutsideToClose:true
+          // onComplete: function(){
+
+          // }
         })
       }
 

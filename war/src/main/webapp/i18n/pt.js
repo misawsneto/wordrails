@@ -318,6 +318,9 @@
 			"CONFIRM_PASSWORD": "Confirmar senha",
 			"BIOGRAPHY": "Biografia",
 			"PASSWORDS_DONT_MATCH": "A senha é inválida ou senha e confirmação não são correspondentes."
+		},
+		"bookmark": {
+			"REMOVE_CONFIRMATION_MSG": "Tem certeza que deseja remover esta item"
 		}
 	},
 	"messages": {

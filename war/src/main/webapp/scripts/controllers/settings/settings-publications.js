@@ -165,7 +165,7 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 	$scope.page = 0;
 	$scope.loadingComments = false
 	$scope.allLoaded = false;
-	$scope.window = 40
+	$scope.window = 20
 
 	// sidenav toggle
 	$scope.toggleComments = buildToggler('post-comments');

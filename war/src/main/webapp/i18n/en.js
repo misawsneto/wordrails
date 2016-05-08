@@ -318,6 +318,9 @@
 			"CONFIRM_PASSWORD": "Confirm password",
 			"BIOGRAPHY": "Biography",
 			"PASSWORDS_DONT_MATCH": "The password is invalido or passowrd and confirmation don't match"
+		},
+		"bookmark": {
+			"REMOVE_CONFIRMATION_MSG": "Are you sure you want to remove this bookmark"
 		}
 	},
 	"messages": {

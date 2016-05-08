@@ -534,7 +534,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if($scope.selectedStation)
 			trix.getTermTree(null, $scope.selectedStation.categoriesTaxonomyId).success(function(response){
 				$scope.termTree = response;
-				$scope.app.selectTerms($scope.termTree, $scope.app.editingPost.terms)
+				if($scope.app.editingPost)
+					$scope.app.selectTerms($scope.termTree, $scope.app.editingPost.terms)
 			});
 	}
 

@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="text-left p-sm w-full z-index-2" >
-              <a target="_blank" ng-href="{{app.getCategoryLink(app.getStationById(postView.stationId).stationSlug, category.name)}}" class="label r md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postView.categories">
+              <a target="_blank" ng-href="{{app.getCategoryLink(app.getStationById(postView.stationId).stationSlug, category.name)}}" class="badge p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postView.categories">
                 {{category.name}}
               </a>
             </div>
@@ -40,33 +40,83 @@
                     <div class="p-b-xs">
                         <md-button ng-click="recommend = !recommend" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="recommend ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': recommend}"><i class="mdi2-heart i-16"></i></md-button>
 
-                        <md-button style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="bookmark ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': bookmark}"><i class="mdi2-bookmark-remove i-20"></i></md-button>
+                        <span class="v-m p-v-sm m-r-sm">{{postView.recommendsCount}}</span>
+
+                        <md-button style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="bookmark ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': bookmark}" ng-click="showRemoveBookmarkDialog(postView)"><i class="mdi2-bookmark-remove i-20"></i></md-button>
                         
-                        <md-button ng-click="showSharesPostDialog(postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+                        <md-button ng-click="app.showSharesPostDialog(postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+
+                        <span class="pull-right v-m p-v-sm m-r-sm">{{postView.commentsCount}}</span>
                         
-                        <md-button style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="loadComments(postView);"><i class="mdi2-comment i-16"></i></md-button>
+                        <md-button style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="app.loadComments(postView);"><i class="mdi2-comment i-16"></i></md-button>
                     </div>
                 </div>
-                <div class="news-comment z-index-1 animated fadeInDown" ng-if="showComments" style="margin:6px -16px -8px -16px;">
+                <div class="news-comment animated fadeInDown" ng-if="postView.showComments" style="margin:6px -16px -8px -16px;">
+
                   <md-divider class=""></md-divider>
+
+                  <div wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" id="comment-list-{{postView.id}}" class="comment-list h-m-200 o-f-a scroller" style="overflow-y: hidden; position: relative;">
+                    <ul infinite-scroll="postView.paginateComments(postView)" class="m-0" infinite-scroll-container="'#comment-list-' + postView.id" infinite-scroll-distance="1">
+                      <li ng-repeat="comment in postView.comments">
+                        <div class="p-sm pos-rlt">
+                          <div class="display-t-c inline p-h-xs">
+                            <div ng-style="app.getUserImage(comment.author, 'small', 'PROFILE_PICTURE', true)" style="height: 34px;" class="bg-cover img-responsive img-circle thumb-xs md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(comment.author)}">
+                              <i ng-if="!app.hasProfilePicture(comment.author)" style="line-height: 36px;" class="mdi2-account i-20"></i>
+                            </div>
+                          </div>
+                          <div class="p-l-sm display-t-c v-m inline text-sm">
+                            <span class="text-base font-bold">{{comment.author.name}}</span><br>
+                            {{comment.body}}
+                          </div>
+                          <div class="p-h-sm text-right">
+                            <span am-time-ago="comment.date" class="text-xxs"></span>
+                          </div>
+                        </div>
+                        <md-divider ng-if="!$last"></md-divider>
+                      </li>
+                    </ul>
+                  </div>
+                    
+                  <md-divider ng-if="postView.comments && postView.comments.length" class=""></md-divider>
 
                   <div class="p inline w-full">
                     <div class="pull-left user-avatar rounded w-36 bg-white pos-rlt background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}" ng-class="{'md-primary-hue-1': !app.userImageSmall}">
                       <i ng-if="!app.userImageSmall" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
                     </div>
 
-                    <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-button not-trans m-0 md-icon-button pull-right md-accent-default background">
+                    <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-button not-trans m-0 md-icon-button pull-right md-accent-default background" ng-click="postView.postComment(postView, postView.newComment)" ng-disabled="!postView.newComment">
                       <i class="mdi2-send i-16"></i>
                     </md-button>
                     <div class="m-l-xxl m-r-xxl"> 
-                      <textarea msd-elastic class="no-border p-t-sm" ng-keydown="reloadMasonry()" ng-model="comment" style="resize: none;" placeholder="{{'titles.COMMENT' | translate }}"></textarea>
+                      <textarea msd-elastic class="no-border p-t-sm" ng-keydown="reloadMasonry()" ng-model="postView.newComment" style="resize: none;" placeholder="{{'titles.COMMENT' | translate }}"></textarea>
                     </div>
                   </div>
 
                 </div>
-                <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="loadingComments" md-mode="indeterminate"></md-progress-linear>
+                <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="postView.loadingBar" md-mode="indeterminate"></md-progress-linear>
             </div>
         </div>
     </div>
   </div>
 </div>
+
+<script type="text/ng-template" id="remove-bookmark-dialog.html">
+  <md-dialog aria-label="change action">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+        <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{'settings.bookmark.REMOVE_CONFIRMATION_MSG' | translate}}?
+        </div>
+
+        <div class="text-center">
+          <md-button ng-click="removeBookmark(postLoaded); disabled = true;" ng-disabled="disabled">
+            {{'titles.YES' | translate}}
+          </md-button>
+          <md-button ng-click="cancel()">
+            {{'titles.NO' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>

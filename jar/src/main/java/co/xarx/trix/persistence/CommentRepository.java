@@ -26,8 +26,8 @@ public interface CommentRepository extends DatabaseRepository<Comment, Integer> 
 	Comment save(Comment entity);
 
 	@RestResource(exported = true)
-	@Query("FROM Comment comment WHERE comment.post.id = :postId ORDER BY comment.date DESC")
-	public List<Comment> findPostCommentsOrderByDate(@Param("postId") Integer postId, Pageable pageable);
+	@Query("SELECT comment FROM Comment comment WHERE comment.post.id = :postId ORDER BY comment.date DESC")
+	public List<Comment> findPostCommentsOrderByDate(@Param("postId") Integer postId,  Pageable  pageable);
 
 	@RestResource(exported = false)
 	@Query("select date(comment.date), count(*)  from Comment comment where comment.post.id = :postId and (date(comment.date) >= date(:dateStart) and date(comment.date) <= date(:dateEnd)) group by date(comment.date)")

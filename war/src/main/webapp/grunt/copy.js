@@ -81,7 +81,9 @@ module.exports = {
                     'perfect-scrollbar/**',
                     'angular-perfect-scrollbar/src/angular-perfect-scrollbar.js',
                     'angularjs-socialshare/dist/angular-socialshare.min.js',
-                    'df-tab-menu/**'
+                    'df-tab-menu/**',
+                    'sly/dist/**',
+                    'angular-sly/dist/**'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',
@@ -113,8 +115,11 @@ module.exports = {
                     'bower-jvectormap-2/**',
                     'slimScroll/jquery.slimscroll.min.js',
                     'jquery-focuspoint/**',
-                    'jcrop/**'
+                    'jcrop/**',
+                    'pgwslider/**'
                 ],
+
+
                 dest: 'libs/jquery',
                 cwd:  'bower_components',
                 expand: true

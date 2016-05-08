@@ -59,7 +59,7 @@
 								              </span>
 													</td>
 													<td class="display-t-c v-m text-center" ng-if="!person.lastLogin"> - </td>
-													<td class="display-t-c v-m text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
+													<td class="display-t-c v-m text-center" ng-if="person.lastLogin">{{app.getLocalTime(person.lastLogin)}}</td>
 													<td class="display-t-c v-m text-center">
 														<div ng-if="person.id != app.person.id" class="hidden-sm" ng-click="app.stopPropagation($event)">
 														 	<md-switch class="no-margin" ng-change="app.enableDisablePerson(person)" ng-model="person.enabled" ng-true-value="true" ng-false-value="false">
