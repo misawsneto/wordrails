@@ -191,4 +191,6 @@ public interface PersonsApi {
 	 * {@link co.xarx.trix.persistence.PersonRepository#findPersons(String, Pageable)}
 	 */
 	void findPersons() throws IOException;
+
+
 }

@@ -385,6 +385,11 @@ var trix = angular.module('trix', [])
 		return \$http.put(_config.url + "/api/bookmarks/toggleBookmark", \$.param({"postId": postId}), config)
 	};
 
+	this.toggleRecommend = function(postId) {
+        var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
+        return \$http.put(_config.url + "/api/recommends/toggleRecommend", \$.param({"postId": postId}), config)
+    };
+
 	this.setMainStation = function(stationId, value) {
 		var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
 		return \$http.put(_config.url + "/api/stations/"+stationId+"/setMainStation", \$.param({"value": value}), config)
@@ -393,11 +398,6 @@ var trix = angular.module('trix', [])
 	this.setDefaultPerspective = function(stationId, perspectiveId) {
 		var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
 		return \$http.put(_config.url + "/api/stations/"+stationId+"/setDefaultPerspective", \$.param({"perspectiveId": perspectiveId}), config)
-	};
-
-	this.toggleRecommend = function(postId) {
-		var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
-		return \$http.put(_config.url + "/api/recommends/toggleRecommend", \$.param({"postId": postId}), config)
 	};
 
 	this.getRowView = function(stationPerspectiveId, termPerspectiveId, childTermId, _page, _size){

@@ -12,7 +12,7 @@
         <div class="h-500 pos-rlt o-f-h md-whiteframe-z2 m-b-md" ng-if="app.fullCardCheck($index, postView)">
           <div ng-style="app.getBackgroundImage(postView, 'large')" class="h-full bg-cover md-primary-default background">
             <div class="color-1 p black-grad-inverse">
-              <md-button ng-click="recommend = !recommend" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="recommend ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': recommend}"><i class="mdi2-heart i-16"></i></md-button>
+              <md-button ng-click="app.toggleRecommend(postView)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(postView)}"><i class="mdi2-heart i-16"></i></md-button>
 
               <span class="v-m p-v-sm m-r-sm text-white ">{{postView.recommendsCount}}</span>
 
@@ -73,7 +73,7 @@
                     <md-divider class="m-b-sm m-t"></md-divider>
 
                     <div class="p-b-xs">
-                        <md-button ng-click="postView.recommend = !postView.recommend" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="postView.recommend ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': postView.recommend}"><i class="mdi2-heart i-16"></i></md-button>
+                        <md-button ng-click="app.toggleRecommend(postView)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(postView)}"><i class="mdi2-heart i-16"></i></md-button>
 
                         <span class="v-m p-v-sm m-r-sm">{{postView.recommendsCount}}</span>
 

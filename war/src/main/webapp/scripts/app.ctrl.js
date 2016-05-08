@@ -1030,28 +1030,51 @@ angular.module('app')
 
         if(!$scope.bookmarkApply){
           $scope.bookmarkApply = true;
-          trix.getPerson($scope.app.person.id).success(function(person){
+          trix.toggleBookmark(post.id).success(function(person){
             if($scope.app.isBookmarked(post)){
-              for (var i = person.bookmarkPosts.length - 1; i >= 0; i--) {
-                if(person.bookmarkPosts[i] == post.id){
-                  person.bookmarkPosts.splice(i, 1);
+              for (var i = $scope.app.person.bookmarkPosts.length - 1; i >= 0; i--) {
+                if($scope.app.person.bookmarkPosts[i] == post.id){
                   $scope.app.person.bookmarkPosts.splice(i, 1);
                 }
               }
             }else{
-              person.bookmarkPosts.push(post.id)
               $scope.app.person.bookmarkPosts.push(post.id)
             }
-            trix.putPerson(person).success(function(){
-              $mdDialog.cancel();
-              $scope.disabled = $scope.bookmarkApply = false;
-            }).error(function(){
-              $mdDialog.cancel();
-              $scope.disabled = $scope.bookmarkApply = false;
-            })
+            $mdDialog.cancel();
+            $scope.disabled = $scope.bookmarkApply = false;
           })
         }
       }
+      // --------- /generic bookmark
+      // --------- generic recommend
+
+      $scope.app.isRecommended = function(post){
+        return $scope.app.person.recommendPosts.indexOf(post.id) > -1;
+      }
+
+      $scope.recommendApply = false;
+      $scope.app.toggleRecommend = function(post){
+
+        if(!$scope.recommendApply){
+          $scope.recommendApply = true;
+          trix.toggleRecommend(post.id).success(function(response){
+            if(!response.response){
+              for (var i = $scope.app.person.recommendPosts.length - 1; i >= 0; i--) {
+                if($scope.app.person.recommendPosts[i] == post.id){
+                  $scope.app.person.recommendPosts.splice(i, 1);
+                  post.recommendsCount--;
+                }
+              }
+            }else{
+              $scope.app.person.recommendPosts.push(post.id)
+              post.recommendsCount++;
+            }
+            $mdDialog.cancel();
+            $scope.disabled = $scope.recommendApply = false;
+          })
+        }
+      }
+
       // --------- /generic bookmark
   }]);
 

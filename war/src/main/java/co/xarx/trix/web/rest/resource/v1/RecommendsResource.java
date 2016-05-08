@@ -5,6 +5,7 @@ import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.persistence.PersonRepository;
+import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.services.PersonService;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.services.security.AuthService;
@@ -25,14 +26,16 @@ public class RecommendsResource extends AbstractResource implements RecommendsAp
 	private PersonService personService;
 	private PersonRepository personRepository;
 	private AuthService authProvider;
+	private QueryPersistence queryPersistence;
 
 	@Autowired
 	public RecommendsResource(PostSearchService postSearchService, PersonService personService,
-							  PersonRepository personRepository, AuthService authProvider) {
+							  PersonRepository personRepository, AuthService authProvider, QueryPersistence queryPersistence) {
 		this.postSearchService = postSearchService;
 		this.personService = personService;
 		this.personRepository = personRepository;
 		this.authProvider = authProvider;
+		this.queryPersistence = queryPersistence;
 	}
 
 	@Override
@@ -50,14 +53,24 @@ public class RecommendsResource extends AbstractResource implements RecommendsAp
 
 	@Override
 	public BooleanResponse toggleRecommend(Integer postId) {
-		BooleanResponse bookmarkInserted = new BooleanResponse();
-
 		Person person = authProvider.getLoggedPerson();
-		person = personRepository.findOne(person.id); //we must ensure this object comes from DB to update it
+		Person originalPerson = personRepository.findOne(person.id);
 
-		bookmarkInserted.response = personService.toggleRecommend(person, postId);
-		personRepository.save(person);
+		BooleanResponse br = new BooleanResponse();
 
-		return bookmarkInserted;
+		if(originalPerson.recommendPosts.contains(postId)){
+			originalPerson.recommendPosts.remove(postId);
+			person.recommendPosts.remove(postId);
+			br.response = false;
+		}else{
+			originalPerson.recommendPosts.add(postId);
+			person.recommendPosts.add(postId);
+			br.response = true;
+		}
+
+		personRepository.save(originalPerson);
+		queryPersistence.updateRecommendsCount(postId);
+
+		return br;
 	}
 }

@@ -558,4 +558,5 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	public void findPersons() throws IOException {
 		forward();
 	}
+
 }

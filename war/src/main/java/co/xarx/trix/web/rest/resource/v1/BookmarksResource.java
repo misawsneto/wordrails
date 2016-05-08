@@ -8,6 +8,7 @@ import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.services.PersonService;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.services.security.AuthService;
@@ -31,17 +32,19 @@ public class BookmarksResource extends AbstractResource implements BookmarksApi 
 	private AuthService authProvider;
 	private PostRepository postRepository;
 	private PostConverter postConverter;
+	private QueryPersistence queryPersistence;
 
 	@Autowired
 	public BookmarksResource(PostSearchService postSearchService, PersonRepository personRepository,
 							 PersonService personService, AuthService authProvider, PostRepository postRepository,
-							 PostConverter postConverter) {
+							 PostConverter postConverter, QueryPersistence queryPersistence) {
 		this.postSearchService = postSearchService;
 		this.personRepository = personRepository;
 		this.personService = personService;
 		this.authProvider = authProvider;
 		this.postRepository = postRepository;
 		this.postConverter = postConverter;
+		this. queryPersistence = queryPersistence;
 	}
 
 	@Override
@@ -73,14 +76,24 @@ public class BookmarksResource extends AbstractResource implements BookmarksApi 
 
 	@Override
 	public BooleanResponse toggleBookmark(Integer postId) {
-		BooleanResponse bookmarkInserted = new BooleanResponse();
-
 		Person person = authProvider.getLoggedPerson();
-		person = personRepository.findOne(person.id); //we must ensure this object comes from DB to update it
+		Person originalPerson = personRepository.findOne(person.id);
 
-		bookmarkInserted.response = personService.toggleBookmark(person, postId);
-		personRepository.save(person);
+		BooleanResponse br = new BooleanResponse();
 
-		return bookmarkInserted;
+		if(originalPerson.bookmarkPosts.contains(postId)){
+			originalPerson.bookmarkPosts.remove(postId);
+			person.bookmarkPosts.remove(postId);
+			br.response = false;
+		}else{
+			originalPerson.bookmarkPosts.add(postId);
+			person.bookmarkPosts.add(postId);
+			br.response = true;
+		}
+
+		personRepository.save(originalPerson);
+		queryPersistence.updateBookmarksCount(postId);
+
+		return br;
 	}
 }
