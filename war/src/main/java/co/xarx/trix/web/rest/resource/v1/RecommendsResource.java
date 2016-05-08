@@ -16,6 +16,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Component
@@ -60,13 +62,13 @@ public class RecommendsResource extends AbstractResource implements RecommendsAp
 
 		if(originalPerson.recommendPosts.contains(postId)){
 			originalPerson.recommendPosts.remove(postId);
-			person.recommendPosts.remove(postId);
 			br.response = false;
 		}else{
 			originalPerson.recommendPosts.add(postId);
-			person.recommendPosts.add(postId);
 			br.response = true;
 		}
+
+		originalPerson.recommendPosts = new ArrayList<>(new HashSet<>(originalPerson.recommendPosts));
 
 		personRepository.save(originalPerson);
 		queryPersistence.updateRecommendsCount(postId);

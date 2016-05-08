@@ -33,11 +33,11 @@
                 <div class="news-comment-shares">
                     <md-divider class="m-b-sm m-t"></md-divider>
                     <div class="p-b-xs">
-                        <md-button ng-click="cell.recommend = !cell.recommend" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="cell.recommend ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': cell.recommend}"><i class="mdi2-heart i-16"></i></md-button>
+                        <md-button ng-click="app.toggleRecommend(cell.postView)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(cell.postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(cell.postView)}"><i class="mdi2-heart i-16"></i></md-button>
 
                         <span class="v-m p-v-sm m-r-sm">{{cell.postView.recommendsCount}}</span>
 
-                        <md-button ng-click="cell.bookmark = !cell.bookmark" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="cell.bookmark ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': cell.bookmark}"><i class="mdi2-bookmark i-16"></i></md-button>
+                        <md-button ng-click="app.toggleBookmark(cell.postView)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(cell.postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(cell.postView)}"><i class="mdi2-bookmark i-16"></i></md-button>
                         
                         <md-button ng-click="app.showSharesPostDialog(cell.postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
 

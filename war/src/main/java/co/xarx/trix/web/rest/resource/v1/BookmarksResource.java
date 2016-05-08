@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Component
@@ -83,13 +84,13 @@ public class BookmarksResource extends AbstractResource implements BookmarksApi 
 
 		if(originalPerson.bookmarkPosts.contains(postId)){
 			originalPerson.bookmarkPosts.remove(postId);
-			person.bookmarkPosts.remove(postId);
 			br.response = false;
 		}else{
 			originalPerson.bookmarkPosts.add(postId);
-			person.bookmarkPosts.add(postId);
 			br.response = true;
 		}
+
+		originalPerson.bookmarkPosts = new ArrayList<>(new HashSet<>(originalPerson.bookmarkPosts));
 
 		personRepository.save(originalPerson);
 		queryPersistence.updateBookmarksCount(postId);
