@@ -59,15 +59,15 @@
                               <i ng-if="!app.hasProfilePicture(comment.author)" style="line-height: 36px;" class="mdi2-account i-20"></i>
                             </div>
                           </div>
-                          <div class="p-l-sm display-t-c v-m inline text-sm">
-                            <span class="text-base font-bold">{{comment.author.name}}</span><br>
+                          <div class="p-l-sm display-t-c v-m inline text-sm w-full">
+                            <div class="p-h-sm text-right pull-right">
+                              <span am-time-ago="comment.date" class="text-xxs"></span>
+                            </div>
+                            <div class="text-base font-bold m-b-xs">{{comment.author.name}}</div>
                             {{comment.body}}
                           </div>
-                          <div class="p-h-sm text-right">
-                            <span am-time-ago="comment.date" class="text-xxs"></span>
-                          </div>
                         </div>
-                        <md-divider ng-if="!$last"></md-divider>
+                        <md-divider style="margin-left: 60px;" ng-if="!$last" md-inset></md-divider>
                       </li>
                     </ul>
                   </div>

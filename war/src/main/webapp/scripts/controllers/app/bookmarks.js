@@ -56,8 +56,11 @@ app.controller('BookmarksCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$m
 							$scope.reloadMasonry();
 						}
 					}
-					if($scope.postViews.length == 0)
-						$scope.noBookmarks = true;
+					if($scope.postViews.length == 0){
+						$timeout(function() {
+							$scope.noBookmarks = true;
+						}, 200);
+					}
 					$mdDialog.cancel();
 					$scope.disabled = false;
 				}).error(function(){

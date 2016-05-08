@@ -1,11 +1,10 @@
 <div class="m-b p-h-xl">
 
-  <div ng-if="noBookmarks" class="text-center text-3x m-t-xxl" style="opacity: 0.5">
-    <div>{{'titles.NO_BOOKMARKS' | translate}}</div>
-    <i class="i-72 mdi2-bookmark"></i>
-  </div>
-
-  <div masonry class="m-b pos-rlt animated fadeIn" reload-on-show ng-if="postViews && postViews.length > 0">
+  <div masonry class="m-b pos-rlt animated fadeIn" reload-on-show>
+    <div ng-if="noBookmarks" class="col-lg-12 col-sm-12 col-xs-12 masonry-brick text-center text-3x m-t-xxl opacity-05">
+      <div>{{'titles.NO_BOOKMARKS' | translate}}</div>
+      <i class="i-72 mdi2-bookmark"></i>
+    </div>
     <div class="col-lg-4 col-sm-6 col-xs-12 masonry-brick" ng-repeat="postView in postViews">
         <!--  Vertical News Box -->
         <div class="news md-whiteframe-z1 vertical z-depth-1 card">
@@ -38,7 +37,7 @@
                 <div class="news-comment-shares z-index-2">
                     <md-divider class="m-b-sm m-t"></md-divider>
                     <div class="p-b-xs">
-                        <md-button ng-click="recommend = !recommend" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="recommend ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': recommend}"><i class="mdi2-heart i-16"></i></md-button>
+                        <md-button ng-click="app.toggleRecommend(postView)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(postView)}"><i class="mdi2-heart i-16"></i></md-button>
 
                         <span class="v-m p-v-sm m-r-sm">{{postView.recommendsCount}}</span>
 
@@ -64,15 +63,15 @@
                               <i ng-if="!app.hasProfilePicture(comment.author)" style="line-height: 36px;" class="mdi2-account i-20"></i>
                             </div>
                           </div>
-                          <div class="p-l-sm display-t-c v-m inline text-sm">
-                            <span class="text-base font-bold">{{comment.author.name}}</span><br>
+                          <div class="p-l-sm display-t-c v-m inline text-sm w-full">
+                            <div class="p-h-sm text-right pull-right">
+                              <span am-time-ago="comment.date" class="text-xxs"></span>
+                            </div>
+                            <div class="text-base font-bold m-b-xs">{{comment.author.name}}</div>
                             {{comment.body}}
                           </div>
-                          <div class="p-h-sm text-right">
-                            <span am-time-ago="comment.date" class="text-xxs"></span>
-                          </div>
                         </div>
-                        <md-divider ng-if="!$last"></md-divider>
+                        <md-divider style="margin-left: 60px;" ng-if="!$last" md-inset></md-divider>
                       </li>
                     </ul>
                   </div>

@@ -1097,8 +1097,10 @@ angular.module('app')
                 var deferred = $q.defer();
                 if(initData.person.id == 0){
                   document.location.href = '/access/signin';
+                  window.console && console.error('user is not logged')
                 }else if(initData.person.username !== $stateParams.username){
                   document.location.href = '/';
+                  window.console && console.error('user is not owner')
                 }else if(initData.person.username === $stateParams.username){
                   deferred.resolve(initData.person.bookmarkPosts)
                 }else{

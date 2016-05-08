@@ -165,14 +165,14 @@
           </div>
           <div class="footer-crt md-primary-default background">
             <div class="container ">
-              <div class="inline">
+              <div class="inline pull-left">
                 © {{ app.date | date:'yyyy'}} Copyright
               </div>
-              <div class="inline w-lg p-h-lg text-center">
+              <div class="inline p-h-lg text-center v-m">
                 <a ng-if="app.network.facebookLink" class="m-h-sm" ng-href="{{app.network.facebookLink}}" target="_blank">
                   <i class="i-24 mdi2-facebook-box"></i>
                 </a>
-                <a ng-if="app.network.facebookLink" class="m-h-sm" ng-href="{{app.network.twitterLink}}" target="_blank">
+                <a ng-if="app.network.twitterLink" class="m-h-sm" ng-href="{{app.network.twitterLink}}" target="_blank">
                   <i class="i-24 mdi2-twitter"></i>
                 </a>
                 <a ng-if="app.network.youtubeLink" class="m-h-sm" ng-href="{{app.network.youtubeLink}}" target="_blank">
@@ -325,15 +325,15 @@
                           <i ng-if="!app.hasProfilePicture(comment.author)" style="line-height: 36px;" class="mdi2-account i-20"></i>
                         </div>
                       </div>
-                      <div class="p-l-sm display-t-c v-m inline text-sm">
-                        <span class="text-base font-bold">{{comment.author.name}}</span><br>
+                      <div class="p-l-sm display-t-c v-m inline text-sm w-full">
+                        <div class="p-h-sm text-right pull-right">
+                          <span am-time-ago="comment.date" class="text-xxs"></span>
+                        </div>
+                        <div class="text-base font-bold m-b-xs">{{comment.author.name}}</div>
                         {{comment.body}}
                       </div>
-                      <div class="p-h-sm text-right">
-                        <span am-time-ago="comment.date" class="text-xxs"></span>
-                      </div>
                     </div>
-                    <md-divider></md-divider>
+                    <md-divider style="margin-left: 60px;" md-inset></md-divider>
                   </li>
                 </ul>
 

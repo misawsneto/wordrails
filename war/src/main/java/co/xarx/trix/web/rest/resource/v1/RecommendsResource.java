@@ -62,9 +62,11 @@ public class RecommendsResource extends AbstractResource implements RecommendsAp
 
 		if(originalPerson.recommendPosts.contains(postId)){
 			originalPerson.recommendPosts.remove(postId);
+			person.recommendPosts.remove(postId);
 			br.response = false;
 		}else{
 			originalPerson.recommendPosts.add(postId);
+			person.recommendPosts.add(postId);
 			br.response = true;
 		}
 

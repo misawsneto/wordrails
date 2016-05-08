@@ -84,9 +84,11 @@ public class BookmarksResource extends AbstractResource implements BookmarksApi 
 
 		if(originalPerson.bookmarkPosts.contains(postId)){
 			originalPerson.bookmarkPosts.remove(postId);
+			person.bookmarkPosts.remove(postId);
 			br.response = false;
 		}else{
 			originalPerson.bookmarkPosts.add(postId);
+			person.bookmarkPosts.add(postId);
 			br.response = true;
 		}
 
