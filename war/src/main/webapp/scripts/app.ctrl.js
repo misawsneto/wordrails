@@ -1019,6 +1019,40 @@ angular.module('app')
 
       // --------- /generic comment tab
 
+      // --------- generic bookmark
+
+      $scope.app.isBookmarked = function(post){
+        return $scope.app.person.bookmarkPosts.indexOf(post.id) > -1;
+      }
+
+      $scope.bookmarkApply = false;
+      $scope.app.toggleBookmark = function(post){
+
+        if(!$scope.bookmarkApply){
+          $scope.bookmarkApply = true;
+          trix.getPerson($scope.app.person.id).success(function(person){
+            if($scope.app.isBookmarked(post)){
+              for (var i = person.bookmarkPosts.length - 1; i >= 0; i--) {
+                if(person.bookmarkPosts[i] == post.id){
+                  person.bookmarkPosts.splice(i, 1);
+                  $scope.app.person.bookmarkPosts.splice(i, 1);
+                }
+              }
+            }else{
+              person.bookmarkPosts.push(post.id)
+              $scope.app.person.bookmarkPosts.push(post.id)
+            }
+            trix.putPerson(person).success(function(){
+              $mdDialog.cancel();
+              $scope.disabled = $scope.bookmarkApply = false;
+            }).error(function(){
+              $mdDialog.cancel();
+              $scope.disabled = $scope.bookmarkApply = false;
+            })
+          })
+        }
+      }
+      // --------- /generic bookmark
   }]);
 
 var appDataCtrl = null;

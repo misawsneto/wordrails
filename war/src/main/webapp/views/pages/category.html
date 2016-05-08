@@ -16,7 +16,7 @@
 
               <span class="v-m p-v-sm m-r-sm text-white ">{{postView.recommendsCount}}</span>
 
-              <md-button ng-click="bookmark = !bookmark" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="bookmark ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': bookmark}"><i class="mdi2-bookmark i-16"></i></md-button>
+              <md-button ng-click="app.toggleBookmark(postView)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(postView)}"><i class="mdi2-bookmark i-16"></i></md-button>
               
               <md-button ng-click="app.showSharesPostDialog(postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
 
@@ -77,7 +77,7 @@
 
                         <span class="v-m p-v-sm m-r-sm">{{postView.recommendsCount}}</span>
 
-                        <md-button ng-click="postView.bookmark = !postView.bookmark" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="postView.bookmark ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': postView.bookmark}"><i class="mdi2-bookmark i-16"></i></md-button>
+                        <md-button ng-click="app.toggleBookmark(postView)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(postView)}"><i class="mdi2-bookmark i-16"></i></md-button>
                         
                         <md-button ng-click="app.showSharesPostDialog(postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
 
