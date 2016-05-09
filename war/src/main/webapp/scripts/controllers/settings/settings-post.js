@@ -852,7 +852,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	var preparePost = function(originalPost){
 		var post = angular.copy(originalPost)
 		post.id = post.id ? post.id : post.postId
+		post.terms = $scope.app.getTermList($scope.termTree);
 		post.terms = $scope.app.getTermUris(post.terms)
+		post.station = $scope.selectedStation;
 		if(!post.author)
 			post.author = PersonDto.getSelf($scope.app.person);
 		else if(post.author.id || post.author.authorId)

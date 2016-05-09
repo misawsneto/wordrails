@@ -105,8 +105,8 @@ public class ESStartupIndexerService {
 //		elasticsearchTemplate.refresh(objectClass, true);
 
 		IndexQuery indexQuery = new IndexQuery();
-		indexQuery.setId(String.valueOf(((ElasticSearchEntity) object).getId()));
-		indexQuery.setObject(object);
+		indexQuery.setId(String.valueOf((entity).getId()));
+		indexQuery.setObject(entity);
 
 		elasticsearchTemplate.index(indexQuery);
 	}

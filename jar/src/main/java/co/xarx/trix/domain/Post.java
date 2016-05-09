@@ -202,7 +202,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	}
 
 	private void onChanges() {
-		stationId = station.id;
+		stationId = station != null ? station.id : null;
 		readTime = calculateReadTime(body);
 	}
 
