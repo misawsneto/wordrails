@@ -14,11 +14,6 @@ import java.util.Map;
 @Produces(MediaType.APPLICATION_JSON)
 public interface StatsApi {
 
-//	@GET
-//	@Path("/me")
-//	@PreAuthorize("isAuthenticated()")
-//	StatsData personStats(@QueryParam("end") String end) throws IOException;
-
 	@GET
 	@Path("/post")
 	@PreAuthorize("isAuthenticated()")
@@ -44,7 +39,7 @@ public interface StatsApi {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Map<String, Integer> getNetworkUsedSpace();
 
-	@POST
+	@GET
 	@Path("/countPostReads")
-	Map<Integer, Integer> countReadsByPostIds(List<Integer> postIds);
+	Map<Integer, Integer> countReadsByPostIds(@QueryParam("postIds") List<Integer> postIds);
 }
