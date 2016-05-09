@@ -276,7 +276,9 @@
 			"ADD_TAGS": "Adicioanr tags",
 			"PUBLISH_ALL": "Publish all",
 			"DRAFT_ALL": "Move to drafts",
-			"TRASH_ALL": "Move to trash"
+			"TRASH_ALL": "Move to trash",
+			"PUBLISH_SUCCESS": "Published",
+			"PUBLISH_ERROR": "Publication error"
 		},
 		"station": {
 			"STATION_SETTINGS": "Station settings",

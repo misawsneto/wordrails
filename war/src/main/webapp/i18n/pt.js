@@ -276,7 +276,9 @@
 			"ADD_TAGS": "Adicionar tags",
 			"PUBLISH_ALL": "Publicar todos",
 			"DRAFT_ALL": "Mover para rascunhos",
-			"TRASH_ALL": "Mover para a lixeira"
+			"TRASH_ALL": "Mover para a lixeira",
+			"PUBLISH_SUCCESS": "Publicado",
+			"PUBLISH_ERROR": "Erro ao publicar"
 		},
 		"station": {
 			"STATION_SETTINGS": "Configurações de estação",
