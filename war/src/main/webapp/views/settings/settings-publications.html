@@ -288,8 +288,8 @@
           <div class="cell">
             <div class="cell-inner">
 
-              <div class="text-left p-sm w-full z-index-2" ng-class="{'pos-abt': postLoaded.postFeaturedImage}">
-                <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(postLoaded.stationId).stationSlug, 'name': category.name})" class="badge p-sm r-5x badge-lg md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postLoaded.terms">
+              <div class="text-left p-h-sm w-full z-index-2" ng-class="{'pos-abt': postLoaded.postFeaturedImage}">
+                <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(postLoaded.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x badge-lg md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postLoaded.terms">
                   {{category.name}}
                 </a>
               </div>

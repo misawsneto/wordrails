@@ -94,7 +94,8 @@
 		"SELECT_ALL": "Selecionar todos",
 		"DESELECT_ALL": "Desselecionar todos",
 		"AT": "em",
-		"SHOW_ALL": "Mais"
+		"SHOW_ALL": "Mais",
+		"SKIP": "Pular"
 	},
 	"signin_signup": {
 		"OR": "ou",

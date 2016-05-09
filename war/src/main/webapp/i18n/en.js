@@ -94,7 +94,8 @@
 		"SELECT_ALL": "Select all",
 		"DESELECT_ALL": "Deselect all",
 		"AT": "at",
-		"SHOW_ALL": "Show all"
+		"SHOW_ALL": "Show all",
+		"SKIP": "Skip"
 	},
 	"signin_signup": {
 		"OR": "or",

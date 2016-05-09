@@ -278,3 +278,42 @@
       </div>
     </div>
   </div>
+
+<script type="text/ng-template" id="welcolme-dialog.html">
+  <md-dialog aria-label="change action">
+    <md-content style="background: white">
+      <div class="" id="email-template">
+        <div class="m-b-sm m-t-xs p-h w-800 pos-rlt">
+              
+          <div slider Interval='999999'>
+            <ul class="slides" style="background: white; height: 300px;">
+              <li>
+                <img src="/images/tutorial/edit-logo.fw.png" class="h-200 img-responsive">
+              </li>
+              <li>
+                <img src="/images/tutorial/stations-logo.fw.png" class="h-200 img-responsive">
+              </li>
+              <li>
+                <img src="/images/tutorial/pages-logo.fw.png" class="h-200 img-responsive">
+              </li>
+              <li>
+                <img src="/images/tutorial/manage-users-logo.fw.png" class="h-200 img-responsive">
+              </li>
+              <li>
+                <img src="/images/tutorial/admin-logo.fw.png" class="h-200 img-responsive">
+              </li>
+              <li>
+                <img src="/images/tutorial/features-logo.fw.png" class="h-200 img-responsive">
+              </li>
+            </ul>
+          </div>
+
+          <div class="pos-abt bottom-0 right-0 z-index-5 m-r-sm">
+            <md-button class="md-raised md-accent p-h md-whiteframe-z2 font-500" ng-click="cancel(); setSeen();">{{'titles.SKIP' | translate}}</md-button>
+          </div>
+
+        </div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>
