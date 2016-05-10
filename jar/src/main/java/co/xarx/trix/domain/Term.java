@@ -78,6 +78,18 @@ public class Term extends BaseEntity implements Serializable, Comparable<Term>{
 	@Lob
 	public String description;
 
+	public String getTermName(){
+		if(name != null)
+			return name;
+		return null;
+	}
+
+	public Integer getTermID(){
+		if(id != null)
+			return id;
+		return null;
+	}
+
 	@SdkInclude
 	public String getImageHash() {
 		if (image != null) return image.getOriginalHash();

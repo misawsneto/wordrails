@@ -273,7 +273,7 @@ public class PostsResource extends AbstractResource implements PostApi {
 	}
 
 	@Override
-	public void putPostTerms(Integer id, List<String> terms) throws IOException {
+	public void putPostTerms(Integer id) throws IOException {
 		forward();
 	}
 }

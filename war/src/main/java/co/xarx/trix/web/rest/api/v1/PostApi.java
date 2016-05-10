@@ -153,7 +153,7 @@ public interface PostApi {
 	ContentResponse<List<PostView>> findPostsByIds(@QueryParam("ids") List<Integer> ids);
 
 	@PUT
-	@Consumes("text/uri-list")
+	@Consumes(MediaType.WILDCARD)
 	@Path("/{id}/terms")
-	public void putPostTerms(Integer id, List<String> terms) throws IOException;
+	public void putPostTerms(@QueryParam("id") Integer id) throws IOException;
 }
