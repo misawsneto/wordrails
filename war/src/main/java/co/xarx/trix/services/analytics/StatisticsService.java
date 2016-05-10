@@ -1,14 +1,17 @@
 package co.xarx.trix.services.analytics;
 
+import co.xarx.trix.api.v2.ReadsCommentsRecommendsCountData;
 import co.xarx.trix.api.v2.StatsData;
+import co.xarx.trix.api.v2.StoreStatsData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.domain.MobileDevice;
+import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.PublishedApp;
 import co.xarx.trix.persistence.FileRepository;
 import co.xarx.trix.persistence.MobileDeviceRepository;
 import co.xarx.trix.persistence.PublishedAppRepository;
+import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
-import co.xarx.trix.api.v2.ReadsCommentsRecommendsCountData;
-import co.xarx.trix.api.v2.StoreStatsData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.arcadiaconsulting.appstoresstats.android.console.AndroidStoreStats;
@@ -49,27 +52,34 @@ public class StatisticsService {
 	private Client client;
 	private ObjectMapper mapper;
 	private String analyticsIndex;
+	private String nginxAccessIndex;
+	private FileRepository fileRepository;
 	private DateTimeFormatter dateTimeFormatter;
 	private PublishedAppRepository appRepository;
 	private MobileDeviceRepository mobileDeviceRepository;
-	private FileRepository fileRepository;
+	private PersonPermissionService personPermissionService;
 
 	private static int MONTH_INTERVAL = 30;
 	private static int WEEK_INTERVAL = 7;
+	private static String ACCESS_TYPE = "nginx_access";
 
 	@Autowired
 	public StatisticsService(Client client,
 							 MobileDeviceRepository mobileDeviceRepository,
 							 @Qualifier("objectMapper") ObjectMapper mapper,
 							 @Value("${elasticsearch.analyticsIndex}") String analyticsIndex,
-							 PublishedAppRepository appRepository, FileRepository fileRepository){
+							 @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex,
+							 PublishedAppRepository appRepository, FileRepository fileRepository,
+	PersonPermissionService personPermissionService){
 		this.mapper = mapper;
 		this.client = client;
 		this.appRepository = appRepository;
+		this.fileRepository = fileRepository;
 		this.analyticsIndex = analyticsIndex;
 		this.dateTimeFormatter = getFormatter();
+		this.nginxAccessIndex = nginxAccessIndex;
 		this.mobileDeviceRepository = mobileDeviceRepository;
-		this.fileRepository = fileRepository;
+		this.personPermissionService = personPermissionService;
 	}
 
 	public HashMap getPorpularNetworks(){
@@ -80,7 +90,7 @@ public class StatisticsService {
 		ClusterState cs = client.admin().cluster().prepareState().setIndices(analyticsIndex).execute().actionGet().getState();
 
 		IndexMetaData indexMetaData = cs.getMetaData().index(analyticsIndex);
-		MappingMetaData mappingMetaData = indexMetaData.mapping(Constants.ObjectType.NGINX_INDEX);
+		MappingMetaData mappingMetaData = indexMetaData.mapping(nginxAccessIndex);
 		Map<String, Object> map = null;
 
 		try {
@@ -124,7 +134,7 @@ public class StatisticsService {
 		String term = "by_" + field;
 
 		SearchRequestBuilder search = client.prepareSearch();
-		search.setTypes(Constants.ObjectType.NGINX_INDEX)
+		search.setTypes(nginxAccessIndex)
 				.addAggregation(AggregationBuilders
 						.terms(term)
 						.field(field)
@@ -150,6 +160,11 @@ public class StatisticsService {
 		return buckets;
 	}
 
+	public StatsData postStats(String end, String beginning, Integer postId){
+		Interval interval = getInterval(end, beginning);
+		return postStats(end, postId, Days.daysBetween(interval.getStart(), interval.getEnd()).getDays());
+	}
+
 	public StatsData postStats(String date, Integer postId, Integer sizeInDays){
 		Interval interval = getInterval(date, sizeInDays);
 
@@ -158,7 +173,7 @@ public class StatisticsService {
 
 		postReadCounts = countPostReadByPost(postId);
 		commentsCounts = countCommentByPost(postId);
-		generalStatus.add(countTotals(postId, "nginx_access.postId", "nginx_access"));
+		generalStatus.add(countTotals(postId, "nginx_access.postId", nginxAccessIndex));
 		generalStatus.add(countTotals(postId, "comment.postId", "analytics"));
 		generalStatus.add(countTotals(postId, "recomment.postId", "analytics"));
 
@@ -171,6 +186,11 @@ public class StatisticsService {
 		return response;
 	}
 
+	public StatsData authorStats(String end, String start, Integer authorId) throws JsonProcessingException {
+		Interval interval = getInterval(end, start);
+		return personStats(end, authorId, Days.daysBetween(interval.getStart(), interval.getEnd()).getDays());
+	}
+
 	public StatsData personStats(String date, Integer personId, Integer sizeInDays) throws JsonProcessingException {
 		Interval interval = getInterval(date, sizeInDays);
 
@@ -179,7 +199,7 @@ public class StatisticsService {
 
 		postReadCounts = countPostreadByAuthor(personId);
 		commentsCounts = countCommentByAuthor(personId);
-		generalStatus.add(countTotals(personId, "nginx_access.authorId", "nginx_access"));
+		generalStatus.add(countTotals(personId, "nginx_access.authorId", nginxAccessIndex));
 		generalStatus.add(countTotals(personId, "comment.postAuthorId", "analytics"));
 		generalStatus.add(countTotals(personId, "recommend.postAuthorId", "analytics"));
 
@@ -201,9 +221,9 @@ public class StatisticsService {
 
 		postreadCounts = countPostreadByTenant(tenantId);
 		commentsCounts = countCommentByTenant(tenantId);
-		generalStatus.add(countTotals(tenantId, "nginx_access.tenantId", "nginx_access"));
-		generalStatus.add(countTotals(tenantId, "comment.tenantId", "analytics"));
-		generalStatus.add(countTotals(tenantId, "recommend.tenantId", "analytics"));
+		generalStatus.add(countTotals(tenantId, "nginx_access.tenantId", nginxAccessIndex));
+		generalStatus.add(countTotals(tenantId, "comment.tenantId", analyticsIndex));
+		generalStatus.add(countTotals(tenantId, "recommend.tenantId", analyticsIndex));
 		generalStatus.add((int) (long) mobileDeviceRepository.countAndroidDevices(tenantId));
 		generalStatus.add((int) (long) mobileDeviceRepository.countAppleDevices(tenantId));
 
@@ -217,6 +237,12 @@ public class StatisticsService {
 		StatsData.fileSpace = getFileStats();
 
 		return StatsData;
+	}
+
+	public Map countPostReads(List<Integer> postIds){
+		Map postReads = new HashMap<Integer, Integer>();
+		postIds.forEach( postId -> postReads.put(postId, countTotals(postId, "nginx_access.postId", nginxAccessIndex)));
+		return postReads;
 	}
 
 	public Map getFileStats(){
@@ -244,11 +270,37 @@ public class StatisticsService {
 		return getAppStats(android, interval);
 	}
 
+	public Map getStationReaders(Integer stationId){
+		List<Person> persons = (List<Person>) personPermissionService.getPersonFromStation(stationId);
+
+		if(persons.size() == 0) return new HashMap<>();
+
+		List<Integer> ids = new ArrayList<>();
+		persons.forEach(person -> {
+			ids.add(person.id);
+		});
+
+		List<MobileDevice> mobileDevices = mobileDeviceRepository.findByPersonIds(ids);
+		Map<String, Integer> stationReaders = new HashMap<>();
+
+		stationReaders.put("total", ids.size());
+		stationReaders.put("stationId", stationId);
+
+		int androidCounter = 0;
+		int iosCounter = 0;
+		for(MobileDevice device: mobileDevices){
+			if(device.type == Constants.MobilePlatform.ANDROID) androidCounter++;
+			if(device.type == Constants.MobilePlatform.APPLE) iosCounter++;
+		}
+
+		stationReaders.put("ios", androidCounter);
+		stationReaders.put("android", iosCounter);
+
+		return stationReaders;
+	}
+
 	public StoreStatsData getAppStats(PublishedApp publishedApp, Interval interval){
 		CommonStatsData stats;
-//		CommonStatsData periodStats;
-//		CommonStatsData android = fetchAndroid.getFullStatsForApp("mobile@xarx.co", "X@rxM0b!l3", "com.wordrails.sportclubdorecife", null, "XARX");
-//		this.ios = fetchIOs.getFullStatsForApp("ac@adrielcafe.com", "X@rxtr1x", "SPORTCLUBDORECIFE", "86672524", null);
 
 		if (publishedApp.getType().equals(Constants.MobilePlatform.ANDROID)) {
 			AndroidStoreStats fetchAndroid = new AndroidStoreStats();
@@ -257,14 +309,6 @@ public class StatisticsService {
 					publishedApp.getPublisherPassword(),
 					publishedApp.getPackageName(), null,
 					publishedApp.getPublisherPublicName());
-
-//			periodStats = fetchAndroid.getStatsForApp(
-//					publishedApp.getPublisherEmail(),
-//					publishedApp.getPublisherPassword(),
-//					publishedApp.getPackageName(),
-//					interval.getStart().toDate(),
-//					interval.getEnd().toDate(), null,
-//					publishedApp.getPublisherPublicName());
 		} else {
 			IOSStoreStats fetchIos = new IOSStoreStats();
 			stats = fetchIos.getFullStatsForApp(
@@ -272,21 +316,12 @@ public class StatisticsService {
 					publishedApp.getPublisherPassword(),
 					publishedApp.getSku(),
 					publishedApp.getVendorId(), null);
-
-//			periodStats = fetchIos.getStatsForApp(
-//					publishedApp.getPublisherEmail(),
-//					publishedApp.getPublisherPassword(),
-//					publishedApp.getPackageName(),
-//					interval.getStart().toDate(),
-//					interval.getEnd().toDate(),
-//					publishedApp.getVendorId(), null);
 		}
 
 		StoreStatsData appStats = new StoreStatsData();
 		appStats.averageRaiting = stats.getAverageRate();
 		appStats.downloads = stats.getDownloadsNumber();
 		appStats.currentInstallations = stats.getCurrentInstallationsNumber();
-//		appStats.monthlyDownloads = periodStats.getDownloadsNumber();
 
 		Interval week = getInterval(interval.getEnd(), WEEK_INTERVAL);
 		Interval month = getInterval(interval.getEnd(), MONTH_INTERVAL);
@@ -312,9 +347,9 @@ public class StatisticsService {
 
 		postreadCounts = countPostreadByStation(stationId);
 		commentsCounts = countCommentByStation(stationId);
-		generalStatus.add(countTotals(stationId, "nginx_access.stationId", "nginx_access"));
-		generalStatus.add(countTotals(stationId, "comment.stationId", "analytics"));
-		generalStatus.add(countTotals(stationId, "recommend.stationId", "analytics"));
+		generalStatus.add(countTotals(stationId, "nginx_access.stationId", nginxAccessIndex));
+		generalStatus.add(countTotals(stationId, "comment.stationId", analyticsIndex));
+		generalStatus.add(countTotals(stationId, "recommend.stationId", analyticsIndex));
 
 		StatsData StatsData = new StatsData();
 		StatsData.generalStatsJson = generalStatus;
@@ -342,10 +377,7 @@ public class StatisticsService {
 	}
 
 	public Interval getInterval(String date, Integer size){
-		Assert.notNull(date, "Invalid date. Expected yyyy-MM-dd");
-		DateTime endDate = dateTimeFormatter.parseDateTime(date);
-
-		return new Interval(endDate.minusDays(size != null ? size : MONTH_INTERVAL), endDate);
+		return getInterval(date != null ? dateTimeFormatter.parseDateTime(date) : new DateTime(), size);
 	}
 
 	public DateTimeFormatter getFormatter(){
@@ -396,35 +428,35 @@ public class StatisticsService {
 	}
 
 	public Map countPostreadByAuthor(Integer authorId) {
-		return generalCounter("author_read_author", "nginx_access", boolQuery().must(termQuery("authorId", authorId)).must(termQuery("type", "nginx_access")), "@timestamp");
+		return generalCounter("author_read_author", nginxAccessIndex, boolQuery().must(termQuery("authorId", authorId)).must(termQuery("_type", ACCESS_TYPE)), "@timestamp");
 	}
 
 	public Map countPostreadByTenant(String tenantId){
-		return generalCounter("author_read_network", "nginx_access", boolQuery().must(termQuery("tenantId", tenantId)).must(termQuery("type", "nginx_access")), "@timestamp");
+		return generalCounter("author_read_network", nginxAccessIndex, boolQuery().must(termQuery("tenantId", tenantId)).must(termQuery("_type", ACCESS_TYPE)), "@timestamp");
 	}
 
 	public Map countCommentByPost(Integer postId) {
-		return generalCounter("comments_count", "analytics", boolQuery().must(termQuery("postId", postId)), "date");
+		return generalCounter("comments_count", analyticsIndex, boolQuery().must(termQuery("postId", postId)), "date");
 	}
 
 	public Map countCommentByTenant(String tenantId){
-		return generalCounter("comments_count_tentant", "analytics", boolQuery().must(termQuery("tenantId", tenantId)), "date");
+		return generalCounter("comments_count_tentant", analyticsIndex, boolQuery().must(termQuery("tenantId", tenantId)), "date");
 	}
 
 	public Map<Long, Integer> countPostReadByPost(Integer postId) {
-		return generalCounter("post_read", "nginx_access", boolQuery().must(termQuery("postId", postId)).must(termQuery("_type", "nginx_access")), "@timestamp");
+		return generalCounter("post_read", nginxAccessIndex, boolQuery().must(termQuery("postId", postId)).must(termQuery("_type", ACCESS_TYPE)), "@timestamp");
 	}
 
 	public Map countPostreadByStation(Integer stationId){
-		return generalCounter("post_read_station", "nginx_access", boolQuery().must(termQuery("stationId", stationId)).must(termQuery("_type", "nginx_access")), "@timestamp");
+		return generalCounter("post_read_station", nginxAccessIndex, boolQuery().must(termQuery("stationId", stationId)).must(termQuery("_type", ACCESS_TYPE)), "@timestamp");
 	}
 
 	public Map countCommentByStation(Integer stationId) {
-		return generalCounter("comment_station", "analytics", boolQuery().must(termQuery("stationId", stationId)).must(termQuery("_type", "comment")), "@timestamp");
+		return generalCounter("comment_station", analyticsIndex, boolQuery().must(termQuery("stationId", stationId)).must(termQuery("_type", "comment")), "@timestamp");
 	}
 
 	public Map countCommentByAuthor(Integer id) {
-		return generalCounter("author_comment", "analytics", boolQuery().must(termQuery("postAuthorId", id)), "date");
+		return generalCounter("author_comment", analyticsIndex, boolQuery().must(termQuery("postAuthorId", id)), "date");
 	}
 
 	public Integer countTotals(Integer id, String entity, String index) {
