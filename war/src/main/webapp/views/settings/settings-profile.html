@@ -37,7 +37,7 @@
 <div class="m-t-lg">
 </div>
 
-<div class="block-800 m-auto p-h">
+<div class="block-800 m-auto p-h-md">
   <div class="search-with-filter p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
     <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
 
@@ -110,7 +110,7 @@
   </div>
 </div>
 
-<div class="block-800 m-auto p-h">
+<div class="block-800 m-auto">
   <!-- <div class="panel panel-card">
     <form>
       <textarea class="form-control no-border" rows="3" placeholder="Write something..."></textarea>
@@ -128,24 +128,29 @@
     <div class="m-b-lg" infinite-scroll="paginate()" infinite-scroll-container='"#content .box-cell"'>
     
       <ul class="bg-t collapsible popout" data-collapsible="accordion" watch>
-        <li class="panel panel-card p" ng-repeat="publication in publications">
-          <a href class="pull-left m-r-md" ng-if="publication.featuredImageHash || publication.imageHash" style="height: 128px;">
-            <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-xl h-full bg-cover">
-            </div>
-          </a>
-          <div class="clear font-thin">
-            <a href class="font-bold block text-md">{{publication.title}}</a>
-            {{publication.body.stripHtml() | characters:170}}
-            <div class="p-t-sm text-xs font-500">
-              <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">editar
+        <li class="md-background-hue-1 background" ng-repeat="publication in publications">
+          <div class="collapsible-header p">
+            {{publication.title}}
+          </div>
+          <div class="collapsible-body p">
+            <a href class="pull-left m-r-md" ng-if="publication.featuredImageHash || publication.imageHash" style="height: 128px;">
+              <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-xl h-full bg-cover">
               </div>
-              <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">remover
+            </a>
+            <div class="clear font-thin">
+              <a href class="font-bold block text-md">{{publication.title}}</a>
+              {{publication.body.stripHtml() | characters:170}}
+              <div class="p-t-sm text-xs font-500">
+                <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">editar
+                </div>
+                <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">remover
+                </div>
               </div>
-            </div>
-            <div class="list-group-item b-n p-sm p-t-sm no-padding-h">
-              <a href class="pull-left m-r-sm"><img src="/images/a1.jpg" class="img-responsive img-circle thumb-xxs md-whiteframe-z1"></a>
-              <div class="clear font-normal p-xs">
-                <a href class="font-500 block">{{publication.authorName}}</a>
+              <div class="list-group-item b-n p-sm p-t-sm no-padding-h">
+                <a href class="pull-left m-r-sm"><img src="/images/a1.jpg" class="img-responsive img-circle thumb-xxs md-whiteframe-z1"></a>
+                <div class="clear font-normal p-xs">
+                  <a href class="font-500 block">{{publication.authorName}}</a>
+                </div>
               </div>
             </div>
           </div>
