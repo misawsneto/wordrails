@@ -15,7 +15,10 @@ public class PostMap<T extends Post> extends PropertyMap<T, ESPost> {
 
 		@Override
 		protected Set<Integer> convert(Set<Term> terms) {
-			return terms.stream().map(Term::getId).collect(Collectors.toSet());
+			if(terms != null && terms.size() > 0)
+				return terms.stream().map(Term::getId).collect(Collectors.toSet());
+			else
+				return null;
 		}
 	}
 
