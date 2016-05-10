@@ -874,10 +874,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.postPost = function(originalPost){
 		var post = preparePost(originalPost);
-		trix.postPost(post).success(function(){
+		trix.postPost(post).success(function(response){
 			$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
+			trix.putPostTerms(response.id, post.terms);
 		}).error(function(){
-			$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_ERROR'));
+			$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
 		})
 	}
 
