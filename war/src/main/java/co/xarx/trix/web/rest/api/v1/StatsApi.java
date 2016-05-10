@@ -42,4 +42,8 @@ public interface StatsApi {
 	@GET
 	@Path("/countPostReads")
 	Map<Integer, Integer> countReadsByPostIds(@QueryParam("postIds") List<Integer> postIds);
+
+	@GET
+	@Path("/countReadersByStation")
+	Map<String, Integer> countReadersByStation(@QueryParam("stationId") Integer stationId);
 }

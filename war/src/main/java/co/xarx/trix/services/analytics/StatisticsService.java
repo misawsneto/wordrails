@@ -1,14 +1,17 @@
 package co.xarx.trix.services.analytics;
 
+import co.xarx.trix.api.v2.ReadsCommentsRecommendsCountData;
 import co.xarx.trix.api.v2.StatsData;
+import co.xarx.trix.api.v2.StoreStatsData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.domain.MobileDevice;
+import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.PublishedApp;
 import co.xarx.trix.persistence.FileRepository;
 import co.xarx.trix.persistence.MobileDeviceRepository;
 import co.xarx.trix.persistence.PublishedAppRepository;
+import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
-import co.xarx.trix.api.v2.ReadsCommentsRecommendsCountData;
-import co.xarx.trix.api.v2.StoreStatsData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.arcadiaconsulting.appstoresstats.android.console.AndroidStoreStats;
@@ -50,10 +53,11 @@ public class StatisticsService {
 	private ObjectMapper mapper;
 	private String analyticsIndex;
 	private String nginxAccessIndex;
+	private FileRepository fileRepository;
 	private DateTimeFormatter dateTimeFormatter;
 	private PublishedAppRepository appRepository;
 	private MobileDeviceRepository mobileDeviceRepository;
-	private FileRepository fileRepository;
+	private PersonPermissionService personPermissionService;
 
 	private static int MONTH_INTERVAL = 30;
 	private static int WEEK_INTERVAL = 7;
@@ -65,15 +69,17 @@ public class StatisticsService {
 							 @Qualifier("objectMapper") ObjectMapper mapper,
 							 @Value("${elasticsearch.analyticsIndex}") String analyticsIndex,
 							 @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex,
-							 PublishedAppRepository appRepository, FileRepository fileRepository){
+							 PublishedAppRepository appRepository, FileRepository fileRepository,
+	PersonPermissionService personPermissionService){
 		this.mapper = mapper;
 		this.client = client;
 		this.appRepository = appRepository;
+		this.fileRepository = fileRepository;
 		this.analyticsIndex = analyticsIndex;
 		this.dateTimeFormatter = getFormatter();
-		this.mobileDeviceRepository = mobileDeviceRepository;
-		this.fileRepository = fileRepository;
 		this.nginxAccessIndex = nginxAccessIndex;
+		this.mobileDeviceRepository = mobileDeviceRepository;
+		this.personPermissionService = personPermissionService;
 	}
 
 	public HashMap getPorpularNetworks(){
@@ -264,11 +270,37 @@ public class StatisticsService {
 		return getAppStats(android, interval);
 	}
 
+	public Map getStationReaders(Integer stationId){
+		List<Person> persons = (List<Person>) personPermissionService.getPersonFromStation(stationId);
+
+		if(persons.size() == 0) return new HashMap<>();
+
+		List<Integer> ids = new ArrayList<>();
+		persons.forEach(person -> {
+			ids.add(person.id);
+		});
+
+		List<MobileDevice> mobileDevices = mobileDeviceRepository.findByPersonIds(ids);
+		Map<String, Integer> stationReaders = new HashMap<>();
+
+		stationReaders.put("total", ids.size());
+		stationReaders.put("stationId", stationId);
+
+		int androidCounter = 0;
+		int iosCounter = 0;
+		for(MobileDevice device: mobileDevices){
+			if(device.type == Constants.MobilePlatform.ANDROID) androidCounter++;
+			if(device.type == Constants.MobilePlatform.APPLE) iosCounter++;
+		}
+
+		stationReaders.put("ios", androidCounter);
+		stationReaders.put("android", iosCounter);
+
+		return stationReaders;
+	}
+
 	public StoreStatsData getAppStats(PublishedApp publishedApp, Interval interval){
 		CommonStatsData stats;
-//		CommonStatsData periodStats;
-//		CommonStatsData android = fetchAndroid.getFullStatsForApp("mobile@xarx.co", "X@rxM0b!l3", "com.wordrails.sportclubdorecife", null, "XARX");
-//		this.ios = fetchIOs.getFullStatsForApp("ac@adrielcafe.com", "X@rxtr1x", "SPORTCLUBDORECIFE", "86672524", null);
 
 		if (publishedApp.getType().equals(Constants.MobilePlatform.ANDROID)) {
 			AndroidStoreStats fetchAndroid = new AndroidStoreStats();

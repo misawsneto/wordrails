@@ -48,4 +48,9 @@ public class StatsResource extends AbstractResource implements StatsApi {
 	public Map<Integer, Integer> countReadsByPostIds(List<Integer> postIds) {
 		return statisticsService.countPostReads(postIds);
 	}
+
+	@Override
+	public Map<String, Integer> countReadersByStation(Integer stationId) {
+		return statisticsService.getStationReaders(stationId);
+	}
 }
