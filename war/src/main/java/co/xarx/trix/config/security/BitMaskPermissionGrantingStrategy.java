@@ -7,12 +7,6 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 
-/**
- * A small modification from Spring's
- * org.springframework.security.acls.domain.DefaultPermissionGrantingStrategy
- * that performs bit-wise permmission comparison.
- * Useful if you want to be able to assign multiple permissions to a SID using a single ACE
- */
 public class BitMaskPermissionGrantingStrategy implements PermissionGrantingStrategy {
 	private final transient AuditLogger auditLogger;
 
@@ -28,21 +22,21 @@ public class BitMaskPermissionGrantingStrategy implements PermissionGrantingStra
 		AccessControlEntry firstRejection = null;
 
 		for (Permission p : permission) {
-			for (Sid sid : sids) {
-				// Attempt to find exact match for this permission mask and SID
-				boolean scanNextSid = true;
-
+			g:for (Sid sid : sids) {
 				for (AccessControlEntry ace : aces) {
-					Permission cumulativePermission = ace.getPermission();
-
-					boolean isAdmin = containsPermission(cumulativePermission, Permissions.ADMINISTRATION);
 					boolean belongsToCurrentSid = ace.getSid().equals(sid);
-					if(isAdmin && belongsToCurrentSid) {
+					if(!belongsToCurrentSid) {
+						continue;
+					}
+
+					Permission cumulativePermission = ace.getPermission();
+					boolean isAdmin = containsPermission(cumulativePermission, Permissions.ADMINISTRATION);
+					if(isAdmin && ace.isGranting()) {
 						return true;
 					}
 
 					//Bit-wise comparison
-					if (containsPermission(cumulativePermission, p) && belongsToCurrentSid) {
+					if (containsPermission(cumulativePermission, p)) {
 						// Found a matching ACE, so its authorization decision will prevail
 						if (ace.isGranting()) {
 							// Success
@@ -56,19 +50,13 @@ public class BitMaskPermissionGrantingStrategy implements PermissionGrantingStra
 						// Failure for this permission, so stop search
 						// We will see if they have a different permission
 						// (this permission is 100% rejected for this SID)
+						// Store first rejection for auditing reasons
 						if (firstRejection == null) {
-							// Store first rejection for auditing reasons
 							firstRejection = ace;
 						}
 
-						scanNextSid = false; // helps break the loop
-
-						break; // exit aces loop
+						break g; // exit sids loop
 					}
-				}
-
-				if (!scanNextSid) {
-					break; // exit SID for loop (now try next permission)
 				}
 			}
 		}

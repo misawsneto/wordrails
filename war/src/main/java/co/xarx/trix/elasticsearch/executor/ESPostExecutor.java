@@ -41,13 +41,13 @@ public class ESPostExecutor implements Executor<PostData, PostStatement> {
 		Assert.notNull(from, "from must not be null");
 
 		int page = from / size;
-		List<Integer> ids = searchService.searchIds(params);
-		List<Post> posts = searchService.search(ids, page, size);
+		List<Post> posts = searchService.search(params, page, size);
 		List<PostData> data = getPostDatas(posts);
+//		List<PostData> data = searchService.searchData(params, page, size);
 
 		Pageable pageable = RestUtil.getPageable(page, size, params.getOrders());
 
-		int contentSize = ids != null ? ids.size() : 0;
+		int contentSize = data != null ? data.size() : 0;
 		return new PageImpl(data, pageable, contentSize);
 	}
 

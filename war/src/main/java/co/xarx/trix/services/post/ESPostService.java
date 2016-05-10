@@ -22,6 +22,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.RangeFilterBuilder;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHitField;
 import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
@@ -109,9 +110,9 @@ public class ESPostService {
 
 			for (int i = 0; i < hits.length; i++) {
 				try {
-					SearchHit hit = hits[i];
 					ESPost esPost = posts.get(i);
 					PostView postView = modelMapper.map(esPost, PostView.class);
+					SearchHit hit = hits[i];
 					Map<String, HighlightField> highlights = hit.getHighlightFields();
 					if (highlights != null && highlights.get("body") != null) {
 						for (Text fragment : highlights.get("body").getFragments()) {
@@ -188,7 +189,7 @@ public class ESPostService {
 		return mainQuery;
 	}
 
-	List<Integer> findIds(PostStatement p) {
+	List<PostSearchResult> findIds(PostStatement p) {
 		List<FieldSortBuilder> sorts = getSorts(p.getOrders());
 
 		BoolQueryBuilder q = getBooleanQuery(p.getQuery());
@@ -206,7 +207,7 @@ public class ESPostService {
 
 		SearchQuery query = getSearchQuery(p, sorts, q, f);
 
-		ResultsExtractor<List<Integer>> extractor = getExtractor();
+		ResultsExtractor<List<PostSearchResult>> extractor = getExtractor();
 
 		return elasticsearchTemplate.query(query, extractor);
 	}
@@ -228,12 +229,25 @@ public class ESPostService {
 		return sorts;
 	}
 
-	private ResultsExtractor<List<Integer>> getExtractor() {
+	private ResultsExtractor<List<PostSearchResult>> getExtractor() {
 		return response -> {
-				List<Integer> ids = new ArrayList<>();
+				List<PostSearchResult> ids = new ArrayList<>();
 				SearchHit[] hits = response.getHits().getHits();
 				for (SearchHit hit : hits) {
-					ids.add(Integer.valueOf(hit.getId()));
+					Integer id = Integer.valueOf(hit.getId());
+					String snippet = null;
+					Map<String, HighlightField> highlights = hit.getHighlightFields();
+					if (highlights != null && highlights.get("body") != null) {
+						for (Text fragment : highlights.get("body").getFragments()) {
+							snippet = fragment.toString();
+						}
+					} else {
+						Map<String, SearchHitField> fields = hit.getFields();
+						String body = fields.get("body").getValue();
+
+						snippet = StringUtil.simpleSnippet(body);
+					}
+					ids.add(new PostSearchResult(id, snippet));
 				}
 
 				return ids;
@@ -252,6 +266,7 @@ public class ESPostService {
 		NativeSearchQuery searchQuery = nativeSearchQueryBuilder
 				.withFilter(f)
 				.withFields("id")
+				.withFields("body")
 				.withPageable(new PageRequest(0, 99999999))
 				.build();
 
@@ -260,13 +275,13 @@ public class ESPostService {
 
 	private void applyStateFilter(BoolFilterBuilder f, String state) {
 		if (state != null && !state.isEmpty()) {
-			f.must(termFilter("state", state));
+			f.must(queryFilter(queryStringQuery(state).defaultField("state")));
 		}
 	}
 
 	private void applyTypeFilter(BoolFilterBuilder f, String type) {
 		if (type != null && !type.isEmpty()) {
-			f.must(termFilter("_type", type));
+			f.must(termFilter("_type", type.toLowerCase()));
 		}
 	}
 
@@ -281,7 +296,7 @@ public class ESPostService {
 	}
 
 	private void applyTenantFilter(BoolFilterBuilder q) {
-		q.must(termFilter("tenantId", TenantContextHolder.getCurrentTenantId()));
+		q.must(termFilter("tenantId", TenantContextHolder.getCurrentTenantId().toLowerCase()));
 	}
 
 	private void applyDateFilter(BoolFilterBuilder f, String from, String until) {
