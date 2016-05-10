@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+	<!-- Configure the database connection here -->
+	<jdbc>
+		<driver>com.mysql.jdbc.Driver</driver>
+		<url>jdbc:mysql://localhost:3306/trix_dev</url>
+		<user>wordrails</user>
+		<password>wordrails</password>
+
+		<!-- You can also pass user/password and other JDBC properties in the optional properties tag: -->
+		<properties>
+			<property>
+				<key>user</key>
+				<value>[db-user]</value>
+			</property>
+			<property>
+				<key>password</key>
+				<value>[db-password]</value>
+			</property>
+		</properties>
+	</jdbc>
+
+	<generator>
+		<database>
+			<name>org.jooq.util.mysql.MySQLDatabase</name>
+			<includes>.*</includes>
+
+			<excludes>
+				schema_version | qrtz_.* | jv_.* | acl_.*
+			</excludes>
+
+			<inputSchema>trix_dev</inputSchema>
+		</database>
+
+		<generate>
+			<!-- Generation flags: See advanced configuration properties -->
+		</generate>
+
+		<target>
+			<packageName>co.xarx.trix.persistence</packageName>
+			<directory>/src/main/java/co/xarx/trix/persistence</directory>
+		</target>
+	</generator>
+</configuration>

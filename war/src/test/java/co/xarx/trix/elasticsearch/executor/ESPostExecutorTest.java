@@ -40,7 +40,7 @@ public class ESPostExecutorTest {
 		}
 
 		@Override
-		public List<Post> search(List<Integer> ids, Integer page, Integer size) {
+		public List<Post> search(PostStatement params, Integer page, Integer size) {
 			Post post1 = TestArtifactsFactory.createPost();
 			post1.setTitle("post1");
 			Post post2 = TestArtifactsFactory.createPost();
@@ -50,8 +50,8 @@ public class ESPostExecutorTest {
 		}
 
 		@Override
-		public List<Integer> searchIds(PostStatement params) {
-			return Lists.newArrayList(1, 2);
+		public List<PostData> searchData(PostStatement params, Integer page, Integer size) {
+			return null;
 		}
 	}
 
@@ -68,12 +68,12 @@ public class ESPostExecutorTest {
 		}
 
 		@Override
-		public List<Post> search(List<Integer> ids, Integer page, Integer size) {
+		public List<Post> search(PostStatement params, Integer page, Integer size) {
 			return null;
 		}
 
 		@Override
-		public List<Integer> searchIds(PostStatement params) {
+		public List<PostData> searchData(PostStatement params, Integer page, Integer size) {
 			return null;
 		}
 	}

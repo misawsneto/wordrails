@@ -89,9 +89,12 @@
 						</execution>
 					</executions>
 				</plugin>
+
 			</plugins>
 		</pluginManagement>
 	</build>
+
+
 
 	<repositories>
 		<repository>
@@ -835,6 +838,22 @@
 				<groupId>es.arcadiaconsulting.appstorestats</groupId>
 				<artifactId>appstoresstats-ios</artifactId>
 				<version>1.0.9</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jooq</groupId>
+				<artifactId>jooq</artifactId>
+				<version>3.8.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jooq</groupId>
+				<artifactId>jooq-meta</artifactId>
+				<version>3.8.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jooq</groupId>
+				<artifactId>jooq-codegen</artifactId>
+				<version>3.8.0</version>
 			</dependency>
 
 		</dependencies>

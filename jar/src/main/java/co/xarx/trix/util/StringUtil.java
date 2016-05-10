@@ -69,6 +69,7 @@ public class StringUtil {
 	}
 
 	public static String simpleSnippet(String body) {
+		if(body == null) return null;
 		String[] splitPhrase = body.split("\\s+");
 		int limit = splitPhrase.length >= 100 ? 100 : splitPhrase.length;
 		String string = StringUtils.join(Arrays.copyOfRange(splitPhrase, 0, limit), " ");

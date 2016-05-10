@@ -110,9 +110,7 @@ public class TermsResource extends AbstractResource implements TermsApi {
 			if (term.parent != null && parent.id.equals(term.parent.id)) {
 				parent.children.add(term);
 				term.parent = null;
-				term.cells = null;
 				term.termPerspectives = null;
-				term.posts = null;
 			}
 		}
 
@@ -124,10 +122,7 @@ public class TermsResource extends AbstractResource implements TermsApi {
 	}
 
 	private void cleanTerm(Term term) {
-		term.posts = null;
-		term.rows = null;
 		term.termPerspectives = null;
-		term.cells = null;
 		term.taxonomy = null;
 	}
 

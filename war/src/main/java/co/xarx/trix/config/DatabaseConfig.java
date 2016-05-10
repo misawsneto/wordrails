@@ -4,6 +4,11 @@ import co.xarx.trix.config.database.RepositoryFactoryBean;
 import co.xarx.trix.config.flyway.FlywayIntegrator;
 import co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence;
 import com.jolbox.bonecp.BoneCPDataSource;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DataSourceConnectionProvider;
+import org.jooq.impl.DefaultConfiguration;
+import org.jooq.impl.DefaultDSLContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.FieldRetrievingFactoryBean;
 import org.springframework.context.annotation.Bean;
@@ -98,6 +103,26 @@ public class DatabaseConfig {
 		jpaTransactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
 		return jpaTransactionManager;
 	}
+
+	@Bean
+	public DataSourceConnectionProvider dataSourceConnectionProvider(){
+		return new DataSourceConnectionProvider(dataSource());
+	}
+
+	@Bean
+	public DefaultConfiguration defaultConfiguration(){
+		DefaultConfiguration defaultConfiguration = new DefaultConfiguration();
+		defaultConfiguration.setConnectionProvider(dataSourceConnectionProvider());
+		defaultConfiguration.setSQLDialect(SQLDialect.MYSQL);
+		return defaultConfiguration;
+	}
+
+	@Bean
+	public DSLContext dslContext(){
+		return new DefaultDSLContext(defaultConfiguration());
+	}
+
+
 
 	@Bean
 	public FieldRetrievingFactoryBean dateTimeProvider() {

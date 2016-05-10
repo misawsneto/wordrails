@@ -1,0 +1,617 @@
+{
+  "fields": [
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "id",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "body",
+	  "type": "CLOB"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "date",
+	  "type": "TIMESTAMP"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "lastModificationDate",
+	  "type": "TIMESTAMP"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "sponsor",
+	  "type": "TINYINT"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "title",
+	  "type": "CLOB"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "author_id",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "featuredImage_id",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "station_id",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "topper",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "originalSlug",
+	  "type": "CLOB"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "slug",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "state",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "sponsor_id",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "wordpressId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "imageId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "imageLandscape",
+	  "type": "BIT"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "imageLargeId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "imageMediumId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "imageSmallId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "updatedAt",
+	  "type": "TIMESTAMP"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "readsCount",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "recommendsCount",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "commentsCount",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "externalFeaturedImgUrl",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "externalVideoUrl",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "imageCaptionText",
+	  "type": "CLOB"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "imageCreditsText",
+	  "type": "CLOB"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "bookmarksCount",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "imageTitleText",
+	  "type": "CLOB"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "lat",
+	  "type": "DOUBLE"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "lng",
+	  "type": "DOUBLE"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "notify",
+	  "type": "TINYINT"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "originalPostId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "readTime",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "scheduledDate",
+	  "type": "TIMESTAMP"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "stationId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "subheading",
+	  "type": "CLOB"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "createdAt",
+	  "type": "TIMESTAMP"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "post_id",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "imageHash",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "imageLargeHash",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "imageMediumHash",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "imageSmallHash",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "featuredAudioHash",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "featuredVideoHash",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "network",
+	  "type": "BLOB"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "network_id",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "networkId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "tenantId",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "version",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "featuredAudio_id",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "post",
+	  "name": "featuredVideo_id",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "id",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "bio",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "email",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "name",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "passwordReseted",
+	  "type": "BIT"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "username",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "image_id",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "twitterHandle",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "cover_id",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "createdAt",
+	  "type": "TIMESTAMP"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "updatedAt",
+	  "type": "TIMESTAMP"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "imageId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "imageLargeId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "imageMediumId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "imageSmallId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "coverId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "coverLargeId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "wordpressId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "coverMediumId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "user_id",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "lastLogin",
+	  "type": "TIMESTAMP"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "networkId",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "coverHash",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "coverLargeHash",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "coverMediumHash",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "imageHash",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "imageLargeHash",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "imageMediumHash",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "imageSmallHash",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "coverUrl",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "imageUrl",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "version",
+	  "type": "INTEGER"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "tenantId",
+	  "type": "VARCHAR"
+	},
+	{
+	  "schema": "trix_dev",
+	  "table": "author",
+	  "name": "networkAdmin",
+	  "type": "BIT"
+	}
+  ],
+  "records": [
+	[
+	  82,
+	  "<p class=\"\"><span>E<\/span>u já desfilei em escola de samba. Se conseguisse, desfilaria todos os anos. E recomendo para todos que gostam minimamente de cantar e dançar, acho incomparável. Na passarela, as pessoas ficam mais bonitas, todo mundo se torna mais próximo, a gente sai de si ao som da bateria.<\/p><p class=\"\">Por proporcionarem esse tipo de experiência, as escolas de sambas são a Disney pop-up do Brasil. Nos dois casos, uma estrutura semelhante a uma linha de produção de fábrica trabalha duro para entregar os clientes emoção, encantamento, alegria.<\/p><p class=\"\">Só que a Disney virou um estudo de caso de gestão consagrado no mundo inteiro e nossas escolas de samba, não. Por quê? Não é por insignificância econômica.<\/p><p class=\"\">Transmitido para mais de 100 países, o Carnaval brasileiro movimenta mais de R$ 5,5 bilhões por ano, segundo dados de 2012 do Ministério do Turismo, e impacta 52 setores da economia formal, fora a informal. O custo de cada desfile do Grupo Especial de escolas de samba do Rio de Janeiro, que dura cerca de 82 minutos uma vez por ano, gravita em torno dos R$ 10 milhões.<\/p><p class=\"\">As escolas de samba têm chamado a atenção de pesquisadores de administração e negócios, como o professor Marcelo Chiavone Pontes, da ESPM São Paulo. Mas as empresas ainda não lhes dão atenção, diferentemente do que ocorreu com a Disney.<\/p><p class=\"\">Deveriam dar. Nossas escolas ainda têm falhas que a Disney não tem, mas sabem lidar bem com uma série de problemas típicos das empresas e dominam algo que é cada vez mais importante: o improviso. Tem faltado sensibilidade aos gestores das empresas para olhar para o Carnaval com vontade de aprender.<\/p><p class=\"\">Jogo aqui alguns ensinamentos das escolas de samba apontados pelos professor Chiavone Pontes:<\/p><p class=\"\"><strong>Satisfação do cliente comprovada.&nbsp;<\/strong>A escola de samba deve entregar emoção para pelo menos três públicos distintos \u2013o folião que pagou caro para desfilar ali (o preço médio de uma fantasia é cerca de um salário mínimo), aquele que pagou ingresso para ver no sambódromo e o que fica em casa assistindo ao desfile pela televisão. E entrega, como analisa Chiavone Pontes. As escolas, na maioria, desfilam com capacidade máxima de foliões, os sambódromos lotam (no Rio e em São Paulo), e a transmissão de TV, só no Brasil, é vista por mais de 4 milhões de pessoas. Além disso, a quase totalidade das pessoas que desfilam sai da avenida satisfeita, querendo voltar e recomendando a experiência para os amigos no boca a boca (como eu fiz).<\/p><p class=\"\"><strong>Trabalho em equipe para valer.&nbsp;<\/strong>Tanto quanto os destaques e as celebridades que desfilam, a escola é formada por membros invisíveis, cuja função é controlar o movimento e os efeitos visuais, ou ajudar alguns passistas no desenvolvimento das coreografias, ou dar suporte para que os destaques da escola brilhem, ou fazer as alas não perderem o passo. E essas pessoas se motivam e aceitam fazer esse papel de bom grado.<\/p><p class=\"\"><strong>Gestão dos mínimos detalhes.&nbsp;<\/strong>Uma escola de samba do grupo especial enfrenta uma concorrência acirrada \u2013 ganha-se ou perde-se um desfile por meio ponto de diferença. Como há pouco mais de uma hora para apresentar o trabalho de um ano inteiro, um erro é fatal para seu resultado na competição, sem segunda oportunidade, como analisa Chiavone Pontes. \u201CAlém disso, o desfile é o único espetáculo artístico do mundo em que não existe ensaio geral\u201D, diz o professor da ESPM SP. Agora, imagine a chance de ocorrer erro em uma escola que desfila com cerca de 4 mil integrantes, porte de grande empresa. Multiplique 4 mil por pelo menos 10 coisas que podem dar errado \u2013 uma fantasia com brilho de menos, um passista que não cante o samba, um membro da bateria que atravesse \u2013; é detalhe à beça para gerenciar.<\/p><p class=\"\"><strong>Senso de pertencimento e comprometimento total.&nbsp;<\/strong>Observe integrantes da escola abrindo caminho para a velha-guarda, numa atitude de agradecimento com quem ajudou a construir aquilo. Ou o respeito geral dedicado à ala das baianas, que abençoam a escola trazendo seu axé. Ou ainda as pessoas reverenciando a bandeira da escola, beijando-a e colocando-a na testa para absorver sua energia positiva. Isso faz ter certeza de que as pessoas se sentem pertencendo àquela organização, como analisa Chiavone Pontes.&nbsp; E você acha que, na hora do desfile, alguém precisa pedir para o outro caprichar e dar o melhor de si? Não, o comprometimento é automático.<\/p><p class=\"\">Tudo isso é sonhado pelas empresas. Algumas, como a Apple ou o Google, conseguem chegar até aí, mas é raridade. Você ainda acha que não existem lições para as empresas aprenderem?<\/p><p class=\"\">Ou você está pensando&nbsp;<em>\u201Cit\u2019s the samba, stupid\u201D<\/em>? Não é o samba, segundo Chiavone Pontes, o que explica esses fatores de sucesso (o que não poderia ser copiado por empresas), mas o que ele chama de \u201Cantiestrutura estruturada\u201D.<\/p><p class=\"\">Foi a antropóloga Maria Júlia Goldwasser, ao estudar a Estação Primeira de Mangueira, que veio com essa ideia, dizendo que as escolas de samba \u201Cse configuram como uma solução entre o princípio de estrutura, dada sua ordenação institucional, e o princípio da antiestrutura, dado seu caráter carnavalesco\u201D. Ou seja, a essência delas é essa antiestrutura estruturada.<\/p><p class=\"\">\u201CPodemos afirmar que aquele aparente caos que se verifica nos ensaios e na concentração dos sambódromos, não é um caos, nem é uma ordem completa. É uma reordem, um estado muito mais adequado a um ambiente que, como já mostramos, pode ser complexo, caótico e sempre muito criativo\u201D, como explica Chiavone Pontes.<\/p><p class=\"\">E a antiestrutura estruturada se apoia em três agendas, a intelectual, comportamental e a emocional, conforme ideias defendidas pelo consultor e professor suíço Didier Marlier (desconfio que há uma grande chance de você, que trabalha em uma empresa, querer essas agendas para chamar de suas).<\/p><p class=\"\">&nbsp;<span style=\"line-height: 25.2000007629395px;\">\u2022&nbsp;<\/span><strong style=\"line-height: 25.2000007629395px;\">A agenda intelectual&nbsp;<\/strong><span style=\"line-height: 25.2000007629395px;\">da escola de samba é de obter a participaçãode todos, entendendo que as boas ideias não são propriedade apenas dos ocupantes de níveis hierárquicos superiores. Ideias de novos materiais, novos andamentos de bateria, novas coreografias, novos efeitos e novos enredos só se conseguem com a participação ativa de todos.<\/span><\/p><p class=\"\">\u2022&nbsp;<strong>A agenda comportamental&nbsp;<\/strong>da escola de samba se refere ao exemplo que vem de cima dos líderes. Como exemplo, Chiavone Pontes lembra que, sabendo que todos os integrantes da escola precisam saber cantar o samba, para que não se perca ponto no quesito harmonia, os diretores de uma escola são os primeiros a decorar a letra. Vale acrescentar que várias escolas de samba são lideradas por mulheres, em uma proporção maior do que a que vemos nas empresas.<\/p><p class=\"\">\u2022&nbsp;<strong>A agenda emocional&nbsp;<\/strong>da escola de samba mostra que os líderes usam símbolos, histórias, metáforas, gestos, ou seja, marcadores emocionais, para todos se envolverem profundamente com a escola.<\/p><p class=\"\">As empresas deviam, ou não, prestar atenção nas escolas de samba? Claro que há problemas, mas também os há na Disney e em qualquer empresa. Fora que tem aquela lição extra que vêm da Marcha da Quarta-Feira de Cinzas, inclusive: \u201C\u2026e, no entanto, é preciso cantar; mais que nunca, é preciso cantar\u201D.<\/p>",
+	  "2014-02-26 14:05:33.0",
+	  "2015-09-14 12:14:55.0",
+	  0,
+	  "Sua empresa poderia aprender algo com as escolas de samba",
+	  51,
+	  49,
+	  11,
+	  "Empreendedorismo",
+	  "sua-empresa-poderia-aprender-algo-com-as-escolas-de-samba",
+	  "sua-empresa-poderia-aprender-algo-com-as-escolas-de-samba-5bnxu",
+	  "PUBLISHED",
+	  null,
+	  null,
+	  260,
+	  true,
+	  263,
+	  262,
+	  261,
+	  "2015-09-14 12:14:55.0",
+	  2,
+	  0,
+	  0,
+	  null,
+	  null,
+	  null,
+	  null,
+	  0,
+	  "Samba (1).jpg",
+	  null,
+	  null,
+	  0,
+	  null,
+	  14,
+	  null,
+	  11,
+	  null,
+	  null,
+	  null,
+	  "919b736e311a20a52a9b6439fe029780",
+	  "3ea6fc936535793a724de497a9bf9eff",
+	  "c75add8d4feeb7db3ca5c1ad6efbacd2",
+	  "5643ff7414781f80cebd9c5b484426e2",
+	  null,
+	  null,
+	  null,
+	  null,
+	  5,
+	  "demo",
+	  0,
+	  null,
+	  null,
+	  51,
+	  "Biografia do Demo",
+	  "contato@xarx.co",
+	  "Demo",
+	  false,
+	  "demo",
+	  4872,
+	  null,
+	  5588,
+	  "2015-01-17 10:31:02.0",
+	  "2016-05-05 15:57:28.0",
+	  19274,
+	  19274,
+	  19276,
+	  19275,
+	  19271,
+	  19271,
+	  null,
+	  19273,
+	  34,
+	  "2016-05-05 15:57:28.0",
+	  5,
+	  "fea4d9046abf392dd059e628f2d539b3",
+	  null,
+	  "61751b3271c2afac87bb156224797433",
+	  "bc3c2042f9c3474ccbebd9b8b40533c4",
+	  null,
+	  "481f14dff0ce2699429706515b9fb73b",
+	  "3a10d25d632ec336bc31bc1e6f17f8e1",
+	  null,
+	  null,
+	  35,
+	  "demo",
+	  true
+	]
+  ]
+}

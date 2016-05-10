@@ -1,9 +1,13 @@
 package co.xarx.trix.services.post;
 
+import co.xarx.trix.annotation.TimeIt;
 import co.xarx.trix.api.PostView;
+import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.persistence.repository.SQLPostRepository;
+import co.xarx.trix.services.security.PermissionFilterService;
 import co.xarx.trix.services.security.StationPermissionService;
 import co.xarx.trix.util.Constants;
 import org.apache.commons.collections.CollectionUtils;
@@ -15,26 +19,33 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class ESPostSearchService implements PostSearchService {
 
 	private ESPostService esPostService;
 	private PostRepository postRepository;
+	private SQLPostRepository sqlPostRepository;
 	private StationPermissionService stationPermissionService;
+	private PermissionFilterService permissionFilterService;
 
 	@Autowired
 	public ESPostSearchService(ESPostService esPostService, PostRepository postRepository,
-							   StationPermissionService stationPermissionService) {
+							   SQLPostRepository sqlPostRepository, StationPermissionService stationPermissionService,
+							   PermissionFilterService permissionFilterService) {
 		this.esPostService = esPostService;
 		this.postRepository = postRepository;
+		this.sqlPostRepository = sqlPostRepository;
 		this.stationPermissionService = stationPermissionService;
+		this.permissionFilterService = permissionFilterService;
 	}
 
 	@Override
@@ -75,15 +86,15 @@ public class ESPostSearchService implements PostSearchService {
 		return esPostService.searchIndex(mainQuery, pageable, sort);
 	}
 
+	@TimeIt
 	@Override
-	public List<Post> search(List<Integer> ids, Integer page, Integer size) {
-		int from = size * page;
+	public List<Post> search(PostStatement params, Integer page, Integer size) {
+		Map<Integer, PostSearchResult> searchResults = searchIds(params);
 		ArrayList<Post> emptyResult = new ArrayList<>();
-		if(ids.isEmpty())
+		if (searchResults.isEmpty())
 			return emptyResult;
-		else if(ids.size() < size)
-			size = ids.size();
-		List<Integer> idsToGetFromDB = ids.subList(from, from + size);
+
+		List<Integer> idsToGetFromDB = getPaginatedIds(new ArrayList<>(searchResults.keySet()), page, size);
 
 		List<Post> result = postRepository.findAll(idsToGetFromDB);
 
@@ -93,9 +104,39 @@ public class ESPostSearchService implements PostSearchService {
 		return result;
 	}
 
+	private List<Integer> getPaginatedIds(List<Integer> ids, Integer page, Integer size) {
+		int from = size * page;
+		if(ids.size() < size)
+			size = ids.size();
+		return ids.subList(from, from + size);
+	}
+
 	@Override
-	@PostFilter("hasPermission(filterObject, 'co.xarx.trix.domain.Post', 'read')")
-	public List<Integer> searchIds(PostStatement params) {
-		return esPostService.findIds(params);
+	public List<PostData> searchData(PostStatement params, Integer page, Integer size) {
+		Map<Integer, PostSearchResult> searchResults = searchIds(params);
+		ArrayList<PostData> emptyResult = new ArrayList<>();
+		if (searchResults.isEmpty())
+			return emptyResult;
+
+		List<Integer> idsToGetFromDB = getPaginatedIds(new ArrayList<>(searchResults.keySet()), page, size);
+		List<PostData> datas = sqlPostRepository.findByIds(idsToGetFromDB);
+
+		for (PostData data : datas) {
+			PostSearchResult psr = searchResults.get(data.getId());
+			data.setSnippet(psr.getSnippet());
+		}
+		
+		return datas;
+	}
+
+	private Map<Integer, PostSearchResult> searchIds(PostStatement params) {
+		List<PostSearchResult> results = esPostService.findIds(params);
+		List<Integer> ids = results.stream()
+				.map(PostSearchResult::getId)
+				.collect(Collectors.toList());
+		final List<Integer> filteredIds = permissionFilterService.filterIds(ids, Post.class, "read");
+		return results.stream()
+				.filter(r -> filteredIds.contains(r.getId()))
+				.collect(Collectors.toMap(PostSearchResult::getId, Function.identity()));
 	}
 }
