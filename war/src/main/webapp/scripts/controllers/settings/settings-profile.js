@@ -75,8 +75,6 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
   // --- publications ----------
 
-      $scope.toggleAdvancedSearch = buildToggler('advanced-search');
-
     $scope.settings = {'tab': 'publications'}
 
     $scope.dateValue = new Date();
@@ -97,7 +95,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
         }
       }
 
-      $scope.toggleLeft = buildDelayedToggler('left');
+      
 
         /**
        * Supplies a function that will continue to operate until the
@@ -246,27 +244,27 @@ $scope.paginate = function(){
     $mdSidenav('comments-list').toggle();
   }
 
-  $scope.createComment = function(){
-    var comment = {}
-    comment = angular.copy($scope.newComment);
-    comment.author = extractSelf($scope.app.initData.person)
-    comment.post =TRIX.baseUrl + '/api/posts/' + $scope.app.nowReading.postId
+  // $scope.createComment = function(){
+  //   var comment = {}
+  //   comment = angular.copy($scope.newComment);
+  //   comment.author = extractSelf($scope.app.initData.person)
+  //   comment.post =TRIX.baseUrl + '/api/posts/' + $scope.app.nowReading.postId
 
-    trix.postComment(comment).success(function(response){
-      if(!$scope.comments || $scope.comments.length == 0)
-        $scope.comments = [];
+  //   trix.postComment(comment).success(function(response){
+  //     if(!$scope.comments || $scope.comments.length == 0)
+  //       $scope.comments = [];
 
-      comment.author = angular.copy($scope.app.initData.person)
-      comment.date = new Date().getTime();
-      $scope.newComment = {body: ''};
+  //     comment.author = angular.copy($scope.app.initData.person)
+  //     comment.date = new Date().getTime();
+  //     $scope.newComment = {body: ''};
 
-      $scope.comments.unshift(comment)
+  //     $scope.comments.unshift(comment)
 
-    }).error(function(response,status){
-      $scope.app.showErrorToast('Houve um erro inesperado. Tente novamente.')
+  //   }).error(function(response,status){
+  //     $scope.app.showErrorToast('Houve um erro inesperado. Tente novamente.')
 
-    })
-  }
+  //   })
+  // }
 
   $scope.commentFocused = false;
   $scope.commentFocus = function(){

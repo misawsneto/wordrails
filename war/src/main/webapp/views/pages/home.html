@@ -21,8 +21,8 @@
                     <!-- <img class="responsive-img materialboxed" ng-src="{{cell.postView | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
                 </div>
             </div>
-            <div class="text-left p-sm w-full z-index-2" >
-              <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(cell.postView.stationId).stationSlug, 'name': category.name})" class="label r md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in cell.postView.categories">
+            <div class="text-left p-h-sm w-full z-index-2" >
+              <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(cell.postView.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in cell.postView.categories">
                 {{category.name}}
               </a>
             </div>
@@ -30,36 +30,65 @@
             <div class="news-description p-t p-b-sm p-h">
                 <div class="news-title" style="min-height: 66px"><a clamp="3"> {{::cell.postView.title}} </a></div>
                 <div class="news-content"><p clamp="4">{{::cell.postView.snippet}}</p></div>
-                <div class="news-comment-shares z-index-2">
+                <div class="news-comment-shares">
                     <md-divider class="m-b-sm m-t"></md-divider>
                     <div class="p-b-xs">
-                        <md-button ng-click="cell.recommend = !cell.recommend" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="cell.recommend ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': cell.recommend}"><i class="mdi2-heart i-16"></i></md-button>
+                        <md-button ng-click="app.toggleRecommend(cell.postView)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(cell.postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(cell.postView)}"><i class="mdi2-heart i-16"></i></md-button>
 
-                        <md-button ng-click="cell.bookmark = !cell.bookmark" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="cell.bookmark ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': cell.bookmark}"><i class="mdi2-bookmark i-16"></i></md-button>
+                        <span class="v-m p-v-sm m-r-sm">{{cell.postView.recommendsCount}}</span>
+
+                        <md-button ng-click="app.toggleBookmark(cell.postView)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(cell.postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(cell.postView)}"><i class="mdi2-bookmark i-16"></i></md-button>
                         
-                        <md-button ng-click="showSharesPostDialog(cell)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
-                        
-                        <md-button style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="loadComments(cell);"><i class="mdi2-comment i-16"></i></md-button>
+                        <md-button ng-click="app.showSharesPostDialog(cell.postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+
+                        <span class="pull-right v-m p-v-sm m-r-sm">{{cell.postView.commentsCount}}</span>
+
+                        <md-button style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="app.loadComments(cell.postView);"><i class="mdi2-comment i-16"></i></md-button>
                     </div>
                 </div>
-                <div class="news-comment z-index-1 animated fadeInDown" ng-if="cell.showComments" style="margin:6px -16px -8px -16px;">
+                <div class="news-comment animated fadeInDown" ng-if="cell.postView.showComments" style="margin:6px -16px -8px -16px;">
+
                   <md-divider class=""></md-divider>
+
+                  <div wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" id="comment-list-{{cell.postView.id}}" class="comment-list h-m-200 o-f-a scroller" style="overflow-y: hidden; position: relative;">
+                    <ul infinite-scroll="cell.postView.paginateComments(cell.postView)" class="m-0" infinite-scroll-container="'#comment-list-' + cell.postView.id" infinite-scroll-distance="1">
+                      <li ng-repeat="comment in cell.postView.comments">
+                        <div class="p-sm pos-rlt">
+                          <div class="display-t-c inline p-h-xs">
+                            <div ng-style="app.getUserImage(comment.author, 'small', 'PROFILE_PICTURE', true)" style="height: 34px;" class="bg-cover img-responsive img-circle thumb-xs md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(comment.author)}">
+                              <i ng-if="!app.hasProfilePicture(comment.author)" style="line-height: 36px;" class="mdi2-account i-20"></i>
+                            </div>
+                          </div>
+                          <div class="p-l-sm display-t-c v-m inline text-sm w-full">
+                            <div class="p-h-sm text-right pull-right">
+                              <span am-time-ago="comment.date" class="text-xxs"></span>
+                            </div>
+                            <div class="text-base font-bold m-b-xs">{{comment.author.name}}</div>
+                            {{comment.body}}
+                          </div>
+                        </div>
+                        <md-divider style="margin-left: 60px;" ng-if="!$last" md-inset></md-divider>
+                      </li>
+                    </ul>
+                  </div>
+                    
+                  <md-divider ng-if="cell.postView.comments && cell.postView.comments.length" class=""></md-divider>
 
                   <div class="p inline w-full">
                     <div class="pull-left user-avatar rounded w-36 bg-white pos-rlt background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}" ng-class="{'md-primary-hue-1': !app.userImageSmall}">
                       <i ng-if="!app.userImageSmall" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
                     </div>
 
-                    <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-button not-trans m-0 md-icon-button pull-right md-accent-default background">
+                    <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-button not-trans m-0 md-icon-button pull-right md-accent-default background" ng-click="cell.postView.postComment(cell.postView, cell.postView.newComment)" ng-disabled="!cell.postView.newComment">
                       <i class="mdi2-send i-16"></i>
                     </md-button>
                     <div class="m-l-xxl m-r-xxl"> 
-                      <textarea msd-elastic class="no-border p-t-sm" ng-keydown="reloadMasonry()" ng-change="checkEmptyComment(cell.comment);" ng-model="cell.comment" style="resize: none;" placeholder="{{'titles.COMMENT' | translate }}"></textarea>
+                      <textarea msd-elastic class="no-border p-t-sm" ng-keydown="reloadMasonry()" ng-model="cell.postView.newComment" style="resize: none;" placeholder="{{'titles.COMMENT' | translate }}"></textarea>
                     </div>
                   </div>
 
                 </div>
-                <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="cell.loadingComments" md-mode="indeterminate"></md-progress-linear>
+                <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="cell.postView.loadingBar" md-mode="indeterminate"></md-progress-linear>
             </div>
         </div>
     </div>
@@ -714,40 +743,3 @@
   </section>
 </div>
 </div>
-
-
-<script type="text/ng-template" id="social-share.html">
-    <md-dialog-content class="md-background-hue-1 background p-md">
-      <div class="m-b-md text-md font-500 text-center text-u-c">
-        {{'titles.SHARE' | translate}}
-      </div>
-      <div class="inline w">
-        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
-            <md-button class="md-fab md-mini md-primary inline" style="background: #3B5999" aria-label="Use Android">
-              <i class="mdi2-facebook i-24"></i>
-            </md-button>
-            <div class="font-500 text-md inline m-r">Facebook</div>
-        </div>
-        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
-            <md-button class="md-fab md-mini md-primary" style="background: #5EA9DD" aria-label="Use Android">
-              <i class="mdi2-twitter i-24"></i>
-            </md-button>
-            <div class="font-500 text-md inline m-r">Twitter</div>
-        </div>
-      </div>
-      <div class="inline w">
-        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
-            <md-button class="md-fab md-mini md-primary" style="background: #DC4A38" aria-label="Use Android">
-              <i class="mdi2-google-plus i-24"></i>
-            </md-button>
-            <div class="font-500 text-md inline m-r">Google+</div>
-        </div>
-        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
-            <md-button class="md-fab md-mini md-primary" style="background: #0177B5" aria-label="Use Android">
-              <i class="mdi2-linkedin i-24"></i>
-            </md-button>
-            <div class="font-500 text-md inline m-r">LinkedIn</div>
-        </div>
-      </div>
-    </md-dialog-content>        
-</script>

@@ -25,8 +25,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.froalaOptions = {
 		toolbarInline: false,
-      heightMin: 200,
-      language: (lang == 'en' ? 'en_gb' : lang == 'pt' ? 'pt_br' : null),
+	      heightMin: 200,
+	      language: (lang == 'en' ? 'en_gb' : lang == 'pt' ? 'pt_br' : null),
 	  	fontSizeDefaultSelection: '18',
 		// Set the image upload parameter.
         imageUploadParam: 'contents',
@@ -57,6 +57,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
         // Allow to upload any file.
         fileAllowedTypes: ['*'],
+        toolbarSticky: false
     }
 
     $scope.showFeaturedMediaSelector = function(){
@@ -533,7 +534,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if($scope.selectedStation)
 			trix.getTermTree(null, $scope.selectedStation.categoriesTaxonomyId).success(function(response){
 				$scope.termTree = response;
-				$scope.app.selectTerms($scope.termTree, $scope.app.editingPost.terms)
+				if($scope.app.editingPost)
+					$scope.app.selectTerms($scope.termTree, $scope.app.editingPost.terms)
 			});
 	}
 
@@ -821,7 +823,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 				term.checked = true;
 			})
 
-		var hash = $scope.app.editingPost.featuredImageHash ? $scope.app.editingPost.featuredImageHash : $scope.app.editingPost.featuredImage.originalHash
+		var hash = $scope.app.editingPost.featuredImageHash ? $scope.app.editingPost.featuredImageHash : $scope.app.editingPost.imageHash ? $scope.app.editingPost.imageHash : $scope.app.editingPost.featuredImage ? $scope.app.editingPost.featuredImage.originalHash : null;
 		setPostFeaturedImage(hash)
 		$scope.featuredImage = $scope.app.editingPost.featuredImage
 		$scope.landscape = $scope.app.editingPost.imageLandscape;
@@ -829,6 +831,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		$scope.useHeading = $scope.app.editingPost.topper ? true:false
 		$scope.useSubtitle = $scope.app.editingPost.subtitle ? true:false
+		$scope.tags = angular.copy($scope.app.editingPost.tags);
 	}
 
 	// --- mock and test
@@ -850,7 +853,10 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	var preparePost = function(originalPost){
 		var post = angular.copy(originalPost)
 		post.id = post.id ? post.id : post.postId
+		post.terms = $scope.app.getTermList($scope.termTree);
 		post.terms = $scope.app.getTermUris(post.terms)
+		post.station = $scope.selectedStation;
+		post.tags = $scope.tags
 		if(!post.author)
 			post.author = PersonDto.getSelf($scope.app.person);
 		else if(post.author.id || post.author.authorId)
@@ -863,12 +869,16 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			post.station = StationDto.getSelf(post.station);
 
 		return post;
+		// return {"author":"http://demo.xarx.rocks/api/persons/51","body":"...","bookmarksCount":0,"commentsCount":0,"date":1462880877015,"imageLandscape":false,"lat":-8.04325205,"lng":-34.94544256,"notify":false,"readTime":0,"readsCount":0,"recommendsCount":0,"state":"PUBLISHED","station":"http://demo.xarx.rocks/api/stations/11","subheading":"","title":"Abcd55","topper":""}
 	}
 
 	$scope.postPost = function(originalPost){
 		var post = preparePost(originalPost);
-		trix.postPost(post).success(function(){
-			$scope.app.showSuccessToast("OK");
+		trix.postPost(post).success(function(response){
+			$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
+			trix.putPostTerms(response.id, post.terms);
+		}).error(function(){
+			$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
 		})
 	}
 

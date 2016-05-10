@@ -55,7 +55,8 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 								Integer page,
 								Integer size,
 								List<String> orders,
-								List<String> embeds) {
+								List<String> embeds,
+								boolean snippet) {
 
 		PostStatement params = new PostStatement(query, authors, stations, state, from, until, categories, tags, orders);
 
@@ -63,7 +64,7 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 		List<PostData> data = getPostDatas(posts);
 //		List<PostData> data = postSearchService.searchData(params, page, size);
 
-		Set<String> postEmbeds = Sets.newHashSet("video", "image", "audio", "author", "categories");
+		Set<String> postEmbeds = Sets.newHashSet("video", "image", "audio", "author", "categories", "body");
 
 		removeNotEmbeddedData(embeds, data, postEmbeds);
 

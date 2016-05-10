@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -35,7 +36,14 @@ public class PostData implements Serializable, Identifiable {
 	private Set<String> tags;
 
 	private Integer authorId;
+	private String authorName;
 	private PersonData author;
+
+	private String authorImageHash;
+	private String authorCoverHash;
+
+	private Integer stationId;
+	private String stationName;
 
 	private Date date;
 
@@ -51,6 +59,11 @@ public class PostData implements Serializable, Identifiable {
 
 	private Double lat;
 	private Double lng;
+
+	private int readsCount = 0;
+	private int bookmarksCount = 0;
+	private int recommendsCount = 0;
+	private int commentsCount = 0;
 
 	private Date scheduledDate;
 	private boolean notified;

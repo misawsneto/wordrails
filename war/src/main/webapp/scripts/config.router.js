@@ -1097,8 +1097,10 @@ angular.module('app')
                 var deferred = $q.defer();
                 if(initData.person.id == 0){
                   document.location.href = '/access/signin';
+                  window.console && console.error('user is not logged')
                 }else if(initData.person.username !== $stateParams.username){
                   document.location.href = '/';
+                  window.console && console.error('user is not owner')
                 }else if(initData.person.username === $stateParams.username){
                   deferred.resolve(initData.person.bookmarkPosts)
                 }else{
@@ -1122,7 +1124,7 @@ angular.module('app')
                 // }
                 return deferred.promise;
               },
-              deps:load( ['angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'perfect_scrollbar'] ).deps
+              deps:load( ['angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'perfect_scrollbar', 'angularMoment'] ).deps
             },
             controller: 'AppDataCtrl'
           })

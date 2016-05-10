@@ -9,6 +9,10 @@ app.controller('CategoryCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$md
         $scope.postsPage++;
     })
 
+    $scope.paginate = function(){
+    	
+    }
+
     $scope.reloadMasonry = function(){
 		$rootScope.$broadcast('masonry.reload');
 	}

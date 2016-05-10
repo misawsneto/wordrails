@@ -35,4 +35,5 @@ public interface PersonProjection {
 	String getBio();
 
 	Boolean getEnabled();
+	Boolean getSeenWelcome();
 }

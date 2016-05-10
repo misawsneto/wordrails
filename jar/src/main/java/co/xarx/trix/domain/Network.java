@@ -88,6 +88,9 @@ public class Network extends BaseEntity implements Serializable {
 	public String youtubeLink;
 	public String googlePlusLink;
 	public String twitterLink;
+	public String pinterestLink;
+	public String linkedInLink;
+	public String instagramLink;
 
 	public String webFooter;
 	

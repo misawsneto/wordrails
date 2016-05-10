@@ -23,17 +23,16 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   // -------- users pagination ---------
   $scope.page = 0;
   var loading = false;
+  var useSearchField = false;
   $scope.allLoaded = false;
   $scope.beginning = true;
   $scope.window = 20
-
 
   $scope.personsCount = 0;
   trix.countPersonsByNetwork().success(function(response){
     $scope.personsCount = response;
   })
 
-  var useSearchField = false
   $scope.doSearch = function(){
     if($scope.search || ($scope.search && $scope.search.trim()))
       useSearchField = true;
@@ -80,15 +79,10 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
   $scope.showProgress = true;
   // get initial users
-  trix.getPersons($scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess);
+  // trix.getPersons($scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess);
 
   // -------- /users pagination ---------
 
-  $scope.loadPerson = function(person){
-    trix.getPerson(person.id, 'personProjection').success(function(personProjection){
-
-    })
-  }
 
   // ------------ enable / disable person ---------
   $scope.app.enableDisablePerson = function(person){
@@ -649,7 +643,8 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       toolbarButtonsSM: ["bold", "italic", "underline", "|", "fontSize", "color", "align", "formatOL", "formatUL", "|", "html"],
       toolbarButtonsXS: ["bold", "italic", "underline", "|", "fontSize", "color", "align", "formatOL", "formatUL", "|", "html"],
       charCounterCount: false,
-      height: 300
+      height: 300,
+      toolbarSticky: false
     }
 
       $scope.invitatePeople = function(){

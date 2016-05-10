@@ -103,6 +103,9 @@ public class Person extends BaseEntity implements Serializable {
 	@RestResource(exported = false)
 	public String password;
 
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public Boolean seenWelcome = false;
+
 	@Transient
 	public String passwordConfirm;
 

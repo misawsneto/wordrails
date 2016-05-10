@@ -93,7 +93,9 @@
 		"SELECTED": "Selected",
 		"SELECT_ALL": "Select all",
 		"DESELECT_ALL": "Deselect all",
-		"AT": "at"
+		"AT": "at",
+		"SHOW_ALL": "Show all",
+		"SKIP": "Skip"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -274,7 +276,9 @@
 			"ADD_TAGS": "Adicioanr tags",
 			"PUBLISH_ALL": "Publish all",
 			"DRAFT_ALL": "Move to drafts",
-			"TRASH_ALL": "Move to trash"
+			"TRASH_ALL": "Move to trash",
+			"PUBLISH_SUCCESS": "Published",
+			"PUBLISH_ERROR": "Publication error"
 		},
 		"station": {
 			"STATION_SETTINGS": "Station settings",
@@ -317,6 +321,9 @@
 			"CONFIRM_PASSWORD": "Confirm password",
 			"BIOGRAPHY": "Biography",
 			"PASSWORDS_DONT_MATCH": "The password is invalido or passowrd and confirmation don't match"
+		},
+		"bookmark": {
+			"REMOVE_CONFIRMATION_MSG": "Are you sure you want to remove this bookmark"
 		}
 	},
 	"messages": {

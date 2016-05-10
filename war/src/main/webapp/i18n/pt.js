@@ -93,7 +93,9 @@
 		"SELECTED": "Selecionado",
 		"SELECT_ALL": "Selecionar todos",
 		"DESELECT_ALL": "Desselecionar todos",
-		"AT": "em"
+		"AT": "em",
+		"SHOW_ALL": "Mais",
+		"SKIP": "Pular"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -274,7 +276,9 @@
 			"ADD_TAGS": "Adicionar tags",
 			"PUBLISH_ALL": "Publicar todos",
 			"DRAFT_ALL": "Mover para rascunhos",
-			"TRASH_ALL": "Mover para a lixeira"
+			"TRASH_ALL": "Mover para a lixeira",
+			"PUBLISH_SUCCESS": "Publicado",
+			"PUBLISH_ERROR": "Erro ao publicar"
 		},
 		"station": {
 			"STATION_SETTINGS": "Configurações de estação",
@@ -317,6 +321,9 @@
 			"CONFIRM_PASSWORD": "Confirmar senha",
 			"BIOGRAPHY": "Biografia",
 			"PASSWORDS_DONT_MATCH": "A senha é inválida ou senha e confirmação não são correspondentes."
+		},
+		"bookmark": {
+			"REMOVE_CONFIRMATION_MSG": "Tem certeza que deseja remover este item"
 		}
 	},
 	"messages": {
