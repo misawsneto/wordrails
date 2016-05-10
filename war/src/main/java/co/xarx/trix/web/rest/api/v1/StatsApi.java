@@ -41,9 +41,11 @@ public interface StatsApi {
 
 	@GET
 	@Path("/countPostReads")
+	@PreAuthorize("isAuthenticated()")
 	Map<Integer, Integer> countReadsByPostIds(@QueryParam("postIds") List<Integer> postIds);
 
 	@GET
 	@Path("/countReadersByStation")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Map<String, Integer> countReadersByStation(@QueryParam("stationId") Integer stationId);
 }
