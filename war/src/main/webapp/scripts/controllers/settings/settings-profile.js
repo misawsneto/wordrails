@@ -287,32 +287,32 @@ $scope.paginate = function(){
       return 'TRASH';
   }
   
-  trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, $scope.app.publicationsCtrl.page, $scope.window, '-date', ['body'], true).success(function(response){
+  trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, $scope.app.publicationsCtrl.page, $scope.window, '-date', ['body', 'tags', 'categories', 'imageHash'], false).success(function(response){
     response.reverse();
     $scope.publications = response;
   })
 
   $scope.showPost = function(postObj){
-    if(postObj.postLoaded)
-      return;
-
-    postObj.loading = true;
+    // postObj.loading = true;
     var id = postObj.id
-    trix.getPost(id, 'postProjection').success(function(response){
-      postObj.postLoaded = response;
+    postObj.terms = postObj.categories;
+    // trix.getPost(id, 'postProjection').success(function(response){
+    //   postObj = response;
 
-      var hash = postObj.postLoaded.featuredImage ? postObj.postLoaded.featuredImage.originalHash : null;
-      postObj.postLoaded.featuredImage = postObj.postLoaded.featuredImage;
-      postObj.postLoaded.landscape = postObj.postLoaded.imageLandscape;
+    var hash = postObj.imageHash;
+    postObj.featuredImage = postObj.featuredImage;
+    postObj.landscape = postObj.imageLandscape;
 
-      postObj.postLoaded.postFeaturedImage = $filter('imageLink')({imageHash: hash}, 'large')
+    postObj.postFeaturedImage = $filter('imageLink')({imageHash: hash}, 'large')
 
-      postObj.postLoaded.useHeading = postObj.postLoaded.topper ? true:false
-      postObj.postLoaded.useSubtitle = postObj.postLoaded.subtitle ? true:false;
-      postObj.loading = false;
-    }).error(function(){
-      postObj.loading = false;
-    })
+    console.log(postObj.postFeaturedImage)
+
+    postObj.useHeading = postObj.topper ? true:false
+    postObj.useSubtitle = postObj.subtitle ? true:false;
+    //   postObj.loading = false;
+    // }).error(function(){
+    //   postObj.loading = false;
+    // })
   }
 
 	settingsProfileCtrl = $scope;
