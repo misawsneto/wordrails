@@ -29,6 +29,7 @@ import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.FlashMap;
+import retrofit.http.Body;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -269,5 +270,10 @@ public class PostsResource extends AbstractResource implements PostApi {
 		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);
 		return response;
+	}
+
+	@Override
+	public void putPostTerms(Integer id, List<String> terms) throws IOException {
+		forward();
 	}
 }

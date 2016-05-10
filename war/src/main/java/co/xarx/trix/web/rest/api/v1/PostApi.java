@@ -151,4 +151,9 @@ public interface PostApi {
 	@GET
 	@Path("/search/findPostsByIds")
 	ContentResponse<List<PostView>> findPostsByIds(@QueryParam("ids") List<Integer> ids);
+
+	@PUT
+	@Consumes("text/uri-list")
+	@Path("/{id}/terms")
+	public void putPostTerms(Integer id, List<String> terms) throws IOException;
 }
