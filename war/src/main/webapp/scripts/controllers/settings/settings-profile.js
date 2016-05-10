@@ -273,7 +273,24 @@ $scope.paginate = function(){
   $scope.commentBlur = function(){
     $scope.commentFocused = false;
   }
+
   // --- /publications ------------
+
+  var tabToState = function(){
+    if($scope.settings.tab === 'publications')
+      return 'PUBLISHED';
+    if($scope.settings.tab === 'scheduled')
+      return 'SCHEDULED';
+    if($scope.settings.tab === 'drafts')
+      return 'DRAFT';
+    if($scope.settings.tab === 'trash')
+      return 'TRASH';
+  }
+  
+  trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, $scope.app.publicationsCtrl.page, $scope.window, '-date', null, true).success(function(response){
+    response.reverse();
+    $scope.publications = response;
+  })
 
 	settingsProfileCtrl = $scope;
 }]);

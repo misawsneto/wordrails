@@ -127,7 +127,7 @@
   <div class="clearfix m-b-xxl">
     <div class="m-b-lg" infinite-scroll="paginate()" infinite-scroll-container='"#content .box-cell"'>
     
-      <ul class="bg-t no-padding">
+      <ul class="bg-t collapsible popout" data-collapsible="accordion" watch>
         <li class="panel panel-card p" ng-repeat="publication in publications">
           <a href class="pull-left m-r-md" ng-if="publication.featuredImageHash || publication.imageHash" style="height: 128px;">
             <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-xl h-full bg-cover">
