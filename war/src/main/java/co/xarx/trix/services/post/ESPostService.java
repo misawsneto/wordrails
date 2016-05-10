@@ -242,10 +242,13 @@ public class ESPostService {
 							snippet = fragment.toString();
 						}
 					} else {
-						Map<String, SearchHitField> fields = hit.getFields();
-						String body = fields.get("body").getValue();
 
-						snippet = StringUtil.simpleSnippet(body);
+						Map<String, SearchHitField> fields = hit.getFields();
+						if(fields != null  && fields.size() > 0) {
+							String body = fields.get("body").getValue();
+
+							snippet = StringUtil.simpleSnippet(body);
+						}
 					}
 					ids.add(new PostSearchResult(id, snippet));
 				}
