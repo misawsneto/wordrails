@@ -8142,6 +8142,11 @@ md-switch[disabled] .md-bar {
   background-color: transparent;
 }
 
+.animated {
+  -webkit-animation-duration: 0.3s!important;
+          animation-duration: 0.3s!important;
+}
+
 .animated1x {
   -webkit-animation-duration: 0.1s!important;
           animation-duration: 0.1s!important;
@@ -8150,11 +8155,6 @@ md-switch[disabled] .md-bar {
 .animated2x {
   -webkit-animation-duration: 0.2s!important;
           animation-duration: 0.2s!important;
-}
-
-.animated {
-  -webkit-animation-duration: 0.3s!important;
-          animation-duration: 0.3s!important;
 }
 
 .animated4x {

@@ -5330,10 +5330,10 @@ a.waves-effect .waves-ripple {
   box-sizing: border-box;
 }
 
-.collapsible-body p {
+/* .collapsible-body p {
   margin: 0;
   padding: 2rem;
-}
+} */
 
 .side-nav .collapsible,
 .side-nav.fixed .collapsible {
