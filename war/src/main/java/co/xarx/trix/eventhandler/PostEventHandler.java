@@ -16,6 +16,7 @@ import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.NotAuthorizedException;
 import java.util.Date;
 
 @RepositoryEventHandler(Post.class)
@@ -44,6 +45,8 @@ public class PostEventHandler {
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
+		if(true)
+			throw new NotAuthorizedException("qualquer coisa");
 		savePost(post);
 	}
 

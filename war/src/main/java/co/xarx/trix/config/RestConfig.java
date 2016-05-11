@@ -16,7 +16,6 @@ public class RestConfig extends RepositoryRestMvcConfiguration {
 	protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
 		config.setDefaultMediaType(MediaType.APPLICATION_JSON);
 		config.setReturnBodyOnCreate(true);
-		config.setReturnBodyOnUpdate(true);
 
 		Reflections reflections = new Reflections("co.xarx.trix.domain");
 		Set<Class<?>> entities = reflections.getTypesAnnotatedWith(Entity.class);
