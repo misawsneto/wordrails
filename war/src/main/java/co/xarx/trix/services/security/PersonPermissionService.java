@@ -13,6 +13,7 @@ import org.springframework.security.acls.model.AccessControlEntry;
 import org.springframework.security.acls.model.Acl;
 import org.springframework.security.acls.model.MutableAcl;
 import org.springframework.security.acls.model.ObjectIdentity;
+import org.springframework.security.acls.model.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,28 +34,30 @@ public class PersonPermissionService {
 		this.personRepository = personRepository;
 	}
 
-	public UserPermissionData getPermissions(String username) {
+	public UserPermissionData getPermissions(Sid sid) {
 		List<Integer> stationIds = stationRepository.findIds(TenantContextHolder.getCurrentTenantId());
 
-		UserPermissionData result = new UserPermissionData(username);
+		UserPermissionData result = new UserPermissionData();
 		Map<ObjectIdentity, MutableAcl> acls = aclService.findAcls(stationIds);
 		for (ObjectIdentity oi : acls.keySet()) {
 			Acl acl = acls.get(oi);
 			int stationId = Math.toIntExact((long) oi.getIdentifier());
-			AccessControlEntry ace = aclService.findAce(acl.getEntries(), username);
+			AccessControlEntry ace = aclService.findAce(acl.getEntries(), sid);
 
-			PermissionData permissionData = aclService.getPermissionData(ace.getPermission());
-			result.getStationPermissions().add(result.new Permission(stationId, permissionData));
+			if (ace != null) {
+				PermissionData permissionData = aclService.getPermissionData(ace.getPermission());
+				result.getStationPermissions().add(result.new Permission(stationId, permissionData));
+			}
 		}
 
 		return result;
 	}
 
-	public UserPermissionData getPermissions(String username, Integer stationId) {
-		UserPermissionData result = new UserPermissionData(username);
+	public UserPermissionData getPermissions(Sid sid, Integer stationId) {
+		UserPermissionData result = new UserPermissionData();
 
 		MutableAcl acl = aclService.findAcl(stationId);
-		AccessControlEntry ace = aclService.findAce(acl.getEntries(), username);
+		AccessControlEntry ace = aclService.findAce(acl.getEntries(), sid);
 
 		PermissionData permissionData = aclService.getPermissionData(ace.getPermission());
 		UserPermissionData.Permission permission = result.new Permission(stationId, permissionData);

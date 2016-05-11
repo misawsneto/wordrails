@@ -1,5 +1,7 @@
 package co.xarx.trix.api;
 
+import co.xarx.trix.api.v2.UserPermissionData;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +13,7 @@ public class PersonData implements Serializable {
 	public List<StationView> stations;
 	public StationView defaultStation;
 	public PersonPermissions personPermissions;
+	public UserPermissionData permissions;
 	public List<PostView> recent;
 	public List<PostView> popular;
 

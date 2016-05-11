@@ -1,13 +1,13 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.api.*;
-import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.converter.TermConverter;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.StationRoleEventHandler;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.services.security.PersonPermissionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.acls.domain.GrantedAuthoritySid;
+import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
@@ -33,7 +35,7 @@ public class InitService {
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
-	private PostConverter postConverter;
+	private PersonPermissionService personPermissionService;
 	@Autowired
 	private MenuEntryRepository menuEntryRepository;
 
@@ -110,6 +112,11 @@ public class InitService {
 
 		PersonData initData = new PersonData();
 		initData.isAdmin = person.networkAdmin;
+		if (authProvider.isAnonymous()) {
+			initData.permissions = personPermissionService.getPermissions(new GrantedAuthoritySid("ROLE_ANONYMOUS"));
+		} else {
+			initData.permissions = personPermissionService.getPermissions(new PrincipalSid(person.username));
+		}
 
 		if (person.user != null && (person.password == null || person.password.equals(""))) {
 			initData.noPassword = true;

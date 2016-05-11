@@ -55,8 +55,9 @@ public class StationPermissionService {
 				.collect(Collectors.toList());
 	}
 
-	public void updateStationsPermissions(List<String> usernames, List<Integer> stationIds, boolean publisher, boolean editor, boolean admin) {
-		Assert.notEmpty(usernames, "Usernames must have elements");
+	public void updateStationsPermissions(List<Sid> sids, List<Integer> stationIds, boolean publisher, boolean
+			editor, boolean admin) {
+		Assert.notEmpty(sids, "Sids must have elements");
 		Assert.notEmpty(stationIds, "Station ids must have elements");
 
 
@@ -79,10 +80,9 @@ public class StationPermissionService {
 		Map<ObjectIdentity, MutableAcl> acls = aclService.findAcls(stationIds);
 		for (MutableAcl acl : acls.values()) {
 			List<AccessControlEntry> entries = acl.getEntries();
-			for (String username : usernames) {
-				AccessControlEntry ace = aclService.findAce(entries, username);
+			for (Sid sid : sids) {
+				AccessControlEntry ace = aclService.findAce(entries, sid);
 				if(ace == null) {
-					Sid sid = new PrincipalSid(username);
 					acl.insertAce(acl.getEntries().size(), permission, sid, true);
 				} else {
 					acl.updateAce(entries.indexOf(ace), permission);
