@@ -37,7 +37,7 @@
 <div class="m-t-lg">
 </div>
 
-<div class="block-800 m-auto p-h">
+<div class="block-800 m-auto p-h-md">
   <div class="search-with-filter p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
     <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
 
@@ -110,7 +110,7 @@
   </div>
 </div>
 
-<div class="block-800 m-auto p-h">
+<div class="block-800 m-auto">
   <!-- <div class="panel panel-card">
     <form>
       <textarea class="form-control no-border" rows="3" placeholder="Write something..."></textarea>
@@ -127,25 +127,147 @@
   <div class="clearfix m-b-xxl">
     <div class="m-b-lg" infinite-scroll="paginate()" infinite-scroll-container='"#content .box-cell"'>
     
-      <ul class="bg-t collapsible popout" data-collapsible="accordion" watch>
-        <li class="panel panel-card p" ng-repeat="publication in publications">
-          <a href class="pull-left m-r-md" ng-if="publication.featuredImageHash || publication.imageHash" style="height: 128px;">
-            <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-xl h-full bg-cover">
-            </div>
-          </a>
-          <div class="clear font-thin">
-            <a href class="font-bold block text-md">{{publication.title}}</a>
-            {{publication.body.stripHtml() | characters:170}}
-            <div class="p-t-sm text-xs font-500">
-              <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">editar
+      <ul class="bg-t collapsible popout" data-collapsible="expandable">
+        <li class="md-background-hue-1 background" ng-repeat="publication in publications">
+          <div class="collapsible-header p" style="line-height: inherit;" ng-click="showPost(publication); publication.selected = !publication.selected">
+            <div class="pos-rlt">
+              <div class="animated animated1x md-background-hue-1 background" ng-class="{'fadeOut pos-abt': publication.selected, 'fadeIn': !publication.selected}">
+                <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
+                  <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
+                  </div>
+                </a>
+                <div class="clear font-thin">
+                  <div class="m-r-xxl">
+                    <a href class="font-bold block text-md">{{publication.title}}</a>
+                    <div  class="text-sm font-normal p-v-sm">
+                      {{app.getLocalTime(publication.date)}}
+                    </div>
+                    {{publication.snippet | characters:220}}
+                  </div>
+                  <div class="p-t-sm font-500">
+                    <a ui-sref="app.post({'id': publication.id})" target="_blank" class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple>{{'titles.EDIT' | translate}}
+                    </a>
+                    <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">{{'titles.REMOVE' | translate}}
+                    </div>
+                  </div>
+                  <div class="m-t-sm pull-right font-500 m-r-sm text-md">
+                    <i class="icon mdi2-radio-tower"></i> {{app.getStationById(publication.stationId).name}}
+                  </div>
+                  <div class="list-group-item b-n p-sm inline p-b-0 v-m">
+                    <a href class="pull-left m-r-sm">
+                      <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1 text-center md-primary-hue-1 background">
+                        <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-16" style="top: 16%;position: relative;"></i>
+                      </div>
+                    </a>
+                    <div class="clear font-normal p-xs">
+                      <a href class="font-500 block">{{publication.authorName}}</a>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">remover
+              <div class="" ng-class="{'animated fadeIn show': publication.selected, 'hide': !publication.selected}">
+                <div class="list-group-item b-n p-sm p-t-sm no-padding-h">
+                  <a href class="pull-left m-r-sm"><img src="/images/a1.jpg" class="img-responsive img-circle thumb-xxs md-whiteframe-z1"></a>
+                  <div class="clear font-normal p-xs">
+                    <a href class="font-500 block">{{publication.authorName}}</a>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="list-group-item b-n p-sm p-t-sm no-padding-h">
-              <a href class="pull-left m-r-sm"><img src="/images/a1.jpg" class="img-responsive img-circle thumb-xxs md-whiteframe-z1"></a>
-              <div class="clear font-normal p-xs">
-                <a href class="font-500 block">{{publication.authorName}}</a>
+          </div>
+          <div class="collapsible-body">
+            <md-progress-linear ng-if="publication.loading" md-mode="indeterminate"></md-progress-linear>
+            <div class="pos-rlt">
+              <div class="animated" ng-if="publication" ng-class="{'fadeIn': publication && publication.selected, 'fadeOut': !publication.selected}">
+                <div class="text-left p-h-sm w-full z-index-2" ng-class="{'pos-abt': publication.postFeaturedImage}">
+                  <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x badge-lg md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in publication.terms">
+                    {{category.name}}
+                  </a>
+                </div>
+
+                <div id="post-image-container" data-img="{{publication.postFeaturedImage}}" class="pos-rlt m-h-auto bg-cover md-whiteframe-z2 h-250" ng-if="publication.postFeaturedImage"  ng-class="{'w-full ': landscape, 'block-800': !landscape}"
+                ng-style="{'background-image': 'url(' + publication.postFeaturedImage + ')', 'background-position': app.imgToolsProps.x + '% ' + app.imgToolsProps.y + '%'}">
+                </div>
+
+                <div ng-if="publication.useVideo" class="block-800 h-400 animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2">
+                  <embed-video width=800 height=400 iframe-id="video1" api="1" player_id="video1" ng-href="{{app.videoUrl}}"></embed-video>
+                  <md-button ng-click="removeVideo();" class="md-fab md-accent md-raised md-mini pos-abt right-0 bottom-0 m-r m-b-xxl ">
+                    <md-tooltip md-direction="top">
+                      {{'titles.REMOVE' | translate}} {{'titles.VIDEO' | translate}}
+                    </md-tooltip>
+                    <i class="mdi mdi2-delete i-20"></i>
+                  </md-button>
+                </div>
+
+                <div ng-if="useUploadedVideo" class="block-800 h-400 animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2">
+                  <videogular md-prevent-menu-close vg-theme="videos.theme">
+                    <vg-media vg-src="videos.sources" vg-type="video">
+                    </vg-media>
+                    <vg-controls vg-autohide="videos.plugins.controls.autoHide" vg-autohide-time="videos.plugins.controls.autoHideTime">
+                        <vg-play-pause-button></vg-play-pause-button>
+                        <vg-time-display>{{ currentTime | date:'mm:ss':'+0000' }}</vg-time-display>
+                        <vg-scrub-bar>
+                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                        </vg-scrub-bar>
+                        <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+                        <vg-time-display>{{ totalTime | date:'mm:ss':'+0000' }}</vg-time-display>
+                        <vg-volume>
+                            <vg-mute-button></vg-mute-button>
+                            <vg-volume-bar></vg-volume-bar>
+                        </vg-volume>
+                        <vg-playback-button></vg-playback-button>
+                        <vg-fullscreen-button></vg-fullscreen-button>
+                    </vg-controls>
+                    <vg-overlay-play></vg-overlay-play>
+                  </videogular>
+                  <md-button ng-click="removeUploadedVideo();" class="md-fab md-raised md-mini pos-abt right-0 top-0 md-accent m-r m-t">
+                    <md-tooltip md-direction="left">
+                      {{'titles.REMOVE' | translate}} {{'titles.VIDEO' | translate}}
+                    </md-tooltip>
+                    <i class="mdi mdi2-delete i-20"></i>
+                  </md-button>
+                </div>
+
+                <div ng-if="useUploadedAudio" class="block-800 animated2x zoomIn pos-rlt m-h-auto">
+                  <!-- audio player -->
+                    <div class="text-center p-md text-5x m-b-xl">
+                      <i class="mdi2-headphones"></i>
+                    </div>
+                    <videogular vg-theme="audios.theme" class="videogular-container audio md-whiteframe-z2">
+                      <vg-media vg-src="audios.sources" vg-type="audio"></vg-media>
+                      <vg-controls vg-autohide="videos.plugins.controls.autoHide" vg-autohide-time="videos.plugins.controls.autoHideTime">
+                        <!-- <vg-button ng-show="audios.length-1" ng-click="play('prev')"><i class="fa fa-backward"></i></vg-button> -->
+                        <vg-play-pause-button></vg-play-pause-button>
+                        <!-- <vg-button ng-show="audios.length-1" ng-click="play('next')"><i class="fa fa-forward"></i></vg-button> -->
+
+                        <vg-time-display>{{ currentTime | date:'mm:ss':'+0000' }}</vg-time-display>
+                        <vg-scrub-bar>
+                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                        </vg-scrub-bar>
+                        <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+                        <vg-time-display>{{ totalTime | date:'mm:ss':'+0000' }}</vg-time-display>
+                         
+                        <vg-volume>
+                            <vg-mute-button></vg-mute-button>
+                            <vg-volume-bar></vg-volume-bar>
+                        </vg-volume>
+                      </vg-controls>
+                    </videogular>
+                  <!-- /audio player -->
+                  <md-button ng-click="removeUploadedAudio();" class="md-fab md-raised md-mini pos-abt right-0 top-0 md-accent m-r m-t">
+                    <md-tooltip md-direction="left">
+                      {{'titles.REMOVE' | translate}} {{'titles.AUDIO' | translate}}
+                    </md-tooltip>
+                    <i class="mdi mdi2-delete i-20"></i>
+                  </md-button>
+                </div>
+                <div class="p text-lg l-h-1x">{{publication.title}}</div>
+                <div class="p-h p-t-xs">{{app.getLocalTime(publication.date)}}</div>
+                <div class="p-h m-t-sm" ng-if="publication.tags">
+                  <span class="label r m-t-xs m-r-xs md-accent-default background" ng-repeat="tag in publication.tags">{{tag}}</span>
+                </div>
+                <div class="p pos-rlt" ng-bind-html="publication.body">
+                </div> 
               </div>
             </div>
           </div>

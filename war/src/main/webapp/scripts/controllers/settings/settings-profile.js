@@ -190,34 +190,34 @@ $scope.paginate = function(){
     type = 'TRASH'
   }
 
-  if(!$scope.loadingPage){
-    $scope.loadingPage = true;
-      /*trix.searchPosts(null, $scope.app.publicationsCtrl.page + 1, 10, {'personId': $scope.app.getLoggedPerson().id,
-        'publicationType': type, sortByDate: true}).success(function(response){*/
+  // if(!$scope.loadingPage){
+  //   $scope.loadingPage = true;
+  //     /*trix.searchPosts(null, $scope.app.publicationsCtrl.page + 1, 10, {'personId': $scope.app.getLoggedPerson().id,
+  //       'publicationType': type, sortByDate: true}).success(function(response){*/
 
-      trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, type, $scope.app.publicationsCtrl.page+1, 10).success(function(response){
-        var posts = response.posts;
+  //     trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, type, $scope.app.publicationsCtrl.page+1, 10).success(function(response){
+  //       var posts = response.posts;
 
-        $scope.loadingPage = false;
-        $scope.app.publicationsCtrl.page = $scope.app.publicationsCtrl.page + 1;
+  //       $scope.loadingPage = false;
+  //       $scope.app.publicationsCtrl.page = $scope.app.publicationsCtrl.page + 1;
 
-        if(!posts || posts.length == 0){
-          $scope.allLoaded = true;
-          return;
-        }
+  //       if(!posts || posts.length == 0){
+  //         $scope.allLoaded = true;
+  //         return;
+  //       }
 
-        if(!$scope.pages)
-          $scope.pages = []
+  //       if(!$scope.pages)
+  //         $scope.pages = []
 
-        posts && posts.forEach(function(element, index){
-          $scope.publications.push(element)
-        }); 
+  //       posts && posts.forEach(function(element, index){
+  //         $scope.publications.push(element)
+  //       }); 
 
-      })
-      .error(function(){
-        $scope.loadingPage = false;
-      })
-    }
+  //     })
+  //     .error(function(){
+  //       $scope.loadingPage = false;
+  //     })
+  //   }
   }
 
   $scope.page = 0;
@@ -287,10 +287,33 @@ $scope.paginate = function(){
       return 'TRASH';
   }
   
-  trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, $scope.app.publicationsCtrl.page, $scope.window, '-date', null, true).success(function(response){
+  trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, $scope.app.publicationsCtrl.page, $scope.window, '-date', ['body', 'tags', 'categories', 'imageHash'], false).success(function(response){
     response.reverse();
     $scope.publications = response;
   })
+
+  $scope.showPost = function(postObj){
+    // postObj.loading = true;
+    var id = postObj.id
+    postObj.terms = postObj.categories;
+    // trix.getPost(id, 'postProjection').success(function(response){
+    //   postObj = response;
+
+    var hash = postObj.imageHash;
+    postObj.featuredImage = postObj.featuredImage;
+    postObj.landscape = postObj.imageLandscape;
+
+    postObj.postFeaturedImage = $filter('imageLink')({imageHash: hash}, 'large')
+
+    console.log(postObj.postFeaturedImage)
+
+    postObj.useHeading = postObj.topper ? true:false
+    postObj.useSubtitle = postObj.subtitle ? true:false;
+    //   postObj.loading = false;
+    // }).error(function(){
+    //   postObj.loading = false;
+    // })
+  }
 
 	settingsProfileCtrl = $scope;
 }]);

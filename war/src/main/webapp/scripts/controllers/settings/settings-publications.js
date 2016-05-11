@@ -87,7 +87,7 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 	// 			$scope.firstLoad = true;
 	// 		})
 	// 	}
-		trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, $scope.app.publicationsCtrl.page, $scope.window, '-date', null, true).success(function(response){
+		trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, $scope.app.publicationsCtrl.page, $scope.window, '-date', ['body'], true).success(function(response){
 			response.reverse();
 			$scope.publications = response;
 		})
