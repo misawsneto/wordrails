@@ -125,29 +125,17 @@ interface I$facade$ {
 	@FormUrlEncoded
 	void convertPost(@Path("postId") Integer postId, @Field("state") String state, Callback<ContentResponse<PostView\>\> _callback);
 
-	/*
-	@GET("/posts/search/networkPosts")
-	ContentResponse<SearchView\> searchPosts(@Query("query") String q, @Query("stationIds") String sIds, @Query("personId") Integer pId,
-			@Query("publicationType") String pt, @Query("noHighlight") Boolean nh, @Query("sortByDate") Boolean sd,
-			@Query("page") Integer p, @Query("size") Integer s);
-	
-	@GET("/posts/search/networkPosts")
-	void searchPosts(@Query("query") String q, @Query("stationIds") String sIds, @Query("personId") Integer pId,
-			@Query("publicationType") String pt, @Query("noHighlight") Boolean nh, @Query("sortByDate") Boolean sd,
-			@Query("page") Integer p, @Query("size") Integer s, Callback<ContentResponse<SearchView\>\> _callback);
-			*/
-
-	@GET("/posts/search/networkPosts")
+	@GET("/v2/posts/search")
     ContentResponse<SearchView\> searchPosts(@Query("q") String q, @Query("authorId") List<Integer> aIds, @Query
     ("stationId") List<Integer\> sIds, @Query("state") String st, @Query("from") String from, @Query("until") String
     until, @Query("categoryId") List<Integer\> cIds, @Query("tag") List<String\> tags, @Query("page") Integer page,
-    @Query("size") Integer size, @Query("order") List<String\> orders, @Query("embed") List<String\> embeds);
+    @Query("size") Integer size, @Query("order") List<String\> orders, @Query("embed") List<String\> embeds, @Query("snippet") String snippet);
 
-    @GET("/posts/search/networkPosts")
+    @GET("/v2/posts/search")
     void searchPosts(@Query("q") String q, @Query("authorId") List<Integer\> aIds, @Query("stationId") List<Integer\>
     sIds, @Query("state") String st, @Query("from") String from, @Query("until") String until, @Query("categoryId")
     List<Integer\> cIds, @Query("tag") List<String\> tags, @Query("page") Integer page, @Query("size") Integer size,
-    @Query("order") List<String\> orders, @Query("embed") List<String\> embeds,
+    @Query("order") List<String\> orders, @Query("embed") List<String\> embeds, @Query("snippet") String snippet, 
     Callback<ContentResponse<SearchView\>\> _callback);
 
 	@GET("/bookmarks/searchBookmarks")

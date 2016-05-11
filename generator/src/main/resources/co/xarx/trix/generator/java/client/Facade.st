@@ -333,35 +333,17 @@ public class $facade$ {
 			}
 		});
 	}
-/*
-	public SearchView searchPosts(String q, String sIds, Integer pId, String pt, Boolean nh, Boolean sd, Integer p, Integer s){
-		return _facade.searchPosts(q, sIds, pId, pt, nh, sd, p, s).content;
-	}
-
-	public void searchPosts(String q, String sIds, Integer pId, String pt, Boolean nh, Boolean sd, Integer p, Integer s, final Callback<SearchView\> _callback){
-		_facade.searchPosts(q, sIds, pId, pt, nh, sd, p, s, new Callback<ContentResponse<SearchView\>\>() {
-			@Override
-			public void success(ContentResponse<SearchView\> _t, Response _response) {
-				_callback.success(_t.content, _response);
-			}
-
-			@Override
-			public void failure(RetrofitError _error) {
-				_callback.failure(_error);
-			}
-		});
-	}
-*/
+	
 	public SearchView searchPosts(String q, List<Integer\> aIds, List<Integer\> sIds, String st, String from,
                                   String until, List<Integer\> cIds, List<String\> tags, Integer page, Integer size,
-                                  List<String\> orders, List<String\> embeds){
-        return _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, page, size, orders, embeds).content;
+                                  List<String\> orders, List<String\> embeds, String snippet){
+        return _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, page, size, orders, embeds, snippet).content;
     }
 
     public void searchPosts(String q, List<Integer\> aIds, List<Integer\> sIds, String st, String from,
                             String until, List<Integer\> cIds, List<String\> tags, Integer page, Integer size,
-                            List<String\> orders, List<String\> embeds, final Callback<SearchView\> _callback){
-        _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, page, size, orders, embeds, new
+                            List<String\> orders, List<String\> embeds, String snippet, final Callback<SearchView\> _callback){
+        _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, page, size, orders, embeds, snippet, new
         Callback<ContentResponse<SearchView\>\>() {
             @Override
             public void success(ContentResponse<SearchView\> _t, Response _response) {
