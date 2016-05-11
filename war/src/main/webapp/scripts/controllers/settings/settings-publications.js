@@ -52,115 +52,119 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
       }, 200);
     }
 
-    $scope.app.publicationsCtrl = {page: 0, firstLoad: false};
+  $scope.$watch('settings.tab', function(){
+    $scope.doSearch();
+  });
 
-	
-		$scope.drafts = [];
-		$scope.publications = [];
-		$scope.scheduleds = [];
-		$scope.trash = [];
+  var tabToState = function(){
+    if($scope.settings.tab === 'publications')
+      return 'PUBLISHED';
+    if($scope.settings.tab === 'scheduled')
+      return 'SCHEDULED';
+    if($scope.settings.tab === 'drafts')
+      return 'DRAFT';
+    if($scope.settings.tab === 'trash')
+      return 'TRASH';
+  }
+  
+  $scope.publicationsCtrl = {
+    'page': 0,
+    'allLoaded': false
+  }
 
-	$scope.$watch('settings.tab', function(){
-	// 	if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){
-	// // trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
-	// 	// 'publicationType': 'DRAFT', sortByDate: true}).success(function(response){
-	// 		trix.getPersonNetworkPostsByState(null, 'DRAFT', $scope.app.publicationsCtrl.page, $scope.window).success(function(response){
-	// 			$scope.drafts = response;
-	// 			$scope.firstLoad = true;
-	// 		})
-	// 	}
-	// 	if(/*$state.params.type == "publications"*/ $scope.settings.tab == "publications"){
-	// 		trix.getPersonNetworkPostsByState(null, 'PUBLISHED', $scope.app.publicationsCtrl.page, $scope.window).success(function(response){
-	// 			$scope.publications = response;
-	// 			$scope.firstLoad = true;
-	// 		})
-	// 	}
-	// 	if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "scheduled"){
-	// 		trix.getPersonNetworkPostsByState(null, 'SCHEDULED', $scope.app.publicationsCtrl.page, $scope.window).success(function(response){
-	// 			$scope.scheduleds = response;
-	// 			$scope.firstLoad = true;
-	// 		})
-	// 	}
-	// 	if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "trash"){
-	// 		trix.getPersonNetworkPostsByState(null, 'TRASH', $scope.app.publicationsCtrl.page, $scope.window).success(function(response){
-	// 			$scope.trash = response;
-	// 			$scope.firstLoad = true;
-	// 		})
-	// 	}
-		trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, $scope.app.publicationsCtrl.page, $scope.window, '-date', ['body'], true).success(function(response){
-			response.reverse();
-			$scope.publications = response;
-		})
-	});
+  $scope.scheduledCtrl = angular.copy($scope.publicationsCtrl)
 
-	var tabToState = function(){
-		if($scope.settings.tab === 'publications')
-			return 'PUBLISHED';
-		if($scope.settings.tab === 'scheduled')
-			return 'SCHEDULED';
-		if($scope.settings.tab === 'drafts')
-			return 'DRAFT';
-		if($scope.settings.tab === 'trash')
-			return 'TRASH';
-	}
+  $scope.draftsCtrl = angular.copy($scope.publicationsCtrl)
 
-	$scope.$on('POST_REMOVED', function(event, postId){
-		if($scope.app.publicationsCtrl && $scope.publications){
-			for (var i = $scope.publications.length - 1; i >= 0; i--) {
-				if(postId == $scope.publications[i].postId)
-					$scope.publications.splice(i,1)
-			};
-		}
-	})
+  $scope.trashCtrl = angular.copy($scope.publicationsCtrl)
 
-	$scope.paginate = function(){
+  $scope.resetPage = function(){
+    $scope.publicationsCtrl.page = $scope.scheduledCtrl.page = $scope.draftsCtrl.page = $scope.trashCtrl.page = 0;
+    $scope.publications = $scope.scheduled = $scope.drafts = $scope.trash = [];
+  }
 
-		if(!$scope.publications || $scope.publications.length == 0)
-			return;
+  $scope.paginate = function(){
+    if(!$scope.loading){
+      $scope.loading = true;
 
-		if($scope.allLoaded)
-			return;
+      var page = getPage();
+      trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response){
+        handleSuccess(response);
+        $scope.loading = false;
+      }).error(function(){
+        $scope.loading = false;
+      })
+    }
+  }
 
-	 	if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){
-	    type = 'DRAFT'
-	  }
-	  if(/*$state.params.type == "publications"*/ $scope.settings.tab == "publications"){
-	    type = 'PUBLISHED'
-	  }
-	  if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "scheduled"){
-	    type = 'SCHEDULED'
-	  }
-	  if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "trash"){
-	    type = 'TRASH'
-	  }
+  var handleSuccess = function(posts){
+    if(posts && posts.length > 0){
+      posts.reverse();
 
-		if(!$scope.loadingPage){
-			$scope.loadingPage = true;
+      if($scope.settings.tab === 'publications'){
+        if(!$scope.publications)
+          $scope.publications = []
 
-			trix.getPersonNetworkPostsByState(null, type, $scope.app.publicationsCtrl.page+1, 10).success(function(response){
-				var posts = response;
+        posts.forEach(function(post){
+          addSnippet(post);
+          $scope.publications.push(post);
+        })
+        $scope.publicationsCtrl.page++;
+      }
+      if($scope.settings.tab === 'scheduled'){
+        if(!$scope.scheduled)
+          $scope.scheduled = []
 
-				$scope.loadingPage = false;
-				$scope.app.publicationsCtrl.page = $scope.app.publicationsCtrl.page + 1;
+        posts.forEach(function(post){
+          addSnippet(post);
+          $scope.scheduled.push(post);
+        })
+        $scope.scheduledCtrl.page++;
+      }
+      if($scope.settings.tab === 'drafts'){
+        if(!$scope.drafts)
+          $scope.drafts = []
 
-				if(!posts || posts.length == 0){
-					$scope.allLoaded = true;
-					return;
-				}
+        posts.forEach(function(post){
+          addSnippet(post);
+          $scope.drafts.push(post);
+        })
+        $scope.draftsCtrl.page++;
+      }
+      if($scope.settings.tab === 'trash'){
+        if(!$scope.trash)
+          $scope.trash = []
 
-				if(!$scope.pages)
-					$scope.pages = []
+        posts.forEach(function(post){
+          addSnippet(post);
+          $scope.trash.push(post);
+        })
+        $scope.trashCtrl.page++;
+      }
+    }
+  }
 
-				posts && posts.forEach(function(element, index){
-					$scope.publications.push(element)
-				}); 
 
-			})
-			.error(function(){
-				$scope.loadingPage = false;
-			})
-		}
-	}
+  var getPage = function(){
+    if($scope.settings.tab === 'publications')
+      return $scope.publicationsCtrl.page;
+    if($scope.settings.tab === 'scheduled')
+      return $scope.scheduledCtrl.page;
+    if($scope.settings.tab === 'drafts')
+      return $scope.draftsCtrl.page;
+    if($scope.settings.tab === 'trash')
+      return $scope.trashCtrl.page;
+  }
+
+  $scope.doSearch = function(){
+    $scope.resetPage();
+    $scope.paginate();
+  }
+
+    var addSnippet = function(postObj){
+    if(postObj.body)
+      postObj.snippet = postObj.body.simpleSnippet();
+  }
 
 	$scope.page = 0;
 	$scope.loadingComments = false

@@ -83,7 +83,7 @@
                     </div>
                     <div class="pos-rlt no-margin m-b-sm inline" style="width: 140px">
                       <mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'titles.END_DATE' | translate}}" ng-model="filter.finalDate">
-                      </mdp-time-picker>
+                      </mdp-date-picker>
                     </div>
                   </div>
                 <!-- -->
@@ -97,10 +97,10 @@
         <div class="row-row">
           <div class="cell">
             <div class="cell-inner p-r-sm p-l-sm">
-              <div class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z2 " style="overflow: auto;
+              <div id="search-results" class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z2 " style="overflow: auto;
     max-height: 100%;">
-                <div class="min-h-400" ng-class="{'hide': settings.tab !== 'publications'}">
-                  <ul class="list-group bg-t m-b-lg">
+                <div class="min-h-400">
+                  <ul class="list-group bg-t m-b-lg" data-collapsible="expandable" infinite-scroll="paginate()" infinite-scroll-container='"#search-results"' infinite-scroll-distance="1">
                     <li class="no-border-radius list-group-item no-bg r-0 p p-h-md b-l-2x">
                       <div class="inline display-t-c v-m">
                         <md-checkbox aria-label="nothing" class="no-margin" ng-model="toggleSelectValue" ng-change="toggleAll(toggleSelectValue)">
@@ -170,52 +170,20 @@
                     </li>
                   </ul> 
                 </div>
-                <!-- end of network configurations -->
-
-                <!-- logos -->
-                <div class="min-h-400"  ng-class="{'hide': settings.tab !== 'drafts'}">
-                  <ul class="list-group bg-t">
-                    <li class="no-border-radius list-group-item no-bg b-l-2x r-0" ng-class="{'b-l-primary': isActiveDraft(draft)}" ng-repeat="draft in drafts" ng-click="activateDraft(draft)" style="cursor: inherit;">
-                      <a href class="pull-left m-r" ng-if="app.hasImage(draft)" style="height: 96px;">
-                        <div ng-style="app.getBackgroundImage(draft, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
-                        </div>
-                      </a>
-                      <div class="clear font-thin">
-                        <a href class="font-bold block text-md">{{draft.title}}</a>
-                        {{draft.snippet | characters:170}}
-                        <div class="p-t-sm font-500">
-                          <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">editar
-                          </div>
-                          <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">remover
-                          </div>
-                        </div>
-                        <div class="m-t pull-right font-500 m-r-sm"><i class="icon mdi2-radio-tower"></i> {{app.getStationById(draft.stationId).name}}</div>
-                        <div class="list-group-item b-n p-sm p-t-sm no-padding-h inline">
-                          <a href class="pull-left m-r-sm"><img src="/images/a1.jpg" class="img-responsive img-circle thumb-xxs md-whiteframe-z1"></a>
-                          <div class="clear font-normal p-xs">
-                            <a href class="font-500 block">{{draft.authorName}}</a>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  </ul> 
-                </div>
-                <!-- /logo section -->
-
-
-            </div>
-            <div  class="md-whiteframe-z1 text-sm md-background-hue-1 background pos-abt bottom-0 z-index-5" style="width: calc(100% - 16px)">
-              <md-divider></md-divider>
-              <div class="p-sm font-code">
-                {{'titles.TOTAL' | translate}}: {{getTotalPublicationCount}} 
-                <span>
-                  | {{'titles.SHOWING' | translate}}: {{getShowingPublicationsLength()}}
-                </span>
-                <span ng-if="getSelectedPublicationsIds().length > 0" >
-                  | {{'titles.SELECTED' | translate}}: {{getSelectedPublicationsIds().length}}
-                </span>
               </div>
-             </div>
+              <div  class="md-whiteframe-z1 text-sm md-background-hue-1 background pos-abt bottom-0 z-index-5" style="width: calc(100% - 16px)">
+                <md-divider></md-divider>
+                <div class="p-sm font-code">
+                  {{'titles.TOTAL' | translate}}: {{getTotalPublicationCount}} 
+                  <span>
+                    | {{'titles.SHOWING' | translate}}: {{getShowingPublicationsLength()}}
+                  </span>
+                  <span ng-if="getSelectedPublicationsIds().length > 0" >
+                    | {{'titles.SELECTED' | translate}}: {{getSelectedPublicationsIds().length}}
+                  </span>
+                </div>
+               </div>
+            </div>
           </div>
         </div>
       </div>

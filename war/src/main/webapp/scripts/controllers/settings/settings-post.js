@@ -857,6 +857,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		post.terms = $scope.app.getTermUris(post.terms)
 		post.station = $scope.selectedStation;
 		post.tags = $scope.tags
+		post.state = 'PUBLISHED'
 		if(!post.author)
 			post.author = PersonDto.getSelf($scope.app.person);
 		else if(post.author.id || post.author.authorId)

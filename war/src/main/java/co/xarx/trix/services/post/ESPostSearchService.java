@@ -21,10 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -108,7 +105,10 @@ public class ESPostSearchService implements PostSearchService {
 		int from = size * page;
 		if(ids.size() < size)
 			size = ids.size();
-		return ids.subList(from, from + size);
+		if(from < ids.size())
+			return ids.subList(from, from + size <= ids.size() ? from + size : ids.size());
+		else
+			return new ArrayList<>();
 	}
 
 	@Override
@@ -135,8 +135,10 @@ public class ESPostSearchService implements PostSearchService {
 				.map(PostSearchResult::getId)
 				.collect(Collectors.toList());
 		final List<Integer> filteredIds = permissionFilterService.filterIds(ids, Post.class, "read");
+
 		return results.stream()
 				.filter(r -> filteredIds.contains(r.getId()))
-				.collect(Collectors.toMap(PostSearchResult::getId, Function.identity()));
+				.collect(Collectors.toMap(PostSearchResult::getId, Function.identity(),(v1,v2)->v1,
+						LinkedHashMap::new));
 	}
 }
