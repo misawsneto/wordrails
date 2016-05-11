@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @Path("/v2/stations/{stationId}/permissions")
 @Produces(MediaType.APPLICATION_JSON)
-public interface V2PermissionsApi {
+public interface V2StationPermissionsApi {
 
 	@GET
 	@Path("/")

@@ -5,6 +5,7 @@ import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.web.rest.api.v2.V2PersonsApi;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.DefaultValue;
@@ -29,14 +30,14 @@ public class V2PersonsResource implements V2PersonsApi {
 
 	@Override
 	public Response getPermissions(String username, Integer stationId) {
-		UserPermissionData data = personPermissionService.getPermissions(username, stationId);
+		UserPermissionData data = personPermissionService.getPermissions(new PrincipalSid(username), stationId);
 
 		return Response.ok().entity(data).build();
 	}
 
 	@Override
 	public Response getPermissions(String username) {
-		UserPermissionData data = personPermissionService.getPermissions(username);
+		UserPermissionData data = personPermissionService.getPermissions(new PrincipalSid(username));
 
 		return Response.ok().entity(data).build();
 	}

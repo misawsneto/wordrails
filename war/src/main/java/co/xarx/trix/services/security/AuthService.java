@@ -56,6 +56,10 @@ public class AuthService {
 		return user.getUsername();
 	}
 
+	public boolean isAnonymous() {
+		return getUser().isAnonymous();
+	}
+
 	public Person getLoggedPerson() {
 		User user = getUser();
 

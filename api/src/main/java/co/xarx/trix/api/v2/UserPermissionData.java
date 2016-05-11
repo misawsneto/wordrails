@@ -10,7 +10,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserPermissionData {
@@ -23,9 +22,6 @@ public class UserPermissionData {
 		private PermissionData permissionData;
 	}
 
-	@NonNull
-	@Getter
-	private String username;
 	@Getter
 	private List<Permission> stationPermissions = new ArrayList<>();
 }

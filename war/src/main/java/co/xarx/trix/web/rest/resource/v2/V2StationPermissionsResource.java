@@ -2,7 +2,7 @@ package co.xarx.trix.web.rest.resource.v2;
 
 import co.xarx.trix.api.v2.StationPermissionData;
 import co.xarx.trix.services.security.StationPermissionService;
-import co.xarx.trix.web.rest.api.v2.V2PermissionsApi;
+import co.xarx.trix.web.rest.api.v2.V2StationPermissionsApi;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -13,12 +13,12 @@ import java.io.IOException;
 
 @Component
 @NoArgsConstructor
-public class V2PermissionsResource implements V2PermissionsApi {
+public class V2StationPermissionsResource implements V2StationPermissionsApi {
 
 	private StationPermissionService stationPermissionService;
 
 	@Autowired
-	public V2PermissionsResource(StationPermissionService stationPermissionService) {
+	public V2StationPermissionsResource(StationPermissionService stationPermissionService) {
 		this.stationPermissionService = stationPermissionService;
 	}
 
