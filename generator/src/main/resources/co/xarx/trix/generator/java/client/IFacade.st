@@ -126,7 +126,7 @@ interface I$facade$ {
 	void convertPost(@Path("postId") Integer postId, @Field("state") String state, Callback<ContentResponse<PostView\>\> _callback);
 
 	@GET("/v2/posts/search")
-    ContentResponse<SearchView\> searchPosts(@Query("q") String q, @Query("authorId") List<Integer> aIds, @Query
+    ContentResponse<List<PostView\>\> searchPosts(@Query("q") String q, @Query("authorId") List<Integer> aIds, @Query
     ("stationId") List<Integer\> sIds, @Query("state") String st, @Query("from") String from, @Query("until") String
     until, @Query("categoryId") List<Integer\> cIds, @Query("tag") List<String\> tags, @Query("page") Integer page,
     @Query("size") Integer size, @Query("order") List<String\> orders, @Query("embed") List<String\> embeds, @Query("snippet") String snippet);
@@ -136,7 +136,7 @@ interface I$facade$ {
     sIds, @Query("state") String st, @Query("from") String from, @Query("until") String until, @Query("categoryId")
     List<Integer\> cIds, @Query("tag") List<String\> tags, @Query("page") Integer page, @Query("size") Integer size,
     @Query("order") List<String\> orders, @Query("embed") List<String\> embeds, @Query("snippet") String snippet, 
-    Callback<ContentResponse<SearchView\>\> _callback);
+    Callback<ContentResponse<List<PostView\>\>\> _callback);
 
 	@GET("/bookmarks/searchBookmarks")
 	ContentResponse<List<PostView\>\> searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size);
