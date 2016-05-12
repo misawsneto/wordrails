@@ -34,7 +34,9 @@
       <div class="vbox p-t-lg p-r-xxl">
       
         <div class="search-with-filter m-r-sm m-l-sm p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
-          <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t" ng-model="searchQuery">
+          <form ng-submit="doSearch()">
+            <input ng-model="searchQuery" placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t" ng-model="searchQuery">
+          </form>
 
           <!-- dropdown filter -->
           <div class="pos-abt top-0 right-0 m-t pull-right" uib-dropdown auto-close="disabled" is-open="advancedMenuOpen">

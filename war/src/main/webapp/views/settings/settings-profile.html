@@ -40,7 +40,7 @@
 <div class="block-800 m-auto p-h-md">
   <div class="search-with-filter p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
     <form ng-submit="doSearch()">
-      <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
+      <input ng-model="searchQuery" placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
     </form>
 
     <!-- dropdown filter -->

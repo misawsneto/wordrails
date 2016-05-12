@@ -129,7 +129,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
       }
 
 
-// ---------- /paginate posts ------
+// ---------- paginate posts ------
 
   $scope.$watch('settings.tab', function(){
     $scope.doSearch();
@@ -151,19 +151,14 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
     'allLoaded': false
   }
 
-  $scope.scheduledCtrl = angular.copy($scope.publicationsCtrl)
-
-  $scope.draftsCtrl = angular.copy($scope.publicationsCtrl)
-
-  $scope.trashCtrl = angular.copy($scope.publicationsCtrl)
-
   $scope.resetPage = function(){
-    $scope.publicationsCtrl.page = $scope.scheduledCtrl.page = $scope.draftsCtrl.page = $scope.trashCtrl.page = 0;
-    $scope.publications = $scope.scheduled = $scope.drafts = $scope.trash = [];
+    $scope.publicationsCtrl.page = 0;
+    $scope.publicationsCtrl.allLoaded = false;
+    $scope.publications = [];
   }
 
   $scope.paginate = function(){
-    if(!$scope.loading){
+    if(!$scope.loading && !$scope.publicationsCtrl.allLoaded){
       $scope.loading = true;
 
       var page = getPage();
@@ -180,7 +175,6 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
     if(posts && posts.length > 0){
       posts.reverse();
 
-      if($scope.settings.tab === 'publications'){
         if(!$scope.publications)
           $scope.publications = []
 
@@ -189,38 +183,9 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
           $scope.publications.push(post);
         })
         $scope.publicationsCtrl.page++;
-      }
-      if($scope.settings.tab === 'scheduled'){
-        if(!$scope.scheduled)
-          $scope.scheduled = []
-
-        posts.forEach(function(post){
-          addSnippet(post);
-          $scope.scheduled.push(post);
-        })
-        $scope.scheduledCtrl.page++;
-      }
-      if($scope.settings.tab === 'drafts'){
-        if(!$scope.drafts)
-          $scope.drafts = []
-
-        posts.forEach(function(post){
-          addSnippet(post);
-          $scope.drafts.push(post);
-        })
-        $scope.draftsCtrl.page++;
-      }
-      if($scope.settings.tab === 'trash'){
-        if(!$scope.trash)
-          $scope.trash = []
-
-        posts.forEach(function(post){
-          addSnippet(post);
-          $scope.trash.push(post);
-        })
-        $scope.trashCtrl.page++;
-      }
-    }
+        $scope.publicationsCtrl.allLoaded;
+    }else
+      $scope.publicationsCtrl.allLoaded = true;
   }
 
 

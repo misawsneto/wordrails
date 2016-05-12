@@ -322,7 +322,7 @@ var trix = angular.module('trix', [])
 	embed, snippet){
 		var config = {
             "params": {
-                "query": query,
+                "q": query,
                 "authors": authors,
                 "stations": stations,
                 "state": state,
