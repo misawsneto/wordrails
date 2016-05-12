@@ -334,7 +334,7 @@ public class $facade$ {
 		});
 	}
 	
-	public SearchView searchPosts(String q, List<Integer\> aIds, List<Integer\> sIds, String st, String from,
+	public List<PostView\> searchPosts(String q, List<Integer\> aIds, List<Integer\> sIds, String st, String from,
                                   String until, List<Integer\> cIds, List<String\> tags, Integer page, Integer size,
                                   List<String\> orders, List<String\> embeds, String snippet){
         return _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, page, size, orders, embeds, snippet).content;
@@ -342,11 +342,11 @@ public class $facade$ {
 
     public void searchPosts(String q, List<Integer\> aIds, List<Integer\> sIds, String st, String from,
                             String until, List<Integer\> cIds, List<String\> tags, Integer page, Integer size,
-                            List<String\> orders, List<String\> embeds, String snippet, final Callback<SearchView\> _callback){
+                            List<String\> orders, List<String\> embeds, String snippet, final Callback<List<PostView\>\> _callback){
         _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, page, size, orders, embeds, snippet, new
-        Callback<ContentResponse<SearchView\>\>() {
+        Callback<ContentResponse<List<PostView\>\>\>() {
             @Override
-            public void success(ContentResponse<SearchView\> _t, Response _response) {
+            public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
                 _callback.success(_t.content, _response);
             }
 
