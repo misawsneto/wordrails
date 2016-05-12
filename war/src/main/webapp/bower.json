@@ -105,6 +105,8 @@
     "angular-socialshare": "angularjs-socialshare#^2.1.4",
     "angular-deckgrid": "^0.5.0",
     "pgwslider": "^2.3.0",
-    "angular-sly": "^0.1.2"
+    "angular-sly": "^0.1.2",
+    "ngSmoothScroll": "^2.0.0",
+    "angular-scroll": "^1.0.0"
   }
 }

@@ -21,49 +21,6 @@
               </ul>
             </div>
             <div class="card-body">
-              <div class="row" ng-controller="ChartCtrl">
-                <div class="col-sm-6">
-                  <div class="text-center">
-                    Server Status
-                  </div>
-                  <div class="p-md">
-                    <div ui-jp="plot" ui-options="
-                      [
-                        { data: {{plot_line}} },
-                        { data: {{plot_line_2}} }
-                      ], 
-                      {
-                        bars: { show: true, fill: true,  barWidth: 0.4, lineWidth: 1, order: 1, fillColor: { colors: [{ opacity: 0.5 }, { opacity: 0.9}] } },
-                        colors: ['{{app.color.primary}}','{{app.color.success}}'],
-                        series: { shadowSize: 3 },
-                        xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
-                        yaxis:{ show: true, font: { color: '#ccc' }},
-                        grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
-                        tooltip: true,
-                        tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
-                      }
-                    " style="height:160px" >
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-6">
-                  <div class="text-center">
-                    Client Overview
-                  </div>
-                  <div class="p-md">
-                    <div ui-jp="plot" ui-options="
-                      {{plot_pie}},
-                      {
-                        series: { pie: { show: true, innerRadius: 0.55, stroke: { width: 3 }, label: { show: true, threshold: 0.05 } } },
-                        colors: ['{{app.color.primary}}','{{app.color.success}}'],
-                        grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },   
-                        tooltip: true,
-                        tooltipOpts: { content: '%s: %p.0%' }
-                      }
-                    " style="height:160px"></div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -127,68 +84,8 @@
           <div class="card p"></div>
         </div>
       </div>
-      <!-- <div class="panel panel-default">
-        <div class="panel-heading bg-white">
-          <span class="label pull-right m-t-xs {{app.setting.theme.warn}}">4 left</span>
-          <span class="h4">Tasks</span>
-        </div>
-        <table class="table m-b-none">
-          <thead>
-            <tr>
-              <th>Progress</th>
-              <th>Item</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="progress progress-xs progress-striped active no-margin m-v-sm">
-                  <div class="progress-bar bg-success" data-toggle="tooltip" data-original-title="80%" style="width: 80%"></div>
-                </div>
-              </td>
-              <td>App prototype design</td>
-            </tr>
-            <tr>                    
-              <td>
-                <div class="progress progress-xs no-margin m-v-sm">
-                  <div class="progress-bar bg-info" data-toggle="tooltip" data-original-title="40%" style="width: 40%"></div>
-                </div>
-              </td>
-              <td>Design documents</td>
-            </tr>
-            <tr>                    
-              <td>
-                <div class="progress progress-xs no-margin m-v-sm">
-                  <div class="progress-bar bg-warning" data-toggle="tooltip" data-original-title="20%" style="width: 20%"></div>
-                </div>
-              </td>
-              <td>UI toolkit</td>
-            </tr>
-            <tr>                    
-              <td>
-                <div class="progress progress-xs no-margin m-v-sm">
-                  <div class="progress-bar bg-danger" data-toggle="tooltip" data-original-title="15%" style="width: 15%"></div>
-                </div>
-              </td>
-              <td>Testing</td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4">
-      <!-- <div class="card">
-        <form>
-          <textarea class="form-control no-border p-md" rows="1" placeholder="Write something..."></textarea>
-        </form>
-        <div class="lt p">
-          <button md-ink-ripple class="md-btn md-raised pull-right p-h-md {{app.setting.theme.primary}}">Post</button>
-          <ul class="nav nav-pills nav-sm">
-            <li><a href><i class="fa fa-camera"></i></a></li>
-            <li><a href><i class="fa fa-video-camera"></i></a></li>
-          </ul>
-        </div>
-      </div> -->
       <div class="card">
         <div class="card-heading">
           <h2>{{'titles.LATEST_POSTS' | translate}}</h2>
@@ -248,33 +145,15 @@
       </div>
       <div class="card {{app.setting.theme.primary}}">
         <div class="card-heading">
-          <h2 class="font-thin" translate="titles.NEW_USERS">Novos Usuáriso</h2>
+          <h2 class="font-thin">{{'titles.USERS' | translate}}</h2>
         </div>
-        <!-- <div class="card-tools">
-          <ul class="list-inline">
-            <li class="dropdown">
-              <a md-ink-ripple data-toggle="dropdown" class="md-btn md-flat md-btn-circle">
-                <i class="mdi-navigation-more-vert text-md"></i>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-scale pull-right pull-up top text-color">
-                <li><a href>Action</a></li>
-                <li><a href>Another action</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div> -->
         <div class="card-divider"></div>
         <div class="card-body">
-          <a href class="m-r-xs inline">
+          <a href class="m-r-sm m-b-sm inline" ng-repeat="person in persons">
             <img src="/images/a4.jpg" class="w-40 img-circle">
           </a>
-          <a href class="m-r-xs inline">
-            <img src="/images/a5.jpg" class="w-40 img-circle">
-          </a>
-          <a href class="m-r-xs inline">
-            <img src="/images/a6.jpg" class="w-40 img-circle">
-          </a>
         </div>
+        <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="loadingPerson" md-mode="indeterminate"></md-
       </div>
     </div>
   </div>

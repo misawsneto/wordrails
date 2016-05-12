@@ -158,7 +158,7 @@ public class TermsResource extends AbstractResource implements TermsApi {
 		}
 
 		ContentResponse<List<TermView>> response = new ContentResponse<>();
-		response.content = termConverter.convertToViews(allTerms);
+		response.content = termConverter.convertToViewsTree(allTerms);
 		return response;
 	}
 
