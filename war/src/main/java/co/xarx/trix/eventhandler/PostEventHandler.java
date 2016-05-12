@@ -45,8 +45,6 @@ public class PostEventHandler {
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
-		if(true)
-			throw new NotAuthorizedException("qualquer coisa");
 		savePost(post);
 	}
 

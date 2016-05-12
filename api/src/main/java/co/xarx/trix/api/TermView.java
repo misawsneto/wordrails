@@ -16,5 +16,5 @@ public class TermView implements Serializable {
 	public java.lang.String name;
 	public java.lang.String description;
 	public java.lang.Integer taxonomyId;
-
+	public List<TermView> children;
 }
