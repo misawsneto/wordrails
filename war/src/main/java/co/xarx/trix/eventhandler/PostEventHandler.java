@@ -56,6 +56,10 @@ public class PostEventHandler {
 		if (post.slug == null || post.slug.isEmpty()) {
 			post.slug = StringUtil.toSlug(post.title);
 		}
+
+		if(postRepository.findBySlug(post.slug) != null){
+			post.slug = post.slug + StringUtil.generateRandomString(6, "aA#");
+		}
 	}
 
 	@HandleAfterCreate

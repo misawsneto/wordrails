@@ -27,7 +27,7 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 
 	$scope.loadingPerson = true;
 	$scope.persons = [];
-	trix.getPersons(0, 12, 'id,desc').success(function(response){
+	trix.getPersons(0, 8, 'id,desc').success(function(response){
 		$scope.persons = response.persons;
 		$scope.loadingPerson = false
 	}).error(function(){
