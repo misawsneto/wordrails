@@ -41,6 +41,7 @@ public final class Constants {
 		public static final String PERSON = "person";
 		public static final String STATION = "station";
 		public static final String BOOKMARK = "bookmark";
+		public static final String APP_STATS = "app_stats";
 	}
 
 	public static class Post {
