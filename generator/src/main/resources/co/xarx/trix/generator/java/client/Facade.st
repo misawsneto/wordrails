@@ -218,6 +218,24 @@ public class $facade$ {
 		});
 	}
 
+	public List<TermDto> getTermTree(Integer perspectiveId){
+		return _facade.getTermTree(perspectiveId).content;
+	}
+
+	public void getTermTree(Integer perspectiveId, final Callback<List<TermDto\>\> _callback){
+		_facade.getTermTree(perspectiveId, new Callback<ContentResponse<List<TermDto\>\>\>() {
+			@Override
+			public void success(ContentResponse<List<TermDto\>\> _t, Response _response) {
+				_callback.success(_t.content, _response);
+			}
+
+			@Override
+			public void failure(RetrofitError _error) {
+				_callback.failure(_error);
+			}
+		});
+	}
+
 	public List<TermView> getAllTerms(Integer taxonomyId, Integer perspectiveId){
 		return _facade.getAllTerms(taxonomyId, perspectiveId).content;
 	}

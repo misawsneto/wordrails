@@ -66,6 +66,12 @@ interface I$facade$ {
 	void findPostsAndPostsPromotedByTermId(@Path("stationId")Integer stationId, @Query("termId") Integer termId, 
 		@Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 		
+	@GET("/terms/termTree")
+	ContentResponse<List<TermDto\>\> getTermTree(@Query("perspectiveId") Integer perspectiveId);
+		
+	@GET("/terms/termTree")
+	void getTermTree(@Query("perspectiveId") Integer perspectiveId, Callback<ContentResponse<List<TermDto\>\>\> _callback);
+		
 	@GET("/terms/allTerms")
 	ContentResponse<List<TermView\>\> getAllTerms(@Query("taxonomyId")Integer taxonomyId, @Query("perspectiveId") Integer perspectiveId);
 		
