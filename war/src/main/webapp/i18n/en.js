@@ -95,7 +95,8 @@
 		"DESELECT_ALL": "Deselect all",
 		"AT": "at",
 		"SHOW_ALL": "Show all",
-		"SKIP": "Skip"
+		"SKIP": "Skip",
+		"SKIP": "Close"
 	},
 	"signin_signup": {
 		"OR": "or",
