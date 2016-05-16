@@ -135,6 +135,11 @@
 	  }
 	},
 	"settings":{
+		"dashboard":{
+			"NO_SCHEDULED": "Não há publicações agendadas ainda",
+			"NO_DRAFTS": "Não há rascunhos ainda",
+			"NO_PUBLICATIONS": "Não há publicações"
+		},
 		"aside":{
 			"DASHBOARD": "Painel",
 			"CONTENT": "Conteúdo",

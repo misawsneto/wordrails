@@ -135,6 +135,11 @@
 	  }
 	},
 	"settings":{
+		"dashboard":{
+			"NO_SCHEDULED": "No publications scheduled yet",
+			"NO_DRAFTS": "No publication drafts yet",
+			"NO_PUBLICATIONS": "No publications yet"
+		},
 		"aside":{
 			"DASHBOARD": "Dashboard",
 			"CONTENT": "Content",
