@@ -25,18 +25,18 @@ public class StatsResource extends AbstractResource implements StatsApi {
 	}
 
 	@Override
-	public StatsData authorStats(String date, String beginning, Integer authorId) throws IOException {
-		return statisticsService.authorStats(date, beginning, authorId);
+	public StatsData authorStats(String end, String start, Integer authorId) throws IOException {
+		return statisticsService.authorStats(end, start, authorId);
 	}
 
 	@Override
-	public StatsData networkStats(String date, String beginning) throws IOException {
-		return statisticsService.networkStats(date, beginning);
+	public StatsData networkStats(String end, String start) throws IOException {
+		return statisticsService.networkStats(end, start);
 	}
 
 	@Override
-	public StatsData stationStats(String date, String beginning, Integer stationId) throws IOException {
-		return statisticsService.stationStats(date, beginning, stationId);
+	public StatsData stationStats(String end, String start, Integer stationId) throws IOException {
+		return statisticsService.stationStats(end, start, stationId);
 	}
 
 	@Override

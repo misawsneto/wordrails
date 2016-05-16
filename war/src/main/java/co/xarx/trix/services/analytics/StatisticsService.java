@@ -4,19 +4,19 @@ import co.xarx.trix.api.v2.ReadsCommentsRecommendsCountData;
 import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.api.v2.StoreStatsData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.domain.ESAppStats;
 import co.xarx.trix.domain.MobileDevice;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.PublishedApp;
+import co.xarx.trix.persistence.ESAppStatsRepository;
 import co.xarx.trix.persistence.FileRepository;
 import co.xarx.trix.persistence.MobileDeviceRepository;
 import co.xarx.trix.persistence.PublishedAppRepository;
+import co.xarx.trix.scheduler.jobs.AppStatsJob;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.arcadiaconsulting.appstoresstats.android.console.AndroidStoreStats;
-import es.arcadiaconsulting.appstoresstats.common.CommonStatsData;
-import es.arcadiaconsulting.appstoresstats.ios.console.IOSStoreStats;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
@@ -32,17 +32,22 @@ import org.joda.time.Days;
 import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 @Service
 @lombok.Getter
@@ -58,10 +63,17 @@ public class StatisticsService {
 	private PublishedAppRepository appRepository;
 	private MobileDeviceRepository mobileDeviceRepository;
 	private PersonPermissionService personPermissionService;
+	private ESAppStatsRepository appStatsRepository;
+
+	private boolean checkStores;
+
+	private Scheduler scheduler;
 
 	private static int MONTH_INTERVAL = 30;
 	private static int WEEK_INTERVAL = 7;
 	private static String ACCESS_TYPE = "nginx_access";
+	private static String STATS_JOB = "app_stats_jobs";
+	private static String STATS_TRIGGER = "apps_stats_trigger";
 
 	@Autowired
 	public StatisticsService(Client client,
@@ -69,15 +81,21 @@ public class StatisticsService {
 							 @Qualifier("objectMapper") ObjectMapper mapper,
 							 @Value("${elasticsearch.analyticsIndex}") String analyticsIndex,
 							 @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex,
+							 @Value("${analytics.checkStores}") boolean checkStores,
 							 PublishedAppRepository appRepository, FileRepository fileRepository,
-	PersonPermissionService personPermissionService){
+							 PersonPermissionService personPermissionService,
+							 ESAppStatsRepository appStatsRepository,
+							 Scheduler scheduler){
 		this.mapper = mapper;
 		this.client = client;
+		this.scheduler = scheduler;
+		this.checkStores = checkStores;
 		this.appRepository = appRepository;
 		this.fileRepository = fileRepository;
 		this.analyticsIndex = analyticsIndex;
 		this.dateTimeFormatter = getFormatter();
 		this.nginxAccessIndex = nginxAccessIndex;
+		this.appStatsRepository = appStatsRepository;
 		this.mobileDeviceRepository = mobileDeviceRepository;
 		this.personPermissionService = personPermissionService;
 	}
@@ -299,37 +317,45 @@ public class StatisticsService {
 		return stationReaders;
 	}
 
-	public StoreStatsData getAppStats(PublishedApp publishedApp, Interval interval){
-		CommonStatsData stats;
-
-		if (publishedApp.getType().equals(Constants.MobilePlatform.ANDROID)) {
-			AndroidStoreStats fetchAndroid = new AndroidStoreStats();
-			stats = fetchAndroid.getFullStatsForApp(
-					publishedApp.getPublisherEmail(),
-					publishedApp.getPublisherPassword(),
-					publishedApp.getPackageName(), null,
-					publishedApp.getPublisherPublicName());
+	public StoreStatsData getAppStats(PublishedApp app, Interval interval){
+		ESAppStats stats;
+		if (app.getType().equals(Constants.MobilePlatform.ANDROID)) {
+			stats = appStatsRepository.findByPackageName(app.getPackageName()).get(0);
 		} else {
-			IOSStoreStats fetchIos = new IOSStoreStats();
-			stats = fetchIos.getFullStatsForApp(
-					publishedApp.getPublisherEmail(),
-					publishedApp.getPublisherPassword(),
-					publishedApp.getSku(),
-					publishedApp.getVendorId(), null);
+			stats = appStatsRepository.findBySku(app.getSku()).get(0);
 		}
 
 		StoreStatsData appStats = new StoreStatsData();
-		appStats.averageRaiting = stats.getAverageRate();
-		appStats.downloads = stats.getDownloadsNumber();
-		appStats.currentInstallations = stats.getCurrentInstallationsNumber();
+		appStats.averageRaiting = stats.averageRaiting;
+		appStats.downloads = stats.downloads;
+		appStats.currentInstallations = stats.currentInstallations;
 
 		Interval week = getInterval(interval.getEnd(), WEEK_INTERVAL);
 		Interval month = getInterval(interval.getEnd(), MONTH_INTERVAL);
 
-		appStats.weeklyActiveUsers = getActiveUserByInterval(week, publishedApp.getType());
-		appStats.monthlyActiveUsers = getActiveUserByInterval(month, publishedApp.getType());
+		appStats.weeklyActiveUsers = getActiveUserByInterval(week, app.getType());
+		appStats.monthlyActiveUsers = getActiveUserByInterval(month, app.getType());
 
 		return appStats;
+	}
+
+	@PostConstruct
+	public void createAppStatsJob(){
+		JobDetail job = newJob(AppStatsJob.class).withIdentity(STATS_JOB).build();
+		CronTrigger trigger = newTrigger()
+				.withIdentity(STATS_TRIGGER, "stats_group")
+				.withSchedule(cronSchedule("0 0/1 * * * ?")).build();
+
+		try {
+			if (checkStores && !scheduler.checkExists(trigger.getKey())) {
+				this.scheduler.scheduleJob(job, trigger);
+			} else if (!checkStores && scheduler.checkExists(trigger.getKey())) {
+				scheduler.unscheduleJob(trigger.getKey());
+				scheduler.deleteJob(job.getKey());
+			}
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Integer getActiveUserByInterval(Interval interval, Constants.MobilePlatform type){
