@@ -308,7 +308,7 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 	        ret.push(pub.id);
 	    });
 	    return ret;
-		}
+	}
 
 	$scope.newComment = '';
 	$scope.postComment = function(post, body){

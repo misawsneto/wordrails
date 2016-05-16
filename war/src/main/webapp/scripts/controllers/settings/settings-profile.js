@@ -266,8 +266,16 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
   var intervalPromise;
   intervalPromise = $interval(function(){
     // console.log($('#scroll-box').position().top);
-    console.log($('#scroll-box').scrollTop())
+    // console.log($('#scroll-box').scrollTop())
+    if($('#scroll-box').scrollTop() > 400)
+      $scope.showScrollUp = true;
+    else
+      $scope.showScrollUp = false;
   }, 500);
+
+  $scope.scrollToTop = function(){
+    $('#scroll-box').scrollTop(0, 300);
+  }
 
   $scope.$on('$destroy',function(){
       if(intervalPromise)
