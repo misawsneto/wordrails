@@ -51,11 +51,12 @@
               <h2>{{'titles.DRAFTS' | translate}}</h2>
             </div>
             <div class="list-group list-group-lg md-accent-default background">
-              <a href class="list-group-item text-ellipsis" ng-repeat="draft in drafts">
+              <a href class="list-group-item" ng-repeat="draft in drafts">
                 <!-- <span class="pull-right">
                   1
                 </span> -->
-                {{draft.title}}
+                <div class="text-ellipsis">{{draft.title}}</div>
+                <div class="text-xs text-right"><i class="mdi mdi2-radio-tower"></i> {{draft.stationName}}</div>
               </a>
               <div class="text-center p-lg" ng-if="!drafts || !drafts.length">
                 <div class="m-b-sm">
@@ -88,8 +89,9 @@
             </div>
           </div>
         </div>
+        <md-divider></md-divider>
         <div class="text-right" ng-if="publications.length > 10">
-          <md-button class="m-t-0" ui-sref="app.publications">{{'titles.SHOW_ALL' | translate}}</md-button>
+          <md-button class="m-t-sm m-r-sm" ui-sref="app.publications">{{'titles.SHOW_ALL' | translate}}</md-button>
         </div>
         <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="loadingPublished" md-mode="indeterminate"></md-progress-linear>
       </div>
@@ -103,7 +105,7 @@
             <img src="/images/a4.jpg" class="w-40 img-circle">
           </a>-->
 
-          <div class="m-b-sm" ng-repeat="person in persons | limitTo:5">
+          <div class="m-b-sm" ng-repeat="person in persons | limitTo:5" ng-click="showPerson(person)">
             <span class="pull-left thumb-sm m-r">
               <div ng-style="app.getUserImage(person, 'small', 'PROFILE_PICTURE', true)" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(person)}">
                 <i ng-if="!app.hasProfilePicture(person)" style="line-height: 36px;" class="mdi2-account i-24"></i>
@@ -115,8 +117,9 @@
             </span>
           </div>
         </div>
+        <md-divider></md-divider>
         <div class="text-right" ng-if="persons.length > 5">
-          <md-button class="m-t-0" ui-sref="app.users">{{'titles.SHOW_ALL' | translate}}</md-button>
+          <md-button class="m-t-sm m-r-sm" ui-sref="app.users">{{'titles.SHOW_ALL' | translate}}</md-button>
         </div>
         <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="loadingPerson" md-mode="indeterminate"></md-progress-linear>
       </div>
@@ -160,4 +163,33 @@
       </div>
     </md-content>
   </md-dialog>
+</script>
+
+<script type="text/ng-template" id="person-dialog.html">
+  <md-dialog-content>
+    <div class="w-xxl scrollable md-background-hue-1 background">
+        <div class="pos-rlt p">
+          <div ng-style="{'background-image': 'url(  {{loadedPerson | coverImage: 'medium'}} )'}" style="margin: -16px -16px 0 -16px" class="hidden-folded bg-cover m-b-md md-whiteframe-z1">
+            <div class="p w-full">
+          <!-- <i class="mdi mdi2-account text-4x"></i> -->
+            <div class="md-whiteframe-z1 user-avatar rounded w-64 bg-white inline pos-rlt md-primary-default background text-center bg-cover" ng-style="app.getBackgroundImage(loadedPerson, 'medium')" bstyle="{'background-image': 'url(  {{loadedPerson | userImage: 'medium'}} )'}">
+              <i ng-if="!loadedPerson.imageHash" class="mdi2-account i-40" style="top: 16%;position: relative;"></i>
+            </div>
+            </div>
+            <div class="p-v-sm p-h black-grad  text-white">
+              <div class="block" style="opacity:0.92">
+                <span class="block font-bold">{{loadedPerson.name}}</span>
+                <span class="text-sm">{{loadedPerson.email}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="">
+            {{loadedPerson.bio}}
+          </div>
+        </div>
+        <div class="text-right">
+          <md-button ng-click="cancel()">{{'titles.SKIP' | translate}}</md-button>
+        </div>
+      </div>
+  </md-dialog-content>
 </script>

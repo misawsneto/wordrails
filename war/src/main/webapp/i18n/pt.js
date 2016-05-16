@@ -95,7 +95,8 @@
 		"DESELECT_ALL": "Desselecionar todos",
 		"AT": "em",
 		"SHOW_ALL": "Mais",
-		"SKIP": "Pular"
+		"SKIP": "Pular",
+		"SKIP": "Fechar"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -136,8 +137,8 @@
 	},
 	"settings":{
 		"dashboard":{
-			"NO_SCHEDULED": "Não há publicações agendadas ainda",
-			"NO_DRAFTS": "Não há rascunhos ainda",
+			"NO_SCHEDULED": "Não há publicações agendadas",
+			"NO_DRAFTS": "Não há rascunhos",
 			"NO_PUBLICATIONS": "Não há publicações"
 		},
 		"aside":{

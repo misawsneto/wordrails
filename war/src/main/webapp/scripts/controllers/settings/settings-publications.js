@@ -113,14 +113,7 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
 
   var getPage = function(){
-    if($scope.settings.tab === 'publications')
       return $scope.publicationsCtrl.page;
-    if($scope.settings.tab === 'scheduled')
-      return $scope.scheduledCtrl.page;
-    if($scope.settings.tab === 'drafts')
-      return $scope.draftsCtrl.page;
-    if($scope.settings.tab === 'trash')
-      return $scope.trashCtrl.page;
   }
 
   $scope.doSearch = function(){
@@ -310,12 +303,12 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
 	var getSelectedPublicationIds = function(type){
 		var ret = []
-    $scope[type].forEach(function(pub, index){
-      if(pub.selected)
-        ret.push(pub.id);
-    });
-    return ret;
-	}
+	    $scope.publications.forEach(function(pub, index){
+	      if(pub.selected)
+	        ret.push(pub.id);
+	    });
+	    return ret;
+		}
 
 	$scope.newComment = '';
 	$scope.postComment = function(post, body){

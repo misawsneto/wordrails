@@ -1,5 +1,5 @@
-app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$filter', '$localStorage',
-						 function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast , $templateCache  ,  $location ,  $filter ,  $localStorage){
+app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$filter', '$localStorage', '$mdDialog',
+						 function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast , $templateCache  ,  $location ,  $filter ,  $localStorage ,  $mdDialog){
 
 	if ( angular.isDefined($localStorage.seenWelcome) ) {
       $scope.app.person.seenWelcome = $localStorage.seenWelcome;
@@ -35,10 +35,11 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	});
 
 	$scope.loadingPublished = true;
-	trix.searchPosts(null, null, null, 'PUBLISHED', null, null, null, null, 0, 5, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(posts){
+	trix.searchPosts(null, null, null, 'PUBLISHED', null, null, null, null, 0, 11, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(posts){
 	    if(posts && posts.length > 0){
 	      posts.reverse();
 	      $scope.publications = posts;
+
 	    }
 
 	    $scope.loadingPublished = false;
@@ -69,5 +70,27 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	  }).error(function(){
 	    $scope.loadingDrafts = false;
 	  })
+
+	  $scope.showPerson = function(person){
+	  	// show term alert
+	      $scope.loadedPerson = angular.copy(person);
+	      $scope.uploadedUserImage = null;
+	      $scope.uploadedCoverImage = null;
+	      $mdDialog.show({
+	        scope: $scope,        // use parent scope in template
+	        closeTo: {
+	          bottom: 1500
+	        },
+	        preserveScope: true, // do not forget this if use parent scope
+	        controller: $scope.app.defaultDialog,
+	        templateUrl: 'person-dialog.html',
+	        parent: angular.element(document.body),
+	        targetEvent: event,
+	        clickOutsideToClose:true
+	        // onComplete: function(){
+
+	        // }
+	      })
+	  }
 
 }]);

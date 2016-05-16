@@ -190,14 +190,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
 
   var getPage = function(){
-    if($scope.settings.tab === 'publications')
-      return $scope.publicationsCtrl.page;
-    if($scope.settings.tab === 'scheduled')
-      return $scope.scheduledCtrl.page;
-    if($scope.settings.tab === 'drafts')
-      return $scope.draftsCtrl.page;
-    if($scope.settings.tab === 'trash')
-      return $scope.trashCtrl.page;
+    return $scope.publicationsCtrl.page;
   }
 
   $scope.doSearch = function(){
@@ -269,6 +262,17 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
     //   postObj.loading = false;
     // })
   }
+
+  var intervalPromise;
+  intervalPromise = $interval(function(){
+    // console.log($('#scroll-box').position().top);
+    console.log($('#scroll-box').scrollTop())
+  }, 500);
+
+  $scope.$on('$destroy',function(){
+      if(intervalPromise)
+          $interval.cancel(intervalPromise);   
+  });
 
 	settingsProfileCtrl = $scope;
 }]);
