@@ -1,0 +1,11 @@
+{
+  "stationIds": [
+    311
+  ],
+  "tenantId": "recbom",
+  "emailSubject": "Bem-vindo ao RecBom",
+  "emails": {
+    "aavasc@hotmail.com": "ANDREA VASCONCELOS",
+    "lanavalentim@hotmail.com": "LANA VALETIM"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "stationIds": [
+    309
+  ],
+  "tenantId": "recbom",
+  "emailSubject": "Bem-vindo ao RecBom",
+  "emails": {
+    "fred@hobtec.com": "FREDERICO QUEIROZ",
+    "machado@machadoempreendimento.com.br": "JOÃO MACHADO",
+    "velhobarretto@hotmail.com": "ADRIANO VELHO BARRETO"
+  }
+}

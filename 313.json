@@ -1,0 +1,14 @@
+{
+  "stationIds": [
+    313
+  ],
+  "tenantId": "recbom",
+  "emailSubject": "Bem-vindo ao RecBom",
+  "emails": {
+    "abruscky@hotmail.com": "ALEXEY",
+    "wiz@alcomercial.com.br": "LUIZ IGNÁCIO",
+    "leonardosrc@gmail.com": "LEONARDO CARVALHO",
+    "lanavalentim@hotmail.com": "LANA VALENTIM",
+    "marcelosantos.ne@gmail.com": "MARCELOS SANTOS"
+  }
+}
