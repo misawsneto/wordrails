@@ -15,11 +15,11 @@
     <!-- / -->
     <!-- Common tools -->
     <ul class="nav nav-sm navbar-tool pull-right" ng-hide="$state.current.data.child">
-      <li>
+      <!-- <li ng-if="!app.search.show">
         <a md-ink-ripple ng-click="app.search.show = true">
           <i class="mdi-action-search i-24 p-h-sm"></i>
         </a>
-      </li>
+      </li> -->
       <!-- <li>
         <a md-ink-ripple data-toggle="modal" data-target="#user">
           <i class="mdi-social-person-outline i-24 p-h-sm"></i>
@@ -41,28 +41,35 @@
     <div class="pull-right" ui-view="navbar@"></div>
     <!-- / -->
     <!-- Search form -->
-    <div id="search" class="pos-abt w-full h-full md-primary-default background" ng-show="app.search.show">
+    <div id="search" class="navbar-header h-full md-primary-default background pull-right w-400" ng-if="!$state.includes('app.search')">
       <div class="box">
-        <div class="box-col w-56 text-center">
-          <!-- hide search form -->
-          <a md-ink-ripple class="navbar-item inline" ng-click="app.search.show=false; app.search.content=''"><i class="mdi-navigation-arrow-back i-24"></i></a>
-        </div>
         <div class="box-col v-m p-h">
           <!-- bind to app.search.content -->
-          <form ng-submit="app.goToSearch(app.search.content)">
-            <input class="form-control input-lg no-bg no-border" placeholder="{{'titles.SEARCH' | translate }}" ng-model="app.search.content">
+          <form ng-submit="app.goToSearch(app.search.content)" class="pos-rlt m-t-sm">
+            <div class="pos-abt p-sm m-l-xs m-t-xs">
+              <i class="mdi2-magnify i-24"></i>
+            </div>
+            <input class="form-control input-lg no-bg no-border md-autofocus p-l-xxl p-r-xxl" placeholder="{{'titles.SEARCH' | translate }}" ng-model="app.search.content">
+            <div class="pos-abt right-0 top-0 m-t-xs">
+              <!-- <a class="" ng-click="app.search.show=false; app.search.content=''"><i class="mdi2-close i-24"></i>
+                        </a> -->
+              <!-- <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-icon-button pull-right" ng-click="app.search.show=false; app.search.content=''"><i class="mdi2-close i-20"></i></md-button> -->
+            </div>
           </form>
+
         </div>
-        <div class="box-col w-56 text-center">
-          <a md-ink-ripple class="navbar-item inline"><i class="mdi-av-mic i-24"></i></a>
-        </div>
+        <!-- <div class="box-col w-56 text-center">
+          hide search form
+          <a class="navbar-item inline" ng-click="app.search.show=false; app.search.content=''"><i class="mdi2-close i-24"></i>
+          </a>
+        </div> -->
       </div>
     </div>
     <!-- / -->
   </div>
   <!-- Content -->
   <div class="box-row">
-    <div class="box-cell">
+    <div id="scroll-box" class="box-cell">
       <div class="box-inner padding" ui-view id="view">
       </div>
     </div>

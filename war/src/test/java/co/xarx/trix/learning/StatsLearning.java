@@ -11,11 +11,11 @@ public class StatsLearning {
 	static IStoreStats fetchIOs = new IOSStoreStats();
 
 	static CommonStatsData android = fetchAndroid.getFullStatsForApp("mobile@xarx.co", "X@rxM0b!l3", "com.wordrails.sportclubdorecife", null, "XARX");
-	static CommonStatsData ios = fetchIOs.getFullStatsForApp("ac@adrielcafe.com", "X@rxtr1x", "SPORTCLUBDORECIFE", "86672524", null);
+//	static CommonStatsData ios = fetchIOs.getFullStatsForApp("ac@adrielcafe.com", "X@rxtr1x", "SPORTCLUBDORECIFE", "86672524", null);
 
 	public static void main(String[] args){
 		System.out.println(new DateTime().toString());
-//		System.out.println(android);
+		System.out.println(android.getDownloadsNumber());
 //		System.out.println(ios);
 		System.exit(0);
 	}

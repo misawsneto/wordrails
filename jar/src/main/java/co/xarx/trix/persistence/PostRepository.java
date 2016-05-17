@@ -125,7 +125,7 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@RestResource(exported = false)
 	@Query("select " +
 			"(select count(*) from PostRead pr where pr.post.id = p.id), " +
-			"(select count(*) from Comment comment where comment.post.id = p.id) " +
+				"(select count(*) from Comment comment where comment.post.id = p.id) " +
 			"from Post p where p.id = :postId")
 	List<Object[]> findPostStats(@Param("postId") Integer postId);
 

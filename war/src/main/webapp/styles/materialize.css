@@ -5314,7 +5314,7 @@ a.waves-effect .waves-ripple {
   border-bottom: 1px solid #ddd;
 }
 
-.collapsible-header i {
+/* .collapsible-header i {
   width: 2rem;
   font-size: 1.6rem;
   line-height: 3rem;
@@ -5322,7 +5322,7 @@ a.waves-effect .waves-ripple {
   float: left;
   text-align: center;
   margin-right: 1rem;
-}
+} */
 
 .collapsible-body {
   display: none;

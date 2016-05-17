@@ -66,6 +66,12 @@ interface I$facade$ {
 	void findPostsAndPostsPromotedByTermId(@Path("stationId")Integer stationId, @Query("termId") Integer termId, 
 		@Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 		
+	@GET("/terms/termTree")
+	ContentResponse<List<TermDto\>\> getTermTree(@Query("perspectiveId") Integer perspectiveId);
+		
+	@GET("/terms/termTree")
+	void getTermTree(@Query("perspectiveId") Integer perspectiveId, Callback<ContentResponse<List<TermDto\>\>\> _callback);
+		
 	@GET("/terms/allTerms")
 	ContentResponse<List<TermView\>\> getAllTerms(@Query("taxonomyId")Integer taxonomyId, @Query("perspectiveId") Integer perspectiveId);
 		
@@ -125,30 +131,18 @@ interface I$facade$ {
 	@FormUrlEncoded
 	void convertPost(@Path("postId") Integer postId, @Field("state") String state, Callback<ContentResponse<PostView\>\> _callback);
 
-	/*
-	@GET("/posts/search/networkPosts")
-	ContentResponse<SearchView\> searchPosts(@Query("query") String q, @Query("stationIds") String sIds, @Query("personId") Integer pId,
-			@Query("publicationType") String pt, @Query("noHighlight") Boolean nh, @Query("sortByDate") Boolean sd,
-			@Query("page") Integer p, @Query("size") Integer s);
-	
-	@GET("/posts/search/networkPosts")
-	void searchPosts(@Query("query") String q, @Query("stationIds") String sIds, @Query("personId") Integer pId,
-			@Query("publicationType") String pt, @Query("noHighlight") Boolean nh, @Query("sortByDate") Boolean sd,
-			@Query("page") Integer p, @Query("size") Integer s, Callback<ContentResponse<SearchView\>\> _callback);
-			*/
-
-	@GET("/posts/search/networkPosts")
-    ContentResponse<SearchView\> searchPosts(@Query("q") String q, @Query("authorId") List<Integer> aIds, @Query
+	@GET("/v2/posts/search")
+    ContentResponse<List<PostView\>\> searchPosts(@Query("q") String q, @Query("authorId") List<Integer> aIds, @Query
     ("stationId") List<Integer\> sIds, @Query("state") String st, @Query("from") String from, @Query("until") String
     until, @Query("categoryId") List<Integer\> cIds, @Query("tag") List<String\> tags, @Query("page") Integer page,
-    @Query("size") Integer size, @Query("order") List<String\> orders, @Query("embed") List<String\> embeds);
+    @Query("size") Integer size, @Query("order") List<String\> orders, @Query("embed") List<String\> embeds, @Query("snippet") String snippet);
 
-    @GET("/posts/search/networkPosts")
+    @GET("/v2/posts/search")
     void searchPosts(@Query("q") String q, @Query("authorId") List<Integer\> aIds, @Query("stationId") List<Integer\>
     sIds, @Query("state") String st, @Query("from") String from, @Query("until") String until, @Query("categoryId")
     List<Integer\> cIds, @Query("tag") List<String\> tags, @Query("page") Integer page, @Query("size") Integer size,
-    @Query("order") List<String\> orders, @Query("embed") List<String\> embeds,
-    Callback<ContentResponse<SearchView\>\> _callback);
+    @Query("order") List<String\> orders, @Query("embed") List<String\> embeds, @Query("snippet") String snippet, 
+    Callback<ContentResponse<List<PostView\>\>\> _callback);
 
 	@GET("/bookmarks/searchBookmarks")
 	ContentResponse<List<PostView\>\> searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size);

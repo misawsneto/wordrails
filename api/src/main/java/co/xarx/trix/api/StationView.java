@@ -19,6 +19,7 @@ public class StationView {
 	public java.lang.Integer categoriesTaxonomyId;
 	public java.lang.Integer defaultPerspectiveId;
 	public Map<String, String> logo;
+	public String logoHash;
 	public boolean main;
 	public java.lang.String name;
 	public java.lang.String navbarColor;
@@ -245,6 +246,14 @@ public class StationView {
 
 	public void setCategories(List<TermView> categories) {
 		this.categories = categories;
+	}
+
+	public String getLogoHash(){
+		if(logo != null){
+			logoHash = logo.get("original");
+			return logoHash;
+		}
+		return null;
 	}
 
 	public int postsTitleSize;

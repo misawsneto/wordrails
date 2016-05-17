@@ -7,6 +7,9 @@ import co.xarx.trix.api.TermView;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.TermRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class TermConverter extends AbstractConverter<Term, TermView> {
 
@@ -32,5 +35,22 @@ public class TermConverter extends AbstractConverter<Term, TermView> {
 		termView.imageHash = term.image != null ? term.image.getOriginalHash() : null;
 		
 		return termView;
+	}
+
+	public TermView convertToTermTree(Term term) {
+		TermView view = convertTo(term);
+		if(term.children != null)
+			view.children = convertToViewsTree(new ArrayList<>(term.children));
+		return view;
+	}
+
+	public List<TermView> convertToViewsTree(List<Term> terms) {
+		List<TermView> views = new ArrayList<TermView>(terms.size());
+		for (Term term : terms) {
+			TermView view = convertToTermTree(term);
+			if(view!=null)
+				views.add(view);
+		}
+		return views;
 	}
 }

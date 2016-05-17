@@ -95,7 +95,8 @@
 		"DESELECT_ALL": "Deselect all",
 		"AT": "at",
 		"SHOW_ALL": "Show all",
-		"SKIP": "Skip"
+		"SKIP": "Skip",
+		"SKIP": "Close"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -135,6 +136,11 @@
 	  }
 	},
 	"settings":{
+		"dashboard":{
+			"NO_SCHEDULED": "No publications scheduled yet",
+			"NO_DRAFTS": "No publication drafts yet",
+			"NO_PUBLICATIONS": "No publications yet"
+		},
 		"aside":{
 			"DASHBOARD": "Dashboard",
 			"CONTENT": "Content",

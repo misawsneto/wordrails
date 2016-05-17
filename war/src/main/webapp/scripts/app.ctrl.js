@@ -1131,6 +1131,18 @@ String.prototype.stripHtml = function(){
   return jQuery(string).text();
 }
 
+String.prototype.simpleSnippet = function(){
+  var string = this.stripHtml();
+  var splitPhrase = string.split("\\s+");
+
+  var newArray = [];
+  for (var i = 0; i < splitPhrase.length || i < 100; i++) {
+    newArray[i] = splitPhrase[i];
+  }
+
+  return newArray.join(' ');
+}
+
 var getLastDigit = function(num){
   if(num){
     var temp = num.toString();

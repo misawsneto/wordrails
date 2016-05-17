@@ -113,7 +113,7 @@ public class PostsResource extends AbstractResource implements PostApi {
 
 	public void getTerms(@P("p") Integer postId) throws ServletException,
 			IOException {
-		forward("/comments");
+		forward();
 	}
 
 	public void putComment(@P("p") Integer postId, Integer commentId) throws ServletException,

@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.NotAuthorizedException;
 import java.util.Date;
 
 @RepositoryEventHandler(Post.class)
@@ -76,6 +77,10 @@ public class PostEventHandler {
 
 		if (post.slug == null || post.slug.isEmpty()) {
 			post.slug = StringUtil.toSlug(post.title);
+		}
+
+		if(postRepository.findBySlug(post.slug) != null){
+			post.slug = post.slug + StringUtil.generateRandomString(6, "aA#");
 		}
 	}
 

@@ -424,9 +424,15 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}
 	}
 
-	$interval(function(){
-		setImgToolsImageWidth();
-	}, 500);
+	  var intervalPromise;
+	  intervalPromise = $interval(function(){
+	   setImgToolsImageWidth();
+	  }, 500);
+
+	  $scope.$on('$destroy',function(){
+	      if(intervalPromise)
+	          $interval.cancel(intervalPromise);   
+	  });
 
 	
 	$scope.showImageFocuspointDialog = function(event){
@@ -451,9 +457,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	
 	var draftAutoSaveCheck = function(){
 	}
-
-	$interval(function(){
-	}, 500);
 
 	// --- auto save
 	
@@ -857,6 +860,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		post.terms = $scope.app.getTermUris(post.terms)
 		post.station = $scope.selectedStation;
 		post.tags = $scope.tags
+		post.state = 'PUBLISHED'
 		if(!post.author)
 			post.author = PersonDto.getSelf($scope.app.person);
 		else if(post.author.id || post.author.authorId)
