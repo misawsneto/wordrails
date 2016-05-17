@@ -2,7 +2,6 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
-import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.cluster.metadata.IndexMetaData;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.elasticsearch.client.Requests.createIndexRequest;
 
@@ -59,14 +59,27 @@ public class ESStartupIndexerService {
 			elasticsearchTemplate.deleteIndex(index);
 
 			List<MultiTenantEntity> stations = new ArrayList(stationRepository.findAll());
-			List<MultiTenantEntity> people = new ArrayList(personRepository.findAll());
-//			List<MultiTenantEntity> posts = Lists.newArrayList(postRepository.findPostWithJoins());
-
 			mapThenSave(stations, ESStation.class, esStationRepository);
-//			mapThenSave(posts, ESPost.class, esPostRepository);
+
+			List<MultiTenantEntity> people = new ArrayList(personRepository.findAll());
 			mapThenSave(people, ESPerson.class, esPersonRepository);
+
+//			List<Post> posts = Lists.newArrayList(postRepository.findAllPosts());
+//			mapThenSavePosts(posts);
+//			List<MultiTenantEntity> posts = Lists.newArrayList(postRepository.findAllPosts());
+//			mapThenSave(posts, ESPost.class, esPostRepository);
+
 		} else {
 			log.info("Elasticsearch indexing is disabled");
+		}
+	}
+
+	public void mapThenSavePosts(List<Post> posts){
+		for(Post post: posts){
+			post.terms = (Set<Term>) postRepository.findTermByPostId(post.id);
+
+			MultiTenantEntity entity = modelMapper.map(post, ESPost.class);
+			saveIndex(entity, ESPost.class, esPostRepository);
 		}
 	}
 

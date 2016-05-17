@@ -3,6 +3,7 @@ package co.xarx.trix.persistence;
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
+import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.custom.PostRepositoryCustom;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -158,4 +159,12 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@RestResource(exported = false)
 	@Query("SELECT post from Post post join fetch post.terms terms")
 	List<Post> findPostWithJoins();
+
+	@RestResource(exported = false)
+	@Query("SELECT post FROM Post post")
+	List<Post> findAllPosts();
+
+	@RestResource(exported = false)
+	@Query(value = "SELECT term FROM Term term where :postId in posts")
+	List<Term> findTermByPostId(@Param("postId") Integer postId);
 }
