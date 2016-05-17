@@ -177,29 +177,25 @@ public class EmailService {
 	}
 
 	public String formatMessage(String name, String login, String password){
-		String message = "Prezado {{name}},<br>\n" +
+		String message = "Prezado {{name}},<br><br>\n" +
 				"\n" +
-				"Vocês estão recebendo um <b>Login</b> e uma <b>Senha</b> de acesso ao RecBom (<a href='http://recbom.trix.rocks'>recbom.trix.rocks</a>). Por destes dados, vocês já podem acessar a plataforma.<br>\n" +
+				"Você está recebendo um <b>Login</b> e uma <b>Senha</b> de acesso ao RecBom (<a href='http://recbom.trix.rocks'>recbom.trix.rocks</a>). Por meio destes dados, você já pode acessar a plataforma.<br>\n" +
 				"\n" +
-				"O RecBom tem muitas funcionalidades e vocês ainda passarão por treinamento. Entretanto, seu funcionamento é bem intuitivo e vocês podem arriscar os primeiros passos agora mesmo.<br>\n" +
-				"\n" +
-				"Mais esclarecimentos serão feitos no treinamento. Enquanto isso, dúvidas já podem ser enviadas para contato@thiagopereira.net<br>\n" +
-				"\n" +
+				"O RecBom tem muitas funcionalidades e você ainda passará por treinamento. Entretanto, seu funcionamento é bem intuitivo e você pode arriscar os primeiros passos agora mesmo.<br>\n" +
+				"<br>" +
+				"Mais esclarecimentos serão feitos no treinamento. Enquanto isso, dúvidas podem ser enviadas para contato@thiagopereira.net<br>\n" +
+				"<br>" +
 				"<b>Login: {{login}}</b><br>\n" +
-				"<b>Senha: {{password}}</b><br>\n" +
+				"<b>Senha: {{password}}</b><br><br>\n" +
 				"\n" +
-				"<b>Para iOS (iPhone)</b><br><br>\n" +
-				"\n" +
+				"<b>Para iOS (iPhone)</b><br>\n" +
 				"<b>1</b>- Clique no link para download: View on App Store<br>\n" +
 				"<b>2</b>- Após instalar, abra o app. Vai aparecer a página inicial do RecBom<br>\n" +
 				"<b>3</b>- Clique do lado esquerdo (nas três barrinhas) e aparecerá um menu. Vá em entrar e digite seu login e senha<br>\n" +
 				"<b>4</b>- Após se logar, na mesma barra de menu à esquerda vai estar a opção para acessar as Estações <br>\n" +
 				"<b>5</b>- Basta permanecer logado, que o app vai sempre abrir na última Estação aberta<br>\n" +
-				"\n" +
-				" \n" +
-				"\n" +
-				"<b>Android (Samsung, Motorola e outros modelos Android)</b><br><br>\n" +
-				"\n" +
+				"<br>" +
+				"<b>Android (Samsung, Motorola e outros modelos Android)</b><br>\n" +
 				"<b>1</b>- Clique no link para download: View on Play Store<br>\n" +
 				"<b>2</b>- Após instalar, abra o app. Vai aparecer a página inicial do RecBom<br>\n" +
 				"<b>3</b>- Clique do lado esquerdo (nas três barrinhas) e aparecerá um menu. Vá em entrar e digite seu login e senha<br>\n" +
