@@ -1,5 +1,6 @@
 package co.xarx.trix.config;
 
+import co.xarx.trix.api.v2.StationData;
 import co.xarx.trix.config.cache.MultitenantCacheManager;
 import co.xarx.trix.config.web.CookieAndHeaderHttpSessionStrategy;
 import co.xarx.trix.domain.Person;
@@ -62,6 +63,9 @@ public class SessionConfig extends CachingConfigurerSupport {
 		RedisTemplate imageRedisTemplate = redisTemplate();
 		imageRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(Map.class));
 
+		RedisTemplate stationsRedisTemplate = redisTemplate();
+		stationsRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(StationData.class));
+
 		RedisTemplate stationsIdsRedisTemplate = redisTemplate();
 		stationsIdsRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(List.class));
 
@@ -71,6 +75,7 @@ public class SessionConfig extends CachingConfigurerSupport {
 		templates.put("person", new HashMap<RedisTemplate, Integer>(){{put(personRedisTemplate, 60);}});
 		templates.put("user", new HashMap<RedisTemplate, Integer>(){{put(userRedisTemplate, 60);}});
 		templates.put("image", new HashMap<RedisTemplate, Integer>(){{put(imageRedisTemplate, 600);}});
+		templates.put("stations", new HashMap<RedisTemplate, Integer>(){{put(stationsRedisTemplate, 600);}});
 		templates.put("stationsIds", new HashMap<RedisTemplate, Integer>(){{put(stationsIdsRedisTemplate, 600);}});
 		templates.put("postsIds", new HashMap<RedisTemplate, Integer>(){{put(postsIdsRedisTemplate, 600);}});
 

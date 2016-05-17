@@ -14,7 +14,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -120,6 +119,31 @@ public class Station extends BaseEntity implements Serializable {
 
 	public Integer defaultPerspectiveId;
 
+	@ElementCollection()
+	@JoinTable(name = "palette_station_primary_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> primaryColors;
+
+	@ElementCollection()
+	@JoinTable(name = "palette_station_secondary_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> secondaryColors;
+
+	@ElementCollection()
+	@JoinTable(name = "palette_station_alert_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> alertColors;
+
+
+	@ElementCollection()
+	@JoinTable(name = "palette_station_background_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> backgroundColors;
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -129,6 +153,13 @@ public class Station extends BaseEntity implements Serializable {
 		result = prime * result + ((visibility == null) ? 0 : visibility.hashCode());
 		result = prime * result + (writable ? 1231 : 1237);
 		return result;
+	}
+
+	@SdkInclude
+	public String getLogoHash() {
+		if (logo != null) return logo.getOriginalHash();
+
+		return null;
 	}
 
 	@Override
@@ -147,38 +178,6 @@ public class Station extends BaseEntity implements Serializable {
 			if (other.visibility != null) return false;
 		} else if (!visibility.equals(other.visibility)) return false;
 		return writable == other.writable;
-	}
-
-	@ElementCollection()
-	@JoinTable(name = "palette_station_primary_color", joinColumns = @JoinColumn(name = "station_id"))
-	@MapKeyColumn(name = "name", nullable = false, length = 100)
-	@Column(name = "color", nullable = false, length = 100)
-	public Map<String, String> primaryColors;
-
-
-	@ElementCollection()
-	@JoinTable(name = "palette_station_secondary_color", joinColumns = @JoinColumn(name = "station_id"))
-	@MapKeyColumn(name = "name", nullable = false, length = 100)
-	@Column(name = "color", nullable = false, length = 100)
-	public Map<String, String> secondaryColors;
-
-	@ElementCollection()
-	@JoinTable(name = "palette_station_alert_color", joinColumns = @JoinColumn(name = "station_id"))
-	@MapKeyColumn(name = "name", nullable = false, length = 100)
-	@Column(name = "color", nullable = false, length = 100)
-	public Map<String, String> alertColors;
-
-	@ElementCollection()
-	@JoinTable(name = "palette_station_background_color", joinColumns = @JoinColumn(name = "station_id"))
-	@MapKeyColumn(name = "name", nullable = false, length = 100)
-	@Column(name = "color", nullable = false, length = 100)
-	public Map<String, String> backgroundColors;
-	
-	@SdkInclude
-	public String getLogoHash() {
-		if (logo != null) return logo.getOriginalHash();
-
-		return null;
 	}
 
 	@SdkInclude

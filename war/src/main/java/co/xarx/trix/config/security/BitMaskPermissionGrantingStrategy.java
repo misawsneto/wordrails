@@ -5,14 +5,28 @@ import org.springframework.security.acls.domain.AuditLogger;
 import org.springframework.security.acls.model.*;
 import org.springframework.util.Assert;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class BitMaskPermissionGrantingStrategy implements PermissionGrantingStrategy {
+
 	private final transient AuditLogger auditLogger;
 
 	public BitMaskPermissionGrantingStrategy(AuditLogger auditLogger) {
 		Assert.notNull(auditLogger, "auditLogger cannot be null");
 		this.auditLogger = auditLogger;
+	}
+
+	private Integer getObjectId(Serializable identifier) {
+		Integer result = 0;
+
+		if(identifier instanceof Long) {
+			result = ((Long) identifier).intValue();
+		} else if(identifier instanceof Integer) {
+			result = ((Integer) identifier);
+		}
+
+		return result;
 	}
 
 	@Override

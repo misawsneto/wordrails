@@ -1,7 +1,9 @@
 package co.xarx.trix.eventhandler;
 
+import co.xarx.trix.config.security.Permissions;
 import co.xarx.trix.domain.ESPost;
 import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.Station;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
@@ -11,8 +13,10 @@ import co.xarx.trix.services.SchedulerService;
 import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.rest.core.annotation.*;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,12 +42,30 @@ public class PostEventHandler {
 	private ESStartupIndexerService elasticSearchService;
 	@Autowired
 	private ESPostRepository esPostRepository;
+	@Autowired
+	private PermissionEvaluator permissionEvaluator;
 
 	@Autowired
-	private PostRepository postRepository;
+	private StationRepository stationRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
+		Integer stationId = post.getStation().getId();
+
+		boolean hasPermissionToCreate = permissionEvaluator.hasPermission(SecurityContextHolder.getContext()
+				.getAuthentication(), stationId, Station
+				.class.getName(), Permissions.CREATE);
+
+		if(!hasPermissionToCreate) {
+			boolean hasPermissionToRead = permissionEvaluator.hasPermission(SecurityContextHolder.getContext()
+					.getAuthentication(), stationId, Station
+					.class.getName(), Permissions.READ);
+			Station station = stationRepository.findOne(stationId);
+			boolean canWrite = station.isWritable() && hasPermissionToRead;
+			if(!canWrite)
+				throw new AccessDeniedException("No permission to create");
+		}
+
 		savePost(post);
 	}
 

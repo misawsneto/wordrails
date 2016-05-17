@@ -26,6 +26,15 @@ public class AccessControlListService {
 		this.aclService = aclService;
 	}
 
+	public boolean hasPermission(Class clazz, Integer objectId, Sid sid, Permission permission) {
+		ObjectIdentityImpl oi = new ObjectIdentityImpl(clazz, objectId);
+		Acl acl = aclService.readAclById(oi);
+		AccessControlEntry ace = findAce(acl.getEntries(), sid);
+
+		return ace != null && Permissions.containsPermission(ace.getPermission(), permission);
+
+	}
+
 
 	AccessControlEntry findAce(List<AccessControlEntry> entries, Sid sid) {
 		for (AccessControlEntry entry : entries) {

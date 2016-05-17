@@ -25,7 +25,7 @@ public interface StationRepository extends StationRepositoryCustom, JpaRepositor
 	@Override
 	@SdkExclude
 	@RestResource(exported = true)
-	@CacheEvict(value = "stationsIds")
+	@CacheEvict(value = {"stationsIds", "stations"})
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Station save(Station station);
 
@@ -41,7 +41,7 @@ public interface StationRepository extends StationRepositoryCustom, JpaRepositor
 
 	@Override
 	@SdkExclude
-	@CacheEvict(value = "stationsIds")
+	@CacheEvict(value = {"stationsIds", "stations"})
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	void delete(Station user);
 
