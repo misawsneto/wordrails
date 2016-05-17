@@ -177,34 +177,36 @@ public class EmailService {
 	}
 
 	public String formatMessage(String name, String login, String password){
-		String message = "Prezado(a) associado(a) {{name}},<br>" +
-				"<br>" +
-				"Temos o prazer de encaminhar um breve passo-a-passo para que possa fazer o download e usar o aplicativo de notícias da AMATRA-2, desenvolvido pela empresa <a href='https://xarx.co'>XARX</a> com curadoria de conteúdo da  <a href='http://satya.trix.rocks'>SATYA Comunicação e Tecnologia</a>. <br>" +
-				"<br>" +
-				"A plataforma está disponível nas lojas virtuais da Apple Store (para quem tem IPhone e sistema operacional iOS) e Play Store (para aparelhos com sistema Android).<br>" +
-				"<br>" +
-				" Se preferir acessar o conteúdo em um laptop, tablet ou qualquer outro tipo de computador, basta entrar no link http://satya.trix.rocks/, fornecer login e senha e, então, entrar na Estação AMATRA-2, exclusiva para associados e associadas da entidade.<br>" +
-				"<br>" +
-				"Login:	<b>{{login}}</b></p><br>" +
-				"Senha:	<b>{{password}}</b><br>" +
-				"<br>" +
-				"<b>Para iOS (iPhone)</b><br>" +
-				"1- Clique no link para download: https://itunes.apple.com/us/app/satya/id1095437609?ls=1&mt=8<br>" +
-				"2- Após instalar, abra o app. Vai aparecer a página inicial de SATYA<br>" +
-				"3- Clique do lado esquerdo (nas três barrinhas) e aparecerá um menu. Vá em entrar e digite seu login e senha<br>" +
-				"4- Após se logar, na mesma barra de menu à esquerda vai estar a opção para acessar a Estação AMATRA-2<br>" +
-				"5- Basta permanecer logado, que o app vai sempre abrir na AMATRA-2<br>" +
-				"<br>" +
-				"<p><b>Android (Samsung, Motorola e outros modelos Android)</b><br>" +
-				"1- Clique no link para download: https://play.google.com/store/apps/details?id=co.xarx.satya<br>" +
-				"2- Após instalar, abra o app. Vai aparecer a página inicial de SATYA<br>" +
-				"3- Clique do lado esquerdo (nas três barrinhas) e aparecerá um menu. Vá em entrar e digite o login e senha abaixo:<br>" +
-				"4- Após se logar, na mesma barra de menu à esquerda vai estar a opção para acessar a Estação AMATRA-2<br>" +
-				"5- Basta permanecer logado, que o app vai sempre abrir na página da AMATRA-2<br>" +
-				"<br>" +
-				"Esperamos que o aplicativo seja útil. Boa navegação!<br>" +
-				"<br>" +
-				"<b>Diretoria AMATRA</b>-2<br>";
+		String message = "Prezado {{name}},<br>\n" +
+				"\n" +
+				"Vocês estão recebendo um <b>Login</b> e uma <b>Senha</b> de acesso ao RecBom (<a href='http://recbom.trix.rocks'>recbom.trix.rocks</a>). Por destes dados, vocês já podem acessar a plataforma.<br>\n" +
+				"\n" +
+				"O RecBom tem muitas funcionalidades e vocês ainda passarão por treinamento. Entretanto, seu funcionamento é bem intuitivo e vocês podem arriscar os primeiros passos agora mesmo.<br>\n" +
+				"\n" +
+				"Mais esclarecimentos serão feitos no treinamento. Enquanto isso, dúvidas já podem ser enviadas para contato@thiagopereira.net<br>\n" +
+				"\n" +
+				"<b>Login: {{login}}</b><br>\n" +
+				"<b>Senha: {{password}}</b><br>\n" +
+				"\n" +
+				"<b>Para iOS (iPhone)</b><br><br>\n" +
+				"\n" +
+				"<b>1</b>- Clique no link para download: View on App Store<br>\n" +
+				"<b>2</b>- Após instalar, abra o app. Vai aparecer a página inicial do RecBom<br>\n" +
+				"<b>3</b>- Clique do lado esquerdo (nas três barrinhas) e aparecerá um menu. Vá em entrar e digite seu login e senha<br>\n" +
+				"<b>4</b>- Após se logar, na mesma barra de menu à esquerda vai estar a opção para acessar as Estações <br>\n" +
+				"<b>5</b>- Basta permanecer logado, que o app vai sempre abrir na última Estação aberta<br>\n" +
+				"\n" +
+				" \n" +
+				"\n" +
+				"<b>Android (Samsung, Motorola e outros modelos Android)</b><br><br>\n" +
+				"\n" +
+				"<b>1</b>- Clique no link para download: View on Play Store<br>\n" +
+				"<b>2</b>- Após instalar, abra o app. Vai aparecer a página inicial do RecBom<br>\n" +
+				"<b>3</b>- Clique do lado esquerdo (nas três barrinhas) e aparecerá um menu. Vá em entrar e digite seu login e senha<br>\n" +
+				"<b>4</b>- Após se logar, na mesma barra de menu à esquerda vai estar a opção para acessar as Estações <br>\n" +
+				"<b>5</b>- Basta permanecer logado, que o app vai sempre abrir na última Estação aberta<br><br>\n" +
+				"\n" +
+				"Boa navegação!<br>";
 
 		return message
 				.replace("{{name}}", name)
@@ -266,7 +268,7 @@ public class EmailService {
 		}
 
 		for(Map.Entry<String, String> entry : persons.entrySet()){
-			if(checkConflict(entry.getValue(), entry.getKey(), conflicts)) continue;;
+			if(checkConflict(entry.getValue(), entry.getKey(), conflicts)) continue;
 			invitees.add(createPerson(entry.getKey(), entry.getValue(), stationIds));
 		}
 
@@ -285,6 +287,7 @@ public class EmailService {
 			stationRole.person = person;
 			stationRole.station = s;
 			stationRole.tenantId = TenantContextHolder.getCurrentTenantId();
+			stationRole.writer = true;
 			stationRoles.add(stationRole);
 		}
 		return stationRoles;
@@ -334,12 +337,6 @@ public class EmailService {
 	}
 
 	public void batchInvitation(Map<String, String> invitees, String tenantId, String subject, List<Integer> stations){
-//		createPersonBatch(invitees, tenantId, stations);
-//		for(String email: invitees.keySet()){
-//			QPerson qp = QPerson.person;
-//			Person invitee = personRepository.findOne(QPerson.person.email.eq(email).and(qp.tenantId.eq(tenantId)));
-//			Date d = invitee.getCreatedAt();
-//		}
 		List<Person> persons = checkConflicts(invitees, tenantId, stations);
 		for(Person person: persons){
 			sendSimpleMail(person.getEmail(), subject, formatMessage(person.getName(), person.user.username, person.user.password));
