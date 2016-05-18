@@ -165,7 +165,7 @@ angular.module('app')
             },
             preserveScope: true, // do not forget this if use parent scope
             controller: $scope.app.defaultDialog,
-            templateUrl: 'simple_dialog.html',
+            templateUrl: 'simple-dialog.html',
             parent: angular.element(document.body),
             clickOutsideToClose:true
             // onComplete: function(){
@@ -316,6 +316,11 @@ angular.module('app')
 
         $scope.app.getCategoryLink = function(stationSlug, categoryName){
           return '/'+stationSlug+'/cat?name='+categoryName;
+        }
+
+        $scope.app.stopPropagation = function(e){
+          e.stopPropagation();
+          e.preventDefault();
         }
 
         // ---------- /util -------------

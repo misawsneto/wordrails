@@ -1,5 +1,5 @@
-app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$filter', '$localStorage', '$mdDialog',
-						 function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast , $templateCache  ,  $location ,  $filter ,  $localStorage ,  $mdDialog){
+app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$filter', '$localStorage', '$mdDialog', '$mdSidenav',
+						 function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast , $templateCache  ,  $location ,  $filter ,  $localStorage ,  $mdDialog ,  $mdSidenav){
 
 	if ( angular.isDefined($localStorage.seenWelcome) ) {
       $scope.app.person.seenWelcome = $localStorage.seenWelcome;
@@ -92,5 +92,28 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	        // }
 	      })
 	  }
+
+	var setPostFeaturedImage = function(hash){
+    $scope.app.postLoaded.postFeaturedImage = $filter('imageLink')({imageHash: hash}, 'large')
+  }
+
+  	function buildToggler(navID) {
+      return function() {
+        $mdSidenav(navID)
+          .toggle()
+          .then(function () {
+            $log.debug("toggle " + navID + " is done");
+          });
+      }
+    }
+  $scope.togglePost = buildToggler('content-post-summary');
+
+  $scope.showPost = function(event, post){
+	    $scope.app.postLoaded = post;
+	    var hash = $scope.app.postLoaded.featuredImage ? $scope.app.postLoaded.featuredImage.originalHash : null;
+	    setPostFeaturedImage(hash)
+	    $scope.togglePost();
+	    post.terms = post.categories;
+ 	}
 
 }]);

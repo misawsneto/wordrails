@@ -282,6 +282,26 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
           $interval.cancel(intervalPromise);   
   });
 
+  $scope.toMovePublication = null;
+  $scope.showMoveToDialog = function(event, publication){
+    $scope.toMovePublication = publication;
+    $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'move-to-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+  }
+
 	settingsProfileCtrl = $scope;
 }]);
 

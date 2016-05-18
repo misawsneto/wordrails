@@ -8845,3 +8845,7 @@ button,
   vertical-align: middle;
   border: 0;
 }
+
+.app-content {
+  overflow-x: hidden!important;
+}
