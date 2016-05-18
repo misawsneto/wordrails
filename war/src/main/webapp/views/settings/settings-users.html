@@ -164,14 +164,14 @@
 
 <script type="text/ng-template" id="edit-person-dialog.html">
   <md-dialog-content layout="row" layout-wrap>
-    <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center" layout="column">
-      <div class="w-lg">
+    <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center w-lg" layout="column">
+      <div class="w-full">
 
         <div class="text-center p w-full" translate="titles.EDIT_PROFILE"></div>
 
         <div class="text-center p p-t-lg w-full m-t-lg">
           <!-- <i class="mdi mdi2-account text-4x"></i> -->
-          <div class="md-whiteframe-z1 m-t m-l user-avatar rounded w-96 bg-white inline pos-rlt md-primary-default background text-center bg-cover" ng-style="app.getBackgroundImage(editingPerson, 'medium')" bstyle="{'background-image': 'url(  {{editingPerson | userImage: 'medium'}} )'}">
+          <div class="md-whiteframe-z1 user-avatar rounded w-96 bg-white inline pos-rlt md-primary-default background text-center bg-cover" ng-style="app.getBackgroundImage(editingPerson, 'medium')" bstyle="{'background-image': 'url(  {{editingPerson | userImage: 'medium'}} )'}">
             <i ng-if="!editingPerson.imageHash" class="mdi2-account i-60" style="top: 16%;position: relative;"></i>
             <!-- image profile upload -->
             <div class="profile-image-button rounded o-f-h w-96 text-center pos-abt top-0" style="background-color: rgba(0,0,0,0.7)">
@@ -247,8 +247,8 @@
 
 <script type="text/ng-template" id="add-profile-dialog.html">
   <md-dialog-content layout="row" layout-wrap>
-    <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center" layout="column">
-      <div class="w-lg">
+    <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center w-lg" layout="column">
+      <div class="w-full">
 
         <div class="text-center p w-full" translate="titles.ADD_PERSON"></div>
 
