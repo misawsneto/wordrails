@@ -78,12 +78,12 @@ public class PersonEventHandler {
 
 	@HandleAfterSave
 	public void handleAfterSave(Person person) {
-		elasticSearchService.saveIndex(person, ESPerson.class, esPersonRepository);
+		elasticSearchService.mapThenSave(person, ESPerson.class);
 	}
 
 	@HandleAfterCreate
 	public void handleAfterCreate(Person person) {
-		elasticSearchService.saveIndex(person, ESPerson.class, esPersonRepository);
+		elasticSearchService.mapThenSave(person, ESPerson.class);
 	}
 
 }

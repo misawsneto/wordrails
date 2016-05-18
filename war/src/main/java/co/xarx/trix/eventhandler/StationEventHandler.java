@@ -63,8 +63,6 @@ public class StationEventHandler {
 	private ObjectStatementRepository statementRepository;
 	@Autowired
 	private PageableQueryRepository pageableQueryRepository;
-	@Autowired
-	private SectionRepository sectionRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
@@ -172,7 +170,7 @@ public class StationEventHandler {
 
 		station.defaultPerspectiveId = stationPerspective.id;
 		stationRepository.save(station);
-		elasticSearchService.saveIndex(station, ESStation.class, esStationRepository);
+		elasticSearchService.mapThenSave(station, ESStation.class);
 	}
 
 	private void createDefaultPage(Station station) {
@@ -239,6 +237,6 @@ public class StationEventHandler {
 	@HandleAfterSave
 	@Transactional
 	public void handleAfterSave(Station station){
-		elasticSearchService.saveIndex(station, ESStation.class, esStationRepository);
+		elasticSearchService.mapThenSave(station, ESStation.class);
 	}
 }

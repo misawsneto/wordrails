@@ -1,6 +1,5 @@
 package co.xarx.trix.web.rest.resource.v2;
 
-import co.xarx.trix.annotation.TimeIt;
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.v2.PostData;
@@ -23,11 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -55,49 +51,22 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 								Integer page,
 								Integer size,
 								List<String> orders,
-								List<String> embeds,
-								boolean snippet) {
+								List<String> embeds) {
 
 		PostStatement params = new PostStatement(query, authors, stations, state, from, until, categories, tags, orders);
 
-		List<Post> posts = postSearchService.search(params, page, size);
-		List<PostData> data = getPostDatas(posts);
-//		List<PostData> data = postSearchService.searchData(params, page, size);
+//		List<PostData> posts = postSearchService.searchData(params, page, size);
+//		List<PostData> data = getPostDatas(posts);
+		List<PostData> data = postSearchService.searchData(params, page, size);
 
-		Set<String> postEmbeds = Sets.newHashSet("video", "image", "audio", "author", "categories", "body");
+		Set<String> postEmbeds = Sets.newHashSet("video", "image", "audio", "author", "categories", "body", "snippet");
 
-		removeNotEmbeddedData(embeds, data, postEmbeds);
+		super.removeNotEmbeddedData(embeds, data, PostData.class, postEmbeds);
 
 		Pageable pageable = RestUtil.getPageable(page, size, orders);
 		Page p = new PageImpl(data, pageable, data.size());
 
 		return Response.ok().entity(p).build();
-	}
-
-	private List<PostData> getPostDatas(List<Post> posts) {
-		if (posts == null || posts.isEmpty())
-			return new ArrayList<>();
-
-		return posts.stream()
-				.map(post -> mapper.map(post, PostData.class))
-				.collect(Collectors.toList());
-	}
-
-	@TimeIt
-	private void removeNotEmbeddedData(List<String> embeds, List<PostData> data, Set<String> postEmbeds) {
-		for (String embed : postEmbeds) {
-			if(!embeds.contains(embed)) {
-				for (PostData postData : data) {
-					try {
-						Field field = PostData.class.getDeclaredField(embed);
-						field.setAccessible(true);
-						field.set(postData, null);
-					} catch (NoSuchFieldException | IllegalAccessException e) {
-						log.error("error to set data to null on embed", e);
-					}
-				}
-			}
-		}
 	}
 
 	@Override

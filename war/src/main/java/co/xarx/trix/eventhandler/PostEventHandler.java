@@ -16,11 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.acls.model.Permission;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.ws.rs.NotAuthorizedException;
 import java.util.Date;
 
 @RepositoryEventHandler(Post.class)
@@ -47,6 +47,9 @@ public class PostEventHandler {
 	private PermissionEvaluator permissionEvaluator;
 
 	@Autowired
+	private PostRepository postRepository;
+
+	@Autowired
 	private StationRepository stationRepository;
 
 	@HandleBeforeCreate
@@ -55,7 +58,7 @@ public class PostEventHandler {
 
 		boolean hasPermissionToCreate = permissionEvaluator.hasPermission(SecurityContextHolder.getContext()
 				.getAuthentication(), stationId, Station
-				.class.getName(), Permissions.CREATE);
+				.class.getName(), new Permission[]{Permissions.CREATE, Permissions.ADMINISTRATION});
 
 		if(!hasPermissionToCreate) {
 			boolean hasPermissionToRead = permissionEvaluator.hasPermission(SecurityContextHolder.getContext()
@@ -93,7 +96,7 @@ public class PostEventHandler {
 				postService.sendNewPostNotification(post);
 
 		}
-		elasticSearchService.saveIndex(post, ESPost.class);
+		elasticSearchService.mapThenSave(post, ESPost.class);
 	}
 
 	@HandleAfterSave
@@ -102,7 +105,7 @@ public class PostEventHandler {
 			schedulerService.schedule(post.id, post.scheduledDate);
 		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
 		}
-		elasticSearchService.saveIndex(post, ESPost.class);
+		elasticSearchService.mapThenSave(post, ESPost.class);
 	}
 
 	@HandleBeforeDelete

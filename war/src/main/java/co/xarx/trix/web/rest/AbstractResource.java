@@ -1,6 +1,8 @@
 package co.xarx.trix.web.rest;
 
+import co.xarx.trix.annotation.TimeIt;
 import co.xarx.trix.api.v2.ErrorData;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -11,9 +13,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+@Slf4j
 public abstract class AbstractResource {
 
 	@Context
@@ -61,5 +67,23 @@ public abstract class AbstractResource {
 
 	protected Response unprocessableEntity(String message) {
 		return Response.status(422).entity(new ErrorData(message)).build();
+	}
+
+
+	@TimeIt
+	protected void removeNotEmbeddedData(List<String> embeds, List objects, Class clazz, Set<String> postEmbeds) {
+		for (String embed : postEmbeds) {
+			if (!embeds.contains(embed)) {
+				for (Object object : objects) {
+					try {
+						Field field = clazz.getDeclaredField(embed);
+						field.setAccessible(true);
+						field.set(object, null);
+					} catch (NoSuchFieldException | IllegalAccessException e) {
+						log.error("error to set data to null on embed", e);
+					}
+				}
+			}
+		}
 	}
 }

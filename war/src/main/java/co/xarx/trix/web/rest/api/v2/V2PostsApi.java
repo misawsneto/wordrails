@@ -28,8 +28,7 @@ public interface V2PostsApi {
 						 @QueryParam("page") @DefaultValue("0") Integer page,
 						 @QueryParam("size") @DefaultValue("10") Integer size,
 						 @QueryParam("order") List<String> orders,
-						 @QueryParam("embed") List<String> embeds,
-						 @QueryParam("snippet") boolean snippet);
+						 @QueryParam("embed") List<String> embeds);
 
 	@GET
 	@Path("/findPostsByIds")
