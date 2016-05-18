@@ -83,7 +83,8 @@ module.exports = {
                     'angularjs-socialshare/dist/angular-socialshare.min.js',
                     'df-tab-menu/**',
                     'sly/dist/**',
-                    'angular-sly/dist/**'
+                    'angular-sly/dist/**',
+                    'angular-scroll/**'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

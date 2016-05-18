@@ -3,6 +3,13 @@
 angular.module('app')
   .constant('MODULE_CONFIG', [
       {
+          name: 'duScroll',
+          module: true,
+          files: [
+              '/libs/angular/angular-scroll/angular-scroll.min.js'
+          ]
+      },
+      {
           name: 'ui.select',
           module: true,
           files: [

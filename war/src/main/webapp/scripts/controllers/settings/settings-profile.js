@@ -253,8 +253,6 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
     postObj.postFeaturedImage = $filter('imageLink')({imageHash: hash}, 'large')
 
-    console.log(postObj.postFeaturedImage)
-
     postObj.useHeading = postObj.topper ? true:false
     postObj.useSubtitle = postObj.subtitle ? true:false;
     //   postObj.loading = false;
@@ -265,8 +263,6 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
   var intervalPromise;
   intervalPromise = $interval(function(){
-    // console.log($('#scroll-box').position().top);
-    // console.log($('#scroll-box').scrollTop())
     if($('#scroll-box').scrollTop() > 400)
       $scope.showScrollUp = true;
     else
@@ -274,7 +270,8 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
   }, 500);
 
   $scope.scrollToTop = function(){
-    $('#scroll-box').scrollTop(0, 300);
+    console.log($('#scroll-box').scrollTop);
+    $('#scroll-box').animate({scrollTop: 0}, 700, 'easeOutQuint');
   }
 
   $scope.$on('$destroy',function(){
