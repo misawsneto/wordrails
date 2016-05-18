@@ -72,27 +72,19 @@
 														</md-checkbox>
 													</td>
 													<td class="display-t-c v-m">
-														<div ng-if="person.id != app.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-															<!-- <a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-navigation-more-vert mdi" dropdown-toggle>
-															</a> -->
-															<ul class="list-inline no-margin">
-								                <li class="dropdown">
-								                  <a href data-toggle="dropdown" class="dropdown-toggle r-50 i-24 mdi-navigation-more-vert mdi" dropdown-toggle>
-																	</a>
-								                  <ul class="dropdown-menu dropdown-menu-scale pull-right pull-up top text-color">
-								                    <li><a ng-click="changePasswordDialog($event, person)">{{'settings.users.REDIFINE_PASSWORD' | translate}}</a></li>
-								                    <li><a href ng-click="showEditProfile($event, person);">{{'settings.users.EDIT_PROFILE' | translate}}</a></li>
-								                  </ul>
-								                </li>
-								              </ul>
-															<!-- dropdown -->
-															<ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
-																<li > <a href> Reconfigurar a senha </a> </li>
-																<!-- <li class="divider"></li> -->
-																<li> <a ng-click="openDeletePersonRole(role.id);"> Alterar permissões </a> </li>
-															</ul>
-															<!-- / dropdown -->
-														</div>
+                            <div ng-if="person.id != app.person.id" class="dropdown hidden-sm">
+                              <ul class="list-inline no-margin">
+                                <li class="dropdown">
+                                  <a data-toggle="dropdown">
+                                    <i class="mdi-navigation-more-vert i-24"></i>
+                                  </a>
+                                  <ul class="dropdown-menu dropdown-menu-scale pull-right pull-up top text-color">
+                                    <li><a ng-click="changePasswordDialog($event, person)">{{'settings.users.REDIFINE_PASSWORD' | translate}}</a></li>
+                                    <li><a ng-click="showEditProfile($event, person);">{{'settings.users.EDIT_PROFILE' | translate}}</a></li>
+                                  </ul>
+                                </li>
+                              </ul>
+                            </div>
 													</td>
 												</tr>
 											</tbody>
