@@ -9,7 +9,6 @@ import co.xarx.trix.util.RestUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2PersonsApi;
 import com.google.common.collect.Sets;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,14 +21,14 @@ import java.util.List;
 import java.util.Set;
 
 @Component
-@NoArgsConstructor
 public class V2PersonsResource extends AbstractResource implements V2PersonsApi {
 
 	private PersonSearchService personSearchService;
 	private PersonPermissionService personPermissionService;
 
 	@Autowired
-	public V2PersonsResource(PersonPermissionService personPermissionService) {
+	public V2PersonsResource(PersonSearchService personSearchService, PersonPermissionService personPermissionService) {
+		this.personSearchService = personSearchService;
 		this.personPermissionService = personPermissionService;
 	}
 
@@ -46,7 +45,7 @@ public class V2PersonsResource extends AbstractResource implements V2PersonsApi 
 
 		List<PersonData> data = personSearchService.search(params, page, size);
 
-		Set<String> postEmbeds = Sets.newHashSet("twitter", "cover", "profilePicture");
+		Set<String> postEmbeds = Sets.newHashSet("twitter");
 
 		super.removeNotEmbeddedData(embeds, data, PersonData.class, postEmbeds);
 
