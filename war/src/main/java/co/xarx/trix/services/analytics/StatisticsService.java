@@ -8,10 +8,7 @@ import co.xarx.trix.domain.ESAppStats;
 import co.xarx.trix.domain.MobileDevice;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.PublishedApp;
-import co.xarx.trix.persistence.ESAppStatsRepository;
-import co.xarx.trix.persistence.FileRepository;
-import co.xarx.trix.persistence.MobileDeviceRepository;
-import co.xarx.trix.persistence.PublishedAppRepository;
+import co.xarx.trix.persistence.*;
 import co.xarx.trix.scheduler.jobs.AppStatsJob;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
@@ -61,9 +58,10 @@ public class StatisticsService {
 	private FileRepository fileRepository;
 	private DateTimeFormatter dateTimeFormatter;
 	private PublishedAppRepository appRepository;
+	private ESAppStatsRepository appStatsRepository;
+	private PersonRepository personRepository;
 	private MobileDeviceRepository mobileDeviceRepository;
 	private PersonPermissionService personPermissionService;
-	private ESAppStatsRepository appStatsRepository;
 
 	private boolean checkStores;
 
@@ -85,7 +83,8 @@ public class StatisticsService {
 							 PublishedAppRepository appRepository, FileRepository fileRepository,
 							 PersonPermissionService personPermissionService,
 							 ESAppStatsRepository appStatsRepository,
-							 Scheduler scheduler){
+							 Scheduler scheduler,
+							 PersonRepository personRepository){
 		this.mapper = mapper;
 		this.client = client;
 		this.scheduler = scheduler;
@@ -94,6 +93,7 @@ public class StatisticsService {
 		this.fileRepository = fileRepository;
 		this.analyticsIndex = analyticsIndex;
 		this.dateTimeFormatter = getFormatter();
+		this.personRepository = personRepository;
 		this.nginxAccessIndex = nginxAccessIndex;
 		this.appStatsRepository = appStatsRepository;
 		this.mobileDeviceRepository = mobileDeviceRepository;
@@ -287,6 +287,14 @@ public class StatisticsService {
 
 		return getAppStats(android, interval);
 	}
+
+//	public Map getPersonTimeline(Integer personId){
+//		Map bookmarks = new TreeMap<Date, Integer>();
+//		Map recommends = new TreeMap<Date, Integer>();
+//
+//		Person p = personRepository.findOne(personId);
+//
+//	}
 
 	public Map getStationReaders(Integer stationId){
 		List<Person> persons = (List<Person>) personPermissionService.getPersonFromStation(stationId);
