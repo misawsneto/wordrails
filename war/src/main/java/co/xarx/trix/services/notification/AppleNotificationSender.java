@@ -66,6 +66,7 @@ public class AppleNotificationSender implements NotificationSender {
 				.customField("postId", notification.postId)
 				.forNewsstand()
 				.shrinkBody("...")
+				.instantDeliveryOrSilentNotification()
 				.build();
 
 		send(devices, payload, apnsClient);
