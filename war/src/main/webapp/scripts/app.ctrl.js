@@ -466,11 +466,13 @@ angular.module('app')
        * @param  {[type]} true    [description]
        */
       $scope.$watch('app.editingPost', function(newVal, oldVal) {
-        if(oldVal && ('title' in oldVal) && ('body' in oldVal)){
+        if(oldVal && (('title' in oldVal) || ('body' in oldVal))){
           // post has been edited
 
-          if(newVal && (newVal.title !== oldVal.title || 
-                      newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") !== oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,""))){
+          var newBody = newVal.body ? newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+          var oldBody = oldVal.body ? oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+
+          if(newVal && (newVal.title !== oldVal.title || newBody !== oldBody)){
 
             // TODO: save draft
 
