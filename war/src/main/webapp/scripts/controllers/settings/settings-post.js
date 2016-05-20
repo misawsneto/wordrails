@@ -866,8 +866,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		else if(post.author.id || post.author.authorId)
 			post.author = ImageDto.getSelf(post.author);
 
-		if(post.featuredImage)
-			post.featuredImage = PersonDto.getSelf(post.featuredImage);
+		if($scope.featuredImage)
+			post.featuredImage = ImageDto.getSelf($scope.featuredImage);
 
 		if(post.station)
 			post.station = StationDto.getSelf(post.station);
@@ -880,7 +880,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		var post = preparePost(originalPost);
 		trix.postPost(post).success(function(response){
 			$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
-			trix.putPostTerms(response.id, post.terms);
+			// trix.putPostTerms(response.id, post.terms);
+			$scope.app.editingPost = response;
+			$scope.loadPostData();
 		}).error(function(){
 			$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
 		})
