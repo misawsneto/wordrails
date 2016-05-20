@@ -261,6 +261,8 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
     // })
   }
 
+  // --------- scroll to top
+  
   var intervalPromise;
   intervalPromise = $interval(function(){
     if($('#scroll-box').scrollTop() > 400)
@@ -279,6 +281,9 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
           $interval.cancel(intervalPromise);   
   });
 
+  // --------- /scroll to top
+
+  // --------- move to state
   $scope.toMovePublication = null;
   $scope.showMoveToDialog = function(event, publication){
     $scope.toMovePublication = publication;
@@ -298,6 +303,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
         // }
       })
   }
+  // --------- /move to state
 
 	settingsProfileCtrl = $scope;
 }]);

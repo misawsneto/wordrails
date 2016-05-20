@@ -16,7 +16,6 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
@@ -103,7 +102,7 @@ public class Person extends BaseEntity implements Serializable {
 	@RestResource(exported = false)
 	public String password;
 
-	@Column(columnDefinition = "boolean default false", nullable = false)
+	@Column(columnDefinition = "boolean default false")
 	public Boolean seenWelcome = false;
 
 	@Transient
@@ -172,6 +171,13 @@ public class Person extends BaseEntity implements Serializable {
 		if(cover != null)
 			coverOriginalHash = cover.getOriginalHash();
 		this.enabled = user.enabled;
+	}
+
+	@PrePersist
+	public void prePersist(){
+		if(seenWelcome == null){
+			seenWelcome = false;
+		}
 	}
 
 }

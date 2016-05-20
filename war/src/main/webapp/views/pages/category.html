@@ -4,7 +4,7 @@
       <div class="text-shadow-lg m-t-md font-normal h4">{{::category.description}}</div>
     </div>
 </div>
-<div class="container">
+<div class="container" infinite-scroll="paginate()" infinite-scroll-container='"#content .box-cell"' infinite-scroll-distance="1">
   <div ng-if="postViews" masonry="{percentPosition: true, columnWidth:1}" class="m-b pos-rlt" reload-on-show>
     
     <div class="col-xs-12 masonry-brick" ng-class="{'col-lg-12': app.fullCardCheck($index, postView), 'col-lg-8 col-sm-6':!app.fullCardCheck($index, postView) && app.largeCardCheck($index, postView), 'col-lg-4 col-sm-6':!app.fullCardCheck($index, postView) && !app.largeCardCheck($index, postView)}" ng-repeat="postView in postViews">
@@ -109,4 +109,8 @@
         </div>
     </div>
   </div>
+</div>
+
+<div aria-label="menu" class="pos-fix bottom-0 right-0 m-b-xl animated" style="margin-right: 60px" ng-click="scrollToTop();" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}">
+  <i class="mdi2-chevron-double-up i-32"></i>
 </div>

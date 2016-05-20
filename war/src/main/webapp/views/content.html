@@ -41,7 +41,7 @@
     <div class="pull-right" ui-view="navbar@"></div>
     <!-- / -->
     <!-- Search form -->
-    <div id="search" class="navbar-header h-full md-primary-default background pull-right w-400" ng-if="!$state.includes('app.search')">
+    <div id="search" class="navbar-header h-full md-primary-default background pull-right w-400 animated" ng-class="{'fadeIn':!$state.includes('app.search'), 'fadeOut':$state.includes('app.search')}">
       <div class="box">
         <div class="box-col v-m p-h">
           <!-- bind to app.search.content -->

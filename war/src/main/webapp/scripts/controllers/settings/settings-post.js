@@ -205,12 +205,12 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.app.checkState = function(state){
-		if(!$scope.app.editingPost)
-			return null;
+		// if(!$scope.app.editingPost)
+		// 	return null;
 
-		state = state ? state : $scope.app.editingPost.state;
+		state = state ? state : $scope.app.editingPost ? $scope.app.editingPost.state : null;
 		if(!state)
-			return null;
+			return 2;
 		if(state == "PUBLISHED"){
 			return 1;
 		}else if(state == "DRAFT"){
@@ -225,12 +225,12 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.app.getStateText = function(state){
-		if(!$scope.app.editingPost)
-			return null;
+		// if(!$scope.app.editingPost)
+		// 	return null;
 
-		state = state ? state : $scope.app.editingPost.state;
+		state = state ? state : $scope.app.editingPost ? $scope.app.editingPost.state : null;
 		if(!state)
-			return " - ";
+			return $filter('translate')('settings.post.states.DRAFT');
 		if(state == "PUBLISHED"){
 			return $filter('translate')('settings.post.states.PUBLISHED');
 		}else if(state == "DRAFT"){
