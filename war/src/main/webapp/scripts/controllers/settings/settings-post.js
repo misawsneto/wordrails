@@ -183,7 +183,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.app.editingPost.title = '';
 		$scope.app.editingPost.body = '';
 		$scope.tags = [];
-		$scope.featureImage = $scope.featuredAudio = $scope.featuredVideo = $scope.postFeaturedImage = $scope.postFeaturedAudio = $scope.postFeaturedVideo = null;
+		$scope.featuredImage = $scope.featuredAudio = $scope.featuredVideo = $scope.postFeaturedImage = $scope.postFeaturedAudio = $scope.postFeaturedVideo = null;
 		$mdDialog.cancel();
 	}
 
@@ -343,7 +343,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.removeFeaturedImage = function(){
-		$scope.featureImage = null;
+		$scope.featuredImage = null;
 		$scope.postFeaturedImage = null;
 	}
 
@@ -881,6 +881,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		if($scope.featuredImage)
 			post.featuredImage = ImageDto.getSelf($scope.featuredImage);
+		else
+			post.featuredImage = null;
 
 		if(post.station)
 			post.station = StationDto.getSelf(post.station);
