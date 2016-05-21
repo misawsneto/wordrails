@@ -890,16 +890,28 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.saveAsDraft = function(event, confirm){
-		if(confirm){
+		if(confirm || !$scope.app.editingPost.id){
 			var post = angular.copy($scope.app.editingPost)
 			post.state = 'DRAFT';
-			$scope.putPost(post);
+			if(post.id)
+				$scope.putPost(post);
+			else
+				$scope.postPost(post);
 		}else{
-			saveToDraftFromPostDialog(event);
+			saveAsDraftConfirmDialog(event);
 		}
 	}
 
-	var saveToDraftFromPostDialog = function(event){
+	$scope.publishPost = function(){
+		var post = angular.copy($scope.app.editingPost)
+		post.state = 'PUBLISHED';
+		if(post.id){
+			$scope.putPost(post);
+		}else
+			$scope.postPost(post);
+	}
+
+	var saveAsDraftConfirmDialog = function(event){
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
           closeTo: {
@@ -907,7 +919,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
           },
           	preserveScope: true, // do not forget this if use parent scope
 			controller: $scope.app.defaultDialog,
-			templateUrl: 'save-to-draft-from-post-dialog.html',
+			templateUrl: 'save-to-draft-confirm-dialog.html',
 			parent: angular.element(document.body),
 			targetEvent: event,
 			clickOutsideToClose:true

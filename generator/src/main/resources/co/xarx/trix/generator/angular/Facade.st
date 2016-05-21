@@ -48,6 +48,15 @@ var trix = angular.module('trix', [])
 				response.data && response.data.content){
 					response.data = response.data.content;
 					return response
+			}else if(response.config.method === "PUT"){
+                var _value = response.headers("Location");
+                if (_value) {
+                    var _index = _value.lastIndexOf("/");
+                    var _suffix = _value.substring(_index + 1);
+                    var id = _suffix;
+                    response.data = id
+                }
+                return response;
 			}else
 				return response;
 		},
