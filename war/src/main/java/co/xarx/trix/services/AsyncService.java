@@ -23,7 +23,7 @@ public class AsyncService {
 	public PersonRepository personRepository;
 
 	@Autowired
-	public ElasticsearchTemplate elasticsearchTemplate;
+	ElasticsearchTemplate elasticsearchTemplate;
 
 	@Async
 	public void run(Runnable runnable) {
