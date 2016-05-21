@@ -39,8 +39,7 @@
 	      	{{'settings.post.menu.AUTO_SAVE_MSG' | translate}}
 	      </div>
 	      <md-divider class="m-b-sm"></md-divider>
-	    	<md-button ng-if="!app.checkState() || app.checkState() > 1" class="pull-right font-bold no-margin"
-	    	ng-click="publishPost()">
+	    	<md-button ng-if="!app.checkState() || app.checkState() > 1" class="pull-right font-bold no-margin" ng-click="publishPost()">
 	    	{{'titles.PUBLISH' | translate}}
 			</md-button>
 			<md-button ng-if="app.editingPost.id && (!app.checkState() || app.checkState() > 0)" class="pull-right font-bold no-margin" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
@@ -455,7 +454,7 @@
 								    	<i class="mdi i-20 text-dark mdi2-format-quote"></i>
 								    </md-button>
 
-								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="useSubtitle = !useSubtitle">
+								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="useSubheading = !useSubheading">
 								    	<md-tooltip md-direction="right">
 								      	{{'settings.post.ACTIVATE_DEACTIVATE_SUBTITLE' | translate}}
 								  		</md-tooltip>
@@ -466,10 +465,10 @@
 								</md-fab-speed-dial>
 
 				      	<textarea rows="1" msd-elastic ng-model="app.editingPost.title" placeholder="{{'titles.TITLE' | translate }}" class="font-500 h1 w-full ph-dk p-sm r" style="resize: none; background: transparent; border: none;"
-				      	ng-class="{'m-b-sm': (useHeading || useSubtitle), 'm-b': !(useHeading || useSubtitle)}">
+				      	ng-class="{'m-b-sm': (useHeading || useSubheading), 'm-b': !(useHeading || useSubheading)}">
 				      	</textarea>
 
-				      	<textarea rows="1" ng-if="useSubtitle" msd-elastic ng-model="app.editingPost.subtitle" placeholder="{{'titles.SUBTITLE' | translate }}" class="font-thin h4 w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
+				      	<textarea rows="1" ng-if="useSubheading" msd-elastic ng-model="app.editingPost.subheading" placeholder="{{'titles.SUBTITLE' | translate }}" class="font-thin h4 w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
 				      	</textarea>
 
 				      	<md-chips ng-model="tags" placeholder="{{'titles.ENTER_TAG' | translate}}" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tag">
@@ -547,7 +546,7 @@
                       </md-checkbox>
                     </div>
                     <div>
-                      <md-checkbox ng-model="useSubtitle">
+                      <md-checkbox ng-model="useSubheading">
                         {{'titles.SUBTITLE' | translate}}
                       </md-checkbox>
                     </div>

@@ -257,7 +257,8 @@
 				"CLEAR_CONTENT_MSG": "Clear all publication content.",
 				"CONTENT_LOST_ALERT": "Attention! All non-saved content will be list.",
 				"NEW_POST_MSG": "Start an entire new publication?",
-				"CHANGE_STATE_FROM_PUBLISHED_MSG": "This publication won't be visible unless it's state is set to PUBLISHED. Tem certeza que deseja mudar o estado desta publicação?"
+				"CHANGE_STATE_FROM_PUBLISHED_MSG": "This publication won't be visible unless it's state is set to PUBLISHED. Tem certeza que deseja mudar o estado desta publicação?",
+				"NEW_PUBLICATION_INFO": "You have started a new publication"
 			},
 			"states": {
 				"PUBLISHED": "Published",

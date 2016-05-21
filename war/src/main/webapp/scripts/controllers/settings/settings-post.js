@@ -844,7 +844,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.customizedLink.slug = $scope.app.editingPost.slug;
 
 		$scope.useHeading = $scope.app.editingPost.topper ? true:false
-		$scope.useSubtitle = $scope.app.editingPost.subtitle ? true:false
+		$scope.useSubheading = $scope.app.editingPost.subheading ? true:false
 		$scope.tags = angular.copy($scope.app.editingPost.tags);
 	}
 

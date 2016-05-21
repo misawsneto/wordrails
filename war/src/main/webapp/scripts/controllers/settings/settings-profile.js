@@ -254,7 +254,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
     postObj.postFeaturedImage = $filter('imageLink')({imageHash: hash}, 'large')
 
     postObj.useHeading = postObj.topper ? true:false
-    postObj.useSubtitle = postObj.subtitle ? true:false;
+    postObj.useSubheading = postObj.subheading ? true:false;
     //   postObj.loading = false;
     // }).error(function(){
     //   postObj.loading = false;
