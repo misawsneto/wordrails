@@ -97,7 +97,7 @@
 		"AT": "at",
 		"SHOW_ALL": "Show all",
 		"SKIP": "Skip",
-		"SKIP": "Close"
+		"CLOSE": "Close"
 	},
 	"signin_signup": {
 		"OR": "or",
