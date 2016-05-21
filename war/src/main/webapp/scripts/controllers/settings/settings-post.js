@@ -20,6 +20,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	  boxHeight: 400
 	};
 
+	$scope.stations = angular.copy($scope.app.stations);
+
 	// Must be [x, y, x2, y2, w, h]
    $scope.app.cropSelection = [100, 100, 200, 200];
 
@@ -193,6 +195,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			$scope.app.editingPost = null;
 			$scope.app.postObjectChanged = false;
 			$state.transitionTo('app.post', {'id': null}, {reload: false, inherit: false, notify: false});
+			$state.transitionTo('app.post', {'id': null}, {reload: false, inherit: false, notify: false});
+			$scope.app.showInfoToast($filter('translate')('settings.post.messages.NEW_PUBLICATION_INFO'))
 		}, 300)
 	}
 
@@ -821,7 +825,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.getStationFromPost = function(){
 		if($scope.app.editingPost.station){
-			$scope.app.stations.forEach(function(station){
+			$scope.stations.forEach(function(station){
 				station.id =station.id ? station.id : station.stationId;
 				if(station.id == $scope.app.editingPost.station.id){
 					$scope.selectedStation = station;
@@ -1015,7 +1019,7 @@ function createVersions(){
 			  '<div class="m-b-sm"><code>/{{app.editingPost.slug}}</code></div>'+
 			  '<div class="h3 font-bold m-b-md">{{app.editingPost.title}}</div>'+
 			  '<div class="text-md m-b-sm">'+
-			    '<strong>Status:</strong>'+
+			    '<strong>Estado da publicação:</strong>'+
 			    '<span class="text-u-c m-l-sm">'+
 			    	'{{app.getStateText()}}'+
 		    	'</span>'+

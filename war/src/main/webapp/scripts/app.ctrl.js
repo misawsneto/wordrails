@@ -217,7 +217,7 @@ angular.module('app')
 
         $scope.app.showInfoToast = function(content) {
           $mdToast.show({
-            template: '<md-toast class="md-toast-info"><div class="md-toast-content"><i class="mdi2-info-circle i-28 p-r"></i>'+content+'</div></md-toast>',
+            template: '<md-toast class="md-toast-info"><div class="md-toast-content"><i class="mdi2-information-outline i-28 p-r"></i>'+content+'</div></md-toast>',
             hideDelay: 3000,
             position: $scope.getToastPosition()
           });

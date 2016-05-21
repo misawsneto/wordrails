@@ -512,7 +512,7 @@
                   	<div class="p-l p-r text-lg">
 	                  	<md-input-container class="w-full">
 												<md-select ng-model="selectedStation" placeholder="{{'titles.STATION' | translate}}">
-													<md-option ng-value="station" ng-repeat="station in app.stations">{{ station.name }}</md-option>
+													<md-option ng-value="station" ng-repeat="station in stations">{{ station.name }}</md-option>
 												</md-select>
 											</md-input-container>
 										</div>
@@ -555,8 +555,9 @@
                         {{'settings.post.NOTIFY_USERS' | translate}}
                       </md-checkbox>
                     </div>
-                    <div>
-                    	<md-button class="font-bold" translate="titles.GEO_NOTIFICATION" ng-click="showGeoNotificationDialog($event)">
+                    <div class="text-center">
+						<md-button class="md-raised md-primary p-h md-whiteframe-z2 text-md" ng-click="showGeoNotificationDialog($event)">
+						<i class="mdi mdi2-google-maps i-20 m-r-sm"></i>{{'titles.GEO_NOTIFICATION' | translate}}
 						</md-button>
                     </div>
                   </md-content>
