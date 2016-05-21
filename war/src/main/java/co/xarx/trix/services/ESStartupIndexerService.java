@@ -104,8 +104,8 @@ public class ESStartupIndexerService {
 
 		List<List<ElasticSearchEntity>> chunks = splitList(entities);
 		for (List<ElasticSearchEntity> eList : chunks) {
-			asyncService.asyncBulkSaveIndex(createIndexQueries(eList));
-//			bulkSaveIndex(createIndexQueries(eList));
+//			asyncService.asyncBulkSaveIndex(createIndexQueries(eList));
+			bulkSaveIndex(createIndexQueries(eList));
 		}
 	}
 

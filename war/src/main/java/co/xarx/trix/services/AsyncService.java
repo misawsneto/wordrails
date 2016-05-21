@@ -4,15 +4,12 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.persistence.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
@@ -22,8 +19,8 @@ public class AsyncService {
 	@Autowired
 	public PersonRepository personRepository;
 
-	@Autowired
-	ElasticsearchTemplate elasticsearchTemplate;
+//	@Autowired
+//	ElasticsearchTemplate elasticsearchTemplate;
 
 	@Async
 	public void run(Runnable runnable) {
@@ -53,8 +50,8 @@ public class AsyncService {
 		}
 	}
 
-	@Async
-	public void asyncBulkSaveIndex(List<IndexQuery> queries) {
-		elasticsearchTemplate.bulkIndex(queries);
-	}
+//	@Async
+//	public void asyncBulkSaveIndex(List<IndexQuery> queries) {
+//		elasticsearchTemplate.bulkIndex(queries);
+//	}
 }
