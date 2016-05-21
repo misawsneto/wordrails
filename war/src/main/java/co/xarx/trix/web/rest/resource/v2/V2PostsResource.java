@@ -7,6 +7,7 @@ import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.util.RestUtil;
 import co.xarx.trix.web.rest.AbstractResource;
@@ -14,7 +15,6 @@ import co.xarx.trix.web.rest.api.v2.V2PostsApi;
 import com.google.common.collect.Sets;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,11 +33,11 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	@Autowired
 	private PostSearchService postSearchService;
 	@Autowired
-	private ModelMapper mapper;
-	@Autowired
 	private PostRepository postRepository;
 	@Autowired
 	private PostConverter postConverter;
+	@Autowired
+	private AuditService auditService;
 
 	@Override
 	public Response searchPosts(String query,
@@ -74,6 +74,13 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 		List<Post> posts = postRepository.findAll(ids);
 		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);
+		return response;
+	}
+
+	@Override
+	public ContentResponse<List<PostData>> getPostVersions(Integer postId) throws NoSuchFieldException, IllegalAccessException {
+		ContentResponse response = new ContentResponse();
+		response.content = auditService.getPostVersions(postId);
 		return response;
 	}
 }
