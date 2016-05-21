@@ -100,15 +100,15 @@ public class StatisticsService {
 		this.personPermissionService = personPermissionService;
 	}
 
-	public HashMap getPorpularNetworks(){
-		return findMostPopular("network", null, null, 10);
+	public Map getPorpularNetworks(){
+		return findMostPopular("tenantId", null, null, 10);
 	}
 
 	public List<String> getNginxFields(){
-		ClusterState cs = client.admin().cluster().prepareState().setIndices(analyticsIndex).execute().actionGet().getState();
+		ClusterState cs = client.admin().cluster().prepareState().setIndices(nginxAccessIndex).execute().actionGet().getState();
 
-		IndexMetaData indexMetaData = cs.getMetaData().index(analyticsIndex);
-		MappingMetaData mappingMetaData = indexMetaData.mapping(nginxAccessIndex);
+		IndexMetaData indexMetaData = cs.getMetaData().index(nginxAccessIndex);
+		MappingMetaData mappingMetaData = indexMetaData.mapping(ACCESS_TYPE);
 		Map<String, Object> map = null;
 
 		try {
@@ -152,7 +152,7 @@ public class StatisticsService {
 		String term = "by_" + field;
 
 		SearchRequestBuilder search = client.prepareSearch();
-		search.setTypes(nginxAccessIndex)
+		search.setTypes(ACCESS_TYPE)
 				.addAggregation(AggregationBuilders
 						.terms(term)
 						.field(field)
