@@ -83,7 +83,7 @@ public class PostEventHandler {
 		}
 
 		if(postRepository.findBySlug(post.slug) != null){
-			post.slug = post.slug + StringUtil.generateRandomString(6, "aA#");
+			post.slug = post.slug + "-" + StringUtil.generateRandomString(6, "aA#");
 		}
 	}
 

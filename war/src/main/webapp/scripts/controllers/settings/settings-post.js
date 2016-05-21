@@ -182,7 +182,18 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.app.clearPostContent = function(){
 		$scope.app.editingPost.title = '';
 		$scope.app.editingPost.body = '';
+		$scope.tags = [];
+		$scope.featureImage = $scope.featuredAudio = $scope.featuredVideo = $scope.postFeaturedImage = $scope.postFeaturedAudio = $scope.postFeaturedVideo = null;
 		$mdDialog.cancel();
+	}
+
+	$scope.app.clearAndResetPost = function(){
+		$scope.app.clearPostContent();
+		$timeout(function(){
+			$scope.app.editingPost = null;
+			$scope.app.postObjectChanged = false;
+			$state.transitionTo('app.post', {'id': null}, {reload: false, inherit: false, notify: false});
+		}, 300)
 	}
 
 	// /clear post
@@ -855,12 +866,14 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	var preparePost = function(originalPost){
 		var post = angular.copy(originalPost)
-		post.id = post.id ? post.id : post.postId
+		post.id = post.id ? post.id : post.postId;
 		post.terms = $scope.app.getTermList($scope.termTree);
-		post.terms = $scope.app.getTermUris(post.terms)
+		post.terms = $scope.app.getTermUris(post.terms);
 		post.station = $scope.selectedStation;
-		post.tags = $scope.tags
-		post.state = 'PUBLISHED'
+		post.tags = $scope.tags;
+		if(!post.state)
+			post.state = 'PUBLISHED';
+		post.imageLandscape = $scope.landscape;
 		if(!post.author)
 			post.author = PersonDto.getSelf($scope.app.person);
 		else if(post.author.id || post.author.authorId)
@@ -876,15 +889,62 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		// return {"author":"http://demo.xarx.rocks/api/persons/51","body":"...","bookmarksCount":0,"commentsCount":0,"date":1462880877015,"imageLandscape":false,"lat":-8.04325205,"lng":-34.94544256,"notify":false,"readTime":0,"readsCount":0,"recommendsCount":0,"state":"PUBLISHED","station":"http://demo.xarx.rocks/api/stations/11","subheading":"","title":"Abcd55","topper":""}
 	}
 
+	$scope.saveAsDraft = function(event, confirm){
+		if(confirm){
+			var post = angular.copy($scope.app.editingPost)
+			post.state = 'DRAFT';
+			$scope.putPost(post);
+		}else{
+			saveToDraftFromPostDialog(event);
+		}
+	}
+
+	var saveToDraftFromPostDialog = function(event){
+		$mdDialog.show({
+			scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
+          	preserveScope: true, // do not forget this if use parent scope
+			controller: $scope.app.defaultDialog,
+			templateUrl: 'save-to-draft-from-post-dialog.html',
+			parent: angular.element(document.body),
+			targetEvent: event,
+			clickOutsideToClose:true
+			// onComplete: function(){
+
+			// }
+		})
+	}
+
+	$scope.putPost = function(originalPost){
+		var post = preparePost(originalPost);
+		trix.putPost(post).success(function(response){
+			$scope.app.showSuccessToast($filter('translate')('settings.post.UPDATE_SUCCESS'));
+			$scope.app.editingPost.id = response;
+			$scope.app.editingPost.state = post.state;
+			// $scope.loadPostData();
+			$scope.app.postObjectChanged = false;
+			// $state.transitionTo('app.post', {'id': $scope.app.editingPost.id}, {reload: false, inherit: false, notify: false});
+			$mdDialog.cancel();
+		}).error(function(){
+			$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
+			$mdDialog.cancel();
+		})
+	}
+
 	$scope.postPost = function(originalPost){
 		var post = preparePost(originalPost);
 		trix.postPost(post).success(function(response){
 			$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
-			// trix.putPostTerms(response.id, post.terms);
 			$scope.app.editingPost = response;
 			$scope.loadPostData();
+			$scope.app.postObjectChanged = false;
+			$state.transitionTo('app.post', {'id': $scope.app.editingPost.id}, {reload: false, inherit: false, notify: false});
+			$mdDialog.cancel();
 		}).error(function(){
 			$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
+			$mdDialog.cancel();
 		})
 	}
 

@@ -256,7 +256,8 @@
 				"PAGE_CHANGE_ALERT": "Você possui conteúdo que ainda não foi salvo.",
 				"CLEAR_CONTENT_MSG": "Limpar todo o conteúdo desta publicação?",
 				"CONTENT_LOST_ALERT": "Atenção! Todo o conteúdo que não foi salvo será perdido.",
-				"NEW_POST_MSG": "Iniciar uma nova publicação por inteiro?"
+				"NEW_POST_MSG": "Iniciar uma nova publicação por inteiro?",
+				"CHANGE_STATE_FROM_PUBLISHED_MSG": "Esta publicação não será visível se seu estado não estiver configurado para PUBLICAÇÃO. Tem certeza que deseja mudar o estado desta publicação?"
 			},
 			"states": {
 				"PUBLISHED": "Publicado",
@@ -284,6 +285,7 @@
 			"PUBLISH_ALL": "Publicar todos",
 			"DRAFT_ALL": "Mover para rascunhos",
 			"TRASH_ALL": "Mover para a lixeira",
+			"UPDATE_SUCCESS": "Atualizado",
 			"PUBLISH_SUCCESS": "Publicado",
 			"PUBLISH_ERROR": "Erro ao publicar"
 		},

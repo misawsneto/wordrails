@@ -256,7 +256,8 @@
 				"PAGE_CHANGE_ALERT": "You have edited your publication and there's unsaved content.",
 				"CLEAR_CONTENT_MSG": "Clear all publication content.",
 				"CONTENT_LOST_ALERT": "Attention! All non-saved content will be list.",
-				"NEW_POST_MSG": "Start an entire new publication?"
+				"NEW_POST_MSG": "Start an entire new publication?",
+				"CHANGE_STATE_FROM_PUBLISHED_MSG": "This publication won't be visible unless it's state is set to PUBLISHED. Tem certeza que deseja mudar o estado desta publicação?"
 			},
 			"states": {
 				"PUBLISHED": "Published",
@@ -284,6 +285,7 @@
 			"PUBLISH_ALL": "Publish all",
 			"DRAFT_ALL": "Move to drafts",
 			"TRASH_ALL": "Move to trash",
+			"UPDATE_SUCCESS": "Atualizado",
 			"PUBLISH_SUCCESS": "Published",
 			"PUBLISH_ERROR": "Publication error"
 		},
