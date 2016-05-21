@@ -37,6 +37,10 @@ public class ESStartupIndexerService {
 	PersonRepository personRepository;
 	@Autowired
 	ElasticsearchTemplate elasticsearchTemplate;
+
+	@Autowired
+	AsyncService asyncService;
+
 	@Autowired
 	Client client;
 	@Value("${spring.data.elasticsearch.index}")
@@ -55,15 +59,17 @@ public class ESStartupIndexerService {
 			List<Identifiable> people = new ArrayList(personRepository.findAll());
 			List<Identifiable> posts = Lists.newArrayList(postRepository.findPostWithJoins());
 
-			mapThenSave(stations, ESStation.class);
-			mapThenSave(posts, ESPost.class);
-			mapThenSave(people, ESPerson.class);
+			mapThenBulkSave(stations, ESStation.class);
+			mapThenBulkSave(posts, ESPost.class);
+			mapThenBulkSave(people, ESPerson.class);
 		} else {
 			log.info("Elasticsearch indexing is disabled");
 		}
 	}
 
-	public <ES extends ElasticSearchEntity> void mapThenSave(List<Identifiable> itens, Class<ES> mapTo) {
+	private static final int SPLIT_FACTOR = 5;
+
+	private <ES extends ElasticSearchEntity> List<ElasticSearchEntity> mapAndCount(List<Identifiable> itens, Class<ES> mapTo) {
 		int errorCount = 0;
 		List<ElasticSearchEntity> entities = new ArrayList<>();
 		for (Object item : itens) {
@@ -80,10 +86,51 @@ public class ESStartupIndexerService {
 			if (entities.size() > 0)
 				log.info("indexing " + entities.size() + " elements of type " + itens.get(0).getClass().getSimpleName());
 		}
+		return entities;
+	}
+
+	public <ES extends ElasticSearchEntity> void mapThenSave(List<Identifiable> itens, Class<ES> mapTo) {
+		List<ElasticSearchEntity> entities = mapAndCount(itens, mapTo);
 
 		if (!isThereIndex(index)) createIndex();
 
 		entities.forEach(this::saveIndex);
+	}
+
+	public <ES extends ElasticSearchEntity> void mapThenBulkSave(List<Identifiable> itens, Class<ES> mapTo) {
+		List<ElasticSearchEntity> entities = mapAndCount(itens, mapTo);
+
+		if (!isThereIndex(index)) createIndex();
+
+		List<List<ElasticSearchEntity>> chunks = splitList(entities);
+		for (List<ElasticSearchEntity> eList : chunks) {
+			asyncService.asyncBulkSaveIndex(createIndexQueries(eList));
+//			bulkSaveIndex(createIndexQueries(eList));
+		}
+	}
+
+	public List<List<ElasticSearchEntity>> splitList(List<ElasticSearchEntity> entities) {
+		return Lists.partition(entities, (entities.size() + SPLIT_FACTOR - 1)/ SPLIT_FACTOR);
+	}
+
+	public void bulkSaveIndex(List<IndexQuery> queries) {
+		elasticsearchTemplate.bulkIndex(queries);
+	}
+
+	public List<IndexQuery> createIndexQueries(List<ElasticSearchEntity> entities) {
+		List<IndexQuery> iq = new ArrayList<>();
+		for (ElasticSearchEntity et : entities) {
+			iq.add(createIndexQuery(et));
+		}
+		return iq;
+	}
+
+	public IndexQuery createIndexQuery(ElasticSearchEntity entity) {
+		IndexQuery indexQuery = new IndexQuery();
+		indexQuery.setId(String.valueOf((entity).getId()));
+		indexQuery.setObject(entity);
+
+		return indexQuery;
 	}
 
 	public <ES extends ElasticSearchEntity> void mapThenSave(Identifiable item, Class<ES> mapTo) {
@@ -95,10 +142,7 @@ public class ESStartupIndexerService {
 //		elasticsearchTemplate.putMapping(objectClass);
 //		elasticsearchTemplate.refresh(objectClass, true);
 
-		IndexQuery indexQuery = new IndexQuery();
-		indexQuery.setId(String.valueOf((entity).getId()));
-		indexQuery.setObject(entity);
-
+		IndexQuery indexQuery = createIndexQuery(entity);
 		elasticsearchTemplate.index(indexQuery);
 	}
 
