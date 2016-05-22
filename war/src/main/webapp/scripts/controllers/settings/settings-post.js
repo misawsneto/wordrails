@@ -29,7 +29,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		toolbarInline: false,
 	      heightMin: 200,
 	      language: (lang == 'en' ? 'en_gb' : lang == 'pt' ? 'pt_br' : null),
-	  	fontSizeDefaultSelection: '18',
 		// Set the image upload parameter.
         imageUploadParam: 'contents',
 
@@ -61,6 +60,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
         fileAllowedTypes: ['*'],
         toolbarSticky: false
     }
+
 
     $scope.showFeaturedMediaSelector = function(){
     	return !$scope.postFeaturedImage && !$scope.useVideo && !$scope.useUploadedVideo && !$scope.useUploadedAudio;
