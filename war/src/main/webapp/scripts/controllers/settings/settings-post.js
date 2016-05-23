@@ -20,6 +20,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	  boxHeight: 400
 	};
 
+	$scope.stations = angular.copy($scope.app.stations);
+
 	// Must be [x, y, x2, y2, w, h]
    $scope.app.cropSelection = [100, 100, 200, 200];
 
@@ -27,7 +29,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		toolbarInline: false,
 	      heightMin: 200,
 	      language: (lang == 'en' ? 'en_gb' : lang == 'pt' ? 'pt_br' : null),
-	  	fontSizeDefaultSelection: '18',
 		// Set the image upload parameter.
         imageUploadParam: 'contents',
 
@@ -59,6 +60,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
         fileAllowedTypes: ['*'],
         toolbarSticky: false
     }
+
 
     $scope.showFeaturedMediaSelector = function(){
     	return !$scope.postFeaturedImage && !$scope.useVideo && !$scope.useUploadedVideo && !$scope.useUploadedAudio;
@@ -180,10 +182,12 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.app.clearPostContent = function(){
-		$scope.app.editingPost.title = '';
-		$scope.app.editingPost.body = '';
+		if($scope.app.editingPost){
+			$scope.app.editingPost.title = '';
+			$scope.app.editingPost.body = '';
+		}
 		$scope.tags = [];
-		$scope.featureImage = $scope.featuredAudio = $scope.featuredVideo = $scope.postFeaturedImage = $scope.postFeaturedAudio = $scope.postFeaturedVideo = null;
+		$scope.featuredImage = $scope.featuredAudio = $scope.featuredVideo = $scope.postFeaturedImage = $scope.postFeaturedAudio = $scope.postFeaturedVideo = null;
 		$mdDialog.cancel();
 	}
 
@@ -193,6 +197,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			$scope.app.editingPost = null;
 			$scope.app.postObjectChanged = false;
 			$state.transitionTo('app.post', {'id': null}, {reload: false, inherit: false, notify: false});
+			$scope.app.showInfoToast($filter('translate')('settings.post.messages.NEW_PUBLICATION_INFO'))
 		}, 300)
 	}
 
@@ -343,7 +348,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.removeFeaturedImage = function(){
-		$scope.featureImage = null;
+		$scope.featuredImage = null;
 		$scope.postFeaturedImage = null;
 	}
 
@@ -821,7 +826,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.getStationFromPost = function(){
 		if($scope.app.editingPost.station){
-			$scope.app.stations.forEach(function(station){
+			$scope.stations.forEach(function(station){
 				station.id =station.id ? station.id : station.stationId;
 				if(station.id == $scope.app.editingPost.station.id){
 					$scope.selectedStation = station;
@@ -844,7 +849,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.customizedLink.slug = $scope.app.editingPost.slug;
 
 		$scope.useHeading = $scope.app.editingPost.topper ? true:false
-		$scope.useSubtitle = $scope.app.editingPost.subtitle ? true:false
+		$scope.useSubheading = $scope.app.editingPost.subheading ? true:false
 		$scope.tags = angular.copy($scope.app.editingPost.tags);
 	}
 
@@ -881,6 +886,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		if($scope.featuredImage)
 			post.featuredImage = ImageDto.getSelf($scope.featuredImage);
+		else
+			post.featuredImage = null;
 
 		if(post.station)
 			post.station = StationDto.getSelf(post.station);
@@ -1013,7 +1020,7 @@ function createVersions(){
 			  '<div class="m-b-sm"><code>/{{app.editingPost.slug}}</code></div>'+
 			  '<div class="h3 font-bold m-b-md">{{app.editingPost.title}}</div>'+
 			  '<div class="text-md m-b-sm">'+
-			    '<strong>Status:</strong>'+
+			    '<strong>Estado da publicação:</strong>'+
 			    '<span class="text-u-c m-l-sm">'+
 			    	'{{app.getStateText()}}'+
 		    	'</span>'+
@@ -1141,7 +1148,7 @@ function createVersions(){
 			'<md-button ng-click="app.cancelDialog();" class="m-0">'+
 				'{{\'titles.CANCEL\' | translate}}'+
 			'</md-button>'+
-			'<md-button ng-click="app.clearPostContent();" class="m-0">'+
+			'<md-button ng-click="" class="m-0">'+
 				'{{\'titles.SAVE\' | translate}}'+
 			'</md-button>'+
 		'</div>'+

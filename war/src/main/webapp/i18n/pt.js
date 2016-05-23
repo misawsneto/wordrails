@@ -257,7 +257,8 @@
 				"CLEAR_CONTENT_MSG": "Limpar todo o conteúdo desta publicação?",
 				"CONTENT_LOST_ALERT": "Atenção! Todo o conteúdo que não foi salvo será perdido.",
 				"NEW_POST_MSG": "Iniciar uma nova publicação por inteiro?",
-				"CHANGE_STATE_FROM_PUBLISHED_MSG": "Esta publicação não será visível se seu estado não estiver configurado para PUBLICADO. Tem certeza que deseja mudar o estado desta publicação?"
+				"CHANGE_STATE_FROM_PUBLISHED_MSG": "Esta publicação não será visível se seu estado não estiver configurado para PUBLICADO. Tem certeza que deseja mudar o estado desta publicação?",
+				"NEW_PUBLICATION_INFO": "Você iniciou uma nova publicação"
 			},
 			"states": {
 				"PUBLISHED": "Publicado",
@@ -329,7 +330,8 @@
 			"PASSWORD": "Senha",
 			"CONFIRM_PASSWORD": "Confirmar senha",
 			"BIOGRAPHY": "Biografia",
-			"PASSWORDS_DONT_MATCH": "A senha é inválida ou senha e confirmação não são correspondentes."
+			"PASSWORDS_DONT_MATCH": "A senha é inválida ou senha e confirmação não são correspondentes.",
+			"MOVE_TO_STATE_MSG": "Tem certeza que deseja mover esta publicação e modificar seu estado? Mover para:"
 		},
 		"bookmark": {
 			"REMOVE_CONFIRMATION_MSG": "Tem certeza que deseja remover este item"

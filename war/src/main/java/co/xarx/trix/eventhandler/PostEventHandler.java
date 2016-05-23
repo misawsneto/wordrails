@@ -10,6 +10,7 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ESStartupIndexerService;
+import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.SchedulerService;
 import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.util.StringUtil;
@@ -41,7 +42,7 @@ public class PostEventHandler {
 	@Autowired
 	private NotificationRepository notificationRepository;
 	@Autowired
-	private ESStartupIndexerService elasticSearchService;
+	private ElasticSearchService elasticSearchService;
 	@Autowired
 	private ESPostRepository esPostRepository;
 	@Autowired

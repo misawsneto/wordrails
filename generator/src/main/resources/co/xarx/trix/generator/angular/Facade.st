@@ -328,16 +328,16 @@ var trix = angular.module('trix', [])
 	}
 
 	this.searchPosts = function(query,authors,stations,state,from,until,categories,tags,page,size,order,
-	embed, snippet){
-		var config = {
+    	embed, snippet){
+        var config = {
             "params": {
                 "q": query,
-                "authors": authors,
-                "stations": stations,
+                "authorId": authors,
+                "stationId": stations,
                 "state": state,
                 "from": from,
                 "until": until,
-                "categories": categories,
+                "categoryId": categories,
                 "tags": tags,
                 "page": page,
                 "size": size,

@@ -1,5 +1,5 @@
 /*!
- * froala_editor v2.2.4 (https://www.froala.com/wysiwyg-editor)
+ * froala_editor v2.3.0 (https://www.froala.com/wysiwyg-editor)
  * License https://froala.com/wysiwyg-editor/terms/
  * Copyright 2014-2016 Froala Labs
  */
@@ -87,6 +87,7 @@
   line-height: 0;
 }
 .fr-view span.fr-emoticon.fr-emoticon-img {
+  background-repeat: no-repeat !important;
   font-size: inherit;
   height: 1em;
   width: 1em;
