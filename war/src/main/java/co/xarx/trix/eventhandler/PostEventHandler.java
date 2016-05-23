@@ -8,6 +8,7 @@ import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
+import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ESStartupIndexerService;
 import co.xarx.trix.services.SchedulerService;
 import co.xarx.trix.services.post.PostService;
@@ -51,6 +52,8 @@ public class PostEventHandler {
 
 	@Autowired
 	private StationRepository stationRepository;
+	@Autowired
+	private AuditService auditService;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
@@ -106,6 +109,7 @@ public class PostEventHandler {
 		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
 		}
 		elasticSearchService.mapThenSave(post, ESPost.class);
+		auditService.saveChange(post);
 	}
 
 	@HandleBeforeDelete

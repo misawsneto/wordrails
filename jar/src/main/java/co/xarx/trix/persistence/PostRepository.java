@@ -4,6 +4,8 @@ import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.persistence.custom.PostRepositoryCustom;
+import org.javers.spring.annotation.JaversAuditable;
+import org.javers.spring.data.JaversSpringDataAuditable;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ import org.springframework.security.access.prepost.PostFilter;
 import java.util.List;
 
 @RepositoryRestResource(exported = true)
+@JaversSpringDataAuditable
 public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post, Integer>,
 		QueryDslPredicateExecutor<Post> {
 

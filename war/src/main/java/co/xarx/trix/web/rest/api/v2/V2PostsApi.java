@@ -2,6 +2,7 @@ package co.xarx.trix.web.rest.api.v2;
 
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.api.PostView;
+import co.xarx.trix.api.v2.PostData;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -33,4 +34,8 @@ public interface V2PostsApi {
 	@GET
 	@Path("/findPostsByIds")
 	ContentResponse<List<PostView>> findPostsByIds (@QueryParam("ids") List<Integer> ids);
+
+	@GET
+	@Path("/getPostVersions")
+	ContentResponse<List<PostData>> getPostVersions(@QueryParam("postId") Integer postId) throws NoSuchFieldException, IllegalAccessException;
 }

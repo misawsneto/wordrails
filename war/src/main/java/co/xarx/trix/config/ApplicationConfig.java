@@ -27,7 +27,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 				"classpath:application-${spring.profiles.active:dev}.properties"
 		}
 )
-@ComponentScan(basePackages = {"co.xarx.trix"})
+@ComponentScan(basePackages = {"co.xarx.trix", "org.javers.spring.jpa"})
 @EnableHypermediaSupport(type = {EnableHypermediaSupport.HypermediaType.HAL})
 public class ApplicationConfig {
 
