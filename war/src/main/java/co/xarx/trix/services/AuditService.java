@@ -46,13 +46,12 @@ public class AuditService {
 
 	public Map getPostVersions(Integer postId) throws NoSuchFieldException, IllegalAccessException {
 		Post domainPost = postRepository.findOne(postId);
-		PostData post = mapper.map(domainPost, PostData.class);
 		List<CdoSnapshot> snapshots = javers.findSnapshots(QueryBuilder.byInstanceId(postId, PostData.class).build());
 		Map versions = new LinkedHashMap<Long, PostData>();
 
 		for (CdoSnapshot snapshot : snapshots) {
+			PostData post = mapper.map(domainPost, PostData.class);
 			Class<?> c = post.getClass();
-			PostData p = post;
 			for (String attrName : snapshot.getChanged()) {
 				if(avoidIt(attrName)) continue;
 
@@ -60,9 +59,10 @@ public class AuditService {
 
 				Field f = c.getDeclaredField(attrName);
 				f.setAccessible(true);
-				f.set(p, f.getType().cast(value));
+				f.set(post, f.getType().cast(value));
 			}
-			versions.put(snapshot.getCommitMetadata().getCommitDate().toDate().getTime(), p);
+			Long date = snapshot.getCommitMetadata().getCommitDate().toDate().getTime();
+			versions.put(date, post);
 		}
 		return versions;
 	}
