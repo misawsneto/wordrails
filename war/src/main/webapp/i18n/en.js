@@ -257,7 +257,7 @@
 				"CLEAR_CONTENT_MSG": "Clear all publication content.",
 				"CONTENT_LOST_ALERT": "Attention! All non-saved content will be list.",
 				"NEW_POST_MSG": "Start an entire new publication?",
-				"CHANGE_STATE_FROM_PUBLISHED_MSG": "This publication won't be visible unless it's state is set to PUBLISHED. Tem certeza que deseja mudar o estado desta publicação?",
+				"CHANGE_STATE_FROM_PUBLISHED_MSG": "This publication won't be visible unless it's state is set to PUBLISHED. Are you sure you want to change the state of this publication?",
 				"NEW_PUBLICATION_INFO": "You have started a new publication"
 			},
 			"states": {
@@ -330,7 +330,8 @@
 			"PASSWORD": "Password",
 			"CONFIRM_PASSWORD": "Confirm password",
 			"BIOGRAPHY": "Biography",
-			"PASSWORDS_DONT_MATCH": "The password is invalido or passowrd and confirmation don't match"
+			"PASSWORDS_DONT_MATCH": "The password is invalido or passowrd and confirmation don't match",
+			"MOVE_TO_STATE_MSG": "Are you sure you want to move this publication and change it's state? Move to:"
 		},
 		"bookmark": {
 			"REMOVE_CONFIRMATION_MSG": "Are you sure you want to remove this bookmark"

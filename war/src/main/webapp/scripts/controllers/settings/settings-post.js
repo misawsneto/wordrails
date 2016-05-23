@@ -1148,7 +1148,7 @@ function createVersions(){
 			'<md-button ng-click="app.cancelDialog();" class="m-0">'+
 				'{{\'titles.CANCEL\' | translate}}'+
 			'</md-button>'+
-			'<md-button ng-click="app.clearPostContent();" class="m-0">'+
+			'<md-button ng-click="" class="m-0">'+
 				'{{\'titles.SAVE\' | translate}}'+
 			'</md-button>'+
 		'</div>'+

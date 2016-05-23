@@ -162,7 +162,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
       $scope.loading = true;
 
       var page = getPage();
-      trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response){
+      trix.searchPosts($scope.searchQuery, [$scope.app.person.id], null, tabToState().toLowerCase(), null, null, null, null, page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response){
         handleSuccess(response);
         $scope.loading = false;
       }).error(function(){
@@ -283,6 +283,24 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
   // --------- /scroll to top
 
   // --------- move to state
+  // 
+    var intToState = function(state){
+      // if(!$scope.app.editingPost)
+      //  return null;
+      if(state == 1){
+        return "PUBLISHED";
+      }else if(state == 2){
+        return "DRAFT";
+      }else if(state == 3){
+        return "SCHEDULED";
+      }else if(state == 4){
+        return "TRASH";
+      }else{
+        return 5;
+      }
+    }
+
+
   $scope.toMovePublication = null;
   $scope.showMoveToDialog = function(event, publication){
     $scope.toMovePublication = publication;
@@ -302,7 +320,33 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
         // }
       })
   }
+
+  $scope.movePublicationToState = function(state){
+    trix.getPost($scope.toMovePublication.id).success(function(response){
+      response.state = intToState(state);
+      trix.putPost(response).success(function(){
+        if($scope.publications)
+        for (var i = $scope.publications.length - 1; i >= 0; i--) {
+          if($scope.publications[i].id == $scope.toMovePublication.id)
+            $scope.publications.splice(i,1);
+        }
+        $mdDialog.cancel();
+      })
+    })
+  }
   // --------- /move to state
+  
+  function buildToggler(navID) {
+      return function() {
+        $mdSidenav(navID)
+          .toggle()
+          .then(function () {
+            $log.debug("toggle " + navID + " is done");
+          });
+      }
+    }
+
+  $scope.app.toggleComments = buildToggler('content-post-comments');
 
 	settingsProfileCtrl = $scope;
 }]);
