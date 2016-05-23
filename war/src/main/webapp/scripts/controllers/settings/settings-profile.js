@@ -330,6 +330,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
           if($scope.publications[i].id == $scope.toMovePublication.id)
             $scope.publications.splice(i,1);
         }
+        $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
         $mdDialog.cancel();
       })
     })
