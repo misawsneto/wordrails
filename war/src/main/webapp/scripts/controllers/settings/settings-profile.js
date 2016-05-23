@@ -283,7 +283,8 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
   // --------- /scroll to top
 
   // --------- move to state
-  // 
+  
+    $scope.toState = null;
     var intToState = function(state){
       // if(!$scope.app.editingPost)
       //  return null;
@@ -303,6 +304,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
   $scope.toMovePublication = null;
   $scope.showMoveToDialog = function(event, publication){
+    $scope.toState = null;
     $scope.toMovePublication = publication;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
