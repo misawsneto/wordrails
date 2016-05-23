@@ -6,6 +6,7 @@ import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.services.AbstractSearchService;
 import co.xarx.trix.services.security.PermissionFilterService;
 import co.xarx.trix.services.security.StationPermissionService;
 import co.xarx.trix.util.Constants;
@@ -26,7 +27,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class ESPostSearchService implements PostSearchService {
+public class ESPostSearchService extends AbstractSearchService implements PostSearchService {
 
 	private ModelMapper mapper;
 	private ESPostService esPostService;
@@ -99,16 +100,6 @@ public class ESPostSearchService implements PostSearchService {
 			return emptyResult;
 
 		return result;
-	}
-
-	private List<Integer> getPaginatedIds(List<Integer> ids, Integer page, Integer size) {
-		int from = size * page;
-		if(ids.size() < size)
-			size = ids.size();
-		if(from < ids.size())
-			return ids.subList(from, from + size <= ids.size() ? from + size : ids.size());
-		else
-			return new ArrayList<>();
 	}
 
 	@TimeIt

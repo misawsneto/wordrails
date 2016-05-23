@@ -157,5 +157,5 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 
 	@RestResource(exported = false)
 	@Query("SELECT post from Post post join fetch post.terms terms")
-	List<Post> findPostWithJoins();
+	List<Post> findPostWithTerms();
 }
