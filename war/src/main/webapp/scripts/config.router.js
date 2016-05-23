@@ -153,10 +153,10 @@ angular.module('app')
                 resolve: {
                   deps: ['$ocLazyLoad', '$templateCache',
                     function( $ocLazyLoad, $templateCache ){
-                      return $ocLazyLoad.load(['angularFileUpload', '/scripts/controllers/settings/settings-users.js'])
+                      return $ocLazyLoad.load(['angularFileUpload', '/scripts/controllers/settings/settings-comments.js'])
                   }]
                 },
-                controller: 'SettingsUsersCtrl'
+                controller: 'SettingsCommentsCtrl'
               })
               .state('app.media-library', {
                 url: '/media',

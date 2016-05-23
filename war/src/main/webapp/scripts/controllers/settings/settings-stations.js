@@ -89,7 +89,7 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
               angular.extend(st, station)
             }
           })
-          $scope.app.showSuccessToast($filter('translate')('settings.station.STATION_CREATION_SUCCESS'))
+          $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
           $mdDialog.cancel();
         });
       }else{

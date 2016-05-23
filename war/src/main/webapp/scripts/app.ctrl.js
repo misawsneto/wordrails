@@ -832,7 +832,6 @@ angular.module('app')
 
       $scope.actionButtonColors = $scope.app.getMaterialColor('myBackground', '700');
       
-      appDataCtrl = $scope;
       $scope.app.date = new Date();
 
       // --------------------------
@@ -1091,6 +1090,12 @@ angular.module('app')
           })
         }
       }
+
+      $scope.app.isSettings = function(){
+        return document.location.pathname.slice(0, '/settings'.length) == '/settings';
+      }
+
+      appDataCtrl = $scope;
 
       // --------- /generic bookmark
   }]);
