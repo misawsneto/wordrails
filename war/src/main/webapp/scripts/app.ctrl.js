@@ -217,7 +217,7 @@ angular.module('app')
 
         $scope.app.showInfoToast = function(content) {
           $mdToast.show({
-            template: '<md-toast class="md-toast-info"><div class="md-toast-content"><i class="mdi2-info-circle i-28 p-r"></i>'+content+'</div></md-toast>',
+            template: '<md-toast class="md-toast-info"><div class="md-toast-content"><i class="mdi2-information-outline i-28 p-r"></i>'+content+'</div></md-toast>',
             hideDelay: 3000,
             position: $scope.getToastPosition()
           });
@@ -466,11 +466,13 @@ angular.module('app')
        * @param  {[type]} true    [description]
        */
       $scope.$watch('app.editingPost', function(newVal, oldVal) {
-        if(oldVal && ('title' in oldVal) && ('body' in oldVal)){
+        if(oldVal && (('title' in oldVal) || ('body' in oldVal))){
           // post has been edited
 
-          if(newVal && (newVal.title !== oldVal.title || 
-                      newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") !== oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,""))){
+          var newBody = newVal.body ? newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+          var oldBody = oldVal.body ? oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+
+          if(newVal && (newVal.title !== oldVal.title || newBody !== oldBody)){
 
             // TODO: save draft
 
@@ -830,7 +832,6 @@ angular.module('app')
 
       $scope.actionButtonColors = $scope.app.getMaterialColor('myBackground', '700');
       
-      appDataCtrl = $scope;
       $scope.app.date = new Date();
 
       // --------------------------
@@ -1089,6 +1090,12 @@ angular.module('app')
           })
         }
       }
+
+      $scope.app.isSettings = function(){
+        return document.location.pathname.slice(0, '/settings'.length) == '/settings';
+      }
+
+      appDataCtrl = $scope;
 
       // --------- /generic bookmark
   }]);

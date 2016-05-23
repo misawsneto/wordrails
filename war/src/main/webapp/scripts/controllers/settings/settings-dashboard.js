@@ -108,9 +108,9 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
     }
   $scope.togglePost = buildToggler('content-post-summary');
 
-  $scope.showPost = function(event, post){
+  $scope.showPost = function(post){
 	    $scope.app.postLoaded = post;
-	    var hash = $scope.app.postLoaded.featuredImage ? $scope.app.postLoaded.featuredImage.originalHash : null;
+	    var hash = $scope.app.postLoaded.imageHash;
 	    setPostFeaturedImage(hash)
 	    $scope.togglePost();
 	    post.terms = post.categories;

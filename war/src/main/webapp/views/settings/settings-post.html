@@ -28,24 +28,24 @@
 	      <div class="p-xs m-b-sm m-t-sm l-h-1x text-base">
 	      	{{'settings.post.menu.PUBLICATION_MSG' | translate}}
 	      </div>
-	      <md-button ng-if="app.checkState() !== 2" class="font-bold no-margin m-b-sm" translate="titles.SAVE_AS_DRAFT">
-				</md-button>
-				<md-divider ng-if="app.checkState() !== 2" class="m-b-sm"></md-divider>
-				<div class="block p-l-xs" ng-if="app.editingPost">
-					<span translate="titles.POST_STATE" class="inline"></span>: <span class="font-500 text-u-c">{{app.getStateText();}}</span>
-				</div>
-				<md-divider class="m-t-sm"></md-divider>
+	  		<md-button ng-if="!app.editingPost.id || app.checkState() !== 2" class="font-bold no-margin m-b-sm" translate="titles.SAVE_AS_DRAFT" ng-click="saveAsDraft($event)">
+			</md-button>
+			<md-divider class="m-b-sm"></md-divider>
+			<div class="block p-l-xs">
+				<span translate="titles.POST_STATE" class="inline"></span>: <span class="font-500 text-u-c">{{app.getStateText();}}</span>
+			</div>
+			<md-divider class="m-t-sm"></md-divider>
 	      <div class="p-xs m-b m-t-sm l-h-1x text-sm">
 	      	{{'settings.post.menu.AUTO_SAVE_MSG' | translate}}
 	      </div>
 	      <md-divider class="m-b-sm"></md-divider>
-        <md-button ng-if="!app.checkState() || app.checkState() > 1" class="pull-right font-bold no-margin">
-        	{{'titles.PUBLISH' | translate}}
-				</md-button>
-				<md-button ng-if="!app.checkState() || app.checkState() > 1" class="pull-right font-bold no-margin" translate="actions.SAVE_CHANGES">
-				</md-button>
-				<md-button ng-if="app.checkState() === 1" class="pull-right font-bold no-margin" translate="actions.UPDATE">
-				</md-button>
+	    	<md-button ng-if="!app.checkState() || app.checkState() > 1" class="pull-right font-bold no-margin" ng-click="publishPost()">
+	    	{{'titles.PUBLISH' | translate}}
+			</md-button>
+			<md-button ng-if="app.editingPost.id && (!app.checkState() || app.checkState() > 0)" class="pull-right font-bold no-margin" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
+			</md-button>
+			<!--<md-button ng-if="app.checkState() === 1" class="pull-right font-bold no-margin" translate="actions.UPDATE">
+			</md-button>-->
       </div>
 	  </div>
 	</div>
@@ -224,8 +224,6 @@
 		      	{{'titles.NOTIFY' | translate}}
 		      </md-checkbox>
 	      </div>
-        <md-button class="pull-right font-bold no-margin" translate="titles.GEO_NOTIFICATION" ng-click="showGeoNotificationDialog($event)">
-				</md-button>
       </div>
 	  </div>
   </div>
@@ -456,7 +454,7 @@
 								    	<i class="mdi i-20 text-dark mdi2-format-quote"></i>
 								    </md-button>
 
-								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="useSubtitle = !useSubtitle">
+								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="useSubheading = !useSubheading">
 								    	<md-tooltip md-direction="right">
 								      	{{'settings.post.ACTIVATE_DEACTIVATE_SUBTITLE' | translate}}
 								  		</md-tooltip>
@@ -467,10 +465,10 @@
 								</md-fab-speed-dial>
 
 				      	<textarea rows="1" msd-elastic ng-model="app.editingPost.title" placeholder="{{'titles.TITLE' | translate }}" class="font-500 h1 w-full ph-dk p-sm r" style="resize: none; background: transparent; border: none;"
-				      	ng-class="{'m-b-sm': (useHeading || useSubtitle), 'm-b': !(useHeading || useSubtitle)}">
+				      	ng-class="{'m-b-sm': (useHeading || useSubheading), 'm-b': !(useHeading || useSubheading)}">
 				      	</textarea>
 
-				      	<textarea rows="1" ng-if="useSubtitle" msd-elastic ng-model="app.editingPost.subtitle" placeholder="{{'titles.SUBTITLE' | translate }}" class="font-thin h4 w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
+				      	<textarea rows="1" ng-if="useSubheading" msd-elastic ng-model="app.editingPost.subheading" placeholder="{{'titles.SUBTITLE' | translate }}" class="font-thin h4 w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
 				      	</textarea>
 
 				      	<md-chips ng-model="tags" placeholder="{{'titles.ENTER_TAG' | translate}}" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tag">
@@ -514,7 +512,7 @@
                   	<div class="p-l p-r text-lg">
 	                  	<md-input-container class="w-full">
 												<md-select ng-model="selectedStation" placeholder="{{'titles.STATION' | translate}}">
-													<md-option ng-value="station" ng-repeat="station in app.stations">{{ station.name }}</md-option>
+													<md-option ng-value="station" ng-repeat="station in stations">{{ station.name }}</md-option>
 												</md-select>
 											</md-input-container>
 										</div>
@@ -548,7 +546,7 @@
                       </md-checkbox>
                     </div>
                     <div>
-                      <md-checkbox ng-model="useSubtitle">
+                      <md-checkbox ng-model="useSubheading">
                         {{'titles.SUBTITLE' | translate}}
                       </md-checkbox>
                     </div>
@@ -556,6 +554,11 @@
                       <md-checkbox ng-model="app.editingPost.notify">
                         {{'settings.post.NOTIFY_USERS' | translate}}
                       </md-checkbox>
+                    </div>
+                    <div class="text-center">
+						<md-button class="md-raised md-primary p-h md-whiteframe-z2" ng-click="showGeoNotificationDialog($event)">
+						<i class="mdi mdi2-google-maps i-20 m-r-sm v-m"></i>{{'titles.GEO_NOTIFICATION' | translate}}
+						</md-button>
                     </div>
                   </md-content>
                 </md-tab>
@@ -583,15 +586,35 @@
         </div>
         <div class="pointer text-center p text-u-c font-bold pos-rlt" ng-click="showMoreOptions($event)">
         	<md-divider class="pos-abt top-0 left-0 right-0"></md-divider>
-          <md-button class="md-raised md-primary p-h md-whiteframe-z2" ng-click="postPost(app.editingPost)">
+          <md-button ng-if="!app.checkState() || app.checkState() > 1" class="md-raised md-primary p-h md-whiteframe-z2" ng-click="postPost(app.editingPost)">
           	<i class="icon mdi2-send i-14 m-r-sm"></i>{{'titles.PUBLISH' | translate}}
           </md-button>
-          <md-button class="" ng-click="toggleOptions();">{{'titles.CANCEL' | translate}}</md-button>
+			<md-button ng-if="app.editingPost.id && app.checkState() === 1" class="md-raised md-primary p-h md-whiteframe-z2" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
+			</md-button>
+          <md-button class="" ng-click="toggleOptions();">{{'titles.CLOSE' | translate}}</md-button>
         </div>
       </div>
 
     </md-content>
 </md-sidenav>
+
+<script type="text/ng-template" id="save-to-draft-confirm-dialog.html">
+	<md-dialog-content >
+		<div class="p-sm">
+			<div class="text-md p block-400 text-center">
+				{{'settings.post.messages.CHANGE_STATE_FROM_PUBLISHED_MSG' | translate}}
+			</div>
+			<div class="text-center p-t">
+				<md-button ng-click="app.cancelDialog();" class="m-0">
+					{{'titles.CANCEL' | translate}}
+				</md-button>
+				<md-button ng-click="saveAsDraft(false, true);" class="m-0">
+					{{'titles.CONFIRM' | translate}}
+				</md-button>
+			</div>
+		</div>
+	</md-dialog-content>
+</script>
 
 <script type="text/ng-template" id="clear-post-dialog.html">
 	<md-dialog-content layout="row" layout-wrap>
@@ -608,12 +631,6 @@
 				</span>
 				{{'settings.post.messages.CONTENT_LOST_ALERT' | translate}}
 			</div>
-			<!-- <md-dialog-actions layout="row">
-			            	<span flex></span>
-				<md-button ng-click="app.clearPostContent();" class="m-0">
-					{{'settings.post.CLEAR_CONTENT' | translate}}
-				</md-button>
-			</md-dialog-actions> -->
 			<div class="text-center p-t">
 				<md-button ng-click="app.cancelDialog();" class="m-0">
 					{{'titles.CANCEL' | translate}}
@@ -621,7 +638,7 @@
 				<md-button ng-click="app.clearPostContent();" class="m-0">
 					{{'settings.post.CLEAR_CONTENT' | translate}}
 				</md-button>
-				<md-button class="m-0">
+				<md-button ng-click="app.clearAndResetPost();" class="m-0">
 					{{'settings.post.NEW_POST' | translate}}
 				</md-button>
 			</div>
@@ -643,7 +660,7 @@
 						<md-button ng-click="app.cancelDialog();" class="m-0">
 							{{'titles.CANCEL' | translate}}
 						</md-button>
-						<md-button ng-click="app.clearPostContent();" class="m-0">
+						<md-button ng-click="" class="m-0">
 							{{'titles.SAVE' | translate}}
 						</md-button>
 					</div>

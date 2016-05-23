@@ -159,7 +159,7 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 			$scope.postLoaded.landscape = $scope.postLoaded.imageLandscape;
 
 			$scope.postLoaded.useHeading = $scope.postLoaded.topper ? true:false
-			$scope.postLoaded.useSubtitle = $scope.postLoaded.subtitle ? true:false
+			$scope.postLoaded.useSubheading = $scope.postLoaded.subheading ? true:false
   	})
   }
 

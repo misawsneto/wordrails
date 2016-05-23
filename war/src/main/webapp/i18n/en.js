@@ -97,7 +97,7 @@
 		"AT": "at",
 		"SHOW_ALL": "Show all",
 		"SKIP": "Skip",
-		"SKIP": "Close"
+		"CLOSE": "Close"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -256,7 +256,9 @@
 				"PAGE_CHANGE_ALERT": "You have edited your publication and there's unsaved content.",
 				"CLEAR_CONTENT_MSG": "Clear all publication content.",
 				"CONTENT_LOST_ALERT": "Attention! All non-saved content will be list.",
-				"NEW_POST_MSG": "Start an entire new publication?"
+				"NEW_POST_MSG": "Start an entire new publication?",
+				"CHANGE_STATE_FROM_PUBLISHED_MSG": "This publication won't be visible unless it's state is set to PUBLISHED. Are you sure you want to change the state of this publication?",
+				"NEW_PUBLICATION_INFO": "You have started a new publication"
 			},
 			"states": {
 				"PUBLISHED": "Published",
@@ -284,6 +286,7 @@
 			"PUBLISH_ALL": "Publish all",
 			"DRAFT_ALL": "Move to drafts",
 			"TRASH_ALL": "Move to trash",
+			"UPDATE_SUCCESS": "Atualizado",
 			"PUBLISH_SUCCESS": "Published",
 			"PUBLISH_ERROR": "Publication error"
 		},
@@ -327,7 +330,8 @@
 			"PASSWORD": "Password",
 			"CONFIRM_PASSWORD": "Confirm password",
 			"BIOGRAPHY": "Biography",
-			"PASSWORDS_DONT_MATCH": "The password is invalido or passowrd and confirmation don't match"
+			"PASSWORDS_DONT_MATCH": "The password is invalido or passowrd and confirmation don't match",
+			"MOVE_TO_STATE_MSG": "Are you sure you want to move this publication and change it's state? Move to:"
 		},
 		"bookmark": {
 			"REMOVE_CONFIRMATION_MSG": "Are you sure you want to remove this bookmark"

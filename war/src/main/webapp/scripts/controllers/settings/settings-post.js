@@ -20,6 +20,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	  boxHeight: 400
 	};
 
+	$scope.stations = angular.copy($scope.app.stations);
+
 	// Must be [x, y, x2, y2, w, h]
    $scope.app.cropSelection = [100, 100, 200, 200];
 
@@ -27,7 +29,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		toolbarInline: false,
 	      heightMin: 200,
 	      language: (lang == 'en' ? 'en_gb' : lang == 'pt' ? 'pt_br' : null),
-	  	fontSizeDefaultSelection: '18',
 		// Set the image upload parameter.
         imageUploadParam: 'contents',
 
@@ -59,6 +60,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
         fileAllowedTypes: ['*'],
         toolbarSticky: false
     }
+
 
     $scope.showFeaturedMediaSelector = function(){
     	return !$scope.postFeaturedImage && !$scope.useVideo && !$scope.useUploadedVideo && !$scope.useUploadedAudio;
@@ -180,9 +182,23 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.app.clearPostContent = function(){
-		$scope.app.editingPost.title = '';
-		$scope.app.editingPost.body = '';
+		if($scope.app.editingPost){
+			$scope.app.editingPost.title = '';
+			$scope.app.editingPost.body = '';
+		}
+		$scope.tags = [];
+		$scope.featuredImage = $scope.featuredAudio = $scope.featuredVideo = $scope.postFeaturedImage = $scope.postFeaturedAudio = $scope.postFeaturedVideo = null;
 		$mdDialog.cancel();
+	}
+
+	$scope.app.clearAndResetPost = function(){
+		$scope.app.clearPostContent();
+		$timeout(function(){
+			$scope.app.editingPost = null;
+			$scope.app.postObjectChanged = false;
+			$state.transitionTo('app.post', {'id': null}, {reload: false, inherit: false, notify: false});
+			$scope.app.showInfoToast($filter('translate')('settings.post.messages.NEW_PUBLICATION_INFO'))
+		}, 300)
 	}
 
 	// /clear post
@@ -205,12 +221,12 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.app.checkState = function(state){
-		if(!$scope.app.editingPost)
-			return null;
+		// if(!$scope.app.editingPost)
+		// 	return null;
 
-		state = state ? state : $scope.app.editingPost.state;
+		state = state ? state : $scope.app.editingPost ? $scope.app.editingPost.state : null;
 		if(!state)
-			return null;
+			return 2;
 		if(state == "PUBLISHED"){
 			return 1;
 		}else if(state == "DRAFT"){
@@ -225,12 +241,12 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.app.getStateText = function(state){
-		if(!$scope.app.editingPost)
-			return null;
+		// if(!$scope.app.editingPost)
+		// 	return null;
 
-		state = state ? state : $scope.app.editingPost.state;
+		state = state ? state : $scope.app.editingPost ? $scope.app.editingPost.state : null;
 		if(!state)
-			return " - ";
+			return $filter('translate')('settings.post.states.DRAFT');
 		if(state == "PUBLISHED"){
 			return $filter('translate')('settings.post.states.PUBLISHED');
 		}else if(state == "DRAFT"){
@@ -332,7 +348,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.removeFeaturedImage = function(){
-		$scope.featureImage = null;
+		$scope.featuredImage = null;
 		$scope.postFeaturedImage = null;
 	}
 
@@ -810,7 +826,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.getStationFromPost = function(){
 		if($scope.app.editingPost.station){
-			$scope.app.stations.forEach(function(station){
+			$scope.stations.forEach(function(station){
 				station.id =station.id ? station.id : station.stationId;
 				if(station.id == $scope.app.editingPost.station.id){
 					$scope.selectedStation = station;
@@ -833,7 +849,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.customizedLink.slug = $scope.app.editingPost.slug;
 
 		$scope.useHeading = $scope.app.editingPost.topper ? true:false
-		$scope.useSubtitle = $scope.app.editingPost.subtitle ? true:false
+		$scope.useSubheading = $scope.app.editingPost.subheading ? true:false
 		$scope.tags = angular.copy($scope.app.editingPost.tags);
 	}
 
@@ -855,19 +871,23 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	var preparePost = function(originalPost){
 		var post = angular.copy(originalPost)
-		post.id = post.id ? post.id : post.postId
+		post.id = post.id ? post.id : post.postId;
 		post.terms = $scope.app.getTermList($scope.termTree);
-		post.terms = $scope.app.getTermUris(post.terms)
+		post.terms = $scope.app.getTermUris(post.terms);
 		post.station = $scope.selectedStation;
-		post.tags = $scope.tags
-		post.state = 'PUBLISHED'
+		post.tags = $scope.tags;
+		if(!post.state)
+			post.state = 'PUBLISHED';
+		post.imageLandscape = $scope.landscape;
 		if(!post.author)
 			post.author = PersonDto.getSelf($scope.app.person);
 		else if(post.author.id || post.author.authorId)
 			post.author = ImageDto.getSelf(post.author);
 
-		if(post.featuredImage)
-			post.featuredImage = PersonDto.getSelf(post.featuredImage);
+		if($scope.featuredImage)
+			post.featuredImage = ImageDto.getSelf($scope.featuredImage);
+		else
+			post.featuredImage = null;
 
 		if(post.station)
 			post.station = StationDto.getSelf(post.station);
@@ -876,13 +896,74 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		// return {"author":"http://demo.xarx.rocks/api/persons/51","body":"...","bookmarksCount":0,"commentsCount":0,"date":1462880877015,"imageLandscape":false,"lat":-8.04325205,"lng":-34.94544256,"notify":false,"readTime":0,"readsCount":0,"recommendsCount":0,"state":"PUBLISHED","station":"http://demo.xarx.rocks/api/stations/11","subheading":"","title":"Abcd55","topper":""}
 	}
 
+	$scope.saveAsDraft = function(event, confirm){
+		if(confirm || !$scope.app.editingPost.id){
+			var post = angular.copy($scope.app.editingPost)
+			post.state = 'DRAFT';
+			if(post.id)
+				$scope.putPost(post);
+			else
+				$scope.postPost(post);
+		}else{
+			saveAsDraftConfirmDialog(event);
+		}
+	}
+
+	$scope.publishPost = function(){
+		var post = angular.copy($scope.app.editingPost)
+		post.state = 'PUBLISHED';
+		if(post.id){
+			$scope.putPost(post);
+		}else
+			$scope.postPost(post);
+	}
+
+	var saveAsDraftConfirmDialog = function(event){
+		$mdDialog.show({
+			scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
+          	preserveScope: true, // do not forget this if use parent scope
+			controller: $scope.app.defaultDialog,
+			templateUrl: 'save-to-draft-confirm-dialog.html',
+			parent: angular.element(document.body),
+			targetEvent: event,
+			clickOutsideToClose:true
+			// onComplete: function(){
+
+			// }
+		})
+	}
+
+	$scope.putPost = function(originalPost){
+		var post = preparePost(originalPost);
+		trix.putPost(post).success(function(response){
+			$scope.app.showSuccessToast($filter('translate')('settings.post.UPDATE_SUCCESS'));
+			$scope.app.editingPost.id = response;
+			$scope.app.editingPost.state = post.state;
+			// $scope.loadPostData();
+			$scope.app.postObjectChanged = false;
+			// $state.transitionTo('app.post', {'id': $scope.app.editingPost.id}, {reload: false, inherit: false, notify: false});
+			$mdDialog.cancel();
+		}).error(function(){
+			$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
+			$mdDialog.cancel();
+		})
+	}
+
 	$scope.postPost = function(originalPost){
 		var post = preparePost(originalPost);
 		trix.postPost(post).success(function(response){
 			$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
-			trix.putPostTerms(response.id, post.terms);
+			$scope.app.editingPost = response;
+			$scope.loadPostData();
+			$scope.app.postObjectChanged = false;
+			$state.transitionTo('app.post', {'id': $scope.app.editingPost.id}, {reload: false, inherit: false, notify: false});
+			$mdDialog.cancel();
 		}).error(function(){
 			$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
+			$mdDialog.cancel();
 		})
 	}
 
@@ -939,7 +1020,7 @@ function createVersions(){
 			  '<div class="m-b-sm"><code>/{{app.editingPost.slug}}</code></div>'+
 			  '<div class="h3 font-bold m-b-md">{{app.editingPost.title}}</div>'+
 			  '<div class="text-md m-b-sm">'+
-			    '<strong>Status:</strong>'+
+			    '<strong>Estado da publicação:</strong>'+
 			    '<span class="text-u-c m-l-sm">'+
 			    	'{{app.getStateText()}}'+
 		    	'</span>'+
@@ -1067,7 +1148,7 @@ function createVersions(){
 			'<md-button ng-click="app.cancelDialog();" class="m-0">'+
 				'{{\'titles.CANCEL\' | translate}}'+
 			'</md-button>'+
-			'<md-button ng-click="app.clearPostContent();" class="m-0">'+
+			'<md-button ng-click="" class="m-0">'+
 				'{{\'titles.SAVE\' | translate}}'+
 			'</md-button>'+
 		'</div>'+

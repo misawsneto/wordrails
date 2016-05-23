@@ -9,15 +9,24 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 
-@Path("/mobile")
+@Path("/")
 @Consumes(MediaType.WILDCARD)
 public interface MobileApi {
 
 	@PUT
-	@Path("/location")
+	@Path("/mobile/location")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@PreAuthorize("permitAll()")
 	Response updateLocation(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String device,
 							@FormParam("lat") Double lat, @FormParam("lng") Double lng);
+
+	@PUT
+	@Path("/persons/me/location")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@PreAuthorize("permitAll()")
+	void updateLocation2(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String
+			device,
+							@FormParam("lat") Double lat, @FormParam("lng") Double lng) throws IOException;
 }
