@@ -35,7 +35,7 @@ public class EmailServiceTest {
 		invitation.person = new Person();
 		invitation.person.email = "jonas.agx@gmail.com";
 		invitation.person.name = "Jonas";
-
-		emailService.notifyPersonCreation(network, invitation, person);
+		//Now it does nothing
+//		emailService.notifyPersonCreation(network, invitation, person);
 	}
 }

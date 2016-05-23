@@ -30,14 +30,19 @@ import java.util.Set;
 @NoArgsConstructor
 public class V2PostsResource extends AbstractResource implements V2PostsApi {
 
-	@Autowired
 	private PostSearchService postSearchService;
-	@Autowired
 	private PostRepository postRepository;
-	@Autowired
 	private PostConverter postConverter;
-	@Autowired
 	private AuditService auditService;
+
+	@Autowired
+	public V2PostsResource(PostSearchService postSearchService, PostRepository postRepository, PostConverter postConverter, AuditService auditService){
+
+		this.postSearchService = postSearchService;
+		this.postRepository = postRepository;
+		this.postConverter = postConverter;
+		this.auditService = auditService;
+	}
 
 	@Override
 	public Response searchPosts(String query,
