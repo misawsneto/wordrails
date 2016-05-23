@@ -182,8 +182,10 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.app.clearPostContent = function(){
-		$scope.app.editingPost.title = '';
-		$scope.app.editingPost.body = '';
+		if($scope.app.editingPost){
+			$scope.app.editingPost.title = '';
+			$scope.app.editingPost.body = '';
+		}
 		$scope.tags = [];
 		$scope.featuredImage = $scope.featuredAudio = $scope.featuredVideo = $scope.postFeaturedImage = $scope.postFeaturedAudio = $scope.postFeaturedVideo = null;
 		$mdDialog.cancel();
@@ -194,7 +196,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$timeout(function(){
 			$scope.app.editingPost = null;
 			$scope.app.postObjectChanged = false;
-			$state.transitionTo('app.post', {'id': null}, {reload: false, inherit: false, notify: false});
 			$state.transitionTo('app.post', {'id': null}, {reload: false, inherit: false, notify: false});
 			$scope.app.showInfoToast($filter('translate')('settings.post.messages.NEW_PUBLICATION_INFO'))
 		}, 300)

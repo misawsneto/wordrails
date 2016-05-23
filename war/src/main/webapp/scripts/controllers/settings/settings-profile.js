@@ -272,7 +272,6 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
   }, 500);
 
   $scope.scrollToTop = function(){
-    console.log($('#scroll-box').scrollTop);
     $('#scroll-box').animate({scrollTop: 0}, 700, 'easeOutQuint');
   }
 
