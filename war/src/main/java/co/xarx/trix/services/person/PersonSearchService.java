@@ -20,6 +20,6 @@ public class PersonSearchService {
 	}
 
 	public List<PersonData> search(PersonStatement params, Integer page, Integer size) {
-		return personRepository.findAll(size, page, RestUtil.getSort(params.getOrders()));
+		return personRepository.findAll(params, size, page, RestUtil.getSort(params.getOrders()));
 	}
 }

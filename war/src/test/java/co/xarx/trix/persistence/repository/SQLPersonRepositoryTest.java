@@ -1,7 +1,9 @@
 package co.xarx.trix.persistence.repository;
 
 import co.xarx.trix.api.v2.PersonData;
+import co.xarx.trix.domain.page.query.statement.PersonStatement;
 import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 import org.jooq.DSLContext;
 import org.jooq.Record;
@@ -63,8 +65,10 @@ public class SQLPersonRepositoryTest {
 
 		create = DSL.using(connection, SQLDialect.MYSQL);
 
+		PersonStatement params = new PersonStatement();
+		params.setEmails(Lists.newArrayList("arthur.hvt@gmail.com", "misawsneto@gmail.com"));
 		SQLPersonRepository repository = new SQLPersonRepository(create);
-		List<PersonData> data = repository.findAll(10, 1, null);
+		List<PersonData> data = repository.findAll(params, 10, 1, null);
 
 		data.forEach(System.out::println);
 
