@@ -836,6 +836,33 @@ angular.module('app')
 
       // --------------------------
       
+      // --------- generic post tab
+      
+      var setPostFeaturedImage = function(hash){
+        $scope.app.postLoaded.postFeaturedImage = $filter('imageLink')({imageHash: hash}, 'large')
+      }
+
+        function buildToggler(navID) {
+          return function() {
+            $mdSidenav(navID)
+              .toggle()
+              .then(function () {
+                $log.debug("toggle " + navID + " is done");
+              });
+          }
+        }
+      $scope.togglePost = buildToggler('post-summary');
+
+      $scope.app.showPost = function(post){
+          $scope.app.postLoaded = post;
+          var hash = $scope.app.postLoaded.imageHash;
+          setPostFeaturedImage(hash)
+          $scope.togglePost();
+          post.terms = post.categories;
+      }
+
+      // --------- /generic post tab
+
       // --------- generic comment tab
       
       function buildToggler(navID) {

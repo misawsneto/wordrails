@@ -42,6 +42,7 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
         posts.forEach(function(post){
           addSnippet(post);
           $scope.publications.push(post);
+          $scope.calculateTopTags();
         })
         $scope.publicationsCtrl.page++;
         $scope.publicationsCtrl.allLoaded;
@@ -89,18 +90,14 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
   // --------- /scroll to top
 
 
-	$scope.getTopTags = function(){
-  	$scope.topTags = [];
+	$scope.calculateTopTags = function(){
+  	$scope.topTags = {};
 		$scope.publications && $scope.publications.forEach(function(pub){
-			pub && pub.tags.forEach(function(i) {$scope.topTags[i] = ($scope.topTags[i]||0)+1;})
+			pub && pub.tags.forEach(function(i) {
+				$scope.topTags[i] = ($scope.topTags[i]||0)+1;
+			})
 		});
 	}
-
-
-
-	// function bubleSort = function(){
-
-	// }
 
 	searchCtrl = $scope;
 }]);
