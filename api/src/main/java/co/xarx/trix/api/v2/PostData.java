@@ -68,10 +68,13 @@ public class PostData implements Serializable, Identifiable {
 
 	private int readTime;
 
+	private String externalVideoUrl;
+
 	private Date scheduledDate;
 	private boolean notified;
 
 	public void setBody(String body) {
+		this.body = body;
 		if (body == null || body.isEmpty())
 			readTime = 0;
 
