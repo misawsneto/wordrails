@@ -1,4 +1,3 @@
-DROP TABLE sectionqueryablelist_queryfixed;
 DROP TABLE sectionqueryablelist;
 DROP TABLE queryfixed_indexes;
 DROP TABLE queryfixed;

@@ -12,11 +12,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by misael on 4/27/2016.
- */
 @SuppressWarnings({"SpringJavaAutowiredMembersInspection", "unused"})
-public class V16__Station_Slug_Update extends SpringContextMigration {
+public class V17__Station_Slug_Update extends SpringContextMigration {
 	@Override
 	public void migrate() throws Exception {
 		migrateStations();

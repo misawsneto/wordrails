@@ -4,8 +4,9 @@ import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.StationPerspective;
 import co.xarx.trix.domain.Taxonomy;
 import co.xarx.trix.domain.Term;
-import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.persistence.StationPerspectiveRepository;
+import co.xarx.trix.persistence.StationRepository;
+import co.xarx.trix.persistence.TaxonomyRepository;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.TaxonomiesApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,17 +26,11 @@ public class TaxonomiesResource extends AbstractResource implements TaxonomiesAp
 	@Autowired
 	public ObjectMapper objectMapper;
 	@Autowired
-	private NetworkRepository networkRepository;
-	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
 	private StationPerspectiveRepository stationPerspectiveRepository;
 	@Autowired
 	private TaxonomyRepository taxonomyRepository;
-	@Autowired
-	private StationRolesRepository stationRolesRepository;
-	@Autowired
-	private AuthService authProvider;
 
 	@Override
 	public void findNetworkCategories() throws IOException {

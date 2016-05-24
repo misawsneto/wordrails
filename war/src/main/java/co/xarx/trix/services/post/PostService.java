@@ -8,10 +8,11 @@ import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,13 +22,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class PostService {
 
 	@Value("${spring.profiles.active:'dev'}")
 	private String profile;
-
-	private static final Logger log = LoggerFactory.getLogger(PostService.class);
 
 	@Autowired
 	private PostRepository postRepository;
@@ -44,18 +44,17 @@ public class PostService {
 	@Autowired
 	private MobileService mobileService;
 	@Autowired
-	private StationRolesRepository stationRolesRepository;
+	private PersonPermissionService personPermissionService;
 	@Autowired
 	private NotificationRepository notificationRepository;
 
 	public void sendNewPostNotification(Post post) throws NotificationException {
 		List<MobileDevice> mobileDevices;
-		List<StationRole> stationRoles;
 		if (stationRepository.isUnrestricted(post.getStationId())) {
 			mobileDevices = mobileDeviceRepository.findAll();
 		} else {
-			stationRoles = stationRolesRepository.findByStation(post.station);
-			List<Integer> personIds = stationRoles.stream().map(stationRole -> stationRole.person.id).collect(Collectors.toList());
+			List<Person> personFromStation = Lists.newArrayList(personPermissionService.getPersonFromStation(post.station.getId()));
+			List<Integer> personIds = personFromStation.stream().map(Person::getId).collect(Collectors.toList());
 
 			personIds.remove(authProvider.getLoggedPerson().getId());
 

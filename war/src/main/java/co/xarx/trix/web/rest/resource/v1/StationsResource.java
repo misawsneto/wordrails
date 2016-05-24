@@ -1,10 +1,8 @@
 package co.xarx.trix.web.rest.resource.v1;
 
 import co.xarx.trix.annotation.TimeIt;
-import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Station;
-import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.domain.page.*;
 import co.xarx.trix.eventhandler.StationEventHandler;
 import co.xarx.trix.persistence.*;
@@ -17,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
-import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
@@ -29,8 +26,6 @@ public class StationsResource extends AbstractResource implements StationsApi {
 
 	@Autowired
 	private AuthService authProvider;
-	@Autowired
-	private StationRolesRepository stationRolesRepository;
 	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
@@ -107,50 +102,26 @@ public class StationsResource extends AbstractResource implements StationsApi {
 		} else return Response.status(Status.UNAUTHORIZED).build();
 	}
 
-	@Override
-	public ContentResponse<Integer> countRolesByStationIds(List<Integer> stationIds, String q) {
-		ContentResponse<Integer> resp = new ContentResponse<>();
-		resp.content = 0;
-		if (stationIds != null && !stationIds.isEmpty()) {
-			if (q != null && !q.isEmpty()) {
-				resp.content = stationRolesRepository.countRolesByStationIdsAndNameOrUsernameOrEmail(stationIds, q).intValue();
-			} else {
-				resp.content = stationRolesRepository.countRolesByStationIds(stationIds).intValue();
-			}
-		} else {
-			throw new co.xarx.trix.exception.BadRequestException();
-		}
-		return resp;
-	}
-
 	private
 	@Autowired
 	StationEventHandler stationEventHandler;
 
 	@Override
-	public Response setDefaultPerspective(@PathParam("stationId") Integer stationId, @FormParam("perspectiveId") Integer perspectiveId) {
-		Person person = authProvider.getLoggedPerson();
+	public Response setDefaultPerspective(Integer stationId, Integer perspectiveId) {
 		Station station = stationRepository.findOne(stationId);
 
-		StationRole sRole =  stationRolesRepository.findByStationAndPersonId(station, person.id);
-
-		if ((person.networkAdmin || sRole.admin) && stationPerspectiveRepository.findOne(perspectiveId).stationId.equals(station.id)) {
+		if (stationPerspectiveRepository.findOne(perspectiveId).stationId.equals(station.id)) {
 			queryPersistence.updateDefaultPerspective(station.id, perspectiveId);
 			return Response.status(Status.OK).build();
 		} else return Response.status(Status.UNAUTHORIZED).build();
 	}
 
 	@Override
-	public Response forceDelete(@PathParam("stationId") Integer stationId) {
-		Person person = authProvider.getLoggedPerson();
+	public Response forceDelete(Integer stationId) {
 		Station station = stationRepository.findOne(stationId);
 
-		StationRole sRole =  stationRolesRepository.findByStationAndPersonId(station, person.id);
-
-		if (sRole.admin) {
-			stationEventHandler.handleBeforeDelete(station);
-			stationRepository.delete(station.id);
-			return Response.status(Status.OK).build();
-		} else return Response.status(Status.UNAUTHORIZED).build();
+		stationEventHandler.handleBeforeDelete(station);
+		stationRepository.delete(station.id);
+		return Response.status(Status.OK).build();
 	}
 }
