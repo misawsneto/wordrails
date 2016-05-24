@@ -151,9 +151,11 @@ public class StationPermissionService {
 
 			//StationRoles Fields
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			stationPermissionDto.admin = permissionEvaluator.hasPermission(auth, station, ADMINISTRATION);
-			stationPermissionDto.editor = permissionEvaluator.hasPermission(auth, station, MODERATION);
-			stationPermissionDto.writer = permissionEvaluator.hasPermission(auth, station, CREATE);
+			if (auth != null) {
+				stationPermissionDto.admin = permissionEvaluator.hasPermission(auth, station, ADMINISTRATION);
+				stationPermissionDto.editor = permissionEvaluator.hasPermission(auth, station, MODERATION);
+				stationPermissionDto.writer = permissionEvaluator.hasPermission(auth, station, CREATE);
+			}
 
 			stationPermissionDtos.add(stationPermissionDto);
 		}
