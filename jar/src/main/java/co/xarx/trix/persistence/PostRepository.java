@@ -3,6 +3,7 @@ package co.xarx.trix.persistence;
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
+import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.custom.PostRepositoryCustom;
 import org.javers.spring.annotation.JaversAuditable;
 import org.javers.spring.data.JaversSpringDataAuditable;
