@@ -30,7 +30,7 @@
               <h2>{{'titles.SCHEDULED' | translate}}</h2>
             </div>
             <div class="list-group list-group-lg md-primary-hue-1 background w-full" ng-class="{'display-table h-300': !scheduled || !scheduled.length}">
-              <a md-ink-ripple class="list-group-item text-ellipsis" ng-repeat="scheduledPost in scheduled" ng-click="showPost(scheduledPost)">
+              <a md-ink-ripple class="list-group-item text-ellipsis" ng-repeat="scheduledPost in scheduled" ng-click="app.showPost(scheduledPost)">
                <!--  <span class="pull-right">
                  <i class="mdi-action-trending-up i-20 text-muted-dk"></i>
                </span> -->
@@ -51,7 +51,7 @@
               <h2>{{'titles.DRAFTS' | translate}}</h2>
             </div>
             <div class="list-group list-group-lg md-accent-default background w-full" ng-class="{'display-table h-300': !drafts || !drafts.length}">
-              <a md-ink-ripple href class="list-group-item" ng-repeat="draft in drafts" ng-click="showPost(draft)">
+              <a md-ink-ripple href class="list-group-item" ng-repeat="draft in drafts" ng-click="app.showPost(draft)">
                 <!-- <span class="pull-right">
                   1
                 </span> -->
@@ -82,7 +82,7 @@
         <div class="card-body">
           <div class="streamline b-l b-accent m-b">
             <div class="sl-item" ng-repeat="publication in publications | limitTo:10">
-              <div class="sl-content" ng-click="showPost(publication)">
+              <div class="sl-content" ng-click="app.showPost(publication)">
                 <div class="text-muted-dk">{{app.getLocalTime(publication.date)}}</div>
                 <p>{{publication.title}}</p>
               </div>

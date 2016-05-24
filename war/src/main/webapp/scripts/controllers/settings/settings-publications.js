@@ -12,14 +12,14 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 		$scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
 
 		function buildToggler(navID) {
-      return function() {
-        $mdSidenav(navID)
-          .toggle()
-          .then(function () {
-            $log.debug("toggle " + navID + " is done");
-          });
-      }
-    }
+	      return function() {
+	        $mdSidenav(navID)
+	          .toggle()
+	          .then(function () {
+	            $log.debug("toggle " + navID + " is done");
+	          });
+	      }
+	    }
 
       /**
      * Supplies a function that will continue to operate until the
@@ -133,88 +133,11 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 	$scope.allLoaded = false;
 	$scope.window = 20
 
-	// sidenav toggle
-	$scope.toggleComments = buildToggler('post-comments');
-	$scope.togglePost = buildToggler('post-summary');
-
 	$scope.postFeaturedImage = null
 	var setPostFeaturedImage = function(hash){
 		$scope.postLoaded.postFeaturedImage = $filter('imageLink')({imageHash: hash}, 'large')
 	}
 
-  $scope.showPost = function(id){
-  	$scope.togglePost();
-  	$scope.postLoaded = null;
-  	trix.getPost(id, 'postProjection').success(function(response){
-  		$scope.postLoaded = response;
-
-  		if($scope.postLoaded.terms)
-			$scope.postLoaded.terms.forEach(function(term){
-				term.checked = true;
-			})
-
-			var hash = $scope.postLoaded.featuredImage ? $scope.postLoaded.featuredImage.originalHash : null;
-			setPostFeaturedImage(hash)
-			$scope.postLoaded.featuredImage = $scope.postLoaded.featuredImage
-			$scope.postLoaded.landscape = $scope.postLoaded.imageLandscape;
-
-			$scope.postLoaded.useHeading = $scope.postLoaded.topper ? true:false
-			$scope.postLoaded.useSubheading = $scope.postLoaded.subheading ? true:false
-  	})
-  }
-
-	$scope.showComments = function(post){
-		$scope.toggleComments();
-		$scope.comments = []
-		$scope.postLoaded = post;
-		$scope.commentsPage = 0;
-		$scope.loadingComments = false
-		$scope.paginateComments();
-	}
-
-	$scope.paginateComments = function(){
-		if(!$scope.loadingComments && $scope.postLoaded && $scope.postLoaded.id){
-			$scope.loadingComments = true;
-			trix.findPostCommentsOrderByDate($scope.postLoaded.id, $scope.commentsPage, $scope.window, null, 'commentProjection').success(function(response){
-				if(response.comments && response.comments.length > 0){
-					response.comments.forEach(function(comment){
-						$scope.comments.push(comment);
-					})
-					$scope.loadingComments = false
-					$scope.commentsPage ++;
-				}
-			}).error(function(){
-				$scope.comments = null;
-				$scope.loadingComments = false
-			})	
-		}
-	}
-
-	// $scope.toggleCommentsSidebar = function(){
-	//   $mdSidenav('comments-list').toggle();
-	// }
-
-	// $scope.createComment = function(){
-	// 	var comment = {}
-	// 	comment = angular.copy($scope.newComment);
-	// 	comment.author = extractSelf($scope.app.initData.person)
-	// 	comment.post =TRIX.baseUrl + '/api/posts/' + $scope.app.nowReading.postId
-
-	// 	trix.postComment(comment).success(function(response){
-	// 		if(!$scope.comments || $scope.comments.length == 0)
-	// 			$scope.comments = [];
-
-	// 		comment.author = angular.copy($scope.app.initData.person)
-	// 		comment.date = new Date().getTime();
-	// 		$scope.newComment = {body: ''};
-
-	// 		$scope.comments.unshift(comment)
-
-	// 	}).error(function(response,status){
-	// 		$scope.app.showErrorToast('Houve um erro inesperado. Tente novamente.')
-
-	// 	})
-	// }
 
 	$scope.commentFocused = false;
 	$scope.commentFocus = function(){
@@ -308,30 +231,6 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 	        ret.push(pub.id);
 	    });
 	    return ret;
-	}
-
-	$scope.newComment = '';
-	$scope.postComment = function(post, body){
-		var comment = {
-			post: PostDto.getSelf(post),
-			author: PersonDto.getSelf($scope.app.person),
-			body: body
-		}
-		trix.postComment(comment).success(function(response){
-			var c = {
-				post: post,
-				author: $scope.app.person,
-				body: body,
-				date: new Date()
-			}
-
-			if(!$scope.comments || !$scope.comments.length)
-				$scope.comments = [];
-
-			$scope.comments.unshift(c);
-			post.commentsCount++;
-			$scope.newComment = '';
-		})
 	}
 
 }]);
