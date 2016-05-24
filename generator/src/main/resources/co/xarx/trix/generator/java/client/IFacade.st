@@ -22,6 +22,8 @@ import retrofit.http.Query;
 import retrofit.mime.TypedInput;
 import retrofit.mime.TypedString;
 
+import co.xarx.trix.api.v2.PostData;
+
 interface I$facade$ {
 	@POST("/batch")
 	Response postBatch(@Body List<Command> batch);
@@ -132,7 +134,7 @@ interface I$facade$ {
 	void convertPost(@Path("postId") Integer postId, @Field("state") String state, Callback<ContentResponse<PostView\>\> _callback);
 
 	@GET("/v2/posts/search")
-    ContentResponse<List<PostView\>\> searchPosts(@Query("q") String q, @Query("authorId") List<Integer> aIds, @Query
+    ContentResponse<List<PostData\>\> searchPosts(@Query("q") String q, @Query("authorId") List<Integer> aIds, @Query
     ("stationId") List<Integer\> sIds, @Query("state") String st, @Query("from") String from, @Query("until") String
     until, @Query("categoryId") List<Integer\> cIds, @Query("tag") List<String\> tags, @Query("page") Integer page,
     @Query("size") Integer size, @Query("order") List<String\> orders, @Query("embed") List<String\> embeds, @Query("snippet") String snippet);
@@ -142,7 +144,7 @@ interface I$facade$ {
     sIds, @Query("state") String st, @Query("from") String from, @Query("until") String until, @Query("categoryId")
     List<Integer\> cIds, @Query("tag") List<String\> tags, @Query("page") Integer page, @Query("size") Integer size,
     @Query("order") List<String\> orders, @Query("embed") List<String\> embeds, @Query("snippet") String snippet, 
-    Callback<ContentResponse<List<PostView\>\>\> _callback);
+    Callback<ContentResponse<List<PostData\>\>\> _callback);
 
 	@GET("/bookmarks/searchBookmarks")
 	ContentResponse<List<PostView\>\> searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size);
