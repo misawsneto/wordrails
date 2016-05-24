@@ -22,6 +22,7 @@ public class PostDataMap extends PropertyMap<Post, PostData> {
 
 	@Override
 	protected void configure() {
+		map(source.getBody(), destination.getBody());
 		map(source.getFeaturedImage(), destination.getImage());
 		map(source.getFeaturedImage().getOriginalHash(), destination.getImageHash());
 		map(source.getImageTitleText(), destination.getImage().getTitle());
@@ -41,6 +42,7 @@ public class PostDataMap extends PropertyMap<Post, PostData> {
 //		Condition<Image, PostData> picsNull = c -> c.getSource().getPictures() == null;
 
 		skip(destination.getSnippet());
+		skip(destination.getReadTime());
 //		skip(destination.getAuthor());
 //		when(picsNull).skip(source.getFeaturedImage(), destination.getImage());
 //		skip(destination.getVideo());

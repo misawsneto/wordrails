@@ -66,19 +66,19 @@ public class PostData implements Serializable, Identifiable {
 	private int recommendsCount = 0;
 	private int commentsCount = 0;
 
-	private int restTime;
+	private int readTime;
 
 	private Date scheduledDate;
 	private boolean notified;
 
 	public void setBody(String body) {
 		if (body == null || body.isEmpty())
-			restTime = 0;
+			readTime = 0;
 
 		Document doc = Jsoup.parse(body);
 		body = doc.text();
 		String[] wordArray = body.split("\\s+");
 		int words = wordArray.length;
-		restTime = 5 * words / 398;
+		readTime = 5 * words / 398;
 	}
 }

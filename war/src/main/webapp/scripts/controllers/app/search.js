@@ -88,4 +88,21 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
 
   // --------- /scroll to top
 
+
+	$scope.getTopTags = function(){
+  	$scope.topTags = [];
+		$scope.publications && $scope.publications.forEach(function(pub){
+			pub && pub.tags.forEach(function(i) {$scope.topTags[i] = ($scope.topTags[i]||0)+1;})
+		});
+	}
+
+
+
+	// function bubleSort = function(){
+
+	// }
+
+	searchCtrl = $scope;
 }]);
+
+var searchCtrl = null;
