@@ -165,31 +165,3 @@
   </md-dialog>
 </script>
 
-<script type="text/ng-template" id="person-dialog.html">
-  <md-dialog-content>
-    <div class="w-xxl scrollable md-background-hue-1 background">
-        <div class="pos-rlt p">
-          <div ng-style="{'background-image': 'url(  {{loadedPerson | coverImage: 'medium'}} )'}" style="margin: -16px -16px 0 -16px" class="hidden-folded bg-cover m-b-md md-whiteframe-z1">
-            <div class="p w-full">
-          <!-- <i class="mdi mdi2-account text-4x"></i> -->
-            <div class="md-whiteframe-z1 user-avatar rounded w-64 bg-white inline pos-rlt md-primary-default background text-center bg-cover" ng-style="app.getBackgroundImage(loadedPerson, 'medium')" bstyle="{'background-image': 'url(  {{loadedPerson | userImage: 'medium'}} )'}">
-              <i ng-if="!loadedPerson.imageHash" class="mdi2-account i-40" style="top: 16%;position: relative;"></i>
-            </div>
-            </div>
-            <div class="p-v-sm p-h black-grad  text-white">
-              <div class="block" style="opacity:0.92">
-                <span class="block font-bold">{{loadedPerson.name}}</span>
-                <span class="text-sm">{{loadedPerson.email}}</span>
-              </div>
-            </div>
-          </div>
-          <div class="">
-            {{loadedPerson.bio}}
-          </div>
-        </div>
-        <div class="text-right">
-          <md-button ng-click="cancel()">{{'titles.CLOSE' | translate}}</md-button>
-        </div>
-      </div>
-  </md-dialog-content>
-</script>

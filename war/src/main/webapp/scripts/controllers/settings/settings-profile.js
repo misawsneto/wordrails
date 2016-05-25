@@ -349,7 +349,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
       }
     }
 
-  $scope.app.toggleComments = buildToggler('content-post-comments');
+  $scope.app.toggleComments = buildToggler('post-comments');
 
 	settingsProfileCtrl = $scope;
 }]);

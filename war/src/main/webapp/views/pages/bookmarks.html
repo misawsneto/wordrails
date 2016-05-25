@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="text-left p-h-sm w-full z-index-2" >
-              <a target="_blank" ng-href="{{app.getCategoryLink(app.getStationById(postView.stationId).stationSlug, category.name)}}" class="badge m-t-sm p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postView.categories">
+              <a target="_blank" ng-href="/{{app.getCategoryLink(app.getStationById(postView.stationId).stationSlug, category.name)}}" class="badge m-t-sm p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postView.categories">
                 {{category.name}}
               </a>
             </div>

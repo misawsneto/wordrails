@@ -27,10 +27,8 @@ public class V17__Station_Slug_Update extends SpringContextMigration {
 	public void updateStationSlugs(List<Station> stations){
 		TransactionSynchronizationManager.initSynchronization();
 		for(Station station: stations){
-			if(station.stationSlug == null){
-				String slug = StringUtil.toSlug(station.name);
-				jdbc.update("UPDATE station set stationSlug = ? where id = ?", slug, station.id);
-			}
+			String slug = StringUtil.toSlug(station.name);
+			jdbc.update("UPDATE station set stationSlug = ? where id = ?", slug, station.id);
 		}
 	}
 
@@ -49,7 +47,6 @@ public class V17__Station_Slug_Update extends SpringContextMigration {
 			while (resultSet.next()) {
 				Station station = new Station();
 				station.id = resultSet.getInt("id");
-				station.stationSlug = resultSet.getString("stationSlug");
 				station.name = resultSet.getString("name");
 
 				stations.add(station);
