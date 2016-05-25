@@ -53,7 +53,7 @@ public class PersonDataFilter implements Filter{
 			request.setAttribute("termPerspectiveView", simpleMapper.writeValueAsString(termPerspectiveView));
 		}
 
-		request.setAttribute("personData", simpleMapper.writeValueAsString(data));
+		request.setAttribute("personData", simpleMapper.writeValueAsString(data) + "");
 		request.setAttribute("networkName", data.network.name);
 		request.setAttribute("networkId", data.network.id);
 		if (data.network.faviconHash != null)

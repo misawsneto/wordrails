@@ -103,7 +103,7 @@
             <!--</div>-->
             <!-- /search -->
             <!--<div class="p-r-sm p-l-sm">-->
-              <div ng-if="search.tab == 'persons'" class="m-t-lg" masonry reload-on-show>
+              <div ng-if="search.tab == 'persons'" class="m-t-lg" masonry="{transitionDuration: '0'}" reload-on-show >
 
                 <div class="col-lg-4 col-sm-6 col-xs-12 masonry-brick" ng-repeat="person in persons">
                   <div class="md-whiteframe-z1 scrollable md-background-hue-1 background inline w-full m-b-lg">
