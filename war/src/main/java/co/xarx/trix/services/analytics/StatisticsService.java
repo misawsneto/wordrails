@@ -108,6 +108,8 @@ public class StatisticsService {
 		ClusterState cs = client.admin().cluster().prepareState().setIndices(nginxAccessIndex).execute().actionGet().getState();
 
 		IndexMetaData indexMetaData = cs.getMetaData().index(nginxAccessIndex);
+		Assert.notNull(indexMetaData, "The data cannot be retrived: No index metadata");
+
 		MappingMetaData mappingMetaData = indexMetaData.mapping(ACCESS_TYPE);
 		Map<String, Object> map = null;
 
