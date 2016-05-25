@@ -23,9 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.PermissionEvaluator;
-import org.springframework.security.acls.domain.PrincipalSid;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 
@@ -46,7 +43,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
-	private PermissionEvaluator permissionEvaluator;
+	private AuthCredentialRepository authCredentialRepository;
 	@Autowired
 	private AuthService authProvider;
 	@Autowired
@@ -161,11 +158,13 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 				throw e;
 			}
 
+			authCredentialRepository.save(new AuthCredential());
+
 			// Create Person ------------------------------
 
 			Person person = networkCreate.person;
 			person.setTenantId(network.getTenantId());
-			User user = null;
+			User user;
 
 			try {
 				user = new User();
@@ -175,7 +174,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 				user.password = person.password;
 
 				UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_USER");
-				UserGrantedAuthority nauthority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN");
+				UserGrantedAuthority nauthority = new UserGrantedAuthority(user, "ROLE_ADMIN");
 
 				authority.setTenantId(network.getTenantId());
 				nauthority.setTenantId(network.getTenantId());
