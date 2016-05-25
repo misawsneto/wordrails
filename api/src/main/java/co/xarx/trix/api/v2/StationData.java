@@ -22,7 +22,7 @@ public class StationData implements Serializable, Identifiable {
 	private Integer id;
 	private String name;
 
-	public String slug;
+	public String stationSlug;
 	public ImageData logo;
 
 	public boolean main;

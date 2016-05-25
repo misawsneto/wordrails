@@ -1083,7 +1083,7 @@ angular.module('app')
                 url: '/s?q',
                 templateUrl: '/views/pages/search.html',
                 data : { titleTranslate: 'titles.SEARCH', title: 'Busca', folded: true },
-                resolve: load(['/scripts/controllers/app/search.js']),
+                resolve: load(['/scripts/controllers/app/search.js', 'wu.masonry']),
                 controller: 'SearchCtrl'
               })
         .state('app.bookmarks', {
