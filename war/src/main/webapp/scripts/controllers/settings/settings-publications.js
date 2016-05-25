@@ -233,6 +233,63 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 	    return ret;
 	}
 
+	  // --------- move to state
+  
+    $scope.toState = null;
+    var intToState = function(state){
+      // if(!$scope.app.editingPost)
+      //  return null;
+      if(state == 1){
+        return "PUBLISHED";
+      }else if(state == 2){
+        return "DRAFT";
+      }else if(state == 3){
+        return "SCHEDULED";
+      }else if(state == 4){
+        return "TRASH";
+      }else{
+        return 5;
+      }
+    }
+
+
+  $scope.toMovePublication = null;
+  $scope.showMoveToDialog = function(event, publication){
+    $scope.toState = null;
+    $scope.toMovePublication = publication;
+    $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'move-to-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+  }
+
+  $scope.movePublicationToState = function(state){
+    trix.getPost($scope.toMovePublication.id).success(function(response){
+      response.state = intToState(state);
+      trix.putPost(response).success(function(){
+        if($scope.publications)
+        for (var i = $scope.publications.length - 1; i >= 0; i--) {
+          if($scope.publications[i].id == $scope.toMovePublication.id)
+            $scope.publications.splice(i,1);
+        }
+        $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+        $mdDialog.cancel();
+      })
+    })
+  }
+  // --------- /move to state
+
 }]);
 
 var settingsPublicationsCtrl = null;

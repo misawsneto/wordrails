@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 public class StationEventHandler {
 
 	@Autowired
-	StationRolesRepository personStationRolesRepository;
-	@Autowired
 	PostEventHandler postEventHandler;
 	@Autowired
 	PostRepository postRepository;
@@ -69,7 +67,7 @@ public class StationEventHandler {
 		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged.networkAdmin){
 			if(station.stationPerspectives == null || station.stationPerspectives.size() == 0){
-				Set<StationPerspective> perspectives = new HashSet<StationPerspective>(1);
+				Set<StationPerspective> perspectives = new HashSet<>(1);
 				
 				//Perspective Default
 				StationPerspective stationPerspective = new StationPerspective();
@@ -78,7 +76,7 @@ public class StationEventHandler {
 				perspectives.add(stationPerspective);
 				station.stationPerspectives = perspectives;
 				
-				Set<Taxonomy> taxonomies = new HashSet<Taxonomy>();
+				Set<Taxonomy> taxonomies = new HashSet<>();
 
 				//Station Default Taxonomy
 				Taxonomy sTaxonomy = new Taxonomy();
@@ -111,7 +109,7 @@ public class StationEventHandler {
 					term1.taxonomy = tax;
 					term2.taxonomy = tax;
 
-					tax.terms = new HashSet<Term>();
+					tax.terms = new HashSet<>();
 					tax.terms.add(term1);
 					tax.terms.add(term2);
 					termRepository.save(term1);
@@ -120,15 +118,6 @@ public class StationEventHandler {
 				}
 			}
 		}
-
-		Person person = authProvider.getLoggedPerson();
-		StationRole role = new StationRole();
-		role.person = person;
-		role.station = station;
-		role.writer = true;
-		role.admin = true;
-		role.editor = true;
-		personStationRolesRepository.save(role);
 
 		StationPerspective stationPerspective = new ArrayList<>(station.stationPerspectives).get(0);
 		try {
@@ -211,11 +200,6 @@ public class StationEventHandler {
 		if (taxonomy != null) {
 			taxonomyEventHandler.handleBeforeDelete(taxonomy);
 			taxonomyRepository.delete(taxonomy);
-		}
-
-		List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
-		if (stationsRoles != null && stationsRoles.size() > 0) {
-			personStationRolesRepository.delete(stationsRoles);
 		}
 
 		List<Post> posts = postRepository.findByStation(station);

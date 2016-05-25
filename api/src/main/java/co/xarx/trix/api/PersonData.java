@@ -22,7 +22,6 @@ public class PersonData implements Serializable {
 	public String imageHash;
 	public String coverHash;
 
-	public List<Integer> postsRead;
 	public List<Integer> bookmarks;
 	public List<Integer> recommends;
 

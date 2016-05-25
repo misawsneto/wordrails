@@ -5,20 +5,19 @@ import co.xarx.trix.api.v2.UserPermissionData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.config.security.Permissions;
 import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Station;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.PrincipalSid;
-import org.springframework.security.acls.model.AccessControlEntry;
-import org.springframework.security.acls.model.Acl;
-import org.springframework.security.acls.model.MutableAcl;
-import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.security.acls.model.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static org.springframework.security.acls.domain.BasePermission.CREATE;
 
 @Service
 public class PersonPermissionService {
@@ -48,6 +47,23 @@ public class PersonPermissionService {
 				PermissionData permissionData = aclService.getPermissionData(ace.getPermission());
 				result.getStationPermissions().add(result.new Permission(stationId, permissionData));
 			}
+		}
+
+		return result;
+	}
+
+	public List<Station> getStationsWithPermission(Sid sid, Permission p) {
+		List<Station> result = new ArrayList<>();
+		List<Station> stations = stationRepository.findAll();
+
+		for (Station station : stations) {
+			boolean hasPermission = aclService.hasPermission(Station.class, station.getId(), sid, p);
+			boolean isPermissionOfCreate = Permissions.containsPermission(p, CREATE);
+			if(isPermissionOfCreate)
+				hasPermission = hasPermission || station.isWritable();
+
+			if(hasPermission)
+				result.add(station);
 		}
 
 		return result;

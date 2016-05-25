@@ -46,7 +46,7 @@ angular.module('app')
               resolve: {
                 appData: function($stateParams, $q, trix){
                   var deferred = $q.defer();
-                   if(initData.person.id == 0){
+                   if(initData && initData.person.id == 0){
                      document.location.href = '/access/signin?next=/settings';
                    }else{
                     deferred.resolve(initData);
@@ -1083,7 +1083,7 @@ angular.module('app')
                 url: '/s?q',
                 templateUrl: '/views/pages/search.html',
                 data : { titleTranslate: 'titles.SEARCH', title: 'Busca', folded: true },
-                resolve: load(['/scripts/controllers/app/search.js']),
+                resolve: load(['/scripts/controllers/app/search.js', 'wu.masonry']),
                 controller: 'SearchCtrl'
               })
         .state('app.bookmarks', {
@@ -1095,7 +1095,7 @@ angular.module('app')
 
               person: function($stateParams, $q, trix){
                 var deferred = $q.defer();
-                if(initData.person.id == 0){
+                if(initData && initData.person.id == 0){
                   document.location.href = '/access/signin';
                   window.console && console.error('user is not logged')
                 }else if(initData.person.username !== $stateParams.username){
@@ -1113,7 +1113,7 @@ angular.module('app')
           })
           .state('access', {
             url: '/access',
-            template: '<div class="bg-big" ng-class="{\'md-background-default background\': !app.network.splashImageHash}"><div class="pos-fix top-0 left-0 text-lg font-bold m-l m-t" ng-class="{\'text-white text-shadow-sm\': app.network.splashImageHash}"><a href="/" target="_self">{{app.name}}</a></div><div ui-view class="fade-in-down smooth"></div></div>',
+            templateUrl: '/views/pages/access.html',
             resolve: {
               appData: function($stateParams, $q, trix){
                 var deferred = $q.defer();
@@ -1145,6 +1145,12 @@ angular.module('app')
             templateUrl: '/views/pages/forgot-password.html',
             resolve: load(['/scripts/controllers/app/signin-signup-forgot.js']),
             controller: 'AppForgotCtrl'
+          })
+          .state('access.createnetwork', {
+            url: '/createnetwork',
+            templateUrl: '/views/pages/create-network.html',
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js']),
+            controller: 'AppNetworkCtrl'
           })
           .state('access.lockme', {
             url: '/lockme',

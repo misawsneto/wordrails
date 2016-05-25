@@ -1125,6 +1125,10 @@ angular.module('app')
       appDataCtrl = $scope;
 
       // --------- /generic bookmark
+  }])
+
+  .controller('AppNetworkCtrl', ['$scope', '$state', '$log', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdMedia', 'amMoment',
+    function (             $scope, $state, $log, $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar, $mdMedia, amMoment) {
   }]);
 
 var appDataCtrl = null;

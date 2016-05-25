@@ -51,10 +51,10 @@ public class ESStartupIndexerService {
 			List<Identifiable> posts = Lists.newArrayList(postRepository.findPostWithTerms());
 			List<Identifiable> comments = Lists.newArrayList(commentRepository.findAll());
 
-			elasticSearchService.mapThenSave(stations, ESStation.class);
-			elasticSearchService.mapThenSave(posts, ESPost.class);
-			elasticSearchService.mapThenSave(people, ESPerson.class);
-			elasticSearchService.mapThenSave(comments, ESComment.class);
+			elasticSearchService.mapThenBulkSave(stations, ESStation.class);
+			elasticSearchService.mapThenBulkSave(posts, ESPost.class);
+			elasticSearchService.mapThenBulkSave(people, ESPerson.class);
+			elasticSearchService.mapThenBulkSave(comments, ESComment.class);
 		} else {
 			log.info("Elasticsearch indexing is disabled");
 		}

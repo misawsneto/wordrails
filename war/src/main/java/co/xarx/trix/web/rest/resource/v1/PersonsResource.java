@@ -1,11 +1,16 @@
 package co.xarx.trix.web.rest.resource.v1;
 
-import co.xarx.trix.api.*;
+import co.xarx.trix.api.ContentResponse;
+import co.xarx.trix.api.IdsList;
+import co.xarx.trix.api.PersonData;
+import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.converter.PostConverter;
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.User;
 import co.xarx.trix.eventhandler.PersonEventHandler;
-import co.xarx.trix.eventhandler.StationRoleEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.UnauthorizedException;
@@ -24,7 +29,6 @@ import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 import lombok.NoArgsConstructor;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +46,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -54,10 +57,6 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	@Autowired
 	private MobileService mobileService;
 	@Autowired
-	private StationRepository stationRepository;
-	@Autowired
-	private StationRolesRepository stationRolesRepository;
-	@Autowired
 	private NetworkRepository networkRepository;
 	@Autowired
 	private NetworkService networkService;
@@ -67,10 +66,6 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	private PostRepository postRepository;
 	@Autowired
 	private PostConverter postConverter;
-	@Autowired
-	private PostReadRepository postReadRepository;
-	@Autowired
-	private CommentRepository commentRepository;
 	@Autowired
 	private QueryPersistence queryPersistence;
 	@Autowired
@@ -88,8 +83,6 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	@Autowired
 	@Qualifier("simpleMapper")
 	public ObjectMapper simpleMapper;
-	@Autowired
-	public StationRoleEventHandler stationRoleEventHandler;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -334,7 +327,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 
 	@Override
 	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
-		Person person = personService.create(dto.name, dto.username, dto.password, dto.email, dto.stationsRole);
+		Person person = personService.create(dto.name, dto.username, dto.password, dto.email);
 
 		if (person != null) {
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
@@ -405,68 +398,6 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 		if(!self.id.equals(person.id)) {
 			person.user.enabled = true;
 			personRepository.save(person);
-		}
-		return Response.status(Status.CREATED).build();
-	}
-
-	@Override
-	@Transactional
-	public Response updateStationRoles(StationRolesUpdate stationRolesUpdate){
-		Person self = authProvider.getLoggedPerson();
-		if(stationRolesUpdate != null && stationRolesUpdate.personsIds != null && stationRolesUpdate.stationsIds != null){
-
-			stationRolesUpdate.personsIds.remove(self.id);
-
-			QStationRole q = QStationRole.stationRole;
-
-			Iterable<StationRole> isr = stationRolesRepository.findAll(q.person.id.in(stationRolesUpdate.personsIds).and(q.station.id.in(stationRolesUpdate.stationsIds)));
-			ArrayList<StationRole> roles = Lists.newArrayList(isr);
-
-			for (StationRole sr: roles){
-				sr.admin = stationRolesUpdate.admin;
-				sr.editor = stationRolesUpdate.editor;
-				sr.writer = stationRolesUpdate.writer;
-			}
-
-			for (StationRole sr: roles) {
-				stationRolesRepository.save(sr);
-			}
-
-
-			List<Person> persons = personRepository.findAll(stationRolesUpdate.personsIds);
-			List<Station> stations = stationRepository.findAll(stationRolesUpdate.stationsIds);
-
-			ArrayList<StationRole> allRoles = new ArrayList<>();
-
-			for (Station station : stations) {
-				for (Person person: persons){
-
-					boolean skip = false;
-					for(StationRole sr: roles){
-						if(sr.person != null && sr.station != null && sr.station.id.equals(station.id) && sr.person.id.equals(person.id)) {
-							skip = true;
-							continue;
-						}
-					}
-
-					if(skip)
-						continue;
-
-					StationRole sRole = new StationRole();
-					sRole.station = station;
-					sRole.person = person;
-					sRole.admin = stationRolesUpdate.admin;
-					sRole.editor = stationRolesUpdate.editor;
-					sRole.writer = stationRolesUpdate.writer;
-
-					allRoles.add(sRole);
-				}
-			}
-
-			for (StationRole sr : allRoles ) {
-				stationRolesRepository.save(sr);
-			}
-
 		}
 		return Response.status(Status.CREATED).build();
 	}

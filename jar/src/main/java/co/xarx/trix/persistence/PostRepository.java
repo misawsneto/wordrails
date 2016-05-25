@@ -162,4 +162,12 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@RestResource(exported = false)
 	@Query("SELECT post from Post post join fetch post.terms terms")
 	List<Post> findPostWithTerms();
+
+	@RestResource(exported = false)
+	@Query("SELECT post FROM Post post")
+	List<Post> findAllPosts();
+
+	@RestResource(exported = false)
+	@Query(value = "SELECT term FROM Term term where :postId in posts")
+	List<Term> findTermByPostId(@Param("postId") Integer postId);
 }

@@ -75,10 +75,6 @@ public class Station extends BaseEntity implements Serializable {
 	@Column(columnDefinition = "varchar(255) default '#5C78B0'")
 	public String primaryColor = "#5C78B0";
 
-	@RestResource(exported = false)
-	@OneToMany(mappedBy = "station", cascade = CascadeType.REMOVE)
-	public Set<StationRole> personsStationRoles;
-
 	@JsonIgnore
 	@OneToMany(mappedBy = "station")
 	public Set<Post> posts;

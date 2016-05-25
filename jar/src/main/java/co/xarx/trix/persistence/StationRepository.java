@@ -54,22 +54,4 @@ public interface StationRepository extends StationRepositoryCustom, JpaRepositor
 	@Query(value="SELECT CASE WHEN (count(st) > 0) then true else false end FROM Station st WHERE st.id = :stationId AND st.visibility = 'UNRESTRICTED'")
 	boolean isUnrestricted(@Param("stationId") Integer stationId);
 
-	@RestResource(exported = false)
-	@Query("select station from Station station join station.personsStationRoles personRoles join personRoles.person person where (person.id = :personId or station.visibility = 'UNRESTRICTED') GROUP BY station ORDER BY station.main desc, station.name")
-	List<Station> findByPersonId(@Param("personId") Integer personId);
-
-	@RestResource(exported = false)
-	@Query("select station from Station station join station.personsStationRoles personRoles join personRoles.person person " +
-			"where person.id = :personId and station.id = :stationId")
-	Station belongsToStation(@Param("personId") Integer personId, @Param("stationId") Integer stationId);
-
-	@RestResource(exported = false)
-	@Query("select station from Station station join station.personsStationRoles personRoles join personRoles.person person " +
-			"where person.id = :personId and station.id IN (:stationsId)")
-	List<Station> belongsToStations(@Param("personId") Integer personId, @Param("stationsId") List<Integer> stationsId);
-
-	@RestResource(exported=false)
-	@Query("select str.station from StationRole str where str.id in (:stationRolesIds) group by str.station.id")
-	List<Station> findByStationRolesIds(@Param("stationRolesIds") List<Integer> stationRolesIds);
-
 }

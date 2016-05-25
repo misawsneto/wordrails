@@ -1,5 +1,6 @@
 package co.xarx.trix.services.security;
 
+import co.xarx.trix.api.StationPermission;
 import co.xarx.trix.api.v2.PermissionData;
 import co.xarx.trix.api.v2.StationPermissionData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -126,5 +128,38 @@ public class StationPermissionService {
 				}
 			}
 		}
+	}
+
+	public List<StationPermission> getStationPermissions(List<Station> stations) {
+		List<StationPermission> stationPermissionDtos = new ArrayList<>();
+		for (Station station : stations) {
+			StationPermission stationPermissionDto = new StationPermission();
+
+			stationPermissionDto.stationId = station.id;
+			stationPermissionDto.stationName = station.name;
+			stationPermissionDto.writable = station.writable;
+			stationPermissionDto.main = station.main;
+			stationPermissionDto.visibility = station.visibility;
+			stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
+
+			stationPermissionDto.subheading = station.subheading;
+			stationPermissionDto.sponsored = station.sponsored;
+			stationPermissionDto.topper = station.topper;
+
+			stationPermissionDto.allowComments = station.allowComments;
+			stationPermissionDto.allowSocialShare = station.allowSocialShare;
+
+			//StationRoles Fields
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			if (auth != null) {
+				stationPermissionDto.admin = permissionEvaluator.hasPermission(auth, station, ADMINISTRATION);
+				stationPermissionDto.editor = permissionEvaluator.hasPermission(auth, station, MODERATION);
+				stationPermissionDto.writer = permissionEvaluator.hasPermission(auth, station, CREATE);
+			}
+
+			stationPermissionDtos.add(stationPermissionDto);
+		}
+
+		return stationPermissionDtos;
 	}
 }

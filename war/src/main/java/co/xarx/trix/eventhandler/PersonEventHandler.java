@@ -20,8 +20,6 @@ public class PersonEventHandler {
 	@Autowired
 	private PostReadRepository postReadRepository;
 	@Autowired
-	private StationRolesRepository stationRolesRepository;
-	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
 	private QueryPersistence queryPersistence;
@@ -49,8 +47,6 @@ public class PersonEventHandler {
 
 	@HandleBeforeDelete
 	public void handleBeforeDelete(Person person) {
-		stationRolesRepository.deleteRolesByPersonId(person.id);
-
 		if(person.cover != null) {
 			imageRepository.delete(person.cover);
 		}

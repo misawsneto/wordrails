@@ -55,7 +55,7 @@ public class StationService {
 
 		data.setId(data.getId());
 		data.setName(station.getName());
-		data.setSlug(station.getStationSlug());
+		data.setStationSlug(station.getStationSlug());
 		if (station.getLogo() != null) {
 			data.setLogo(mapper.map(station.getLogo(), ImageData.class));
 		}

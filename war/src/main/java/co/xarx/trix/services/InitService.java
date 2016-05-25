@@ -3,11 +3,13 @@ package co.xarx.trix.services;
 import co.xarx.trix.api.*;
 import co.xarx.trix.converter.TermConverter;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.eventhandler.StationRoleEventHandler;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.persistence.*;
+import co.xarx.trix.persistence.MenuEntryRepository;
+import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.persistence.TermRepository;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.PersonPermissionService;
+import co.xarx.trix.services.security.StationPermissionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,22 +27,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 
+import static org.springframework.security.acls.domain.BasePermission.READ;
+
 @Service
 public class InitService {
-
-	@Autowired
-	private StationRepository stationRepository;
-	@Autowired
-	private StationRolesRepository stationRolesRepository;
-	@Autowired
-	private PostRepository postRepository;
-	@Autowired
-	private PersonPermissionService personPermissionService;
-	@Autowired
-	private MenuEntryRepository menuEntryRepository;
-
-	@Autowired
-	private TermRepository termRepository;
 
 	@Autowired
 	@Qualifier("objectMapper")
@@ -48,28 +38,30 @@ public class InitService {
 	@Autowired
 	@Qualifier("simpleMapper")
 	public ObjectMapper simpleMapper;
-	@Autowired
-	public StationRoleEventHandler stationRoleEventHandler;
-	@Autowired
-	private AuthService authProvider;
-
-	@Autowired
-	private ModelMapper modelMapper;
-
-	@Autowired
-	private TermConverter termConverter;
-
 	@Value("${trix.amazon.cloudfront}")
 	String cloudfrontUrl;
+	@Autowired
+	private PostRepository postRepository;
+	@Autowired
+	private StationPermissionService stationPermissionService;
+	@Autowired
+	private PersonPermissionService personPermissionService;
+	@Autowired
+	private MenuEntryRepository menuEntryRepository;
+	@Autowired
+	private TermRepository termRepository;
+	@Autowired
+	private AuthService authProvider;
+	@Autowired
+	private ModelMapper modelMapper;
+	@Autowired
+	private TermConverter termConverter;
 
 	public PersonData getData(PersonData personData, Integer stationId) throws IOException {
 		StationView defaultStation = getDefaultStation(personData, stationId);
 
 		if (defaultStation != null) {
 			personData.defaultStation = defaultStation;
-
-			Pageable pageable = new PageRequest(0, 10);
-
 		} else {
 			personData.noVisibleStation = true;
 		}
@@ -85,12 +77,11 @@ public class InitService {
 			throw new UnauthorizedException("User is not authorized");
 		}
 
-
 		PersonPermissions personPermissions = new PersonPermissions();
 
 
 		List<StationView> stationViews = new ArrayList<>();
-		List<Station> stations = stationRepository.findByPersonId(person.id);
+		List<Station> stations = personPermissionService.getStationsWithPermission(authProvider.getCurrentSid(), READ);
 		for (Station station : stations) {
 			StationView stationView = modelMapper.map(station, StationView.class);
 			List<Term> terms = termRepository.findByTaxonomyId(station.categoriesTaxonomyId);
@@ -98,14 +89,14 @@ public class InitService {
 //			stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
 //			stationDtos.add(stationDto);
 			Set<String> perspectives = new HashSet<>();
-			for (String perspective: stationView.stationPerspectives) {
+			for (String perspective : stationView.stationPerspectives) {
 				perspectives.add(baseUrl + "/api/stationPerspectives/" + perspective);
 			}
 			stationView.stationPerspectives = perspectives;
 			stationViews.add(stationView);
 		}
 
-		personPermissions.stationPermissions = getStationPermissions(stations, person.id);
+		personPermissions.stationPermissions = stationPermissionService.getStationPermissions(stations);
 		personPermissions.personId = person.id;
 		personPermissions.username = person.username;
 		personPermissions.personName = person.name;
@@ -154,10 +145,8 @@ public class InitService {
 
 		Pageable pageable2 = new PageRequest(0, 100, new Sort(Sort.Direction.DESC, "id"));
 		if (initData.person != null && !initData.person.username.equals("wordrails")) {
-			List<Integer> postsRead = postRepository.findPostReadByPerson(initData.person.id, pageable2);
 			List<Integer> bookmarks = new ArrayList(person.getBookmarkPosts());
 			List<Integer> recommends = new ArrayList(person.getRecommendPosts());
-			initData.postsRead = postsRead;
 			initData.bookmarks = bookmarks;
 			initData.recommends = recommends;
 		}
@@ -224,36 +213,5 @@ public class InitService {
 		return Collections.singletonList(link);
 	}
 
-	private List<StationPermission> getStationPermissions(List<Station> stations, Integer personId) {
-		List<StationPermission> stationPermissionDtos = new ArrayList<>();
-		for (Station station : stations) {
-			StationPermission stationPermissionDto = new StationPermission();
 
-			stationPermissionDto.stationId = station.id;
-			stationPermissionDto.stationName = station.name;
-			stationPermissionDto.writable = station.writable;
-			stationPermissionDto.main = station.main;
-			stationPermissionDto.visibility = station.visibility;
-			stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
-
-			stationPermissionDto.subheading = station.subheading;
-			stationPermissionDto.sponsored = station.sponsored;
-			stationPermissionDto.topper = station.topper;
-
-			stationPermissionDto.allowComments = station.allowComments;
-			stationPermissionDto.allowSocialShare = station.allowSocialShare;
-
-			//StationRoles Fields
-			StationRole stationRole = stationRolesRepository.findByStationAndPersonId(station, personId);
-			if (stationRole != null) {
-				stationPermissionDto.admin = stationRole.admin;
-				stationPermissionDto.editor = stationRole.editor;
-				stationPermissionDto.writer = stationRole.writer;
-			}
-
-			stationPermissionDtos.add(stationPermissionDto);
-		}
-
-		return stationPermissionDtos;
-	}
 }

@@ -1,6 +1,5 @@
 package co.xarx.trix.web.rest.api.v1;
 
-import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.domain.page.Page;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,17 +53,15 @@ public interface StationsApi {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	Response setMainStation(@PathParam("stationId") Integer stationId, @FormParam("value") boolean value);
 
-	@GET
-	@Path("/stats/roles/count")
-	ContentResponse<Integer> countRolesByStationIds(@QueryParam("stationIds") List<Integer> stationIds, @QueryParam("q") String q);
-
 	@DELETE
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Path("/{stationId}/force")
-	public Response forceDelete(@PathParam("stationId") Integer stationId);
+	Response forceDelete(@PathParam("stationId") Integer stationId);
 
 	@PUT
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Path("/{stationId}/setDefaultPerspective")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response setDefaultPerspective(@PathParam("stationId") Integer stationId, @FormParam("perspectiveId")
+	Response setDefaultPerspective(@PathParam("stationId") Integer stationId, @FormParam("perspectiveId")
 			Integer perspectiveId);
 }
