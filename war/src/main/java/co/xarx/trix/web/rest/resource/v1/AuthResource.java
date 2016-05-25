@@ -2,8 +2,7 @@ package co.xarx.trix.web.rest.resource.v1;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.AuthCredential;
-import co.xarx.trix.domain.Network;
-import co.xarx.trix.persistence.NetworkRepository;
+import co.xarx.trix.persistence.AuthCredentialRepository;
 import co.xarx.trix.services.PasswordService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
@@ -25,27 +24,26 @@ import java.io.IOException;
 @NoArgsConstructor
 public class AuthResource extends AbstractResource implements AuthApi {
 
-	private NetworkRepository networkRepository;
+	private AuthCredentialRepository authCredentialRepository;
 	private AuthService authProvider;
 	private PasswordService passwordService;
 
 	@Autowired
-	public AuthResource(NetworkRepository networkRepository, AuthService authProvider, PasswordService passwordService) {
-		this.networkRepository = networkRepository;
+	public AuthResource(AuthCredentialRepository authCredentialRepository, AuthService authProvider, PasswordService passwordService) {
+		this.authCredentialRepository = authCredentialRepository;
 		this.authProvider = authProvider;
 		this.passwordService = passwordService;
 	}
 
 	@Override
 	public Response signin(String providerId, String userId, String accessToken) throws IOException {
-		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+		AuthCredential oauthCredential = authCredentialRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 
-		if(network.authCredential == null) {
+		if(oauthCredential == null) {
 			throw new NotAllowedException("This network does not support social login");
 		}
 
 		boolean allowSocialLogin = true;
-		AuthCredential oauthCredential = network.authCredential;
 		OAuthService service = null;
 		Token token = null;
 		if (providerId.equals("facebook")) {
