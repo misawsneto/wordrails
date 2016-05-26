@@ -164,14 +164,14 @@ public class Person extends BaseEntity implements Serializable {
 		return null;
 	}
 
-	@PostLoad
-	public void postLoad(){
-		if(image != null)
-			imageOriginalHash = image.getOriginalHash();
-		if(cover != null)
-			coverOriginalHash = cover.getOriginalHash();
-		this.enabled = user.enabled;
-	}
+//	@PostLoad
+//	public void postLoad(){
+//		if(image != null)
+//			imageOriginalHash = image.getOriginalHash();
+//		if(cover != null)
+//			coverOriginalHash = cover.getOriginalHash();
+//		this.enabled = user.enabled;
+//	}
 
 	@PrePersist
 	public void prePersist(){

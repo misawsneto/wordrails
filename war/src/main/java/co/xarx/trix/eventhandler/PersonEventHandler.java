@@ -51,7 +51,7 @@ public class PersonEventHandler {
 			imageRepository.delete(person.cover);
 		}
 
-		postReadRepository.deleteByPersonId(person.id);
+//		postReadRepository.deleteByPersonId(person.id);
 
 		List<Post> posts = postRepository.findAllFromPerson(person.id);
 		for (Post post: posts){

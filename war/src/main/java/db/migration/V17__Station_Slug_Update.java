@@ -16,7 +16,9 @@ import java.util.List;
 public class V17__Station_Slug_Update extends SpringContextMigration {
 	@Override
 	public void migrate() throws Exception {
+		TransactionSynchronizationManager.initSynchronization();
 		migrateStations();
+		TransactionSynchronizationManager.clearSynchronization();
 	}
 
 	public void migrateStations() {
@@ -25,7 +27,6 @@ public class V17__Station_Slug_Update extends SpringContextMigration {
 	}
 
 	public void updateStationSlugs(List<Station> stations){
-		TransactionSynchronizationManager.initSynchronization();
 		for(Station station: stations){
 			String slug = StringUtil.toSlug(station.name);
 			jdbc.update("UPDATE station set stationSlug = ? where id = ?", slug, station.id);

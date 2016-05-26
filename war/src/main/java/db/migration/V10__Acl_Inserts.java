@@ -44,10 +44,12 @@ public class V10__Acl_Inserts extends SpringContextMigration {
 	@Override
 	@SuppressWarnings("Duplicates")
 	public void migrate() throws Exception {
+		TransactionSynchronizationManager.initSynchronization();
 		Map<Integer, MutableAcl> stationAcls = migrateStations();
 		Map<Integer, MutableAcl> postsAcl = migratePosts(stationAcls);
 
 		migrateComments(postsAcl);
+		TransactionSynchronizationManager.clearSynchronization();
 	}
 
 	public void migrateComments(Map<Integer, MutableAcl> postsAcl) {
@@ -109,7 +111,6 @@ public class V10__Acl_Inserts extends SpringContextMigration {
 				"INNER JOIN person p ON person_station_role.person_id = p.id " +
 				"INNER JOIN station s ON person_station_role.station_id = s.id", new StationRoleExtractor());
 
-		TransactionSynchronizationManager.initSynchronization();
 		for (Integer stationId : stationRolesMap.keySet()) {
 			Pair<List<StationRole>, String> stationRoles = stationRolesMap.get(stationId);
 			TenantContextHolder.setCurrentTenantId(stationRoles.getLeft().get(0).getTenantId());
