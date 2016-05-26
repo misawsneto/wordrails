@@ -81,8 +81,8 @@ public class TaxonomiesResource extends AbstractResource implements TaxonomiesAp
 
 		ArrayList<Taxonomy> allTax = new ArrayList<>();
 
-		category.owningNetwork = null; category.owningStation = null; category.networks = null;
-		scategory.owningNetwork = null; scategory.owningStation = null; scategory.networks = null;
+		category.owningNetwork = null; category.owningStation = null; //category.networks = null;
+		scategory.owningNetwork = null; scategory.owningStation = null; //scategory.networks = null;
 
 		category.terms = new HashSet<>(categoryTerms);
 		scategory.terms = new HashSet<>(scategoryTerms);

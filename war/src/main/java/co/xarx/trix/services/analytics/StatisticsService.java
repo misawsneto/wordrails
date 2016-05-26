@@ -108,6 +108,8 @@ public class StatisticsService {
 		ClusterState cs = client.admin().cluster().prepareState().setIndices(nginxAccessIndex).execute().actionGet().getState();
 
 		IndexMetaData indexMetaData = cs.getMetaData().index(nginxAccessIndex);
+		Assert.notNull(indexMetaData, "The data cannot be retrived: No index metadata");
+
 		MappingMetaData mappingMetaData = indexMetaData.mapping(ACCESS_TYPE);
 		Map<String, Object> map = null;
 
@@ -352,7 +354,7 @@ public class StatisticsService {
 		JobDetail job = newJob(AppStatsJob.class).withIdentity(STATS_JOB).build();
 		CronTrigger trigger = newTrigger()
 				.withIdentity(STATS_TRIGGER, "stats_group")
-				.withSchedule(cronSchedule("0 0/1 * * * ?")).build();
+				.withSchedule(cronSchedule("0 0 0/12 * * ?")).build();
 
 		try {
 			if (checkStores && !scheduler.checkExists(trigger.getKey())) {

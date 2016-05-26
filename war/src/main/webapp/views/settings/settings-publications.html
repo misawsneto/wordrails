@@ -132,9 +132,9 @@
                           {{publication.snippet | characters:220}}
                         </div>
                         <div class="p-t-sm font-500">
-                          <a ui-sref="app.post({'id': publication.id})" target="_blank" class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple>{{'titles.EDIT' | translate}}
+                          <a ui-sref="app.post({'id': publication.id})" target="_blank" class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="$event.stopPropagation();" md-ink-ripple>{{'titles.EDIT' | translate}}
                           </a>
-                          <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">{{'titles.MOVE_TO' | translate}}
+                          <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" md-ink-ripple ng-click="app.stopPropagation($event); showMoveToDialog($event, publication)">{{'titles.MOVE_TO' | translate}}
                           </div>
                         </div>
                         <div class="m-t-sm pull-right font-500 m-r-sm text-md">

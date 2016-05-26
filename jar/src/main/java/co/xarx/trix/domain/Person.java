@@ -84,13 +84,6 @@ public class Person extends BaseEntity implements Serializable {
 
 	@Transient
 	@SdkInclude
-	public String imageOriginalHash;
-	@Transient
-	@SdkInclude
-	public String coverOriginalHash;
-
-	@Transient
-	@SdkInclude
 	public Boolean enabled;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
@@ -176,15 +169,6 @@ public class Person extends BaseEntity implements Serializable {
 		}
 
 		return null;
-	}
-
-	@PostLoad
-	public void postLoad() {
-		if (image != null)
-			imageOriginalHash = image.getOriginalHash();
-		if (cover != null)
-			coverOriginalHash = cover.getOriginalHash();
-		this.enabled = user.enabled;
 	}
 
 	@PrePersist

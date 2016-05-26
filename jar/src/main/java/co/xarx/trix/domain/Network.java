@@ -15,7 +15,6 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 
 @Getter
@@ -50,11 +49,11 @@ public class Network extends BaseEntity implements Serializable {
 //	@OneToMany(mappedBy="network", cascade=CascadeType.REMOVE)
 //	public Set<Station> stations;
 
-	@ManyToMany
-	public Set<Taxonomy> taxonomies;
-
-	@OneToMany(mappedBy="owningNetwork")
-	public Set<Taxonomy> ownedTaxonomies;
+//	@ManyToMany
+//	public Set<Taxonomy> taxonomies;
+//
+//	@OneToMany(mappedBy="owningNetwork")
+//	public Set<Taxonomy> ownedTaxonomies;
 
 	public boolean allowSignup;
 

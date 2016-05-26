@@ -92,6 +92,6 @@
   <script src="/scripts/services/ngstore.js"></script>
   <script src="/scripts/services/ui-load.js"></script>
 
-  <script async="true" src="http://platform.twitter.com/widgets.js"></script>
+  <script async="true" src="https://platform.twitter.com/widgets.js"></script>
 </body>
 </html>

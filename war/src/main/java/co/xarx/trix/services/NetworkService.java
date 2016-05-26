@@ -52,6 +52,9 @@ public class NetworkService {
 
 	public String getTenantFromHost(String host) {
 		String tenantId = StringUtil.getSubdomainFromHost(host);
+		if("settings".equals(tenantId))
+			return "settings";
+
 		if (domains.keySet().contains(host)) {
 			for (String s : tenantIds.keySet()) {
 				if (Objects.equals(tenantIds.get(s), domains.get(host))) {
