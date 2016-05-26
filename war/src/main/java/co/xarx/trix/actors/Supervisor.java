@@ -1,20 +1,13 @@
 package co.xarx.trix.actors;
 
-import akka.actor.ActorRef;
 import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import akka.routing.ActorRefRoutee;
-import akka.routing.Routee;
 import akka.routing.Router;
-import akka.routing.SmallestMailboxRoutingLogic;
 import co.xarx.trix.config.SpringExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A sample supervisor which should handle exceptions and general feedback
@@ -37,14 +30,14 @@ public class Supervisor extends UntypedActor {
     public void preStart() throws Exception {
 
         logger.info("Starting up");
-
-        List<Routee> routees = new ArrayList<Routee>();
-        for (int i = 0; i < 100; i++) {
-            ActorRef actor = getContext().actorOf(springExtension.props("taskActor"));
-            getContext().watch(actor);
-            routees.add(new ActorRefRoutee(actor));
-        }
-        router = new Router(new SmallestMailboxRoutingLogic(), routees);
+//
+//        List<Routee> routees = new ArrayList<Routee>();
+//        for (int i = 0; i < 100; i++) {
+//            ActorRef actor = getContext().actorOf(springExtension.props("taskActor"));
+//            getContext().watch(actor);
+//            routees.add(new ActorRefRoutee(actor));
+//        }
+//        router = new Router(new SmallestMailboxRoutingLogic(), routees);
         super.preStart();
     }
 
