@@ -68,6 +68,9 @@ public class SocialAuthenticationService {
 		Response response = request.send();
 		System.out.println(response.getBody());
 
+		if(!response.isSuccessful())
+			throw new IOException("ERROR: " + response.getCode() + " - " + response.getMessage());
+
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode rootNode = mapper.readTree(response.getBody());
 
@@ -163,7 +166,7 @@ public class SocialAuthenticationService {
 		FacebookUser fbUser = mapper.readValue(response.getBody(), FacebookUser.class);
 		fbUser.setProviderId("facebook");
 		fbUser.setProfileUrl("http://facebook.com/" + fbUser.getId());
-		fbUser.setProfileImageUrl(mapper.readTree(response.getBody()).get("picture").get("data").get("url").asText());
+		fbUser.setProfileImageUrl("https://graph.facebook.com/" + fbUser.getId() + "/picture?type=large");
 		return fbUser;
 	}
 

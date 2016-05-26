@@ -84,6 +84,10 @@ public class AuthResource extends AbstractResource implements AuthApi {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).build();
 		}
 
+		if(token == null) {
+			return Response.status(Response.Status.BAD_REQUEST).entity("Invalid provider ID").build();
+		}
+
 		boolean authorized = authProvider.socialAuthentication(providerId, service, userId, token);
 
 		if (authorized) {

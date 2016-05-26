@@ -6,8 +6,6 @@ import co.xarx.trix.services.NetworkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +17,8 @@ public class NetworkDomainFilter implements Filter {
 
 	@Autowired
 	private NetworkService networkService;
+//	@Autowired
+//	private TenantProvider tenantProvider;
 
 	@Override
 	public void destroy() {
@@ -52,6 +52,7 @@ public class NetworkDomainFilter implements Filter {
 			session.setAttribute("userAgent", request.getHeader("User-Agent"));
 			session.setAttribute("tenantId", tenantId);
 			TenantContextHolder.setCurrentTenantId(tenantId);
+//			tenantProvider.setTenantId(tenantId);
 		}
 
 		response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");

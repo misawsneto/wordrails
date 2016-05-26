@@ -2,9 +2,9 @@ package co.xarx.trix.config;
 
 import co.xarx.trix.config.modelmapper.*;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.config.multitenancy.TenantProvider;
 import co.xarx.trix.elasticsearch.mapper.*;
 import co.xarx.trix.services.AmazonCloudService;
-import co.xarx.trix.services.TenantProvider;
 import co.xarx.trix.services.notification.APNSClient;
 import co.xarx.trix.services.notification.GCMClient;
 import co.xarx.trix.services.notification.MobileNotificationSender;
