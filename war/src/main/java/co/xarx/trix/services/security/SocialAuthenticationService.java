@@ -8,6 +8,7 @@ import co.xarx.trix.domain.social.FacebookUser;
 import co.xarx.trix.domain.social.GoogleUser;
 import co.xarx.trix.domain.social.SocialUser;
 import co.xarx.trix.persistence.PersonRepository;
+import co.xarx.trix.persistence.UserConnectionRepository;
 import co.xarx.trix.persistence.UserRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,11 +33,13 @@ public class SocialAuthenticationService {
 
 	private PersonRepository personRepository;
 	private UserRepository userRepository;
+	private UserConnectionRepository userConnectionRepository;
 
 	@Autowired
-	public SocialAuthenticationService(PersonRepository personRepository, UserRepository userRepository) {
+	public SocialAuthenticationService(PersonRepository personRepository, UserRepository userRepository, UserConnectionRepository userConnectionRepository) {
 		this.personRepository = personRepository;
 		this.userRepository = userRepository;
+		this.userConnectionRepository = userConnectionRepository;
 	}
 
 	boolean facebookLogin(String userId, OAuthService service, Token token) {
@@ -175,6 +178,7 @@ public class SocialAuthenticationService {
 
 		UserConnection userConnection = newUserConnection(socialUser);
 		userConnection.setUser(user);
+		userConnectionRepository.save(userConnection);
 		user.userConnections.add(userConnection);
 		person.user = user;
 

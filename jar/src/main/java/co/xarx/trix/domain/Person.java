@@ -24,7 +24,8 @@ import java.util.List;
 @Table(name = "person",
 		uniqueConstraints = {
 				@UniqueConstraint(columnNames = {"user_id", "username"}),
-				@UniqueConstraint(columnNames = {"username", "tenantId"})
+				@UniqueConstraint(columnNames = {"username", "tenantId"}),
+				@UniqueConstraint(columnNames = {"email", "tenantId"})
 		})
 @JsonIgnoreProperties(value = {
 		"imageHash", "imageLargeHash", "imageMediumHash", "imageSmallHash",
