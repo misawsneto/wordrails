@@ -108,7 +108,9 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
 
 	@RestResource(exported = false)
-	@Query("SELECT post FROM Post post where post.station.id = :stationId AND post.state = 'PUBLISHED' ORDER BY post.readsCount DESC, post.id DESC")
+	@Query("SELECT post FROM Post post where post.station.id = :stationId and post.state = 'PUBLISHED' ORDER BY post.readsCount " +
+			"DESC," +
+			" post.id DESC")
 	List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
 
 	@RestResource(exported = false)
