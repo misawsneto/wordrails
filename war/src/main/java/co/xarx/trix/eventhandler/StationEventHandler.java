@@ -9,7 +9,7 @@ import co.xarx.trix.domain.page.query.PageableQuery;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.ESStartupIndexerService;
+import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.security.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
@@ -23,8 +23,6 @@ import java.util.stream.Collectors;
 @Component
 public class StationEventHandler {
 
-	@Autowired
-	StationRolesRepository personStationRolesRepository;
 	@Autowired
 	PostEventHandler postEventHandler;
 	@Autowired
@@ -54,7 +52,7 @@ public class StationEventHandler {
 	@Autowired
 	private AuthService authProvider;
 	@Autowired
-	private ESStartupIndexerService elasticSearchService;
+	private ElasticSearchService elasticSearchService;
 	@Autowired
 	private ESStationRepository esStationRepository;
 	@Autowired
@@ -63,15 +61,13 @@ public class StationEventHandler {
 	private ObjectStatementRepository statementRepository;
 	@Autowired
 	private PageableQueryRepository pageableQueryRepository;
-	@Autowired
-	private SectionRepository sectionRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
 		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged.networkAdmin){
 			if(station.stationPerspectives == null || station.stationPerspectives.size() == 0){
-				Set<StationPerspective> perspectives = new HashSet<StationPerspective>(1);
+				Set<StationPerspective> perspectives = new HashSet<>(1);
 				
 				//Perspective Default
 				StationPerspective stationPerspective = new StationPerspective();
@@ -80,7 +76,7 @@ public class StationEventHandler {
 				perspectives.add(stationPerspective);
 				station.stationPerspectives = perspectives;
 				
-				Set<Taxonomy> taxonomies = new HashSet<Taxonomy>();
+				Set<Taxonomy> taxonomies = new HashSet<>();
 
 				//Station Default Taxonomy
 				Taxonomy sTaxonomy = new Taxonomy();
@@ -113,7 +109,7 @@ public class StationEventHandler {
 					term1.taxonomy = tax;
 					term2.taxonomy = tax;
 
-					tax.terms = new HashSet<Term>();
+					tax.terms = new HashSet<>();
 					tax.terms.add(term1);
 					tax.terms.add(term2);
 					termRepository.save(term1);
@@ -122,15 +118,6 @@ public class StationEventHandler {
 				}
 			}
 		}
-
-		Person person = authProvider.getLoggedPerson();
-		StationRole role = new StationRole();
-		role.person = person;
-		role.station = station;
-		role.writer = true;
-		role.admin = true;
-		role.editor = true;
-		personStationRolesRepository.save(role);
 
 		StationPerspective stationPerspective = new ArrayList<>(station.stationPerspectives).get(0);
 		try {
@@ -172,7 +159,7 @@ public class StationEventHandler {
 
 		station.defaultPerspectiveId = stationPerspective.id;
 		stationRepository.save(station);
-		elasticSearchService.saveIndex(station, ESStation.class, esStationRepository);
+		elasticSearchService.mapThenSave(station, ESStation.class);
 	}
 
 	private void createDefaultPage(Station station) {
@@ -215,11 +202,6 @@ public class StationEventHandler {
 			taxonomyRepository.delete(taxonomy);
 		}
 
-		List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
-		if (stationsRoles != null && stationsRoles.size() > 0) {
-			personStationRolesRepository.delete(stationsRoles);
-		}
-
 		List<Post> posts = postRepository.findByStation(station);
 
 		if (posts != null && posts.size() > 0) {
@@ -239,6 +221,6 @@ public class StationEventHandler {
 	@HandleAfterSave
 	@Transactional
 	public void handleAfterSave(Station station){
-		elasticSearchService.saveIndex(station, ESStation.class, esStationRepository);
+		elasticSearchService.mapThenSave(station, ESStation.class);
 	}
 }

@@ -16,11 +16,12 @@ public interface V2PersonsApi {
 	@GET
 	@Path("/search")
 	Response searchPersons(@QueryParam("q") String query,
-						 @QueryParam("stationId") List<Integer> stations,
-						 @QueryParam("page") @DefaultValue("0") Integer page,
-						 @QueryParam("size") @DefaultValue("10") Integer size,
-						 @QueryParam("order") List<String> orders,
-						 @QueryParam("embed") List<String> embeds);
+						   @QueryParam("username") List<String> usernames,
+						   @QueryParam("email") List<String> emails,
+						   @QueryParam("page") @DefaultValue("0") Integer page,
+						   @QueryParam("size") @DefaultValue("10") Integer size,
+						   @QueryParam("order") List<String> orders,
+						   @QueryParam("embed") List<String> embeds);
 
 	@GET
 	@Path("{username}/permissions/station/{stationId}")

@@ -48,15 +48,15 @@ var trix = angular.module('trix', [])
 				response.data && response.data.content){
 					response.data = response.data.content;
 					return response
-			}else if(response.config.method === "POST" || response.config.method === "PUT"){
-				var _value = response.headers("Location");
-				if (_value) {
-					var _index = _value.lastIndexOf("/");
-					var _suffix = _value.substring(_index + 1);
-					var id = _suffix;
-					response.data = id
-				}
-				return response;
+			}else if(response.config.method === "PUT"){
+                var _value = response.headers("Location");
+                if (_value) {
+                    var _index = _value.lastIndexOf("/");
+                    var _suffix = _value.substring(_index + 1);
+                    var id = _suffix;
+                    response.data = id
+                }
+                return response;
 			}else
 				return response;
 		},
@@ -327,21 +327,23 @@ var trix = angular.module('trix', [])
 	  return \$http.get(_config.url + "/api/posts/search/networkPosts", config)
 	}
 
-	this.searchPosts = function(query,authors,stations,state,from,until,categories,tags,page,size,orders,
-	embeds){
-		var config = {
+	this.searchPosts = function(query,authors,stations,state,from,until,categories,tags,page,size,order,
+    	embed, snippet){
+        var config = {
             "params": {
-                "query": query,
-                "authors": authors,
-                "stations": stations,
+                "q": query,
+                "authorId": authors,
+                "stationId": stations,
                 "state": state,
                 "from": from,
                 "until": until,
-                "categories": categories,
+                "categoryId": categories,
                 "tags": tags,
                 "page": page,
                 "size": size,
-                "orders": orders
+                "order": order,
+                "embed": embed,
+                "snippet": snippet
             }
         }
         return \$http.get(_config.url + "/api/v2/posts/search", config)
@@ -383,6 +385,11 @@ var trix = angular.module('trix', [])
 		return \$http.put(_config.url + "/api/bookmarks/toggleBookmark", \$.param({"postId": postId}), config)
 	};
 
+	this.toggleRecommend = function(postId) {
+        var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
+        return \$http.put(_config.url + "/api/recommends/toggleRecommend", \$.param({"postId": postId}), config)
+    };
+
 	this.setMainStation = function(stationId, value) {
 		var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
 		return \$http.put(_config.url + "/api/stations/"+stationId+"/setMainStation", \$.param({"value": value}), config)
@@ -391,11 +398,6 @@ var trix = angular.module('trix', [])
 	this.setDefaultPerspective = function(stationId, perspectiveId) {
 		var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
 		return \$http.put(_config.url + "/api/stations/"+stationId+"/setDefaultPerspective", \$.param({"perspectiveId": perspectiveId}), config)
-	};
-
-	this.toggleRecommend = function(postId) {
-		var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
-		return \$http.put(_config.url + "/api/recommends/toggleRecommend", \$.param({"postId": postId}), config)
 	};
 
 	this.getRowView = function(stationPerspectiveId, termPerspectiveId, childTermId, _page, _size){

@@ -3208,7 +3208,7 @@ td, th {
   border: none;
 }
 
-span.badge {
+/* span.badge {
   min-width: 3rem;
   padding: 0 6px;
   text-align: center;
@@ -3237,7 +3237,7 @@ nav ul a span.badge {
   margin-left: 4px;
   line-height: 0;
 }
-
+ */
 .video-container {
   position: relative;
   padding-bottom: 56.25%;
@@ -5314,7 +5314,7 @@ a.waves-effect .waves-ripple {
   border-bottom: 1px solid #ddd;
 }
 
-.collapsible-header i {
+/* .collapsible-header i {
   width: 2rem;
   font-size: 1.6rem;
   line-height: 3rem;
@@ -5322,7 +5322,7 @@ a.waves-effect .waves-ripple {
   float: left;
   text-align: center;
   margin-right: 1rem;
-}
+} */
 
 .collapsible-body {
   display: none;
@@ -5330,10 +5330,10 @@ a.waves-effect .waves-ripple {
   box-sizing: border-box;
 }
 
-.collapsible-body p {
+/* .collapsible-body p {
   margin: 0;
   padding: 2rem;
-}
+} */
 
 .side-nav .collapsible,
 .side-nav.fixed .collapsible {

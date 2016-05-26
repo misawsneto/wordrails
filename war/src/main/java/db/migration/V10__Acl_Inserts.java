@@ -2,8 +2,10 @@ package db.migration;
 
 import co.xarx.trix.config.flyway.SpringContextMigration;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.*;
 import co.xarx.trix.config.security.Permissions;
+import co.xarx.trix.domain.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -279,6 +281,24 @@ public class V10__Acl_Inserts extends SpringContextMigration {
 			}
 
 			return commentsMap;
+		}
+	}
+
+	@Setter
+	@Getter
+	static class StationRole extends BaseEntity {
+
+		public Integer id;
+		public Station station;
+		public Person person;
+		public boolean editor;
+		public boolean writer;
+		public boolean admin;
+
+		public Integer getStationId() {
+			if (station != null)
+				return station.id;
+			return null;
 		}
 	}
 }

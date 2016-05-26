@@ -1,17 +1,16 @@
-package co.xarx.trix.web.rest;
+package co.xarx.trix.web.rest.resource.v2;
 
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.services.analytics.StatisticsService;
+import co.xarx.trix.web.rest.api.v2.V2StatisticsApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-@Path("/stats")
-@Consumes(MediaType.WILDCARD)
 @Component
-public class StatisticsResource {
+public class V2StatisticsResource implements V2StatisticsApi{
 
 	@Autowired
 	public StatisticsService statisticsService;
@@ -19,11 +18,11 @@ public class StatisticsResource {
 	@GET
 	@Path("/getMostPopular")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse getMostCommonTerm(@QueryParam("page") Integer page,
-											 @QueryParam("size") Integer size,
-											 @QueryParam("startTime") Long startTime,
-											 @QueryParam("endTime") Long endTime,
-											 @QueryParam("field") String field){
+	public ContentResponse getMostCommonTerm(Integer page,
+											 Integer size,
+											 Long startTime,
+											 Long endTime,
+											 String field){
 		ContentResponse response = new ContentResponse();
 		response.content = statisticsService.findMostPopular(field, startTime, endTime, size);
 		return response;
@@ -32,7 +31,7 @@ public class StatisticsResource {
 	@GET
 	@Path("/popularNetworks")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse getPopularNetworks(@QueryParam("page") Integer page, @QueryParam("size") Integer size){
+	public ContentResponse getPopularNetworks(Integer page, Integer size){
 		ContentResponse response = new ContentResponse();
 		response.content = statisticsService.getPorpularNetworks();
 		return response;

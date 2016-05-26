@@ -68,7 +68,9 @@ public interface TermRepository extends DatabaseRepository<Term, Integer> {
 	@Query(nativeQuery=true, value="DELETE FROM post_term WHERE terms_id = ?")
 	void deletePostsTerms(Integer termId);
 
-	@Query(value="SELECT taxonomy.terms FROM StationPerspective sp join sp.taxonomy taxonomy where sp.id = :perspectiveId")
+	@Query(value="SELECT terms FROM StationPerspective sp join sp.taxonomy taxonomy join taxonomy.terms terms where sp" +
+			".id" +
+			" = :perspectiveId")
 	List<Term> findByPerspectiveId(@Param("perspectiveId") Integer perspectiveId);
 
     @RestResource(exported = false)
@@ -80,7 +82,7 @@ public interface TermRepository extends DatabaseRepository<Term, Integer> {
 
 	@RestResource(exported = false)
 	@Query(value="SELECT post FROM Post post left join post.terms term where post.state = 'PUBLISHED' and post.stationId = :stationId and term.name = :tagName")
-	List<Post> findPostsByTagAndStationId(@Param("tagName") String tagName, @Param("stationId")Integer stationId, Pageable pageable);
+	List<Post> findPostsByCategoryAndStationId(@Param("tagName") String tagName, @Param("stationId")Integer stationId, Pageable pageable);
 
 	@RestResource(exported = false)
 	@Query(value="SELECT post FROM Post post join post.terms term where post.state = 'PUBLISHED' and term.id = :termId")

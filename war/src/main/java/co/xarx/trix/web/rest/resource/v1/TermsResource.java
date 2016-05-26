@@ -110,9 +110,7 @@ public class TermsResource extends AbstractResource implements TermsApi {
 			if (term.parent != null && parent.id.equals(term.parent.id)) {
 				parent.children.add(term);
 				term.parent = null;
-				term.cells = null;
 				term.termPerspectives = null;
-				term.posts = null;
 			}
 		}
 
@@ -124,10 +122,7 @@ public class TermsResource extends AbstractResource implements TermsApi {
 	}
 
 	private void cleanTerm(Term term) {
-		term.posts = null;
-		term.rows = null;
 		term.termPerspectives = null;
-		term.cells = null;
 		term.taxonomy = null;
 	}
 
@@ -163,19 +158,7 @@ public class TermsResource extends AbstractResource implements TermsApi {
 		}
 
 		ContentResponse<List<TermView>> response = new ContentResponse<>();
-		response.content = termConverter.convertToViews(allTerms);
-		return response;
-	}
-
-	@Override
-	public ContentResponse<List<PostView>> findPostsByTagAndStationId(String tagName, Integer stationId,
-																	  int page, int size) throws ServletException, IOException {
-		Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
-
-		List<Post> posts = termRepository.findPostsByTagAndStationId(tagName, stationId, pageable);
-
-		ContentResponse<List<PostView>> response = new ContentResponse<>();
-		response.content = postConverter.convertToViews(posts);
+		response.content = termConverter.convertToViewsTree(allTerms);
 		return response;
 	}
 
@@ -193,7 +176,7 @@ public class TermsResource extends AbstractResource implements TermsApi {
 	public ContentResponse<List<PostView>> findPostsByCategory(String categoryName, Integer stationId, int page, int size) {
 		Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
 
-		List<Post> posts = termRepository.findPostsByTagAndStationId(categoryName, stationId, pageable);
+		List<Post> posts = termRepository.findPostsByCategoryAndStationId(categoryName, stationId, pageable);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);

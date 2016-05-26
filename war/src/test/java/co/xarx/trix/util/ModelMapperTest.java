@@ -56,6 +56,8 @@ public class ModelMapperTest {
 		PostData data = modelMapper.map(post, PostData.class);
 
 		assertEquals(post.getTags(), data.getTags());
+		assertNotNull(data.getExternalVideoUrl());
+		assertNotNull(data.getBody());
 		assertNotNull(data.getVideo());
 		assertNotNull(data.getAuthor());
 		assertNotNull(data.getAudio());

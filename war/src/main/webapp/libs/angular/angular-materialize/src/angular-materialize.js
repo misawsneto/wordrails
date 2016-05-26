@@ -1,6 +1,6 @@
 (function (angular) {
     var undefined;
-    angular.module("ui.materialize", ["ui.materialize.ngModel", "ui.materialize.collapsible", "ui.materialize.toast", "ui.materialize.sidenav", "ui.materialize.material_select", "ui.materialize.dropdown", "ui.materialize.inputfield", "ui.materialize.input_date", "ui.materialize.tabs", "ui.materialize.pagination", "ui.materialize.pushpin", "ui.materialize.scrollspy", "ui.materialize.parallax","ui.materialize.modal", "ui.materialize.tooltipped",  "ui.materialize.slider", "ui.materialize.materialboxed", "ui.materialize.scrollFire", "ui.materialize.nouislider"]);
+    angular.module("ui.materialize", ["ui.materialize.ngModel", "ui.materialize.collapsible", "ui.materialize.toast", "ui.materialize.sidenav", "ui.materialize.material_select", "ui.materialize.dropdown", "ui.materialize.inputfield", "ui.materialize.input_date", "ui.materialize.tabs", "ui.materialize.pagination", "ui.materialize.pushpin", "ui.materialize.scrollspy", "ui.materialize.parallax","ui.materialize.modal", "ui.materialize.tooltipped",  "ui.materialize.slider", "ui.materialize.materialboxed", "ui.materialize.scrollFire", "ui.materialize.nouislider", "ui.materialize.input_clock"]);
 
     /*     example usage:
      <div scroll-fire="func('Scrolled', 2000)" ></scroll-fire>
@@ -238,10 +238,13 @@
         }]);
 
     angular.module("ui.materialize.tabs", [])
-        .directive("tabs", [function(){
+        .directive("tabs", ["$timeout", function($timeout){
             return {
                 link: function (scope, element, attrs) {
-                    element.tabs();
+                    element.addClass("tabs");
+                    $timeout(function() {
+                        element.tabs();
+                    });
                 }
             };
         }]);
@@ -279,11 +282,16 @@
                                       return;
                                   }
                                 }
-                                if (newVal !== undefined && element.siblings("ul.active").length) { // If select is open
-                                    var selectedOptions = element.siblings("ul.active").children("li.active").length; // Number of selected elements
+                                var activeUl = element.siblings("ul.active");
+                                if (newVal !== undefined && activeUl.length) { // If select is open
+                                    var selectedOptions = activeUl.children("li.active").length; // Number of selected elements
                                     if (selectedOptions == newVal.length) {
                                         return;
                                     }
+                                }
+                            } else {
+                                if (newVal == element.val()){
+                                    return;
                                 }
                             }
                             element.siblings(".caret").remove();
@@ -323,7 +331,7 @@
      </li>
      </ul>*/
     angular.module("ui.materialize.dropdown", [])
-        .directive("dropdown", ["$compile", "$timeout", function ($compile, $timeout) {
+        .directive("dropdown", ["$timeout", function ($timeout) {
             return {
                 scope: {
                     inDuration: "@",
@@ -336,7 +344,6 @@
                 },
                 link: function (scope, element, attrs) {
                     $timeout(function () {
-                        $compile(element.contents())(scope);
                         element.dropdown({
                             inDuration: (angular.isDefined(scope.inDuration)) ? scope.inDuration : undefined,
                             outDuration: (angular.isDefined(scope.outDuration)) ? scope.outDuration : undefined,
@@ -362,7 +369,7 @@
      </inputfield>
      */
     angular.module("ui.materialize.inputfield", [])
-        .directive('inputField', ["$compile", "$timeout", function ($compile, $timeout) {
+        .directive('inputField', ["$timeout", function ($timeout) {
             return {
                 transclude: true,
                 scope: {},
@@ -657,6 +664,48 @@
             };
         }]);
 
+
+
+    /**
+     * time-picker directive
+     * Example:
+     <label for="input_starttime">Time</label>
+     <input id="input_starttime" input-clock data-twelvehour="false" type="text">
+     */
+    angular.module("ui.materialize.input_clock", [])
+        .directive('inputClock', [function () {
+            return {
+                restrict: 'A',
+                scope: {
+                    default: "@",
+                    fromnow: "=?",
+                    donetext: "@",
+                    autoclose: "=?",
+                    ampmclickable: "=?",
+                    darktheme: "=?",
+                    twelvehour: "=?",
+                    vibrate: "=?"
+                },
+                link: function (scope, element) {
+                    $(element).addClass("timepicker");
+                    if (!(scope.ngReadonly)) {
+                        element.clockpicker({
+                            default: (angular.isDefined(scope.default)) ? scope.default : '',
+                            fromnow: (angular.isDefined(scope.fromnow)) ? scope.fromnow : 0,
+                            donetext: (angular.isDefined(scope.donetext)) ? scope.donetext : 'Done',
+                            autoclose: (angular.isDefined(scope.autoclose)) ? scope.autoclose : false,
+                            ampmclickable: (angular.isDefined(scope.ampmclickable)) ? scope.ampmclickable : false,
+                            darktheme: (angular.isDefined(scope.darktheme)) ? scope.darktheme : false,
+                            twelvehour: (angular.isDefined(scope.twelvehour)) ? scope.twelvehour : true,
+                            vibrate: (angular.isDefined(scope.vibrate)) ? scope.vibrate : true
+                        });
+                    }
+                }
+            };
+        }]);
+
+
+
     /**
      * Example:
      <pagination
@@ -670,7 +719,7 @@
      * Based on https://github.com/brantwills/Angular-Paging
      */
     angular.module("ui.materialize.pagination", [])
-        .directive('pagination', function () {
+        .directive('pagination', ["$sce", function ($sce) {
 
             // Assign null-able scope values from settings
             function setScopeValues(scope, attrs) {
@@ -687,6 +736,7 @@
                 scope.scrollTop = scope.$eval(attrs.scrollTop);
                 scope.hideIfEmpty = scope.$eval(attrs.hideIfEmpty);
                 scope.showPrevNext = scope.$eval(attrs.showPrevNext);
+                scope.useSimplePrevNext = scope.$eval(attrs.useSimplePrevNext);
             }
 
             // Validate and clean up any scope values
@@ -717,6 +767,7 @@
 
             // Internal Pagination Click Action
             function internalAction(scope, page) {
+                page = page.valueOf();
                 // Block clicks we try to load the active page
                 if (scope.page == page) {
                     return;
@@ -739,7 +790,7 @@
                 var i = 0;
                 for (i = start; i <= finish; i++) {
                     var item = {
-                        value: i.toString(),
+                        value: $sce.trustAsHtml(i.toString()),
                         liClass: scope.page == i ? scope.activeClass : 'waves-effect',
                         action: function() {
                             internalAction(scope, this.value);
@@ -753,7 +804,7 @@
             // Add Dots ie: 1 2 [...] 10 11 12 [...] 56 57
             function addDots(scope) {
                 scope.List.push({
-                    value: scope.dots
+                    value: $sce.trustAsHtml(scope.dots)
                 });
             }
 
@@ -795,22 +846,33 @@
                     disabled = scope.page - 1 <= 0;
                     var prevPage = scope.page - 1 <= 0 ? 1 : scope.page - 1;
 
-                    alpha = { value : "<<", title: 'First Page', page: 1 };
-                    beta = { value: "<", title: 'Previous Page', page: prevPage };
+                    if (scope.useSimplePrevNext) {
+                        alpha = {value: "<<", title: 'First Page', page: 1};
+                        beta = {value: "<", title: 'Previous Page', page: prevPage };
+                    } else {
+                        alpha = {value: "<i class=\"material-icons\">first_page</i>", title: 'First Page', page: 1};
+                        beta = {value: "<i class=\"material-icons\">chevron_left</i>", title: 'Previous Page', page: prevPage };
+                    }
 
                 } else {
 
                     disabled = scope.page + 1 > pageCount;
                     var nextPage = scope.page + 1 >= pageCount ? pageCount : scope.page + 1;
 
-                    alpha = { value : ">", title: 'Next Page', page: nextPage };
-                    beta = { value: ">>", title: 'Last Page', page: pageCount };
+                    if (scope.useSimplePrevNext) {
+                        alpha = { value : ">", title: 'Next Page', page: nextPage };
+                        beta = { value: ">>", title: 'Last Page', page: pageCount };
+                    } else {
+                        alpha = { value : "<i class=\"material-icons\">chevron_right</i>", title: 'Next Page', page: nextPage };
+                        beta = { value: "<i class=\"material-icons\">last_page</i>", title: 'Last Page', page: pageCount };
+                    }
+
                 }
 
                 // Create the Add Item Function
                 var addItem = function(item, disabled){
                     scope.List.push({
-                        value: item.value,
+                        value: $sce.trustAsHtml(item.value),
                         title: item.title,
                         liClass: disabled ? scope.disabledClass : '',
                         action: function(){
@@ -909,6 +971,7 @@
                     adjacent: '@',
                     scrollTop: '@',
                     showPrevNext: '@',
+                    useSimplePrevNext: '@',
                     paginationAction: '&',
                     ulClass: '=?'
                 },
@@ -919,7 +982,7 @@
                         'ng-click="Item.action()" ' +
                         'ng-repeat="Item in List"> ' +
                         '<a href> ' +
-                        '<span ng-bind="Item.value"></span> ' +
+                        '<span ng-bind-html="Item.value"></span> ' +
                         '</a>' +
                     '</ul>',
                 link: function (scope, element, attrs) {
@@ -930,7 +993,7 @@
                     });
                 }
             };
-        });
+        }]);
 
     /*     example usage:
      <!-- Modal Trigger -->

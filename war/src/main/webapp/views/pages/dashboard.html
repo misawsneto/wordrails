@@ -21,103 +21,49 @@
               </ul>
             </div>
             <div class="card-body">
-              <div class="row" ng-controller="ChartCtrl">
-                <div class="col-sm-6">
-                  <div class="text-center">
-                    Server Status
-                  </div>
-                  <div class="p-md">
-                    <div ui-jp="plot" ui-options="
-                      [
-                        { data: {{plot_line}} },
-                        { data: {{plot_line_2}} }
-                      ], 
-                      {
-                        bars: { show: true, fill: true,  barWidth: 0.4, lineWidth: 1, order: 1, fillColor: { colors: [{ opacity: 0.5 }, { opacity: 0.9}] } },
-                        colors: ['{{app.color.primary}}','{{app.color.success}}'],
-                        series: { shadowSize: 3 },
-                        xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
-                        yaxis:{ show: true, font: { color: '#ccc' }},
-                        grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
-                        tooltip: true,
-                        tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
-                      }
-                    " style="height:160px" >
-                    </div>
-                  </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="md-primary-default background md-whiteframe-z1">
+            <div class="card-heading">
+              <h2>{{'titles.SCHEDULED' | translate}}</h2>
+            </div>
+            <div class="list-group list-group-lg md-primary-hue-1 background w-full" ng-class="{'display-table h-300': !scheduled || !scheduled.length}">
+              <a md-ink-ripple class="list-group-item text-ellipsis" ng-repeat="scheduledPost in scheduled" ng-click="app.showPost(scheduledPost)">
+               <!--  <span class="pull-right">
+                 <i class="mdi-action-trending-up i-20 text-muted-dk"></i>
+               </span> -->
+                {{scheduledPost.title}}
+              </a>
+              <div class="text-center p-lg display-cell v-m w-full" ng-if="!scheduled || !scheduled.length">
+                <div class="m-b text-md">
+                  {{'settings.dashboard.NO_SCHEDULED' | translate}}
                 </div>
-                <div class="col-sm-6">
-                  <div class="text-center">
-                    Client Overview
-                  </div>
-                  <div class="p-md">
-                    <div ui-jp="plot" ui-options="
-                      {{plot_pie}},
-                      {
-                        series: { pie: { show: true, innerRadius: 0.55, stroke: { width: 3 }, label: { show: true, threshold: 0.05 } } },
-                        colors: ['{{app.color.primary}}','{{app.color.success}}'],
-                        grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },   
-                        tooltip: true,
-                        tooltipOpts: { content: '%s: %p.0%' }
-                      }
-                    " style="height:160px"></div>
-                  </div>
-                </div>
+                <i class="mdi2-calendar-clock i-32 text-3x"></i>
               </div>
             </div>
           </div>
         </div>
         <div class="col-xs-6">
-          <div class="card {{app.setting.theme.primary}}">
-            <div class="card-heading">
-              <h2>{{'titles.SCHEDULED' | translate}}</h2>
-            </div>
-            <div class="list-group list-group-lg no-bg">
-              <a href class="list-group-item text-ellipsis">
-               <!--  <span class="pull-right">
-                 <i class="mdi-action-trending-up i-20 text-muted-dk"></i>
-               </span> -->
-                #TheWalkingDead
-              </a>
-              <a href class="list-group-item text-ellipsis">
-                <!-- <span class="pull-right">
-                  <i class="mdi-action-trending-neutral i-20 text-muted-dk"></i>
-                </span> -->
-                #Survivor
-              </a>
-              <a href class="list-group-item text-ellipsis">
-               <!--  <span class="pull-right">
-                 <i class="mdi-action-trending-down i-20 text-muted-dk"></i>
-               </span> -->
-                #Whitehouse
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="col-xs-6">
-          <div class="card {{app.setting.theme.accent}}">
+          <div class="md-accent-hue-1 background md-whiteframe-z1">
             <div class="card-heading">
               <h2>{{'titles.DRAFTS' | translate}}</h2>
             </div>
-            <div class="list-group list-group-lg no-bg">
-              <a href class="list-group-item">
+            <div class="list-group list-group-lg md-accent-default background w-full" ng-class="{'display-table h-300': !drafts || !drafts.length}">
+              <a md-ink-ripple href class="list-group-item" ng-repeat="draft in drafts" ng-click="app.showPost(draft)">
                 <!-- <span class="pull-right">
                   1
                 </span> -->
-                #Story
+                <div class="text-ellipsis font-bold">{{draft.title}}</div>
+                <div class="text-xs text-right p-t-sm"><i class="mdi mdi2-radio-tower"></i> {{draft.stationName}}</div>
               </a>
-              <a href class="list-group-item">
-                <!-- <span class="pull-right">
-                  2
-                </span> -->
-                #Nature
-              </a>
-              <a href class="list-group-item">
-               <!--  <span class="pull-right">
-                 3
-               </span> -->
-                #Sleeping
-              </a>
+              <div class="text-center p-lg display-cell v-m w-full" ng-if="!drafts || !drafts.length">
+                <div class="m-b-sm">
+                  {{'settings.dashboard.NO_DRAFTS' | translate}}
+                </div>
+                <i class="mdi2-calendar-clock i-32 text-3x"></i>
+              </div>
             </div>
           </div>
         </div>
@@ -127,154 +73,123 @@
           <div class="card p"></div>
         </div>
       </div>
-      <!-- <div class="panel panel-default">
-        <div class="panel-heading bg-white">
-          <span class="label pull-right m-t-xs {{app.setting.theme.warn}}">4 left</span>
-          <span class="h4">Tasks</span>
-        </div>
-        <table class="table m-b-none">
-          <thead>
-            <tr>
-              <th>Progress</th>
-              <th>Item</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="progress progress-xs progress-striped active no-margin m-v-sm">
-                  <div class="progress-bar bg-success" data-toggle="tooltip" data-original-title="80%" style="width: 80%"></div>
-                </div>
-              </td>
-              <td>App prototype design</td>
-            </tr>
-            <tr>                    
-              <td>
-                <div class="progress progress-xs no-margin m-v-sm">
-                  <div class="progress-bar bg-info" data-toggle="tooltip" data-original-title="40%" style="width: 40%"></div>
-                </div>
-              </td>
-              <td>Design documents</td>
-            </tr>
-            <tr>                    
-              <td>
-                <div class="progress progress-xs no-margin m-v-sm">
-                  <div class="progress-bar bg-warning" data-toggle="tooltip" data-original-title="20%" style="width: 20%"></div>
-                </div>
-              </td>
-              <td>UI toolkit</td>
-            </tr>
-            <tr>                    
-              <td>
-                <div class="progress progress-xs no-margin m-v-sm">
-                  <div class="progress-bar bg-danger" data-toggle="tooltip" data-original-title="15%" style="width: 15%"></div>
-                </div>
-              </td>
-              <td>Testing</td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4">
-      <!-- <div class="card">
-        <form>
-          <textarea class="form-control no-border p-md" rows="1" placeholder="Write something..."></textarea>
-        </form>
-        <div class="lt p">
-          <button md-ink-ripple class="md-btn md-raised pull-right p-h-md {{app.setting.theme.primary}}">Post</button>
-          <ul class="nav nav-pills nav-sm">
-            <li><a href><i class="fa fa-camera"></i></a></li>
-            <li><a href><i class="fa fa-video-camera"></i></a></li>
-          </ul>
-        </div>
-      </div> -->
       <div class="card">
         <div class="card-heading">
-          <h2>{{'titles.LATEST_POSTS' | translate}}</h2>
+          <h2 class="font-thin">{{'titles.LATEST_POSTS' | translate}}</h2>
         </div>
         <div class="card-body">
           <div class="streamline b-l b-accent m-b">
-            <div class="sl-item">
-              <div class="sl-content">
-                <div class="text-muted-dk">Just now</div>
-                <p>Finished task <a href class="text-info">#features 4</a>.</p>
-              </div>
-            </div>
-            <div class="sl-item b-info">
-              <div class="sl-content">
-                <div class="text-muted-dk">11:30</div>
-                <p><a href>@Jessi</a> retwit your post</p>
-              </div>
-            </div>
-            <div class="sl-item b-primary b-l">
-              <div class="sl-content">
-                <div class="text-muted-dk">10:30</div>
-                <p>Call to customer <a href class="text-info">Jacob</a> and discuss the detail.</p>
-              </div>
-            </div>
-            <div class="sl-item b-warning">
-              <div class="sl-content">
-                <div class="text-muted-dk">3 days ago</div>
-                <p><a href class="text-info">Jessi</a> commented your post.</p>
-              </div>
-            </div>
-            <div class="sl-item b-info">
-              <div class="sl-content">
-                <div class="text-muted-dk">Thu, 10 Mar</div>
-                <p>Trip to the moon</p>
-              </div>
-            </div>
-            <div class="sl-item b-info">
-              <div class="sl-content">
-                <div class="text-muted-dk">Sat, 5 Mar</div>
-                <p>Prepare for presentation</p>
-              </div>
-            </div>
-            <div class="sl-item">
-              <div class="sl-content">
-                <div class="text-muted-dk">Sun, 11 Feb</div>
-                <p><a href class="text-info">Jessi</a> assign you a task <a href class="text-info">Mockup Design</a>.</p>
-              </div>
-            </div>
-            <div class="sl-item">
-              <div class="sl-content">
-                <div class="text-muted-dk">Thu, 17 Jan</div>
-                <p>Follow up to close deal</p>
+            <div class="sl-item" ng-repeat="publication in publications | limitTo:10">
+              <div class="sl-content" ng-click="app.showPost(publication)">
+                <div class="text-muted-dk">{{app.getLocalTime(publication.date)}}</div>
+                <p>{{publication.title}}</p>
               </div>
             </div>
           </div>
         </div>
+        <md-divider></md-divider>
+        <div class="text-right" ng-if="publications.length > 10">
+          <md-button class="m-t-sm m-r-sm" ui-sref="app.publications">{{'titles.SHOW_ALL' | translate}}</md-button>
+        </div>
+        <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="loadingPublished" md-mode="indeterminate"></md-progress-linear>
       </div>
       <div class="card {{app.setting.theme.primary}}">
         <div class="card-heading">
-          <h2 class="font-thin" translate="titles.NEW_USERS">Novos Usuáriso</h2>
+          <h2 class="font-thin">{{'titles.USERS' | translate}}</h2>
         </div>
-        <!-- <div class="card-tools">
-          <ul class="list-inline">
-            <li class="dropdown">
-              <a md-ink-ripple data-toggle="dropdown" class="md-btn md-flat md-btn-circle">
-                <i class="mdi-navigation-more-vert text-md"></i>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-scale pull-right pull-up top text-color">
-                <li><a href>Action</a></li>
-                <li><a href>Another action</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div> -->
         <div class="card-divider"></div>
         <div class="card-body">
-          <a href class="m-r-xs inline">
+          <!--<a href class="m-l-sm m-r-sm m-b inline" ng-repeat="person in persons">
             <img src="/images/a4.jpg" class="w-40 img-circle">
-          </a>
-          <a href class="m-r-xs inline">
-            <img src="/images/a5.jpg" class="w-40 img-circle">
-          </a>
-          <a href class="m-r-xs inline">
-            <img src="/images/a6.jpg" class="w-40 img-circle">
-          </a>
+          </a>-->
+
+          <div class="m-b-sm" ng-repeat="person in persons | limitTo:5" ng-click="showPerson(person)">
+            <span class="pull-left thumb-sm m-r">
+              <div ng-style="app.getUserImage(person, 'small', 'PROFILE_PICTURE', true)" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(person)}">
+                <i ng-if="!app.hasProfilePicture(person)" style="line-height: 36px;" class="mdi2-account i-24"></i>
+              </div>
+            </span>
+            <span class="clear">
+              <span class="text-md font-bold">{{person.name}}</span>
+              <div class="text-muted clear text-ellipsis">{{person.username}} | {{person.email}}</div>
+            </span>
+          </div>
         </div>
+        <md-divider></md-divider>
+        <div class="text-right" ng-if="persons.length > 5">
+          <md-button class="m-t-sm m-r-sm" ui-sref="app.users">{{'titles.SHOW_ALL' | translate}}</md-button>
+        </div>
+        <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="loadingPerson" md-mode="indeterminate"></md-progress-linear>
       </div>
     </div>
   </div>
+
+<script type="text/ng-template" id="welcolme-dialog.html">
+  <md-dialog aria-label="change action">
+    <md-content style="background: white">
+      <div class="" id="email-template">
+        <div class="m-b-sm m-t-xs p-h w-800 pos-rlt">
+              
+          <div slider Interval='999999'>
+            <ul class="slides" style="background: white; height: 300px;">
+              <li>
+                <img src="/images/tutorial/edit-logo.fw.png" class="h-200 img-responsive">
+              </li>
+              <li>
+                <img src="/images/tutorial/stations-logo.fw.png" class="h-200 img-responsive">
+              </li>
+              <li>
+                <img src="/images/tutorial/pages-logo.fw.png" class="h-200 img-responsive">
+              </li>
+              <li>
+                <img src="/images/tutorial/manage-users-logo.fw.png" class="h-200 img-responsive">
+              </li>
+              <li>
+                <img src="/images/tutorial/admin-logo.fw.png" class="h-200 img-responsive">
+              </li>
+              <li>
+                <img src="/images/tutorial/features-logo.fw.png" class="h-200 img-responsive">
+              </li>
+            </ul>
+          </div>
+
+          <div class="pos-abt bottom-0 right-0 z-index-5 m-r-sm">
+            <md-button class="md-raised md-accent p-h md-whiteframe-z2 font-500" ng-click="cancel(); setSeen();">{{'titles.SKIP' | translate}}</md-button>
+          </div>
+
+        </div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>
+
+<script type="text/ng-template" id="person-dialog.html">
+  <md-dialog-content>
+    <div class="w-xxl scrollable md-background-hue-1 background">
+        <div class="pos-rlt p">
+          <div ng-style="{'background-image': 'url(  {{loadedPerson | coverImage: 'medium'}} )'}" style="margin: -16px -16px 0 -16px" class="hidden-folded bg-cover m-b-md md-whiteframe-z1">
+            <div class="p w-full">
+          <!-- <i class="mdi mdi2-account text-4x"></i> -->
+            <div class="md-whiteframe-z1 user-avatar rounded w-64 bg-white inline pos-rlt md-primary-default background text-center bg-cover" ng-style="app.getBackgroundImage(loadedPerson, 'medium')" bstyle="{'background-image': 'url(  {{loadedPerson | userImage: 'medium'}} )'}">
+              <i ng-if="!loadedPerson.imageHash" class="mdi2-account i-40" style="top: 16%;position: relative;"></i>
+            </div>
+            </div>
+            <div class="p-v-sm p-h black-grad  text-white">
+              <div class="block" style="opacity:0.92">
+                <span class="block font-bold">{{loadedPerson.name}}</span>
+                <span class="text-sm">{{loadedPerson.email}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="">
+            {{loadedPerson.bio}}
+          </div>
+        </div>
+        <div class="text-right">
+          <md-button ng-click="cancel()">{{'titles.CLOSE' | translate}}</md-button>
+        </div>
+      </div>
+  </md-dialog-content>
+</script>

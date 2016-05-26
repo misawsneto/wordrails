@@ -19,6 +19,9 @@ public class AsyncService {
 	@Autowired
 	public PersonRepository personRepository;
 
+//	@Autowired
+//	ElasticsearchTemplate elasticsearchTemplate;
+
 	@Async
 	public void run(Runnable runnable) {
 		runnable.run();
@@ -46,4 +49,9 @@ public class AsyncService {
 			personRepository.save(person);
 		}
 	}
+
+//	@Async
+//	public void asyncBulkSaveIndex(List<IndexQuery> queries) {
+//		elasticsearchTemplate.bulkIndex(queries);
+//	}
 }

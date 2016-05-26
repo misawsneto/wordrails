@@ -5,7 +5,6 @@ import co.xarx.trix.config.security.Permissions;
 import co.xarx.trix.domain.Station;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
-import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.*;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
 
 import static co.xarx.trix.config.security.Permissions.MODERATION;
 import static org.springframework.security.acls.domain.BasePermission.*;
-import static org.springframework.security.acls.domain.BasePermission.ADMINISTRATION;
 
 @Component
 public class AccessControlListService {
@@ -28,10 +26,19 @@ public class AccessControlListService {
 		this.aclService = aclService;
 	}
 
+	public boolean hasPermission(Class clazz, Integer objectId, Sid sid, Permission permission) {
+		ObjectIdentityImpl oi = new ObjectIdentityImpl(clazz, objectId);
+		Acl acl = aclService.readAclById(oi);
+		AccessControlEntry ace = findAce(acl.getEntries(), sid);
 
-	AccessControlEntry findAce(List<AccessControlEntry> entries, String username) {
+		return ace != null && Permissions.containsPermission(ace.getPermission(), permission);
+
+	}
+
+
+	AccessControlEntry findAce(List<AccessControlEntry> entries, Sid sid) {
 		for (AccessControlEntry entry : entries) {
-			if (entry.getSid().equals(new PrincipalSid(username))) {
+			if (entry.getSid().equals(sid)) {
 				return entry;
 			}
 		}

@@ -81,7 +81,7 @@ public final class MultitenantCache implements Cache {
 	private String translateKey(Object key) throws TargetLookupFailureException {
 		Assert.notNull(key, "Key must have some value");
 
-		logger.debug("Translating key {}", key);
+		logger.trace("Translating key {}", key);
 		String tenantContext = TenantContextHolder.getCurrentTenantId();
 
 		Assert.hasText(tenantContext, "Tenant context is required but is not available");

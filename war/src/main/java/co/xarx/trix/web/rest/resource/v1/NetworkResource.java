@@ -14,6 +14,8 @@ import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.NetworkService;
 import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.services.security.PersonPermissionService;
+import co.xarx.trix.services.security.StationPermissionService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.NetworkApi;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,15 +23,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.acls.domain.PrincipalSid;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 
 import javax.validation.ConstraintViolation;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.util.*;
+
+import static org.springframework.security.acls.domain.BasePermission.READ;
 
 @Component
 @NoArgsConstructor
@@ -40,7 +46,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
-	private StationRolesRepository stationRolesRepository;
+	private PermissionEvaluator permissionEvaluator;
 	@Autowired
 	private AuthService authProvider;
 	@Autowired
@@ -52,13 +58,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	@Autowired
 	private TermRepository termRepository;
 	@Autowired
-	private PostRepository postRepository;
-	@Autowired
 	private PostEventHandler postEventHandler;
-	@Autowired
-	private PostReadRepository postReadRepository;
-	@Autowired
-	private CommentRepository commentRepository;
 	@Autowired
 	private QueryPersistence queryPersistence;
 	@Autowired
@@ -71,6 +71,10 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	private StatisticsService statisticsService;
 	@Autowired
 	private NetworkService networkService;
+	@Autowired
+	private StationPermissionService stationPermissionService;
+	@Autowired
+	private PersonPermissionService personPermissionService;
 
 	@Override
 	public void putNetwork(Integer id) throws IOException {
@@ -84,36 +88,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 
 
 		//Stations Permissions
-		List<Station> stations = stationRepository.findByPersonId(person.id);
-		List<StationPermission> stationPermissionDtos = new ArrayList<>(stations.size());
-		for (Station station : stations) {
-			StationPermission stationPermissionDto = new StationPermission();
-
-			//Station Fields
-			stationPermissionDto.stationId = station.id;
-			stationPermissionDto.stationName = station.name;
-			stationPermissionDto.writable = station.writable;
-			stationPermissionDto.main = station.main;
-			stationPermissionDto.visibility = station.visibility;
-			stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
-
-			stationPermissionDto.subheading = station.subheading;
-			stationPermissionDto.sponsored = station.sponsored;
-			stationPermissionDto.topper = station.topper;
-
-			stationPermissionDto.allowComments = station.allowComments;
-			stationPermissionDto.allowSocialShare = station.allowSocialShare;
-
-			//StationRoles Fields
-			StationRole stationRole = stationRolesRepository.findByStationAndPerson(station, person);
-			if (stationRole != null) {
-				stationPermissionDto.admin = stationRole.admin;
-				stationPermissionDto.editor = stationRole.editor;
-				stationPermissionDto.writer = stationRole.writer;
-			}
-
-			stationPermissionDtos.add(stationPermissionDto);
-		}
+		List<Station> stations = personPermissionService.getStationsWithPermission(authProvider.getCurrentSid(), READ);
+		List<StationPermission> stationPermissionDtos = stationPermissionService.getStationPermissions(stations);
 
 		personPermissions.stationPermissions = stationPermissionDtos;
 		personPermissions.personId = person.id;
@@ -333,15 +309,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 				}
 			}
 
-			StationRole role = new StationRole();
-			role.setTenantId(network.getTenantId());
-			role.person = person;
-			role.station = station;
-			role.writer = true;
-			role.admin = true;
-			role.editor = true;
-			stationRolesRepository.save(role);
-			station.defaultPerspectiveId = new ArrayList<StationPerspective>(station.stationPerspectives).get(0).id;
+			station.defaultPerspectiveId = new ArrayList<>(station.stationPerspectives).get(0).id;
 			stationRepository.save(station);
 
 			try {
@@ -351,7 +319,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 				tp.perspective = stationPerspective;
 				tp.stationId = station.id;
 
-				tp.rows = new ArrayList<Row>();
+				tp.rows = new ArrayList<>();
 
 				Row row1 = new Row();
 				row1.setTenantId(network.getTenantId());

@@ -78,8 +78,6 @@ public class QueryableListSection extends AbstractSection implements QueryableSe
 	@NotNull
 	public Integer size;
 
-	public Integer mSize;
-
 	@Override
 	public Type getType() {
 		return Type.QUERYABLE;

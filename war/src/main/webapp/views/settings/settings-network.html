@@ -161,6 +161,9 @@
                           </md-button>
                         </div>
                       </li>
+                      <li class="p-sm p-h-md">
+                        <md-divider></md-divider>
+                      </li>
                       <li class="list-group-item clearfix b-n">
                         <div class="display-t-c v-middle">
                           <div class="b b-a thumb-xl">
@@ -185,6 +188,9 @@
                             {{'titles.REMOVE' | translate}}
                           </md-button>
                         </div>
+                      </li>
+                      <li class="p-sm p-h-md">
+                        <md-divider></md-divider>
                       </li>
                       <li class="list-group-item clearfix b-n">
                         <div class="display-t-c v-middle">
@@ -255,8 +261,12 @@
                           <input ng-model="network.twitterLink">
                         </md-input-container>
                         <md-input-container class="m-b-sm m-t-sm w-full">
-                          <label>Link do perfil do instagram</label>
+                          <label>Link do perfil do Instagram</label>
                           <input ng-model="network.instagramLink">
+                        </md-input-container>
+                        <md-input-container class="m-b-sm m-t-sm w-full">
+                          <label>Link da página do LinkedIn</label>
+                          <input ng-model="network.linkedInLink">
                         </md-input-container>
                       </div>
                       <div class="col-lg-6">
@@ -270,7 +280,7 @@
                         </md-input-container>
                         <md-input-container class="m-b-sm m-t-sm w-full">
                           <label>Link do perfil do Pinterest</label>
-                          <input ng-model="network.piterestLink">
+                          <input ng-model="network.pinterestLink">
                         </md-input-container>
                       </div>
                     </div>

@@ -45,6 +45,7 @@
 		"EDIT": "Edit",
 		"EDIT_PROFILE": "Edit profile",
 		"REMOVE": "Remove",
+		"MOVE_TO": "Move to...",
 		"FILTER_BY": "Filter by",
 		"FILTER_BY_STATION": "Filter by station",
 		"FILTER_BY_DATE": "Filter by date",
@@ -93,7 +94,10 @@
 		"SELECTED": "Selected",
 		"SELECT_ALL": "Select all",
 		"DESELECT_ALL": "Deselect all",
-		"AT": "at"
+		"AT": "at",
+		"SHOW_ALL": "Show all",
+		"SKIP": "Skip",
+		"CLOSE": "Close"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -133,6 +137,11 @@
 	  }
 	},
 	"settings":{
+		"dashboard":{
+			"NO_SCHEDULED": "No publications scheduled yet",
+			"NO_DRAFTS": "No publication drafts yet",
+			"NO_PUBLICATIONS": "No publications yet"
+		},
 		"aside":{
 			"DASHBOARD": "Dashboard",
 			"CONTENT": "Content",
@@ -247,7 +256,9 @@
 				"PAGE_CHANGE_ALERT": "You have edited your publication and there's unsaved content.",
 				"CLEAR_CONTENT_MSG": "Clear all publication content.",
 				"CONTENT_LOST_ALERT": "Attention! All non-saved content will be list.",
-				"NEW_POST_MSG": "Start an entire new publication?"
+				"NEW_POST_MSG": "Start an entire new publication?",
+				"CHANGE_STATE_FROM_PUBLISHED_MSG": "This publication won't be visible unless it's state is set to PUBLISHED. Are you sure you want to change the state of this publication?",
+				"NEW_PUBLICATION_INFO": "You have started a new publication"
 			},
 			"states": {
 				"PUBLISHED": "Published",
@@ -274,7 +285,10 @@
 			"ADD_TAGS": "Adicioanr tags",
 			"PUBLISH_ALL": "Publish all",
 			"DRAFT_ALL": "Move to drafts",
-			"TRASH_ALL": "Move to trash"
+			"TRASH_ALL": "Move to trash",
+			"UPDATE_SUCCESS": "Atualizado",
+			"PUBLISH_SUCCESS": "Published",
+			"PUBLISH_ERROR": "Publication error"
 		},
 		"station": {
 			"STATION_SETTINGS": "Station settings",
@@ -316,7 +330,11 @@
 			"PASSWORD": "Password",
 			"CONFIRM_PASSWORD": "Confirm password",
 			"BIOGRAPHY": "Biography",
-			"PASSWORDS_DONT_MATCH": "The password is invalido or passowrd and confirmation don't match"
+			"PASSWORDS_DONT_MATCH": "The password is invalido or passowrd and confirmation don't match",
+			"MOVE_TO_STATE_MSG": "Are you sure you want to move this publication and change it's state? Move to:"
+		},
+		"bookmark": {
+			"REMOVE_CONFIRMATION_MSG": "Are you sure you want to remove this bookmark"
 		}
 	},
 	"messages": {

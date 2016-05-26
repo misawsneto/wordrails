@@ -74,7 +74,7 @@ public class GlobalSecurityConfig extends GlobalMethodSecurityConfiguration {
 	}
 
 	@Bean
-	public PermissionGrantingStrategy aclPermissionGrantingStrategy() {
+	public PermissionGrantingStrategy aclPermissionGrantingStrategy() throws IOException {
 		return new BitMaskPermissionGrantingStrategy(aclAuditLogger());
 	}
 
@@ -95,10 +95,16 @@ public class GlobalSecurityConfig extends GlobalMethodSecurityConfiguration {
 		return factory;
 	}
 
+	@Bean
+	public PermissionGrantingStrategy permissionGrantingStrategy() {
+		return new BitMaskPermissionGrantingStrategy(aclAuditLogger());
+	}
+
 
 	@Bean
 	public AclCache aclCache(RedisConnectionFactory redisConnectionFactory) throws CacheException, IOException {
-		return new SpringCacheBasedAclCache(aclCacheManager(redisConnectionFactory).getCache("acl"), aclPermissionGrantingStrategy(), aclAuthorizationStrategy());
+		return new SpringCacheBasedAclCache(aclCacheManager(redisConnectionFactory).getCache("acl"),
+				permissionGrantingStrategy(), aclAuthorizationStrategy());
 	}
 
 	@Bean
@@ -113,7 +119,8 @@ public class GlobalSecurityConfig extends GlobalMethodSecurityConfiguration {
 
 	@Bean
 	public LookupStrategy aclLookupStrategy(DataSource dataSource, RedisConnectionFactory redisConnectionFactory) throws CacheException, IOException {
-		BasicLookupStrategy lookupStrategy = new BasicLookupStrategy(dataSource, aclCache(redisConnectionFactory), aclAuthorizationStrategy(), aclPermissionGrantingStrategy());
+		BasicLookupStrategy lookupStrategy = new BasicLookupStrategy(dataSource, aclCache(redisConnectionFactory),
+				aclAuthorizationStrategy(), permissionGrantingStrategy());
 		lookupStrategy.setPermissionFactory(aclPermissionFactory());
 		return lookupStrategy;
 	}

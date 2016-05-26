@@ -2,7 +2,7 @@
 @license textAngular
 Author : Austin Anderson
 License : 2013 MIT
-Version 1.5.0
+Version 1.5.1
 
 See README.md or https://github.com/fraywing/textAngular/wiki for requirements and use.
 */
@@ -11,10 +11,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 Commonjs package manager support (eg componentjs).
 */
 
-/* istanbul ignore next:  */
-'undefined'!=typeof module&&'undefined'!=typeof exports&&module.exports===exports&&(module.exports='textAngular');
 
-(function(){ // encapsulate all variables so they don't become global vars
 "use strict";
 // IE version detection - http://stackoverflow.com/questions/4169160/javascript-ie-detection-why-not-use-simple-conditional-comments
 // We need this as IE sometimes plays funny tricks with the contenteditable.
@@ -662,12 +659,11 @@ angular.module('textAngular.DOM', ['textAngular.factories'])
 			}catch(e){}
 		};
 	};
-}]).service('taSelection', ['$window', '$document', 'taDOM',
+}]).service('taSelection', ['$document', 'taDOM',
 /* istanbul ignore next: all browser specifics and PhantomJS dosen't seem to support half of it */
-function($window, $document, taDOM){
+function($document, taDOM){
 	// need to dereference the document else the calls don't work correctly
 	var _document = $document[0];
-	var rangy = $window.rangy;
 	var brException = function (element, offset) {
 		/* check if selection is a BR element at the beginning of a container. If so, get
 		* the parentNode instead.
@@ -1015,11 +1011,11 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 	};
 }])
 .directive('taBind', [
-		'taSanitize', '$timeout', '$window', '$document', 'taFixChrome', 'taBrowserTag',
+		'taSanitize', '$timeout', '$document', 'taFixChrome', 'taBrowserTag',
 		'taSelection', 'taSelectableElements', 'taApplyCustomRenderers', 'taOptions',
 		'_taBlankTest', '$parse', 'taDOM', 'textAngularManager',
 		function(
-			taSanitize, $timeout, $window, $document, taFixChrome, taBrowserTag,
+			taSanitize, $timeout, $document, taFixChrome, taBrowserTag,
 			taSelection, taSelectableElements, taApplyCustomRenderers, taOptions,
 			_taBlankTest, $parse, taDOM, textAngularManager){
 	// Uses for this are textarea or input with ng-model and ta-bind='text'
@@ -1466,10 +1462,12 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 					var _processingPaste = false;
 					/* istanbul ignore next: phantom js cannot test this for some reason */
 					var processpaste = function(text) {
+                        var _isOneNote = text.match(/content=["']*OneNote.File/i);
 						/* istanbul ignore else: don't care if nothing pasted */
+                        //console.log(text);
 						if(text && text.trim().length){
 							// test paste from word/microsoft product
-							if(text.match(/class=["']*Mso(Normal|List)/i) || text.match(/content=["']*Word.Document/i)){
+							if(text.match(/class=["']*Mso(Normal|List)/i) || text.match(/content=["']*Word.Document/i) || text.match(/content=["']*OneNote.File/i)){
 								var textFragment = text.match(/<!--StartFragment-->([\s\S]*?)<!--EndFragment-->/i);
 								if(!textFragment) textFragment = text;
 								else textFragment = textFragment[1];
@@ -1567,7 +1565,11 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 									if(node.attributes.length <= 0) _unwrapElement(node);
 								});
 								angular.forEach(targetDom.find('font'), _unwrapElement);
-								text = targetDom.html();
+
+                                text = targetDom.html();
+                                if(_isOneNote){
+                                    text = targetDom.html() || dom.html();
+                                }
 							}else{
 								// remove unnecessary chrome insert
 								text = text.replace(/<(|\/)meta[^>]*?>/ig, '');
@@ -1659,13 +1661,13 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 							e.preventDefault();
 							return false;
 						} else {// Everything else - empty editdiv and allow browser to paste content into it, then cleanup
-							var _savedSelection = $window.rangy.saveSelection(),
+							var _savedSelection = rangy.saveSelection(),
 								_tempDiv = angular.element('<div class="ta-hidden-input" contenteditable="true"></div>');
 							$document.find('body').append(_tempDiv);
 							_tempDiv[0].focus();
 							$timeout(function(){
 								// restore selection
-								$window.rangy.restoreSelection(_savedSelection);
+								rangy.restoreSelection(_savedSelection);
 								processpaste(_tempDiv[0].innerHTML);
 								element[0].focus();
 								_tempDiv.remove();
@@ -1796,11 +1798,11 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 								taSelection.setSelectionToElementStart(element.children()[0]);
 							}else if(val.substring(0, 1) !== '<' && attrs.taDefaultWrap !== ''){
 								/* we no longer do this, since there can be comments here and white space
-								var _savedSelection = $window.rangy.saveSelection();
+								var _savedSelection = rangy.saveSelection();
 								val = _compileHtml();
 								val = "<" + attrs.taDefaultWrap + ">" + val + "</" + attrs.taDefaultWrap + ">";
 								_setInnerHTML(val);
-								$window.rangy.restoreSelection(_savedSelection);
+								rangy.restoreSelection(_savedSelection);
 								*/
 							}
 							var triggerUndo = _lastKey !== event.keyCode && UNDO_TRIGGER_KEYS.test(event.keyCode);
@@ -2040,38 +2042,11 @@ textAngular.config([function(){
 	angular.forEach(taTools, function(value, key){ delete taTools[key];	});
 }]);
 
-textAngular.run([function(){
-	/* istanbul ignore next: not sure how to test this */
-	// Require Rangy and rangy savedSelection module.
-	if (typeof define === 'function' && define.amd) {
-		// AMD. Register as an anonymous module.
-		define(function(require) {
-			window.rangy = require('rangy');
-			window.rangy.saveSelection = require('rangy/lib/rangy-selectionsaverestore');
-		});
-	} else if (typeof require ==='function' && typeof module !== 'undefined' && typeof exports === 'object') {
-		// Node/CommonJS style
-		window.rangy = require('rangy');
-		window.rangy.saveSelection = require('rangy/lib/rangy-selectionsaverestore');
-	} else {
-		// Ensure that rangy and rangy.saveSelection exists on the window (global scope).
-		// TODO: Refactor so that the global scope is no longer used.
-		if(!window.rangy){
-			throw("rangy-core.js and rangy-selectionsaverestore.js are required for textAngular to work correctly, rangy-core is not yet loaded.");
-		}else{
-			window.rangy.init();
-			if(!window.rangy.saveSelection){
-				throw("rangy-selectionsaverestore.js is required for textAngular to work correctly.");
-			}
-		}
-	}
-}]);
-
 textAngular.directive("textAngular", [
 	'$compile', '$timeout', 'taOptions', 'taSelection', 'taExecCommand',
-	'textAngularManager', '$window', '$document', '$animate', '$log', '$q', '$parse',
+	'textAngularManager', '$document', '$animate', '$log', '$q', '$parse',
 	function($compile, $timeout, taOptions, taSelection, taExecCommand,
-		textAngularManager, $window, $document, $animate, $log, $q, $parse){
+		textAngularManager, $document, $animate, $log, $q, $parse){
 		return {
 			require: '?ngModel',
 			scope: {},
@@ -2383,9 +2358,9 @@ textAngular.directive("textAngular", [
 				scope.startAction = function(){
 					scope._actionRunning = true;
 					// if rangy library is loaded return a function to reload the current selection
-					_savedSelection = $window.rangy.saveSelection();
+					_savedSelection = rangy.saveSelection();
 					return function(){
-						if(_savedSelection) $window.rangy.restoreSelection(_savedSelection);
+						if(_savedSelection) rangy.restoreSelection(_savedSelection);
 					};
 				};
 				scope.endAction = function(){
@@ -2396,8 +2371,8 @@ textAngular.directive("textAngular", [
 						}else{
 							scope.displayElements.text[0].focus();
 						}
-						// $window.rangy.restoreSelection(_savedSelection);
-						$window.rangy.removeMarkers(_savedSelection);
+						// rangy.restoreSelection(_savedSelection);
+						rangy.removeMarkers(_savedSelection);
 					}
 					_savedSelection = false;
 					scope.updateSelectedStyles();
@@ -3092,4 +3067,3 @@ textAngular.directive('textAngularToolbar', [
 		};
 	}
 ]);
-})();

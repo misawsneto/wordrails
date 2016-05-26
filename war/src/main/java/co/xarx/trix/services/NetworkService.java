@@ -8,7 +8,6 @@ import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import sun.nio.ch.Net;
 
 import java.nio.charset.Charset;
 import java.nio.file.Files;

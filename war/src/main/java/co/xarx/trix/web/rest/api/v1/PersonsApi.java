@@ -3,7 +3,6 @@ package co.xarx.trix.web.rest.api.v1;
 import co.xarx.trix.api.*;
 import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.exception.ConflictException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,21 +19,20 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public interface PersonsApi {
 
-	public static class PersonInvitationDto {
+	class PersonInvitationDto {
 		public String emailTemplate;
 		public List<String> emails;
 	}
 
-	public static class PersonCreateDto {
+	class PersonCreateDto {
 		public String name;
 		public String username;
 		public String email;
 		public String password;
 		public boolean emailNotification;
-		public List<StationRole> stationsRole;
 	}
 
-	public static class PersonAuthDto {
+	class PersonAuthDto {
 		public Integer id;
 		public String username;
 		public String email;
@@ -151,12 +149,6 @@ public interface PersonsApi {
 	Response enablePerson(@PathParam("personId") Integer personId);
 
 	@PUT
-	@Transactional
-	@Path("/updateStationRoles")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	Response updateStationRoles(StationRolesUpdate stationRolesUpdate);
-
-	@PUT
 	@Path("/enable/all")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response enablePerson(IdsList idsList);
@@ -191,4 +183,6 @@ public interface PersonsApi {
 	 * {@link co.xarx.trix.persistence.PersonRepository#findPersons(String, Pageable)}
 	 */
 	void findPersons() throws IOException;
+
+
 }

@@ -48,6 +48,7 @@ public class TestArtifactsFactory {
 		post.featuredAudioHash = generateToken();
 		post.lat = 132.51;
 		post.lng = 42.90;
+		post.externalVideoUrl = "https://www.youtube.com/watch?v=jXhFcBIEDHM";
 		post.subheading = "Dummy subheading";
 		post.scheduledDate = new Date();
 		post.notify = true;

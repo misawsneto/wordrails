@@ -15,7 +15,7 @@ public class QueryPersistence {
 
 	@Transactional
 	public void updateCommentsCount(Integer postId) {
-		manager.createNativeQuery("UPDATE Post p set commentsCount = (select count(*) FROM comment c WHERE c.post_id = :postId1) + 1 WHERE p.id = :postId2").setParameter("postId1", postId).setParameter("postId2", postId).executeUpdate();
+		manager.createNativeQuery("UPDATE Post p set commentsCount = (select count(*) FROM comment c WHERE c.post_id = :postId1) WHERE p.id = :postId2").setParameter("postId1", postId).setParameter("postId2", postId).executeUpdate();
 	}
 
 	@Transactional
@@ -96,5 +96,17 @@ public class QueryPersistence {
 	@Transactional
 	public void deleteAuthoritiesByStation(Integer id) {
 		manager.createNativeQuery("DELETE from authorities where station_id = (:id)").setParameter("id", id).executeUpdate();
+	}
+
+	@Transactional
+	public void updateBookmarksCount(Integer postId) {
+		manager.createNativeQuery("UPDATE Post p set p.bookmarksCount = (select count(*) FROM person_bookmark pb WHERE pb.post_id" +
+				" = :postId1) WHERE p.id = :postId2").setParameter("postId1", postId).setParameter("postId2", postId).executeUpdate();
+	}
+
+	@Transactional
+	public void updateRecommendsCount(Integer postId) {
+		manager.createNativeQuery("UPDATE Post p set p.recommendsCount = (select count(*) FROM person_recommend pr WHERE" +
+				" pr.post_id = :postId1) WHERE p.id = :postId2").setParameter("postId1", postId).setParameter("postId2", postId).executeUpdate();
 	}
 }

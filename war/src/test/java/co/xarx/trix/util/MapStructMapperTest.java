@@ -45,6 +45,8 @@ public class MapStructMapperTest {
 	ContainerSectionMapper containerSectionMapper;
 	@Autowired
 	QueryableSectionMapper queryableSectionMapper;
+//	@Autowired
+//	PostMapper postMapper;
 
 	@Test
 	public void testPageableStatementDataToEntity() {
@@ -101,6 +103,19 @@ public class MapStructMapperTest {
 		assertThat(entity.getSize(), is(10));
 		assertEquals(entity.isPageable(), true);
 	}
+
+//	@Test
+//	@Ignore
+//	public void testPostToDto() {
+//		val entity = TestArtifactsFactory.createPost();
+//
+//		PostData dto = postMapper.asDto(entity);
+//
+//		assertThat(dto.getId(), is(entity.getId()));
+//		assertThat(dto.getState(), is(entity.getState()));
+//		assertThat(dto.getSlug(), is(entity.getSlug()));
+//		assertThat(dto.getAuthor().getId(), is(entity.getAuthor().getId()));
+//	}
 
 	private void assertSection(AbstractSection entity) {
 		assertEquals(entity.getTitle(), "Dummy title");

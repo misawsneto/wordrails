@@ -40,12 +40,8 @@ public final class Constants {
 		public static final String POST = "post";
 		public static final String PERSON = "person";
 		public static final String STATION = "station";
-		public static final String BOOKMARK = "bookmark";
-		public static final String NGINX_INDEX = "nginx_access";
-		public static final String MYSQL_INDEX = "analytics";
-		public static final String POSTREAD_ENTITY = NGINX_INDEX + ".nginx_access";
-		public static final String COMMENT_ENTITY = MYSQL_INDEX + ".comment";
-		public static final String RECOMMEND_ENTITY = MYSQL_INDEX + ".recommend";
+		public static final String COMMENT = "comment";
+		public static final String APP_STATS = "app_stats";
 	}
 
 	public static class Post {

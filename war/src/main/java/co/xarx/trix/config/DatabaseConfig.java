@@ -4,11 +4,17 @@ import co.xarx.trix.config.database.RepositoryFactoryBean;
 import co.xarx.trix.config.flyway.FlywayIntegrator;
 import co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence;
 import com.jolbox.bonecp.BoneCPDataSource;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DataSourceConnectionProvider;
+import org.jooq.impl.DefaultConfiguration;
+import org.jooq.impl.DefaultDSLContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.FieldRetrievingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -23,7 +29,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableJpaAuditing(dateTimeProviderRef = "dateTimeProvider")
 @EnableJpaRepositories(
-		basePackages = {"co.xarx.trix.persistence"}
+		basePackages = {"co.xarx.trix.persistence", "org.javers.spring.jpa"}
 		,repositoryFactoryBeanClass = RepositoryFactoryBean.class
 )
 public class DatabaseConfig {
@@ -69,7 +75,7 @@ public class DatabaseConfig {
 		factory.setPersistenceUnitName("wordrails");
 		factory.setPersistenceProviderClass(MultiTenantHibernatePersistence.class);
 		factory.setJpaVendorAdapter(vendorAdapter);
-		factory.setPackagesToScan("co.xarx.trix.domain");
+		factory.setPackagesToScan("co.xarx.trix.domain", "org.javers.spring.model");
 		factory.setJpaProperties(hibernateProperties());
 		factory.afterPropertiesSet();
 
@@ -100,9 +106,34 @@ public class DatabaseConfig {
 	}
 
 	@Bean
+	public DataSourceConnectionProvider dataSourceConnectionProvider(){
+		return new DataSourceConnectionProvider(dataSource());
+	}
+
+	@Bean
+	public DefaultConfiguration defaultConfiguration(){
+		DefaultConfiguration defaultConfiguration = new DefaultConfiguration();
+		defaultConfiguration.setConnectionProvider(dataSourceConnectionProvider());
+		defaultConfiguration.setSQLDialect(SQLDialect.MYSQL);
+		return defaultConfiguration;
+	}
+
+	@Bean
+	public DSLContext dslContext(){
+		return new DefaultDSLContext(defaultConfiguration());
+	}
+
+
+
+	@Bean
 	public FieldRetrievingFactoryBean dateTimeProvider() {
 		FieldRetrievingFactoryBean fieldRetrievingFactoryBean = new FieldRetrievingFactoryBean();
 		fieldRetrievingFactoryBean.setStaticField("org.springframework.data.auditing.CurrentDateTimeProvider.INSTANCE");
 		return fieldRetrievingFactoryBean;
+	}
+
+	@Bean
+	public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+		return new PersistenceExceptionTranslationPostProcessor();
 	}
 }

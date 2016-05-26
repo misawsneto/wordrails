@@ -13,7 +13,7 @@ public interface AuthApi {
 	@POST
 	@Path("/signin")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@PreAuthorize("isAnonymous()")
+//	@PreAuthorize("isAnonymous()")
 	Response signin(@FormParam("provider") String providerId, @FormParam("userId") String userId, @FormParam("accessToken") String accessToken) throws IOException;
 
 	@POST

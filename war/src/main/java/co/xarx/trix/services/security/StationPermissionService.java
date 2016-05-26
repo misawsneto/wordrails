@@ -1,5 +1,6 @@
 package co.xarx.trix.services.security;
 
+import co.xarx.trix.api.StationPermission;
 import co.xarx.trix.api.v2.PermissionData;
 import co.xarx.trix.api.v2.StationPermissionData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -55,8 +57,9 @@ public class StationPermissionService {
 				.collect(Collectors.toList());
 	}
 
-	public void updateStationsPermissions(List<String> usernames, List<Integer> stationIds, boolean publisher, boolean editor, boolean admin) {
-		Assert.notEmpty(usernames, "Usernames must have elements");
+	public void updateStationsPermissions(List<Sid> sids, List<Integer> stationIds, boolean publisher, boolean
+			editor, boolean admin) {
+		Assert.notEmpty(sids, "Sids must have elements");
 		Assert.notEmpty(stationIds, "Station ids must have elements");
 
 
@@ -79,10 +82,9 @@ public class StationPermissionService {
 		Map<ObjectIdentity, MutableAcl> acls = aclService.findAcls(stationIds);
 		for (MutableAcl acl : acls.values()) {
 			List<AccessControlEntry> entries = acl.getEntries();
-			for (String username : usernames) {
-				AccessControlEntry ace = aclService.findAce(entries, username);
+			for (Sid sid : sids) {
+				AccessControlEntry ace = aclService.findAce(entries, sid);
 				if(ace == null) {
-					Sid sid = new PrincipalSid(username);
 					acl.insertAce(acl.getEntries().size(), permission, sid, true);
 				} else {
 					acl.updateAce(entries.indexOf(ace), permission);
@@ -126,5 +128,38 @@ public class StationPermissionService {
 				}
 			}
 		}
+	}
+
+	public List<StationPermission> getStationPermissions(List<Station> stations) {
+		List<StationPermission> stationPermissionDtos = new ArrayList<>();
+		for (Station station : stations) {
+			StationPermission stationPermissionDto = new StationPermission();
+
+			stationPermissionDto.stationId = station.id;
+			stationPermissionDto.stationName = station.name;
+			stationPermissionDto.writable = station.writable;
+			stationPermissionDto.main = station.main;
+			stationPermissionDto.visibility = station.visibility;
+			stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
+
+			stationPermissionDto.subheading = station.subheading;
+			stationPermissionDto.sponsored = station.sponsored;
+			stationPermissionDto.topper = station.topper;
+
+			stationPermissionDto.allowComments = station.allowComments;
+			stationPermissionDto.allowSocialShare = station.allowSocialShare;
+
+			//StationRoles Fields
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			if (auth != null) {
+				stationPermissionDto.admin = permissionEvaluator.hasPermission(auth, station, ADMINISTRATION);
+				stationPermissionDto.editor = permissionEvaluator.hasPermission(auth, station, MODERATION);
+				stationPermissionDto.writer = permissionEvaluator.hasPermission(auth, station, CREATE);
+			}
+
+			stationPermissionDtos.add(stationPermissionDto);
+		}
+
+		return stationPermissionDtos;
 	}
 }

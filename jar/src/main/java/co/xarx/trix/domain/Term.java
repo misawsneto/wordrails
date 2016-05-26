@@ -1,10 +1,8 @@
 package co.xarx.trix.domain;
 
 
-import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.annotation.SdkInclude;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.javers.core.metamodel.annotation.DiffIgnore;
@@ -35,23 +33,8 @@ public class Term extends BaseEntity implements Serializable, Comparable<Term>{
 	public String name_parent;
 
 	@DiffIgnore
-	@JsonBackReference("cells")
-	@OneToMany(mappedBy="term")
-	public Set<Cell> cells;
-
-	@DiffIgnore
-	@JsonBackReference("posts")
-	@ManyToMany(mappedBy="terms")
-	public Set<Post> posts;
-
-	@DiffIgnore
-	@JsonBackReference("rows")
-	@OneToMany(mappedBy="term")
-	public Set<Row> rows;
-
-	@DiffIgnore
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	public Taxonomy taxonomy;
 
 	@JsonBackReference("parent")
@@ -77,6 +60,18 @@ public class Term extends BaseEntity implements Serializable, Comparable<Term>{
 
 	@Lob
 	public String description;
+
+	public String getTermName(){
+		if(name != null)
+			return name;
+		return null;
+	}
+
+	public Integer getTermID(){
+		if(id != null)
+			return id;
+		return null;
+	}
 
 	@SdkInclude
 	public String getImageHash() {

@@ -1,18 +1,25 @@
 package co.xarx.trix.eventhandler;
 
+import co.xarx.trix.config.security.Permissions;
 import co.xarx.trix.domain.ESPost;
 import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.Station;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
+import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ESStartupIndexerService;
+import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.SchedulerService;
 import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.rest.core.annotation.*;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.acls.model.Permission;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,15 +42,38 @@ public class PostEventHandler {
 	@Autowired
 	private NotificationRepository notificationRepository;
 	@Autowired
-	private ESStartupIndexerService elasticSearchService;
+	private ElasticSearchService elasticSearchService;
 	@Autowired
 	private ESPostRepository esPostRepository;
+	@Autowired
+	private PermissionEvaluator permissionEvaluator;
 
 	@Autowired
 	private PostRepository postRepository;
 
+	@Autowired
+	private StationRepository stationRepository;
+	@Autowired
+	private AuditService auditService;
+
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
+		Integer stationId = post.getStation().getId();
+
+		boolean hasPermissionToCreate = permissionEvaluator.hasPermission(SecurityContextHolder.getContext()
+				.getAuthentication(), stationId, Station
+				.class.getName(), new Permission[]{Permissions.CREATE, Permissions.ADMINISTRATION});
+
+		if(!hasPermissionToCreate) {
+			boolean hasPermissionToRead = permissionEvaluator.hasPermission(SecurityContextHolder.getContext()
+					.getAuthentication(), stationId, Station
+					.class.getName(), Permissions.READ);
+			Station station = stationRepository.findOne(stationId);
+			boolean canWrite = station.isWritable() && hasPermissionToRead;
+			if(!canWrite)
+				throw new AccessDeniedException("No permission to create");
+		}
+
 		savePost(post);
 	}
 
@@ -55,6 +85,10 @@ public class PostEventHandler {
 		if (post.slug == null || post.slug.isEmpty()) {
 			post.slug = StringUtil.toSlug(post.title);
 		}
+
+		if(postRepository.findBySlug(post.slug) != null){
+			post.slug = post.slug + "-" + StringUtil.generateRandomString(6, "aA#");
+		}
 	}
 
 	@HandleAfterCreate
@@ -65,8 +99,8 @@ public class PostEventHandler {
 			if (post.notify)
 				postService.sendNewPostNotification(post);
 
-			elasticSearchService.saveIndex(post, ESPost.class);
 		}
+		elasticSearchService.mapThenSave(post, ESPost.class);
 	}
 
 	@HandleAfterSave
@@ -74,8 +108,9 @@ public class PostEventHandler {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
 			schedulerService.schedule(post.id, post.scheduledDate);
 		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
-			elasticSearchService.saveIndex(post, ESPost.class);
 		}
+		elasticSearchService.mapThenSave(post, ESPost.class);
+		auditService.saveChange(post);
 	}
 
 	@HandleBeforeDelete

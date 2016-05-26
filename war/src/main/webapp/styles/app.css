@@ -768,22 +768,30 @@ sup {
 
 .dropdown-menu-scale {
   display: block;
+  pointer-events: none;
   opacity: 0;
-  -webkit-transform: scale(0);
-      -ms-transform: scale(0);
-          transform: scale(0);
-  -webkit-transition: all 0.25s;
-          transition: all 0.25s;
+  -webkit-transform: scale(0.8);
+      -ms-transform: scale(0.8);
+          transform: scale(0.8);
+  -webkit-transition: all 250ms cubic-bezier(0.24, 0.22, 0.015, 1.56);
+          transition: all 250ms cubic-bezier(0.24, 0.22, 0.015, 1.56);
   -webkit-backface-visibility: hidden;
      -moz-backface-visibility: hidden;
           backface-visibility: hidden;
 }
 
 .open > .dropdown-menu-scale {
+  display: block !important;
+  pointer-events: auto;
   opacity: 1;
   -webkit-transform: scale(1);
       -ms-transform: scale(1);
           transform: scale(1);
+}
+
+.collapsing .dropdown-menu-scale,
+.collapse.in .dropdown-menu-scale {
+  display: none;
 }
 
 .dropdown-header {
@@ -6396,6 +6404,14 @@ bg-none {
   border-radius: 9px;
 }
 
+.r-4x {
+  border-radius: 12px;
+}
+
+.r-5x {
+  border-radius: 15px;
+}
+
 .r-50 {
   border-radius: 50%;
 }
@@ -6812,6 +6828,14 @@ bg-none {
 
 .h-500 {
   height: 500px;
+}
+
+.h-m-100 {
+  max-height: 100px;
+}
+
+.h-m-200 {
+  max-height: 200px;
 }
 
 .h-m-300 {
@@ -8118,6 +8142,11 @@ md-switch[disabled] .md-bar {
   background-color: transparent;
 }
 
+.animated {
+  -webkit-animation-duration: 0.3s!important;
+          animation-duration: 0.3s!important;
+}
+
 .animated1x {
   -webkit-animation-duration: 0.1s!important;
           animation-duration: 0.1s!important;
@@ -8126,11 +8155,6 @@ md-switch[disabled] .md-bar {
 .animated2x {
   -webkit-animation-duration: 0.2s!important;
           animation-duration: 0.2s!important;
-}
-
-.animated {
-  -webkit-animation-duration: 0.3s!important;
-          animation-duration: 0.3s!important;
 }
 
 .animated4x {
@@ -8494,6 +8518,10 @@ md-switch[disabled] .md-bar {
           transition: all 0.2s ease-in-out;
 }
 
+.opacity-0 {
+  opacity: 0;
+}
+
 .opacity-03 {
   opacity: 0.3;
 }
@@ -8791,6 +8819,7 @@ button,
   padding: 16px;
 }
 
+.b-n-i,
 #email-template .fr-view table td,
 #email-template .fr-view table th {
   border: none!important;
@@ -8810,9 +8839,14 @@ button,
           box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.12), 0 -1px 2px rgba(0, 0, 0, 0.24);
 }
 
-#post-summary-sidebar img {
+#post-summary-sidebar img,
+.post-summary img {
   height: auto;
   max-width: 100%;
   vertical-align: middle;
   border: 0;
+}
+
+.app-content {
+  overflow-x: hidden!important;
 }

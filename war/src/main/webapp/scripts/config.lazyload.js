@@ -3,11 +3,26 @@
 angular.module('app')
   .constant('MODULE_CONFIG', [
       {
+          name: 'duScroll',
+          module: true,
+          files: [
+              '/libs/angular/angular-scroll/angular-scroll.min.js'
+          ]
+      },
+      {
           name: 'ui.select',
           module: true,
           files: [
               '/libs/angular/angular-ui-select/dist/select.min.js',
               '/libs/angular/angular-ui-select/dist/select.min.css'
+          ]
+      },
+      {
+          name: 'angular-sly',
+          module: true,
+          files: [
+              '/libs/angular/sly/dis/sly.min.js',
+              '/libs/angular/angular-sly/dis/angular-sly.min.js'
           ]
       },
       {
@@ -305,6 +320,14 @@ angular.module('app')
           module: true,
           files: [
               '/libs/angular/angular-smart-table/dist/smart-table.min.js'
+          ]
+      },
+      {
+          name: 'pgwslider',
+          module: false,
+          files:[
+              '/libs/jquery/pgwslider/pgwslider.min.css',
+              '/libs/jquery/pgwslider/pgwslider.min.js'
           ]
       },
       {

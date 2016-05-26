@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
@@ -35,7 +37,14 @@ public class PostData implements Serializable, Identifiable {
 	private Set<String> tags;
 
 	private Integer authorId;
+	private String authorName;
 	private PersonData author;
+
+	private String authorImageHash;
+	private String authorCoverHash;
+
+	private Integer stationId;
+	private String stationName;
 
 	private Date date;
 
@@ -52,6 +61,27 @@ public class PostData implements Serializable, Identifiable {
 	private Double lat;
 	private Double lng;
 
+	private int readsCount = 0;
+	private int bookmarksCount = 0;
+	private int recommendsCount = 0;
+	private int commentsCount = 0;
+
+	private int readTime;
+
+	private String externalVideoUrl;
+
 	private Date scheduledDate;
 	private boolean notified;
+
+	public void setBody(String body) {
+		this.body = body;
+		if (body == null || body.isEmpty())
+			readTime = 0;
+
+		Document doc = Jsoup.parse(body);
+		body = doc.text();
+		String[] wordArray = body.split("\\s+");
+		int words = wordArray.length;
+		readTime = 5 * words / 398;
+	}
 }

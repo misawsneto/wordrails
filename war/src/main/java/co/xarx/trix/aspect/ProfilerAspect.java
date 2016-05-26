@@ -23,7 +23,8 @@ public class ProfilerAspect {
 		Object output = pjp.proceed();
 		long finish = System.currentTimeMillis();
 		long elapsedTime = finish - start;
-		log.debug("@ profile - Method " + method + "\n\t Elapsed time: " + elapsedTime);
+		String className = method.getDeclaringClass().getSimpleName();
+		log.debug("@ profile - Method " + className + "." + method.getName() + "\n\t Elapsed time: " + elapsedTime);
 		return output;
 	}
 

@@ -13,12 +13,18 @@ import org.javers.spring.jpa.JpaHibernateConnectionProvider;
 import org.javers.spring.jpa.TransactionalJaversBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 
 @Configuration
 public class AuditConfig {
 
-	//.. JaVers setup ..
+//	@Autowired
+//	private JpaTransactionManager jpaTransactionManager;
+//	@Autowired
+//	private EntityManagerFactory entityManagerFactory;
+//	@Autowired
+//	private PlatformTransactionManager platformTransactionManager;
+//	@Autowired
+//	private DataSource dataSource;
 
 	/**
 	 * Creates JaVers instance with {@link JaversSqlRepository}
@@ -47,15 +53,6 @@ public class AuditConfig {
 		return new JaversAuditableRepositoryAspect(javers(), authorProvider());
 	}
 
-	/**
-	 * Required by Repository auto-audit aspect. <br/><br/>
-	 * <p>
-	 * Returns mock implementation for testing.
-	 * <br/>
-	 * Provide real implementation,
-	 * when using Spring Security you can use
-	 * {@link org.javers.spring.auditable.SpringSecurityAuthorProvider}.
-	 */
 	@Bean
 	public AuthorProvider authorProvider() {
 		return new EventAuthorProvider();
@@ -64,11 +61,7 @@ public class AuditConfig {
 
 	@Bean
 	public ConnectionProvider jpaConnectionProvider() {
-		return new JpaHibernateConnectionProvider();
-	}
-
-	@Bean
-	public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
-		return new PersistenceExceptionTranslationPostProcessor();
+		JpaHibernateConnectionProvider jpaHibernateConnectionProvider = new JpaHibernateConnectionProvider();
+		return jpaHibernateConnectionProvider;
 	}
 }

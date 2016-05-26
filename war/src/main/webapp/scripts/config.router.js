@@ -76,7 +76,7 @@ angular.module('app')
                 data : { titleTranslate: 'titles.POST', title: 'Publicação', folded: true },
                 resolve: load([
                   'com.2fdevs.videogular','com.2fdevs.videogular.plugins.controls','com.2fdevs.videogular.plugins.overlayplay','com.2fdevs.videogular.plugins.poster',
-                  'recorderServiceProvider', 'angularAudioRecorder','videosharing-embed','/libs/angular/lifely-focuspoint/dist/focuspoint.css', 'leaflet-directive', 'ngJcrop', 'froala', 'monospaced.elastic', 'angularFileUpload', '/scripts/controllers/settings/settings-post.js', '/scripts/controllers/settings/settings-post-geolocation.js']),
+                  /*'recorderServiceProvider', 'angularAudioRecorder',*/'videosharing-embed','/libs/angular/lifely-focuspoint/dist/focuspoint.css', 'leaflet-directive', 'ngJcrop', 'froala', 'monospaced.elastic', 'angularFileUpload', '/scripts/controllers/settings/settings-post.js', '/scripts/controllers/settings/settings-post-geolocation.js']),
                 controller: 'SettingsPostCtrl'
               })
 
@@ -153,10 +153,10 @@ angular.module('app')
                 resolve: {
                   deps: ['$ocLazyLoad', '$templateCache',
                     function( $ocLazyLoad, $templateCache ){
-                      return $ocLazyLoad.load(['angularFileUpload', '/scripts/controllers/settings/settings-users.js'])
+                      return $ocLazyLoad.load(['angularFileUpload', '/scripts/controllers/settings/settings-comments.js'])
                   }]
                 },
-                controller: 'SettingsUsersCtrl'
+                controller: 'SettingsCommentsCtrl'
               })
               .state('app.media-library', {
                 url: '/media',
@@ -184,7 +184,7 @@ angular.module('app')
                 url: '/dashboard',
                 templateUrl: '/views/pages/dashboard.html',
                 data : { title: 'Dashboard', folded: false },
-                resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js', '/scripts/controllers/settings/settings-dashboard.js']),
+                resolve: load(['/scripts/controllers/settings/settings-dashboard.js']),
                 controller: 'DashboardCtrl'
               })
               .state('app.pagebuilder', {
@@ -1097,8 +1097,10 @@ angular.module('app')
                 var deferred = $q.defer();
                 if(initData.person.id == 0){
                   document.location.href = '/access/signin';
+                  window.console && console.error('user is not logged')
                 }else if(initData.person.username !== $stateParams.username){
                   document.location.href = '/';
+                  window.console && console.error('user is not owner')
                 }else if(initData.person.username === $stateParams.username){
                   deferred.resolve(initData.person.bookmarkPosts)
                 }else{
@@ -1122,7 +1124,7 @@ angular.module('app')
                 // }
                 return deferred.promise;
               },
-              deps:load( ['angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'perfect_scrollbar'] ).deps
+              deps:load( ['angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'perfect_scrollbar', 'angularMoment'] ).deps
             },
             controller: 'AppDataCtrl'
           })

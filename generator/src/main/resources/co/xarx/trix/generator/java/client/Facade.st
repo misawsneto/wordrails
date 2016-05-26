@@ -26,6 +26,7 @@ import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
+import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.api.TermPerspectiveView;
 import co.xarx.trix.api.RowView;
 
@@ -218,6 +219,24 @@ public class $facade$ {
 		});
 	}
 
+	public List<TermDto> getTermTree(Integer perspectiveId){
+		return _facade.getTermTree(perspectiveId).content;
+	}
+
+	public void getTermTree(Integer perspectiveId, final Callback<List<TermDto\>\> _callback){
+		_facade.getTermTree(perspectiveId, new Callback<ContentResponse<List<TermDto\>\>\>() {
+			@Override
+			public void success(ContentResponse<List<TermDto\>\> _t, Response _response) {
+				_callback.success(_t.content, _response);
+			}
+
+			@Override
+			public void failure(RetrofitError _error) {
+				_callback.failure(_error);
+			}
+		});
+	}
+
 	public List<TermView> getAllTerms(Integer taxonomyId, Integer perspectiveId){
 		return _facade.getAllTerms(taxonomyId, perspectiveId).content;
 	}
@@ -333,38 +352,20 @@ public class $facade$ {
 			}
 		});
 	}
-/*
-	public SearchView searchPosts(String q, String sIds, Integer pId, String pt, Boolean nh, Boolean sd, Integer p, Integer s){
-		return _facade.searchPosts(q, sIds, pId, pt, nh, sd, p, s).content;
-	}
-
-	public void searchPosts(String q, String sIds, Integer pId, String pt, Boolean nh, Boolean sd, Integer p, Integer s, final Callback<SearchView\> _callback){
-		_facade.searchPosts(q, sIds, pId, pt, nh, sd, p, s, new Callback<ContentResponse<SearchView\>\>() {
-			@Override
-			public void success(ContentResponse<SearchView\> _t, Response _response) {
-				_callback.success(_t.content, _response);
-			}
-
-			@Override
-			public void failure(RetrofitError _error) {
-				_callback.failure(_error);
-			}
-		});
-	}
-*/
-	public SearchView searchPosts(String q, List<Integer\> aIds, List<Integer\> sIds, String st, String from,
+	
+	public List<PostData\> searchPosts(String q, List<Integer\> aIds, List<Integer\> sIds, String st, String from,
                                   String until, List<Integer\> cIds, List<String\> tags, Integer page, Integer size,
-                                  List<String\> orders, List<String\> embeds){
-        return _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, page, size, orders, embeds).content;
+                                  List<String\> orders, List<String\> embeds, String snippet){
+        return _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, page, size, orders, embeds, snippet).content;
     }
 
     public void searchPosts(String q, List<Integer\> aIds, List<Integer\> sIds, String st, String from,
                             String until, List<Integer\> cIds, List<String\> tags, Integer page, Integer size,
-                            List<String\> orders, List<String\> embeds, final Callback<SearchView\> _callback){
-        _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, page, size, orders, embeds, new
-        Callback<ContentResponse<SearchView\>\>() {
+                            List<String\> orders, List<String\> embeds, String snippet, final Callback<List<PostData\>\> _callback){
+        _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, page, size, orders, embeds, snippet, new
+        Callback<ContentResponse<List<PostData\>\>\>() {
             @Override
-            public void success(ContentResponse<SearchView\> _t, Response _response) {
+            public void success(ContentResponse<List<PostData\>\> _t, Response _response) {
                 _callback.success(_t.content, _response);
             }
 

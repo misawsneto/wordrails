@@ -1,8 +1,12 @@
 package co.xarx.trix.web.rest.resource.v1;
 
-import co.xarx.trix.domain.*;
-import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.domain.Station;
+import co.xarx.trix.domain.StationPerspective;
+import co.xarx.trix.domain.Taxonomy;
+import co.xarx.trix.domain.Term;
+import co.xarx.trix.persistence.StationPerspectiveRepository;
+import co.xarx.trix.persistence.StationRepository;
+import co.xarx.trix.persistence.TaxonomyRepository;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.TaxonomiesApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,12 +14,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @NoArgsConstructor
@@ -24,17 +26,11 @@ public class TaxonomiesResource extends AbstractResource implements TaxonomiesAp
 	@Autowired
 	public ObjectMapper objectMapper;
 	@Autowired
-	private NetworkRepository networkRepository;
-	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
 	private StationPerspectiveRepository stationPerspectiveRepository;
 	@Autowired
 	private TaxonomyRepository taxonomyRepository;
-	@Autowired
-	private StationRolesRepository stationRolesRepository;
-	@Autowired
-	private AuthService authProvider;
 
 	@Override
 	public void findNetworkCategories() throws IOException {
@@ -73,11 +69,7 @@ public class TaxonomiesResource extends AbstractResource implements TaxonomiesAp
 		StationPerspective sp = stationPerspectiveRepository.findOne(station.defaultPerspectiveId);
 		category = taxonomyRepository.findOne(sp.taxonomy.id);
 
-		List<Term> categoryTerms = new ArrayList<>();
-		for(Term term: category.terms){
-			categoryTerms.add(term);
-			term.cells = null; term.children = null; term.parent = null; term.posts = null; term.rows = null; term.termPerspectives = null; term.taxonomy = null;
-		}
+		List<Term> categoryTerms = getTerms(category);
 
 		Taxonomy scategory = null;
 		List<Taxonomy> staxonomies = taxonomyRepository.findStationTaxonomy(stationId);
@@ -85,11 +77,7 @@ public class TaxonomiesResource extends AbstractResource implements TaxonomiesAp
 			scategory = staxonomies.get(0);
 		}
 
-		List<Term> scategoryTerms = new ArrayList<>();
-		for(Term term: scategory.terms){
-			scategoryTerms.add(term);
-			term.cells = null; term.children = null; term.parent = null; term.posts = null; term.rows = null; term.termPerspectives = null; term.taxonomy = null;
-		}
+		List<Term> scategoryTerms = getTerms(scategory);
 
 		ArrayList<Taxonomy> allTax = new ArrayList<>();
 
@@ -103,5 +91,17 @@ public class TaxonomiesResource extends AbstractResource implements TaxonomiesAp
 		allTax.add(scategory);
 
 		return  allTax;
+	}
+
+	private List<Term> getTerms(Taxonomy scategory) {
+		List<Term> scategoryTerms = new ArrayList<>();
+		for(Term term: scategory.terms){
+			scategoryTerms.add(term);
+			term.children = null;
+			term.parent = null;
+			term.termPerspectives = null;
+			term.taxonomy = null;
+		}
+		return scategoryTerms;
 	}
 }

@@ -22,6 +22,10 @@ public interface NetworkProjection {
 	String getYoutubeLink();
 	String getGooglePlusLink();
 	String getTwitterLink();
+
+	String getInstagramLink();
+	String getPinterestLink();
+	String getLinkedInLink();
 	
 	String getFlurryKey();
 	String getTrackingId();

@@ -9,6 +9,9 @@ import co.xarx.trix.persistence.UserConnectionRepository;
 import org.scribe.model.Token;
 import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.acls.domain.GrantedAuthoritySid;
+import org.springframework.security.acls.domain.PrincipalSid;
+import org.springframework.security.acls.model.Sid;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -56,6 +59,10 @@ public class AuthService {
 		return user.getUsername();
 	}
 
+	public boolean isAnonymous() {
+		return getUser().isAnonymous();
+	}
+
 	public Person getLoggedPerson() {
 		User user = getUser();
 
@@ -77,6 +84,15 @@ public class AuthService {
 		SecurityContextHolder.getContext().setAuthentication(auth);
 
 		return person;
+	}
+
+	public Sid getCurrentSid() {
+		User user = getUser();
+		if (user.isAnonymous()) {
+			return new GrantedAuthoritySid("ROLE_ANONYMOUS");
+		} else {
+			return new PrincipalSid(user.getUsername());
+		}
 	}
 
 	public void updateLoggedPerson(User user) {

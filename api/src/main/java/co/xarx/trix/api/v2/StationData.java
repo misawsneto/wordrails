@@ -21,4 +21,22 @@ public class StationData implements Serializable, Identifiable {
 
 	private Integer id;
 	private String name;
+
+	public String slug;
+	public ImageData logo;
+
+	public boolean main;
+	public boolean writable;
+
+	public boolean readableForAnonymous;
+	public boolean allowComments;
+	public boolean allowSocialShare;
+
+	public boolean allowWritersToNotify;
+	public boolean topper;
+
+	public boolean subheading;
+	public boolean showAuthorData;
+
+	public boolean showAuthorSocialData;
 }

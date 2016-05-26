@@ -1,13 +1,8 @@
 package co.xarx.trix.eventhandler;
 
-import co.xarx.trix.domain.Notification;
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.QNotification;
-import co.xarx.trix.domain.ESPerson;
-import co.xarx.trix.persistence.ESPersonRepository;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.ESStartupIndexerService;
+import co.xarx.trix.services.ElasticSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
@@ -25,8 +20,6 @@ public class PersonEventHandler {
 	@Autowired
 	private PostReadRepository postReadRepository;
 	@Autowired
-	private StationRolesRepository stationRolesRepository;
-	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
 	private QueryPersistence queryPersistence;
@@ -35,7 +28,7 @@ public class PersonEventHandler {
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
-	private ESStartupIndexerService elasticSearchService;
+	private ElasticSearchService elasticSearchService;
 	@Autowired
 	private ESPersonRepository esPersonRepository;
 	@Autowired
@@ -54,8 +47,6 @@ public class PersonEventHandler {
 
 	@HandleBeforeDelete
 	public void handleBeforeDelete(Person person) {
-		stationRolesRepository.deleteRolesByPersonId(person.id);
-
 		if(person.cover != null) {
 			imageRepository.delete(person.cover);
 		}
@@ -78,12 +69,12 @@ public class PersonEventHandler {
 
 	@HandleAfterSave
 	public void handleAfterSave(Person person) {
-		elasticSearchService.saveIndex(person, ESPerson.class, esPersonRepository);
+		elasticSearchService.mapThenSave(person, ESPerson.class);
 	}
 
 	@HandleAfterCreate
 	public void handleAfterCreate(Person person) {
-		elasticSearchService.saveIndex(person, ESPerson.class, esPersonRepository);
+		elasticSearchService.mapThenSave(person, ESPerson.class);
 	}
 
 }
