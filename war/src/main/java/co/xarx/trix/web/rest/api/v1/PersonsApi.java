@@ -48,12 +48,13 @@ public interface PersonsApi {
 	@GET
 	@Path("/{id}")
 	@Transactional
-	Response findPerson(@PathParam("id") Integer id) throws IOException;
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	void findPerson(@PathParam("id") Integer id) throws IOException;
 
 	@GET
 	@Path("/search/findByUsername")
 	@Transactional
-	Response findPersonByUsername() throws IOException;
+	void findPersonByUsername() throws IOException;
 
 	@PUT
 	@Path("/update")

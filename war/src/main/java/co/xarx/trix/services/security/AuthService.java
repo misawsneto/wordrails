@@ -142,7 +142,7 @@ public class AuthService {
 				}
 			}
 
-			user = userConnection.user;
+			user = userConnection.getUser();
 		}
 
 		if (user == null) return false;

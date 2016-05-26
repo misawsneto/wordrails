@@ -101,12 +101,12 @@ public class SocialAuthenticationService {
 
 	private UserConnection newUserConnection(SocialUser socialUser) {
 		UserConnection userConnection = new UserConnection();
-		userConnection.providerId = socialUser.getProviderId();
-		userConnection.providerUserId = socialUser.getId();
-		userConnection.email = socialUser.getEmail();
-		userConnection.displayName = socialUser.getName();
-		userConnection.profileUrl = socialUser.getProfileUrl();
-		userConnection.imageUrl = socialUser.getProfileImageUrl();
+		userConnection.setProviderId(socialUser.getProviderId());
+		userConnection.setProviderUserId(socialUser.getId());
+		userConnection.setEmail(socialUser.getEmail());
+		userConnection.setDisplayName(socialUser.getName());
+		userConnection.setProfileUrl(socialUser.getProfileUrl());
+		userConnection.setImageUrl(socialUser.getProfileImageUrl());
 		return userConnection;
 	}
 
@@ -174,7 +174,7 @@ public class SocialAuthenticationService {
 		}
 
 		UserConnection userConnection = newUserConnection(socialUser);
-		userConnection.user = user;
+		userConnection.setUser(user);
 		user.userConnections.add(userConnection);
 		person.user = user;
 

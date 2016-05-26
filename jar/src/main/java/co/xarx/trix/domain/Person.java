@@ -17,7 +17,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor
 @Entity
 @Table(name = "person",
 		uniqueConstraints = {
@@ -47,7 +49,7 @@ public class Person extends BaseEntity implements Serializable {
 
 	@OrderColumn(name = "list_order")
 	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "person_bookmark",joinColumns = @JoinColumn(name = "person_id"))
+	@CollectionTable(name = "person_bookmark", joinColumns = @JoinColumn(name = "person_id"))
 	@Column(name = "post_id")
 	public List<Integer> bookmarkPosts;
 
@@ -63,7 +65,6 @@ public class Person extends BaseEntity implements Serializable {
 	public boolean networkAdmin = false;
 
 	@JsonIgnore
-//	@RestResource(exported = false)
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	public User user;
@@ -75,11 +76,9 @@ public class Person extends BaseEntity implements Serializable {
 	@Email
 	public String email;
 
-//	@RestResource(exported = false)
 	@ManyToOne
 	public Image image;
 
-//	@RestResource(exported = false)
 	@ManyToOne
 	public Image cover;
 
@@ -164,18 +163,33 @@ public class Person extends BaseEntity implements Serializable {
 		return null;
 	}
 
+	@Deprecated
+	@SdkInclude
+	public String getImageSocialUrl() {
+		if (user != null && user.getUserConnections() != null && !user.getUserConnections().isEmpty()) {
+			return user.getUserConnections()
+					.stream()
+					.filter(uc -> uc.getImageUrl() != null)
+					.findFirst()
+					.map(UserConnection::getImageUrl)
+					.orElse(null);
+		}
+
+		return null;
+	}
+
 	@PostLoad
-	public void postLoad(){
-		if(image != null)
+	public void postLoad() {
+		if (image != null)
 			imageOriginalHash = image.getOriginalHash();
-		if(cover != null)
+		if (cover != null)
 			coverOriginalHash = cover.getOriginalHash();
 		this.enabled = user.enabled;
 	}
 
 	@PrePersist
-	public void prePersist(){
-		if(seenWelcome == null){
+	public void prePersist() {
+		if (seenWelcome == null) {
 			seenWelcome = false;
 		}
 	}

@@ -98,20 +98,13 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 
 	@Override
 	@Transactional
-	public Response findPerson(Integer id) throws IOException {
-		Person person = authProvider.getLoggedPerson();
-
-		if(person.id.equals(id) || person.networkAdmin) {
-			forward();
-			return Response.status(Status.OK).build();
-		}else
-			return Response.status(Status.UNAUTHORIZED).build();
+	public void findPerson(Integer id) throws IOException {
+		forward();
 	}
 
 	@Override
-	public Response findPersonByUsername() throws IOException {
+	public void findPersonByUsername() throws IOException {
 		forward();
-		return null;
 	}
 
 	@Override
