@@ -44,6 +44,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -1039,5 +1040,13 @@ public class PersonsResource {
 					pair.getValue().commentsCount = count;
 			}
 		}
+	}
+
+	@PUT
+	@Path("/me/location")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response updateLocation2(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device")
+			String device, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
+		return updateMobile(token, lat, lng, device.equals("apple") ? MobileDevice.Type.APPLE : MobileDevice.Type.ANDROID);
 	}
 }

@@ -16,7 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/")
+@Path("/mobile")
 @Consumes(MediaType.WILDCARD)
 @Component
 public class MobileResource {
@@ -27,7 +27,7 @@ public class MobileResource {
 	private MobileService mobileService;
 
 	@PUT
-	@Path("/mobile/location")
+	@Path("/location")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response updateLocation(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String device,
 							 @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
@@ -39,13 +39,5 @@ public class MobileResource {
 		Logger.info("Updating " + type.toString() + " device " + token + " for person " + person.id);
 		mobileService.updateDevice(person, token, lat, lng, type);
 		return Response.status(Response.Status.OK).build();
-	}
-
-	@PUT
-	@Path("/persons/me/location")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response updateLocation2(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device")
-			String device, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		return updateMobile(token, lat, lng, device.equals("apple") ? MobileDevice.Type.APPLE : MobileDevice.Type.ANDROID);
 	}
 }
