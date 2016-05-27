@@ -16,7 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/mobile")
+@Path("/")
 @Consumes(MediaType.WILDCARD)
 @Component
 public class MobileResource {
@@ -27,7 +27,7 @@ public class MobileResource {
 	private MobileService mobileService;
 
 	@PUT
-	@Path("/location")
+	@Path("/mobile/location")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response updateLocation(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String device,
 							 @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
