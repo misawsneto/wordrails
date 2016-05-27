@@ -43,6 +43,19 @@ public class AuthResource extends AbstractResource implements AuthApi {
 			throw new NotAllowedException("This network does not support social login");
 		}
 
+
+		if(providerId.equals("google")) {
+			String userAgent = request.getHeader("User-Agent");
+			if(userAgent.contains("WordRailsIOSClient")) {
+				providerId = "googleios";
+			} else if(userAgent.contains("OkHttp")) {
+				providerId = "googleandroid";
+			} else {
+				providerId = "googleweb";
+			}
+		}
+
+
 		boolean allowSocialLogin = true;
 		OAuthService service = null;
 		Token token = null;

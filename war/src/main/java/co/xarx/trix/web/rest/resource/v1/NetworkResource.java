@@ -74,6 +74,11 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	private PersonPermissionService personPermissionService;
 
 	@Override
+	public void getNetworks() throws IOException {
+		forward();
+	}
+
+	@Override
 	public void putNetwork(Integer id) throws IOException {
 		forward();
 	}
