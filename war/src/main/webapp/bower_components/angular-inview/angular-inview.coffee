@@ -133,13 +133,13 @@ bindWindowEvents = ->
 	# The bind to window events will be added only if actually needed.
 	return if _windowEventsHandlerBinded
 	_windowEventsHandlerBinded = yes
-	angular.element(window).bind 'checkInView click ready scroll resize', windowEventsHandler
+	angular.element(window).bind 'checkInView click ready wheel mousewheel DomMouseScroll MozMousePixelScroll resize scroll touchmove mouseup', windowEventsHandler
 unbindWindowEvents = ->
 	# All the window bindings will be removed if no directive requires to be checked.
 	return unless _windowEventsHandlerBinded
 	return if _windowInViewItems.length or _containersControllers.length
 	_windowEventsHandlerBinded = no
-	angular.element(window).unbind 'checkInView click ready scroll resize', windowEventsHandler
+	angular.element(window).unbind 'checkInView click ready wheel mousewheel DomMouseScroll MozMousePixelScroll resize scroll touchmove mouseup', windowEventsHandler
 
 # ### InView checks
 # This method will call the user defined callback with the proper parameters if neccessary.
@@ -232,7 +232,7 @@ debounce = (f, t) ->
 		clearTimeout timer if timer?
 		timer = setTimeout (-> f(args...)), (t ? 100)
 
-# The main funciton to perform in-view checks on all items.
+# The main function to perform in-view checks on all items.
 windowCheckInView = (event) ->
 	i.customDebouncedCheck() for i in _windowInViewItems when i.customDebouncedCheck?
 	checkInView (i for i in _windowInViewItems when not i.customDebouncedCheck?), null, event

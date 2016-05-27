@@ -1,6 +1,5 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.util.StringUtil;
@@ -35,6 +34,10 @@ public class NetworkService {
 
 	public String getTenantFromHost(String host) {
 		String tenantId = StringUtil.getSubdomainFromHost(host);
+
+		if ("settings".equals(tenantId))
+			return "settings";
+
 		if (domains.keySet().contains(host)) {
 			for (String s : tenantIds.keySet()) {
 				if (Objects.equals(tenantIds.get(s), domains.get(host))) {

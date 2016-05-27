@@ -4,14 +4,14 @@ app.controller('SettingsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 		$scope.createNetworkObject = {}
 
 		$scope.$watch('createNetworkObject.name', function(){
-			if(!subdomainChanged)
+			if(!subdomainChanged && $scope.createNetworkObject.name)
 				$scope.createNetworkObject.newSubdomain = $scope.createNetworkObject.name.toSlug();
 		})
 
 		$scope.changeSubdomain= function(){ subdomainChanged = true; }
 
 		$scope.$watch('createNetworkObject.person.name', function(){
-			if(!personNameChanged)
+			if(!personNameChanged && $scope.createNetworkObject.person)
 				$scope.createNetworkObject.person.username = $scope.createNetworkObject.person.name.toSlug();
 
 		})
@@ -19,10 +19,12 @@ app.controller('SettingsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 		$scope.changePersonName= function(){ personNameChanged = true; }
 
 		$scope.$watch('createNetworkObject.newSubdomain', function(){
+			if($scope.createNetworkObject.person)
 			$scope.createNetworkObject.newSubdomain = $scope.createNetworkObject.newSubdomain.toSlug();
 		})
 
 		$scope.$watch('createNetworkObject.person.username', function(){
+			if($scope.createNetworkObject.person)
 			$scope.createNetworkObject.person.username = $scope.createNetworkObject.person.username.toSlug();
 		})
 

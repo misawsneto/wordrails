@@ -1,6 +1,6 @@
 {
   "name": "flot-spline",
-  "version": "0.0.1",
+  "version": "0.8.2",
   "homepage": "https://github.com/JohnPozy/flot-spline",
   "authors": [
     "Alex Bardas < alex.bardas@gmail.com >"
@@ -11,7 +11,7 @@
     "flot",
     "spline"
   ],
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "main": "js/jquery.flot.spline.js",
   "ignore": [
     "**/.*",
@@ -20,13 +20,13 @@
     "test",
     "tests"
   ],
-  "_release": "0.0.1",
+  "_release": "0.8.2",
   "_resolution": {
     "type": "version",
-    "tag": "0.0.1",
-    "commit": "e2261a31a3d6042969e23a1d12e6daae13e5f798"
+    "tag": "0.8.2",
+    "commit": "2ddbb1782735cc269dd57a7c7c69381ce8221159"
   },
-  "_source": "git://github.com/JohnPozy/flot-spline.git",
+  "_source": "https://github.com/JohnPozy/flot-spline.git",
   "_target": "*",
   "_originalSource": "flot-spline"
 }

@@ -95,13 +95,13 @@ public class WordrailsService {
 				network.name = "Settings";
 				network.tenantId = "settings";
 				network.id = 0;
-			}
-
-			try {
-				network = networkRepository.findByTenantId(subdomain);
-			} catch (Exception e) {
-				// no network found in cache or db.
-				e.printStackTrace();
+			}else{
+				try {
+					network = networkRepository.findByTenantId(subdomain);
+				} catch (Exception e) {
+					// no network found in cache or db.
+					e.printStackTrace();
+				}
 			}
 			if (network != null) return network;
 		}

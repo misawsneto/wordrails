@@ -33,8 +33,7 @@ uiScrollViewport directive (see below), browser window will be used as viewport.
 
 ### Dependencies
 
-To use the directive make sure the ui-scroll.js (as transpiled from ui-scroll.coffee) is loaded in your page. You also have to include
-module name 'ui.scroll' on the list of your application module dependencies.
+To use the directive make sure the dist/ui-scroll.js is loaded in your page. You also have to include module name 'ui.scroll' on the list of your application module dependencies.
 
 The code in this file relies on a few DOM element methods of jQuery which are currently not implemented in jQlite, namely
 * before(elem)
@@ -43,7 +42,7 @@ The code in this file relies on a few DOM element methods of jQuery which are cu
 * scrollTop() and scrollTop(value)
 * offset()
 
-File ui-scroll-jqlite.coffee houses implementations of the above methods and also has to be loaded in your page. Please note that the methods are implemented in a separate module
+File dist/ui-scroll-jqlite houses implementations of the above methods and also has to be loaded in your page. Please note that the methods are implemented in a separate module
 'ui.scroll.jqlite' and this name should also be included in the dependency list of the main module. The implementation currently supports missing methods
 only as necessary for the directive. It is tested on IE8 and up as well as on the Chrome 28 and Firefox 20.
 
@@ -53,7 +52,7 @@ If you plan to use ui-scroll over jQuery feel free to skip ui-scroll-jqlite.
 ###Usage
 
 ```html
-<ANY ui-scroll="{scroll_expression}" buffer-size="value" padding="value">
+<ANY ui-scroll="{scroll_expression}" buffer-size="value" padding="value" start-index="value" adapter="name">
       ...
 </ANY>
 ```
@@ -73,6 +72,7 @@ dl as a repeated tag is not supported.
 * **buffer-size - value**, optional - number of items requested from the datasource in a single request. The default is 10 and the minimal value is 3
 * **padding - value**, optional - extra height added to the visible area for the purpose of determining when the items should be created/destroyed.
 The value is relative to the visible height of the area, the default is 0.5 and the minimal value is 0.3
+* **start-index - value**, optional - index of the first item to be requested from the datasource. The default is 1.
 * **adapter - name**, optional - if provided a reference to the adapter object for the scroller instance will be placed in the member with the said name on the scope associated with the viewport. If the viewport is the window, the value will be placed on the $rootScope.
 
 Some of the properties offered by the adapter can also be accessed directly from the directive by using matching attributes. In the same way as for the adapter attribute, syntax for such attributes allows for providing a name to be used to access the corresponding value. A reference to the value will be placed on the scope associated with the viewport. If the viewport is the window, the value will be placed on the $rootScope. Below is a list of such attributes:
@@ -88,7 +88,7 @@ Data source is an object to be used by the uiScroll directive to access the data
 The directive will locate the object using the provided data source name. It will first look for a property with the given name on its $scope.
 If none found it will try to get an angular service with the provided name.
 
-The datasource object implements methods and properties to be used by the directive to access the data:
+The data source object implements methods and properties to be used by the directive to access the data:
 
 * Method `get`
 
@@ -103,10 +103,17 @@ The datasource object implements methods and properties to be used by the direct
     * **descriptor** is an object defining the portion of the dataset requested. The object will have 3 properties. Two of them named  `index` and `count`. They have the same meaning as in the alternative signature when the parameters passed explicitly (see below). The third one will be named either `append` if the items will be appended to the last item in the buffer, or `prepend` if they are to be prepended to the first item in the buffer. The value of the property in either case will be the item the new items will be appended/prepended to. This is useful if it is easier to identify the items to be added based on the previously requested items rather than on the index. Keep in mind that in certain use cases (i.e. on initial load) the value of the append/prepend property can be undefined.
     * **index** indicates the first data row requested
     * **count** indicates number of data rows requested
-    * **success** function to call when the data are retrieved. The implementation of the datsource has to call this function when the data are retrieved and pass it an array of the items retrieved. If no items are retrieved, an empty array has to be passed.
+    * **success** function to call when the data are retrieved. The implementation of the data source has to call this function when the data are retrieved and pass it an array of the items retrieved. If no items are retrieved, an empty array has to be passed.
 
 **Important:** Make sure to respect the `index` and `count` parameters of the request. The array passed to the success method should have
 exactly `count` elements unless it hit eof/bof
+
+* Properties `minIndex` and  `maxIndex`
+
+    #### Description
+    As the scroller recieves the items requested by the `get` method, the value of minimum and maximum values of the item index are placed in the `minIndex` and `maxIndex` properties respectively. The values of the properties are cumulative - the value of the `minIndex` will never increase, and the value of the `maxIndex` will never decrease - except the values are reset in response to a call to the adapter `reload` method. The values of the properties are used to maintain the appearance of the scroller scrollBar.
+    
+    Values of the properties can be assigned programmatically. If the range of the index values is known in advance, assigneing them programmatically would improve the usability of the scrollBar. 
 
 ###Adapter
 The adapter object is an internal object created for every instance of the scroller. Properties and methods of the adapter can be used to manipulate and assess the scroller the adapter was created for. Adapter based API replaces old (undocumented) event based API introduced earlier for this purpose. The event based API is now deprecated and no longer supported.
@@ -128,7 +135,7 @@ Adapater object implements the following methods
         reload(startIndex)
 
    #### Description
-    Calling this method reinitializes and reloads the scroller content. `startIndex` is an integer indicating what item index the scroller will use to start the load process. Calling `reload()` is equivalent to calling `reload(1)`.
+    Calling this method reinitializes and reloads the scroller content. `startIndex` is an integer indicating what item index the scroller will use to start the load process. The value of the argument replaces the value provided with the start-index attribute.  Calling `reload()` is equivalent to calling `reload` method with current value of the `start-index` attribute .
     
     **important: `startIndex` should fall within underlying datset boundaries** The scroller will request two batches of items one starting from the `startIndex` and another one preceding the first one (starting from `startIndex - bufferSize`). If both requests come back empty, the scroller will consider the dataset to be empty and will place no further data requests. 
     
@@ -194,18 +201,29 @@ marked with uiScrollViewport directive, the browser window object will be used a
 
 ###Examples
 
-Examples ([look here](https://github.com/angular-ui/ui-scroll/tree/master/demo/examples)) consist of several pages (.html files) showing various ways to use the ui-scroll directive. Each page relays on its own datasource service (called `datasource`) defined in the coffescript file with the same name and .coffee extension.
+Examples ([look here for sources](https://github.com/angular-ui/ui-scroll/tree/master/demo/examples)) consist of several pages (.html files) showing various ways to use the ui-scroll directive. Each page relays on its own datasource service (called `datasource`) defined in the javascript file with the same name and .js extension.
 
 I intentionally broke every rule of proper html/css structure (i.e. embedded styles). This is done to keep the html as bare bones as possible and leave
 it to you to do it properly - whatever properly means in your book.
 
-See [index.html](http://rawgithub.com/angular-ui/ui-scroll/master/demo/index.html)
+To run the examples use this [link](http://rawgithub.com/angular-ui/ui-scroll/master/demo/index.html)
 
 ###History
 
+###v1.4.1
+* Developed a new complex approach of paddings elements height calculation (see [details](https://github.com/angular-ui/ui-scroll/pull/77)).
+* Added startIndex attribute.
+* Changed clipTop/clipBottom methods logic.
+* Some new demos, tests, cleanup and other minor refactoring.
+
+###v1.4.0
+* Migrated sources from CoffeeScript to ES6.
+* Optimized scroll events handling, removed odd $digest cycles.
+* Examples (demo) refactoring.
+
 ###v1.3.3
-* Implemented new version of gatasource.get(descriptor, success) method. See the documentation.
-* Implemented new version of reload(startIndex) method in the Adapter. See the documentation.
+* Implemented new signature of the Datasource get(descriptor, success) method.
+* Implemented new signature of the Adapter reload(startIndex) method.
 * Changed the logic of scroll bar adjustment (minIndex, maxIndex).
 
 ###v1.3.2

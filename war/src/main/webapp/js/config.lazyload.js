@@ -260,6 +260,12 @@ angular.module('app')
               ,{
                 name: 'angular-inview',
                 files: ['../bower_components/angular-inview/angular-inview.js?']
+              },{
+                name: 'digitalfondue.dftabmenu',
+                files: [
+                  '../bower_components/df-tab-menu/build/df-tab-menu.min.js',
+                  '../bower_components/df-tab-menu/css/df-tab-menu.css'
+                ]
               }
           ]
       });
