@@ -31,7 +31,9 @@ public class MobileResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response updateLocation(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String device,
 							 @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		return updateMobile(token, lat, lng, device.equals("apple") ? MobileDevice.Type.APPLE : MobileDevice.Type.ANDROID);
+		return updateMobile(token, lat, lng, device.equals("apple") || device.equals("ios") ? MobileDevice.Type.APPLE :
+				MobileDevice.Type
+				.ANDROID);
 	}
 
 	public Response updateMobile(String token, Double lat, Double lng, MobileDevice.Type type) {
