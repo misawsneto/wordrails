@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -185,5 +186,12 @@ public interface PersonsApi {
 	 */
 	void findPersons() throws IOException;
 
+	@PUT
+	@Path("/me/location")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@PreAuthorize("permitAll()")
+	Response updateLocation2(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String
+			device,
+						 @FormParam("lat") Double lat, @FormParam("lng") Double lng) throws IOException;
 
 }
