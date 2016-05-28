@@ -11,10 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 
 @Component
 @NoArgsConstructor
@@ -32,7 +29,7 @@ public class MobileResource extends AbstractResource implements MobileApi {
 	@Override
 	public Response updateLocation(String token, String device, Double lat, Double lng) {
 		String userAgent = request.getHeader("User-Agent");
-		
+
 		Constants.MobilePlatform platform;
 		if (device.equals("apple") || userAgent.contains("WordRailsIOSClient"))
 			platform = Constants.MobilePlatform.APPLE;
@@ -42,12 +39,6 @@ public class MobileResource extends AbstractResource implements MobileApi {
 			return Response.status(Response.Status.BAD_REQUEST).entity("Invalid device").build();
 
 		return updateMobile(token, lat, lng, platform);
-	}
-
-	@Override
-	public void updateLocation2(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String
-			device, @FormParam("lat") Double lat, @FormParam("lng") Double lng) throws IOException {
-		forward("/mobile/location");
 	}
 
 	private Response updateMobile(String token, Double lat, Double lng, Constants.MobilePlatform type) {

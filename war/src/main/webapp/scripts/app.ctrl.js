@@ -721,6 +721,7 @@ angular.module('app')
       $scope.app.signOut = function(){
         trix.logout().success(function(){
           document.location.href = '/';
+          trix.resetUsername('');
         })
       }
 
@@ -731,6 +732,7 @@ angular.module('app')
             appData = initData = response;
             startApp();
             $mdDialog.cancel();
+            trix.setUsername(initData.person.username);
             $scope.app.loading = false;
           }).error(function(){
             $scope.app.loading = false;
@@ -739,6 +741,9 @@ angular.module('app')
           $scope.app.loading = false;
         });
       }
+
+      if($scope.app.person)
+        trix.setUsername($scope.app.person.username);
 
       $scope.app.signInButton =  function(){
         $scope.app.signState = 'signin'
