@@ -22,7 +22,7 @@ app.controller('BookmarksCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$m
 
 		$scope.postLoaded = null;
 
-		$scope.showRemoveBookmarkDialog = function(post){
+		$scope.showRemoveBookmarkDialog = function(event, post){
 			$scope.postLoaded = post;
 			$mdDialog.show({
 				scope: $scope,        // use parent scope in template

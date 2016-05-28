@@ -15,7 +15,6 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
         controller: $scope.app.defaultDialog,
         templateUrl: 'welcolme-dialog.html',
         parent: angular.element(document.body),
-        targetEvent: event,
         clickOutsideToClose:false,
         escapeToClose: false
       })
