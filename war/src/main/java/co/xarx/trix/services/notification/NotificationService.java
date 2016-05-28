@@ -5,6 +5,7 @@ import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.util.ListUtil;
 import co.xarx.trix.util.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -12,6 +13,7 @@ import org.springframework.util.Assert;
 import java.io.IOException;
 import java.util.*;
 
+@Slf4j
 @Service
 public class NotificationService {
 
@@ -33,6 +35,7 @@ public class NotificationService {
 
 				notifications.addAll(this.getSuccessNotifications(results, notification, post, deviceType));
 			} catch (IOException e) {
+				log.error("Error sending notification to devices", e);
 				notifications.addAll(this.getErrorNotifications(new HashSet<>(part), notification, post, e, deviceType));
 			}
 
