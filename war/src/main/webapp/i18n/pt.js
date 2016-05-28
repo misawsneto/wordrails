@@ -76,7 +76,7 @@
 		"VIDEO": "Vídeo",
 		"AUDIO": "Áudio",
 		"SOCIAL_NETWORK_PROFILES": "Perfis de redes sociais",
-		"SOCIAL_NETWORK_IDS": "IDs de aplicativos sociais",
+		"SOCIAL_NETWORK_IDS": "redes sociais",
 		"BOOKMARKS": "Minhas leituras",
 		"NOTIFICATIONS": "Notificações",
 		"IMAGE": "Imagem",
@@ -157,6 +157,7 @@
 				"LOGOS": "Logotipos",
 				"FOOTER": "Rodapé",
 				"CUSTOMIZATION": "Personalização",
+				"INTEGRATIONS": "Integrações",
 				"THEMING": "Aparência"
 			},
 			"settings":{

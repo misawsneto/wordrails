@@ -323,6 +323,10 @@ angular.module('app')
           e.preventDefault();
         }
 
+        $scope.app.focusOnSearch = function(){
+          $('id#search form input').focus();
+        }
+
         // ---------- /util -------------
 
         // ---------- theming -----------

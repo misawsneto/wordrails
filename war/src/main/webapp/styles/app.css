@@ -8275,6 +8275,7 @@ md-switch[disabled] .md-bar {
 .bg-cover {
   background-position: 50% 50%;
   background-size: cover;
+  transition-duration: 0.5s;
 }
 
 /* focus point */

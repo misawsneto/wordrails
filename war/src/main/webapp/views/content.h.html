@@ -49,7 +49,7 @@
     <!-- Common tools -->
     <ul class="nav nav-sm navbar-tool pull-right" ng-hide="$state.current.data.child">
       <li class="animated" ng-class="{'fadeIn': !app.search.show, 'fadeOut': app.search.show}">
-        <a md-ink-ripple ng-click="app.search.show = true">
+        <a md-ink-ripple ng-click="app.search.show = true; app.focusOnSearch">
           <i class="mdi-action-search i-24 p-h-sm"></i>
         </a>
       </li>
