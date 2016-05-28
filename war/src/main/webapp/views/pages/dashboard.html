@@ -105,7 +105,7 @@
             <img src="/images/a4.jpg" class="w-40 img-circle">
           </a>-->
 
-          <div class="m-b-sm" ng-repeat="person in persons | limitTo:5" ng-click="showPerson(person)">
+          <div class="m-b-sm" ng-repeat="person in persons | limitTo:5" ng-click="showPerson($event,person)">
             <span class="pull-left thumb-sm m-r">
               <div ng-style="app.getUserImage(person, 'small', 'PROFILE_PICTURE', true)" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(person)}">
                 <i ng-if="!app.hasProfilePicture(person)" style="line-height: 36px;" class="mdi2-account i-24"></i>

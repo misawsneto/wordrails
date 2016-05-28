@@ -70,7 +70,7 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	    $scope.loadingDrafts = false;
 	  })
 
-	  $scope.showPerson = function(person){
+	  $scope.showPerson = function(event,person){
 	  	// show term alert
 	      $scope.loadedPerson = angular.copy(person);
 	      $scope.uploadedUserImage = null;

@@ -568,6 +568,105 @@ var trix = angular.module('trix', [])
         authCredential, config)
     }
 
+    //@Path("/getMostPopular")
+    this.getMostCommonTerm = function(startTime,endTime,field,page,size){
+        var config = {};
+        config.params = {
+            startTime: startTime,
+            endTime: endTime,
+            field: field,
+            page: page,
+            size: size
+        }
+        config.headers = {"Content-Type": "application/json"}
+        return \$http.get(_config.url + "/api/v2/statistics/getMostPopular", config)
+    }
+
+    //@Path("/popularNetworks")
+    this.getPopularNetworks = function(page,size){
+        var config = {};
+        config.params = {
+            page: page,
+            size: size
+        }
+        config.headers = {"Content-Type": "application/json"}
+        return \$http.get(_config.url + "/api/v2/statistics/popularNetworks", config)
+    }
+
+    	//@Path("/post")
+    this.postStats = function(end, start, postId){
+         var config = {};
+         config.params = {
+             end: end,
+             start: start,
+             postId: postId
+         }
+         config.headers = {"Content-Type": "application/json"}
+         return \$http.get(_config.url + "/api/v2/statistics/post", config)
+    }
+
+    //@Path("/author")
+    this.authorStats = function(end, start, authorId){
+         var config = {};
+         config.params = {
+             end: end,
+             start: start,
+             authorId: authorId
+         }
+         config.headers = {"Content-Type": "application/json"}
+         return \$http.get(_config.url + "/api/v2/statistics/author", config)
+    }
+
+    //@Path("/network")
+    this.networkStats = function(end, start){
+		 var config = {};
+         config.params = {
+             end: end,
+             start: start
+         }
+         config.headers = {"Content-Type": "application/json"}
+         return \$http.get(_config.url + "/api/v2/statistics/network", config)
+    }
+
+    	//@Path("/station")
+    this.stationStats = function(end, start, stationId){
+	     var config = {};
+         config.params = {
+             end: end,
+             start: start,
+             stationId: stationId
+         }
+         config.headers = {"Content-Type": "application/json"}
+         return \$http.get(_config.url + "/api/v2/statistics/station", config)
+    }
+
+    	//@Path("/storage")
+    this.getNetworkUsedSpace = function(){
+	     var config = {};
+         config.headers = {"Content-Type": "application/json"}
+         return \$http.get(_config.url + "/api/v2/statistics/storage", config)
+    }
+
+    //	@Path("/countPostReads")
+    this.countReadsByPostIds = function(postIds){
+         var config = {};
+         config.params = {
+             postIds: postIds
+         }
+         config.headers = {"Content-Type": "application/json"}
+         return \$http.get(_config.url + "/api/v2/statistics/countPostReads", config)
+    }
+
+    	//@Path("/countReadersByStation")
+    this.countReadersByStation = function(stationId){
+     var config = {};
+     config.params = {
+         stationId: stationId
+     }
+     config.headers = {"Content-Type": "application/json"}
+     return \$http.get(_config.url + "/api/v2/statistics/countReadersByStation", config)
+    }
+
 	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$
   }
 

@@ -279,15 +279,20 @@ public class StatisticsService {
 		String tenant = TenantContextHolder.getCurrentTenantId();
 		PublishedApp ios = appRepository.findByTenantIdAndType(tenant, Constants.MobilePlatform.APPLE);
 
-		return getAppStats(ios, interval);
+		if(ios != null)
+			return getAppStats(ios, interval);
+		else
+			return null;
 
 	}
 
 	public StoreStatsData getAndroidStats(Interval interval) {
 		String tenant = TenantContextHolder.getCurrentTenantId();
 		PublishedApp android = appRepository.findByTenantIdAndType(tenant, Constants.MobilePlatform.ANDROID);
-
-		return getAppStats(android, interval);
+		if(android != null)
+			return getAppStats(android, interval);
+		else
+			return  null;
 	}
 
 //	public Map getPersonTimeline(Integer personId){
