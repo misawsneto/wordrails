@@ -37,7 +37,7 @@ public class AuthResource extends AbstractResource implements AuthApi {
 
 	@Override
 	public Response signin(String providerId, String userId, String accessToken) throws IOException {
-		AuthCredential oauthCredential = authCredentialRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+		AuthCredential oauthCredential = authCredentialRepository.findAuthCredentialByTenantId(TenantContextHolder.getCurrentTenantId());
 
 		if(oauthCredential == null) {
 			throw new NotAllowedException("This network does not support social login");

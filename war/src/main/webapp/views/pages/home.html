@@ -17,7 +17,9 @@
             </div>
             <!-- News Image -->
             <div class="news-image o-f-h">
-                <div ng-if="app.hasImage(cell.postView);" ng-style="app.getBackgroundImage(cell.postView, 'medium')" class="zoom-hover h-full bg-cover" style="min-height: 230px;">
+                <div ng-if="app.hasImage(cell.postView);" 
+                preload-bg-image="{{app.getImageLink(cell.postView, 'medium')}}"
+                 class="zoom-hover h-full bg-cover" style="min-height: 230px;">
                     <!-- <img class="responsive-img materialboxed" ng-src="{{cell.postView | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
                 </div>
             </div>

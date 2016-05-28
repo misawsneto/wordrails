@@ -1,6 +1,5 @@
 package co.xarx.trix.domain;
 
-import co.xarx.trix.annotation.SdkExclude;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rometools.utils.Strings;
 import lombok.Data;
@@ -12,7 +11,6 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@SdkExclude
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId"}))
 public class AuthCredential extends BaseEntity {
 

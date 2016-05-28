@@ -1,5 +1,6 @@
 package co.xarx.trix.web.rest.api.v1;
 
+import co.xarx.trix.api.AuthCredentialDto;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.security.access.method.P;
@@ -28,4 +29,8 @@ public interface AuthCredentialsApi {
 	@POST
 	@Path("/")
 	void postAuthCredentials() throws ServletException, IOException;
+
+	@PUT
+	@Path("/network")
+	public void updateAuthCredentials(AuthCredentialDto authCredential) throws ServletException, IOException;
 }

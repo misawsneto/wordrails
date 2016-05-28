@@ -5,6 +5,8 @@ var TRIX_BACKEND = null;
 var trix = angular.module('trix', [])
 .provider('trix', function trixProvider(\$httpProvider) {
 
+	var username = null;
+
 	var _config = {}
 	_config.url = null;
 	var provider = {};
@@ -61,6 +63,8 @@ var trix = angular.module('trix', [])
 				return response;
 		},
 		request: function(config) {
+			if(username)
+                config.headers['x-username'] = username;
 		  return config;
 		}
 		};
@@ -70,6 +74,14 @@ var trix = angular.module('trix', [])
 	delete \$httpProvider.defaults.headers.common['X-Requested-With'];
 
   var Trix = function(\$http){
+
+    this.setUsername = function(uname){
+        username = uname;
+    }
+
+    this.resetUsername = function(){
+        username = null;
+    }
 
 	this.login = function(username, password) {
 	  var config = {};
@@ -548,6 +560,12 @@ var trix = angular.module('trix', [])
 
     this.getImagesPost = function(id) {
         return _config.url + "/api/images/posts/" + id + "?size=" + size;
+    }
+
+    this.updateAuthCredential = function (authCredential) {
+        var config = {"headers": {"Content-Type": "application/json"}}
+        return \$http.put(_config.url + "/api/authCredentials/network/",
+        authCredential, config)
     }
 
 	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$

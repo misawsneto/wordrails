@@ -38,7 +38,7 @@
 
 </head>
 <body ng-app="app">
-  <div class="app" ui-view ng-controller="AppCtrl" ng-class="{'bg-cover': $state.includes('access')}" ng-style="$state.includes('access') && app.network.splashImageHash ? app.getSplash() : null"></div>
+  <div class="app" ui-view ng-controller="AppCtrl" ng-class="{'bg-cover o-f-h': $state.includes('access')}" ng-style="$state.includes('access') && app.network.splashImageHash ? app.getSplash() : null"></div>
 <!-- jQuery -->
   <script src="/libs/jquery/jquery/dist/jquery.js"></script>
   <script src="/libs/jquery/bootstrap/dist/js/bootstrap.js"></script>

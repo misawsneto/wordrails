@@ -134,7 +134,7 @@
             <div class="pos-rlt">
               <div class="animated animated1x md-background-hue-1 background" ng-class="{'fadeOut pos-abt': publication.selected, 'fadeIn': !publication.selected}">
                 <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
-                  <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
+                  <div preload-bg-image="{{app.getImageLink(publication, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
                   </div>
                 </a>
                 <div class="clear font-thin">

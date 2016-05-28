@@ -523,6 +523,14 @@ angular.module('app')
         return img;
       }
 
+      $scope.app.getImageLink = $scope.getImageLink = function(object, size){
+        var img = $filter('imageLink')(object, size);
+        if(object.externalVideoUrl){
+          img = $filter('videoThumb')(object.externalVideoUrl);
+        }
+        return img;
+      }
+
       $scope.app.getImagesPerson = function (post, id, size, type, bg) {
         if(post)
           return $scope.app.hasAuthorImage(post) ? $filter('getImagesPerson')(id, size, type, bg) : null;

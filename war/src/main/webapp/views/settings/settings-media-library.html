@@ -99,7 +99,7 @@
               <ul class="list-group bg-t m-0">
                 <li class="no-border-radius list-group-item no-bg b-l-2x r-0" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in publications" ng-click="activatePublication(publication);" style="cursor: inherit;">
                   <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
-                    <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
+                    <div preload-bg-image="{{app.getImageLink(publication, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
                     </div>
                   </a>
                   <div class="clear font-thin">
@@ -142,7 +142,7 @@
               <ul class="list-group bg-t m-0">
                 <li class="no-border-radius list-group-item no-bg b-l-2x r-0" ng-class="{'b-l-primary': isActiveDraft(draft)}" ng-repeat="draft in drafts" ng-click="activateDraft(draft)" style="cursor: inherit;">
                   <a href class="pull-left m-r" ng-if="app.hasImage(draft)" style="height: 96px;">
-                    <div ng-style="app.getBackgroundImage(draft, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
+                    <div preload-bg-image="{{app.getImageLink(draft, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
                     </div>
                   </a>
                   <div class="clear font-thin">
