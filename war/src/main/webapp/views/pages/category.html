@@ -18,7 +18,7 @@
 
               <md-button ng-click="app.toggleBookmark(postView)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(postView)}"><i class="mdi2-bookmark i-16"></i></md-button>
               
-              <md-button ng-click="app.showSharesPostDialog(postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+              <md-button ng-click="app.showSharesPostDialog($event, postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
 
               <span class="v-m p-v-sm m-r-sm text-white pull-right">{{postView.commentsCount}}</span>
               
@@ -79,7 +79,7 @@
 
                         <md-button ng-click="app.toggleBookmark(postView)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(postView)}"><i class="mdi2-bookmark i-16"></i></md-button>
                         
-                        <md-button ng-click="app.showSharesPostDialog(postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+                        <md-button ng-click="app.showSharesPostDialog($event,postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
 
                         <span class="pull-right v-m p-v-sm m-r-sm">{{postView.commentsCount}}</span>
                         
