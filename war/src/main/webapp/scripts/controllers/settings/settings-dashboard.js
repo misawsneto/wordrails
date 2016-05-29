@@ -89,7 +89,62 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	        // onComplete: function(){
 
 	        // }
-	      })
-	  }
+	    })
+	}
 
+	var start = null;
+	var startTime = start;
+	var end = moment().format('YYYY-MM-DD');
+	var endTime = new Date().getTime();
+	var field = 'authorId';
+	var page = 0;
+	var size = 100;
+	var authorId = 51;
+	var postIds = [6017];
+	var postId = 6017;
+	var stationId = 11;
+
+	trix.getMostCommonTerm(startTime,endTime,field,page,size).success(function(response){
+
+    })
+
+    //@Path("/popularNetworks")
+    trix.getPopularNetworks(page,size).success(function(response){
+        
+    })
+
+        //@Path("/post")
+    trix.postStats(end, start, postId).success(function(response){
+        
+    })
+
+    //@Path("/author")
+    trix.authorStats(end, start, authorId).success(function(response){
+        
+    })
+
+    //@Path("/network")
+    trix.networkStats(end, start).success(function(response){
+        
+    })
+
+        //@Path("/station")
+    trix.stationStats(end, start, stationId).success(function(response){
+        
+    })
+
+        //@Path("/storage")
+    trix.getNetworkUsedSpace().success(function(response){
+        
+    })
+
+    //  @Path("/countPostReads")
+    trix.countReadsByPostIds(postIds).success(function(response){
+        
+    })
+
+        //@Path("/countReadersByStation")
+    trix.countReadersByStation(stationId).success(function(response){
+        
+    })
 }]);

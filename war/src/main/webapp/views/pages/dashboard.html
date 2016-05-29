@@ -29,7 +29,7 @@
             <div class="card-heading">
               <h2>{{'titles.SCHEDULED' | translate}}</h2>
             </div>
-            <div class="list-group list-group-lg md-primary-hue-1 background w-full" ng-class="{'display-table h-300': !scheduled || !scheduled.length}">
+            <div class="list-group list-group-lg md-primary-hue-1 background w-full" ng-style="{'height': (drafts.length * 78) + 'px'}" ng-class="{'display-table': !scheduled || !scheduled.length}">
               <a md-ink-ripple class="list-group-item text-ellipsis" ng-repeat="scheduledPost in scheduled" ng-click="app.showPost(scheduledPost)">
                <!--  <span class="pull-right">
                  <i class="mdi-action-trending-up i-20 text-muted-dk"></i>
@@ -50,7 +50,7 @@
             <div class="card-heading">
               <h2>{{'titles.DRAFTS' | translate}}</h2>
             </div>
-            <div class="list-group list-group-lg md-accent-default background w-full" ng-class="{'display-table h-300': !drafts || !drafts.length}">
+            <div class="list-group list-group-lg md-accent-default background w-full" ng-style="{'height': (scheduled.length * 78) + 'px'}" ng-class="{'display-table': !drafts || !drafts.length}">
               <a md-ink-ripple href class="list-group-item" ng-repeat="draft in drafts" ng-click="app.showPost(draft)">
                 <!-- <span class="pull-right">
                   1
@@ -59,7 +59,7 @@
                 <div class="text-xs text-right p-t-sm"><i class="mdi mdi2-radio-tower"></i> {{draft.stationName}}</div>
               </a>
               <div class="text-center p-lg display-cell v-m w-full" ng-if="!drafts || !drafts.length">
-                <div class="m-b-sm">
+                <div class="m-b text-md">
                   {{'settings.dashboard.NO_DRAFTS' | translate}}
                 </div>
                 <i class="mdi2-calendar-clock i-32 text-3x"></i>
