@@ -83,9 +83,9 @@ public class Person extends BaseEntity implements Serializable {
 	@ManyToOne
 	public Image cover;
 
-	@Transient
-	@SdkInclude
-	public Boolean enabled;
+//	@Transient
+//	@SdkInclude
+//	public Boolean enabled;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -108,6 +108,14 @@ public class Person extends BaseEntity implements Serializable {
 		if (image != null) return image.getOriginalHash();
 
 		return null;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public boolean getEnabled() {
+		if (user != null) return user.isEnabled();
+
+		return false;
 	}
 
 	@Deprecated
