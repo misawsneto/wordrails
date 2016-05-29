@@ -116,12 +116,12 @@ public class NetworkService {
 
 		network.authCredential.facebookAppID = authCredential.facebookAppID;
 		network.authCredential.facebookAppSecret = authCredential.facebookAppSecret;
+		network.authCredential.googleWebAppID = authCredential.googleWebAppID;
+		network.authCredential.googleWebAppSecret = authCredential.googleWebAppSecret;
 		network.authCredential.googleAndroidAppID = authCredential.googleAndroidAppID;
 		network.authCredential.googleAndroidAppSecret = authCredential.googleAndroidAppSecret;
-		network.authCredential.googleAndroidAppID = authCredential.googleAndroidAppID;
-		network.authCredential.googleAndroidAppSecret = authCredential.googleAndroidAppSecret;
-		network.authCredential.googleAndroidAppID = authCredential.googleWebAppID;
-		network.authCredential.googleAndroidAppSecret = authCredential.googleWebAppSecret;
+		network.authCredential.googleAppleAppID = authCredential.googleAppleAppID;
+		network.authCredential.googleAppleAppSecret = authCredential.googleAppleAppSecret;
 
 		networkRepository.save(network);
 	}

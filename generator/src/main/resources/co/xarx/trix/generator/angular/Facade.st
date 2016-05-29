@@ -564,13 +564,13 @@ var trix = angular.module('trix', [])
 
     this.updateAuthCredential = function (authCredential) {
         var config = {"headers": {"Content-Type": "application/json"}}
-        return \$http.put(_config.url + "/api/authCredentials/network/",
+        return \$http.put(_config.url + "/api/authCredentials",
         authCredential, config)
     }
 
     this.getAuthCredential = function () {
         var config = {"headers": {"Content-Type": "application/json"}}
-        return \$http.get(_config.url + "/api/authCredentials/network/",config);
+        return \$http.get(_config.url + "/api/authCredentials",config);
     }
 
     //@Path("/getMostPopular")
