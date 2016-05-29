@@ -7,13 +7,16 @@
             <div class="cell-inner p">
               <ul class="settings-list text-muted m-t-xxl pos-rlt">
                 <li ng-class="{'active': settings.tab === 'publications'}">
-                  <a ng-click="settings.tab = 'publications'" md-ink-ripple class="settings-items"><span translate='titles.PUBLICATIONS'></span></a>
+                  <a ng-click="settings.tab = 'publications'" md-ink-ripple class="settings-items"><span translate='titles.IMAGES'></span></a>
                 </li>
                 <li ng-class="{'active': settings.tab === 'users'}">
-                  <a ng-click="settings.tab = 'users'" md-ink-ripple class="settings-items"><span translate='titles.USERS'></span></a>
+                  <a ng-click="settings.tab = 'users'" md-ink-ripple class="settings-items"><span translate='titles.VIDEOS'></span></a>
                 </li>
                 <li ng-class="{'active': settings.tab === 'drafts'}">
-                  <a ng-click="settings.tab = 'drafts'" md-ink-ripple class="settings-items"><span translate='titles.CATEGORIES'></span></a>
+                  <a ng-click="settings.tab = 'drafts'" md-ink-ripple class="settings-items"><span translate='titles.AUDIOS'></span></a>
+                </li>
+                <li ng-class="{'active': settings.tab === 'drafts'}">
+                  <a ng-click="settings.tab = 'drafts'" md-ink-ripple class="settings-items"><span translate='titles.DOCUMENTS'></span></a>
                 </li>
               </ul>
             </div>

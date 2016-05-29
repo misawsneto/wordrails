@@ -568,6 +568,11 @@ var trix = angular.module('trix', [])
         authCredential, config)
     }
 
+    this.getAuthCredential = function () {
+        var config = {"headers": {"Content-Type": "application/json"}}
+        return \$http.get(_config.url + "/api/authCredentials/network/",config);
+    }
+
     //@Path("/getMostPopular")
     this.getMostCommonTerm = function(startTime,endTime,field,page,size){
         var config = {};

@@ -125,4 +125,8 @@ public class NetworkService {
 
 		networkRepository.save(network);
 	}
+
+	public AuthCredential getAuthCredentials() {
+		return  authCredentialRepository.findAuthCredentialByTenantId(TenantContextHolder.getCurrentTenantId());
+	}
 }

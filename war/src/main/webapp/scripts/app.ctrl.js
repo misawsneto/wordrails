@@ -916,6 +916,8 @@ angular.module('app')
           trix.findPostCommentsOrderByDate($scope.app.postLoaded.id, $scope.app.commentsPage, $scope.app.window, null, 'commentProjection').success(function(response){
             if(response.comments && response.comments.length > 0){
               response.comments.forEach(function(comment){
+                if(!$scope.app.comments)
+                  $scope.app.comments = [];
                 $scope.app.comments.push(comment);
               })
               $scope.app.commentsPage ++;
