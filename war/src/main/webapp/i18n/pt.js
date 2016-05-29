@@ -348,6 +348,7 @@
 		"SUCCESS_MSG": "Alterações realizadas com sucesso",
 		"network":{
 			"NO_LANGUAGE": "Idioma não disponível"
-		}
+		},
+		"INVALID_CREDENTIALS": "Credenciais inválidas. Por favor tente novamente."
 	}
 }

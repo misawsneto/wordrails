@@ -206,7 +206,7 @@
     <md-progress-linear class="pos-abt top-0 left-0" ng-if="app.loading" md-mode="indeterminate"></md-progress-linear>
     <!-- signin -->
     <div class="text-color m text-center" ng-if="app.signState !== 'signup' && app.signState !== 'forgot'">
-      <div class="m-b-md m-t-md text-md text-u-c font-500">{{'signin_signup.SIGNIN' | translate}}</div>
+      <div class="m-b m-t text-md text-u-c font-500">{{'signin_signup.SIGNIN' | translate}}</div>
       <div class="text-center">
         <md-button class="md-fab md-mini" style="background: #3B5999" aria-label="Use Android">
           <i class="mdi2-facebook i-24 text-white"></i>
@@ -221,8 +221,11 @@
           <i class="mdi2-linkedin i-24 text-white"></i>
         </md-button>-->
       </div>
-        <div class="p-t text-md" translate="signin_signup.OR">ou</div>
+        <div class="p-t-sm text-md" translate="signin_signup.OR">ou</div>
       <form name="form" ng-submit="app.signIn(person)" class="text-md w-xxl">
+       <div ng-if="app.invalidCredentials" class="animated5x fadeIn md-warn-hue-1 background m-b-sm m-t-xs p-xs r-2x">
+          {{'messages.INVALID_CREDENTIALS' | translate}}
+        </div>
         <div class="p" style="padding-bottom: 0">
           <md-input-container class="w-full m-b-0">
             <label for="testInput">{{'titles.USERNAME' | translate}}</label>

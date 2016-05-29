@@ -348,6 +348,7 @@
 		"SUCCESS_MSG": "Changes successfully applied",
 		"network":{
 			"NO_LANGUAGE": "Language is not available"
-		}
+		},
+		"INVALID_CREDENTIALS": "Invalid credentials. Please try again."
 	}
 }

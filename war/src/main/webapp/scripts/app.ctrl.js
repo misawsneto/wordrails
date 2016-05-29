@@ -737,6 +737,7 @@ angular.module('app')
         })
       }
 
+      $scope.app.invalidCredentials = false;
       $scope.app.signIn = function(person, goToHome){
         $scope.app.loading = true;
         trix.login(person.username, person.password).success(function(){
@@ -751,6 +752,7 @@ angular.module('app')
           });
         }).error(function(){
           $scope.app.loading = false;
+          $scope.app.invalidCredentials = true;
         });
       }
 
