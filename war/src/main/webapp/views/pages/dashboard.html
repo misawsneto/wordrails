@@ -1,23 +1,38 @@
   <div class="row">
     <div class="col-lg-8 col-md-8 col-sm-8">
         <div class="row row-sm text-center">
-          <div class="col-xs-4">
-            <div class="panel b-n m-b-0 p-v item md-whiteframe-z1">
+          <div class="col-xs-6">
+            <div class="b-n m-b-0 p-v item md-whiteframe-z1" ng-style="app.getMaterialBGColor('myAccent', '400', 1.0)">
+              <div class="h1 font-thin h1 m-b">521</div>
+              <span class="p-t text-u-c font-500">{{'settings.dashboard.IOS_INSTALLS' | translate}}</span>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="b-n m-b-0 p-v item md-whiteframe-z1" ng-style="app.getMaterialBGColor('myAccent', '600', 1.0)">
               <div class="h1 font-thin h1 m-b counter" value="registeredUsersValue" to="registeredUsers" duration="1000">{{ registeredUsersValue | number:0 }}</div>
-              <span class="p-t">{{'settings.dashboard.REGISTERD_USERS' | translate}}</span>
+              <span class="p-t text-u-c font-500">{{'settings.dashboard.REGISTERD_USERS' | translate}}</span>
               <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="loadingRegisteredUsers" md-mode="indeterminate"></md-progress-linear>
             </div>
           </div>
+        </div>
+        <div class="row row-sm text-center">
           <div class="col-xs-4">
-            <div class="panel b-n m-b-0 p-v item md-whiteframe-z1">
-              <div class="h1 font-thin h1 m-b">521</div>
-              <span class="p-t">{{'settings.dashboard.IOS_INSTALLS' | translate}}</span>
+            <div class="b-n m-b-0 p-v item md-whiteframe-z1" ng-style="app.getMaterialBGColor('myPrimary', '800', 1.0)">
+              <div class="h1 font-thin h1 m-b counter" value="registeredUsersValue" to="registeredUsers" duration="1000">{{ registeredUsersValue | number:0 }}</div>
+              <span class="p-t text-u-c font-500">{{'settings.dashboard.REGISTERD_USERS' | translate}}</span>
+              <md-progress-linear class="pos-abt md-accent bottom-0 left-0" ng-if="loadingRegisteredUsers" md-mode="indeterminate"></md-progress-linear>
             </div>
           </div>
           <div class="col-xs-4">
-            <div class="panel b-n m-b-0 p-v item md-whiteframe-z1">
+            <div class="b-n m-b-0 p-v item md-whiteframe-z1" ng-style="app.getMaterialBGColor('myPrimary', '600', 1.0)">
               <div class="h1 font-thin h1 m-b">521</div>
-              <span class="p-t">{{'settings.dashboard.ANDROID_INSTALLS' | translate}}</span>
+              <span class="p-t text-u-c font-500">{{'settings.dashboard.IOS_INSTALLS' | translate}}</span>
+            </div>
+          </div>
+          <div class="col-xs-4">
+            <div class="b-n m-b-0 p-v item md-whiteframe-z1" ng-style="app.getMaterialBGColor('myPrimary', '400', 1.0)">
+              <div class="h1 font-thin h1 m-b">521</div>
+              <span class="p-t text-u-c font-500">{{'settings.dashboard.ANDROID_INSTALLS' | translate}}</span>
             </div>
           </div>
         </div>
@@ -48,22 +63,34 @@
                 <div class="col-xs-6">
                   <div class="text-md p">
                     <div class="p-sm">
-                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-pencil i-20"></i></div><div class="clear opacity-09"><a class="text-u-l-hover">{{'settings.dashboard.CREATE_PUBLICATION_HEADER' | translate}}</a></div>
+                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-pencil i-20"></i></div><div class="clear opacity-09">
+                        <a class="text-u-l-hover" ui-sref="app.post">{{'settings.dashboard.CREATE_PUBLICATION_HEADER' | translate}}</a>
+                        </div>
                     </div>
                     <div class="p-sm">
-                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-settings i-20"></i></div><div class="clear opacity-09"><a class="text-u-l-hover">{{'settings.dashboard.NETWORK_MANAGEMENT_HEADER' | translate}}</a></div>
+                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-settings i-20"></i></div><div class="clear opacity-09">
+                        <a class="text-u-l-hover" ui-sref="app.network">{{'settings.dashboard.NETWORK_MANAGEMENT_HEADER' | translate}}</a>
+                        </div>
                     </div>
                     <div class="p-sm">
-                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-radio-tower i-20"></i></div><div class="clear opacity-09"><a class="text-u-l-hover">{{'settings.dashboard.STATION_MANAGEMENT_HEADER' | translate}}</a></div>
+                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-radio-tower i-20"></i></div><div class="clear opacity-09">
+                        <a class="text-u-l-hover" ui-sref="app.stations">{{'settings.dashboard.STATION_MANAGEMENT_HEADER' | translate}}</a>
+                        </div>
                     </div>
                     <div class="p-sm">
-                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-view-quilt i-20"></i></div><div class="clear opacity-09"><a class="text-u-l-hover">{{'settings.dashboard.CREATE_PAGES_HEADER' | translate}}</a></div>
+                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-view-quilt i-20"></i></div><div class="clear opacity-09">
+                        <a class="text-u-l-hover" ui-sref="app.pagebuilder.list">{{'settings.dashboard.CREATE_PAGES_HEADER' | translate}}</a>
+                        </div>
                     </div>
                     <div class="p-sm">
-                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi-social-people i-20"></i></div><div class="clear opacity-09"><a class="text-u-l-hover">{{'settings.dashboard.USER_MANAGEMENT_HEADER' | translate}}</a></div>
+                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi-social-people i-20"></i></div><div class="clear opacity-09">
+                        <a class="text-u-l-hover" ui-sref="app.users">{{'settings.dashboard.USER_MANAGEMENT_HEADER' | translate}}</a>
+                        </div>
                     </div>
                     <div class="p-sm">
-                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-newspaper i-20"></i></div><div class="clear opacity-09"><a class="text-u-l-hover">{{'settings.dashboard.POST_MANAGEMENT_HEADER' | translate}}</a></div>
+                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-newspaper i-20"></i></div><div class="clear opacity-09">
+                        <a class="text-u-l-hover" ui-sref="app.publications">{{'settings.dashboard.POST_MANAGEMENT_HEADER' | translate}}</a>
+                        </div>
                     </div>
                   </div>
                 </div>
@@ -125,11 +152,11 @@
           </div>
         </div>
       </div>
-      <div class="row row-sm">
+      <!--<div class="row row-sm">
         <div class="col-sm-12">
           <div class="card p"></div>
         </div>
-      </div>
+      </div>-->
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4">
       <div class="card md-whiteframe-z1">
