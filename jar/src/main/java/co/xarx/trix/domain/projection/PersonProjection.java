@@ -25,8 +25,8 @@ public interface PersonProjection {
 
 	String getImageSmallHash();
 
-	String getImageOriginalHash();
-	String getCoverOriginalHash();
+//	String getImageOriginalHash();
+//	String getCoverOriginalHash();
 
 	Date getLastLogin();
 

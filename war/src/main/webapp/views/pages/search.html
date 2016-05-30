@@ -111,7 +111,7 @@
                       <div ng-style="{'background-image': 'url(  {{person | coverImage: 'medium'}} )'}" style="margin: -16px -16px 0 -16px" class="hidden-folded bg-cover m-b-md md-whiteframe-z1">
                         <div class="p w-full">
                       <!-- <i class="mdi mdi2-account text-4x"></i> -->
-                        <div class="md-whiteframe-z1 user-avatar rounded w-64 bg-white inline pos-rlt md-primary-default background text-center bg-cover" ng-style="app.getBackgroundImage(person, 'medium')" bstyle="{'background-image': 'url(  {{person | userImage: 'medium'}} )'}">
+                        <div class="md-whiteframe-z1 user-avatar rounded w-64 bg-white inline pos-rlt md-primary-default background text-center bg-cover" preload-bg-image="{{app.getUserImage(person, 'medium', 'PROFILE_PICTURE')}}">
                           <i ng-if="!person.imageHash" class="mdi2-account i-40" style="top: 16%;position: relative;"></i>
                         </div>
                         </div>
@@ -155,7 +155,7 @@
                             </div>
                             <div class="clear font-thin">
                                   <a href class="pull-left w-full" ng-if="app.hasImage(publication)" style="height: 196px;">
-                                    <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
+                                    <div preload-bg-image="{{app.getImageLink(publication, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
                                     </div>
                                   </a>
                               </div>
@@ -183,7 +183,7 @@
 
                                         <md-button ng-click="app.toggleBookmark(publication)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(publication) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(publication)}"><i class="mdi2-bookmark i-16"></i></md-button>
                                         
-                                        <md-button ng-click="app.showSharesPostDialog(publication)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+                                        <md-button ng-click="app.showSharesPostDialog($event, publication)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
 
                                         <span class="pull-right v-m p-v-sm m-r-sm">{{publication.commentsCount}}</span>
                                         
@@ -217,7 +217,7 @@
                     </div>
                     <md-divider ng-class=" m-b-xs"></md-divider>
                     <div class="m-t-sm">
-                      <div class="m-b-sm" ng-repeat="person in persons | limitTo:5" ng-click="showPerson(person)">
+                      <div class="m-b-sm" ng-repeat="person in persons | limitTo:5" ng-click="showPerson($event,person)">
                         <span class="pull-left thumb-sm m-r">
                           <div ng-style="app.getUserImage(person, 'small', 'PROFILE_PICTURE', true)" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(person)}">
                             <i ng-if="!app.hasProfilePicture(person)" style="line-height: 36px;" class="mdi2-account i-24"></i>

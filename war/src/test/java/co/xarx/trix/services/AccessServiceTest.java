@@ -1,5 +1,6 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.config.multitenancy.TenantProvider;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

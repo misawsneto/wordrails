@@ -1,7 +1,5 @@
 package co.xarx.trix.domain;
 
-import co.xarx.trix.annotation.SdkExclude;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rometools.utils.Strings;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +10,6 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@SdkExclude
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId"}))
 public class AuthCredential extends BaseEntity {
 
@@ -25,25 +22,25 @@ public class AuthCredential extends BaseEntity {
 		return id;
 	}
 
-	@JsonIgnore
+//	@JsonIgnore
 	public String facebookAppSecret;
 	public String facebookAppID;
 
-	@JsonIgnore
+//	@JsonIgnore
 	public String googleWebAppSecret;
 	public String googleWebAppID;
 
-	@JsonIgnore
+//	@JsonIgnore
 	public String googleAndroidAppSecret;
 	public String googleAndroidAppID;
 
-	@JsonIgnore
+//	@JsonIgnore
 	public String googleAppleAppSecret;
 	public String googleAppleAppID;
 
 	@OneToOne
 	@NotNull
-	private Network network;
+	public Network network;
 
 	public boolean isFacebookLoginAllowed() {
 		return Strings.isNotEmpty(facebookAppID) && Strings.isNotEmpty(facebookAppSecret);

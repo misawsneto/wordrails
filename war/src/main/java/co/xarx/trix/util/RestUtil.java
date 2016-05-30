@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -58,5 +59,10 @@ public class RestUtil {
 		JsonElement je = jp.parse(json);
 
 		return gson.toJson(je);
+	}
+
+	public String getDeviceFromUserAgent(String userAgent) {
+		UserAgent ua = UserAgent.parseUserAgentString(userAgent);
+		return ua.getBrowser().getName();
 	}
 }

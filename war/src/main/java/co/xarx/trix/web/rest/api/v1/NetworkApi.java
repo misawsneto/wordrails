@@ -20,6 +20,10 @@ import java.io.IOException;
 @Produces(MediaType.APPLICATION_JSON)
 public interface NetworkApi {
 
+	@GET
+	@Path("/")
+	void getNetworks() throws IOException;
+
 	@PUT
 	@Path("/{id}")
 	void putNetwork(@PathParam("id") Integer id) throws IOException;

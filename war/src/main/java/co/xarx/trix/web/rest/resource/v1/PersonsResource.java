@@ -42,6 +42,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -98,20 +100,13 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 
 	@Override
 	@Transactional
-	public Response findPerson(Integer id) throws IOException {
-		Person person = authProvider.getLoggedPerson();
-
-		if(person.id.equals(id) || person.networkAdmin) {
-			forward();
-			return Response.status(Status.OK).build();
-		}else
-			return Response.status(Status.UNAUTHORIZED).build();
+	public void findPerson(Integer id) throws IOException {
+		forward();
 	}
 
 	@Override
-	public Response findPersonByUsername() throws IOException {
+	public void findPersonByUsername() throws IOException {
 		forward();
-		return null;
 	}
 
 	@Override
@@ -488,6 +483,12 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	 */
 	public void findPersons() throws IOException {
 		forward();
+	}
+
+	public Response updateLocation2(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String
+			device, @FormParam("lat") Double lat, @FormParam("lng") Double lng) throws IOException {
+		return updateMobile(token, lat, lng, "apple".equals(device) ? Constants.MobilePlatform.APPLE : Constants
+				.MobilePlatform.ANDROID);
 	}
 
 }

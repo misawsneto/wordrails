@@ -37,11 +37,24 @@ public class AuthResource extends AbstractResource implements AuthApi {
 
 	@Override
 	public Response signin(String providerId, String userId, String accessToken) throws IOException {
-		AuthCredential oauthCredential = authCredentialRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+		AuthCredential oauthCredential = authCredentialRepository.findAuthCredentialByTenantId(TenantContextHolder.getCurrentTenantId());
 
 		if(oauthCredential == null) {
 			throw new NotAllowedException("This network does not support social login");
 		}
+
+
+		if(providerId.equals("google")) {
+			String userAgent = request.getHeader("User-Agent");
+			if(userAgent.contains("WordRailsIOSClient")) {
+				providerId = "googleios";
+			} else if(userAgent.contains("OkHttp")) {
+				providerId = "googleandroid";
+			} else {
+				providerId = "googleweb";
+			}
+		}
+
 
 		boolean allowSocialLogin = true;
 		OAuthService service = null;
@@ -82,6 +95,10 @@ public class AuthResource extends AbstractResource implements AuthApi {
 
 		if (!allowSocialLogin) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+		}
+
+		if(token == null) {
+			return Response.status(Response.Status.BAD_REQUEST).entity("Invalid provider ID").build();
 		}
 
 		boolean authorized = authProvider.socialAuthentication(providerId, service, userId, token);

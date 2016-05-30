@@ -21,7 +21,7 @@
             </div>
             <!-- News Image -->
             <div class="news-image o-f-h">
-                <div ng-if="app.hasImage(postView);" ng-style="app.getBackgroundImage(postView, 'medium')" class="zoom-hover h-full bg-cover" style="min-height: 230px;">
+                <div ng-if="app.hasImage(postView);" preload-bg-image="{{app.getImageLink(postView, 'medium')}}" class="zoom-hover h-full bg-cover" style="min-height: 230px;">
                     <!-- <img class="responsive-img materialboxed" ng-src="{{postView | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
                 </div>
             </div>
@@ -41,9 +41,9 @@
 
                         <span class="v-m p-v-sm m-r-sm">{{postView.recommendsCount}}</span>
 
-                        <md-button style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="bookmark ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': bookmark}" ng-click="showRemoveBookmarkDialog(postView)"><i class="mdi2-bookmark-remove i-20"></i></md-button>
+                        <md-button style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="bookmark ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': bookmark}" ng-click="showRemoveBookmarkDialog($event, postView)"><i class="mdi2-bookmark-remove i-20"></i></md-button>
                         
-                        <md-button ng-click="app.showSharesPostDialog(postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+                        <md-button ng-click="app.showSharesPostDialog($event, postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
 
                         <span class="pull-right v-m p-v-sm m-r-sm">{{postView.commentsCount}}</span>
                         

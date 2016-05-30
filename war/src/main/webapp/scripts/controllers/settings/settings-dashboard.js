@@ -15,7 +15,6 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
         controller: $scope.app.defaultDialog,
         templateUrl: 'welcolme-dialog.html',
         parent: angular.element(document.body),
-        targetEvent: event,
         clickOutsideToClose:false,
         escapeToClose: false
       })
@@ -71,7 +70,7 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	    $scope.loadingDrafts = false;
 	  })
 
-	  $scope.showPerson = function(person){
+	  $scope.showPerson = function(event,person){
 	  	// show term alert
 	      $scope.loadedPerson = angular.copy(person);
 	      $scope.uploadedUserImage = null;
@@ -90,7 +89,76 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	        // onComplete: function(){
 
 	        // }
-	      })
-	  }
+	    })
+	}
 
+	var start = null;
+	var startTime = start;
+	var end = moment().format('YYYY-MM-DD');
+	var endTime = new Date().getTime();
+	var field = 'authorId';
+	var page = 0;
+	var size = 100;
+	var authorId = 51;
+	var postIds = [6017];
+	var postId = 6017;
+	var stationId = 11;
+
+	$scope.networkStats = {};
+
+	trix.getMostCommonTerm(startTime,endTime,field,page,size).success(function(response){
+
+    })
+
+    //@Path("/popularNetworks")
+    trix.getPopularNetworks(page,size).success(function(response){
+        
+    })
+
+        //@Path("/post")
+    trix.postStats(end, start, postId).success(function(response){
+        
+    })
+
+    //@Path("/author")
+    trix.authorStats(end, start, authorId).success(function(response){
+        
+    })
+
+    //@Path("/network")
+    trix.networkStats(end, start).success(function(response){
+        
+    })
+
+        //@Path("/station")
+    trix.stationStats(end, start, stationId).success(function(response){
+        
+    })
+
+        //@Path("/storage")
+    trix.getNetworkUsedSpace().success(function(response){
+        
+    })
+
+    //  @Path("/countPostReads")
+    trix.countReadsByPostIds(postIds).success(function(response){
+        
+    })
+
+        //@Path("/countReadersByStation")
+    trix.countReadersByStation(stationId).success(function(response){
+        
+    })
+
+    $scope.registeredUsers = 0;
+    $scope.loadingRegisteredUsers = true;
+    trix.countPersonsByNetwork().success(function(response){
+    	$scope.registeredUsers = response;
+    	$scope.loadingRegisteredUsers = false;
+    }).error(function(){
+    	$scope.loadingRegisteredUsers = false;
+    })
+
+ 	// iosStore;
+	// androidStore;
 }]);

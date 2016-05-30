@@ -48,8 +48,8 @@
     <!-- / -->
     <!-- Common tools -->
     <ul class="nav nav-sm navbar-tool pull-right" ng-hide="$state.current.data.child">
-      <li ng-if="!app.search.show">
-        <a md-ink-ripple ng-click="app.search.show = true">
+      <li class="animated" ng-class="{'fadeIn': !app.search.show, 'fadeOut': app.search.show}">
+        <a md-ink-ripple ng-click="app.search.show = true; app.focusOnSearch">
           <i class="mdi-action-search i-24 p-h-sm"></i>
         </a>
       </li>
@@ -206,23 +206,26 @@
     <md-progress-linear class="pos-abt top-0 left-0" ng-if="app.loading" md-mode="indeterminate"></md-progress-linear>
     <!-- signin -->
     <div class="text-color m text-center" ng-if="app.signState !== 'signup' && app.signState !== 'forgot'">
-      <div class="m-b-md m-t-md text-md text-u-c font-500">{{'signin_signup.SIGNIN' | translate}}</div>
+      <div class="m-b m-t text-md text-u-c font-500">{{'signin_signup.SIGNIN' | translate}}</div>
       <div class="text-center">
         <md-button class="md-fab md-mini" style="background: #3B5999" aria-label="Use Android">
           <i class="mdi2-facebook i-24 text-white"></i>
         </md-button>
-        <md-button class="md-fab md-mini" style="background: #5EA9DD" aria-label="Use Android">
+        <!--<md-button class="md-fab md-mini" style="background: #5EA9DD" aria-label="Use Android">
           <i class="mdi2-twitter i-24 text-white"></i>
-        </md-button>
+        </md-button>-->
         <md-button class="md-fab md-mini" style="background: #DC4A38" aria-label="Use Android">
           <i class="mdi2-google-plus text-white i-24"></i>
         </md-button>
-        <md-button class="md-fab md-mini" style="background: #0177B5" aria-label="Use Android">
+        <!--<md-button class="md-fab md-mini" style="background: #0177B5" aria-label="Use Android">
           <i class="mdi2-linkedin i-24 text-white"></i>
-        </md-button>
+        </md-button>-->
       </div>
-        <div class="p-t text-md" translate="signin_signup.OR">ou</div>
+        <div class="p-t-sm text-md" translate="signin_signup.OR">ou</div>
       <form name="form" ng-submit="app.signIn(person)" class="text-md w-xxl">
+       <div ng-if="app.invalidCredentials" class="animated5x fadeIn md-warn-hue-1 background m-b-sm m-t-xs p-xs r-2x">
+          {{'messages.INVALID_CREDENTIALS' | translate}}
+        </div>
         <div class="p" style="padding-bottom: 0">
           <md-input-container class="w-full m-b-0">
             <label for="testInput">{{'titles.USERNAME' | translate}}</label>
@@ -399,7 +402,7 @@
           <div ng-style="{'background-image': 'url(  {{loadedPerson | coverImage: 'medium'}} )'}" style="margin: -16px -16px 0 -16px" class="hidden-folded bg-cover m-b-md md-whiteframe-z1">
             <div class="p w-full">
           <!-- <i class="mdi mdi2-account text-4x"></i> -->
-            <div class="md-whiteframe-z1 user-avatar rounded w-64 bg-white inline pos-rlt md-primary-default background text-center bg-cover" ng-style="app.getBackgroundImage(loadedPerson, 'medium')" bstyle="{'background-image': 'url(  {{loadedPerson | userImage: 'medium'}} )'}">
+            <div class="md-whiteframe-z1 user-avatar rounded w-64 bg-white inline pos-rlt md-primary-default background text-center bg-cover" preload-bg-image="{{app.getImageLink(loadedPerson, 'medium')}}" bstyle="{'background-image': 'url(  {{loadedPerson | userImage: 'medium'}} )'}">
               <i ng-if="!loadedPerson.imageHash" class="mdi2-account i-40" style="top: 16%;position: relative;"></i>
             </div>
             </div>

@@ -14,14 +14,14 @@
                 <li ng-class="{'active': settings.tab === 'settings'}">
                   <a ng-click="settings.tab = 'settings'" md-ink-ripple class="settings-items"><span translate='settings.network.tabs.SETTINGS'></span></a>
                 </li>
-                <li ng-class="{'active': settings.tab === 'domain-analytics'}">
-                  <a ng-click="settings.tab = 'domain-analytics'" md-ink-ripple class="settings-items"><span translate='settings.network.tabs.DOMAINS_ANALYTICS'></span></a>
-                </li>
                 <li ng-class="{'active': settings.tab === 'logos'}">
                   <a ng-click="settings.tab = 'logos'" md-ink-ripple class="settings-items"><span translate='settings.network.tabs.LOGOS'></span></a>
                 </li>
                 <li ng-class="{'active': settings.tab === 'customization'}">
                   <a ng-click="settings.tab = 'customization'" md-ink-ripple class="settings-items"><span translate='settings.network.tabs.CUSTOMIZATION'></span></a>
+                </li>
+                <li ng-class="{'active': settings.tab === 'integrations'}">
+                  <a ng-click="settings.tab = 'integrations'" md-ink-ripple class="settings-items"><span translate='settings.network.tabs.INTEGRATIONS'></span></a>
                 </li>
               </ul>
             </div>
@@ -87,49 +87,32 @@
                           </p>
                         </div>
                       </div>
+                      <div class="line line-dashed b-b line-lg pull-in"></div>
+                      <div class="m-b text-muted text-md text-u-c m-l-lg" translate="titles.DOMAIN">Domínio</div>
+                      <div class="row pos-rlt">
+                        <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
+                        <div class="p-h p-t row m-b-0">
+                          <div class="col-lg-6">
+                            <div class="m-h-auto">
+                              <md-input-container class="m-b-sm m-t-sm w-full">
+                                <label translate="titles.SUBDOMAIN">Subdomínio</label>
+                                <input ng-model="network.subdomain" disabled>
+                              </md-input-container>
+                            </div>
+                          </div>
+                          <div class="col-lg-6">
+                            <div class="m-h-auto">
+                              <md-input-container class="m-b-sm m-t-sm w-full">
+                                <label translate="settings.network.domain_analytics.CUSTOM_DOMAIN">Domínio personalizado</label>
+                                <input ng-model="network.domain">
+                              </md-input-container>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 <!-- end of network configurations -->
-
-                <!-- domain and analytics -->
-                  <div class="md-padding min-h-400" ng-class="{'hide': settings.tab !== 'domain-analytics'}">
-                    <div class="m-b text-muted text-md text-u-c" translate="titles.DOMAIN">Domínio</div>
-                      <div class="row pos-rlt">
-                        <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
-                        <div class="w-xxl m-h-auto">
-                          <md-input-container class="m-b-sm m-t-sm w-full">
-                            <label translate="titles.SUBDOMAIN">Subdomínio</label>
-                            <input ng-model="network.subdomain" disabled>
-                          </md-input-container>
-                        </div>
-                        <div class="w-xxl m-h-auto">
-                          <md-input-container class="m-b-sm m-t-sm w-full">
-                            <label translate="settings.network.domain_analytics.CUSTOM_DOMAIN">Domínio personalizado</label>
-                            <input ng-model="network.domain">
-                          </md-input-container>
-                        </div>
-                      </div>
-                      <!-- /domain settings -->
-                      <!-- analytics settings -->
-                      <div class="line line-dashed b-b line-lg pull-in"></div>
-                      <div class="m-b text-muted text-md text-u-c">Analytics</div>
-                      <div class="row pos-rlt">
-                        <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
-                        <div class="w-xxl m-h-auto">
-                          <md-input-container class="m-b-sm m-t-sm w-full">
-                            <label>Google Analytics - TRACKING ID</label>
-                            <input ng-model="network.trackingId">
-                          </md-input-container>
-                        </div>
-                        <div class="w-xxl m-h-auto">
-                          <md-input-container class="m-b-sm m-t-sm w-full">
-                            <label>Flurry - API KEY</label>
-                            <input ng-model="network.flurryKey">
-                          </md-input-container>
-                        </div>
-                      </div>
-                  </div>
-                <!-- /domain and analytics -->
 
                 <!-- logos -->
                   <div class="md-padding min-h-400"  ng-class="{'hide': settings.tab !== 'logos'}">
@@ -223,32 +206,6 @@
                 <!-- customization -->
                   <div class="md-padding min-h-400" ng-class="{'hide': settings.tab !== 'customization'}">
 
-                    <div class="m-b text-muted text-md text-u-c">{{'titles.SOCIAL_NETWORK_IDS' | translate}}</div>
-                    <div class="p-h p-t row m-b-0">
-                      <div class="col-lg-6">
-                        <md-input-container class="m-b-sm m-t-sm w-full">
-                          <label>ID do Facebook</label>
-                          <input ng-model="network.facebookAppID">
-                        </md-input-container>
-                        <md-input-container class="m-b-sm m-t-sm w-full">
-                          <label>ID do Twitter</label>
-                          <input ng-model="network.twitterAppID">
-                        </md-input-container>
-                      </div>
-                      <div class="col-lg-6">
-                        <md-input-container class="m-b-sm m-t-sm w-full">
-                          <label>ID do LinkedIn</label>
-                          <input ng-model="network.linkdedInAppID">
-                        </md-input-container>
-                        <md-input-container class="m-b-sm m-t-sm w-full">
-                          <label>ID do Google+</label>
-                          <input ng-model="network.googleAppID">
-                        </md-input-container>
-                      </div>
-                    </div>
-
-                    <div class="line line-dashed b-b line-lg pull-in"></div>
-
                     <div class="m-b text-muted text-md text-u-c">{{'titles.SOCIAL_NETWORK_PROFILES' | translate}}</div>
                     <div class="p-h p-t row m-b-0">
                       <div class="col-lg-6">
@@ -302,10 +259,96 @@
                       <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
                     </md-input-container>
                   </div>
-                <!-- </md-tab> -->
-                <!-- /customization -->
-              <!-- </md-tabs> -->
+                  <div class="md-padding min-h-400" ng-class="{'hide': settings.tab !== 'integrations'}">
+                    
+                    <div class="m-b text-muted text-md text-u-c">Analytics</div>
+                    <div class="p-h p-t row m-b-0">
+                      <div class="display-table">
+                        <div class="display-cell p-h-xxl v-m">
+                          <div class="p-sm text-white r-2x" style="background: #777777">
+                            <i class="mdi2-chart-bar i-60"></i>
+                          </div>
+                        </div>
+                        <div class="display-cell w-xxl">
+                          <div class="m-t">
+                            <md-input-container class="m-b-sm m-t-sm w-full">
+                              <label>Google Analytics - TRACKING ID</label>
+                              <input ng-model="network.trackingId">
+                            </md-input-container>
+                            <md-input-container class="m-b-sm m-t-sm w-full">
+                              <label>Flurry - API KEY</label>
+                              <input ng-model="network.flurryKey">
+                            </md-input-container>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="m-b text-muted text-md text-u-c">{{'titles.SOCIAL_NETWORK_IDS' | translate}}</div>
+                    <div class="p-h p-t row m-b-0">
+                      <div class="display-table">
+                        <div class="display-cell p-h-xxl v-m">
+                          <div class="p-sm text-white r-2x" style="background: #3B5999">
+                            <i class="mdi2-facebook i-60"></i>
+                          </div>
+                        </div>
+                        <div class="display-cell w-xxl">
+                          <div class="m-t">
+                            <md-input-container class="m-b-sm m-t-sm w-full">
+                              <label>ID do Facebook</label>
+                              <input ng-model="authCredentials.facebookAppID">
+                            </md-input-container>
+                            <md-input-container class="m-b-sm m-t-sm w-full">
+                              <label>Segredo do Facebook</label>
+                              <input ng-model="authCredentials.facebookAppSecret">
+                            </md-input-container>
+                          </div>
+                        </div>
+                      </div>
+                      <md-divider class="m-t m-b" md-inset></md-divider>
+                      <div class="display-table">
+                        <div class="display-cell p-h-xxl v-m">
+                          <div class="p-sm text-white r-2x" style="background: #DC4A38">
+                            <i class="mdi2-google-plus i-60"></i>
+                          </div>
+                        </div>
+                        <div class="display-cell w-xxl">
+                          <div class="m-t">
+                            <md-input-container class="m-b-sm m-t-sm w-full">
+                              <label>ID do Google + para Web</label>
+                              <input ng-model="authCredentials.googleWebAppID">
+                            </md-input-container>
+                            <md-input-container class="m-b-sm m-t-sm w-full">
+                              <label>Segredo do Google + para Web</label>
+                              <input ng-model="authCredentials.googleWebAppSecret">
+                            </md-input-container>
+
+                            <md-input-container class="m-b-sm m-t-sm w-full">
+                              <label>ID do Google + para Android</label>
+                              <input ng-model="authCredentials.googleAndroidAppID">
+                            </md-input-container>
+                            <md-input-container class="m-b-sm m-t-sm w-full">
+                              <label>Segredo do Google + para Android</label>
+                              <input ng-model="authCredentials.googleAndroidAppSecret">
+                            </md-input-container>
+
+                            <md-input-container class="m-b-sm m-t-sm w-full">
+                              <label>ID do Google + para iOS</label>
+                              <input ng-model="authCredentials.googleAppleAppID">
+                            </md-input-container>
+                            <md-input-container class="m-b-sm m-t-sm w-full">
+                              <label>Segredo do Google + para iOS</label>
+                              <input ng-model="authCredentials.googleAppleAppSecret">
+                            </md-input-container>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -313,8 +356,7 @@
       </div>
     </div>
   </div>
-</div>
-  
+
   <md-button aria-label="menu" ng-click="saveChanges()" ng-disabled="disabled" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-lg m-b-md">
     <i class="mdi-content-save i-24"></i>
   </md-button>

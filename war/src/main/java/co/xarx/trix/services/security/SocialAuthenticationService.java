@@ -8,6 +8,7 @@ import co.xarx.trix.domain.social.FacebookUser;
 import co.xarx.trix.domain.social.GoogleUser;
 import co.xarx.trix.domain.social.SocialUser;
 import co.xarx.trix.persistence.PersonRepository;
+import co.xarx.trix.persistence.UserConnectionRepository;
 import co.xarx.trix.persistence.UserRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,11 +33,13 @@ public class SocialAuthenticationService {
 
 	private PersonRepository personRepository;
 	private UserRepository userRepository;
+	private UserConnectionRepository userConnectionRepository;
 
 	@Autowired
-	public SocialAuthenticationService(PersonRepository personRepository, UserRepository userRepository) {
+	public SocialAuthenticationService(PersonRepository personRepository, UserRepository userRepository, UserConnectionRepository userConnectionRepository) {
 		this.personRepository = personRepository;
 		this.userRepository = userRepository;
+		this.userConnectionRepository = userConnectionRepository;
 	}
 
 	boolean facebookLogin(String userId, OAuthService service, Token token) {
@@ -64,6 +67,9 @@ public class SocialAuthenticationService {
 		System.out.println(MapUtils.toString(request.getHeaders()));
 		Response response = request.send();
 		System.out.println(response.getBody());
+
+		if(!response.isSuccessful())
+			throw new IOException("ERROR: " + response.getCode() + " - " + response.getMessage());
 
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode rootNode = mapper.readTree(response.getBody());
@@ -101,12 +107,12 @@ public class SocialAuthenticationService {
 
 	private UserConnection newUserConnection(SocialUser socialUser) {
 		UserConnection userConnection = new UserConnection();
-		userConnection.providerId = socialUser.getProviderId();
-		userConnection.providerUserId = socialUser.getId();
-		userConnection.email = socialUser.getEmail();
-		userConnection.displayName = socialUser.getName();
-		userConnection.profileUrl = socialUser.getProfileUrl();
-		userConnection.imageUrl = socialUser.getProfileImageUrl();
+		userConnection.setProviderId(socialUser.getProviderId());
+		userConnection.setProviderUserId(socialUser.getId());
+		userConnection.setEmail(socialUser.getEmail());
+		userConnection.setDisplayName(socialUser.getName());
+		userConnection.setProfileUrl(socialUser.getProfileUrl());
+		userConnection.setImageUrl(socialUser.getProfileImageUrl());
 		return userConnection;
 	}
 
@@ -160,7 +166,7 @@ public class SocialAuthenticationService {
 		FacebookUser fbUser = mapper.readValue(response.getBody(), FacebookUser.class);
 		fbUser.setProviderId("facebook");
 		fbUser.setProfileUrl("http://facebook.com/" + fbUser.getId());
-		fbUser.setProfileImageUrl(mapper.readTree(response.getBody()).get("picture").get("data").get("url").asText());
+		fbUser.setProfileImageUrl("https://graph.facebook.com/" + fbUser.getId() + "/picture?type=large");
 		return fbUser;
 	}
 
@@ -174,7 +180,8 @@ public class SocialAuthenticationService {
 		}
 
 		UserConnection userConnection = newUserConnection(socialUser);
-		userConnection.user = user;
+		userConnection.setUser(user);
+		userConnectionRepository.save(userConnection);
 		user.userConnections.add(userConnection);
 		person.user = user;
 

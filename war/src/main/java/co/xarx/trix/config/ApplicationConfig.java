@@ -1,13 +1,13 @@
 package co.xarx.trix.config;
 
+import co.xarx.trix.config.modelmapper.*;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.config.multitenancy.TenantProvider;
 import co.xarx.trix.elasticsearch.mapper.*;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.notification.APNSClient;
 import co.xarx.trix.services.notification.GCMClient;
 import co.xarx.trix.services.notification.MobileNotificationSender;
-import co.xarx.trix.services.TenantProvider;
-import co.xarx.trix.config.modelmapper.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.Sender;
 import org.modelmapper.ModelMapper;
@@ -96,4 +96,5 @@ public class ApplicationConfig {
 	public AmazonCloudService amazonCloudService() {
 		return new AmazonCloudService(accessKey, accessSecretKey, cloudfrontUrl, bucketName);
 	}
+
 }

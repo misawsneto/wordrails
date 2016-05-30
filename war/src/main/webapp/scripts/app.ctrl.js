@@ -323,6 +323,10 @@ angular.module('app')
           e.preventDefault();
         }
 
+        $scope.app.focusOnSearch = function(){
+          $('id#search form input').focus();
+        }
+
         // ---------- /util -------------
 
         // ---------- theming -----------
@@ -517,6 +521,14 @@ angular.module('app')
       
       $scope.getBackgroundImage = function(object, size){
         var img = $filter('bgImageLink')(object, size);
+        if(object.externalVideoUrl){
+          img = $filter('videoThumb')(object.externalVideoUrl);
+        }
+        return img;
+      }
+
+      $scope.app.getImageLink = $scope.getImageLink = function(object, size){
+        var img = $filter('imageLink')(object, size);
         if(object.externalVideoUrl){
           img = $filter('videoThumb')(object.externalVideoUrl);
         }
@@ -721,9 +733,11 @@ angular.module('app')
       $scope.app.signOut = function(){
         trix.logout().success(function(){
           document.location.href = '/';
+          trix.resetUsername('');
         })
       }
 
+      $scope.app.invalidCredentials = false;
       $scope.app.signIn = function(person, goToHome){
         $scope.app.loading = true;
         trix.login(person.username, person.password).success(function(){
@@ -731,14 +745,19 @@ angular.module('app')
             appData = initData = response;
             startApp();
             $mdDialog.cancel();
+            trix.setUsername(initData.person.username);
             $scope.app.loading = false;
           }).error(function(){
             $scope.app.loading = false;
           });
         }).error(function(){
           $scope.app.loading = false;
+          $scope.app.invalidCredentials = true;
         });
       }
+
+      if($scope.app.person)
+        trix.setUsername($scope.app.person.username);
 
       $scope.app.signInButton =  function(){
         $scope.app.signState = 'signin'
@@ -899,6 +918,8 @@ angular.module('app')
           trix.findPostCommentsOrderByDate($scope.app.postLoaded.id, $scope.app.commentsPage, $scope.app.window, null, 'commentProjection').success(function(response){
             if(response.comments && response.comments.length > 0){
               response.comments.forEach(function(comment){
+                if(!$scope.app.comments)
+                  $scope.app.comments = [];
                 $scope.app.comments.push(comment);
               })
               $scope.app.commentsPage ++;

@@ -1,5 +1,6 @@
 package co.xarx.trix.api;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -7,7 +8,8 @@ import java.util.Set;
 /**
  * Created by misael on 4/21/2016.
  */
-public class StationView {
+public class StationView implements Serializable {
+    private static final long serialVersionUID = 2504331733945628049L;
 	public java.lang.Integer id;
 	public java.util.Map<java.lang.String, java.lang.String> alertColors;
 	public boolean allowComments;

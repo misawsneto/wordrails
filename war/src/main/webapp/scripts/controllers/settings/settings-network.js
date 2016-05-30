@@ -226,7 +226,8 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
 		}).error(function(){
 			$scope.disabled = false;
-		})
+		});
+		$scope.saveAuthCredentials();
 	}
 
 	$scope.setLanguage = function(languageRef){
@@ -243,6 +244,20 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 				$scope.app.showErrorToast($filter('translate')('messages.settings.network.NO_LANGUAGE'))
 				break;
 		}
+	}
+
+	$scope.authCredentials = {};
+	trix.getAuthCredentials().success(function(response){
+		$scope.authCredentials = response;
+		if(!$scope.authCredentials)
+			$scope.authCredentials = {};
+	})
+	$scope.saveAuthCredentials = function(){
+		trix.updateAuthCredential($scope.authCredentials).success(function(response){
+			console.log(response);
+		}).error(function(){
+
+		})
 	}
 
 	settingsNetworkCtrl	= $scope;

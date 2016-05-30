@@ -1,6 +1,5 @@
 package co.xarx.trix.config.multitenancy;
 
-import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.jpa.internal.EntityManagerImpl;
 
@@ -11,8 +10,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 public class EntityManagerFactoryDynamicProxy implements InvocationHandler {
-
-	Logger log = Logger.getLogger(this.getClass().getName());
 
 	private EntityManagerFactory emf;
 

@@ -134,7 +134,7 @@
             <div class="pos-rlt">
               <div class="animated animated1x md-background-hue-1 background" ng-class="{'fadeOut pos-abt': publication.selected, 'fadeIn': !publication.selected}">
                 <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
-                  <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
+                  <div preload-bg-image="{{app.getImageLink(publication, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
                   </div>
                 </a>
                 <div class="clear font-thin">
@@ -304,7 +304,7 @@
 
                       <md-button ng-click="app.toggleBookmark(publication)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(publication) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(publication)}"><i class="mdi2-bookmark i-16"></i></md-button>
                       
-                      <md-button ng-click="app.showSharesPostDialog(publication)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+                      <md-button ng-click="app.showSharesPostDialog($event, publication)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
 
                       <span class="pull-right v-m p-v-sm m-r-sm">{{publication.commentsCount}}</span>
                       

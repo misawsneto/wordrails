@@ -117,7 +117,7 @@
                         <md-checkbox ng-model="publication.selected" ng-true-value="true" ng-false-value="false"></md-checkbox>
                       </div>
                       <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
-                        <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
+                        <div preload-bg-image="{{app.getImageLink(publication, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
                         </div>
                       </a>
                       <div class="clear font-thin">

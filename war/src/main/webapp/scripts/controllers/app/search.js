@@ -120,7 +120,7 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
 		$scope.loadingPerson = false;
 	});
 
-	$scope.showPerson = function(person){
+	$scope.showPerson = function(event,person){
   	// show term alert
       $scope.loadedPerson = angular.copy(person);
       $scope.uploadedUserImage = null;
