@@ -58,7 +58,7 @@ public class StatisticsService {
 	private FileRepository fileRepository;
 	private DateTimeFormatter dateTimeFormatter;
 	private PublishedAppRepository appRepository;
-	private ESAppStatsRepository appStatsRepository;
+	private ESAppStatsRepository esAppStatsRepository;
 	private PersonRepository personRepository;
 	private MobileDeviceRepository mobileDeviceRepository;
 	private PersonPermissionService personPermissionService;
@@ -82,7 +82,7 @@ public class StatisticsService {
 							 @Value("${analytics.checkStores}") boolean checkStores,
 							 PublishedAppRepository appRepository, FileRepository fileRepository,
 							 PersonPermissionService personPermissionService,
-							 ESAppStatsRepository appStatsRepository,
+							 ESAppStatsRepository esAppStatsRepository,
 							 Scheduler scheduler,
 							 PersonRepository personRepository){
 		this.mapper = mapper;
@@ -95,7 +95,7 @@ public class StatisticsService {
 		this.dateTimeFormatter = getFormatter();
 		this.personRepository = personRepository;
 		this.nginxAccessIndex = nginxAccessIndex;
-		this.appStatsRepository = appStatsRepository;
+		this.esAppStatsRepository = esAppStatsRepository;
 		this.mobileDeviceRepository = mobileDeviceRepository;
 		this.personPermissionService = personPermissionService;
 	}
@@ -328,14 +328,22 @@ public class StatisticsService {
 	}
 
 	public StoreStatsData getAppStats(PublishedApp app, Interval interval){
-		ESAppStats stats;
+		Assert.notNull(app, "App cannot be null");
+
+		List<ESAppStats> result;
 		if (app.getType().equals(Constants.MobilePlatform.ANDROID)) {
-			stats = appStatsRepository.findByPackageName(app.getPackageName()).get(0);
+			result = esAppStatsRepository.findByPackageName(app.getPackageName());
 		} else {
-			stats = appStatsRepository.findBySku(app.getSku()).get(0);
+			result = esAppStatsRepository.findBySku(app.getSku());
 		}
 
+		if(result == null || result.isEmpty()){
+			return new StoreStatsData();
+		}
+
+		ESAppStats stats = result.get(0);
 		StoreStatsData appStats = new StoreStatsData();
+
 		appStats.averageRaiting = stats.averageRaiting;
 		appStats.downloads = stats.downloads;
 		appStats.currentInstallations = stats.currentInstallations;
