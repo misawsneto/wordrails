@@ -247,16 +247,16 @@ public class StatisticsService {
 		generalStatus.add((int) (long) mobileDeviceRepository.countAndroidDevices(tenantId));
 		generalStatus.add((int) (long) mobileDeviceRepository.countAppleDevices(tenantId));
 
-		StatsData StatsData = new StatsData();
-		StatsData.generalStatsJson = generalStatus;
-		StatsData.dateStatsJson = makeHistogram(postreadCounts, commentsCounts, interval);
+		StatsData statsData = new StatsData();
+		statsData.generalStatsJson = generalStatus;
+		statsData.dateStatsJson = makeHistogram(postreadCounts, commentsCounts, interval);
 
-		StatsData.androidStore = getAndroidStats(interval);
-		StatsData.iosStore = getIosStats(interval);
+		statsData.androidStore = getAndroidStats(interval);
+		statsData.iosStore = getIosStats(interval);
 
-		StatsData.fileSpace = getFileStats();
+		statsData.fileSpace = getFileStats();
 
-		return StatsData;
+		return statsData;
 	}
 
 	public Map countPostReads(List<Integer> postIds){
