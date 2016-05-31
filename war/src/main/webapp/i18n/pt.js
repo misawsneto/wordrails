@@ -145,7 +145,22 @@
 		"dashboard":{
 			"NO_SCHEDULED": "Não há publicações agendadas",
 			"NO_DRAFTS": "Não há rascunhos",
-			"NO_PUBLICATIONS": "Não há publicações"
+			"NO_PUBLICATIONS": "Não há publicações",
+			"REGISTERD_USERS": "Usuários cadastrados",
+			"IOS_INSTALLS": "Instações iOS",
+			"ANDROID_INSTALLS": "Instalações Android",
+			"CREATE_PUBLICATION_HEADER": "Crie uma nova publicação",
+			"CREATE_PUBLICATION_DESC": "",
+			"NETWORK_MANAGEMENT_HEADER": "Permitir cadastros de usuários e outras configurações",
+			"NETWORK_MANAGEMENT_DESC": "",
+			"STATION_MANAGEMENT_HEADER": "Crie novas estações, adicione categorias e outras configurações",
+			"STATION_MANAGEMENT_DESC": "",
+			"CREATE_PAGES_HEADER": "Crie e configure páginas",
+			"CREATE_PAGES_DESC": "",
+			"USER_MANAGEMENT_HEADER": "Faça a gestão dos usuários",
+			"USER_MANAGEMENT_DESC": "",
+			"POST_MANAGEMENT_HEADER": "Gerencie todas publicação",
+			"POST_MANAGEMENT_DESC": ""
 		},
 		"aside":{
 			"DASHBOARD": "Painel",

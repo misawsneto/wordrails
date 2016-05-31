@@ -1,13 +1,51 @@
   <div class="row">
-    <div class="col-lg-8 col-md-8 col-sm-6">
+    <div class="col-lg-8 col-md-8 col-sm-8">
+        <div class="row row-sm text-center">
+          <div class="col-xs-6">
+            <div class="b-n m-b-0 p-v item md-whiteframe-z1" ng-style="app.getMaterialBGColor('myAccent', '400', 1.0)">
+              <div class="h1 font-thin h1 m-b">521</div>
+              <span class="p-t text-u-c font-500">{{'settings.dashboard.IOS_INSTALLS' | translate}}</span>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="b-n m-b-0 p-v item md-whiteframe-z1" ng-style="app.getMaterialBGColor('myAccent', '600', 1.0)">
+              <div class="h1 font-thin h1 m-b counter" value="registeredUsersValue" to="registeredUsers" duration="1000">{{ registeredUsersValue | number:0 }}</div>
+              <span class="p-t text-u-c font-500">{{'settings.dashboard.REGISTERD_USERS' | translate}}</span>
+              <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="loadingRegisteredUsers" md-mode="indeterminate"></md-progress-linear>
+            </div>
+          </div>
+        </div>
+        <div class="row row-sm text-center">
+          <div class="col-xs-4">
+            <div class="b-n m-b-0 p-v item md-whiteframe-z1" ng-style="app.getMaterialBGColor('myPrimary', '800', 1.0)">
+              <div class="h1 font-thin h1 m-b counter" value="registeredUsersValue" to="registeredUsers" duration="1000">{{ registeredUsersValue | number:0 }}</div>
+              <span class="p-t text-u-c font-500">{{'settings.dashboard.REGISTERD_USERS' | translate}}</span>
+              <md-progress-linear class="pos-abt md-accent bottom-0 left-0" ng-if="loadingRegisteredUsers" md-mode="indeterminate"></md-progress-linear>
+            </div>
+          </div>
+          <div class="col-xs-4">
+            <div class="b-n m-b-0 p-v item md-whiteframe-z1" ng-style="app.getMaterialBGColor('myPrimary', '600', 1.0)">
+              <div class="h1 font-thin h1 m-b">521</div>
+              <span class="p-t text-u-c font-500">{{'settings.dashboard.IOS_INSTALLS' | translate}}</span>
+            </div>
+          </div>
+          <div class="col-xs-4">
+            <div class="b-n m-b-0 p-v item md-whiteframe-z1" ng-style="app.getMaterialBGColor('myPrimary', '400', 1.0)">
+              <div class="h1 font-thin h1 m-b">521</div>
+              <span class="p-t text-u-c font-500">{{'settings.dashboard.ANDROID_INSTALLS' | translate}}</span>
+            </div>
+          </div>
+        </div>
       <div class="row no-gutter">
+
+
         <div class="col-xs-12">
-          <div class="card">
-            <div class="card-heading">
+          <div class="card md-whiteframe-z1">
+            <!--<div class="card-heading">
               <h2>Dashboard</h2>
               <small>Welcome to the new material design dashboard</small>
-            </div>
-            <div class="card-tools">
+            </div>-->
+            <!--<div class="card-tools">
               <ul class="list-inline">
                 <li class="dropdown">
                   <a md-ink-ripple data-toggle="dropdown" class="md-btn md-flat md-btn-circle">
@@ -19,8 +57,54 @@
                   </ul>
                 </li>
               </ul>
-            </div>
-            <div class="card-body">
+            </div>-->
+            <div class="card-body p-0">
+              <div class="row no-gutter m-b-0">
+                <div class="col-xs-6">
+                  <div class="text-md p">
+                    <div class="p-sm">
+                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-pencil i-20"></i></div><div class="clear opacity-09">
+                        <a class="text-u-l-hover" ui-sref="app.post">{{'settings.dashboard.CREATE_PUBLICATION_HEADER' | translate}}</a>
+                        </div>
+                    </div>
+                    <div class="p-sm">
+                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-settings i-20"></i></div><div class="clear opacity-09">
+                        <a class="text-u-l-hover" ui-sref="app.network">{{'settings.dashboard.NETWORK_MANAGEMENT_HEADER' | translate}}</a>
+                        </div>
+                    </div>
+                    <div class="p-sm">
+                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-radio-tower i-20"></i></div><div class="clear opacity-09">
+                        <a class="text-u-l-hover" ui-sref="app.stations">{{'settings.dashboard.STATION_MANAGEMENT_HEADER' | translate}}</a>
+                        </div>
+                    </div>
+                    <div class="p-sm">
+                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-view-quilt i-20"></i></div><div class="clear opacity-09">
+                        <a class="text-u-l-hover" ui-sref="app.pagebuilder.list">{{'settings.dashboard.CREATE_PAGES_HEADER' | translate}}</a>
+                        </div>
+                    </div>
+                    <div class="p-sm">
+                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi-social-people i-20"></i></div><div class="clear opacity-09">
+                        <a class="text-u-l-hover" ui-sref="app.users">{{'settings.dashboard.USER_MANAGEMENT_HEADER' | translate}}</a>
+                        </div>
+                    </div>
+                    <div class="p-sm">
+                      <div class="pull-left m-r-md"><i class="opacity-07 v-m mdi2-newspaper i-20"></i></div><div class="clear opacity-09">
+                        <a class="text-u-l-hover" ui-sref="app.publications">{{'settings.dashboard.POST_MANAGEMENT_HEADER' | translate}}</a>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6 o-f-h">
+                  <div class="text-center" style="margin: 0 -50px 0 -50px; min-height: 230px;">
+                    <img src="/images/tutorial/features-logo.fw.png" class="img-responsive">
+                  </div>
+                  <div class="text-center m-t-lg w-full">
+                    <md-button class="md-button md-raised md-primary p-h md-whiteframe-z2" ng-href="/" target="_blank">
+                      <i class="mdi2-home i-14 m-r-sm"></i> {{'settings.pages.HOME_PAGE' | translate}}
+                    </md-button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -68,20 +152,20 @@
           </div>
         </div>
       </div>
-      <div class="row row-sm">
+      <!--<div class="row row-sm">
         <div class="col-sm-12">
           <div class="card p"></div>
         </div>
-      </div>
+      </div>-->
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4">
-      <div class="card">
+      <div class="card md-whiteframe-z1">
         <div class="card-heading">
           <h2 class="font-thin">{{'titles.LATEST_POSTS' | translate}}</h2>
         </div>
         <div class="card-body">
           <div class="streamline b-l b-accent m-b">
-            <div class="sl-item" ng-repeat="publication in publications | limitTo:10">
+            <div class="sl-item" ng-repeat="publication in publications | limitTo:5">
               <div class="sl-content" ng-click="app.showPost(publication)">
                 <div class="text-muted-dk">{{app.getLocalTime(publication.date)}}</div>
                 <p>{{publication.title}}</p>
@@ -89,13 +173,12 @@
             </div>
           </div>
         </div>
-        <md-divider></md-divider>
         <div class="text-right" ng-if="publications.length > 10">
           <md-button class="m-t-sm m-r-sm" ui-sref="app.publications">{{'titles.SHOW_ALL' | translate}}</md-button>
         </div>
         <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="loadingPublished" md-mode="indeterminate"></md-progress-linear>
       </div>
-      <div class="card {{app.setting.theme.primary}}">
+      <div class="card md-whiteframe-z1">
         <div class="card-heading">
           <h2 class="font-thin">{{'titles.USERS' | translate}}</h2>
         </div>
@@ -117,7 +200,6 @@
             </span>
           </div>
         </div>
-        <md-divider></md-divider>
         <div class="text-right" ng-if="persons.length > 5">
           <md-button class="m-t-sm m-r-sm" ui-sref="app.users">{{'titles.SHOW_ALL' | translate}}</md-button>
         </div>
@@ -149,9 +231,9 @@
               <li>
                 <img src="/images/tutorial/admin-logo.fw.png" class="h-200 img-responsive">
               </li>
-              <li>
+              <!--<li>
                 <img src="/images/tutorial/features-logo.fw.png" class="h-200 img-responsive">
-              </li>
+              </li>-->
             </ul>
           </div>
 

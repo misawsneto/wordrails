@@ -1,11 +1,10 @@
-package co.xarx.trix.web.rest.resource.v1;
+package co.xarx.trix.web.rest.resource.v2;
 
 import co.xarx.trix.api.BooleanResponse;
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.services.post.PostService;
-import co.xarx.trix.web.rest.AbstractResource;
-import co.xarx.trix.web.rest.api.v1.BookmarksApi;
+import co.xarx.trix.web.rest.api.v2.V2BookmarksApi;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,14 +13,9 @@ import java.util.List;
 
 @Component
 @NoArgsConstructor
-public class BookmarksResource extends AbstractResource implements BookmarksApi {
-
-	private PostService postService;
-
+public class V2BookmarksResource implements V2BookmarksApi {
 	@Autowired
-	public BookmarksResource(PostService postService) {
-		this.postService = postService;
-	}
+	private PostService postService;
 
 	@Override
 	public ContentResponse<List<PostView>> searchBookmarks(String q, Integer page, Integer size) {
@@ -30,6 +24,7 @@ public class BookmarksResource extends AbstractResource implements BookmarksApi 
 		response.content = postService.searchBookmarks(q, page, size);
 
 		return response;
+
 	}
 
 	@Override

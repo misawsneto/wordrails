@@ -104,6 +104,8 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	var postId = 6017;
 	var stationId = 11;
 
+	$scope.networkStats = {};
+
 	trix.getMostCommonTerm(startTime,endTime,field,page,size).success(function(response){
 
     })
@@ -147,4 +149,16 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
     trix.countReadersByStation(stationId).success(function(response){
         
     })
+
+    $scope.registeredUsers = 0;
+    $scope.loadingRegisteredUsers = true;
+    trix.countPersonsByNetwork().success(function(response){
+    	$scope.registeredUsers = response;
+    	$scope.loadingRegisteredUsers = false;
+    }).error(function(){
+    	$scope.loadingRegisteredUsers = false;
+    })
+
+ 	// iosStore;
+	// androidStore;
 }]);

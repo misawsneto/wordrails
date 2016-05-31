@@ -53,6 +53,10 @@ public class AppStatsJob extends QuartzJobBean {
 		List<PublishedApp> apps = appRepository.findAll();
 		List<ESAppStats> storeStatsDatas = new ArrayList<>();
 
+		if(apps == null || apps.isEmpty()){
+			return;
+		}
+
 		for(PublishedApp app: apps){
 			CommonStatsData stats;
 

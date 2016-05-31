@@ -8851,3 +8851,7 @@ button,
 .app-content {
   overflow-x: hidden!important;
 }
+
+.text-u-l-hover:hover {
+  text-decoration: underline;
+}
