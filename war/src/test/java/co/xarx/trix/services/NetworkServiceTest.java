@@ -1,7 +1,6 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.domain.Network;
-import co.xarx.trix.persistence.AuthCredentialRepository;
 import co.xarx.trix.persistence.NetworkRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,12 +20,10 @@ public class NetworkServiceTest {
 
 	private NetworkService networkService;
 	private NetworkRepository networkRepository;
-	private AuthCredentialRepository authCredentialRepository;
 
 	@Before
 	public void setUp() throws Exception {
 		networkRepository = mock(NetworkRepository.class);
-		authCredentialRepository = mock(AuthCredentialRepository.class);
 
 		List<Network> networkList = new ArrayList<>();
 		Network network1 = new Network();
@@ -42,7 +39,7 @@ public class NetworkServiceTest {
 
 		when(networkRepository.findAll()).thenReturn(networkList);
 
-		networkService = new NetworkService(networkRepository, authCredentialRepository);
+		networkService = new NetworkService(networkRepository);
 	}
 
 	@Test

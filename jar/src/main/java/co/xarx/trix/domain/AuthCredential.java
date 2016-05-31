@@ -22,21 +22,11 @@ public class AuthCredential extends BaseEntity {
 		return id;
 	}
 
-//	@JsonIgnore
 	public String facebookAppSecret;
 	public String facebookAppID;
 
-//	@JsonIgnore
-	public String googleWebAppSecret;
-	public String googleWebAppID;
-
-//	@JsonIgnore
-	public String googleAndroidAppSecret;
-	public String googleAndroidAppID;
-
-//	@JsonIgnore
-	public String googleAppleAppSecret;
-	public String googleAppleAppID;
+	public String googleAppSecret;
+	public String googleAppID;
 
 	@OneToOne
 	@NotNull
@@ -46,15 +36,7 @@ public class AuthCredential extends BaseEntity {
 		return Strings.isNotEmpty(facebookAppID) && Strings.isNotEmpty(facebookAppSecret);
 	}
 
-	public boolean isGoogleWebLoginAllowed() {
-		return Strings.isNotEmpty(googleWebAppID) && Strings.isNotEmpty(googleWebAppSecret);
-	}
-
-	public boolean isGoogleAndroidLoginAllowed() {
-		return Strings.isNotEmpty(googleAndroidAppID) && Strings.isNotEmpty(googleAndroidAppSecret);
-	}
-
-	public boolean isGoogleAppleLoginAllowed() {
-		return Strings.isNotEmpty(googleAppleAppID) && Strings.isNotEmpty(googleAppleAppSecret);
+	public boolean isGoogleLoginAllowed() {
+		return Strings.isNotEmpty(googleAppID) && Strings.isNotEmpty(googleAppSecret);
 	}
 }
