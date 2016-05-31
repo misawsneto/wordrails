@@ -10,7 +10,10 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId"}))
+@Table(uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"tenantId"}),
+		@UniqueConstraint(columnNames = {"network_id"})
+})
 public class AuthCredential extends BaseEntity {
 
 	@Id

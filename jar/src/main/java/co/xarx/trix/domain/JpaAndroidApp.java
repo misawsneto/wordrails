@@ -40,4 +40,8 @@ public class JpaAndroidApp extends BaseEntity implements AndroidApp {
 	@NotNull
 	@ManyToOne(cascade = CascadeType.REMOVE)
 	private File icon;
+	
+	@OneToOne
+	@NotNull
+	public Network network;
 }

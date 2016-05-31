@@ -11,6 +11,10 @@ import java.sql.Blob;
 @lombok.Setter
 @SdkExclude
 @Entity
+@Table(uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"tenantId"}),
+		@UniqueConstraint(columnNames = {"network_id"})
+})
 public class AppleCertificate extends BaseEntity {
 
 	@Id
@@ -24,6 +28,10 @@ public class AppleCertificate extends BaseEntity {
 
 	@NotNull
 	public Blob file;
+
+	@OneToOne
+	@NotNull
+	public Network network;
 
 	@NotNull
 	public String password;
