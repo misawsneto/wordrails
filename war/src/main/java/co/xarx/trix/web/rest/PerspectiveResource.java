@@ -230,6 +230,7 @@ public class PerspectiveResource {
 					rowView.type = Row.HOME_ROW;
 					cells = fillPostsNotPositionedInHomeRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 				}
+				Collections.sort(cells);
 				rowView.id = row.id;
 				rowView.cells = cellConverter.convertToViews(cells, withBody != null ? withBody : false);
 				rowView.termId = term != null ? term.id : null;
@@ -259,6 +260,7 @@ public class PerspectiveResource {
 					rowView.type = Row.HOME_ROW;
 					cells = fillPostsNotPositionedInHomeRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 				}
+				Collections.sort(cells);
 				rowView.id = row.id;
 				rowView.cells = cellConverter.convertToViews(cells, withBody != null ? withBody : false);
 				rowView.termId = term != null ? term.id : null;
@@ -298,7 +300,15 @@ public class PerspectiveResource {
 				cellRepository.deleteInBatch(difference.cellsToDelete);
 			}
 			newRow.cells = difference.cellsToSave;
-			rowRepository.save(newRow);
+			Collections.sort(newRow.cells);
+			Row oldRow = rowRepository.findOne(newRow.id);
+			oldRow.cells = newRow.cells;
+			if(oldRow.cells != null){
+				for (Cell cell : oldRow.cells){
+					cellRepository.save(cell);
+				}
+			}
+			rowRepository.save(oldRow);
 		}else{
 			if(type.equals(Row.FEATURED_ROW) && termPerspective.featuredRow != null){
 				rowRepository.delete(termPerspective.featuredRow);
