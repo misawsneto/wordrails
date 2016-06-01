@@ -14,14 +14,14 @@ import java.util.List;
 public interface V2BookmarksApi {
 
 	@GET
-	@Path("/searchBookmarks")
+	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
 	@PreAuthorize("isAuthenticated()")
 	ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size);
 
 	@PUT
-	@Path("/toggleBookmark")
+	@Path("/toggle/{postId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@PreAuthorize("isAuthenticated()")
-	BooleanResponse toggleBookmark(@QueryParam("postId") Integer postId);
+	BooleanResponse toggleBookmark(@PathParam("postId") Integer postId);
 }
