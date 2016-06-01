@@ -7,6 +7,7 @@ import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.*;
+import co.xarx.trix.services.MobileNotificationService;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.PersonPermissionService;
@@ -44,6 +45,8 @@ public class PostService {
 	@Autowired
 	private MobileService mobileService;
 	@Autowired
+	private MobileNotificationService mobileNotificationService;
+	@Autowired
 	private PersonPermissionService personPermissionService;
 	@Autowired
 	private NotificationRepository notificationRepository;
@@ -74,7 +77,7 @@ public class PostService {
 		Collection androidDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.ANDROID);
 
 		NotificationView notification = getCreatePostNotification(post, network.id);
-		List<Notification> notifications = mobileService.sendNotifications(post, notification, androidDevices, appleDevices);
+		List<Notification> notifications = mobileNotificationService.sendNotifications(post, notification, androidDevices, appleDevices);
 		for (Notification n : notifications) {
 			notificationRepository.save(n);
 		}

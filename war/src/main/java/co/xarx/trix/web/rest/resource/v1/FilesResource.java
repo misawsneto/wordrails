@@ -79,7 +79,7 @@ public class FilesResource extends AbstractResource implements FilesApi {
 
 	@Override
 	public Response uploadVideo() throws Exception {
-		FileItem item = FileUtil.getFileFromRequest(request);
+		FileItem item = getFileFromRequest();
 
 		if (item == null) {
 			return Response.noContent().build();
@@ -107,7 +107,7 @@ public class FilesResource extends AbstractResource implements FilesApi {
 
 	@Override
 	public Response uploadAudio() throws Exception {
-		FileItem item = FileUtil.getFileFromRequest(request);
+		FileItem item = getFileFromRequest();
 
 		if (item == null) {
 			return Response.noContent().build();
@@ -135,7 +135,7 @@ public class FilesResource extends AbstractResource implements FilesApi {
 
 	@Override
 	public Response uploadDoc() throws Exception {
-		FileItem item = FileUtil.getFileFromRequest(request);
+		FileItem item = getFileFromRequest();
 
 		if (item == null) {
 			return Response.noContent().build();
