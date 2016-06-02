@@ -672,6 +672,12 @@ var trix = angular.module('trix', [])
      return \$http.get(_config.url + "/api/v2/statistics/countReadersByStation", config)
     }
 
+    this.dashboardStats = function(){
+        var config = {};
+        config.headers = {"Content-Type": "application/json"}
+        return \$http.get(_config.url + "/api/v2/statistics/dashboardStats", config)
+    }
+
 	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$
   }
 

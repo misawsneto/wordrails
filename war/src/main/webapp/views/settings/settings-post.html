@@ -516,14 +516,14 @@
 												</md-select>
 											</md-input-container>
 										</div>
-										<div class="p-h text-md" ng-if="termTree">{{'titles.CATEGORIES' | translate}}:</div>
+										<div class="p-h text-md" ng-if="selectedStation.termTree">{{'titles.CATEGORIES' | translate}}:</div>
                     <!-- list categories -->
                     <div class="p-sm term-tree">
                       <div class="span5 article-tree animated fadeIn">
                         <div ng-style="{'overflow': 'auto'}">
                           <div class="tree well">
                             <ul>
-                              <node-tree ng-model="termTree"></node-tree>
+                              <node-tree ng-model="selectedStation.termTree"></node-tree>
                             </ul>
                           </div>
                         </div>

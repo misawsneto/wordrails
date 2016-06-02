@@ -69,4 +69,9 @@ public class V2StatisticsResource implements V2StatisticsApi {
 	public Map<String, Integer> countReadersByStation(Integer stationId) {
 		return statisticsService.getStationReaders(stationId);
 	}
+
+	@Override
+	public Map<String, Integer> dashboardStats() {
+		return statisticsService.dashboardStats();
+	}
 }

@@ -170,4 +170,7 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@RestResource(exported = false)
 	@Query(value = "SELECT term FROM Term term where :postId in posts")
 	List<Term> findTermByPostId(@Param("postId") Integer postId);
+
+	@RestResource(exported = false)
+	public Long countByState(String state);
 }

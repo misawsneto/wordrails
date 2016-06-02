@@ -3,15 +3,16 @@
         <div class="row row-sm text-center">
           <div class="col-xs-6">
             <div class="b-n m-b-0 p-v item md-whiteframe-z1" ng-style="app.getMaterialBGColor('myAccent', '400', 1.0)">
-              <div class="h1 font-thin h1 m-b">521</div>
-              <span class="p-t text-u-c font-500">{{'settings.dashboard.IOS_INSTALLS' | translate}}</span>
+              <div class="h1 font-thin h1 m-b counter" value="publicationsCountValue" to="publicationsCount" duration="1000">{{publicationsCountValue | number:0 }}</div>
+              <span class="p-t text-u-c font-500">{{'titles.PUBLICATIONS' | translate}}</span>
+              <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="loadingDashStats" md-mode="indeterminate"></md-progress-linear>
             </div>
           </div>
           <div class="col-xs-6">
             <div class="b-n m-b-0 p-v item md-whiteframe-z1" ng-style="app.getMaterialBGColor('myAccent', '600', 1.0)">
-              <div class="h1 font-thin h1 m-b counter" value="registeredUsersValue" to="registeredUsers" duration="1000">{{ registeredUsersValue | number:0 }}</div>
-              <span class="p-t text-u-c font-500">{{'settings.dashboard.REGISTERD_USERS' | translate}}</span>
-              <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="loadingRegisteredUsers" md-mode="indeterminate"></md-progress-linear>
+              <div class="h1 font-thin h1 m-b counter" value="commentsCountValue" to="commentsCount" duration="1000">{{ commentsCountValue | number:0 }}</div>
+              <span class="p-t text-u-c font-500">{{'titles.COMMENTS' | translate}}</span>
+              <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="loadingDashStats" md-mode="indeterminate"></md-progress-linear>
             </div>
           </div>
         </div>
@@ -25,14 +26,16 @@
           </div>
           <div class="col-xs-4">
             <div class="b-n m-b-0 p-v item md-whiteframe-z1" ng-style="app.getMaterialBGColor('myPrimary', '600', 1.0)">
-              <div class="h1 font-thin h1 m-b">521</div>
+              <div class="h1 font-thin h1 m-b counter" value="iosCountValue" to="iosCount" duration="1000">{{ iosCountValue | number:0 }}</div>
               <span class="p-t text-u-c font-500">{{'settings.dashboard.IOS_INSTALLS' | translate}}</span>
+              <md-progress-linear class="pos-abt md-accent bottom-0 left-0" ng-if="loadingNetworkStats" md-mode="indeterminate"></md-progress-linear>
             </div>
           </div>
           <div class="col-xs-4">
             <div class="b-n m-b-0 p-v item md-whiteframe-z1" ng-style="app.getMaterialBGColor('myPrimary', '400', 1.0)">
-              <div class="h1 font-thin h1 m-b">521</div>
+              <div class="h1 font-thin h1 m-b counter" value="androidCountValue" to="androidCount" duration="1000">{{ androidCountValue | number:0 }}</div>
               <span class="p-t text-u-c font-500">{{'settings.dashboard.ANDROID_INSTALLS' | translate}}</span>
+              <md-progress-linear class="pos-abt md-accent bottom-0 left-0" ng-if="loadingNetworkStats" md-mode="indeterminate"></md-progress-linear>
             </div>
           </div>
         </div>

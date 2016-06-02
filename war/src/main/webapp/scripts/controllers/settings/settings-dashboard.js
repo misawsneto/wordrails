@@ -126,8 +126,17 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
     })
 
     //@Path("/network")
+    $scope.loadingNetworkStats = true;
+    $scope.networkStats = null;
+    $scope.androidCount = 0;
+    $scope.iosCount = 0;
     trix.networkStats(end, start).success(function(response){
-        
+        $scope.networkStats = response;
+        $scope.loadingNetworkStats = false;
+        $scope.androidCount = $scope.networkStats.generalStatsJson[3];
+        $scope.iosCount = $scope.networkStats.generalStatsJson[4];
+    }).error(function(){
+    	$scope.loadingNetworkStats = false;
     })
 
         //@Path("/station")
@@ -148,6 +157,18 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
         //@Path("/countReadersByStation")
     trix.countReadersByStation(stationId).success(function(response){
         
+    })
+
+    //@Path("/dashboardStats")
+    $scope.loadingDashStats = true
+    $scope.publicationsCount = 0;
+    $scope.commentsCount = 0;
+    trix.dashboardStats().success(function(response){
+    	$scope.publicationsCount = response.post;
+        $scope.commentsCount = response.comment;
+        $scope.loadingDashStats = false;
+    }).error(function(){
+    	$scope.loadingDashStats = false;
     })
 
     $scope.registeredUsers = 0;

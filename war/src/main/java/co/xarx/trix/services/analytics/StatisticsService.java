@@ -4,10 +4,7 @@ import co.xarx.trix.api.v2.ReadsCommentsRecommendsCountData;
 import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.api.v2.StoreStatsData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.ESAppStats;
-import co.xarx.trix.domain.MobileDevice;
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.PublishedApp;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.scheduler.jobs.AppStatsJob;
 import co.xarx.trix.services.security.PersonPermissionService;
@@ -51,6 +48,8 @@ import static org.quartz.TriggerBuilder.newTrigger;
 @lombok.Setter
 public class StatisticsService {
 
+	private final PostRepository postRepository;
+	private final CommentRepository commentRepository;
 	private Client client;
 	private ObjectMapper mapper;
 	private String analyticsIndex;
@@ -84,7 +83,9 @@ public class StatisticsService {
 							 PersonPermissionService personPermissionService,
 							 ESAppStatsRepository esAppStatsRepository,
 							 Scheduler scheduler,
-							 PersonRepository personRepository){
+							 PersonRepository personRepository,
+							 PostRepository postRepository,
+							 CommentRepository commentRepository){
 		this.mapper = mapper;
 		this.client = client;
 		this.scheduler = scheduler;
@@ -98,6 +99,9 @@ public class StatisticsService {
 		this.esAppStatsRepository = esAppStatsRepository;
 		this.mobileDeviceRepository = mobileDeviceRepository;
 		this.personPermissionService = personPermissionService;
+		this.postRepository = postRepository;
+		this.commentRepository = commentRepository;
+		this.mobileDeviceRepository = mobileDeviceRepository;
 	}
 
 	public Map getPorpularNetworks(){
@@ -514,5 +518,16 @@ public class StatisticsService {
 
 	public Integer countTotals(String id, String entity, String index) {
 		return (int) client.prepareSearch(index).setQuery(termQuery(entity, id)).execute().actionGet().getHits().getTotalHits();
+	}
+
+	public Map<String,Integer> dashboardStats() {
+		Map<String, Integer> ret = new LinkedHashMap<>();
+		Long posts = postRepository.countByState(Post.STATE_PUBLISHED.toString());
+		Long comments = commentRepository.countPublished();
+
+		ret.put("post", posts != null ? posts.intValue() : 0);
+		ret.put("comment", comments != null ? comments.intValue() : 0);
+
+		return ret;
 	}
 }
