@@ -12,6 +12,9 @@ import co.xarx.trix.persistence.ESAppStatsRepository;
 import co.xarx.trix.persistence.FileRepository;
 import co.xarx.trix.persistence.MobileDeviceRepository;
 import co.xarx.trix.persistence.PublishedAppRepository;
+import co.xarx.trix.domain.*;
+import co.xarx.trix.persistence.*;
+import co.xarx.trix.scheduler.jobs.AppStatsJob;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -464,5 +467,16 @@ public class StatisticsService {
 
 	public Integer countTotals(String id, String entity, String index) {
 		return (int) client.prepareSearch(index).setQuery(boolQuery().must(termQuery(entity, id)).must(termQuery("verb", "get"))).execute().actionGet().getHits().getTotalHits();
+	}
+
+	public Map<String,Integer> dashboardStats() {
+		Map<String, Integer> ret = new LinkedHashMap<>();
+		Long posts = postRepository.countByState(Post.STATE_PUBLISHED.toString());
+		Long comments = commentRepository.countPublished();
+
+		ret.put("post", posts != null ? posts.intValue() : 0);
+		ret.put("comment", comments != null ? comments.intValue() : 0);
+
+		return ret;
 	}
 }

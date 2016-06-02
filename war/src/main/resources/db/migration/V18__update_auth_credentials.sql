@@ -6,12 +6,8 @@ CREATE TABLE `authcredential` (
 	`version`                INT(11)      NOT NULL DEFAULT '0',
 	`facebookAppID`          VARCHAR(255)          DEFAULT NULL,
 	`facebookAppSecret`      VARCHAR(255)          DEFAULT NULL,
-	`googleAndroidAppID`     VARCHAR(255)          DEFAULT NULL,
-	`googleAndroidAppSecret` VARCHAR(255)          DEFAULT NULL,
-	`googleAppleAppID`       VARCHAR(255)          DEFAULT NULL,
-	`googleAppleAppSecret`   VARCHAR(255)          DEFAULT NULL,
-	`googleWebAppID`         VARCHAR(255)          DEFAULT NULL,
-	`googleWebAppSecret`     VARCHAR(255)          DEFAULT NULL,
+	`googleAppID`     VARCHAR(255)          DEFAULT NULL,
+	`googleAppSecret` VARCHAR(255)          DEFAULT NULL,
 	`network_id`             INT(11)      NOT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE KEY `UK_ti5rv704qmrnxq8n9angb04aa` (`tenantId`),
@@ -22,15 +18,7 @@ CREATE TABLE `authcredential` (
 	DEFAULT CHARSET = utf8;
 
 
-
-INSERT INTO authcredential (tenantId, facebookAppID, facebookAppSecret, googleAndroidAppID, googleAndroidAppSecret, googleAppleAppID, googleAppleAppSecret, googleWebAppID, googleWebAppSecret, network_id) SELECT
-																																																																																												tenantId, facebookAppID,
-																																																																																												facebookAppSecret,
-																																																																																												googleAppID,
-																																																																																												googleAppSecret,
-																																																																																												googleAppID,
-																																																																																												googleAppSecret,
-																																																																																												googleAppID,
-																																																																																												googleAppSecret, id
-																																																																																											FROM
-																																																																																												network;
+INSERT INTO authcredential (tenantId, facebookAppID, facebookAppSecret, googleAppID, googleAppSecret, network_id)
+	SELECT tenantId, facebookAppID, facebookAppSecret, googleAppID, googleAppSecret, id
+	FROM
+		network;

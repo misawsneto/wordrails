@@ -44,4 +44,7 @@ public interface CommentRepository extends DatabaseRepository<Comment, Integer> 
 	@RestResource(exported = false)
 	@Query("select comment from Comment comment join fetch comment.author where comment.id in (:ids)")
 	List<Comment> findAllWithAuthors(@Param("ids") List<Integer> ids, Sort sort);
+
+	@Query("select count(*) from Comment comment where comment.post.state = 'PUBLISHED'")
+	public Long countPublished();
 }

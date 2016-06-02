@@ -1,47 +1,39 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.api.NotificationView;
-import co.xarx.trix.aspect.annotations.AccessGroup;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.exception.NotificationException;
+import co.xarx.trix.persistence.AppleCertificateRepository;
 import co.xarx.trix.persistence.MobileDeviceRepository;
-import co.xarx.trix.services.notification.MobileNotificationSender;
-import co.xarx.trix.services.notification.NotificationService;
+import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.util.Constants;
-import com.mysema.commons.lang.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
+import java.sql.Blob;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 @Service
 public class MobileService {
 
 	@Value("${spring.profiles.active:'dev'}")
 	private String profile;
+	@Value("${trix.apns.default-password}")
+	private String defaultApnsPassword;
 
-	private NotificationService notificationService;
-	private AsyncService asyncService;
+	private AppleCertificateRepository certificateRepository;
 	private MobileDeviceRepository mobileDeviceRepository;
-	private MobileNotificationSender appleNS;
-	private MobileNotificationSender androidNS;
+	private NetworkRepository networkRepository;
 
 	@Autowired
-	public MobileService(NotificationService notificationService,
-						 AsyncService asyncService, MobileDeviceRepository mobileDeviceRepository,
-						 MobileNotificationSender appleNS, MobileNotificationSender androidNS) {
-		this.notificationService = notificationService;
-		this.asyncService = asyncService;
+	public MobileService(AppleCertificateRepository certificateRepository, MobileDeviceRepository mobileDeviceRepository, NetworkRepository networkRepository) {
+		this.certificateRepository = certificateRepository;
 		this.mobileDeviceRepository = mobileDeviceRepository;
-		this.appleNS = appleNS;
-		this.androidNS = androidNS;
+		this.networkRepository = networkRepository;
 	}
 
 	public Collection<String> getDeviceCodes(List<MobileDevice> mobileDevices, Constants.MobilePlatform type) {
@@ -55,43 +47,6 @@ public class MobileService {
 		return deviceCodes;
 	}
 
-	@AccessGroup(tenants = {"demo"}, profiles = {"prod"}, inclusion = true)
-	public List<Notification> sendNotifications(Post post, NotificationView notification,
-												Collection<String> androidDevices, Collection<String> appleDevices) throws NotificationException {
-		Assert.notNull(post, "Post should not be null");
-
-		Future<List<Notification>> futureAndroidNotifications = null;
-		Future<List<Notification>> futureAppleNotifications;
-		try {
-			futureAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-					() -> notificationService.sendNotifications(androidNS, notification, post, androidDevices, Notification.DeviceType.ANDROID));
-			futureAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-					() -> notificationService.sendNotifications(appleNS, notification, post, appleDevices, Notification.DeviceType.APPLE));
-		} catch (Exception e) {
-			if (futureAndroidNotifications != null)
-				futureAndroidNotifications.cancel(true);
-			throw new NotificationException(e);
-		}
-
-		List<Notification> notifications;
-
-		try {
-			notifications = futureAndroidNotifications.get();
-		} catch (InterruptedException | ExecutionException e) {
-			notifications = notificationService.getErrorNotifications(androidDevices,
-					notification, post, e, Notification.DeviceType.ANDROID);
-		}
-
-		try {
-			notifications.addAll(futureAppleNotifications.get());
-		} catch (InterruptedException | ExecutionException e) {
-			notifications.addAll(notificationService.getErrorNotifications(appleDevices,
-					notification, post, e, Notification.DeviceType.APPLE));
-		}
-
-		return notifications;
-	}
-
 	public void updateDevice(Person person, String deviceCode, Double lat, Double lng, Constants.MobilePlatform type) {
 		Assert.hasText(deviceCode, "Device code must not be empty");
 
@@ -100,6 +55,42 @@ public class MobileService {
 		device = getMobileDevice(person, deviceCode, lat, lng, type, device);
 
 		mobileDeviceRepository.save(device);
+	}
+
+	public void updateAppleCertificateFile(Blob certificate) {
+		Assert.notNull(certificate);
+
+		AppleCertificate appleCertificate = getAppleCertificate();
+
+		if (appleCertificate == null) {
+			appleCertificate = new AppleCertificate();
+			Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+			appleCertificate.setPassword(defaultApnsPassword);
+			appleCertificate.setNetwork(network);
+		}
+
+		appleCertificate.setFile(certificate);
+
+		certificateRepository.save(appleCertificate);
+	}
+
+	public void updateApplePassword(String password) throws Exception {
+		Assert.notNull(password);
+
+		AppleCertificate appleCertificate = getAppleCertificate();
+		if (appleCertificate == null) {
+			throw new Exception("Certificate does not exist. Upload a file first");
+		}
+		appleCertificate.setPassword(password);
+
+		certificateRepository.save(appleCertificate);
+	}
+
+	private AppleCertificate getAppleCertificate() {
+		String tenant = TenantContextHolder.getCurrentTenantId();
+		AppleCertificate appleCertificate = certificateRepository.findByTenantId(tenant);
+
+		return appleCertificate;
 	}
 
 	public MobileDevice getMobileDevice(Person person, String deviceCode,

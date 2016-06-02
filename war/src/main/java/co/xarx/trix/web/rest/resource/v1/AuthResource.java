@@ -37,22 +37,10 @@ public class AuthResource extends AbstractResource implements AuthApi {
 
 	@Override
 	public Response signin(String providerId, String userId, String accessToken) throws IOException {
-		AuthCredential oauthCredential = authCredentialRepository.findAuthCredentialByTenantId(TenantContextHolder.getCurrentTenantId());
+		AuthCredential credential = authCredentialRepository.findAuthCredentialByTenantId(TenantContextHolder.getCurrentTenantId());
 
-		if(oauthCredential == null) {
+		if(credential == null) {
 			throw new NotAllowedException("This network does not support social login");
-		}
-
-
-		if(providerId.equals("google")) {
-			String userAgent = request.getHeader("User-Agent");
-			if(userAgent.contains("WordRailsIOSClient")) {
-				providerId = "googleios";
-			} else if(userAgent.contains("OkHttp")) {
-				providerId = "googleandroid";
-			} else {
-				providerId = "googleweb";
-			}
 		}
 
 
@@ -60,37 +48,21 @@ public class AuthResource extends AbstractResource implements AuthApi {
 		OAuthService service = null;
 		Token token = null;
 		if (providerId.equals("facebook")) {
-			allowSocialLogin = oauthCredential.isFacebookLoginAllowed();
+			allowSocialLogin = credential.isFacebookLoginAllowed();
 			service = new ServiceBuilder()
 					.provider(FacebookApi.class)
-					.apiKey(oauthCredential.getFacebookAppID())
-					.apiSecret(oauthCredential.getFacebookAppSecret())
+					.apiKey(credential.getFacebookAppID())
+					.apiSecret(credential.getFacebookAppSecret())
 					.build();
-			token = new Token(accessToken, oauthCredential.getFacebookAppSecret());
-		} else if (providerId.equals("googleweb")) {
-			allowSocialLogin = oauthCredential.isGoogleWebLoginAllowed();
+			token = new Token(accessToken, credential.getFacebookAppSecret());
+		} else if (providerId.equals("google")) {
+			allowSocialLogin = credential.isGoogleLoginAllowed();
 			service = new ServiceBuilder()
 					.provider(GoogleApi.class)
-					.apiKey(oauthCredential.getGoogleWebAppID())
-					.apiSecret(oauthCredential.getGoogleWebAppSecret())
+					.apiKey(credential.getGoogleAppID())
+					.apiSecret(credential.getGoogleAppSecret())
 					.build();
-			token = new Token(accessToken, oauthCredential.getGoogleWebAppSecret());
-		} else if (providerId.equals("googleandroid")) {
-			allowSocialLogin = oauthCredential.isGoogleAndroidLoginAllowed();
-			service = new ServiceBuilder()
-					.provider(GoogleApi.class)
-					.apiKey(oauthCredential.getGoogleAndroidAppID())
-					.apiSecret(oauthCredential.getGoogleAndroidAppSecret())
-					.build();
-			token = new Token(accessToken, oauthCredential.getGoogleAndroidAppSecret());
-		} else if (providerId.equals("googleios")) {
-			allowSocialLogin = oauthCredential.isGoogleAppleLoginAllowed();
-			service = new ServiceBuilder()
-					.provider(GoogleApi.class)
-					.apiKey(oauthCredential.getGoogleAppleAppID())
-					.apiSecret(oauthCredential.getGoogleAppleAppSecret())
-					.build();
-			token = new Token(accessToken, oauthCredential.getGoogleAppleAppSecret());
+			token = new Token(accessToken, credential.getGoogleAppSecret());
 		}
 
 		if (!allowSocialLogin) {

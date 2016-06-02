@@ -232,20 +232,8 @@ public class Network extends BaseEntity implements Serializable {
 	}
 
 	@SdkInclude
-	public String getGoogleAndroidAppID() {
-		if (authCredential != null) return authCredential.getGoogleAndroidAppID();
-		return null;
-	}
-
-	@SdkInclude
-	public String getGoogleAppleAppID() {
-		if (authCredential != null) return authCredential.getGoogleAppleAppID();
-		return null;
-	}
-
-	@SdkInclude
-	public String getGoogleWebAppID() {
-		if (authCredential != null) return authCredential.getGoogleWebAppID();
+	public String getGoogleAppID() {
+		if (authCredential != null) return authCredential.getGoogleAppID();
 		return null;
 	}
 
@@ -255,18 +243,8 @@ public class Network extends BaseEntity implements Serializable {
 	}
 
 	@SdkInclude
-	public boolean isGoogleAndroidLoginAllowed() {
-		return allowSocialLogin && authCredential != null && authCredential.isGoogleAndroidLoginAllowed();
-	}
-
-	@SdkInclude
-	public boolean isGoogleAppleLoginAllowed() {
-		return allowSocialLogin && authCredential != null && authCredential.isGoogleAppleLoginAllowed();
-	}
-
-	@SdkInclude
-	public boolean isGoogleWebLoginAllowed() {
-		return allowSocialLogin && authCredential != null && authCredential.isGoogleWebLoginAllowed();
+	public boolean isGoogleLoginAllowed() {
+		return allowSocialLogin && authCredential != null && authCredential.isGoogleLoginAllowed();
 	}
 
 	@SdkInclude

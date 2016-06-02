@@ -64,7 +64,7 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 
 	@Override
 	public Response uploadImage(@QueryParam("imageType") String type) throws Exception {
-		FileItem item = FileUtil.getFileFromRequest(request);
+		FileItem item = getFileFromRequest();
 
 		if (item == null) {
 			return Response.noContent().build();

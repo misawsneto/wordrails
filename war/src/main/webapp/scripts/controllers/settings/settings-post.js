@@ -544,19 +544,27 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	// ------------------- update term tree ---------------
 
-	$scope.selectedStation = null;
-	$scope.$watch('selectedStation', function(newVal){
-		updateTermTree()
+	$scope.stations.forEach(function(station){
+		trix.getTermTree(null, station.categoriesTaxonomyId).success(function(response){
+			station.termTree = response;
+			if($scope.app.editingPost)
+				$scope.app.selectTerms(station.termTree, $scope.app.editingPost.terms)
+		});
 	})
 
-	function updateTermTree(){
-		if($scope.selectedStation)
-			trix.getTermTree(null, $scope.selectedStation.categoriesTaxonomyId).success(function(response){
-				$scope.termTree = response;
-				if($scope.app.editingPost)
-					$scope.app.selectTerms($scope.termTree, $scope.app.editingPost.terms)
-			});
-	}
+	$scope.selectedStation = null;
+	$scope.$watch('selectedStation', function(station){
+		$scope.app.selectTerms(station.termTree, $scope.app.editingPost.terms)
+	})
+
+	// function updateTermTree(){
+	// 	if($scope.selectedStation)
+	// 		trix.getTermTree(null, $scope.selectedStation.categoriesTaxonomyId).success(function(response){
+	// 			$scope.termTree = response;
+	// 			if($scope.app.editingPost)
+	// 				$scope.app.selectTerms($scope.termTree, $scope.app.editingPost.terms)
+	// 		});
+	// }
 
 	$scope.showVideoDialog = function(){
 		$mdDialog.show({
@@ -851,6 +859,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.useHeading = $scope.app.editingPost.topper ? true:false
 		$scope.useSubheading = $scope.app.editingPost.subheading ? true:false
 		$scope.tags = angular.copy($scope.app.editingPost.tags);
+		$scope.app.postObjectChanged = false;
 	}
 
 	// --- mock and test
@@ -872,7 +881,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	var preparePost = function(originalPost){
 		var post = angular.copy(originalPost)
 		post.id = post.id ? post.id : post.postId;
-		post.terms = $scope.app.getTermList($scope.termTree);
+		post.terms = $scope.app.getTermList($scope.selectTerms.termTree);
 		post.terms = $scope.app.getTermUris(post.terms);
 		post.station = $scope.selectedStation;
 		post.tags = $scope.tags;

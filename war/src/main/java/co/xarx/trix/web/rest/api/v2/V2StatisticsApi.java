@@ -63,4 +63,9 @@ public interface V2StatisticsApi {
 	@Path("/countReadersByStation")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Map<String, Integer> countReadersByStation(@QueryParam("stationId") Integer stationId);
+
+	@GET
+	@Path("/dashboardStats")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public Map<String, Integer> dashboardStats();
 }
