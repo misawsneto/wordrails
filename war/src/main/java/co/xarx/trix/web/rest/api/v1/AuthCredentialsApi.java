@@ -17,10 +17,10 @@ import java.io.IOException;
 public interface AuthCredentialsApi {
 	@PUT
 	@Path("/")
-	public void updateAuthCredentials(AuthCredentialDto authCredential) throws ServletException, IOException;
+	void updateAuthCredentials(AuthCredentialDto authCredential) throws ServletException, IOException;
 
 	@GET
 	@Path("/")
-	public AuthCredential getAuthCredentials() throws ServletException, IOException;
+	AuthCredential getAuthCredentials() throws ServletException, IOException;
 
 }
