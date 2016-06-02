@@ -4,17 +4,11 @@ import co.xarx.trix.api.v2.ReadsCommentsRecommendsCountData;
 import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.api.v2.StoreStatsData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.ESAppStats;
 import co.xarx.trix.domain.MobileDevice;
 import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PublishedApp;
-import co.xarx.trix.persistence.ESAppStatsRepository;
-import co.xarx.trix.persistence.FileRepository;
-import co.xarx.trix.persistence.MobileDeviceRepository;
-import co.xarx.trix.persistence.PublishedAppRepository;
-import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.scheduler.jobs.AppStatsJob;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -53,29 +47,25 @@ public class StatisticsService {
 	private FileRepository fileRepository;
 	private DateTimeFormatter dateTimeFormatter;
 	private PublishedAppRepository appRepository;
-	private ESAppStatsRepository esAppStatsRepository;
 	private MobileDeviceRepository mobileDeviceRepository;
 	private PersonPermissionService personPermissionService;
+	private PostRepository postRepository;
+	private CommentRepository commentRepository;
 
 	private static int MONTH_INTERVAL = 30;
 	private static int WEEK_INTERVAL = 7;
 	private static String ACCESS_TYPE = "nginx_access";
 
 	@Autowired
-	public StatisticsService(Client client,
-							 MobileDeviceRepository mobileDeviceRepository,
-							 @Value("${elasticsearch.analyticsIndex}") String analyticsIndex,
-							 @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex,
-							 PublishedAppRepository appRepository, FileRepository fileRepository,
-							 PersonPermissionService personPermissionService,
-							 ESAppStatsRepository esAppStatsRepositoryf){
+	public StatisticsService(Client client, MobileDeviceRepository mobileDeviceRepository, @Value("${elasticsearch.analyticsIndex}") String analyticsIndex, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, PublishedAppRepository appRepository, FileRepository fileRepository, PersonPermissionService personPermissionService, PostRepository postRepository, CommentRepository commentRepository){
 		this.client = client;
 		this.appRepository = appRepository;
 		this.fileRepository = fileRepository;
 		this.analyticsIndex = analyticsIndex;
+		this.postRepository = postRepository;
+		this.commentRepository = commentRepository;
 		this.dateTimeFormatter = getFormatter();
 		this.nginxAccessIndex = nginxAccessIndex;
-		this.esAppStatsRepository = esAppStatsRepository;
 		this.mobileDeviceRepository = mobileDeviceRepository;
 		this.personPermissionService = personPermissionService;
 	}
@@ -307,23 +297,7 @@ public class StatisticsService {
 	public StoreStatsData getAppStats(PublishedApp app, Interval interval){
 		Assert.notNull(app, "App cannot be null");
 
-		List<ESAppStats> result;
-		if (app.getType().equals(Constants.MobilePlatform.ANDROID)) {
-			result = esAppStatsRepository.findByPackageName(app.getPackageName());
-		} else {
-			result = esAppStatsRepository.findBySku(app.getSku());
-		}
-
-		if(result == null || result.isEmpty()){
-			return new StoreStatsData();
-		}
-
-		ESAppStats stats = result.get(0);
 		StoreStatsData appStats = new StoreStatsData();
-
-		appStats.averageRaiting = stats.averageRaiting;
-		appStats.downloads = stats.downloads;
-		appStats.currentInstallations = stats.currentInstallations;
 
 		Interval week = getInterval(interval.getEnd(), WEEK_INTERVAL);
 		Interval month = getInterval(interval.getEnd(), MONTH_INTERVAL);
