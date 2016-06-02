@@ -13,34 +13,48 @@ import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.search.SearchHit;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.acls.model.AlreadyExistsException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 @Slf4j
 @Service
 public class PersonService {
 
+	private Client client;
+	private String nginxAccessIndex;
+	private AuthService authService;
 	private UserService userService;
-	private PersonRepository personRepository;
 	private EmailService emailService;
+	private PersonRepository personRepository;
 	private NetworkRepository networkRepository;
 	private InvitationRepository invitationRepository;
-	private AuthService authService;
 
 	@Autowired
 	public PersonService(UserService userService, PersonRepository personRepository, EmailService emailService,
 						 NetworkRepository networkRepository, InvitationRepository invitationRepository,
-						 AuthService authService) {
+						 AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex) {
+		this.client = client;
+		this.authService = authService;
 		this.userService = userService;
-		this.personRepository = personRepository;
 		this.emailService = emailService;
+		this.nginxAccessIndex = nginxAccessIndex;
+		this.personRepository = personRepository;
 		this.networkRepository = networkRepository;
 		this.invitationRepository = invitationRepository;
-		this.authService = authService;
 	}
 
 	/**
@@ -117,5 +131,48 @@ public class PersonService {
 		invitationRepository.save(invitation);
 
 		emailService.notifyPersonCreation(network, invitation, authService.getLoggedPerson());
+	}
+
+	public List<Map<String, Object>> getUserTimeline(String username) {
+		Person person = personRepository.findByUsername(username);
+		Assert.notNull(person, "Person not found: personId " + username);
+
+		List<Map<String, Object>> timeline = new ArrayList<>();
+
+		SearchRequestBuilder search = client.prepareSearch(nginxAccessIndex);
+		search.setQuery(boolQuery().must(termQuery("username", person.username)));
+
+		SearchResponse searchResponse = search.execute().actionGet();
+
+		DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+
+		SearchHit[] hits = searchResponse.getHits().getHits();
+		for (SearchHit hit : hits) {
+			Map source = hit.sourceAsMap();
+
+			int response = (int) source.get("response");
+			if (response < 200 || response >= 400) {
+				continue;
+			}
+
+			Long timestamp = fmt.parseDateTime(source.get("@timestamp").toString()).getMillis()/1000;
+			source.put("date", timestamp);
+			source.remove("message");
+			source.remove("host");
+			source.remove("type");
+			source.remove("clientip");
+			source.remove("ZONE");
+			source.remove("verb");
+			source.remove("httpversion");
+			source.remove("bytes");
+			source.remove("referrer");
+			source.remove("os_name");
+			source.remove("device");
+			source.remove("browser");
+
+			timeline.add(source);
+		}
+
+		return timeline;
 	}
 }
