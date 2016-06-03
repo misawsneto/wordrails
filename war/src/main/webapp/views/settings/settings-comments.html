@@ -5,10 +5,8 @@
 
 <div class="pos-abt w-full top-0 bottom-0 left-0">
   <div class="hbox">
-
     <div class="col animated zoomIn">
       <div class="vbox p-t-lg p-r-xxl p-l-xxl">
-      
         <div class="search-with-filter m-r-sm m-l-sm p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
           <form ng-submit="doSearch()">
             <input placeholder="{{'titles.SEARCH' | translate }}" ng-model="search" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
@@ -29,14 +27,15 @@
                             <md-checkbox aria-label="nothing" class="no-margin" ng-model="toggleSelectValue" ng-change="toggleAll(toggleSelectValue)">
                             </md-checkbox>
                           </th>
-                          <th>{{'titles.SELECT_ALL' | translate}}</th>
-                          <th style="width:230px;"></th>
+                          <th style="width: 300px">{{'titles.SELECT_ALL' | translate}}</th>
+                          <th></th>
+                          <th></th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr ng-repeat="comment in comments" class="b-l-3x b-l-s b-c-t"  ng-style="comment.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" ng-class="{'b-l-primary': isActivePerson(comment)}">
                           <td class="display-t-c v-m">
-                            <md-checkbox aria-label="nothing" class="no-margin"
+                            <md-checkbox aria-label="nothing" class="no-margin" ng-if="person.id != app.person.id"
                              ng-model="comment.selected" ng-true-value="true" ng-false-value="false" ng-click="app.stopPropagation($event)">
                             </md-checkbox>
                           </td>
@@ -48,15 +47,20 @@
                             </span>
                               <span class="clear">
                                 <span class="text-md font-bold">{{comment.author.name}}</span>
-                                <div class="m-t-sm">
-                                  {{comment.body}}
-                                </div>
-                                <div class="text-muted text-sm clear m-t-xs">{{app.getLocalTime(comment.date)}} | 
-                                  <span class="font-500">
-                                    <i class="icon mdi2-radio-tower"></i> {{app.getStationById(comment.stationId).name}}
-                                  </span>
-                                </div>
+                                <div class="text-muted clear text-ellipsis">{{comment.author.username}} | {{comment.author.email}}</div>
                               </span>
+                          </td>
+                          <td class="display-t-c v-m clearfix">
+                            <span class="clear">
+                              <div class="text-md">
+                                {{comment.body}}
+                              </div>
+                              <div class="text-muted text-sm clear m-t-xs">{{app.getLocalTime(comment.date)}} | 
+                                <span class="font-500">
+                                  <i class="icon mdi2-radio-tower"></i> {{app.getStationById(comment.stationId).name}}
+                                </span>
+                              </div>
+                            </span>
                           </td>
                           <td class="display-t-c v-m">
                             <div ng-if="person.id != app.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
@@ -64,6 +68,9 @@
                               </a> -->
                               <ul class="list-inline no-margin text-right">
                                 <li class="dropdown">
+                                  <md-button class="md-icon-button m-t md-warn" aria-label="More" ng-click="app.showDeleteCommentDialog({id: comment.postId})">
+                                    <i class="i-20 mdi2-delete ng-scope"></i>
+                                  </md-button>
                                   <md-button class="md-icon-button m-t" aria-label="More 2" ng-click="app.showComments({id: comment.postId})">
                                     <i class="i-20 mdi2-comment-multiple-outline ng-scope"></i>
                                   </md-button>
@@ -108,54 +115,12 @@
   </div>
 </div>
 
-  <!-- /background -->
-<!-- </md-sidenav> -->
-  
-  <!-- <md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg"
-    ui-sref="app.post">
-    <i class="mdi-editor-mode-edit i-24"></i>
-  </md-button> -->
-
-  <md-fab-speed-dial md-direction="up" class="md-scale pos-fix right-0 bottom-0 m-r-lg m-b-md">
-    <md-fab-trigger>
-      <md-button aria-label="Add..." class="md-fab md-accent">
-        <i class="mdi mdi2-menu i-24"></i>
-      </md-button>
-    </md-fab-trigger>
-    <md-fab-actions>
-      <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showAddUserDialog($event)">
-        <md-tooltip md-direction="left">
-          {{'settings.users.ADD_USERS' | translate}}
-        </md-tooltip>
-        <i class="mdi i-20 mdi2-plus text-dark"></i>
-      </md-button>
-      <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'enablePersons')">
-        <md-tooltip md-direction="left">
-          {{'settings.users.ENABLE_ALL_SELECTED' | translate}}
-        </md-tooltip>
-        <i class="mdi mdi2-account-check i-20 text-dark"></i>
-      </md-button>
-      <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'disablePersons')">
-        <md-tooltip md-direction="left">
-          {{'settings.users.DISABLE_ALL_SELECTED' | translate}}
-        </md-tooltip>
-        <i class="mdi mdi2-account-off i-20 text-dark"></i>
-      </md-button>
-      <md-button aria-label="Add Group" class="md-fab md-raised md-mini" >
-        <md-tooltip md-direction="left">
-          {{'settings.users.PERMISSIONS_OF_ALL_SELECTED' | translate}}
-        </md-tooltip>
-        <i class="mdi mdi2-key-variant i-20 text-dark"></i>
-      </md-button>
-      <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showInviteUserDialog($event);">
-        <md-tooltip md-direction="left">
-          {{'settings.users.INVITE_USERS' | translate}}
-        </md-tooltip>
-        <i class="mdi mdi2-email i-20 text-dark"></i>
-      </md-button>
-    </md-fab-actions>
-  </md-fab-speed-dial>
-
+<md-button aria-label="menu" ng-if="comments && comments.length > 0" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-class="{'zoomIn': getSelectedComments().length > 0, 'zoomOut': getSelectedComments().length == 0}">
+  <md-tooltip md-direction="top">
+    {{'titles.REMOVE_ALL' | translate}}
+  </md-tooltip>
+  <i class="mdi2-delete i-24"></i>
+</md-button>
 
 <script type="text/ng-template" id="edit-person-dialog.html">
   <md-dialog-content layout="row" layout-wrap>
@@ -217,16 +182,6 @@
           </md-input-container>
           </div>
           <div class="">
-          <!-- <md-input-container class="w-xxl m-b-0">
-            <label for="testInput">{{'settings.profile.PASSWORD' | translate}} ({{'titles.OPTIONAL' | translate}})</label>
-            <input type="password" ng-model="editingPerson.password" >
-          </md-input-container>
-          </div>
-          <div class="">
-          <md-input-container class="w-xxl m-b-0" ng-class="{'animated fadeIn': editingPerson.password, 'hide': !editingPerson.password}">
-            <label for="testInput">{{'settings.profile.CONFIRM_PASSWORD' | translate}}</label>
-            <input type="password" ng-model="editingPerson.passwordConfirm" >
-          </md-input-container> -->
           </div>
           <div class="">
           <md-input-container class="w-xxl m-b-0">

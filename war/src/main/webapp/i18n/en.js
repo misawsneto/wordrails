@@ -45,6 +45,7 @@
 		"EDIT": "Edit",
 		"EDIT_PROFILE": "Edit profile",
 		"REMOVE": "Remove",
+		"REMOVE_ALL": "Remove all",
 		"MOVE_TO": "Move to...",
 		"FILTER_BY": "Filter by",
 		"FILTER_BY_STATION": "Filter by station",

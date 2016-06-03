@@ -25,8 +25,6 @@ public class ESComment implements ElasticSearchEntity {
 	private Integer authorId;
 	private Integer stationId;
 
-	private ESPost post;
-
 	public String tenantId;
 
 	@Override

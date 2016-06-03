@@ -39,7 +39,8 @@ public class CommentSearchService extends AbstractSearchService {
 
 		List<Integer> idsToGetFromDB = getPaginatedIds(searchResults, page, size);
 
-		List<Comment> entities = commentRepository.findAllWithAuthors(idsToGetFromDB, sort);
+		List<Comment> entities = idsToGetFromDB.size() > 0 ? commentRepository.findAllWithAuthors(idsToGetFromDB, sort)
+		: new ArrayList<Comment>();
 
 		if (entities == null)
 			return result;

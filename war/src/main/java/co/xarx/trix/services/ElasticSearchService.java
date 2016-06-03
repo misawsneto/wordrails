@@ -89,7 +89,10 @@ public class ElasticSearchService {
 	}
 
 	public List<List<ElasticSearchEntity>> splitList(List<ElasticSearchEntity> entities) {
-		return Lists.partition(entities, (entities.size() + SPLIT_FACTOR - 1) / SPLIT_FACTOR);
+		if(entities.size() > 0)
+			return Lists.partition(entities, (entities.size() + SPLIT_FACTOR - 1) / SPLIT_FACTOR);
+		else
+			return new ArrayList<List<ElasticSearchEntity>>();
 	}
 
 	public void bulkSaveIndex(List<IndexQuery> queries) {

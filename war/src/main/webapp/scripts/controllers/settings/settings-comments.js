@@ -19,72 +19,6 @@ app.controller('SettingsCommentsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 
   // ------------ person file upload
 
-  // -------- users pagination ---------
-  // $scope.page = 0;
-  // var loading = false;
-  // var useSearchField = false;
-  // $scope.allLoaded = false;
-  // $scope.beginning = true;
-  // $scope.window = 20
-
-  // $scope.personsCount = 0;
-  // trix.countPersonsByNetwork().success(function(response){
-  //   $scope.personsCount = response;
-  // })
-
-  // $scope.doSearch = function(){
-  //   if($scope.search || ($scope.search && $scope.search.trim()))
-  //     useSearchField = true;
-  //   $scope.persons = [];
-  //   $scope.showProgress = false;
-  //   $scope.page = 0;
-  //   loading = false
-  //   $scope.allLoaded = false
-  //   $scope.paginate()
-  // }
-
-  // $scope.paginate = function(){
-  //   if(!loading){
-  //     loading = true;
-  //     if(!$scope.allLoaded && !useSearchField){
-  //       $scope.showProgress = true;
-  //       trix.getPersons($scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess).error(getPersonsError); 
-  //     }else if(!$scope.allLoaded && useSearchField){
-  //       trix.findPersons($scope.search, $scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess).error(getPersonsError); 
-  //     }
-  //   }
-  // }
-
-  // var getPersonsError = function(response){
-  // }
-
-  // var getPersonsSuccess = function(response){
-  //     if(!$scope.persons || !$scope.persons.length){
-  //       $scope.persons = [];
-  //     }
-      
-  //     if(response.persons && response.persons.length > 0){
-  //       response.persons.forEach(function(p){
-  //         $scope.persons.push(p);
-  //       })
-  //       $scope.page++;
-  //     }else{
-  //       $scope.allLoaded = true;
-  //     }
-
-  //   $scope.showProgress = false;
-  //   loading = false;
-  // }
-
-  // $scope.showProgress = true;
-  // get initial users
-  // trix.getPersons($scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess);
-
-  // -------- /users pagination ---------
-
-
-  // ------------ enable / disable person ---------
-
 
     // ------------- /user edit image -------------
 
@@ -148,15 +82,6 @@ app.controller('SettingsCommentsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
     $scope.commentFocused = false;
   }
 
-  var publicationActiveId = null;
-  $scope.activatePublication = function(publication){
-    publicationActiveId = publication.id;
-  }
-
-  $scope.isActivePublication = function(publication){
-    return publicationActiveId == publication.id
-  }
-
   var draftActiveId = null;
   $scope.activateDraft = function(draft){
     draftActiveId = draft.id;
@@ -171,19 +96,28 @@ app.controller('SettingsCommentsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
   $scope.toggleAll = function(toggleSelectValue){
 
     if(toggleSelectValue && $scope.comments){
-      $scope.comments.forEach(function(publication, index){
-         publication.selected = true;
+      $scope.comments.forEach(function(comment, index){
+         comment.selected = true;
       }); 
     }else if($scope.comments){
-      $scope.comments.forEach(function(publication, index){
-          publication.selected = false;
+      $scope.comments.forEach(function(comment, index){
+          comment.selected = false;
       }); 
     }
 
   }
 
   // -------- /toggle all
-  // 
+  
+  $scope.getSelectedComments = function(type){
+    var ret = []
+      $scope.comments.forEach(function(comment, index){
+        if(comment.selected)
+          ret.push(comment.id);
+      });
+      return ret;
+  }
+
     // -------- /invitation -------
     
     $scope.$mdConstant = $mdConstant.KEY_CODE;
