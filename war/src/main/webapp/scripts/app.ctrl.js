@@ -880,6 +880,15 @@ angular.module('app')
           post.terms = post.categories;
       }
 
+      $scope.app.showPostContent = function(post){
+          trix.getPost(post.id, 'postProjection').success(function(response){
+            $scope.app.postLoaded = response;
+            var hash = $scope.app.postLoaded.imageHash ? $scope.app.postLoaded.imageHash : $scope.app.postLoaded.featuredImage ? $scope.app.postLoaded.featuredImage.originalHash : null;
+            setPostFeaturedImage(hash)
+            $scope.togglePost();
+          })
+      }
+
       // --------- /generic post tab
 
       // --------- generic comment tab

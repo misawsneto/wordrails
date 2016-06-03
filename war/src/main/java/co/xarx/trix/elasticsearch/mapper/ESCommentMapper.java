@@ -17,7 +17,8 @@ public interface ESCommentMapper extends ESMapper<ESComment, Comment> {
 			@Mapping(target = "date", source = "date"),
 			@Mapping(target = "postId", source = "post.id"),
 			@Mapping(target = "authorId", source = "author.id"),
-			@Mapping(target = "stationId", source = "post.station.id")
+			@Mapping(target = "stationId", source = "post.station.id"),
+			@Mapping(target = "post", source = "post")
 	})
 	ESComment asDto(Comment entity);
 }

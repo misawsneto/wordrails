@@ -1,5 +1,8 @@
 <div class="center-block w-xxl w-auto-xs p-v-md m-t-lg ">
  <md-content class="md-background-hue-1 background md-whiteframe-z2">
+    <div ng-if="app.invalidCredentials" class="animated5x fadeIn md-warn-hue-1 background m-b-sm p-sm">
+      {{'messages.INVALID_CREDENTIALS' | translate}}
+    </div>
     <md-progress-linear class="pos-abt top-0 left-0" ng-if="app.loading" md-mode="indeterminate"></md-progress-linear>
     <!-- signin -->
     <div class="text-color m text-center">
@@ -20,9 +23,6 @@
       </div>
         <div class="p-t text-md" translate="signin_signup.OR">ou</div>
       <form name="form" ng-submit="signin(person)" class="text-md w-full">
-        <div ng-if="app.invalidCredentials" class="animated5x fadeIn md-warn-hue-1 background m-b-sm m-t-xs p-xs r-2x">
-          {{'messages.INVALID_CREDENTIALS' | translate}}
-        </div>
         <div class="p" style="padding-bottom: 0">
           <md-input-container class="w-full m-b-0">
             <label for="testInput">{{'titles.USERNAME' | translate}}</label>

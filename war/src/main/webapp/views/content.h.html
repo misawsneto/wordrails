@@ -94,26 +94,26 @@
           </li>
           <li md-ink-ripple>
             <a ng-href="/settings/profile" target="_self">
-              <i class="icon m-r i-16 mdi2-account-circle"></i>
+              <i class="icon m-r i-16 mdi2-account-circle opacity-08"></i>
               {{'settings.aside.MY_PROFILE' | translate}}
             </a>
           </li>
           <li md-ink-ripple>
             <a ng-href="/settings" target="_self">
-              <i class="icon m-r i-16 mdi2-settings"></i>
+              <i class="icon m-r i-16 mdi2-settings opacity-08"></i>
               {{'titles.SETTINGS' | translate}}
             </a>
           </li>
           <li md-ink-ripple>
             <a ui-sref="app.docs">
-              <i class="icon m-r i-16 mdi2-help-circle mdi"></i>
+              <i class="icon m-r i-16 mdi2-help-circle mdi opacity-08"></i>
               {{'titles.HELP' | translate}}
             </a>
           </li>
           <md-divider></md-divider>
           <li md-ink-ripple>
             <a ng-click="app.signOut();">
-              <i class="icon m-r i-16 mdi2-logout"></i>
+              <i class="icon m-r i-16 mdi2-logout opacity-08"></i>
               {{'header.navbar.LOGOUT' | translate}}
             </a>
           </li>
@@ -203,6 +203,9 @@
 
 <script type="text/ng-template" id="signin-signup-dialog.html">
   <md-dialog-content class="md-background-hue-1 background">
+    <div ng-if="app.invalidCredentials" class="animated5x fadeIn md-warn-hue-1 background m-b-sm m-t-xs p-sm">
+      {{'messages.INVALID_CREDENTIALS' | translate}}
+    </div>
     <md-progress-linear class="pos-abt top-0 left-0" ng-if="app.loading" md-mode="indeterminate"></md-progress-linear>
     <!-- signin -->
     <div class="text-color m text-center" ng-if="app.signState !== 'signup' && app.signState !== 'forgot'">
@@ -223,9 +226,6 @@
       </div>
         <div class="p-t-sm text-md" translate="signin_signup.OR">ou</div>
       <form name="form" ng-submit="app.signIn(person)" class="text-md w-xxl">
-       <div ng-if="app.invalidCredentials" class="animated5x fadeIn md-warn-hue-1 background m-b-sm m-t-xs p-xs r-2x">
-          {{'messages.INVALID_CREDENTIALS' | translate}}
-        </div>
         <div class="p" style="padding-bottom: 0">
           <md-input-container class="w-full m-b-0">
             <label for="testInput">{{'titles.USERNAME' | translate}}</label>

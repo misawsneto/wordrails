@@ -324,20 +324,23 @@ var trix = angular.module('trix', [])
 	  return \$http.get(_config.url + "/api/persons/"+personId+"/recommends", config)
 	}
 
-	this.searchPosts = function(query, _page, _size, params) {
-		var config = {
-			"params": {
-				"query": query,
-				"page": _page,
-				"size": _size,
-			}
-		}
-
-		if(params && angular)
-			config.params = angular.extend(config.params, params);
-
-	  return \$http.get(_config.url + "/api/posts/search/networkPosts", config)
-	}
+	this.searchComments = function(query,authors,posts,stations,from,until,page,size,order,embed){
+        var config = {
+            "params": {
+                "q": query,
+                "authorId": authors,
+                "postId": posts,
+                "stationId": stations,
+                "from": from,
+                "until": until,
+                "page": page,
+                "size": size,
+                "order": order,
+                "embed": embed,
+            }
+        }
+        return \$http.get(_config.url + "/api/v2/comments/search", config)
+    }
 
 	this.searchPosts = function(query,authors,stations,state,from,until,categories,tags,page,size,order,
     	embed, snippet){

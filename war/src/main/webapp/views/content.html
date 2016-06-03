@@ -236,7 +236,7 @@
   </md-content>
 </md-sidenav>
 
-<md-sidenav class="md-background-hue-1 background md-sidenav-right md-whiteframe-z2 w-400" md-component-id="post-comments">
+  <md-sidenav class="md-background-hue-1 background md-sidenav-right md-whiteframe-z2 w-400" md-component-id="post-comments">
     <md-toolbar class="md-theme-light">
       <h1 class="md-toolbar-tools" translate="titles.COMMENTS"></h1>
     </md-toolbar>
@@ -244,7 +244,7 @@
         <div id="post-comments-sidebar" class="vbox">
           <div class="row-row">
             <div id="comment-list" class="cell">
-              <div class="cell-inner">
+              <div class="cell-inner" ng-if="app.comments && app.comments.length">
                 <ul infinite-scroll="app.paginateComments()" infinite-scroll-container="'#comment-list'">
                   <li ng-repeat="comment in app.comments">
                     <div class="p-sm pos-rlt">

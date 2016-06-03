@@ -71,7 +71,8 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
   
   $scope.publicationsCtrl = {
     'page': 0,
-    'allLoaded': false
+    'allLoaded': false,
+    'window': 20
   }
 
   $scope.resetPage = function(){
@@ -84,12 +85,12 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
     if(!$scope.loading && !$scope.publicationsCtrl.allLoaded){
       $scope.loading = true;
 
-      var page = getPage();
-      trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response){
+      trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, $scope.publicationsCtrl.page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response){
         handleSuccess(response);
         $scope.loading = false;
       }).error(function(){
         $scope.loading = false;
+        $scope.publicationsCtrl.allLoaded = true;
       })
     }
   }
@@ -106,15 +107,12 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
           $scope.publications.push(post);
         })
         $scope.publicationsCtrl.page++;
-        $scope.publicationsCtrl.allLoaded;
+        // if(posts.length < $scope.publicationsCtrl.window)
+        //   $scope.publicationsCtrl.allLoaded = true;
     }else
       $scope.publicationsCtrl.allLoaded = true;
   }
 
-
-  var getPage = function(){
-      return $scope.publicationsCtrl.page;
-  }
 
   $scope.doSearch = function(){
     $scope.resetPage();
@@ -127,11 +125,6 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
     if(postObj.body)
       postObj.snippet = postObj.body.simpleSnippet();
   }
-
-	$scope.page = 0;
-	$scope.loadingComments = false
-	$scope.allLoaded = false;
-	$scope.window = 20
 
 	$scope.postFeaturedImage = null
 	var setPostFeaturedImage = function(hash){
