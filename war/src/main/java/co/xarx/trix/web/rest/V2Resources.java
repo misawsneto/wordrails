@@ -31,7 +31,7 @@ public class V2Resources {
 												   @QueryParam("q") String q,
 												   @QueryParam("page") Integer page,
 												   @QueryParam("size") Integer size,
-												   @QueryParam("order") Integer order) {
+												   @QueryParam("order") String order) {
 
 		boolean sortByDate = "-date".equals(order) ? true : false;
 
