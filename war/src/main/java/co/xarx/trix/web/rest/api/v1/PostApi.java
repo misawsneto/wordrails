@@ -1,7 +1,6 @@
 package co.xarx.trix.web.rest.api.v1;
 
 import co.xarx.trix.api.*;
-import co.xarx.trix.api.v2.PostData;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.security.access.method.P;
@@ -11,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import javax.servlet.ServletException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
 
@@ -155,5 +153,5 @@ public interface PostApi {
 	@PUT
 	@Consumes("text/uri-list")
 	@Path("/{id}/terms")
-	public void putPostTerms(@QueryParam("id") Integer id) throws IOException;
+	void putPostTerms(@QueryParam("id") Integer id) throws IOException;
 }

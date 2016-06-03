@@ -56,4 +56,11 @@ public final class Constants {
 		APPLE,
 		ANDROID
 	}
+
+	public static class StatsEventType {
+		public static final String POST_READ = "post_read";
+		public static final String POST_COMMENT = "post_comment";
+		public static final String POST_BOOKMARK = "post_bookmark";
+		public static final String POST_RECOMMEND = "post_recommend";
+	}
 }

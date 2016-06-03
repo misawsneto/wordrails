@@ -14,13 +14,13 @@ import java.util.List;
 public interface V2RecommendApi {
 
 	@GET
-	@Path("/searchRecommends")
+	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
 	ContentResponse<List<PostView>> searchRecommends(@QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size);
 
 	@PUT
-	@Path("/toggleRecommend")
+	@Path("/toggle/{postId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@PreAuthorize("isAuthenticated()")
-	BooleanResponse toggleRecommend(@QueryParam("postId") Integer postId);
+	BooleanResponse toggleRecommend(@PathParam("postId") Integer postId);
 }
