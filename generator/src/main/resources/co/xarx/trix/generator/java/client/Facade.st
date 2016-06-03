@@ -115,6 +115,10 @@ public class $facade$ {
 		return new Batch(_facade);
 	}
 
+	public void setUsername(String username) {
+		_interceptor.setUsername(username);
+	}
+
 	public void login(){
 		_interceptor.logIn();
 	}
