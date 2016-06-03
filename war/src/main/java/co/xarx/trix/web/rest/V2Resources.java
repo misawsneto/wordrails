@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * Created by misael on 03/06/2016.
  */
-@Path("/v2/")
+@Path("/v2")
 @Consumes(MediaType.WILDCARD)
 @Component
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
