@@ -1111,6 +1111,31 @@ angular.module('app')
               deps:load(['wu.masonry', '/scripts/controllers/app/bookmarks.js']).deps
             }
           })
+        .state('app.userprofile', {
+            url: '/@{username}',
+            templateUrl: '/views/pages/profile.html',
+            data : { title: 'Profle', folded: false },
+            controller: 'ProfileCtrl',
+            resolve: {
+
+              person: function($stateParams, $q, trix){
+                var deferred = $q.defer();
+                if(initData && initData.person.id == 0){
+                  document.location.href = '/access/signin';
+                  window.console && console.error('user is not logged')
+                }else if(initData.person.username !== $stateParams.username){
+                  document.location.href = '/';
+                  window.console && console.error('user is not owner')
+                }else if(initData.person.username === $stateParams.username){
+                  deferred.resolve(initData.person.bookmarkPosts)
+                }else{
+                  document.location.href = '/404';
+                }
+                return deferred.promise;
+              },
+              deps:load(['wu.masonry', '/scripts/controllers/app/profile.js']).deps
+            }
+          })
           .state('access', {
             url: '/access',
             templateUrl: '/views/pages/access.html',

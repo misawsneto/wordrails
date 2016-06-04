@@ -195,6 +195,11 @@
                             </div>
                           </div>
                         </li>
+                        <li ng-if="!publicationsCtrl.allLoaded">
+                          <div class="p-md text-center animated animated5x fadeIn">
+                            <md-progress-circular class="m-auto" md-diameter="144"></md-progress-circular>
+                          </div>
+                        </li>
                       </ul>
                       
                     </div>

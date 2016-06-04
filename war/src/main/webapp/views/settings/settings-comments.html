@@ -52,13 +52,13 @@
                           </td>
                           <td class="display-t-c v-m clearfix">
                             <span class="clear">
-                              <div class="text-md">
-                                {{comment.body}}
-                              </div>
-                              <div class="text-muted text-sm clear m-t-xs">{{app.getLocalTime(comment.date)}} | 
+                              <div class="text-muted text-sm clear">{{app.getLocalTime(comment.date)}} | 
                                 <span class="font-500">
                                   <i class="icon mdi2-radio-tower"></i> {{app.getStationById(comment.stationId).name}}
                                 </span>
+                              </div>
+                              <div class="text-md m-t-xs">
+                                {{comment.body}}
                               </div>
                             </span>
                           </td>
