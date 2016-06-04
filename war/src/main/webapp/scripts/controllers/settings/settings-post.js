@@ -554,7 +554,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.selectedStation = null;
 	$scope.$watch('selectedStation', function(station){
-		$scope.app.selectTerms(station.termTree, $scope.app.editingPost.terms)
+		if(station && station.termTree)
+			$scope.app.selectTerms(station.termTree, $scope.app.editingPost.terms)
 	})
 
 	// function updateTermTree(){

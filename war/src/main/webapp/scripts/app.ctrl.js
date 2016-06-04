@@ -267,6 +267,23 @@ angular.module('app')
           return ret
         }
 
+        $scope.app.getStationBySlug = function(slug){
+          var ret = null;
+          $scope.app.stations.forEach(function(station){
+            if(station.stationSlug == slug)
+              ret = station
+          })
+          return ret
+        }
+
+        $scope.app.publicationToShare = null;
+        $scope.app.getPublicationLink = function(){
+          if($scope.app.publicationToShare)
+            return TRIX.baseUrl + '/' + $scope.app.getStationById($scope.app.publicationToShare.stationId).stationSlug  + '/' + $scope.app.publicationToShare.slug;
+          else
+            return TRIX.baseUrl;
+        }
+
         $scope.app.getMaterialColor = function(colorA, hueA){
           var colorValue = themeProvider._PALETTES[colorA][hueA] ?
           themeProvider._PALETTES[colorA][hueA].value :
@@ -786,14 +803,6 @@ angular.module('app')
 
       // ----------- /signin-signup-forgot --------------
 
-      $scope.app.getStationFromSlug = function(slug){
-
-      }
-
-      $scope.app.getStationFromId = function(id){
-        
-      }
-
       $scope.app.selectTerms = function (terms, termList){
         if(!termList || !terms)
           return;
@@ -1060,9 +1069,10 @@ angular.module('app')
         })
       }
 
-      $scope.app.showSharesPostDialog = function(event){
+      $scope.app.showSharesPostDialog = function(event, post){
         // show term alert
         
+        $scope.app.publicationToShare = post;
         $mdDialog.show({
           scope: $scope,        // use parent scope in template
             closeTo: {

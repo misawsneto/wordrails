@@ -53,6 +53,11 @@
           <i class="mdi-action-search i-24 p-h-sm"></i>
         </a>
       </li>
+      <li ng-if="app.person.id > 0" class="animated fadeIn">
+        <a md-ink-ripple ng-click="app.search.show = true; app.focusOnSearch">
+          <i class="mdi2-bell-outline i-24 p-h-sm"></i>
+        </a>
+      </li>
       <!-- <li>
         <a md-ink-ripple data-toggle="modal" data-target="#user">
           <i class="mdi-social-person-outline i-24 p-h-sm"></i>
@@ -365,32 +370,40 @@
         {{'titles.SHARE' | translate}}
       </div>
       <div class="inline w">
-        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
+        <a socialshare socialshare-provider="facebook" socialshare-text="{{app.publicationToShare.title}}" socialshare-url="{{app.getPublicationLink()}}">
+          <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
             <md-button class="md-fab md-mini md-primary inline" style="background: #3B5999" aria-label="Use Android">
               <i class="mdi2-facebook i-24"></i>
             </md-button>
             <div class="font-500 text-md inline m-r">Facebook</div>
-        </div>
-        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
-            <md-button class="md-fab md-mini md-primary" style="background: #5EA9DD" aria-label="Use Android">
-              <i class="mdi2-twitter i-24"></i>
-            </md-button>
-            <div class="font-500 text-md inline m-r">Twitter</div>
-        </div>
+          </div>
+        </a>
+        <a socialshare socialshare-provider="twitter" socialshare-text="{{app.publicationToShare.title}}" socialshare-url="{{app.getPublicationLink()}}">
+          <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
+              <md-button class="md-fab md-mini md-primary" style="background: #5EA9DD" aria-label="Use Android">
+                <i class="mdi2-twitter i-24"></i>
+              </md-button>
+              <div class="font-500 text-md inline m-r">Twitter</div>
+          </div>
+        </a>
       </div>
       <div class="inline w">
-        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
+        <a socialshare socialshare-provider="google" socialshare-text="{{app.publicationToShare.title}}" socialshare-url="{{app.getPublicationLink()}}">
+          <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
             <md-button class="md-fab md-mini md-primary" style="background: #DC4A38" aria-label="Use Android">
               <i class="mdi2-google-plus i-24"></i>
             </md-button>
             <div class="font-500 text-md inline m-r">Google+</div>
-        </div>
-        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
+          </div>
+        </a>
+        <a socialshare socialshare-provider="linkedin" socialshare-text="{{app.publicationToShare.title}}" socialshare-url="{{app.getPublicationLink()}}">
+          <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
             <md-button class="md-fab md-mini md-primary" style="background: #0177B5" aria-label="Use Android">
               <i class="mdi2-linkedin i-24"></i>
             </md-button>
             <div class="font-500 text-md inline m-r">LinkedIn</div>
-        </div>
+          </div>
+        </a>
       </div>
     </md-dialog-content>        
 </script>
