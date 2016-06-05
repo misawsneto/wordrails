@@ -586,7 +586,7 @@
 				            	</h4>
 					            <p class="clear text-ellipsis"> {{revision.payload.title}} </p>
 					          </div>
-					          <md-button class="md-secondary md-icon-button" aria-label="call">
+					          <md-button class="md-secondary md-icon-button" aria-label="call" ng-click="restoreRevision(revision.payload)">
 					          	<md-tooltip md-direction="bottom">
 												{{'settings.post.SHOW_VERSION' | translate}}
 					          	</md-tooltip>

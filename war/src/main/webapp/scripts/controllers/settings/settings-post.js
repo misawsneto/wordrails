@@ -869,7 +869,14 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	    }
 	  }, true);
 
-
+	$scope.restoreRevision = function(post){
+		$scope.app.showLoadingProgress();
+		$scope.app.editingPost = post;
+		$scope.loadPostData();
+		$timeout(function(){
+			$mdDialog.cancel();
+		},2000)
+	}
 
 
 	// -------- /autoSave
@@ -887,6 +894,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.loadPostData = function(){
 		$scope.getStationFromPost();
+		if($scope.app.editingPost.categories && $scope.app.editingPost.categories.length)
+			$scope.app.editingPost.terms = $scope.app.editingPost.categories;
 		if($scope.app.editingPost.terms)
 			$scope.app.editingPost.terms.forEach(function(term){
 				term.checked = true;
@@ -1058,8 +1067,6 @@ function formatVersions(versions){
 	        }
 	    }
 	}
-
-	
 
 	return setIndexes(ret);
 }
