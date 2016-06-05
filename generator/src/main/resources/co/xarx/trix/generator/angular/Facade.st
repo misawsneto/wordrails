@@ -364,6 +364,15 @@ var trix = angular.module('trix', [])
         return \$http.get(_config.url + "/api/v2/posts/search", config)
 	}
 
+	this.getPostVersions = function(postId){
+		var config = {
+            "params": {
+                "postId": postId
+            }
+        }
+		return \$http.get(_config.url + "/api/v2/posts/getPostVersions", config);
+	}
+
 	this.searchBookmarks = function(query, _page, _size) {
 		var config = {
 		"params": {

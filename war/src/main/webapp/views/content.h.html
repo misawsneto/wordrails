@@ -98,6 +98,19 @@
             </div>
           </li>
           <li md-ink-ripple>
+            <a ng-href="/settings/post" target="_self">
+              <i class="icon mdi2-pencil icon m-r i-16 opacity-08"></i>
+              <span translate="titles.NEW_POST">Nova publicação</span>
+            </a>
+          </li>
+          <li md-ink-ripple>
+            <a ui-sref="app.bookmarks({'username': app.person.username})">
+              <i class="icon mdi-action-bookmark icon m-r i-16 opacity-08"></i>
+              <span translate="titles.BOOKMARKS">Bookmarks</span>
+            </a>
+          </li>
+          <md-divider></md-divider>
+          <li md-ink-ripple>
             <a ng-href="/settings/profile" target="_self">
               <i class="icon m-r i-16 mdi2-account-circle opacity-08"></i>
               {{'settings.aside.MY_PROFILE' | translate}}

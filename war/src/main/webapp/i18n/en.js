@@ -83,6 +83,7 @@
 		"SOCIAL_NETWORK_PROFILES": "Social network profiles",
 		"SOCIAL_NETWORK_IDS": "Social networks",
 		"BOOKMARKS": "Bookmarks",
+		"NOTIFICATION": "Notification",
 		"NOTIFICATIONS": "Notifications",
 		"IMAGE": "Image",
 		"IMAGES": "Images",
@@ -258,7 +259,7 @@
 			"ACTIVATE_DEACTIVATE_HEADING": "Activate/Deactivate heading",
 			"ACTIVATE_DEACTIVATE_SUBTITLE": "Activate/Deactivate subtitle",
 			"DETAILS": "Details",
-			"REVISIONS": "Revisions",
+			"REVISIONS": "History",
 			"OPTIONS": "Publication options",
 			"CUSTOMIZE_LINK_DESC": "Customized URL address for the web",
 			"SCHEDULED_DATE_DESC": "Schedule date for auto publishing",
@@ -301,7 +302,7 @@
 			"CROP_IMAGE_DESC": "Click and drag to create a selection to crop the given image.",
 			"FOCUS_IMAGE_DESC": "Drag the marker to set the focuspoint.",
 			"TOGGLE_LANDSCAPE": "On/off landscape (image)",
-			"SHOW_VERSION": "Show version",
+			"SHOW_VERSION": "Restore version",
 			"CONTRAST": "Contrast",
 			"SELECT_STATION": "Select a station and categories for indexing your publication",
 			"ADD_TAGS": "Adicioanr tags",
@@ -310,7 +311,9 @@
 			"TRASH_ALL": "Move to trash",
 			"UPDATE_SUCCESS": "Atualizado",
 			"PUBLISH_SUCCESS": "Published",
-			"PUBLISH_ERROR": "Publication error"
+			"PUBLISH_ERROR": "Publication error",
+			"EDITING": "Editing",
+			"AUTOMATIC_SAVE": "Automatic save"
 		},
 		"station": {
 			"STATION_SETTINGS": "Station settings",

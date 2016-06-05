@@ -535,6 +535,13 @@
 
                 <md-tab label="{{'settings.post.PREFERENCES' | translate}}">
                   <md-content class="p">
+                  	<!--<div class="text-md text-center font-500 m-b">
+                  		{{'settings.post.EDITING' | translate}}
+                  	</div>-->
+                  	<div class="m-b-lg">
+                  		<md-switch class="m-t-0" ng-model="automaticSave" ng-true-value="true" ng-false-value="false">
+                              {{'settings.post.AUTOMATIC_SAVE' | translate}}</md-switch>
+                  	</div>
                     <div>
                       <md-checkbox ng-model="landscape" ng-change="landscape = !landscape; toggleLandscape();">
                         {{'settings.post.TOGGLE_LANDSCAPE' | translate}}
@@ -550,25 +557,34 @@
                         {{'titles.SUBTITLE' | translate}}
                       </md-checkbox>
                     </div>
-                    <div>
+                    <!--<md-divider></md-divider>
+                    <div class="text-md text-center font-500 m-v">
+                  		{{'titles.NOTIFICATION' | translate}}
+                  	</div>-->
+                    <div class="m-t">
                       <md-checkbox ng-model="app.editingPost.notify">
                         {{'settings.post.NOTIFY_USERS' | translate}}
                       </md-checkbox>
                     </div>
-                    <div class="text-center">
+                    <div class="text-center m-b-sm">
 						<md-button class="md-raised md-primary p-h md-whiteframe-z2" ng-click="showGeoNotificationDialog($event)">
 						<i class="mdi mdi2-google-maps i-20 m-r-sm v-m"></i>{{'titles.GEO_NOTIFICATION' | translate}}
 						</md-button>
                     </div>
+                    <!--<md-divider></md-divider>-->
                   </md-content>
                 </md-tab>
                 <md-tab label="{{'settings.post.REVISIONS' | translate}}">
                 	<md-list-item class="md-2-line" ng-repeat="revision in revisions">
 					          <!-- <i class="mdi mdi2-phone i-20"></i> -->
-					          <img ng-src="{{phone.options.face}}?25" class="md-avatar"/>
+					          <!--<img ng-src="{{phone.options.face}}?25" class="md-avatar"/>-->
 					          <div class="md-list-item-text" >
-					            <h3> {{ revision.date | fromNow3}} </h3>
-					            <!-- <p> {{revision.author.name}} </p> -->
+					            <h4 class="clear text-ellipsis">
+					            	<span class="font-bold">#{{revision.index}}</span> 
+					            	<span class="p-l-xs p-r-xs">|</span> 
+					            	<span>{{app.getLocalTime(revision.date)}}{{app.getSecondsOnly(revision.date)}}</span>
+				            	</h4>
+					            <p class="clear text-ellipsis"> {{revision.payload.title}} </p>
 					          </div>
 					          <md-button class="md-secondary md-icon-button" aria-label="call">
 					          	<md-tooltip md-direction="bottom">

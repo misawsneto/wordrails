@@ -132,6 +132,14 @@ angular.module('app')
         return moment(date).format('lll');
       }
 
+      $scope.app.getTimeOnly = function(date){
+        return moment(date).format('h:mm:ss');
+      }
+
+      $scope.app.getSecondsOnly = function(date){
+        return moment(date).format(':ss');
+      }
+
       $scope.app.goToLink = function(link){
         document.location.href = link;
       }
@@ -494,9 +502,6 @@ angular.module('app')
           var oldBody = oldVal.body ? oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
 
           if(newVal && (newVal.title !== oldVal.title || newBody !== oldBody)){
-
-            // TODO: save draft
-
             // set post changed so $scope.watch can see app.postObjectChanged
             if(!$scope.app.postObjectChanged){
               $log.info('post changed, avoid page change...')

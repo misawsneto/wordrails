@@ -83,6 +83,7 @@
 		"SOCIAL_NETWORK_PROFILES": "Perfis de redes sociais",
 		"SOCIAL_NETWORK_IDS": "redes sociais",
 		"BOOKMARKS": "Minhas leituras",
+		"NOTIFICATION": "Notification",
 		"NOTIFICATIONS": "Notificações",
 		"IMAGE": "Imagem",
 		"IMAGES": "Imagens",
@@ -258,7 +259,7 @@
 			"ACTIVATE_DEACTIVATE_HEADING": "Ativar/Desativar chapéu",
 			"ACTIVATE_DEACTIVATE_SUBTITLE": "Ativar/Desativar subtítulo",
 			"DETAILS": "Detalhes",
-			"REVISIONS": "Revisões",
+			"REVISIONS": "Histórico",
 			"OPTIONS": "Opções de publicação",
 			"CUSTOMIZE_LINK_DESC": "Endereço web personalizado para acesso através da web",
 			"SCHEDULED_DATE_DESC": "Agendamento de publicação automática",
@@ -301,7 +302,7 @@
 			"CROP_IMAGE_DESC": "Clique e arraste para criar uma seleção e cortar a imagem.",
 			"FOCUS_IMAGE_DESC": "Arraste o marcador para configurar o ponto focal.",
 			"TOGGLE_LANDSCAPE": "Ligar/desligar modo paisagem (imagem)",
-			"SHOW_VERSION": "Exibir versão",
+			"SHOW_VERSION": "Restaurar versão",
 			"CONTRAST": "Contraste",
 			"SELECT_STATION": "Selecione uma estação e categorias para indexar sua publicação",
 			"ADD_TAGS": "Adicionar tags",
@@ -310,7 +311,9 @@
 			"TRASH_ALL": "Mover para a lixeira",
 			"UPDATE_SUCCESS": "Atualizado",
 			"PUBLISH_SUCCESS": "Publicado",
-			"PUBLISH_ERROR": "Erro ao publicar"
+			"PUBLISH_ERROR": "Erro ao publicar",
+			"EDITING": "Edição",
+			"AUTOMATIC_SAVE": "Salvar automaticamente"
 		},
 		"station": {
 			"STATION_SETTINGS": "Configurações de estação",
