@@ -143,6 +143,11 @@
 	    "NEW_POST" : "New publication"
 	  }
 	},
+	"search": {
+		"VIEW_PROFILE": "View perfil",
+		"VIEW_STATION": "Visit station",
+		"VIEW_CATEGORY": "View category"
+	},
 	"settings":{
 		"dashboard":{
 			"NO_SCHEDULED": "No publications scheduled yet",

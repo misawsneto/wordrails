@@ -14,7 +14,7 @@
                 {{'settings.pages.MAIN_STATION' | translate}}
               </md-tooltip>
               <md-select ng-model="selectedStation" placeholder="{{'settings.pages.MAIN_STATION' | translate}}">
-                <md-option ng-value="station" ng-repeat="station in app.stations">{{ station.name }}</md-option>
+                <md-option ng-value="station" ng-repeat="station in stations">{{ station.name }}</md-option>
               </md-select>
             </md-input-container>
           </div>

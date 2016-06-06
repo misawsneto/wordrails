@@ -6,6 +6,7 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
 	$scope.search = {'tab': 'publications'}
 
 	$scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
+  $scope.stations = angular.copy($scope.app.stations);
 
 	$scope.publicationsCtrl = {
     'page': 0,

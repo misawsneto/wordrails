@@ -12,11 +12,15 @@ app.controller('PageBuilderListCtrl', ['$scope', '$rootScope', '$log', '$timeout
 				station.pages = response.pages;
 				$rootScope.$broadcast('masonry.reload');
 			})
+
+			if(station.main)
+				$scope.selectedStation = station;
 		})
 
 		$timeout(function(){
 			$scope.showHomePage = true;
 		})
+
 
 		// var i = 0;
 		// for(;i < 6;i++){

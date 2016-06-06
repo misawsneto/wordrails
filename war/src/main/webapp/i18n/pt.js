@@ -143,6 +143,11 @@
 	    "NEW_POST" : "Nova publicação"
 	  }
 	},
+	"search": {
+		"VIEW_PROFILE": "Visitar perfil",
+		"VIEW_STATION": "Visualizar estação",
+		"VIEW_CATEGORY": "Visualizar categoria"
+	},
 	"settings":{
 		"dashboard":{
 			"NO_SCHEDULED": "Não há publicações agendadas",
@@ -211,7 +216,7 @@
 			"ALERT": "Mensagem de alerta!"
 		},
 		"pages":{
-			"MAIN_STATION": "Estação proncipal",
+			"MAIN_STATION": "Estação principal",
 			"HOME_PAGE": "Página principal",
 			"CATEGORY_PAGES": "Páginas de categorias",
 			"ADD_SECTION": "Adicionar seção",
@@ -255,7 +260,7 @@
 				"ATTACH_POST": "Anexar outras publicações",
 				"NOTIFY_STATION_USERS": "Notificar usuários",
 				"PUBLICATION_MSG": "O conteúdo será publicado ao clicar em Publicar.",
-				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada minuto uma vez que o título, conteúdo, estações e categorias sejam inseridos. As versões da publicação pode ser visualizado no menu \"Opções de publicação\"."
+				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada minuto uma vez que o título, conteúdo, estações e categorias sejam inseridos. Para desabilitar esta função, verifique a opção \"Salvar automaticamente\" em \"Opções de publicação\". As versões da publicação pode ser visualizado no menu \"Opções de publicação\"."
 			},
 			"ACTIVATE_DEACTIVATE_HEADING": "Ativar/Desativar chapéu",
 			"ACTIVATE_DEACTIVATE_SUBTITLE": "Ativar/Desativar subtítulo",
