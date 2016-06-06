@@ -68,7 +68,7 @@
                               </a> -->
                               <ul class="list-inline no-margin text-right">
                                 <li class="dropdown">
-                                  <md-button class="md-icon-button m-t md-warn" aria-label="More" ng-click="app.showDeleteCommentDialog({id: comment.postId})">
+                                  <md-button class="md-icon-button m-t md-warn" aria-label="More" ng-click="showDeleteCommentsDialog($event, [comment])">
                                     <i class="i-20 mdi2-delete ng-scope"></i>
                                   </md-button>
                                   <md-button class="md-icon-button m-t" aria-label="More 2" ng-click="app.showComments({id: comment.postId})">
@@ -115,149 +115,33 @@
   </div>
 </div>
 
-<md-button aria-label="menu" ng-if="comments && comments.length > 0" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-class="{'zoomIn': getSelectedComments().length > 0, 'zoomOut': getSelectedComments().length == 0}">
+<md-button aria-label="menu" ng-if="comments && comments.length > 0" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-class="{'zoomIn': getSelectedComments().length > 0, 'zoomOut': getSelectedComments().length == 0}" ng-click="showDeleteCommentsDialog($event, getSelectedCommentsObjects())">
   <md-tooltip md-direction="top">
     {{'titles.REMOVE_ALL' | translate}}
   </md-tooltip>
   <i class="mdi2-delete i-24"></i>
 </md-button>
 
-<script type="text/ng-template" id="edit-person-dialog.html">
-  <md-dialog-content layout="row" layout-wrap>
-    <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center" layout="column">
-      <div class="w-lg">
-
-        <div class="text-center p w-full" translate="titles.EDIT_PROFILE"></div>
-
-        <div class="text-center p p-t-lg w-full m-t-lg">
-          <!-- <i class="mdi mdi2-account text-4x"></i> -->
-          <div class="md-whiteframe-z1 m-t m-l user-avatar rounded w-96 bg-white inline pos-rlt md-primary-default background text-center bg-cover" preload-bg-image="{{app.getImageLink(editingPerson, 'medium')}}" bstyle="{'background-image': 'url(  {{editingPerson | userImage: 'medium'}} )'}">
-            <i ng-if="!editingPerson.imageHash" class="mdi2-account i-60" style="top: 16%;position: relative;"></i>
-            <!-- image profile upload -->
-            <div class="profile-image-button rounded o-f-h w-96 text-center pos-abt top-0" style="background-color: rgba(0,0,0,0.7)">
-              <i class="mdi2-pencil i-48 text-white image-edit" style="opacity: 0.92; position: relative; top: 24%"></i>
-              <input class="image-upload" style="height: 96px;" type="file" nv-file-select="" uploader="personImageUploader" name="contents" accept="image/*">
-            </div>
-            <!-- /image profile upload -->
-          </div>
+<script type="text/ng-template" id="delete-comments-dialog.html">
+  <md-dialog aria-label="change action">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+        <div ng-if="commentsToDelete && commentsToDelete.length == 1" class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{'settings.comment.REMOVE_COMMENT_MSG' | translate}}
+        </div>
+        <div ng-if="commentsToDelete && commentsToDelete.length > 1" class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{'settings.comment.REMOVE_SELECTED_COMMENTS_MSG' | translate}}
         </div>
 
-        <div class="pos-abt bottom-0 text-center w-full p-t p-b">
-          <md-button ng-click="cancel()" class="m-0">
-            {{'titles.CANCEL' | translate}}
+        <div class="text-center">
+          <md-button ng-click="deleteComments(); disabled = true;" ng-disabled="disabled">
+            {{'titles.YES' | translate}}
           </md-button>
-          <md-button ng-click="saveProfile(editingPerson)" ng-disabled="disabled" class="m-0">
-            {{'titles.SAVE' | translate}}
+          <md-button ng-click="cancel()">
+            {{'titles.NO' | translate}}
           </md-button>
-        </div>
+        <div>
       </div>
-    </md-toolbar>
-    <div class="p w-x col-400 scrollable md-background-hue-1 background">
-        <div class="pos-rlt p">
-          <div ng-if="personImageUploader" ng-style="{'background-image': 'url(  {{editingPerson | coverImage: 'medium'}} )'}" style="margin: -32px -32px 32px -32px" class="hidden-folded bg-cover m-b-md md-whiteframe-z1">
-            <div class="m-b-xxl p-lg"></div>
-            <div class="p-v-sm p-h black-grad m-t text-white">
-              <div class="block" style="opacity:0.92">
-                <span class="block font-bold">{{editingPerson.name}}</span>
-                <span class="text-sm">{{editingPerson.email}}</span>
-              </div>
-            </div>
-          </div>
-          <div class="">
-          <md-input-container class="w-xxl m-b-0">
-            <label for="testInput">{{'settings.profile.NAME' | translate}}</label>
-            <input type="text" ng-model="editingPerson.name" md-autofocus>
-          </md-input-container>
-          </div>
-          <div class="">
-          <md-input-container class="w-xxl m-b-0">
-            <label for="testInput">{{'settings.profile.USERNAME' | translate}}</label>
-            <input type="text" ng-model="editingPerson.username" >
-          </md-input-container>
-          </div>
-          <div class="">
-          <md-input-container class="w-xxl m-b-0">
-            <label for="testInput">{{'settings.profile.EMAIL' | translate}}</label>
-            <input type="text" ng-model="editingPerson.email" >
-          </md-input-container>
-          </div>
-          <div class="">
-          </div>
-          <div class="">
-          <md-input-container class="w-xxl m-b-0">
-            <label for="testInput">{{'settings.profile.BIOGRAPHY' | translate}}</label>
-            <textarea type="text" columns="1" ng-model="editingPerson.bio" ></textarea>
-          </md-input-container>
-          </div>
-        </div>
-      </div>
-    </div>
-  </md-dialog-content>
+    </md-content>
+  </md-dialog>
 </script>
-
-<script type="text/ng-template" id="add-profile-dialog.html">
-  <md-dialog-content layout="row" layout-wrap>
-    <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center" layout="column">
-      <div class="w-lg">
-
-        <div class="text-center p w-full" translate="titles.ADD_PERSON"></div>
-
-        <div class="text-center p p-t-lg w-full m-t-lg">
-          <i class="mdi mdi2-account text-4x"></i>
-        </div>
-
-        <div class="pos-abt bottom-0 text-center w-full p-t p-b">
-          <md-button ng-click="cancel()" class="m-0">
-            {{'titles.CANCEL' | translate}}
-          </md-button>
-          <md-button ng-click="createPerson(addingPerson)" ng-disabled="disabled" class="m-0">
-            {{'titles.SAVE' | translate}}
-          </md-button>
-        </div>
-      </div>
-    </md-toolbar>
-    <div class="p w-x col-400 scrollable md-background-hue-1 background">
-        <div class="pos-rlt p">
-          <div class="">
-          <md-input-container class="w-xxl m-b-0">
-            <label for="testInput">{{'settings.profile.NAME' | translate}}</label>
-            <input type="text" id="testInput" ng-model="addingPerson.name" md-autofocus>
-          </md-input-container>
-          </div>
-          <div class="">
-          <md-input-container class="w-xxl m-b-0">
-            <label for="testInput">{{'settings.profile.USERNAME' | translate}}</label>
-            <input type="text" id="testInput" ng-model="addingPerson.username" >
-          </md-input-container>
-          </div>
-          <div class="">
-          <md-input-container class="w-xxl m-b-0">
-            <label for="testInput">{{'settings.profile.EMAIL' | translate}}</label>
-            <input type="text" id="testInput" ng-model="addingPerson.email" >
-          </md-input-container>
-          </div>
-          <div class="">
-          <md-input-container class="w-xxl m-b-0">
-            <label for="testInput">{{'settings.profile.PASSWORD' | translate}}</label>
-            <input type="password" id="testInput" ng-model="addingPerson.password" >
-            <small class="text-xs">{{'settings.users.OPTIONAL_PASSWORD' | translate}}</small>
-          </md-input-container>
-          </div>
-          <div class="">
-          <md-input-container class="w-xxl m-b-0">
-            <label for="testInput">{{'settings.profile.CONFIRM_PASSWORD' | translate}}</label>
-            <input type="password" id="testInput" ng-model="addingPerson.passwordConfirm" >
-          </md-input-container>
-          </div>
-          <div class="">
-          <md-input-container class="w-xxl m-b-0">
-            <label for="testInput">{{'settings.profile.BIOGRAPHY' | translate}}</label>
-            <textarea type="text" id="testInput" columns="1" ng-model="addingPerson.bio"></textarea>
-          </md-input-container>
-          </div>
-        </div>
-      </div>
-    </div>
-  </md-dialog-content>
-</script>
-

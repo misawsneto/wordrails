@@ -248,6 +248,10 @@
 			"OPTIONAL_PASSWORD": "A senha é opcional e caso não fornecida será gerado automáticamente e enviada por email.",
 			"INVITATIONS_SENT": "Convites enviados com sucesso"
 		},
+		"comment":{
+			"REMOVE_COMMENT_MSG": "Tem certeza que deseja remover este comentário?",
+			"REMOVE_SELECTED_COMMENTS_MSG": "Tem certeza que deseja remover os comentários selecionados?"
+		},
 		"post": {
 			"menu":{
 				"INFO": "Informações",

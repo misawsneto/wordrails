@@ -342,6 +342,12 @@ var trix = angular.module('trix', [])
         return \$http.get(_config.url + "/api/v2/comments/search", config)
     }
 
+    this.deleteComments = function(comments) {
+        var config = {};
+        config.headers = {"Content-Type": "application/json"}
+        return \$http.put("/api/v2/comments", comments, config);
+    }
+
 	this.searchPosts = function(query,authors,stations,state,from,until,categories,tags,page,size,order,
     	embed, snippet){
         var config = {

@@ -115,11 +115,20 @@ app.controller('SettingsCommentsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 
   // -------- /toggle all
   
-  $scope.getSelectedComments = function(type){
+  $scope.getSelectedComments = function(){
     var ret = []
       $scope.comments.forEach(function(comment, index){
         if(comment.selected)
           ret.push(comment.id);
+      });
+      return ret;
+  }
+
+  $scope.getSelectedCommentsObjects = function(){
+    var ret = []
+      $scope.comments.forEach(function(comment, index){
+        if(comment.selected)
+          ret.push(comment);
       });
       return ret;
   }
@@ -130,6 +139,47 @@ app.controller('SettingsCommentsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
     $scope.separatorKeys = []
     for(prop in $mdConstant.KEY_CODE){
       $scope.separatorKeys.push($mdConstant.KEY_CODE[prop]);
+    }
+
+    $scope.commentsToDelete = null;
+    $scope.showDeleteCommentsDialog = function(event, commmets){
+      $scope.commentsToDelete = commmets;
+      $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'delete-comments-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+    }
+
+    $scope.deleteComments = function(){
+      var comments = $scope.commentsToDelete;
+      if($scope.commentsToDelete && $scope.commentsToDelete.length > 0){
+        trix.deleteComments(comments).success(function(){
+          for (var i = 0; i < $scope.comments.length; i++) {
+            for (var j = 0; j < comments.length; j++) {
+              if($scope.comments[i].id == comments[j].id)
+                $scope.comments.splice(i, 1);
+            }
+          }
+          $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+          $scope.disabled = false;
+          $mdDialog.cancel();
+        }).error(function(){
+          $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+          $scope.disabled = false;
+          $mdDialog.cancel();
+        })
+      }
     }
 
     settingsUsersCtrl = $scope;

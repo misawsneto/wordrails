@@ -11,14 +11,17 @@ import java.io.IOException;
 @NoArgsConstructor
 public class CommentResource extends AbstractResource implements CommentApi {
 
-
-
 	@Override
 	public void findPostCommentsOrderByDate(Integer postId) throws IOException {
 		forward();
 	}
 	@Override
 	public void postComment() throws IOException {
+		forward();
+	}
+
+	@Override
+	public void putComment(Integer id) throws IOException {
 		forward();
 	}
 }

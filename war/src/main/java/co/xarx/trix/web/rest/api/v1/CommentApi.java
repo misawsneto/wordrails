@@ -19,4 +19,9 @@ public interface CommentApi {
 	@POST
 	@Path("/")
 	void postComment() throws IOException;
+
+	@PUT
+	@Path("/{id}")
+	void putComment(@PathParam("id") Integer commentId) throws IOException;
+
 }

@@ -248,6 +248,10 @@
 			"OPTIONAL_PASSWORD": "Password is optional and if not provided a random password will be generated and sent via email.",
 			"INVITATIONS_SENT": "Invitations were sent"
 		},
+		"comment":{
+			"REMOVE_COMMENT_MSG": "Are you sure you want to permanatly delete this comment?",
+			"REMOVE_SELECTED_COMMENTS_MSG": "Are you sure you want to permanatly delete all selected comments?"
+		},
 		"post": {
 			"menu":{
 				"INFO": "Post informations",
