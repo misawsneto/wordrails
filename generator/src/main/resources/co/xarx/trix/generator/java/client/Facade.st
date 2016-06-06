@@ -551,19 +551,19 @@ public class $facade$ {
 	}
 
 	public BooleanResponse toggleBookmark(Integer postId){
-		return _facade.toggleBookmark(postId);
+		return _facade.toggleBookmark(postId, "");
 	}
 	
 	public void toggleBookmark(Integer postId, Callback<BooleanResponse> _callback){
-		_facade.toggleBookmark(postId, _callback);
+		_facade.toggleBookmark(postId, "", _callback);
 	}
 	
 	public BooleanResponse toggleRecommend(Integer postId){
-		return _facade.toggleRecommend(postId);
+		return _facade.toggleRecommend(postId, "");
 	}
 	
 	public void toggleRecommend(Integer postId, Callback<BooleanResponse> _callback){
-		_facade.toggleRecommend(postId, _callback);
+		_facade.toggleRecommend(postId, "", _callback);
 	}
 	
 	public Response putRegId(String regId, Integer networkId, Double lat, Double lng){
