@@ -190,8 +190,8 @@ public class StatisticsService {
 		postReadCounts = countPostreadByAuthor(personId);
 		commentsCounts = countCommentByAuthor(personId);
 		generalStatus.add(countTotals(personId, "nginx_access.authorId", nginxAccessIndex));
-		generalStatus.add(countTotals(personId, "comment.postAuthorId", "analytics"));
-		generalStatus.add(countTotals(personId, "recommend.postAuthorId", "analytics"));
+		generalStatus.add(countTotals(personId, "comment.postAuthorId", analyticsIndex));
+		generalStatus.add(countTotals(personId, "recommend.postAuthorId", analyticsIndex));
 
 		StatsData response = new StatsData();
 		response.dateStatsJson = makeHistogram(postReadCounts, commentsCounts, interval);
