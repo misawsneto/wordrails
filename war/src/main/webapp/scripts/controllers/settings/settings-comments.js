@@ -27,19 +27,25 @@ app.controller('SettingsCommentsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
       'allLoaded': false
     }
 
-    $scope.paginate = function(){
-    if(!$scope.loading && !$scope.commentsCtrl.allLoaded){
-      $scope.loading = true;
-
-      trix.searchComments($scope.searchQuery, null, null, null, null, null, $scope.commentsCtrl.page, 20, '-date', ['author', 'post']).success(function(response){
-        handleSuccess(response);
-        $scope.loading = false;
-      }).error(function(){
-        $scope.loading = false;
-        $scope.commentsCtrl.allLoaded = true;
-      })
+    $scope.resetPage = function(){
+      $scope.commentsCtrl.page = 0;
+      $scope.commentsCtrl.allLoaded = false;
+      $scope.comments = [];
     }
-  }
+
+    $scope.paginate = function(){
+      if(!$scope.loading && !$scope.commentsCtrl.allLoaded){
+        $scope.loading = true;
+
+        trix.searchComments($scope.searchQuery, null, null, null, null, null, $scope.commentsCtrl.page, 20, '-date', ['author', 'post']).success(function(response){
+          handleSuccess(response);
+          $scope.loading = false;
+        }).error(function(){
+          $scope.loading = false;
+          $scope.commentsCtrl.allLoaded = true;
+        })
+      }
+    }
 
   var handleSuccess = function(comments){
     if(comments && comments.length > 0){
