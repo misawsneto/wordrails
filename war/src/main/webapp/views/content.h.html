@@ -151,7 +151,7 @@
       <div class="md-primary-hue-1 background" style="min-height: 50px;">
       </div>
     </md-toolbar> -->
-    <md-content id="scroll-box" class="box-cell">
+    <md-content id="scroll-box" class="box-cell o-f-x-h">
       <div id="app-content" class="box-inner">
         <!-- <div id="view" class="clearfix md-whiteframe-z0 no-radius" ng-class="$state.current.data.theme ? $state.current.data.theme.primary : app.setting.theme.primary"> -->
           <!-- <div class="container m-v-md"> -->
@@ -161,7 +161,7 @@
           <!-- </div> -->
         <!-- </div> -->
         <main class="p-v-lg" ui-view></main>
-        <footer class="page-footer md-primary-hue-1 background" ng-if="!$state.includes('app.search')">
+        <footer class="page-footer md-primary-hue-1 background" ng-class="{'hide':$state.includes('app.search')}">
           <div class="container">
             <div class="row">
               <div class="col l6 s12">
@@ -444,7 +444,7 @@
           </div>
         </div>
         <div class="text-right">
-          <md-button ng-click="cancel()">{{'titles.CLOSE' | translate}}</md-button>
+          <md-button ui-sref="app.userprofile({'username': loadedPerson.username})">{{'search.VIEW_PROFILE' | translate}}</md-button>
         </div>
       </div>
   </md-dialog-content>

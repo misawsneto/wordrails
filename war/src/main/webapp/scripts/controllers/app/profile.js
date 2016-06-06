@@ -22,7 +22,7 @@ app.controller('ProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$stat
       $scope.loading = true;
 
       var page = getPage();
-      trix.searchPosts($scope.searchQuery, [$scope.person.id], null, 'published', null, null, null, null, page, 10, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response){
+      trix.searchPosts($scope.searchQuery, [$scope.person.id], null, 'published', null, null, null, null, page, 10, '-date', ['snippet', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response){
         handleSuccess(response);
         $scope.loading = false;
       }).error(function(){

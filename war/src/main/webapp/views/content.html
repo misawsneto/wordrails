@@ -317,7 +317,7 @@
           </div>
         </div>
         <div class="text-right">
-          <md-button ng-click="cancel()">{{'titles.CLOSE' | translate}}</md-button>
+          <md-button ui-sref="app.userprofile({'username': loadedPerson.username})">{{'search.VIEW_PROFILE' | translate}}</md-button>
         </div>
       </div>
   </md-dialog-content>
