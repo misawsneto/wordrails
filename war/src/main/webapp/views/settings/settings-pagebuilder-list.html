@@ -8,10 +8,16 @@
 
       <div class=" b-n no-padding">
         <div class="md-list-item-content p-sm w-full">
-          <div class="p-sm inline text-u-c font-500">{{'settings.pages.HOME_PAGE' | translate}}</div>
-          <md-button class="md-icon-button pull-right m-0" ui-sref="app.pagebuilder.header">
-            <i class="mdi mdi2-pencil i-16"></i>
-          </md-button>
+          <div class="p-sm font-500 text-lg">
+            <md-input-container class="w-full">
+              <md-tooltip md-direction="top">
+                {{'settings.pages.MAIN_STATION' | translate}}
+              </md-tooltip>
+              <md-select ng-model="selectedStation" placeholder="{{'settings.pages.MAIN_STATION' | translate}}">
+                <md-option ng-value="station" ng-repeat="station in app.stations">{{ station.name }}</md-option>
+              </md-select>
+            </md-input-container>
+          </div>
         </div>
       </div>
 

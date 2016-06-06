@@ -1,9 +1,9 @@
 {
 	"name": "videogular-themes-default",
-	"version": "1.4.4",
+	"version": "1.4.3",
 	"main": "videogular.css",
 	"dependencies": {
-		"videogular": "~1.4.4"
+		"videogular": "~1.4.3"
 	},
 	"devDependencies": {
 		"grunt": "~0.4.1",

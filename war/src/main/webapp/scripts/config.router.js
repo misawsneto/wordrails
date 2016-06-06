@@ -1102,7 +1102,7 @@ angular.module('app')
                   document.location.href = '/';
                   window.console && console.error('user is not owner')
                 }else if(initData.person.username === $stateParams.username){
-                  deferred.resolve(initData.person.bookmarkPosts)
+                  deferred.resolve(initData.person)
                 }else{
                   document.location.href = '/404';
                 }
@@ -1120,6 +1120,7 @@ angular.module('app')
 
               person: function($stateParams, $q, trix){
                 var deferred = $q.defer();
+                /*
                 if(initData && initData.person.id == 0){
                   document.location.href = '/access/signin';
                   window.console && console.error('user is not logged')
@@ -1131,6 +1132,12 @@ angular.module('app')
                 }else{
                   document.location.href = '/404';
                 }
+                */
+                trix.findByUsername($stateParams.username, 'personProjection').success(function(response){
+                  deferred.resolve(response)
+                }).error(function(){
+                  document.location.href = '/404';
+                });
                 return deferred.promise;
               },
               deps:load(['wu.masonry', '/scripts/controllers/app/profile.js']).deps

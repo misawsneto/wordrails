@@ -38,7 +38,7 @@
 
             <div ng-class="{'p-l-sm p-r-xxl m-r-lg': $mdMedia('gt-sm')}">
 
-              <div class="m-t-lg search-with-filter m-r-sm m-l-sm p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
+              <div ng-if="search.tab == 'publications'" class="m-t-lg search-with-filter m-r-sm m-l-sm p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
                 <form ng-submit="doSearch()">
                   <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t" ng-model="query">
                 </form>

@@ -211,6 +211,7 @@
 			"ALERT": "Mensagem de alerta!"
 		},
 		"pages":{
+			"MAIN_STATION": "Estação proncipal",
 			"HOME_PAGE": "Página principal",
 			"CATEGORY_PAGES": "Páginas de categorias",
 			"ADD_SECTION": "Adicionar seção",
