@@ -872,7 +872,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.restoreRevision = function(post){
 		$scope.app.showLoadingProgress();
 		$scope.app.editingPost = post;
-		$scope.loadPostData();
+		$scope.loadPostData(true);
 		$timeout(function(){
 			$mdDialog.cancel();
 		},2000)
@@ -892,7 +892,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}
 	};
 
-	$scope.loadPostData = function(){
+	$scope.loadPostData = function(lockContent){
 		$scope.getStationFromPost();
 		if($scope.app.editingPost.categories && $scope.app.editingPost.categories.length)
 			$scope.app.editingPost.terms = $scope.app.editingPost.categories;
@@ -910,7 +910,10 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.useHeading = $scope.app.editingPost.topper ? true:false
 		$scope.useSubheading = $scope.app.editingPost.subheading ? true:false
 		$scope.tags = angular.copy($scope.app.editingPost.tags);
-		$scope.app.postObjectChanged = false;
+		if(!lockContent)
+			$timeout(function(){
+				$scope.app.postObjectChanged = false;
+			}, 1000)
 	}
 
 	// --- mock and test

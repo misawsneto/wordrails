@@ -61,12 +61,12 @@ public class PostData implements Serializable, Identifiable {
 	private Double lat;
 	private Double lng;
 
-	private int readsCount = 0;
-	private int bookmarksCount = 0;
-	private int recommendsCount = 0;
-	private int commentsCount = 0;
+	private Integer readsCount = 0;
+	private Integer bookmarksCount = 0;
+	private Integer recommendsCount = 0;
+	private Integer commentsCount = 0;
 
-	private int readTime;
+	private Integer readTime;
 
 	private String externalVideoUrl;
 
