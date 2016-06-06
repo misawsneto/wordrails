@@ -9,7 +9,6 @@ import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.AuditService;
-import co.xarx.trix.services.ESStartupIndexerService;
 import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.SchedulerService;
 import co.xarx.trix.services.post.PostService;
@@ -60,16 +59,28 @@ public class PostEventHandler {
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
 		Integer stationId = post.getStation().getId();
 
-		boolean hasPermissionToCreate = permissionEvaluator.hasPermission(SecurityContextHolder.getContext()
+		boolean hasPermissionToWrite = permissionEvaluator.hasPermission(SecurityContextHolder.getContext()
 				.getAuthentication(), stationId, Station
-				.class.getName(), new Permission[]{Permissions.CREATE, Permissions.ADMINISTRATION});
+				.class.getName(), new Permission[]{Permissions.WRITE, Permissions.ADMINISTRATION});
 
-		if(!hasPermissionToCreate) {
+		if(!hasPermissionToWrite) {
 			boolean hasPermissionToRead = permissionEvaluator.hasPermission(SecurityContextHolder.getContext()
 					.getAuthentication(), stationId, Station
 					.class.getName(), Permissions.READ);
 			Station station = stationRepository.findOne(stationId);
 			boolean canWrite = station.isWritable() && hasPermissionToRead;
+
+			if (!canWrite){
+				boolean hasPermissionToCreate = permissionEvaluator.hasPermission(SecurityContextHolder.getContext()
+						.getAuthentication(), stationId, Station
+						.class.getName(), Permissions.CREATE);
+
+				if(hasPermissionToCreate) {
+					post.setState(Post.STATE_UNPUBLISHED);
+					canWrite = true;
+				}
+			}
+
 			if(!canWrite)
 				throw new AccessDeniedException("No permission to create");
 		}
