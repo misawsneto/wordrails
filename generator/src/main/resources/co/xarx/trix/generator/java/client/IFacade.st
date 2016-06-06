@@ -146,16 +146,16 @@ interface I$facade$ {
     @Query("order") List<String\> orders, @Query("embed") List<String\> embeds, @Query("snippet") String snippet, 
     Callback<ContentResponse<List<PostData\>\>\> _callback);
 
-	@GET("/bookmarks/searchBookmarks")
+	@GET("/v2/bookmarks/search")
 	ContentResponse<List<PostView\>\> searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size);
 	
-	@GET("/bookmarks/searchBookmarks")
+	@GET("/v2/bookmarks/search")
 	void searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
-	@GET("/recommends/searchRecommends")
+	@GET("/v2/recommends/search")
 	ContentResponse<List<PostView\>\> searchRecommends(@Query("query") String query, @Query("page") int page, @Query("size") int size);
 	
-	@GET("/recommends/searchRecommends")
+	@GET("/v2/recommends/search")
 	void searchRecommends(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
 	@GET("/notifications/searchNotifications")
@@ -251,21 +251,17 @@ interface I$facade$ {
 	@GET("/posts/{postId}/body")
 	void getPostBody(@Path("postId") Integer postId, Callback<StringResponse> _callback);
 
-	@PUT("/bookmarks/toggleBookmark")
-	@FormUrlEncoded
-	BooleanResponse toggleBookmark(@Field("postId") Integer postId);
+	@PUT("/v2/bookmarks/toggle/{postId}")
+	BooleanResponse toggleBookmark(@Path("postId") Integer postId, @Body String body);
 	
-	@PUT("/bookmarks/toggleBookmark")
-	@FormUrlEncoded
-	void toggleBookmark(@Field("postId") Integer postId, Callback<BooleanResponse> _callback);
+	@PUT("/v2/bookmarks/toggle/{postId}")
+	void toggleBookmark(@Path("postId") Integer postId, @Body String body, Callback<BooleanResponse> _callback);
 	
-	@PUT("/recommends/toggleRecommend")
-	@FormUrlEncoded
-	BooleanResponse toggleRecommend(@Field("postId") Integer postId);
+	@PUT("/v2/recommends/toggle/{postId}")
+	BooleanResponse toggleRecommend(@Path("postId") Integer postId, @Body String body);
 	
-	@PUT("/recommends/toggleRecommend")
-	@FormUrlEncoded
-	void toggleRecommend(@Field("postId") Integer postId, Callback<BooleanResponse> _callback);
+	@PUT("/v2/recommends/toggle/{postId}")
+	void toggleRecommend(@Path("postId") Integer postId, @Body String body, Callback<BooleanResponse> _callback);
 	
 	@PUT("/persons/me/regId")
 	@FormUrlEncoded
