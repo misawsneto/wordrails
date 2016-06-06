@@ -575,25 +575,25 @@
                   </md-content>
                 </md-tab>
                 <md-tab label="{{'settings.post.REVISIONS' | translate}}">
-                	<md-list-item class="md-2-line" ng-repeat="revision in revisions">
+                	<md-list-item class="md-2-line block" ng-repeat="revision in revisions" style="padding-top: 16px">
 					          <!-- <i class="mdi mdi2-phone i-20"></i> -->
 					          <!--<img ng-src="{{phone.options.face}}?25" class="md-avatar"/>-->
-					          <div class="md-list-item-text" >
-					            <h4 class="clear text-ellipsis">
-					            	<span class="font-bold">#{{revision.index}}</span> 
-					            	<span class="p-l-xs p-r-xs">|</span> 
-					            	<span>{{app.getLocalTime(revision.date)}}{{app.getSecondsOnly(revision.date)}}</span>
-				            	</h4>
-					            <p class="clear text-ellipsis"> {{revision.payload.title}} </p>
-					          </div>
-					          <md-button class="md-secondary md-icon-button" aria-label="call" ng-click="restoreRevision(revision.payload)">
-					          	<md-tooltip md-direction="bottom">
-												{{'settings.post.SHOW_VERSION' | translate}}
-					          	</md-tooltip>
-					            <i class="mdi mdi2-backup-restore i-20"></i>
-					          </md-button>
-					          <md-divider></md-divider>
-					        </md-list-item>
+			          <div class="md-list-item-text" style="margin-right:40px;">
+			            <h4 class="clear text-ellipsis">
+			            	<span class="font-bold">#{{revision.index}}</span> 
+			            	<span class="p-l-xs p-r-xs">|</span> 
+			            	<span>{{app.getLocalTime(revision.date)}}{{app.getSecondsOnly(revision.date)}}</span>
+		            	</h4>
+			            <p class="clear text-ellipsis"> {{revision.payload.title}} </p>
+			          </div>
+			          <md-button class="md-secondary md-icon-button" aria-label="call" ng-click="restoreRevision(revision.payload)">
+			          	<md-tooltip md-direction="bottom">
+										{{'settings.post.SHOW_VERSION' | translate}}
+			          	</md-tooltip>
+			            <i class="mdi mdi2-backup-restore i-20"></i>
+			          </md-button>
+			          <md-divider></md-divider>
+			        </md-list-item>
                 </md-tab>
               </md-tabs>
 
