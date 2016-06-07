@@ -252,7 +252,7 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 		googleAppID: $scope.network.googleAppID,
 		googleAppSecret: $scope.network.facebookAppSecret
 	};
-	trix.getAuthCredentials().success(function(response){
+	trix.authCredentials().success(function(response){
 		$scope.authCredentials = response;
 		if(!$scope.authCredentials)
 			$scope.authCredentials = {};

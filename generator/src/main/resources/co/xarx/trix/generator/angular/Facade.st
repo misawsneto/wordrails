@@ -390,6 +390,10 @@ var trix = angular.module('trix', [])
 	  return \$http.get(_config.url + "/api/bookmarks/searchBookmarks", config)
 	}
 
+	this.authCredentials = function() {
+        return \$http.get(_config.url + "/api/v2/auth/social/credentials")
+    }
+
 	this.searchNotifications = function(query, _page, _size) {
 		var config = {
 		"params": {
