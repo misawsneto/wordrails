@@ -114,6 +114,13 @@
   </div>
 </div>
 
-<div aria-label="menu" class="pos-fix bottom-0 right-0 m-b-xl animated" style="margin-right: 60px" ng-click="scrollToTop();" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}">
+<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}" ng-click="scrollToTop();">
+  <!-- <md-tooltip md-direction="top">
+    {{'titles.REMOVE_ALL' | translate}}
+  </md-tooltip> -->
+  <i class="mdi2-chevron-up i-32"></i>
+</md-button>
+
+<!--<div aria-label="menu" class="pos-fix bottom-0 right-0 m-b-xl animated" style="margin-right: 60px" ng-click="scrollToTop();" >
   <i class="mdi2-chevron-double-up i-32"></i>
-</div>
+</div>-->

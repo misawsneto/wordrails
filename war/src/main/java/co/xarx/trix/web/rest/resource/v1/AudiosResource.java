@@ -3,7 +3,7 @@ package co.xarx.trix.web.rest.resource.v1;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
-import co.xarx.trix.web.rest.api.v1.VideosApi;
+import co.xarx.trix.web.rest.api.v1.AudiosApi;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,23 +12,23 @@ import java.io.IOException;
 
 @Component
 @NoArgsConstructor
-public class VideosResource extends AbstractResource implements VideosApi {
+public class AudiosResource extends AbstractResource implements AudiosApi {
 
 	private AuthService authService;
 	private MobileService mobileService;
 
 	@Override
-	public void getVideo(int videoId) throws ServletException, IOException {
+	public void getAudio(int audioId) throws ServletException, IOException {
 		forward();
 	}
 
 	@Override
-	public void findVideosOrderByDate() throws ServletException, IOException {
+	public void findAudiosOrderByDate() throws ServletException, IOException {
 		forward();
 	}
 
 	@Override
-	public void postVideo() throws ServletException, IOException {
+	public void postAudio() throws ServletException, IOException {
 		forward();
 	}
 }

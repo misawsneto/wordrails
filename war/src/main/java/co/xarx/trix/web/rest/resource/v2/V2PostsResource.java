@@ -10,6 +10,7 @@ import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.util.RestUtil;
+import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2PostsApi;
 import com.google.common.collect.Sets;
@@ -64,7 +65,13 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 //		List<PostData> data = getPostDatas(posts);
 		List<PostData> data = postSearchService.searchData(params, page, size);
 
-		Set<String> postEmbeds = Sets.newHashSet("video", "image", "audio", "author", "categories", "body", "snippet");
+		if(embeds.contains("snippet")){
+			for (PostData post : data) {
+				post.setSnippet(StringUtil.simpleSnippet(post.getBody()));
+			}
+		}
+
+		Set<String> postEmbeds = Sets.newHashSet("video", "image", "audio", "author", "categories", "body");
 
 		super.removeNotEmbeddedData(embeds, data, PostData.class, postEmbeds);
 

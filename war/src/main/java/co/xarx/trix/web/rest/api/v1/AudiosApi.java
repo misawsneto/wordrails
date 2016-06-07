@@ -8,21 +8,21 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
-@Path("/videos")
+@Path("/audios")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public interface VideosApi {
+public interface AudiosApi {
 
 	@GET
 	@Path("/{id:\\d+}")
-	void getVideo(@PathParam("id") int videoId) throws ServletException, IOException;
+	void getAudio(@PathParam("id") int audioId) throws ServletException, IOException;
 
 	@GET
-	@Path("/search/findVideosOrderByDate")
-	void findVideosOrderByDate() throws ServletException, IOException;
+	@Path("/search/findAudiosOrderByDate")
+	void findAudiosOrderByDate() throws ServletException, IOException;
 
 	@POST
 	@Path("/")
-	void postVideo() throws ServletException, IOException;
+	void postAudio() throws ServletException, IOException;
 }
