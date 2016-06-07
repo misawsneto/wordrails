@@ -8856,3 +8856,20 @@ button,
 .text-u-l-hover:hover {
   text-decoration: underline;
 }
+
+#user-permissions-dialog md-content > div {
+  width: 400px;
+  max-height: 500px;
+  min-height: 400px;
+  overflow: auto;
+}
+
+#user-permissions-dialog .station-permissions li {
+  display: inline-block;
+}
+
+.stations-permissions-dialog-list {
+  max-height: 230px;
+  overflow: auto;
+  box-shadow: inset 0 0px 25px -10px rgba(0, 0, 0, 0.5);
+}

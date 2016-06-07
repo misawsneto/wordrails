@@ -194,20 +194,7 @@ angular.module('app')
           module: true,
           files: [
             // froala style
-            '/libs/angular/froala-wysiwyg-editor/css/froala_editor.min.css',
-            '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css',
-            // plugins styles
-            '/libs/angular/froala-wysiwyg-editor/css/plugins/char_counter.css',
-            '/libs/angular/froala-wysiwyg-editor/css/plugins/code_view.css',
-            '/libs/angular/froala-wysiwyg-editor/css/plugins/colors.css',
-            '/libs/angular/froala-wysiwyg-editor/css/plugins/emoticons.css',
-            '/libs/angular/froala-wysiwyg-editor/css/plugins/file.css',
-            '/libs/angular/froala-wysiwyg-editor/css/plugins/fullscreen.css',
-            '/libs/angular/froala-wysiwyg-editor/css/plugins/image_manager.css',
-            '/libs/angular/froala-wysiwyg-editor/css/plugins/image.css',
-            '/libs/angular/froala-wysiwyg-editor/css/plugins/line_breaker.css',
-            '/libs/angular/froala-wysiwyg-editor/css/plugins/table.css',
-            '/libs/angular/froala-wysiwyg-editor/css/plugins/video.css',
+            '/styles/froala.all.css',
             '/scripts/froala.all.js',
             '/libs/angular/angular-froala/src/angular-froala.js',
             '/libs/angular/angular-froala/src/froala-sanitize.js'
