@@ -51,14 +51,17 @@ public class StatisticsService {
 	private PersonPermissionService personPermissionService;
 	private PostRepository postRepository;
 	private CommentRepository commentRepository;
+	private String trixIndex;
 
 	private static int MONTH_INTERVAL = 30;
 	private static int WEEK_INTERVAL = 7;
 	private static String ACCESS_TYPE = "nginx_access";
 
 	@Autowired
-	public StatisticsService(Client client, MobileDeviceRepository mobileDeviceRepository, @Value("${elasticsearch.analyticsIndex}") String analyticsIndex, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, PublishedAppRepository appRepository, FileRepository fileRepository, PersonPermissionService personPermissionService, PostRepository postRepository, CommentRepository commentRepository){
+	public StatisticsService(Client client, MobileDeviceRepository mobileDeviceRepository, @Value("${elasticsearch.analyticsIndex}") String analyticsIndex, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, @Value("${spring.data.elasticsearch.index}") String trixIndex,
+							 PublishedAppRepository appRepository, FileRepository fileRepository, PersonPermissionService personPermissionService, PostRepository postRepository, CommentRepository commentRepository){
 		this.client = client;
+		this.trixIndex = trixIndex;
 		this.appRepository = appRepository;
 		this.fileRepository = fileRepository;
 		this.analyticsIndex = analyticsIndex;
@@ -164,8 +167,8 @@ public class StatisticsService {
 		postReadCounts = countPostReadByPost(postId);
 		commentsCounts = countCommentByPost(postId);
 		generalStatus.add(countTotals(postId, "nginx_access.postId", nginxAccessIndex));
-		generalStatus.add(countTotals(postId, "comment.postId", "analytics"));
-		generalStatus.add(countTotals(postId, "recommend.postId", "analytics"));
+		generalStatus.add(countTotals(postId, "comment.postId", analyticsIndex));
+		generalStatus.add(countTotals(postId, "recommend.postId", analyticsIndex));
 
 		TreeMap<Long, ReadsCommentsRecommendsCountData> stats = makeHistogram(postReadCounts, commentsCounts, interval);
 
