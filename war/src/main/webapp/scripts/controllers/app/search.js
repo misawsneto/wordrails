@@ -1,6 +1,6 @@
 app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$interval', '$mdSidenav', '$translate', '$filter', '$localStorage',
 					function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $interval, $mdSidenav, $translate, $filter, $localStorage){
-	$scope.query = $state.params.q;
+	$scope.searchQuery = angular.copy($state.params.q);
 	$scope.app.search.show=false;
 
 	$scope.search = {'tab': 'publications'}
@@ -26,7 +26,7 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
       var page = getPage();
       $scope.topTagsObj = null;
     	$scope.topTags = null;
-      trix.searchPosts($scope.query, null, null, 'published', null, null, null, null, page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response){
+      trix.searchPosts($scope.searchQuery, null, null, 'published', null, null, null, null, page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response){
         handleSuccess(response);
         $scope.loading = false;
       }).error(function(){
@@ -58,7 +58,8 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
       return $scope.publicationsCtrl.page;
   }
 
-  $scope.doSearch = function(){
+  $scope.doSearch = function(query){
+    $scope.searchQuery = query;
     $scope.resetPage();
     $scope.paginate();
   }

@@ -1170,6 +1170,35 @@ angular.module('app')
       appDataCtrl = $scope;
 
       // --------- /generic bookmark
+  
+      $scope.app.loadingNotifications = false;
+      $scope.page = 0;
+      $scope.size = 20;
+      $scope.app.nnotifications = [
+        {
+          person: {
+            email:"contato@xarx.co",
+            id: 51,
+            imageHash:"bc3c2042f9c3474ccbebd9b8b40533c4",
+            imageLargeHash:"bc3c2042f9c3474ccbebd9b8b40533c4",
+            imageMediumHash:"481f14dff0ce2699429706515b9fb73b",
+            imageSmallHash:"3a10d25d632ec336bc31bc1e6f17f8e1",
+            name:"Demo",
+            username:"demo"
+          },
+          message: "Isso é um texto",
+          type: "POST_ADDED"
+        }
+      ] 
+      $scope.app.getNotification = function(){
+        $scope.app.loadingNotifications = true;
+        trix.searchNotifications(null, $scope.page, $scope.size).success(function(response){
+          $scope.app.loadingNotifications = false;
+
+        })
+      }
+
+      $scope.app.getNotification();
   }])
 
   .controller('AppNetworkCtrl', ['$scope', '$state', '$log', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdMedia', 'amMoment',

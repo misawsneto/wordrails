@@ -89,12 +89,33 @@ module.exports = {
     'libs/angular/froala-wysiwyg-editor/js/plugins/save.min.js',
     'libs/angular/froala-wysiwyg-editor/js/plugins/table.min.js',
     'libs/angular/froala-wysiwyg-editor/js/plugins/video.min.js',
+    //'libs/angular/froala-image-caption/js/plugins/image_caption.js',
     // langueges
     'libs/angular/froala-wysiwyg-editor/js/languages/en_gb.js',
     'libs/angular/froala-wysiwyg-editor/js/languages/pt_br.js',
     ],
     // dest:'angular/scripts/app.src.js'
     dest:'scripts/froala.all.js'
+  },
+  froalacss:{
+    src:[
+      'libs/angular/froala-wysiwyg-editor/css/froala_editor.min.css',
+      'libs/angular/froala-wysiwyg-editor/css/froala_style.min.css',
+              // plugins styles
+      'libs/angular/froala-wysiwyg-editor/css/plugins/char_counter.css',
+      'libs/angular/froala-wysiwyg-editor/css/plugins/code_view.css',
+      'libs/angular/froala-wysiwyg-editor/css/plugins/colors.css',
+      'libs/angular/froala-wysiwyg-editor/css/plugins/emoticons.css',
+      'libs/angular/froala-wysiwyg-editor/css/plugins/file.css',
+      'libs/angular/froala-wysiwyg-editor/css/plugins/fullscreen.css',
+      'libs/angular/froala-wysiwyg-editor/css/plugins/image_manager.css',
+      'libs/angular/froala-wysiwyg-editor/css/plugins/image.css',
+      'libs/angular/froala-wysiwyg-editor/css/plugins/line_breaker.css',
+      'libs/angular/froala-wysiwyg-editor/css/plugins/table.css',
+      'libs/angular/froala-wysiwyg-editor/css/plugins/video.css',
+      //'libs/angular/froala-image-caption/css/image_caption.css'
+      ],
+    dest:'styles/froala.all.css'  
   },
   masonry: {
     src:[

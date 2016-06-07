@@ -1,15 +1,9 @@
-<div class="md-whiteframe-z2 block-800 m-auto md-primary-hue-1 background bg-cover pos-rlt" ng-style="{'background-image': 'url(' + app.coverImageMedium + ')', 'width': '100%', 'height': '50%', 'min-height': '250px', 'margin-top': '-32px', 'background-position': '50% 50%'}">
+<div class="md-whiteframe-z2 block-800 m-auto md-primary-hue-1 background bg-cover pos-rlt" ng-style="{'background-image': 'url(  {{person | coverImage: 'medium'}} )', 'width': '100%', 'height': '50%', 'min-height': '250px', 'margin-top': '-32px', 'background-position': '50% 50%'}">
 
   <!-- headshot -->
   <div class="bg-white rounded m-t-md m-l-md inline md-whiteframe-z1" style="width: 128px; height: 128px;">
-    <div class="m-xs user-avatar rounded w-120 bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageMedium + ')', 'background-position': '50% 50%'}">
-      <i ng-if="!app.userImageMedium" class="mdi2-account i-60" style="top: 24%;position: relative;"></i>
-      <!-- image profile upload -->
-      <div class="profile-image-button rounded o-f-h w-120 text-center pos-abt top-0" style="background-color: rgba(0,0,0,0.7)">
-        <i class="mdi2-pencil i-44 text-white image-edit" style="opacity: 0.92; position: relative; top: 32%"></i>
-        <input class="image-upload" style="height: 120px" type="file" nv-file-select="" uploader="app.userImageUploader" name="contents" accept="image/*">
-      </div>
-      <!-- /image profile upload -->
+    <div class="m-xs user-avatar rounded w-120 bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover" preload-bg-image="{{app.getImageLink(person, 'medium')}}" bstyle="{'background-image': 'url(  {{person | userImage: 'medium'}} )'}">
+      <i ng-if="!app.hasProfilePicture(person)" class="mdi2-account i-60" style="top: 24%;position: relative;"></i>
     </div>
   </div>
   <!-- /headshot -->
@@ -61,7 +55,7 @@
 
                         <span class="v-m p-v-sm m-r-sm">{{publication.recommendsCount}}</span>
 
-                        <md-button style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="bookmark ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': bookmark}" ng-click="showRemoveBookmarkDialog($event, publication)"><i class="mdi2-bookmark-remove i-20"></i></md-button>
+                        <md-button ng-click="app.toggleBookmark(publication)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(publication) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(publication)}"><i class="mdi2-bookmark i-16"></i></md-button>
                         
                         <md-button ng-click="app.showSharesPostDialog($event, publication)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
 
@@ -120,7 +114,13 @@
   </div>
 </div>
 
+<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}" ng-click="scrollToTop();">
+  <!-- <md-tooltip md-direction="top">
+    {{'titles.REMOVE_ALL' | translate}}
+  </md-tooltip> -->
+  <i class="mdi2-chevron-up i-32"></i>
+</md-button>
 
-<div aria-label="menu" class="pos-fix right-0 m-b-xl animated" style="bottom: 66px; margin-right: 60px" ng-click="scrollToTop();" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}">
+<!--<div aria-label="menu" class="pos-fix bottom-0 right-0 m-b-xl animated" style="margin-right: 60px" ng-click="scrollToTop();" >
   <i class="mdi2-chevron-double-up i-32"></i>
-</div>
+</div>-->

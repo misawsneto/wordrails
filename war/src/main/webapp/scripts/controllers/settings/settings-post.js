@@ -33,6 +33,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		// Set the image upload parameter.
         imageUploadParam: 'contents',
 
+        imageCaption: true,
+
         // Set the image upload URL.
         imageUploadURL: '/api/images/upload?imageType=POST',
 

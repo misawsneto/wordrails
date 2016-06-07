@@ -515,6 +515,24 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       })
     }
 
+    $scope.showBulkChangePermissions = function(){
+      $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'change-permissions-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+    }
+
     $scope.disabled = false;
     $scope.changePassword = function(){
 
