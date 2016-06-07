@@ -22,92 +22,92 @@
       <div class="col-lg-6 col-sm-6 col-xs-12 masonry-brick" ng-repeat="publication in publications">
         <!--  Vertical News Box -->
         <div class="news md-whiteframe-z1 vertical z-depth-1 card">
-            <div class="">
-              <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
-              ng-style="app.getImagesPerson(publication, publication.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(publication)}">
-                <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
-              </div>
-              <div class="inline p-t v-t font-500">
-              {{publication.authorName}}
-              </div>
-              <div class="inline p-t v-t pull-right p-r-sm text-sm" style="opacity: 0.6" am-time-ago="publication.date">
-              </div>
+          <div class="">
+            <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
+            ng-style="app.getImagesPerson(publication, publication.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(publication)}">
+              <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
             </div>
-            <!-- News Image -->
-            <div class="news-image o-f-h">
-                <div ng-if="app.hasImage(publication);" preload-bg-image="{{app.getImageLink(publication, 'medium')}}" class="zoom-hover h-full bg-cover" style="min-height: 230px;">
-                    <!-- <img class="responsive-img materialboxed" ng-src="{{publication | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
-                </div>
+            <div class="inline p-t v-t font-500">
+            {{publication.authorName}}
             </div>
-            <div class="text-left p-h-sm w-full z-index-2" >
-              <a target="_blank" ng-href="{{app.getCategoryLink(app.getStationById(publication.stationId).stationSlug, category.name)}}" class="badge m-t-sm p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in publication.categories">
-                {{category.name}}
-              </a>
+            <div class="inline p-t v-t pull-right p-r-sm text-sm" style="opacity: 0.6" am-time-ago="publication.date">
             </div>
-            <!-- News Description -->
-            <div class="news-description p-t p-b-sm p-h">
-                <div class="news-title" style="min-height: 66px"><a clamp="3"> {{::publication.title}} </a></div>
-                <div class="news-content"><p clamp="4">{{::publication.snippet}}</p></div>
-                <div class="news-comment-shares z-index-2">
-                    <md-divider class="m-b-sm m-t"></md-divider>
-                    <div class="p-b-xs">
-                        <md-button ng-click="app.toggleRecommend(publication)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(publication) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(publication)}"><i class="mdi2-heart i-16"></i></md-button>
+          </div>
+          <!-- News Image -->
+          <div class="news-image o-f-h">
+              <div ng-if="app.hasImage(publication);" preload-bg-image="{{app.getImageLink(publication, 'medium')}}" class="zoom-hover h-full bg-cover" style="min-height: 230px;">
+                  <!-- <img class="responsive-img materialboxed" ng-src="{{publication | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
+              </div>
+          </div>
+          <div class="text-left p-h-sm w-full z-index-2" >
+            <a target="_blank" ng-href="{{app.getCategoryLink(app.getStationById(publication.stationId).stationSlug, category.name)}}" class="badge m-t-sm p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in publication.categories">
+              {{category.name}}
+            </a>
+          </div>
+          <!-- News Description -->
+          <div class="news-description p-t p-b-sm p-h">
+              <div class="news-title" style="min-height: 66px"><a clamp="3"> {{::publication.title}} </a></div>
+              <div class="news-content"><p clamp="4">{{::publication.snippet}}</p></div>
+              <div class="news-comment-shares z-index-2">
+                  <md-divider class="m-b-sm m-t"></md-divider>
+                  <div class="p-b-xs">
+                      <md-button ng-click="app.toggleRecommend(publication)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(publication) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(publication)}"><i class="mdi2-heart i-16"></i></md-button>
 
-                        <span class="v-m p-v-sm m-r-sm">{{publication.recommendsCount}}</span>
+                      <span class="v-m p-v-sm m-r-sm">{{publication.recommendsCount}}</span>
 
-                        <md-button ng-click="app.toggleBookmark(publication)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(publication) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(publication)}"><i class="mdi2-bookmark i-16"></i></md-button>
-                        
-                        <md-button ng-click="app.showSharesPostDialog($event, publication)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+                      <md-button ng-click="app.toggleBookmark(publication)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(publication) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(publication)}"><i class="mdi2-bookmark i-16"></i></md-button>
+                      
+                      <md-button ng-click="app.showSharesPostDialog($event, publication)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
 
-                        <span class="pull-right v-m p-v-sm m-r-sm">{{publication.commentsCount}}</span>
-                        
-                        <md-button style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="app.loadComments(publication);"><i class="mdi2-comment i-16"></i></md-button>
-                    </div>
-                </div>
-                <div class="news-comment animated fadeInDown" ng-if="publication.showComments" style="margin:6px -16px -8px -16px;">
+                      <span class="pull-right v-m p-v-sm m-r-sm">{{publication.commentsCount}}</span>
+                      
+                      <md-button style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="app.loadComments(publication);"><i class="mdi2-comment i-16"></i></md-button>
+                  </div>
+              </div>
+              <div class="news-comment animated fadeInDown" ng-if="publication.showComments" style="margin:6px -16px -8px -16px;">
 
-                  <md-divider class=""></md-divider>
+                <md-divider class=""></md-divider>
 
-                  <div wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" id="comment-list-{{publication.id}}" class="comment-list h-m-200 o-f-a scroller" style="overflow-y: hidden; position: relative;">
-                    <ul infinite-scroll="publication.paginateComments(publication)" class="m-0" infinite-scroll-container="'#comment-list-' + publication.id" infinite-scroll-distance="1">
-                      <li ng-repeat="comment in publication.comments">
-                        <div class="p-sm pos-rlt">
-                          <div class="display-t-c inline p-h-xs">
-                            <div ng-style="app.getUserImage(comment.author, 'small', 'PROFILE_PICTURE', true)" style="height: 34px;" class="bg-cover img-responsive img-circle thumb-xs md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(comment.author)}">
-                              <i ng-if="!app.hasProfilePicture(comment.author)" style="line-height: 36px;" class="mdi2-account i-20"></i>
-                            </div>
-                          </div>
-                          <div class="p-l-sm display-t-c v-m inline text-sm w-full">
-                            <div class="p-h-sm text-right pull-right">
-                              <span am-time-ago="comment.date" class="text-xxs"></span>
-                            </div>
-                            <div class="text-base font-bold m-b-xs">{{comment.author.name}}</div>
-                            {{comment.body}}
+                <div wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" id="comment-list-{{publication.id}}" class="comment-list h-m-200 o-f-a scroller" style="overflow-y: hidden; position: relative;">
+                  <ul infinite-scroll="publication.paginateComments(publication)" class="m-0" infinite-scroll-container="'#comment-list-' + publication.id" infinite-scroll-distance="1">
+                    <li ng-repeat="comment in publication.comments">
+                      <div class="p-sm pos-rlt">
+                        <div class="display-t-c inline p-h-xs">
+                          <div ng-style="app.getUserImage(comment.author, 'small', 'PROFILE_PICTURE', true)" style="height: 34px;" class="bg-cover img-responsive img-circle thumb-xs md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(comment.author)}">
+                            <i ng-if="!app.hasProfilePicture(comment.author)" style="line-height: 36px;" class="mdi2-account i-20"></i>
                           </div>
                         </div>
-                        <md-divider style="margin-left: 60px;" ng-if="!$last" md-inset></md-divider>
-                      </li>
-                    </ul>
-                  </div>
-                    
-                  <md-divider ng-if="publication.comments && publication.comments.length" class=""></md-divider>
-
-                  <div class="p inline w-full">
-                    <div class="pull-left user-avatar rounded w-36 bg-white pos-rlt background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}" ng-class="{'md-primary-hue-1': !app.userImageSmall}">
-                      <i ng-if="!app.userImageSmall" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
-                    </div>
-
-                    <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-button not-trans m-0 md-icon-button pull-right md-accent-default background" ng-click="publication.postComment(publication, publication.newComment)" ng-disabled="!publication.newComment">
-                      <i class="mdi2-send i-16"></i>
-                    </md-button>
-                    <div class="m-l-xxl m-r-xxl"> 
-                      <textarea msd-elastic class="no-border p-t-sm" ng-keydown="reloadMasonry()" ng-model="publication.newComment" style="resize: none;" placeholder="{{'titles.COMMENT' | translate }}"></textarea>
-                    </div>
-                  </div>
-
+                        <div class="p-l-sm display-t-c v-m inline text-sm w-full">
+                          <div class="p-h-sm text-right pull-right">
+                            <span am-time-ago="comment.date" class="text-xxs"></span>
+                          </div>
+                          <div class="text-base font-bold m-b-xs">{{comment.author.name}}</div>
+                          {{comment.body}}
+                        </div>
+                      </div>
+                      <md-divider style="margin-left: 60px;" ng-if="!$last" md-inset></md-divider>
+                    </li>
+                  </ul>
                 </div>
-                <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="publication.loadingBar" md-mode="indeterminate"></md-progress-linear>
-            </div>
+                  
+                <md-divider ng-if="publication.comments && publication.comments.length" class=""></md-divider>
+
+                <div class="p inline w-full">
+                  <div class="pull-left user-avatar rounded w-36 bg-white pos-rlt background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}" ng-class="{'md-primary-hue-1': !app.userImageSmall}">
+                    <i ng-if="!app.userImageSmall" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
+                  </div>
+
+                  <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-button not-trans m-0 md-icon-button pull-right md-accent-default background" ng-click="publication.postComment(publication, publication.newComment)" ng-disabled="!publication.newComment">
+                    <i class="mdi2-send i-16"></i>
+                  </md-button>
+                  <div class="m-l-xxl m-r-xxl"> 
+                    <textarea msd-elastic class="no-border p-t-sm" ng-keydown="reloadMasonry()" ng-model="publication.newComment" style="resize: none;" placeholder="{{'titles.COMMENT' | translate }}"></textarea>
+                  </div>
+                </div>
+
+              </div>
+              <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="publication.loadingBar" md-mode="indeterminate"></md-progress-linear>
+          </div>
         </div>
       </div>
     </div>
