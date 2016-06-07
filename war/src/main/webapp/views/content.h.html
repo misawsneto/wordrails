@@ -49,14 +49,36 @@
     <!-- Common tools -->
     <ul class="nav nav-sm navbar-tool pull-right" ng-hide="$state.current.data.child">
       <li class="animated" ng-class="{'fadeIn': !app.search.show, 'fadeOut': app.search.show}">
-        <a md-ink-ripple ng-click="app.search.show = true; app.focusOnSearch">
+        <a md-ink-ripple ng-click="app.search.show = true; app.focusOnSearch()">
           <i class="mdi-action-search i-24 p-h-sm"></i>
         </a>
       </li>
-      <li ng-if="app.person.id > 0" class="animated fadeIn">
-        <a md-ink-ripple ng-click="app.search.show = true; app.focusOnSearch">
+      <li ng-if="app.person.id > 0" class="animated fadeIn dropdown ">
+        <a md-ink-ripple class="dropdown-toggle clear" data-toggle="dropdown">
           <i class="mdi2-bell-outline i-24 p-h-sm"></i>
         </a>
+        <ul ng-if="app.isLogged()" class="dropdown-menu dropdown-menu-scale o-f-h w-xxl pull-right">
+          <li md-ink-ripple ng-repeat="notification in app.notifications" class="p-sm">
+            <!-- <a >
+              <span ></span>
+            </a> -->
+            <span class="pull-left thumb-sm m-r">
+              <div ng-style="app.getUserImage(notification.person, 'small', 'PROFILE_PICTURE', true)" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(notification.person)}">
+                <i ng-if="!app.hasProfilePicture(notification.person)" style="line-height: 36px;" class="mdi2-account i-24"></i>
+              </div>
+            </span>
+            <span class="clear">
+              <span class="text-md font-bold">{{notification.person.name}}</span>
+              <div class="text-muted clear text-ellipsis">{{notification.message}}</div>
+            </span>
+          </li>
+          <li ng-if="!app.notifications || app.notifications.length == 0">
+            <div class="text-center text-md p-md opacity-07">
+              <div>{{'titles.NO_NOTIFICATIONS' | translate}}</div>
+              <i class="i-32 mdi2-bell-outline"></i>
+            </div>
+          </li>
+        </ul>
       </li>
       <!-- <li>
         <a md-ink-ripple data-toggle="modal" data-target="#user">
