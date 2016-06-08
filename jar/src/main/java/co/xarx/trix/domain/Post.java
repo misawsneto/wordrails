@@ -116,9 +116,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public Integer stationId;
 
 	@Column(updatable = false)
-	public Integer readsCount = 0;
-
-	@Column(updatable = false)
 	public Integer bookmarksCount = 0;
 
 	@Column(updatable = false)
@@ -137,12 +134,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	@Column(columnDefinition = "boolean default true", nullable = false)
 	public boolean imageLandscape = true;
-
-	@Column(length = 1024)
-	public String externalFeaturedImgUrl;
-
-	@Column(length = 1024)
-	public String externalVideoUrl;
 
 	@Column(columnDefinition = "int(11) DEFAULT 0")
 	public Integer readTime;
@@ -166,15 +157,9 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public String imageTitleText;
 
 	@Getter(AccessLevel.NONE)
-	public String featuredVideoHash;
-
-	@Getter(AccessLevel.NONE)
 	public String featuredAudioHash;
 
 	public String getFeaturedVideoHash(){
-		if(featuredVideoHash != null)
-			return featuredVideoHash;
-
 		return featuredVideo != null ? (featuredVideo.file != null ? featuredVideo.file.hash : null) : null;
 	}
 
