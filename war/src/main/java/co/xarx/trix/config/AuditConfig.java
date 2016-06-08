@@ -17,18 +17,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AuditConfig {
 
-//	@Autowired
-//	private JpaTransactionManager jpaTransactionManager;
-//	@Autowired
-//	private EntityManagerFactory entityManagerFactory;
-//	@Autowired
-//	private PlatformTransactionManager platformTransactionManager;
-//	@Autowired
-//	private DataSource dataSource;
-
-	/**
-	 * Creates JaVers instance with {@link JaversSqlRepository}
-	 */
 	@Bean
 	public Javers javers() {
 		JaversSqlRepository sqlRepository = SqlRepositoryBuilder
@@ -41,13 +29,6 @@ public class AuditConfig {
 				.registerJaversRepository(sqlRepository).build();
 	}
 
-	/**
-	 * Enables Repository auto-audit aspect. <br/>
-	 * <p>
-	 * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
-	 * to annotate Spring Data Repositories
-	 * or {@link org.javers.spring.annotation.JaversAuditable} for ordinary Repositories.
-	 */
 	@Bean
 	public JaversAuditableRepositoryAspect javersAuditableRepositoryAspect() {
 		return new JaversAuditableRepositoryAspect(javers(), authorProvider());
@@ -61,7 +42,6 @@ public class AuditConfig {
 
 	@Bean
 	public ConnectionProvider jpaConnectionProvider() {
-		JpaHibernateConnectionProvider jpaHibernateConnectionProvider = new JpaHibernateConnectionProvider();
-		return jpaHibernateConnectionProvider;
+		return new JpaHibernateConnectionProvider();
 	}
 }

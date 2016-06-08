@@ -1,6 +1,8 @@
 package co.xarx.trix.domain.social;
 
+import lombok.Data;
 
+@Data
 public class GoogleUser implements SocialUser {
 
 	private String providerId;
@@ -11,62 +13,12 @@ public class GoogleUser implements SocialUser {
 	private String profileUrl;
 	private String profileImageUrl;
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
 	@Override
-	public String getProviderId() {
-		return providerId;
-	}
-
-	public void setProviderId(String providerId) {
-		this.providerId = providerId;
-	}
-
-	@Override
-	public String getProfileUrl() {
-		return profileUrl;
-	}
-
-	public void setProfileUrl(String profileUrl) {
-		this.profileUrl = profileUrl;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	public String getCoverUrl() {
 		return coverUrl;
 	}
 
 	public void setCoverUrl(String coverUrl) {
 		this.coverUrl = coverUrl;
-	}
-
-	@Override
-	public String getProfileImageUrl() {
-		return profileImageUrl;
-	}
-
-	public void setProfileImageUrl(String profileImageUrl) {
-		this.profileImageUrl = profileImageUrl;
 	}
 }
