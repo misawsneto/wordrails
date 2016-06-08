@@ -35,12 +35,6 @@ public interface PersonRepository extends DatabaseRepository<Person, Integer> {
 	List<Person> findPersons(@Param("usernameOrEmailOrName") String usernameOrEmail, Pageable pageable);
 
 	@RestResource(exported = false)
-	@Query("select (select count(*) from PostRead pr where pr.post.author.id = p.id), " +
-			"(select count(*) from Comment comment where comment.post.author.id = p.id) " +
-			"from Person p where p.id = :authorId")
-	List<Object[]> findPersonStats(@Param("authorId") Integer authorId);
-
-	@RestResource(exported = false)
 	@Query("select count(*) from Person person")
 	Long countPersons();
 
