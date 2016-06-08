@@ -40,13 +40,15 @@
         <!--  Vertical News Box -->
         <div class="news md-whiteframe-z1 vertical z-depth-1 card" ng-if="!app.fullCardCheck($index, postView)">
             <div class="">
-              <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
-              ng-style="app.getImagesPerson(postView, postView.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(postView)}">
-                <i ng-if="!app.hasAuthorImage(postView)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
-              </div>
-              <div class="inline p-t v-t font-500">
-              {{::postView.authorName}}
-              </div>
+              <a ui-sref="app.userprofile({username: postView.authorUsername})">
+                <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
+                ng-style="app.getImagesPerson(postView, postView.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(postView)}">
+                  <i ng-if="!app.hasAuthorImage(postView)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
+                </div>
+                <div class="inline p-t v-t font-500" ui-sref="app.userprofile({username: postView.authorUsername})">
+                {{::postView.authorName}}
+                </div>
+              </a>
               <div class="inline p-t v-t pull-right p-r-sm text-sm" style="opacity: 0.6" am-time-ago="postView.date">
               </div>
             </div>
@@ -111,6 +113,13 @@
   </div>
 </div>
 
-<div aria-label="menu" class="pos-fix bottom-0 right-0 m-b-xl animated" style="margin-right: 60px" ng-click="scrollToTop();" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}">
+<!--<div aria-label="menu" class="pos-fix bottom-0 right-0 m-b-xl animated" style="margin-right: 60px" ng-click="scrollToTop();" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}">
   <i class="mdi2-chevron-double-up i-32"></i>
-</div>
+</div>-->
+
+<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}" ng-click="scrollToTop();">
+  <!-- <md-tooltip md-direction="top">
+    {{'titles.REMOVE_ALL' | translate}}
+  </md-tooltip> -->
+  <i class="mdi2-chevron-up i-32"></i>
+</md-button>
