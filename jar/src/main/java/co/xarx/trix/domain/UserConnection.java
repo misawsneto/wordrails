@@ -26,6 +26,7 @@ public class UserConnection extends BaseEntity implements Serializable {
 	@Column(unique = true)
 	private String accessToken;
 
+	@NotNull
 	private String providerUserId;
 
 	@JsonIgnore
@@ -41,6 +42,7 @@ public class UserConnection extends BaseEntity implements Serializable {
 
 	private String profileUrl;
 
+	@NotNull
 	private String email;
 
 	private String imageUrl;

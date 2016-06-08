@@ -75,6 +75,7 @@ public class Person extends BaseEntity implements Serializable {
 
 	@Column
 	@Email
+	@NotNull
 	public String email;
 
 	@ManyToOne

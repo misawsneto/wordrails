@@ -67,7 +67,6 @@ public class Authenticator {
 			Person person;
 			try {
 				person = personFactory.create(socialUser.getName(), socialUser.getEmail(), socialUser);
-				personRepository.save(person);
 			} catch (PersonAlreadyExistsException e) {
 				person = personRepository.findByEmail(socialUser.getEmail());
 			}
