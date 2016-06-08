@@ -9,13 +9,15 @@
         <!--  Vertical News Box -->
         <div class="news md-whiteframe-z1 vertical z-depth-1 card">
             <div class="">
-              <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
-              ng-style="app.getImagesPerson(postView, postView.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(postView)}">
-                <i ng-if="!app.hasAuthorImage(postView)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
-              </div>
-              <div class="inline p-t v-t font-500">
-              {{postView.authorName}}
-              </div>
+              <a ui-sref="app.userprofile({username: postView.authorUsername})">
+                <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
+                ng-style="app.getImagesPerson(postView, postView.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(postView)}">
+                  <i ng-if="!app.hasAuthorImage(postView)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
+                </div>
+                <div class="inline p-t v-t font-500">
+                {{postView.authorName}}
+                </div>
+              </a>
               <div class="inline p-t v-t pull-right p-r-sm text-sm" style="opacity: 0.6" am-time-ago="postView.date">
               </div>
             </div>

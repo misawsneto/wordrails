@@ -95,6 +95,7 @@
 		"LATEST_POSTS": "Últimas publicações",
 		"OPTIONAL": "opcional",
 		"NO_BOOKMARKS": "Você não possui leituras",
+		"NO_NOTIFICATIONS": "Você não possui notificações",
 		"ADD_PERSON": "Crie um novo usuário",
 		"TOTAL": "Total",
 		"SHOWING": "Exibidos",

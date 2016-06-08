@@ -117,16 +117,16 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public Integer stationId;
 
 	@Column(updatable = false)
-	public int readsCount = 0;
+	public Integer readsCount = 0;
 
 	@Column(updatable = false)
-	public int bookmarksCount = 0;
+	public Integer bookmarksCount = 0;
 
 	@Column(updatable = false)
-	public int recommendsCount = 0;
+	public Integer recommendsCount = 0;
 
 	@Column(updatable = false)
-	public int commentsCount = 0;
+	public Integer commentsCount = 0;
 
 	@ManyToMany
 	@JoinTable(name = "post_term", joinColumns = @JoinColumn(name = "posts_id"))
@@ -146,7 +146,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public String externalVideoUrl;
 
 	@Column(columnDefinition = "int DEFAULT 0")
-	public int readTime;
+	public Integer readTime;
 
 	@Column(columnDefinition = "boolean DEFAULT false")
 	public boolean notify = false;

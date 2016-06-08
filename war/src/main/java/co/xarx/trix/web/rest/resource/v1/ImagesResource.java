@@ -129,6 +129,11 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 	}
 
 	@Override
+	public void findImagesOrderByDate() throws IOException {
+		forward();
+	}
+
+	@Override
 	public Response getPersonImage(Integer id, String size, String type) throws IOException {
 
 		Person person = personRepository.findOne(id);

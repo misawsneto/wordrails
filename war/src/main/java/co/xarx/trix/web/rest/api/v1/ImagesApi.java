@@ -20,6 +20,10 @@ public interface ImagesApi {
 	Response getImage(@PathParam("hash") String hash, @QueryParam("size") String size) throws IOException;
 
 	@GET
+	@Path("/search/findImagesOrderByDate")
+	void findImagesOrderByDate() throws IOException;
+
+	@GET
 	@Path("/persons/{id}")
 	Response getPersonImage(@PathParam("id") Integer id, @QueryParam("size") String size, @QueryParam("type") String
 			type)

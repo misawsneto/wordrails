@@ -39,6 +39,7 @@ module.exports = {
                     'mdPickers/dist/**',
                     'froala-wysiwyg-editor/**',
                     'angular-froala/**',
+                    'froala-image-caption/**',
                     'angular-elastic/elastic.js',
                     'lifely-focuspoint/**',
                     'ng-jcrop/**',

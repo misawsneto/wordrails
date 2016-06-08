@@ -95,6 +95,7 @@
 		"LATEST_POSTS": "Latest posts",
 		"OPTIONAL": "optional",
 		"NO_BOOKMARKS": "You do not have bookmarks",
+		"NO_NOTIFICATIONS": "You do not have notifications",
 		"ADD_PERSON": "Create a new user",
 		"TOTAL": "Total",
 		"SHOWING": "Showing",

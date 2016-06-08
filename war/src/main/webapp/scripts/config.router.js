@@ -1134,7 +1134,10 @@ angular.module('app')
                 }
                 */
                 trix.findByUsername($stateParams.username, 'personProjection').success(function(response){
-                  deferred.resolve(response)
+                  if(response.persons && response.persons.length > 0)
+                    deferred.resolve(response.persons[0])
+                  else
+                    document.location.href = '/404';
                 }).error(function(){
                   document.location.href = '/404';
                 });

@@ -146,7 +146,7 @@
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-account-off i-20 text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" >
+	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showBulkChangePermissions($event)">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.PERMISSIONS_OF_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
@@ -416,6 +416,61 @@
           </md-button>
         <div>
         
+      </div>
+    </md-content>
+  </md-dialog>
+</script>
+
+<script type="text/ng-template" id="change-permissions-dialog.html">
+  <md-dialog aria-label="Editar permissão" id="user-permissions-dialog">
+    <md-content class="md-background-hue-1 background">
+      <div class="p">
+        <div class="p-xs text-md">
+          Estações:
+        </div>
+        <div class="p-sm stations-permissions-dialog-list m-t-sm" >
+          <ul class="no-style">
+            <li ng-repeat="station in app.stations" class="clearfix p-xs font-thin">
+              <span class="pull-right">
+                <label class="md-check">
+                  <input type="checkbox" ng-model="station.selected">
+                  <i class="md-accent-default background"></i>
+                </label>
+              </span>
+              <span class="clear m-r-xxl">
+                <span>{{station.name}}</span>
+                <small class="text-muted text-xs clear text-ellipsis">
+                  Visibilidade: {{(station.visibility == 'UNRESTRICTED') ? 'Pública' : 'Privada'}} | Todos podem escrever: {{(station.writable) ? 'Sim' : 'Não'}}
+                </small>
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div class="p-xs text-base m-t-sm">
+          <span class="text-md">Permissões:</span>
+
+          <md-radio-group ng-model="stationRole">
+            <ul class="station-permissions m-t">
+              <li class="m-r">
+                <md-radio-button value="READER">Leitor</md-radio-button>
+              </li>
+              <li class="m-r">
+                <md-radio-button value="WRITER">Escritor</md-radio-button>
+              </li>
+              <li class="m-r">
+                <md-radio-button value="EDITOR">Edtor</md-radio-button>
+              </li>
+              <li class="m-r">
+                <md-radio-button value="ADMIN">Administrador</md-radio-button>
+              </li>
+            </ul>
+          </md-radio-group>
+          
+        </div>
+        <div class="text-right">
+          <md-button ng-click="pe.applyPermissions(pe.adminStations, pe.stationRole)" class="no-margin m-r">Confirmar</md-button>
+          <md-button ng-click="cancel()" class="no-margin">Fechar</md-button>
+        <div>
       </div>
     </md-content>
   </md-dialog>
