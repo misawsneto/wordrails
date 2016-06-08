@@ -39,7 +39,7 @@ import java.util.List;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class AclTestConfig extends GlobalMethodSecurityConfiguration {
+public class AclTestConfig {
 
 
 	@Autowired
@@ -123,8 +123,8 @@ public class AclTestConfig extends GlobalMethodSecurityConfiguration {
 		return aclService;
 	}
 
-	@Override
-	protected MethodSecurityExpressionHandler createExpressionHandler() {
+	@Bean
+	public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
 		DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
 		try {
 			DataSource dataSource = context.getBean(DataSource.class);

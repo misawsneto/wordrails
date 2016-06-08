@@ -1,257 +1,38 @@
-<div class="display-table animated5x fadeIn w-full bg-cover m-b-xl md-whiteframe-z2 h-400 text-center" style="margin-top: -32px; background-position: 50% 50%;">
+<div ng-if="app.hasImage(post) && post.imageLandscape" preload-bg-image="{{app.getImageLink(post, 'large')}}" class="display-table animated5x fadeIn w-full bg-cover m-b-xl md-whiteframe-z2 h-400 text-center" style="margin-top: -32px; background-position: 50% 50%;">
 </div>
 
 <div class="container">
-                <div class="row">
-                    <div class="col l12">
-                        <div class="news-single z-depth-1 card">
-                            <!-- News Single Image -->
-                            <img alt="news Image" src="http://placehold.it/350x235?text=News Image" class="responsive-img">
-                            <!-- News Single Description -->
-                            <div class="col l8 offset-l2">
-                                <!-- News Time -->
-                                <!--<div class="news-time">The Village Guide  <i class="fa fa-clock-o"></i> 9 min ago </div>-->
-                                <div class="m-v-md">
-                            			<a ui-sref="app.userprofile({username: post.author.username})">
-										                <div class="inline m-r-sm user-avatar rounded w-56 bg-white inline pos-rlt text-center bg-cover" 
-										                ng-style="app.getImagesPerson(post, post.author.id, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(post)}">
-										                  <i ng-if="!app.hasAuthorImage(post)" class="mdi2-account i-32" style="top: 16%;position: relative;"></i>
-										                </div>
-										                <div class="inline v-t font-500 text-md p-t-sm">
-										                	{{post.author.name}}
-										                	<div class="text-base opacity-07">
-										                			{{app.getLocalTime(post.date)}}
-										                	</div>
-										                </div>
-										              </a>
-                                </div>
-                                <!-- News Title -->
-                                <div class="news-title" ng-bind-html="post.title"></div>
-                                <div class="fr-view" ng-bind-html="post.body"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col l12 col m12">
-                        <!-- Title -->
-                        <div class="title">Sport</div>
-                    </div>
-                    <div class="col l3 col m6 col s12">
-                        <!-- vertical  News Box -->
-                        <div class="news vertical z-depth-1">
-                            <!-- vertical News Image -->    
-                            <div class="news-image">
-                                <img alt="news Image" src="http://placehold.it/350x235?text=News Image" class="responsive-img">
-                            </div>
-                            <!-- vertical News Description -->
-                            <div class="news-description">
-                                <div class="news-time">
-                                    <i class="fa fa-clock-o"></i> 9 min ago 
-                                </div>
-                                <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna leo metus vel magna. </a></div>
-                                <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus. et bibendum leo metus vel magna.</p></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col l3 col m6 col s12">
-                        <!-- vertical News Box -->
-                        <div class="news vertical z-depth-1">
-                            <!-- vertical News Image -->    
-                            <div class="news-image">
-                                <img alt="news Image" src="http://placehold.it/350x235?text=News Image" class="responsive-img">
-                            </div>
-                            <!-- vertical News Description -->
-                            <div class="news-description">
-                                <div class="news-time">
-                                    <i class="fa fa-clock-o"></i> 9 min ago 
-                                </div>
-                                <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna leo metus vel magna. </a></div>
-                                <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus. et bibendum leo metus vel magna.</p></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col l6 col m12 col s12">
-                        <!-- News Blog Box -->
-                        <div class="news-blog z-depth-1">
-                            <!-- News Blog Video -->
-                            <div class="video-container no-controls">
-                                <iframe allowfullscreen="" src="//www.youtube.com/embed/Q8TXgCzxEnw?rel=0;autohide=1"></iframe>
-                            </div>
-                            <!-- News Blog Category -->
-                            <div class="news-category">
-                                <span class="orange">Video</span>
-                                <!-- Dropdown -->
-                                <div class="news-dropdown">
-                                    <a class="dropdown-button" href="javascript:void(0);" data-activates="dropdown1"><i class="fa fa-ellipsis-v "></i></a><ul id="dropdown1" class="dropdown-content">
-                                        <li><a href="javascript:void(0);">Option 1</a></li>
-                                        <li><a href="javascript:void(0);">Option 1</a></li>
-                                        <li><a href="javascript:void(0);">Option 1</a></li>
-                                    </ul>
-                                    
-                                </div>
-                            </div>
-                            <!-- News Blog Description -->
-                            <div class="news-description">
-                                <div class="news-time">
-                                    21 min ago 
-                                </div>
-                                <div class="news-title"> <a href="javascript:void(0);"> Party Sweepsto Israel <br> election Victory </a></div>
-                                <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac <br> tellus non rutrum. Integer ut nisi risus.</p></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                
-                <div class="row">
-                    <div class="col l12 col m12">
-                        <!-- Title -->
-                        <div class="title">Relevant Today</div>
-                    </div>
-                    <div class="col l3 col m6 col s12">
-                        <!-- vertical News Box -->
-                        <div class="news vertical z-depth-1">
-                            <!-- vertical News Image -->    
-                            <div class="news-image">
-                                <img alt="news Image" src="http://placehold.it/350x235?text=News Image" class="responsive-img">
-                            </div>
-                            <!-- vertical News Description -->
-                            <div class="news-description">
-                                <div class="news-time">
-                                    <i class="fa fa-clock-o"></i> 9 min ago 
-                                </div>
-                                <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna leo metus vel magna. </a></div>
-                                <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus.</p></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col l3 col m6 col s12">
-                        <!-- vertical News Box -->
-                        <div class="news vertical z-depth-1">
-                            <!-- vertical News Image -->    
-                            <div class="news-image">
-                                <img alt="news Image" src="http://placehold.it/350x235?text=News Image" class="responsive-img">
-                            </div>
-                            <!-- vertical News Description -->
-                            <div class="news-description">
-                                <div class="news-time">
-                                    <i class="fa fa-clock-o"></i> 9 min ago 
-                                </div>
-                                <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna leo metus vel magna. </a></div>
-                                <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus.</p></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col l3 col m6 col s12">
-                        <!-- vertical News Box -->
-                        <div class="news vertical z-depth-1">
-                            <!-- vertical News Image -->    
-                            <div class="news-image">
-                                <img alt="news Image" src="http://placehold.it/350x235?text=News Image" class="responsive-img">
-                            </div>
-                            <!-- vertical News Description -->
-                            <div class="news-description">
-                                <div class="news-time">
-                                    <i class="fa fa-clock-o"></i> 9 min ago 
-                                </div>
-                                <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna leo metus vel magna. </a></div>
-                                <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus.</p></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col l3 col m6 col s12">
-                        <!-- vertical News Box -->
-                        <div class="news vertical z-depth-1">
-                            <!-- vertical News Image -->    
-                            <div class="news-image">
-                                <img alt="news Image" src="http://placehold.it/350x235?text=News Image" class="responsive-img">
-                            </div>
-                            <!-- vertical News Description -->
-                            <div class="news-description">
-                                <div class="news-time">
-                                    <i class="fa fa-clock-o"></i> 9 min ago 
-                                </div>
-                                <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna leo metus vel magna. </a></div>
-                                <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus.</p></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                
-                <div class="row">
-                    <div class="col l12 col m12">
-                        <!-- Title -->
-                        <div class="title">Related News</div>
-                    </div>
-                    <div class="col l6 col m12 col s12">
-                        <!-- News Blog Box -->
-                        <div class="news-blog z-depth-1">
-                            <!-- News Blog Video -->
-                            <div class="video-container no-controls">
-                                <iframe allowfullscreen="" src="//www.youtube.com/embed/Q8TXgCzxEnw?rel=0;autohide=1"></iframe>
-                            </div>
-                            <!-- News Blog Category -->
-                            <div class="news-category">
-                                <span class="orange">Video</span>
-                                <!-- Dropdown -->
-                                <div class="news-dropdown">
-                                    <a class="dropdown-button" href="javascript:void(0);" data-activates="dropdown2"><i class="fa fa-ellipsis-v "></i></a><ul id="dropdown2" class="dropdown-content">
-                                        <li><a href="javascript:void(0);">Option 1</a></li>
-                                        <li><a href="javascript:void(0);">Option 1</a></li>
-                                        <li><a href="javascript:void(0);">Option 1</a></li>
-                                    </ul>
-                                    
-                                </div>
-                            </div>
-                            <!-- News Blog Description -->
-                            <div class="news-description">
-                                <div class="news-time">
-                                    21 min ago 
-                                </div>
-                                <div class="news-title"> <a href="javascript:void(0);"> Party Sweepsto Israel <br> election Victory </a></div>
-                                <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac <br> tellus non rutrum. Integer ut nisi risus.</p></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col l3 col m6 col s12">
-                        <!-- vertical News Box -->
-                        <div class="news vertical z-depth-1">
-                            <!-- vertical News Image -->    
-                            <div class="news-image">
-                                <img alt="news Image" src="http://placehold.it/350x235?text=News Image" class="responsive-img">
-                            </div>
-                            <!-- vertical News Description -->
-                            <div class="news-description">
-                                <div class="news-time">
-                                    <i class="fa fa-clock-o"></i> 9 min ago 
-                                </div>
-                                <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna leo metus vel magna. </a></div>
-                                <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus. et bibendum leo metus vel magna.</p></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col l3 col m6 col s12">
-                        <!-- vertical News Box -->
-                        <div class="news vertical z-depth-1">
-                            <!-- vertical News Image -->    
-                            <div class="news-image">
-                                <img alt="news Image" src="http://placehold.it/350x235?text=News Image" class="responsive-img">
-                            </div>
-                            <!-- vertical News Description -->
-                            <div class="news-description">
-                                <div class="news-time">
-                                    <i class="fa fa-clock-o"></i> 9 min ago 
-                                </div>
-                                <div class="news-title"><a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna leo metus vel magna. </a></div>
-                                <div class="news-content"><p>et bibendum leo metus vel magna. In dapibus ac tellus non rutrum. Integer ut nisi risus. et bibendum leo metus vel magna.</p></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="row">
+      <div class="col l12">
+          <div class="news-single z-depth-1 card">
+              <!-- News Single Image -->
+              <div alt="news Image" ng-if="app.hasImage(post) && !post.imageLandscape" preload-bg-image="{{app.getImageLink(post, 'large')}}" class="responsive-img h-400 bg-cover"></div>
+              <!-- News Single Description -->
+              <div class="col l8 offset-l2">
+                  <!-- News Time -->
+                  <!--<div class="news-time">The Village Guide  <i class="fa fa-clock-o"></i> 9 min ago </div>-->
+                  <div class="m-v-md">
+              			<a ui-sref="app.userprofile({username: post.author.username})">
+			                <div class="inline m-r-sm user-avatar rounded w-56 bg-white inline pos-rlt text-center bg-cover" 
+			                ng-style="app.getImagesPerson(post, post.author.id, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(post)}">
+			                  <i ng-if="!app.hasAuthorImage(post)" class="mdi2-account i-32" style="top: 16%;position: relative;"></i>
+			                </div>
+			                <div class="inline v-t font-500 text-md p-t-sm">
+			                	{{post.author.name}}
+			                	<div class="text-base opacity-07">
+			                			{{app.getLocalTime(post.date)}}
+			                	</div>
+			                </div>
+			              </a>
+                  </div>
+                  <!-- News Title -->
+                  <div class="news-title" ng-bind-html="post.title"></div>
+                  <div class="fr-view" ng-bind-html="post.body"></div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
 
 <md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}" ng-click="scrollToTop();">
   <!-- <md-tooltip md-direction="top">
