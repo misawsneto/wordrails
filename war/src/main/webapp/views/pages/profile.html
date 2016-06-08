@@ -35,9 +35,11 @@
           </div>
           <!-- News Image -->
           <div class="news-image o-f-h">
-              <div ng-if="app.hasImage(publication);" preload-bg-image="{{app.getImageLink(publication, 'medium')}}" class="zoom-hover h-full bg-cover" style="min-height: 230px;">
+              <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" ng-if="app.hasImage(publication);">
+              <div  preload-bg-image="{{app.getImageLink(publication, 'medium')}}" class="zoom-hover h-full bg-cover" style="min-height: 230px;">
                   <!-- <img class="responsive-img materialboxed" ng-src="{{publication | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
               </div>
+              </a>
           </div>
           <div class="text-left p-h-sm w-full z-index-2" >
             <a target="_blank" ng-href="{{app.getCategoryLink(app.getStationById(publication.stationId).stationSlug, category.name)}}" class="badge m-t-sm p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in publication.categories">
@@ -46,8 +48,10 @@
           </div>
           <!-- News Description -->
           <div class="news-description p-t p-b-sm p-h">
-              <div class="news-title" style="min-height: 66px"><a clamp="3"> {{::publication.title}} </a></div>
+              <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})">
+              <div class="news-title" style="min-height: 66px"><p clamp="3"> {{::publication.title}} </p></div>
               <div class="news-content"><p clamp="4">{{::publication.snippet}}</p></div>
+              </a>
               <div class="news-comment-shares z-index-2">
                   <md-divider class="m-b-sm m-t"></md-divider>
                   <div class="p-b-xs">

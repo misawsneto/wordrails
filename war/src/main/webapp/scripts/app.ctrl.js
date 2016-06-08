@@ -292,6 +292,11 @@ angular.module('app')
             return TRIX.baseUrl;
         }
 
+        $scope.app.goToPublicationLink = function(stationId, slug){
+          if(stationId && slug)
+            $state.go('app.read', {'stationSlug': $scope.app.getStationById(stationId), 'postSlug': slug})
+        }
+
         $scope.app.getMaterialColor = function(colorA, hueA){
           var colorValue = themeProvider._PALETTES[colorA][hueA] ?
           themeProvider._PALETTES[colorA][hueA].value :
@@ -584,6 +589,8 @@ angular.module('app')
       }
 
       $scope.app.hasAuthorImage = function(post){
+        if(post.author)
+          return post.author.imageHash || post.author.imageSmallHash || post.author.image || post.author.profilePicture; 
         return post.authorImageHash || post.authorImageSmallHash || post.authorImage || post.authorProfilePicture; 
       }
 
