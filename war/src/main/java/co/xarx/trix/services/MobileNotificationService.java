@@ -1,7 +1,7 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.annotation.AccessGroup;
 import co.xarx.trix.api.NotificationView;
-import co.xarx.trix.aspect.annotations.AccessGroup;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;

@@ -111,16 +111,6 @@ public interface PostApi {
 											@QueryParam("size") Integer size);
 
 	@GET
-	@Path("/{stationId}/postRead")
-	ContentResponse<List<PostView>> getPostRead(@PathParam("stationId") Integer stationId,
-												@QueryParam("page") Integer page,
-												@QueryParam("size") Integer size) throws BadRequestException;
-
-	@GET
-	@Path("/{stationId}/allPostRead")
-	ContentResponse<List<PostView>> getAllPostRead(@PathParam("stationId") Integer stationId);
-
-	@GET
 	@Path("/{stationId}/popular")
 	ContentResponse<List<PostView>> getPopular(@PathParam("stationId") Integer stationId,
 											   @QueryParam("page") Integer page,

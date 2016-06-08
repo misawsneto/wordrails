@@ -1,5 +1,6 @@
 package co.xarx.trix.services.security;
 
+import co.xarx.trix.annotation.IntegrationTestBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+@IntegrationTestBean
 @Component
 public class PermissionFilterService {
 

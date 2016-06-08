@@ -145,7 +145,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Column(length = 1024)
 	public String externalVideoUrl;
 
-	@Column(columnDefinition = "int(11) DEFAULT 0")
+	@Column(columnDefinition = "int DEFAULT 0")
 	public int readTime;
 
 	@Column(columnDefinition = "boolean DEFAULT false")

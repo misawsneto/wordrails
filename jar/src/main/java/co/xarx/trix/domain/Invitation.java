@@ -1,6 +1,7 @@
 package co.xarx.trix.domain;
 
 import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @lombok.Getter
 @lombok.Setter
 @Entity
+@NoArgsConstructor
 //@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "network_id"}))
 public class Invitation extends BaseEntity {
 

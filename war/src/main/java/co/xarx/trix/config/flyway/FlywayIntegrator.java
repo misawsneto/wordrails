@@ -25,6 +25,8 @@ public class FlywayIntegrator implements Integrator, ApplicationContextAware {
 	public void integrate(final Configuration configuration, final SessionFactoryImplementor sessionFactoryImplementor,
 						  final SessionFactoryServiceRegistry sessionFactoryServiceRegistry) {
 
+		if(applicationContext == null) return;
+
 		Environment env = applicationContext.getEnvironment();
 		Boolean migrate = env.getRequiredProperty("trix.flyway.migrate", Boolean.class);
 		DataSource dataSource = (DataSource) applicationContext.getBean("dataSource");

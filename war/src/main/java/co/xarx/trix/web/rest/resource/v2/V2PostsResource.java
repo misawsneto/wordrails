@@ -8,7 +8,10 @@ import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AuditService;
+import co.xarx.trix.services.post.PostModerationService;
 import co.xarx.trix.services.post.PostSearchService;
+import co.xarx.trix.services.security.PostPermissionService;
+import co.xarx.trix.util.ImmutablePage;
 import co.xarx.trix.util.RestUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2PostsApi;
@@ -16,9 +19,6 @@ import com.google.common.collect.Sets;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
@@ -30,13 +30,17 @@ import java.util.Set;
 @NoArgsConstructor
 public class V2PostsResource extends AbstractResource implements V2PostsApi {
 
+	private PostModerationService postModerationService;
+	private PostPermissionService postPermissionService;
 	private PostSearchService postSearchService;
 	private PostRepository postRepository;
 	private PostConverter postConverter;
 	private AuditService auditService;
 
 	@Autowired
-	public V2PostsResource(PostSearchService postSearchService, PostRepository postRepository, PostConverter postConverter, AuditService auditService){
+	public V2PostsResource(PostModerationService postModerationService, PostPermissionService postPermissionService, PostSearchService postSearchService, PostRepository postRepository, PostConverter postConverter, AuditService auditService){
+		this.postModerationService = postModerationService;
+		this.postPermissionService = postPermissionService;
 
 		this.postSearchService = postSearchService;
 		this.postRepository = postRepository;
@@ -60,18 +64,42 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 
 		PostStatement params = new PostStatement(query, authors, stations, state, from, until, categories, tags, orders);
 
-//		List<PostData> posts = postSearchService.searchData(params, page, size);
-//		List<PostData> data = getPostDatas(posts);
-		List<PostData> data = postSearchService.searchData(params, page, size);
+		ImmutablePage<PostData> pageOfPosts = postSearchService.searchData(params, page, size);
 
 		Set<String> postEmbeds = Sets.newHashSet("video", "image", "audio", "author", "categories", "body", "snippet");
+		super.removeNotEmbeddedData(embeds, pageOfPosts.items(), PostData.class, postEmbeds);
 
-		super.removeNotEmbeddedData(embeds, data, PostData.class, postEmbeds);
+		return Response.ok().entity(RestUtil.getPageData(pageOfPosts, orders)).build();
+	}
 
-		Pageable pageable = RestUtil.getPageable(page, size, orders);
-		Page p = new PageImpl(data, pageable, data.size());
+	@Override
+	public Response publish(Integer postId) {
+		boolean canPublish = postPermissionService.canPublishPost(postId);
 
-		return Response.ok().entity(p).build();
+		if(canPublish) {
+			try {
+				postModerationService.publish(postId);
+			} catch (IllegalStateException | IllegalArgumentException e) {
+				return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+			}
+		}
+
+		return Response.ok().build();
+	}
+
+	@Override
+	public Response unpublish(Integer postId) {
+		boolean canPublish = postPermissionService.canPublishPost(postId);
+
+		if (canPublish) {
+			try {
+				postModerationService.unpublish(postId);
+			} catch (IllegalStateException | IllegalArgumentException e) {
+				return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+			}
+		}
+
+		return Response.ok().build();
 	}
 
 	@Override

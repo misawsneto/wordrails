@@ -18,8 +18,6 @@ public class PersonEventHandler {
 	@Autowired
 	private NotificationRepository notificationRepository;
 	@Autowired
-	private PostReadRepository postReadRepository;
-	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
 	private QueryPersistence queryPersistence;
