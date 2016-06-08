@@ -61,7 +61,6 @@ public class PostData implements Serializable, Identifiable {
 	private Double lat;
 	private Double lng;
 
-	private Integer readsCount = 0;
 	private Integer bookmarksCount = 0;
 	private Integer recommendsCount = 0;
 	private Integer commentsCount = 0;

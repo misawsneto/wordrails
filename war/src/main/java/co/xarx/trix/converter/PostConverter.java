@@ -64,7 +64,6 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.imageLandscape = post.imageLandscape;
 		postView.date = post.date;
 		postView.topper = post.topper;
-		postView.readsCount = post.readsCount;
 		postView.recommendsCount = post.recommendsCount;
 		postView.commentsCount = post.commentsCount;
 		postView.snippet = StringUtil.simpleSnippet(post.body);
@@ -91,8 +90,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		}
 
 		postView.terms = getTermViews(post.terms);
-		postView.externalFeaturedImgUrl = post.externalFeaturedImgUrl;
-		postView.externalVideoUrl = post.externalVideoUrl;
+		postView.externalVideoUrl = post.getFeaturedVideo().getExternalVideoUrl();
 
 		postView.featuredAudioHash = post.getFeaturedAudioHash();
 		postView.featuredVideoHash = post.getFeaturedVideoHash();
