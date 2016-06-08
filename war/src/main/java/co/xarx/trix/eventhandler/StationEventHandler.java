@@ -38,8 +38,6 @@ public class StationEventHandler {
 	@Autowired
 	NotificationRepository notificationRepository;
 	@Autowired
-	PostReadRepository postReadRepository;
-	@Autowired
 	QueryPersistence queryPersistence;
 	@Autowired
 	TermRepository termRepository;

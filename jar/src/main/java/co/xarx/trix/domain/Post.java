@@ -27,6 +27,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public static final String STATE_NO_AUTHOR = "NOAUTHOR";
 	public static final String STATE_TRASH = "TRASH";
 	public static final String STATE_PUBLISHED = "PUBLISHED";
+	public static final String STATE_UNPUBLISHED = "UNPUBLISHED";
 	public static final String STATE_SCHEDULED = "SCHEDULED";
 
 	private static final long serialVersionUID = 7468718930497246401L;
@@ -144,7 +145,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Column(length = 1024)
 	public String externalVideoUrl;
 
-	@Column(columnDefinition = "int(11) DEFAULT 0")
+	@Column(columnDefinition = "int DEFAULT 0")
 	public Integer readTime;
 
 	@Column(columnDefinition = "boolean DEFAULT false")

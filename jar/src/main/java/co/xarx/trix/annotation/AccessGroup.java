@@ -1,4 +1,4 @@
-package co.xarx.trix.aspect.annotations;
+package co.xarx.trix.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

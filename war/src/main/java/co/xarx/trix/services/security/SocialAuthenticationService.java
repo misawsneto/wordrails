@@ -1,15 +1,8 @@
 package co.xarx.trix.services.security;
 
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.User;
-import co.xarx.trix.domain.UserConnection;
-import co.xarx.trix.domain.UserGrantedAuthority;
+import co.xarx.trix.annotation.IntegrationTestBean;
 import co.xarx.trix.domain.social.FacebookUser;
 import co.xarx.trix.domain.social.GoogleUser;
-import co.xarx.trix.domain.social.SocialUser;
-import co.xarx.trix.persistence.PersonRepository;
-import co.xarx.trix.persistence.UserConnectionRepository;
-import co.xarx.trix.persistence.UserRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,27 +13,14 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 import org.scribe.utils.MapUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.text.Normalizer;
-import java.util.HashSet;
 
 @Slf4j
 @Service
+@IntegrationTestBean
 public class SocialAuthenticationService {
-
-	private PersonRepository personRepository;
-	private UserRepository userRepository;
-	private UserConnectionRepository userConnectionRepository;
-
-	@Autowired
-	public SocialAuthenticationService(PersonRepository personRepository, UserRepository userRepository, UserConnectionRepository userConnectionRepository) {
-		this.personRepository = personRepository;
-		this.userRepository = userRepository;
-		this.userConnectionRepository = userConnectionRepository;
-	}
 
 	boolean facebookLogin(String userId, OAuthService service, Token token) {
 		try {
@@ -105,55 +85,6 @@ public class SocialAuthenticationService {
 		return googleUser;
 	}
 
-	private UserConnection newUserConnection(SocialUser socialUser) {
-		UserConnection userConnection = new UserConnection();
-		userConnection.setProviderId(socialUser.getProviderId());
-		userConnection.setProviderUserId(socialUser.getId());
-		userConnection.setEmail(socialUser.getEmail());
-		userConnection.setDisplayName(socialUser.getName());
-		userConnection.setProfileUrl(socialUser.getProfileUrl());
-		userConnection.setImageUrl(socialUser.getProfileImageUrl());
-		return userConnection;
-	}
-
-	private User newUser(String username) {
-		User user = new User();
-
-		UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_USER");
-
-		user.enabled = true;
-		user.username = username;
-		user.password = "";
-		user.userConnections = new HashSet<>();
-		authority.user = user;
-		user.addAuthority(authority);
-
-		return user;
-	}
-
-	private Person findExistingUser(SocialUser socialUser) {
-		String email = socialUser.getEmail() == null ? "" : socialUser.getEmail();
-		Person person = personRepository.findByEmail(email);
-
-		if (person == null) {
-			int i = 1;
-			String originalUsername = socialUser.getName().toLowerCase().replace(" ", "");
-			String username = Normalizer.normalize(originalUsername, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
-			while (userRepository.existsByUsername(username)) {
-				username = originalUsername + i++;
-			}
-
-			person = new Person();
-			person.name = socialUser.getName();
-			person.username = username;
-			person.email = email;
-//			person.coverUrl = socialUser.getCoverUrl();
-//			person.imageUrl = socialUser.getProfileImageUrl();
-		}
-
-		return person;
-	}
-
 	FacebookUser getFacebookUserFromOAuth(String userId, OAuthService service, Token token) throws IOException {
 		OAuthRequest request = new OAuthRequest(Verb.GET, "https://graph.facebook.com/v2.5/" + userId + "?fields=id,name,email,cover,picture.type(large)");
 		service.signRequest(token, request);
@@ -168,23 +99,5 @@ public class SocialAuthenticationService {
 		fbUser.setProfileUrl("http://facebook.com/" + fbUser.getId());
 		fbUser.setProfileImageUrl("https://graph.facebook.com/" + fbUser.getId() + "/picture?type=large");
 		return fbUser;
-	}
-
-	Person getPersonFromSocialUser(SocialUser socialUser) throws IOException {
-		Person person = findExistingUser(socialUser);
-		User user;
-		if (person.user == null) {
-			user = newUser(person.username);
-		} else {
-			user = person.user;
-		}
-
-		UserConnection userConnection = newUserConnection(socialUser);
-		userConnection.setUser(user);
-		userConnectionRepository.save(userConnection);
-		user.userConnections.add(userConnection);
-		person.user = user;
-
-		return person;
 	}
 }

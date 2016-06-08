@@ -1,5 +1,6 @@
 package co.xarx.trix.aspect;
 
+import co.xarx.trix.annotation.IntegrationTestBean;
 import co.xarx.trix.annotation.TimeIt;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -12,6 +13,7 @@ import java.lang.reflect.Method;
 
 @Aspect
 @Component
+@IntegrationTestBean
 public class ProfilerAspect {
 
 	Logger log = Logger.getLogger(this.getClass().getName());

@@ -33,7 +33,7 @@ public class Row extends BaseEntity implements Comparable<Row> {
 	@OneToMany(mappedBy="row", cascade=CascadeType.ALL)
 	public List<Cell> cells;
 
-	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)
+	@Column(columnDefinition = "int DEFAULT 0", nullable = false)
 	public Integer maxPosts = 0;
 	
 /*--FEATURED_ROW-------------------------------------------------------------*/	

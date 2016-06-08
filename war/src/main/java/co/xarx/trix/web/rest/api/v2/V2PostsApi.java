@@ -31,9 +31,17 @@ public interface V2PostsApi {
 						 @QueryParam("order") List<String> orders,
 						 @QueryParam("embed") List<String> embeds);
 
+	@POST
+	@Path("/{postId}/publish")
+	Response publish(@PathParam("postId") Integer postId);
+
+	@POST
+	@Path("/{postId}/unpublish")
+	Response unpublish(@PathParam("postId") Integer postId);
+
 	@GET
 	@Path("/findPostsByIds")
-	ContentResponse<List<PostView>> findPostsByIds (@QueryParam("ids") List<Integer> ids);
+	ContentResponse<List<PostView>> findPostsByIds(@QueryParam("ids") List<Integer> ids);
 
 	@GET
 	@Path("/getPostVersions")

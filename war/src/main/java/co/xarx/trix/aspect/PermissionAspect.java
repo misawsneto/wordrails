@@ -1,5 +1,6 @@
 package co.xarx.trix.aspect;
 
+import co.xarx.trix.annotation.IntegrationTestBean;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Comment;
 import co.xarx.trix.domain.Post;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
+@IntegrationTestBean
 public class PermissionAspect {
 
 	private AuthService authService;
