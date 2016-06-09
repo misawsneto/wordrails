@@ -2,14 +2,11 @@ package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.annotation.SdkInclude;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Set;
 
 @lombok.Getter
 @lombok.Setter
@@ -40,7 +37,6 @@ public class Video extends BaseEntity implements Serializable {
 
 	public String title;
 
-	@NotNull
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@SdkExclude
 	public File file;

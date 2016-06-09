@@ -36,6 +36,23 @@ angular.module('app')
           layout = '/views/layout.h.html';aside = '/views/aside.h.html';content= '/views/content.h.html';
         }
 
+        var stationDep = function($stateParams, $q, trix){
+          var deferred = $q.defer();
+          var stationObj = null;
+          initData.stations.forEach(function(station){
+            if(station.stationSlug == $stateParams.stationSlug)
+              stationObj = station;
+          })
+
+          if(stationObj)
+            deferred.resolve(stationObj);
+          else
+            document.location.href = '/404';
+
+           
+          return deferred.promise;
+        }
+
         var createSettingsRoutes = function(){
           $urlRouterProvider
           .otherwise('/settings/dashboard');
@@ -89,11 +106,35 @@ angular.module('app')
               })
 
               .state('app.categories', {
-                url: '/categories?slug',
+                url: '/{stationSlug}/categories',
                 templateUrl: '/views/settings/settings-categories.html',
                 data : { titleTranslate: 'titles.CATEGORIES', title: 'Categorias', folded: false },
-                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-categories.js','angularSpectrumColorpicker']),
+                resolve:{
+                  station: stationDep,
+                  deps:load(['angularFileUpload', '/scripts/controllers/settings/settings-categories.js','angularSpectrumColorpicker']).deps
+                },
                 controller: 'SettingsCategoriesCtrl'
+              })
+
+              .state('app.perspectives', {
+                url: '/{stationSlug}/perspectives',
+                templateUrl: '/views/settings/settings-perspectives.html',
+                data : { titleTranslate: 'titles.PERSPECTIVES', title: 'Perspectives', folded: false },
+                resolve:{
+                  station: stationDep,
+                  deps: load(['angularFileUpload', '/scripts/controllers/settings/settings-perspectives.js']).deps
+                },
+                controller: 'SettingsPerspectivesCtrl'
+              })
+              .state('app.permissions', {
+                url: '/{stationSlug}/permissions',
+                templateUrl: '/views/settings/settings-station-permissions.html',
+                data : { titleTranslate: 'titles.PERMISSIONS', title: 'Permissions', folded: false },
+                resolve:{
+                  station: stationDep, 
+                  deps: load(['angularFileUpload', '/scripts/controllers/settings/settings-station-permissions.js']).deps
+                },
+                controller: 'SettingsStationPermissionsCtrl'
               })
 
               .state('app.users', {
@@ -1180,23 +1221,6 @@ angular.module('app')
           })
 
           if(!isSettigns){
-
-            var stationDep = function($stateParams, $q, trix){
-              var deferred = $q.defer();
-              var stationObj = null;
-              initData.stations.forEach(function(station){
-                if(station.stationSlug == $stateParams.stationSlug)
-                  stationObj = station;
-              })
-
-              if(stationObj)
-                deferred.resolve(stationObj);
-              else
-                document.location.href = '/404';
-
-               
-              return deferred.promise;
-            }
 
             var postDep = function($stateParams, $q, trix){
               var deferred = $q.defer();

@@ -49,6 +49,8 @@ var trix = angular.module('trix', [])
 				response.config.url.indexOf(_config.url + "/api") > -1 &&
 				response.data && response.data.content){
 					response.data = response.data.content;
+					if(response.data.content.totalElements)
+                        response.data.totalElements = response.data.content.totalElements
 					return response
 			}else if(response.config.method === "PUT"){
                 var _value = response.headers("Location");
@@ -377,6 +379,10 @@ var trix = angular.module('trix', [])
             }
         }
 		return \$http.get(_config.url + "/api/v2/posts/getPostVersions", config);
+	}
+
+	this.getStationPermission = function(stationId){
+	    return \$http.get(_config.url + "/api/v2/stations/"+stationId+"/permissions");
 	}
 
 	this.searchBookmarks = function(query, _page, _size) {

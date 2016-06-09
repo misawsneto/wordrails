@@ -663,11 +663,18 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.useVideo = false;
 	$scope.app.videoUrl = null;
 
+	// validVideo
 	$scope.videoSelected = function(videoId, provider){
 		if (videoId) 
 			$scope.validVideoUrl = true;
 		else
 			$scope.validVideoUrl = false;
+
+		if(videoId && provider)
+			$scope.featuredVideo = {
+				identifier: videoId,
+				provider: provider
+			}
 	}
 
 	$scope.insertVideo = function(){
@@ -949,10 +956,23 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		else if(post.author.id || post.author.authorId)
 			post.author = ImageDto.getSelf(post.author);
 
+		// --- image ---
 		if($scope.featuredImage)
 			post.featuredImage = ImageDto.getSelf($scope.featuredImage);
 		else
 			post.featuredImage = null;
+
+		// --- video ---
+		if($scope.featuredVideo)
+			post.featuredVideo = VideoDto.getSelf($scope.featuredVideo);
+		else
+			post.featuredVideo = null;
+
+		// --- audio ---
+		if($scope.featuredAudio)
+			post.featuredAudio = AudioDto.getSelf($scope.featuredAudio);
+		else
+			post.featuredAudio = null;
 
 		if(post.station)
 			post.station = StationDto.getSelf(post.station);
@@ -1002,7 +1022,20 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.putPost = function(originalPost){
+		originalPost = checkPost(originalPost);
+		if(!originalPost)
+			return
 		var post = preparePost(originalPost);
+
+		if($scope.featuredVideo && $scope.featuredVideo.identifier && $scope.featuredVideo.provider){
+			trix.postVideo($scope.featuredVideo).success(function(video){
+				console.log(video)
+				$scope.featuredVideo.id = video.id;
+				$scope.putPost(originalPost)
+			});
+			return;
+		}
+		
 		trix.putPost(post).success(function(response){
 			$scope.app.showSuccessToast($filter('translate')('settings.post.UPDATE_SUCCESS'));
 			$scope.app.editingPost.id = response;
@@ -1019,7 +1052,20 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.postPost = function(originalPost){
+		originalPost = checkPost(originalPost);
+		if(!originalPost)
+			return
 		var post = preparePost(originalPost);
+
+		if($scope.featuredVideo && $scope.featuredVideo.identifier && $scope.featuredVideo.provider){
+			trix.postVideo($scope.featuredVideo).success(function(video){
+				console.log(video)
+				$scope.featuredVideo.id = video.id;
+				$scope.postPost(originalPost)
+			});
+			return;
+		}
+
 		trix.postPost(post).success(function(response){
 			if($scope.app.checkState == 2)
 				$scope.app.showSuccessToast($filter('translate')('settings.post.UPDATE_SUCCESS'));
@@ -1035,6 +1081,27 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
 			$mdDialog.cancel();
 		})
+	}
+
+	var checkPost = function(originalPost){
+		if(!$scope.selectedStation || (!$scope.app.getTermList($scope.selectedStation.termTree) || $scope.app.getTermList($scope.selectedStation.termTree).length == 0)){
+			showInvalidTermsOrStationsDialog();
+			return null;
+		}
+		if(!originalPost.title || !originalPost.body){
+			showInvalidTitleOrBodyDialog();
+			return null;
+		}
+
+		return originalPost;
+	}
+
+	var showInvalidTermsOrStationsDialog = function(){
+		$scope.app.showErrorToast($filter('translate')('settings.post.messages.INVALID_TERMS_OR_STATIONS'))
+	}
+
+	var showInvalidTitleOrBodyDialog = function(){
+		$scope.app.showErrorToast($filter('translate')('settings.post.messages.INVALID_TITLE_OR_BODY'))
 	}
 
 	var test = function(){

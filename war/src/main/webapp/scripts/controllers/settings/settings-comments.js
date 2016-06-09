@@ -37,8 +37,9 @@ app.controller('SettingsCommentsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
       if(!$scope.loading && !$scope.commentsCtrl.allLoaded){
         $scope.loading = true;
 
-        trix.searchComments($scope.searchQuery, null, null, null, null, null, $scope.commentsCtrl.page, 20, '-date', ['author', 'post']).success(function(response){
+        trix.searchComments($scope.searchQuery, null, null, null, null, null, $scope.commentsCtrl.page, 20, '-date', ['author', 'post']).success(function(response,a,b,c){
           handleSuccess(response);
+          $scope.totalCommentsCount = c.totalElements;
           $scope.loading = false;
         }).error(function(){
           $scope.loading = false;
