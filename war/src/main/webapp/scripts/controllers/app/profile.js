@@ -27,6 +27,7 @@ app.controller('ProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$stat
         $scope.loading = false;
       }).error(function(){
         $scope.loading = false;
+        $scope.publicationsCtrl.allLoaded = true;
       })
     }
   }
