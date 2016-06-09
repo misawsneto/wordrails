@@ -8,12 +8,8 @@ import co.xarx.trix.services.security.Authenticator;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.AuthApi;
 import lombok.NoArgsConstructor;
-import org.scribe.builder.ServiceBuilder;
-import org.scribe.builder.api.FacebookApi;
-import org.scribe.builder.api.GoogleApi;
-import org.scribe.model.Token;
-import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.NotAllowedException;
@@ -45,35 +41,28 @@ public class AuthResource extends AbstractResource implements AuthApi {
 
 
 		boolean allowSocialLogin = true;
-		OAuthService service = null;
-		Token token = null;
+		String appId = null;
+		String appSecret = null;
 		if (providerId.equals("facebook")) {
 			allowSocialLogin = credential.isFacebookLoginAllowed();
-			service = new ServiceBuilder()
-					.provider(FacebookApi.class)
-					.apiKey(credential.getFacebookAppID())
-					.apiSecret(credential.getFacebookAppSecret())
-					.build();
-			token = new Token(accessToken, credential.getFacebookAppSecret());
+			appId = credential.getFacebookAppID();
+			appSecret = credential.getFacebookAppSecret();
 		} else if (providerId.equals("google")) {
 			allowSocialLogin = credential.isGoogleLoginAllowed();
-			service = new ServiceBuilder()
-					.provider(GoogleApi.class)
-					.apiKey(credential.getGoogleAppID())
-					.apiSecret(credential.getGoogleAppSecret())
-					.build();
-			token = new Token(accessToken, credential.getGoogleAppSecret());
+			appId = credential.getGoogleAppID();
+			appSecret = credential.getGoogleAppSecret();
 		}
 
 		if (!allowSocialLogin) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).build();
 		}
 
-		if(token == null) {
-			return Response.status(Response.Status.BAD_REQUEST).entity("Invalid provider ID").build();
+		boolean authorized;
+		try {
+			authorized = authenticator.socialAuthentication(providerId, userId, appId, appSecret, accessToken);
+		} catch (BadCredentialsException e) {
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
-
-		boolean authorized = authenticator.socialAuthentication(providerId, service, userId, token);
 
 		if (authorized) {
 			return Response.status(Response.Status.OK).build();
