@@ -22,7 +22,9 @@ import retrofit.http.Query;
 import retrofit.mime.TypedInput;
 import retrofit.mime.TypedString;
 
+import co.xarx.trix.api.ImageUploadResponse;
 import co.xarx.trix.api.v2.PostData;
+import co.xarx.trix.api.v2.response.FileUpload;
 
 interface I$facade$ {
 	@POST("/batch")
@@ -305,11 +307,36 @@ interface I$facade$ {
 /*---------------------------------------------------------------------------*/
 	@POST("/images/upload")
 	@Multipart
-	Response postImageUpload(@Query("imageType") String imageType, @Part("contents") TypedInput contents);
+	ImageUploadResponse postImageUpload(@Query("imageType") String imageType, @Part("contents") TypedInput contents);
 
 	@POST("/images/upload")
 	@Multipart
-	void postImageUpload(@Query("imageType") String imageType, @Part("contents") TypedInput contents, Callback<Response> _callback);
+	void postImageUpload(@Query("imageType") String imageType, @Part("contents") TypedInput contents, Callback<ImageUploadResponse> _callback);
+
+	@POST("/files/upload/video")
+	@Multipart
+	FileUpload postUploadVideo(@Part("contents") TypedInput contents);
+	
+	@POST("/files/upload/video")
+	@Multipart
+	void postUploadVideo(@Part("contents") TypedInput contents, Callback<FileUpload> _callback);
+
+	@POST("/files/upload/audio")
+	@Multipart
+	FileUpload postUploadAudio(@Part("contents") TypedInput contents);
+	
+	@POST("/files/upload/audio")
+	@Multipart
+	void postUploadAudio(@Part("contents") TypedInput contents, Callback<FileUpload> _callback);
+
+	@POST("/files/upload/doc")
+	@Multipart
+	FileUpload postUploadDoc(@Part("contents") TypedInput contents);
+	
+	@POST("/files/upload/doc")
+	@Multipart
+	void postUploadDoc(@Part("contents") TypedInput contents, Callback<FileUpload> _callback);
+
 /*---------------------------------------------------------------------------*/
 
 $entities:IFacadeMethods(); separator="\n\n"$

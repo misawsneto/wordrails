@@ -31,7 +31,7 @@ public class MobileResource extends AbstractResource implements MobileApi {
 		String userAgent = request.getHeader("User-Agent");
 
 		Constants.MobilePlatform platform;
-		if (device.equals("apple") || userAgent.contains("WordRailsIOSClient"))
+		if (device.equals("apple") || device.equals("ios") || userAgent.contains("WordRailsIOSClient"))
 			platform = Constants.MobilePlatform.APPLE;
 		else if(device.equals("android") || userAgent.contains("OkHttp"))
 			platform = Constants.MobilePlatform.ANDROID;
