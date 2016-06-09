@@ -15,7 +15,11 @@ import java.util.List;
 public class RestUtil {
 
 	public static <T> Page<T> getPageData(ImmutablePage<T> page, List<String> order) {
-		return new PageImpl(page.items(), getPageable(page.getIndex(), page.size(), order), page.totalSize());
+		if(page == null || page.isEmpty()) {
+			return new PageImpl<>(new ArrayList<>());
+		}
+
+		return new PageImpl<>(page.items(), getPageable(page.getIndex(), page.size(), order), page.totalSize());
 	}
 
 
