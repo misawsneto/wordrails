@@ -846,21 +846,21 @@
 				<version>1.5.0</version>
 			</dependency>
 
-			<dependency>
-				<groupId>org.jooq</groupId>
-				<artifactId>jooq</artifactId>
-				<version>3.8.0</version>
-			</dependency>
-			<dependency>
-				<groupId>org.jooq</groupId>
-				<artifactId>jooq-meta</artifactId>
-				<version>3.8.0</version>
-			</dependency>
-			<dependency>
-				<groupId>org.jooq</groupId>
-				<artifactId>jooq-codegen</artifactId>
-				<version>3.8.0</version>
-			</dependency>
+			<!--<dependency>-->
+				<!--<groupId>org.jooq</groupId>-->
+				<!--<artifactId>jooq</artifactId>-->
+				<!--<version>3.8.0</version>-->
+			<!--</dependency>-->
+			<!--<dependency>-->
+				<!--<groupId>org.jooq</groupId>-->
+				<!--<artifactId>jooq-meta</artifactId>-->
+				<!--<version>3.8.0</version>-->
+			<!--</dependency>-->
+			<!--<dependency>-->
+				<!--<groupId>org.jooq</groupId>-->
+				<!--<artifactId>jooq-codegen</artifactId>-->
+				<!--<version>3.8.0</version>-->
+			<!--</dependency>-->
 			<!--<dependency>-->
 				<!--<groupId>com.typesafe.akka</groupId>-->
 				<!--<artifactId>akka-actor_2.11</artifactId>-->

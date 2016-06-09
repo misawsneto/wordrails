@@ -1,11 +1,6 @@
 package co.xarx.trix.config;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DataSourceConnectionProvider;
-import org.jooq.impl.DefaultConfiguration;
-import org.jooq.impl.DefaultDSLContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -82,21 +77,21 @@ public class DatabaseTestConfig {
 		return transactionManager;
 	}
 
-	@Bean
-	public DataSourceConnectionProvider dataSourceConnectionProvider() {
-		return new DataSourceConnectionProvider(dataSource());
-	}
-
-	@Bean
-	public DefaultConfiguration defaultConfiguration() {
-		DefaultConfiguration defaultConfiguration = new DefaultConfiguration();
-		defaultConfiguration.setConnectionProvider(dataSourceConnectionProvider());
-		defaultConfiguration.setSQLDialect(SQLDialect.HSQLDB);
-		return defaultConfiguration;
-	}
-
-	@Bean
-	public DSLContext dslContext() {
-		return new DefaultDSLContext(defaultConfiguration());
-	}
+//	@Bean
+//	public DataSourceConnectionProvider dataSourceConnectionProvider() {
+//		return new DataSourceConnectionProvider(dataSource());
+//	}
+//
+//	@Bean
+//	public DefaultConfiguration defaultConfiguration() {
+//		DefaultConfiguration defaultConfiguration = new DefaultConfiguration();
+//		defaultConfiguration.setConnectionProvider(dataSourceConnectionProvider());
+//		defaultConfiguration.setSQLDialect(SQLDialect.HSQLDB);
+//		return defaultConfiguration;
+//	}
+//
+//	@Bean
+//	public DSLContext dslContext() {
+//		return new DefaultDSLContext(defaultConfiguration());
+//	}
 }
