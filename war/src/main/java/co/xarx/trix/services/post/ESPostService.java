@@ -178,6 +178,7 @@ public class ESPostService extends AbstractElasticSearchService {
 					.field("topper")
 					.field("subheading")
 					.field("authorName")
+					.field("authorUsername")
 					.field("terms.name")
 					.fuzziness(Fuzziness.AUTO)
 					.prefixLength(1);
