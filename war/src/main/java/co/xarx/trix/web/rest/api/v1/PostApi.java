@@ -111,12 +111,6 @@ public interface PostApi {
 											@QueryParam("size") Integer size);
 
 	@GET
-	@Path("/{stationId}/popular")
-	ContentResponse<List<PostView>> getPopular(@PathParam("stationId") Integer stationId,
-											   @QueryParam("page") Integer page,
-											   @QueryParam("size") Integer size);
-
-	@GET
 	@Path("/{stationId}/recent")
 	ContentResponse<List<PostView>> getRecent(@PathParam("stationId") Integer stationId,
 											  @QueryParam("page") Integer page,

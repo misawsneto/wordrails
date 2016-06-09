@@ -1027,7 +1027,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			return
 		var post = preparePost(originalPost);
 
-		if($scope.featuredVideo && $scope.featuredVideo.identifier && $scope.featuredVideo.provider){
+		if($scope.featuredVideo && !$scope.featuredVideo.id && $scope.featuredVideo.identifier && $scope.featuredVideo.provider){
 			trix.postVideo($scope.featuredVideo).success(function(video){
 				console.log(video)
 				$scope.featuredVideo.id = video.id;
@@ -1057,7 +1057,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			return
 		var post = preparePost(originalPost);
 
-		if($scope.featuredVideo && $scope.featuredVideo.identifier && $scope.featuredVideo.provider){
+		if($scope.featuredVideo && !$scope.featuredVideo.id && $scope.featuredVideo.identifier && $scope.featuredVideo.provider){
 			trix.postVideo($scope.featuredVideo).success(function(video){
 				console.log(video)
 				$scope.featuredVideo.id = video.id;

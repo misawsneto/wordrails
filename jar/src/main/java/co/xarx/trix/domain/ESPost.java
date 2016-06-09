@@ -40,7 +40,6 @@ public class ESPost implements ElasticSearchEntity {
 	public String topper;
 	public String state;
 
-	public int readsCount;
 	public int bookmarksCount;
 	public int recommendsCount;
 	public int commentsCount;

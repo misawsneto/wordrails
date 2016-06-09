@@ -18,7 +18,7 @@ public class V2StatisticsResource implements V2StatisticsApi {
 	public StatisticsService statisticsService;
 
 	@Override
-	public ContentResponse getMostCommonTerm(Integer page,
+	public ContentResponse getMostCommonField(Integer page,
 											 Integer size,
 											 Long startTime,
 											 Long endTime,

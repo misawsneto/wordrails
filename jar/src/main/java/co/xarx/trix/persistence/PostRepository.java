@@ -87,17 +87,8 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@Cacheable(value = "postsIds", key = "#p0")
 	List<Integer> findIds(@Param("tenantId") String tenantId);
 
-	@Modifying
-	@RestResource(exported = false)
-	@Query("UPDATE Post p set p.readsCount = p.readsCount + 1 where p.id = :postId")
-	void incrementReadCount(@Param("postId") int postId);
-
 	@RestResource(exported = false)
 	List<Post> findByStation(Station station);
-
-	@RestResource(exported = false)
-	@Query("SELECT post FROM Post post where post.station.id = :stationId AND post.state = 'PUBLISHED' ORDER BY post.readsCount DESC, post.id DESC")
-	List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
 
 	@RestResource(exported = false)
 	@Query("SELECT post FROM Post post where " +
@@ -149,7 +140,7 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	List<Term> findTermByPostId(@Param("postId") Integer postId);
 
 	@RestResource(exported = false)
-	public Long countByState(String state);
+	Long countByState(String state);
 
 	String findStateById(@Param("id") Integer id);
 

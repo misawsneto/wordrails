@@ -42,8 +42,6 @@ public interface PostProjection {
 
 	Integer getBookmarksCount();
 
-	Integer getReadsCount();
-
 	Integer getRecommendsCount();
 
 	Integer getCommentsCount();
@@ -51,8 +49,6 @@ public interface PostProjection {
 	Date getUpdatedAt();
 
 	Date getScheduledDate();
-
-	String getExternalFeaturedImgUrl();
 
 	String getExternalVideoUrl();
 

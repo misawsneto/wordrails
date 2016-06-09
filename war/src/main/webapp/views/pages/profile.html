@@ -22,17 +22,15 @@
       <div class="col-lg-6 col-sm-6 col-xs-12 masonry-brick" ng-repeat="publication in publications">
         <!--  Vertical News Box -->
         <div class="news md-whiteframe-z1 vertical z-depth-1 card">
-          <div class="">
+          <a ui-sref="app.userprofile({username: publication.authorUsername})">
             <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
             ng-style="app.getImagesPerson(publication, publication.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(publication)}">
               <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
             </div>
             <div class="inline p-t v-t font-500">
-            {{::publication.authorName}}
+            {{publication.authorName}}
             </div>
-            <div class="inline p-t v-t pull-right p-r-sm text-sm" style="opacity: 0.6" am-time-ago="publication.date">
-            </div>
-          </div>
+          </a>
           <!-- News Image -->
           <div class="news-image o-f-h">
               <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" ng-if="app.hasImage(publication);">

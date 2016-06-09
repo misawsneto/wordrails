@@ -23,11 +23,11 @@ public interface MobileDeviceRepository extends DatabaseRepository<MobileDevice,
 	void deleteByPersonId(Integer id);
 
 	@RestResource(exported = false)
-	@Query("select count(*) from MobileDevice md where md.type = 0 and tenantId = :tenantId")
+	@Query("select count(*) from MobileDevice md where md.type = 'ANDROID' and tenantId = :tenantId")
 	Object countAndroidDevices(@Param("tenantId") String tenantId);
 
 	@RestResource(exported = false)
-	@Query("select count(*) from MobileDevice md where md.type = 1 and tenantId = :tenantId")
+	@Query("select count(*) from MobileDevice md where md.type = 'APPLE' and tenantId = :tenantId")
 	Object countAppleDevices(@Param("tenantId") String tenantId);
 
 	@RestResource(exported = false)

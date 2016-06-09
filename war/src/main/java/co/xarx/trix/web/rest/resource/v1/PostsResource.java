@@ -7,9 +7,7 @@ import co.xarx.trix.domain.QPost;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.services.ResponseService;
 import co.xarx.trix.services.post.PostSearchService;
-import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.PostApi;
@@ -49,11 +47,6 @@ public class PostsResource extends AbstractResource implements PostApi {
 	private AuthService authProvider;
 	@Autowired
 	private PostSearchService postSearchService;
-	@Autowired
-	private PostService postService;
-
-	@Autowired
-	private ResponseService responseService;
 
 	@Deprecated
 	public ContentResponse<SearchView> searchPosts(
@@ -176,18 +169,6 @@ public class PostsResource extends AbstractResource implements PostApi {
 		response.content = new SearchView();
 		response.content.hits = postsViews.getLeft();
 		response.content.posts = postsViews.getRight();
-		return response;
-	}
-
-	public ContentResponse<List<PostView>> getPopular(Integer stationId,
-													  Integer page,
-													  Integer size) {
-
-		Pageable pageable = new PageRequest(page, size);
-		List<Post> posts = postRepository.findPopularPosts(stationId, pageable);
-
-		ContentResponse<List<PostView>> response = new ContentResponse<>();
-		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
 
