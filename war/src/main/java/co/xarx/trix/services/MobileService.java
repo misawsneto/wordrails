@@ -5,6 +5,7 @@ import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.AppleCertificateRepository;
 import co.xarx.trix.persistence.MobileDeviceRepository;
 import co.xarx.trix.persistence.NetworkRepository;
+import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +13,6 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.sql.Blob;
 import java.util.Collection;
 import java.util.HashSet;
@@ -31,15 +30,14 @@ public class MobileService {
 	private AppleCertificateRepository certificateRepository;
 	private MobileDeviceRepository mobileDeviceRepository;
 	private NetworkRepository networkRepository;
-
-	@PersistenceContext
-	private EntityManager entityManager;
+	private PersonRepository personRepository;
 
 	@Autowired
-	public MobileService(AppleCertificateRepository certificateRepository, MobileDeviceRepository mobileDeviceRepository, NetworkRepository networkRepository) {
+	public MobileService(AppleCertificateRepository certificateRepository, MobileDeviceRepository mobileDeviceRepository, NetworkRepository networkRepository, PersonRepository personRepository) {
 		this.certificateRepository = certificateRepository;
 		this.mobileDeviceRepository = mobileDeviceRepository;
 		this.networkRepository = networkRepository;
+		this.personRepository = personRepository;
 	}
 
 	public Collection<String> getDeviceCodes(List<MobileDevice> mobileDevices, Constants.MobilePlatform type) {
@@ -60,8 +58,8 @@ public class MobileService {
 		MobileDevice device = mobileDeviceRepository.findOne(QMobileDevice.mobileDevice.deviceCode.eq(deviceCode));
 
 		Person person = null;
-		if (personId != 0) {
-			person = entityManager.getReference(Person.class, personId);
+		if (personId != null && personId > 0) {
+			person = personRepository.findOne(personId);
 		}
 		device = getMobileDevice(person, deviceCode, lat, lng, type, device);
 
