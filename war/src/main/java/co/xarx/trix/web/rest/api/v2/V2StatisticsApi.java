@@ -18,7 +18,7 @@ public interface V2StatisticsApi {
 	@GET
 	@Path("/getMostPopular")
 	@Produces(MediaType.APPLICATION_JSON)
-	ContentResponse getMostCommonTerm(@QueryParam("page") Integer page,
+	ContentResponse getMostCommonField(@QueryParam("page") Integer page,
 											 @QueryParam("size") Integer size,
 											 @QueryParam("startTime") Long startTime,
 											 @QueryParam("endTime") Long endTime,
