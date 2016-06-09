@@ -861,24 +861,21 @@
 				<artifactId>jooq-codegen</artifactId>
 				<version>3.8.0</version>
 			</dependency>
-			<!-- http://mvnrepository.com/artifact/com.typesafe.akka/akka-actor_2.11 -->
-			<dependency>
-				<groupId>com.typesafe.akka</groupId>
-				<artifactId>akka-actor_2.11</artifactId>
-				<version>2.4.7</version>
-			</dependency>
-			<!-- http://mvnrepository.com/artifact/com.typesafe.akka/akka-cluster_2.11 -->
-			<dependency>
-				<groupId>com.typesafe.akka</groupId>
-				<artifactId>akka-cluster_2.11</artifactId>
-				<version>2.4.7</version>
-			</dependency>
-			<!-- http://mvnrepository.com/artifact/com.typesafe.akka/akka-remote_2.11 -->
-			<dependency>
-				<groupId>com.typesafe.akka</groupId>
-				<artifactId>akka-remote_2.11</artifactId>
-				<version>2.4.7</version>
-			</dependency>
+			<!--<dependency>-->
+				<!--<groupId>com.typesafe.akka</groupId>-->
+				<!--<artifactId>akka-actor_2.11</artifactId>-->
+				<!--<version>2.4.7</version>-->
+			<!--</dependency>-->
+			<!--<dependency>-->
+				<!--<groupId>com.typesafe.akka</groupId>-->
+				<!--<artifactId>akka-cluster_2.11</artifactId>-->
+				<!--<version>2.4.7</version>-->
+			<!--</dependency>-->
+			<!--<dependency>-->
+				<!--<groupId>com.typesafe.akka</groupId>-->
+				<!--<artifactId>akka-remote_2.11</artifactId>-->
+				<!--<version>2.4.7</version>-->
+			<!--</dependency>-->
 			<!-- http://mvnrepository.com/artifact/com.typesafe.akka/akka-contrib_2.11 -->
 			<dependency>
 				<groupId>com.typesafe.akka</groupId>

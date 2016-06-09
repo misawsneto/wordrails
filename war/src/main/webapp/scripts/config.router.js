@@ -119,7 +119,7 @@ angular.module('app')
               .state('app.perspectives', {
                 url: '/{stationSlug}/perspectives',
                 templateUrl: '/views/settings/settings-perspectives.html',
-                data : { titleTranslate: 'titles.PERSPECTIVES', title: 'Perspectives', folded: false },
+                data : { titleTranslate: 'titles.PERSPECTIVES', title: 'Perspectives', folded: true },
                 resolve:{
                   station: stationDep,
                   deps: load(['angularFileUpload', '/scripts/controllers/settings/settings-perspectives.js']).deps
