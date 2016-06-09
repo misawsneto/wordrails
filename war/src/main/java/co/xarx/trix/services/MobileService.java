@@ -109,6 +109,7 @@ public class MobileService {
 
 	public MobileDevice getMobileDevice(Person person, String deviceCode,
 										Double lat, Double lng, Constants.MobilePlatform type, MobileDevice device) {
+		System.out.println("Person: " + person + " - Device code: " + deviceCode);
 		if (person != null && person.id == 0) {
 			person = null;
 		}
