@@ -23,9 +23,9 @@ public class Video extends BaseEntity implements Serializable {
 		public static Map<String, String> providers;
 		static {
 			providers = new HashMap<>();
-			providers.put("DAILYMOTION", "http://www.dailymotion.com/video/");
-			providers.put("YOUTUBE", "http://www.youtube.com/watch?v=");
-			providers.put("VIMEO", "http://vimeo.com");
+			providers.put("dailymotion", "http://www.dailymotion.com/video/");
+			providers.put("youtube", "http://www.youtube.com/watch?v=");
+			providers.put("vimeo", "http://vimeo.com/");
 		}
 	}
 
@@ -51,6 +51,8 @@ public class Video extends BaseEntity implements Serializable {
 	public Integer id;
 
 	public String title;
+
+	public Integer duration;
 
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@SdkExclude
@@ -78,7 +80,7 @@ public class Video extends BaseEntity implements Serializable {
 	@SdkInclude
 	public String getExternalVideoUrl(){
 		if(getType().equals(EXTERNAL_VIDEO) && provider != null && identifier != null){
-			return VideoExternalProvider.providers.get(getProvider()) +  identifier;
+			return VideoExternalProvider.providers.get(provider) +  identifier;
 		} return null;
 	}
 

@@ -90,7 +90,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		}
 
 		postView.terms = getTermViews(post.terms);
-		postView.externalVideoUrl = post.getFeaturedVideo().getExternalVideoUrl();
+		postView.externalVideoUrl = post.getFeaturedVideo() != null ? post.getFeaturedVideo().getExternalVideoUrl() : null;
 
 		postView.featuredAudioHash = post.getFeaturedAudioHash();
 		postView.featuredVideoHash = post.getFeaturedVideoHash();
