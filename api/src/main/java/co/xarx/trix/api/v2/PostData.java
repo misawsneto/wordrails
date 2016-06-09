@@ -38,6 +38,7 @@ public class PostData implements Serializable, Identifiable {
 
 	private Integer authorId;
 	private String authorName;
+	private String authorUsername;
 	private PersonData author;
 
 	private String authorImageHash;

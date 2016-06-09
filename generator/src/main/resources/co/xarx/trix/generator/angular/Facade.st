@@ -48,9 +48,9 @@ var trix = angular.module('trix', [])
 			}else if (_config.url && response.config.method === "GET" &&
 				response.config.url.indexOf(_config.url + "/api") > -1 &&
 				response.data && response.data.content){
+					if(response.data.totalElements)
+                       response.config.totalElements = response.data.totalElements
 					response.data = response.data.content;
-					if(response.data.content.totalElements)
-                        response.data.totalElements = response.data.content.totalElements
 					return response
 			}else if(response.config.method === "PUT"){
                 var _value = response.headers("Location");
