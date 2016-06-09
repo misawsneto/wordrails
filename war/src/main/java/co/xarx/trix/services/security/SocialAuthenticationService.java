@@ -53,21 +53,26 @@ public class SocialAuthenticationService {
 
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode rootNode = mapper.readTree(response.getBody());
+		JsonNode id = rootNode.get("id");
+		JsonNode name = rootNode.get("name");
+		JsonNode cover = rootNode.get("cover");
+		JsonNode image = rootNode.get("image");
+		JsonNode emails = rootNode.get("emails");
 
 		GoogleUser googleUser = new GoogleUser();
 
 		googleUser.setProviderId("google");
-		googleUser.setId(rootNode.get("id").asText());
+		googleUser.setId(id.asText());
 		googleUser.setProfileUrl("http://plus.google.com/" + googleUser.getId());
-		googleUser.setName(rootNode.get("name").get("givenName").asText() + " " + rootNode.get("name").get("familyName").asText());
+		googleUser.setName(name.get("givenName").asText() + " " + name.get("familyName").asText());
 		try {
-			googleUser.setCoverUrl(rootNode.get("cover").get("coverPhoto").get("url").asText());
+			googleUser.setCoverUrl(cover.get("coverPhoto").get("url").asText());
 		} catch (NullPointerException e) {
 			log.debug("user " + googleUser.getId() + " doesnt have cover");
 		}
 
 		try {
-			googleUser.setProfileImageUrl(rootNode.get("image").get("url").asText());
+			googleUser.setProfileImageUrl(image.get("url").asText());
 			//image comes in size 50px. replace the url to show the default sized image
 			if (googleUser.getProfileImageUrl().contains("?sz=50")) {
 				googleUser.setProfileImageUrl(googleUser.getProfileImageUrl().replace("?sz=50", ""));
@@ -76,7 +81,7 @@ public class SocialAuthenticationService {
 			log.debug("user " + googleUser.getId() + " doesnt have profile image");
 		}
 
-		for (JsonNode emailNode : rootNode.get("emails")) {
+		for (JsonNode emailNode : emails) {
 			if (emailNode.get("type").asText().equals("account")) {
 				googleUser.setEmail(emailNode.get("value").asText());
 			}
