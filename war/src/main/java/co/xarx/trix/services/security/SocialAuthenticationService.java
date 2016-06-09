@@ -61,6 +61,17 @@ public class SocialAuthenticationService {
 
 		GoogleUser googleUser = new GoogleUser();
 
+		for (JsonNode emailNode : emails) {
+			googleUser.setEmail(emailNode.get("value").asText());
+			if (emailNode.get("type").asText().equals("account")) {
+				break;
+			}
+		}
+
+		if(googleUser.getEmail() == null) {
+			throw new IOException("Request is incorrect, email is not present in the response");
+		}
+
 		googleUser.setProviderId("google");
 		googleUser.setId(id.asText());
 		googleUser.setProfileUrl("http://plus.google.com/" + googleUser.getId());
@@ -79,12 +90,6 @@ public class SocialAuthenticationService {
 			}
 		} catch (NullPointerException e) {
 			log.debug("user " + googleUser.getId() + " doesnt have profile image");
-		}
-
-		for (JsonNode emailNode : emails) {
-			if (emailNode.get("type").asText().equals("account")) {
-				googleUser.setEmail(emailNode.get("value").asText());
-			}
 		}
 
 		return googleUser;
