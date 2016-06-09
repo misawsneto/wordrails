@@ -1120,19 +1120,6 @@ angular.module('app')
 
               person: function($stateParams, $q, trix){
                 var deferred = $q.defer();
-                /*
-                if(initData && initData.person.id == 0){
-                  document.location.href = '/access/signin';
-                  window.console && console.error('user is not logged')
-                }else if(initData.person.username !== $stateParams.username){
-                  document.location.href = '/';
-                  window.console && console.error('user is not owner')
-                }else if(initData.person.username === $stateParams.username){
-                  deferred.resolve(initData.person.bookmarkPosts)
-                }else{
-                  document.location.href = '/404';
-                }
-                */
                 trix.findByUsername($stateParams.username, 'personProjection').success(function(response){
                   if(response.persons && response.persons.length > 0)
                     deferred.resolve(response.persons[0])
@@ -1191,6 +1178,66 @@ angular.module('app')
             url: '/lockme',
             templateUrl: '/views/pages/lockme.html'
           })
+
+          if(!isSettigns){
+
+            var stationDep = function($stateParams, $q, trix){
+              var deferred = $q.defer();
+              var stationObj = null;
+              initData.stations.forEach(function(station){
+                if(station.stationSlug == $stateParams.stationSlug)
+                  stationObj = station;
+              })
+
+              if(stationObj)
+                deferred.resolve(stationObj);
+              else
+                document.location.href = '/404';
+
+               
+              return deferred.promise;
+            }
+
+            var postDep = function($stateParams, $q, trix){
+              var deferred = $q.defer();
+
+              trix.findBySlug($stateParams.postSlug, "postProjection")
+              .success(function(response){
+                if(response.posts && response.posts.length > 0)
+                  deferred.resolve(response.posts[0]);
+                else
+                  document.location.href = '/404';
+              })
+              .error(function(){
+                document.location.href = '/404';
+              })
+
+              return deferred.promise;
+            }
+
+            $stateProvider
+            .state('app.read', {
+                url: '/{stationSlug}/{postSlug}',
+                templateUrl: '/views/pages/read.html',
+                data : { title: 'Read', folded: false },
+                controller: 'ReadCtrl',
+                resolve: {
+                  post: postDep,
+                  station: stationDep,
+                  deps:load(['/scripts/controllers/app/read.js', '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css']).deps
+                }
+              })
+            .state('app.station', {
+                url: '/{stationSlug}',
+                templateUrl: '/views/pages/station.html',
+                data : { title: 'Station', folded: false },
+                controller: 'StationCtrl',
+                resolve: {
+                  station: stationDep,
+                  deps:load(['/scripts/controllers/app/station.js']).deps
+                }
+            })
+          }
         
           function load(srcs, callback) {
             return {

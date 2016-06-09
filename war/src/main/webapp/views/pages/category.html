@@ -69,7 +69,7 @@
             <!-- News Description -->
             <div class="news-description p-t p-b-sm p-h">
                 <div class="news-title" ng-if="!app.largeCardCheck($index, postView)" style="height: 66px"><a clamp="2">{{::postView.title}}</a></div>
-                <div class="news-title text-md" ng-if="app.largeCardCheck($index, postView)" style="height: 66px"><p clamp="2"> {{postView.snippet}} </p></div>
+                <div class="news-title text-md" ng-if="app.largeCardCheck($index, postView)" style="height: 66px"><p clamp="2"> {{::postView.snippet}} </p></div>
                 <div class="news-content" ng-if="!app.largeCardCheck($index, postView)" style="height: 95px" ng-if="!app.largeCardCheck($index, postView)"><p clamp="4">{{::postView.snippet}}</p></div>
                 <div class="news-comment-shares z-index-2">
                     <md-divider class="m-b-sm m-t"></md-divider>

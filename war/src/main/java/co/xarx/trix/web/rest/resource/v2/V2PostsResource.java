@@ -67,6 +67,13 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 
 		ImmutablePage<PostData> pageOfPosts = postSearchService.searchData(params, page, size);
 
+		if (embeds.contains("snippet")) {
+			for (PostData post : pageOfPosts) {
+				post.setSnippet(StringUtil.simpleSnippet(post.getBody()));
+			}
+		}
+
+
 		Set<String> postEmbeds = Sets.newHashSet("video", "image", "audio", "author", "categories", "body", "snippet");
 		super.removeNotEmbeddedData(embeds, pageOfPosts.items(), PostData.class, postEmbeds);
 

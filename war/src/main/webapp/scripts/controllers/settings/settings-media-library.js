@@ -7,10 +7,10 @@ app.controller('SettingsMediaLibraryCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
 	$scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
 
-	$scope.imagePagination{'page': 0, 'size': 21};
-	$scope.videoPagination{'page': 0, 'size': 21};
-	$scope.audioPagination{'page': 0, 'size': 21};
-	$scope.docPagination{'page': 0, 'size': 21};
+	$scope.imagePagination = {'page': 0, 'size': 21};
+	$scope.videoPagination = {'page': 0, 'size': 21};
+	$scope.audioPagination = {'page': 0, 'size': 21};
+	$scope.docPagination = {'page': 0, 'size': 21};
 
 	trix.findImagesOrderByDate($scope.imagePagination.page, $scope.imagePagination.size, null, 'imageProjection');
 	trix.findVideosOrderByDate($scope.videoPagination.page, $scope.videoPagination.size, null, 'videoProjection');
