@@ -1,15 +1,8 @@
 package co.xarx.trix.services.security;
 
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.User;
-import co.xarx.trix.domain.UserConnection;
-import co.xarx.trix.domain.UserGrantedAuthority;
+import co.xarx.trix.annotation.IntegrationTestBean;
 import co.xarx.trix.domain.social.FacebookUser;
 import co.xarx.trix.domain.social.GoogleUser;
-import co.xarx.trix.domain.social.SocialUser;
-import co.xarx.trix.persistence.PersonRepository;
-import co.xarx.trix.persistence.UserConnectionRepository;
-import co.xarx.trix.persistence.UserRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,27 +13,14 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 import org.scribe.utils.MapUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.text.Normalizer;
-import java.util.HashSet;
 
 @Slf4j
 @Service
+@IntegrationTestBean
 public class SocialAuthenticationService {
-
-	private PersonRepository personRepository;
-	private UserRepository userRepository;
-	private UserConnectionRepository userConnectionRepository;
-
-	@Autowired
-	public SocialAuthenticationService(PersonRepository personRepository, UserRepository userRepository, UserConnectionRepository userConnectionRepository) {
-		this.personRepository = personRepository;
-		this.userRepository = userRepository;
-		this.userConnectionRepository = userConnectionRepository;
-	}
 
 	boolean facebookLogin(String userId, OAuthService service, Token token) {
 		try {
@@ -73,21 +53,37 @@ public class SocialAuthenticationService {
 
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode rootNode = mapper.readTree(response.getBody());
+		JsonNode id = rootNode.get("id");
+		JsonNode name = rootNode.get("name");
+		JsonNode cover = rootNode.get("cover");
+		JsonNode image = rootNode.get("image");
+		JsonNode emails = rootNode.get("emails");
 
 		GoogleUser googleUser = new GoogleUser();
 
+		for (JsonNode emailNode : emails) {
+			googleUser.setEmail(emailNode.get("value").asText());
+			if (emailNode.get("type").asText().equals("account")) {
+				break;
+			}
+		}
+
+		if(googleUser.getEmail() == null) {
+			throw new IOException("Request is incorrect, email is not present in the response");
+		}
+
 		googleUser.setProviderId("google");
-		googleUser.setId(rootNode.get("id").asText());
+		googleUser.setId(id.asText());
 		googleUser.setProfileUrl("http://plus.google.com/" + googleUser.getId());
-		googleUser.setName(rootNode.get("name").get("givenName").asText() + " " + rootNode.get("name").get("familyName").asText());
+		googleUser.setName(name.get("givenName").asText() + " " + name.get("familyName").asText());
 		try {
-			googleUser.setCoverUrl(rootNode.get("cover").get("coverPhoto").get("url").asText());
+			googleUser.setCoverUrl(cover.get("coverPhoto").get("url").asText());
 		} catch (NullPointerException e) {
 			log.debug("user " + googleUser.getId() + " doesnt have cover");
 		}
 
 		try {
-			googleUser.setProfileImageUrl(rootNode.get("image").get("url").asText());
+			googleUser.setProfileImageUrl(image.get("url").asText());
 			//image comes in size 50px. replace the url to show the default sized image
 			if (googleUser.getProfileImageUrl().contains("?sz=50")) {
 				googleUser.setProfileImageUrl(googleUser.getProfileImageUrl().replace("?sz=50", ""));
@@ -96,62 +92,7 @@ public class SocialAuthenticationService {
 			log.debug("user " + googleUser.getId() + " doesnt have profile image");
 		}
 
-		for (JsonNode emailNode : rootNode.get("emails")) {
-			if (emailNode.get("type").asText().equals("account")) {
-				googleUser.setEmail(emailNode.get("value").asText());
-			}
-		}
-
 		return googleUser;
-	}
-
-	private UserConnection newUserConnection(SocialUser socialUser) {
-		UserConnection userConnection = new UserConnection();
-		userConnection.setProviderId(socialUser.getProviderId());
-		userConnection.setProviderUserId(socialUser.getId());
-		userConnection.setEmail(socialUser.getEmail());
-		userConnection.setDisplayName(socialUser.getName());
-		userConnection.setProfileUrl(socialUser.getProfileUrl());
-		userConnection.setImageUrl(socialUser.getProfileImageUrl());
-		return userConnection;
-	}
-
-	private User newUser(String username) {
-		User user = new User();
-
-		UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_USER");
-
-		user.enabled = true;
-		user.username = username;
-		user.password = "";
-		user.userConnections = new HashSet<>();
-		authority.user = user;
-		user.addAuthority(authority);
-
-		return user;
-	}
-
-	private Person findExistingUser(SocialUser socialUser) {
-		String email = socialUser.getEmail() == null ? "" : socialUser.getEmail();
-		Person person = personRepository.findByEmail(email);
-
-		if (person == null) {
-			int i = 1;
-			String originalUsername = socialUser.getName().toLowerCase().replace(" ", "");
-			String username = Normalizer.normalize(originalUsername, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
-			while (userRepository.existsByUsername(username)) {
-				username = originalUsername + i++;
-			}
-
-			person = new Person();
-			person.name = socialUser.getName();
-			person.username = username;
-			person.email = email;
-//			person.coverUrl = socialUser.getCoverUrl();
-//			person.imageUrl = socialUser.getProfileImageUrl();
-		}
-
-		return person;
 	}
 
 	FacebookUser getFacebookUserFromOAuth(String userId, OAuthService service, Token token) throws IOException {
@@ -168,23 +109,5 @@ public class SocialAuthenticationService {
 		fbUser.setProfileUrl("http://facebook.com/" + fbUser.getId());
 		fbUser.setProfileImageUrl("https://graph.facebook.com/" + fbUser.getId() + "/picture?type=large");
 		return fbUser;
-	}
-
-	Person getPersonFromSocialUser(SocialUser socialUser) throws IOException {
-		Person person = findExistingUser(socialUser);
-		User user;
-		if (person.user == null) {
-			user = newUser(person.username);
-		} else {
-			user = person.user;
-		}
-
-		UserConnection userConnection = newUserConnection(socialUser);
-		userConnection.setUser(user);
-		userConnectionRepository.save(userConnection);
-		user.userConnections.add(userConnection);
-		person.user = user;
-
-		return person;
 	}
 }

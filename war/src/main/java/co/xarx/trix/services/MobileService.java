@@ -8,9 +8,12 @@ import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.sql.Blob;
 import java.util.Collection;
 import java.util.HashSet;
@@ -28,6 +31,9 @@ public class MobileService {
 	private AppleCertificateRepository certificateRepository;
 	private MobileDeviceRepository mobileDeviceRepository;
 	private NetworkRepository networkRepository;
+
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Autowired
 	public MobileService(AppleCertificateRepository certificateRepository, MobileDeviceRepository mobileDeviceRepository, NetworkRepository networkRepository) {
@@ -47,14 +53,22 @@ public class MobileService {
 		return deviceCodes;
 	}
 
-	public void updateDevice(Person person, String deviceCode, Double lat, Double lng, Constants.MobilePlatform type) {
+	public void updateDevice(Integer personId, String deviceCode, Double lat, Double lng, Constants.MobilePlatform
+			type) {
 		Assert.hasText(deviceCode, "Device code must not be empty");
 
 		MobileDevice device = mobileDeviceRepository.findOne(QMobileDevice.mobileDevice.deviceCode.eq(deviceCode));
 
+		Person person = null;
+		if (personId != 0) {
+			person = entityManager.getReference(Person.class, personId);
+		}
 		device = getMobileDevice(person, deviceCode, lat, lng, type, device);
 
-		mobileDeviceRepository.save(device);
+		try {
+			mobileDeviceRepository.save(device);
+		} catch (ObjectOptimisticLockingFailureException ignored) {
+		}
 	}
 
 	public void updateAppleCertificateFile(Blob certificate) {

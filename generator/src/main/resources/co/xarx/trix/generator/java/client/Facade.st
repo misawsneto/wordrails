@@ -26,7 +26,9 @@ import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
+import co.xarx.trix.api.ImageUploadResponse;
 import co.xarx.trix.api.v2.PostData;
+import co.xarx.trix.api.v2.response.FileUpload;
 import co.xarx.trix.api.TermPerspectiveView;
 import co.xarx.trix.api.RowView;
 
@@ -612,12 +614,36 @@ public class $facade$ {
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-	public Response postImageUpload(String imageType, TypedInput contents){
+	public ImageUploadResponse postImageUpload(String imageType, TypedInput contents){
 		return _facade.postImageUpload(imageType, contents);
 	}
 	
-	public void postImageUpload(String imageType, TypedInput contents, Callback<Response> _callback){
+	public void postImageUpload(String imageType, TypedInput contents, Callback<ImageUploadResponse> _callback){
 		_facade.postImageUpload(imageType, contents, _callback);
+	}
+
+	public FileUpload postUploadVideo(TypedInput contents){
+		return _facade.postUploadVideo(contents);
+	}
+	
+	public void postUploadVideo(TypedInput contents, Callback<FileUpload> _callback){
+		_facade.postUploadVideo(contents, _callback);
+	}
+
+	public FileUpload postUploadAudio(TypedInput contents){
+		return _facade.postUploadAudio(contents);
+	}
+	
+	public void postUploadAudio(TypedInput contents, Callback<FileUpload> _callback){
+		_facade.postUploadAudio(contents, _callback);
+	}
+
+	public FileUpload postUploadDoc(TypedInput contents){
+		return _facade.postUploadDoc(contents);
+	}
+	
+	public void postUploadDoc(TypedInput contents, Callback<FileUpload> _callback){
+		_facade.postUploadDoc(contents, _callback);
 	}
 /*---------------------------------------------------------------------------*/
 

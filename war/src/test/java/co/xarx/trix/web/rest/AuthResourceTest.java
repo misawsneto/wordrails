@@ -2,7 +2,6 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.persistence.AuthCredentialRepository;
 import co.xarx.trix.services.PasswordService;
-import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.api.v1.AuthApi;
 import co.xarx.trix.web.rest.resource.v1.AuthResource;
 import org.junit.AfterClass;
@@ -24,10 +23,9 @@ public class AuthResourceTest {
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		AuthCredentialRepository authCredentialRepository = mock(AuthCredentialRepository.class);
-		AuthService authService = new AuthService(null, null, null);
 		PasswordService passwordService = mock(PasswordService.class);
 
-		AuthApi resource = new AuthResource(authCredentialRepository, authService, passwordService);
+		AuthApi resource = new AuthResource(authCredentialRepository, null, passwordService);
 		server = InMemoryRestServer.create(resource);
 	}
 

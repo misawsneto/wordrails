@@ -4,7 +4,7 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.AuthCredential;
 import co.xarx.trix.persistence.AuthCredentialRepository;
 import co.xarx.trix.services.PasswordService;
-import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.services.security.Authenticator;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.AuthApi;
 import lombok.NoArgsConstructor;
@@ -25,13 +25,13 @@ import java.io.IOException;
 public class AuthResource extends AbstractResource implements AuthApi {
 
 	private AuthCredentialRepository authCredentialRepository;
-	private AuthService authProvider;
+	private Authenticator authenticator;
 	private PasswordService passwordService;
 
 	@Autowired
-	public AuthResource(AuthCredentialRepository authCredentialRepository, AuthService authProvider, PasswordService passwordService) {
+	public AuthResource(AuthCredentialRepository authCredentialRepository, Authenticator authenticator, PasswordService passwordService) {
 		this.authCredentialRepository = authCredentialRepository;
-		this.authProvider = authProvider;
+		this.authenticator = authenticator;
 		this.passwordService = passwordService;
 	}
 
@@ -73,7 +73,7 @@ public class AuthResource extends AbstractResource implements AuthApi {
 			return Response.status(Response.Status.BAD_REQUEST).entity("Invalid provider ID").build();
 		}
 
-		boolean authorized = authProvider.socialAuthentication(providerId, service, userId, token);
+		boolean authorized = authenticator.socialAuthentication(providerId, service, userId, token);
 
 		if (authorized) {
 			return Response.status(Response.Status.OK).build();

@@ -2,7 +2,6 @@ package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.*;
@@ -48,7 +47,7 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 
 	@Version
 	@JsonIgnore
-	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)
+	@Column(columnDefinition = "int DEFAULT 0", nullable = false)
 	private int version;
 
 	@JsonIgnore

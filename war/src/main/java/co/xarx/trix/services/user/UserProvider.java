@@ -1,7 +1,7 @@
-package co.xarx.trix.services;
+package co.xarx.trix.services.user;
 
+import co.xarx.trix.annotation.IntegrationTestBean;
 import co.xarx.trix.domain.User;
-import co.xarx.trix.domain.UserGrantedAuthority;
 import co.xarx.trix.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,13 +9,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+@IntegrationTestBean
 @Service
-public class UserService implements UserDetailsService {
+public class UserProvider implements UserDetailsService {
 
 	private UserRepository userRepository;
 
 	@Autowired
-	public UserService(UserRepository userRepository) {
+	public UserProvider(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 
@@ -25,20 +26,6 @@ public class UserService implements UserDetailsService {
 
 		if(user == null)
 			throw new UsernameNotFoundException("Username doesn't exist");
-
-		return user;
-	}
-
-	public User create(String username, String password) {
-		User user = new User();
-		user.enabled = true;
-		user.username = username;
-		user.password = password;
-		UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.USER);
-		authority.user = user;
-		user.addAuthority(authority);
-
-		userRepository.save(user);
 
 		return user;
 	}

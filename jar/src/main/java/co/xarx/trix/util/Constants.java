@@ -49,6 +49,7 @@ public final class Constants {
 		public static final String STATE_NO_AUTHOR = "NOAUTHOR";
 		public static final String STATE_TRASH = "TRASH";
 		public static final String STATE_PUBLISHED = "PUBLISHED";
+		public static final String STATE_UNPUBLISHED = "UNPUBLISHED";
 		public static final String STATE_SCHEDULED = "SCHEDULED";
 	}
 

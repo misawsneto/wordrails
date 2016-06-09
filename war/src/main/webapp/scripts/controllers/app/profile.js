@@ -27,6 +27,7 @@ app.controller('ProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$stat
         $scope.loading = false;
       }).error(function(){
         $scope.loading = false;
+        $scope.publicationsCtrl.allLoaded = true;
       })
     }
   }
@@ -41,6 +42,7 @@ app.controller('ProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$stat
         posts.forEach(function(post){
           //addSnippet(post);
           $scope.publications.push(post);
+          console.log($scope.app.getStationById(post.stationId).stationSlug);
         })
         $scope.publicationsCtrl.page++;
         $scope.publicationsCtrl.allLoaded;

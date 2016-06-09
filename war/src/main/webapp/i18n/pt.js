@@ -95,7 +95,7 @@
 		"LATEST_POSTS": "Últimas publicações",
 		"OPTIONAL": "opcional",
 		"NO_BOOKMARKS": "Você não possui leituras",
-		"NO_NOTIFICATIONS": "Você não possui notificações",
+		"NO_NOTIFICATIONS": "Não há notificações neste momento",
 		"ADD_PERSON": "Crie um novo usuário",
 		"TOTAL": "Total",
 		"SHOWING": "Exibidos",
@@ -292,7 +292,9 @@
 				"CONTENT_LOST_ALERT": "Atenção! Todo o conteúdo que não foi salvo será perdido.",
 				"NEW_POST_MSG": "Iniciar uma nova publicação por inteiro?",
 				"CHANGE_STATE_FROM_PUBLISHED_MSG": "Esta publicação não será visível se seu estado não estiver configurado para PUBLICADO. Tem certeza que deseja mudar o estado desta publicação?",
-				"NEW_PUBLICATION_INFO": "Você iniciou uma nova publicação"
+				"NEW_PUBLICATION_INFO": "Você iniciou uma nova publicação",
+				"INVALID_TERMS_OR_STATIONS": "You need to set a station and category before creating/updating a publication",
+				"INVALID_TITLE_OR_BODY": "You need to set a title and body before creating/updating a publication"
 			},
 			"states": {
 				"PUBLISHED": "Publicado",

@@ -31,7 +31,7 @@ public class MobileResource extends AbstractResource implements MobileApi {
 		String userAgent = request.getHeader("User-Agent");
 
 		Constants.MobilePlatform platform;
-		if (device.equals("apple") || userAgent.contains("WordRailsIOSClient"))
+		if (device.equals("apple") || device.equals("ios") || userAgent.contains("WordRailsIOSClient"))
 			platform = Constants.MobilePlatform.APPLE;
 		else if(device.equals("android") || userAgent.contains("OkHttp"))
 			platform = Constants.MobilePlatform.ANDROID;
@@ -44,7 +44,7 @@ public class MobileResource extends AbstractResource implements MobileApi {
 	private Response updateMobile(String token, Double lat, Double lng, Constants.MobilePlatform type) {
 		Person person = authService.getLoggedPerson();
 		Logger.info("Updating " + type.toString() + " device " + token + " for person " + person.id);
-		mobileService.updateDevice(person, token, lat, lng, type);
+		mobileService.updateDevice(person.getId(), token, lat, lng, type);
 		return Response.status(Response.Status.OK).build();
 	}
 }

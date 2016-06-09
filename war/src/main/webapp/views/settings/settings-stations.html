@@ -13,21 +13,21 @@
             {{station.name}}
           </div>
 
-          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.settings.perspectives({'stationId': station.id})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.perspectives({'stationSlug': station.stationSlug})">
             <div class="md-list-item-content">
               <i class="mdi mdi-hardware-phone-android p-r fa-fw text-muted"></i> 
               {{'titles.PERSPECTIVE' | translate}}s
             </div>
           </a>
 
-          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.categories({'slug': station.stationSlug})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.categories({'stationSlug': station.stationSlug})">
             <div class="md-list-item-content">
               <i class="mdi mdi2-format-list-bulleted p-r fa-fw text-muted"></i> 
               {{'titles.CATEGORIES' | translate}}
             </div>
           </a>
 
-          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.settings.stationusers({'stationId': station.id})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.permissions({'stationSlug': station.stationSlug})">
             <div class="md-list-item-content">
               <i class="mdi mdi-communication-vpn-key p-r fa-fw text-muted"></i> 
               {{'titles.PERMISSIONS' | translate}}

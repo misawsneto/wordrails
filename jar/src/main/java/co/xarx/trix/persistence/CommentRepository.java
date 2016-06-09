@@ -27,19 +27,7 @@ public interface CommentRepository extends DatabaseRepository<Comment, Integer> 
 
 	@RestResource(exported = true)
 	@Query("SELECT comment FROM Comment comment WHERE comment.post.id = :postId ORDER BY comment.date DESC")
-	public List<Comment> findPostCommentsOrderByDate(  @Param("postId") Integer postId, Pageable pageable);
-
-	@RestResource(exported = false)
-	@Query("select date(comment.date), count(*)  from Comment comment where comment.post.id = :postId and (date(comment.date) >= date(:dateStart) and date(comment.date) <= date(:dateEnd)) group by date(comment.date)")
-	List<Object[]> countByPostAndDate(@Param("postId") Integer postId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
-
-	@RestResource(exported = false)
-	@Query("select date(comment.date), count(*)  from Comment comment where comment.post.author.id = :authorId and (date(comment.date) >= date(:dateStart) and date(comment.date) <= date(:dateEnd)) group by date(comment.date)")
-	List<Object[]> countByAuthorAndDate(@Param("authorId") Integer authorId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
-
-	@RestResource(exported = false)
-	@Query("select date(comment.date), count(*)  from Comment comment where comment.post.stationId in (select s.id from Station s) and (date(comment.date) >= date(:dateStart) and date(comment.date) <= date(:dateEnd)) group by date(comment.date)")
-	List<Object[]> countByDate(@Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
+	List<Comment> findPostCommentsOrderByDate(  @Param("postId") Integer postId, Pageable pageable);
 
 	@RestResource(exported = false)
 	@Query("select comment from Comment comment join fetch comment.author where comment.id in (:ids)")
@@ -47,5 +35,5 @@ public interface CommentRepository extends DatabaseRepository<Comment, Integer> 
 
 	@RestResource(exported = false)
 	@Query("select count(*) from Comment comment where comment.post.state = 'PUBLISHED'")
-	public Long countPublished();
+	Long countPublished();
 }

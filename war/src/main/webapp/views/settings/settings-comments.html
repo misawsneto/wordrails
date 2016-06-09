@@ -94,15 +94,15 @@
                   </div> 
                 </div>
               </div>
-              <div ng-if="personsCount && persons" class="md-whiteframe-z1 text-sm md-background-hue-1 background pos-abt bottom-0 z-index-5" style="width: calc(100% - 16px)">
+              <div ng-if="comments && comments.length > 0" class="md-whiteframe-z1 text-sm md-background-hue-1 background pos-abt bottom-0 z-index-5" style="width: calc(100% - 16px)">
                 <md-divider></md-divider>
                 <div class="p-sm font-code">
-                  {{'titles.TOTAL' | translate}}: {{personsCount}} 
+                  {{'titles.TOTAL' | translate}}: {{totalCommentsCount}} 
                   <span>
-                    | {{'titles.SHOWING' | translate}}: {{persons.length}}
+                    | {{'titles.SHOWING' | translate}}: {{comments.length}}
                   </span>
-                  <span ng-if="getSelectedPersonIds().length > 0" >
-                    | {{'titles.SELECTED' | translate}}: {{getSelectedPersonIds().length}}
+                  <span ng-if="getSelectedComments().length > 0" >
+                    | {{'titles.SELECTED' | translate}}: {{getSelectedComments().length}}
                   </span>
                 </div>
                </div>

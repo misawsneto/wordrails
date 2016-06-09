@@ -4,13 +4,11 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Invitation;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.QPerson;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.InvitationRepository;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.services.security.AuthService;
-import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -21,11 +19,13 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.acls.model.AlreadyExistsException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
@@ -37,19 +37,17 @@ public class PersonService {
 	private Client client;
 	private String nginxAccessIndex;
 	private AuthService authService;
-	private UserService userService;
 	private EmailService emailService;
 	private PersonRepository personRepository;
 	private NetworkRepository networkRepository;
 	private InvitationRepository invitationRepository;
 
 	@Autowired
-	public PersonService(UserService userService, PersonRepository personRepository, EmailService emailService,
+	public PersonService(PersonRepository personRepository, EmailService emailService,
 						 NetworkRepository networkRepository, InvitationRepository invitationRepository,
 						 AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex) {
 		this.client = client;
 		this.authService = authService;
-		this.userService = userService;
 		this.emailService = emailService;
 		this.nginxAccessIndex = nginxAccessIndex;
 		this.personRepository = personRepository;
@@ -94,33 +92,6 @@ public class PersonService {
 		}
 
 		return persons;
-	}
-
-	public Person create(String name, String username, String password, String email) {
-		if (personRepository.findOne(QPerson.person.username.eq(username)) != null) {
-			throw new AlreadyExistsException("User with username " + username + " already exists");
-		} else if (personRepository.findOne(QPerson.person.email.eq(email)) != null) {
-			throw new AlreadyExistsException("User with email " + email + " already exists");
-		}
-
-		boolean sendPlainPassword = false;
-		if(password == null || "".equals(password)){
-			password = StringUtil.generateRandomString(6, "aA#");
-		} else {
-			sendPlainPassword = true;
-		}
-
-		Person person = new Person();
-		person.name = name;
-		person.username = username;
-		person.password = password;
-		person.email = email;
-
-		person.user = userService.create(username, password);
-		personRepository.save(person);
-
-		notifyPersonCreation(person, sendPlainPassword);
-		return person;
 	}
 
 	public void notifyPersonCreation(Person person, boolean sendPlainPassword){

@@ -5,9 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import eu.bitwalker.useragentutils.UserAgent;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 
@@ -15,6 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RestUtil {
+
+	public static <T> Page<T> getPageData(ImmutablePage<T> page, List<String> order) {
+		return new PageImpl(page.items(), getPageable(page.getIndex(), page.size(), order), page.totalSize());
+	}
 
 
 	public static Pageable getPageable(Integer page, Integer size, List<String> order) {

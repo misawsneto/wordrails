@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +52,6 @@ public class Video extends BaseEntity implements Serializable {
 
 	public String title;
 
-	@NotNull
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@SdkExclude
 	public File file;

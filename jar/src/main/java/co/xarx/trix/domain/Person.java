@@ -67,7 +67,7 @@ public class Person extends BaseEntity implements Serializable {
 
 	@JsonIgnore
 	@NotNull
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToOne(fetch = FetchType.EAGER)
 	public User user;
 
 	@Size(max = 2048)
@@ -75,6 +75,7 @@ public class Person extends BaseEntity implements Serializable {
 
 	@Column
 	@Email
+	@NotNull
 	public String email;
 
 	@ManyToOne

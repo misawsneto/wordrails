@@ -140,5 +140,11 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	List<Term> findTermByPostId(@Param("postId") Integer postId);
 
 	@RestResource(exported = false)
-	public Long countByState(String state);
+	Long countByState(String state);
+
+	String findStateById(@Param("id") Integer id);
+
+	@Modifying
+	@Query("UPDATE Post p set p.state = :state where p.id = :postId")
+	void updateState(@Param("postId") int postId, @Param("state") String state);
 }

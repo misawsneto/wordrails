@@ -292,7 +292,9 @@
 				"CONTENT_LOST_ALERT": "Attention! All non-saved content will be list.",
 				"NEW_POST_MSG": "Start an entire new publication?",
 				"CHANGE_STATE_FROM_PUBLISHED_MSG": "This publication won't be visible unless it's state is set to PUBLISHED. Are you sure you want to change the state of this publication?",
-				"NEW_PUBLICATION_INFO": "You have started a new publication"
+				"NEW_PUBLICATION_INFO": "You have started a new publication",
+				"INVALID_TERMS_OR_STATIONS": "Você precisa definir uma estação e uma categoria antes de criar/atualizar uma publicação",
+				"INVALID_TITLE_OR_BODY": "Você precisa definir um título e corpo antes de criar/atualizar uma publicação"
 			},
 			"states": {
 				"PUBLISHED": "Published",
