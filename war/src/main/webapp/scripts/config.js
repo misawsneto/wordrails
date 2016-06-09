@@ -285,6 +285,7 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
       if(cssname === 'primary' && name === 'hue-1'){
         stylesheet.insertRule(".md-primary-hue-1 .nav-lines > li.active:after{border-bottom-color: " + contrastColor + "}", index); index++;
         stylesheet.insertRule(".b-l-primary {border-left-color: " + color + "}", index); index++;
+        stylesheet.insertRule("#comment-box:focus{border: 1px solid " + color + "}", index); index++;
       }
 
       if(cssname === 'warn' && name === 'default'){
@@ -308,6 +309,7 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
         stylesheet.insertRule(".not-trans.md-button:not([disabled]).md-icon-button:hover{ background-color: " + color + "}", index); index++
         stylesheet.insertRule(".not-trans.md-button:not([disabled]).md-icon-button:focus{ background-color: " + color + "}", index); index++
         stylesheet.insertRule(".streamline {border-color: " + color + "}", index); index++;
+        stylesheet.insertRule("#send-comment:not([disabled]){background-color: " + color + "}", index); index++;
       }
       if(cssname === 'background' && name === 'default'){
         stylesheet.insertRule(".mdp-datepicker .md-content,"+

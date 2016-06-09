@@ -884,7 +884,7 @@ ul.pgwSlider > li span, .pgwSlider > .ps-list > li span
 
 .comment{ background-color: #fff; overflow: hidden; padding: 50px; margin-top:40px; }
 .comment  ul{ margin: 35px 0 0 0; }
-.comment-box { border-top: 2px solid #f63e7c; padding: 25px 0; overflow: hidden;  }
+.comment-box { /*border-top: 2px solid #f63e7c;*/ padding: 25px 0; overflow: hidden;  }
 .comment-box.child {margin-left: 40px; padding-left: 40px;}
 .comment-title {
   color: #3e52b3;

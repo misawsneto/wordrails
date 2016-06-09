@@ -1084,6 +1084,9 @@ angular.module('app')
       $scope.app.showSharesPostDialog = function(event, post){
         // show term alert
         
+        if(post.station)
+          post.stationId = post.station.id
+
         $scope.app.publicationToShare = post;
         $mdDialog.show({
           scope: $scope,        // use parent scope in template

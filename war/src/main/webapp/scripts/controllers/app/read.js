@@ -3,6 +3,8 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 
 		$scope.post = post;
 
+    $scope.app.loadComments($scope.post)
+
   var intervalPromise;
   intervalPromise = $interval(function(){
     if($('#scroll-box').scrollTop() > 400 && $('main').height() - 400)
