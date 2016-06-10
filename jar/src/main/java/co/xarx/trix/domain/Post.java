@@ -164,6 +164,11 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 		return featuredVideo != null ? (featuredVideo.file != null ? featuredVideo.file.hash : null) : null;
 	}
 
+	@SdkInclude
+	public String getExternalVideoUrl() {
+		return featuredVideo != null ? featuredVideo.getExternalVideoUrl() : null;
+	}
+
 	public String getFeaturedAudioHash(){
 		if(featuredAudioHash != null)
 			return featuredAudioHash;
