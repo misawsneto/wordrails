@@ -228,7 +228,12 @@
 			"SUBSECTION": "Subsection",
 			"SIDENAV": "Side menu",
 			"FOOTER": "Footer",
-			"HEADER": "Header"
+			"HEADER": "Header",
+			"header": {
+				"TABS": "Tabs",
+				"MENU_ITEM": "Menu item",
+				"MENU_NAME": "Menu name"
+			}
 		},
 		"users": {
 			"ENABLE_ALL_SELECTED": "Enable all selected",
@@ -293,8 +298,8 @@
 				"NEW_POST_MSG": "Start an entire new publication?",
 				"CHANGE_STATE_FROM_PUBLISHED_MSG": "This publication won't be visible unless it's state is set to PUBLISHED. Are you sure you want to change the state of this publication?",
 				"NEW_PUBLICATION_INFO": "You have started a new publication",
-				"INVALID_TERMS_OR_STATIONS": "Você precisa definir uma estação e uma categoria antes de criar/atualizar uma publicação",
-				"INVALID_TITLE_OR_BODY": "Você precisa definir um título e corpo antes de criar/atualizar uma publicação"
+				"INVALID_TERMS_OR_STATIONS": "You need to set a station and category before creating/updating a publication",
+				"INVALID_TITLE_OR_BODY": "You need to set a title and body before creating/updating a publication"
 			},
 			"states": {
 				"PUBLISHED": "Published",
