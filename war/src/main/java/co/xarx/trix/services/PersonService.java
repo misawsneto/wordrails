@@ -8,6 +8,7 @@ import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.InvitationRepository;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.PersonRepository;
+import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
 import lombok.extern.slf4j.Slf4j;
@@ -41,25 +42,23 @@ public class PersonService {
 	private PersonRepository personRepository;
 	private NetworkRepository networkRepository;
 	private InvitationRepository invitationRepository;
+	private StationRepository stationRepository;
 
 	@Autowired
 	public PersonService(PersonRepository personRepository, EmailService emailService,
 						 NetworkRepository networkRepository, InvitationRepository invitationRepository,
-						 AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex) {
+						 AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex,
+						 StationRepository stationRepository) {
 		this.client = client;
 		this.authService = authService;
 		this.emailService = emailService;
 		this.nginxAccessIndex = nginxAccessIndex;
 		this.personRepository = personRepository;
+		this.stationRepository = stationRepository;
 		this.networkRepository = networkRepository;
 		this.invitationRepository = invitationRepository;
 	}
 
-	/**
-	 *
-	 * @param dto
-	 * @return conflicting person
-	 */
 	public List<Person> invite(PersonsApi.PersonInvitationDto dto){
 		if(dto.emails == null || dto.emails.size() == 0 || dto.emailTemplate == null){
 			throw new BadRequestException("Invalid emails or temaplte");
@@ -77,6 +76,14 @@ public class PersonService {
 			}
 		}
 
+		if (dto.stationIds != null) {
+			for(Integer stationId: dto.stationIds) {
+				if(stationRepository.findOne(stationId) == null){
+					dto.stationIds.remove(stationId);
+				}
+			}
+		}
+
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 
 		dto.emailTemplate = dto.emailTemplate.replaceAll("\\&\\#123;\\&\\#123;", "{{");
@@ -87,6 +94,7 @@ public class PersonService {
 		for(String email: dto.emails){
 			Invitation invitation = new Invitation(network.getRealDomain(), false);
 			invitation.email = email;
+			invitation.invitationStations = dto.stationIds;
 			invitationRepository.save(invitation);
 			emailService.sendInvitation(network, invitation, authService.getLoggedPerson(), dto.emailTemplate);
 		}
