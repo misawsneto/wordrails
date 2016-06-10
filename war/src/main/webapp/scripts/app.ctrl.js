@@ -292,6 +292,13 @@ angular.module('app')
             return TRIX.baseUrl;
         }
 
+        $scope.app.getPublicationUrl = function(stationId, post){
+          if(stationId && post)
+            return TRIX.baseUrl + '/' + $scope.app.getStationById(stationId).stationSlug  + '/' + post.slug;
+          else
+            return TRIX.baseUrl;
+        }
+
         $scope.app.goToPublicationLink = function(stationId, slug){
           if(stationId && slug)
             $state.go('app.read', {'stationSlug': $scope.app.getStationById(stationId), 'postSlug': slug})

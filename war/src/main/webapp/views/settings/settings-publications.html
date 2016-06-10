@@ -125,7 +125,7 @@
                           <i class="i-20 mdi2-format-float-left"></i>
                         </md-button>
                         <div class="m-r-xxl">
-                          <a href class="font-bold block text-md">{{publication.title}}</a>
+                          <a ng-href="{{app.getPublicationUrl(publication.stationId, publication)}}" target="_blank" class="text-u-l-hover font-bold block text-md">{{publication.title}}</a>
                           <div  class="text-sm font-normal p-v-sm text-muted">
                             {{app.getLocalTime(publication.date)}}
                           </div>
