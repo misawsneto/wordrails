@@ -26,16 +26,6 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
           $interval.cancel(intervalPromise);   
   });
 
-  var masonryTimeout = null;
-  $scope.reloadMasonry = function(){
-    if(masonryTimeout)
-      $timeout.cancel(masonryTimeout)
-    
-    masonryTimeout = $timeout(function(){
-      $rootScope.$broadcast('masonry.reload');
-    },200)
-  }
-
   var findRelated = function(size, categories){
     trix.searchPosts(null, null, null, 'published', null, null, categories, null, 0, size, '-date', ['snippet', 'tags', 'categories', 'imageHash', 'state'], false).success(function(posts,a,b,c){
         if(posts && posts.length > 0){
@@ -43,11 +33,12 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
           if(!$scope.related)
             $scope.related = []
 
-          posts.forEach(function(post){
-            $scope.related.push(post);
+          posts.forEach(function(postObj){
+            if(postObj.id != post.id)
+              $scope.related.push(postObj);
           })
 
-          
+          $scope.reloadMasonry();
       }
     })
   }

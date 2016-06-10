@@ -2,7 +2,7 @@
 </div>
 
 <div class="container">
-  <div class="row">
+  <div class="row no-margin">
       <div class="col l12">
           <div class="news-single z-depth-1 card">
               <!-- News Single Image -->
@@ -90,10 +90,10 @@
               </div>
           </div>
           <!-- related -->
-          <div class="text-u-c p font-bold text-lg m-b-sm" ng-if="related" ng-style="{'color': app.getMaterialColor('myPrimary', '500')}">
+          <div class="text-u-c p font-bold text-lg m-b-sm" ng-if="related && related.length > 0" ng-style="{'color': app.getMaterialColor('myPrimary', '500')}">
             {{'titles.RELATED' | translate}}
           </div>
-          <div class="row" masonry class="m-b pos-rlt animated fadeIn m-t-lg" reload-on-show ng-show="related">
+          <div class="row no-margin" masonry class="m-b pos-rlt animated fadeIn m-t-lg" reload-on-show ng-show="related">
             <div ng-if="publication.id != post.id" class="col-lg-4 col-sm-6 col-xs-12 masonry-brick" ng-repeat="publication in related">
               <!--  Vertical News Box -->
               <div class="news md-whiteframe-z1 vertical z-depth-1 card">

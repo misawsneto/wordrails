@@ -35,10 +35,6 @@ app.controller('CategoryCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$md
 		}
     }
 
-    $scope.reloadMasonry = function(){
-		$rootScope.$broadcast('masonry.reload');
-	}
-
 	// --------- scroll to top
   
   var intervalPromise;
