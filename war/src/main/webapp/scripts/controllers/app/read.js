@@ -44,7 +44,7 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 
   if($scope.post.terms && $scope.post.terms.length > 0){
     if($scope.post.terms.length == 1){
-      findRelated(6, [$scope.post.terms[0].id]);
+      findRelated(9, [$scope.post.terms[0].id]);
     }
 
     if($scope.post.terms.length == 2){
@@ -53,9 +53,9 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
     }
 
     if($scope.post.terms.length > 2){
-      findRelated(2, [$scope.post.terms[0].id]);
-      findRelated(2, [$scope.post.terms[1].id]);
-      findRelated(2, [$scope.post.terms[2].id]);
+      findRelated(3, [$scope.post.terms[0].id]);
+      findRelated(3, [$scope.post.terms[1].id]);
+      findRelated(3, [$scope.post.terms[2].id]);
     }
   }
 

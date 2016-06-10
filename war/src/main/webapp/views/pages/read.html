@@ -38,7 +38,7 @@
                         <span class="v-m p-v-sm m-r-sm pull-right">{{post.recommendsCount}}</span>
                         <md-button ng-click="app.toggleRecommend(post)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button pull-right" ng-style="app.isRecommended(post) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(post)}"><i class="mdi2-heart i-16"></i></md-button>
 
-                        <span class="v-m p-v-sm m-r-sm text-u-c text-lg" ng-style="{'color': app.getMaterialColor('myPrimary', '500')}"> {{'titles.COMMENTS' | translate}} • {{post.commentsCount}}</span>
+                        <div class="p-v-xs m-t-sm m-r-sm text-u-c text-md-l" ng-style="{'color': app.getMaterialColor('myPrimary', '500')}"> {{'titles.COMMENTS' | translate}} • {{post.commentsCount}}</div>
 
                         <!--<md-button style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="app.loadComments(post);"><i class="mdi2-comment i-16"></i></md-button>-->
                     </div>
@@ -90,11 +90,11 @@
               </div>
           </div>
           <!-- related -->
-          <div class="text-u-c p font-bold text-md-l m-b-sm" ng-if="related" ng-style="{'color': app.getMaterialColor('myPrimary', '500')}">
+          <div class="text-u-c p font-bold text-lg m-b-sm" ng-if="related" ng-style="{'color': app.getMaterialColor('myPrimary', '500')}">
             {{'titles.RELATED' | translate}}
           </div>
           <div class="row" masonry class="m-b pos-rlt animated fadeIn m-t-lg" reload-on-show ng-show="related">
-            <div ng-if="publication.id != post.id" class="col-lg-6 col-sm-6 col-xs-12 masonry-brick" ng-repeat="publication in related">
+            <div ng-if="publication.id != post.id" class="col-lg-4 col-sm-6 col-xs-12 masonry-brick" ng-repeat="publication in related">
               <!--  Vertical News Box -->
               <div class="news md-whiteframe-z1 vertical z-depth-1 card">
                 <a ui-sref="app.userprofile({username: publication.authorUsername})">
