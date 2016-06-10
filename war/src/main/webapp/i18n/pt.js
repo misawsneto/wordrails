@@ -105,7 +105,8 @@
 		"AT": "em",
 		"SHOW_ALL": "Mais",
 		"SKIP": "Pular",
-		"CLOSE": "Fechar"
+		"CLOSE": "Fechar",
+		"RELATED": "Publicações relacionadas"
 	},
 	"signin_signup": {
 		"OR": "ou",

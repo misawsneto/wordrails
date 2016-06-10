@@ -157,7 +157,7 @@
                           </div>
                         </div>
                         <div class="text-right">
-                          <md-button ng-click="cancel()">{{'search.VIEW_CATEGORY' | translate}}</md-button>
+                          <md-button ng-href="{{app.getCategoryLink(station.stationSlug, category.name)}}" target="{{app.isSettings() ? '_self' : ''}}">{{'search.VIEW_CATEGORY' | translate}}</md-button>
                         </div>
                       </div>
                     </div>
@@ -202,38 +202,40 @@
                         <li class="md-whiteframe-z1 md-background-hue-1 background fade-in-hover-container" ng-repeat="publication in publications">
                           <div class="pos-rlt">
                             <div class="list-group-item b-n p">
-                              <a href class="pull-left m-r-sm">
-                                <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1 text-center md-primary-hue-1 background">
-                                  <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-16" style="top: 16%;position: relative;"></i>
+                              <a ui-sref="app.userprofile({username: publication.authorUsername})">
+                                <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="pull-left m-r-sm bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1 text-center md-primary-hue-1 background">
+                                  <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
+                                </div>
+                                <div class="clear font-normal p-xs font-500 block">
+                                  {{publication.authorName}}
                                 </div>
                               </a>
-                              <div class="clear font-normal p-xs">
-                                <a href class="font-500 block">{{publication.authorName}}</a>
-                              </div>
                               <div class="m-t m-r pos-abt font-500 text-md ng-binding right-0 top-0">
                                 <i class="icon mdi2-radio-tower"></i> {{app.getStationById(publication.stationId).name}}
                               </div>
                             </div>
                             <div class="clear font-thin">
-                                  <a href class="pull-left w-full" ng-if="app.hasImage(publication)" style="height: 196px;">
-                                    <div preload-bg-image="{{app.getImageLink(publication, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
-                                    </div>
-                                  </a>
-                              </div>
+                                <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" class="pull-left w-full" ng-if="app.hasImage(publication)" style="height: 196px;">
+                                  <div preload-bg-image="{{app.getImageLink(publication, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
+                                  </div>
+                                </a>
+                            </div>
                           </div>
                           <div class="p m-b-md" style="line-height: inherit;" ng-click="showPost(publication); publication.selected = !publication.selected">
                             <div class="pos-rlt">
                               <div class="animated animated1x md-background-hue-1 background" >
                                 <div class="clear font-thin">
                                   <div class="m-r-xxl text-md">
-                                    <a href class="font-bold block text-md">{{publication.title}}</a>
+                                    <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" class="font-500 block text-md-l">{{publication.title}}</a>
                                     <div  class="text-base font-normal p-v-sm">
                                       {{app.getLocalTime(publication.date)}}
                                     </div>
                                     <div class="m-b-sm">
                                       <span class="label r m-t-xs m-r-xs md-accent-default background" ng-repeat="tag in publication.tags">{{tag}}</span>
                                     </div>
+                                    <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})">
                                     {{publication.snippet | characters:220}}
+                                    </a>
                                   </div>
                                   <div class="news-comment-shares z-index-2">
                                     <md-divider class="m-b-sm m-t"></md-divider>

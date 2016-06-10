@@ -17,10 +17,51 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
     $('#scroll-box').animate({scrollTop: 0}, 700, 'easeOutQuint');
   }
 
+  $timeout(function(){
+    $scope.scrollToTop();
+  })
+
   $scope.$on('$destroy',function(){
       if(intervalPromise)
           $interval.cancel(intervalPromise);   
   });
 
+  var findRelated = function(size, categories){
+    trix.searchPosts(null, null, null, 'published', null, null, categories, null, 0, size, '-date', ['snippet', 'tags', 'categories', 'imageHash', 'state'], false).success(function(posts,a,b,c){
+        if(posts && posts.length > 0){
+          posts.reverse();
+          if(!$scope.related)
+            $scope.related = []
+
+          posts.forEach(function(postObj){
+            if(postObj.id != post.id)
+              $scope.related.push(postObj);
+          })
+
+          $scope.reloadMasonry();
+      }
+    })
+  }
+
+  if($scope.post.terms && $scope.post.terms.length > 0){
+    if($scope.post.terms.length == 1){
+      findRelated(9, [$scope.post.terms[0].id]);
+    }
+
+    if($scope.post.terms.length == 2){
+      findRelated(3, [$scope.post.terms[0].id]);
+      findRelated(3, [$scope.post.terms[1].id]);
+    }
+
+    if($scope.post.terms.length > 2){
+      findRelated(3, [$scope.post.terms[0].id]);
+      findRelated(3, [$scope.post.terms[1].id]);
+      findRelated(3, [$scope.post.terms[2].id]);
+    }
+  }
+
   // --------- /scroll to top
+  readCtrl = $scope;
 }]);
+
+var readCtrl = null;

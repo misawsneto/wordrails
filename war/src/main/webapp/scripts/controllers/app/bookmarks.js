@@ -1,10 +1,6 @@
 app.controller('BookmarksCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDialog', '$state', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$interval', '$mdSidenav', '$translate', '$filter', '$localStorage', '$sce',
 	function($scope , $rootScope,  $log ,  $timeout ,  $mdDialog ,  $state ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $interval, $mdSidenav, $translate, $filter, $localStorage, $sce){
 
-		$scope.reloadMasonry = function(){
-      $rootScope.$broadcast('masonry.reload');
-    }
-
 		if($scope.app.person.bookmarkPosts && $scope.app.person.bookmarkPosts.length){
 			trix.findPostsByIds($scope.app.person.bookmarkPosts).success(function(posts){
 				$scope.postViews = []
@@ -15,7 +11,7 @@ app.controller('BookmarksCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$m
 					})
 				})
 				if($scope.postViews && $scope.postViews.length > 0)
-					$rootScope.$broadcast('masonry.reload');
+					$scope.reloadMasonry();
 			})
 		}else
 			$scope.noBookmarks = true;

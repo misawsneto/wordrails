@@ -10,7 +10,7 @@ app.controller('PageBuilderListCtrl', ['$scope', '$rootScope', '$log', '$timeout
 		$scope.stations.forEach(function(station){
 			trix.getStationPages(station.id).success(function(response){
 				station.pages = response.pages;
-				$rootScope.$broadcast('masonry.reload');
+				$scope.reloadMasonry();
 			})
 
 			if(station.main)

@@ -116,15 +116,21 @@ angular.module('app')
         $timeout(function() { $document.find('#aside').length && $mdSidenav('aside').close(); });
       }
 
+      var masonryTimeout = null;
+      $scope.reloadMasonry = function(){
+        if(masonryTimeout)
+          $timeout.cancel(masonryTimeout)
+
+        masonryTimeout = $timeout(function(){
+          $rootScope.$broadcast('masonry.reload');
+        },200)
+      }
+
     }
   ])
 
   .controller('AppDataCtrl', ['$scope', '$state', '$log', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdMedia', 'amMoment',
     function (             $scope, $state, $log, $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar, $mdMedia, amMoment) {
-
-      $scope.reloadMasonry = function(){
-        $rootScope.$broadcast('masonry.reload');
-      }
 
       $rootScope.$mdMedia = $mdMedia;
       amMoment.changeLocale('pt');
@@ -352,7 +358,8 @@ angular.module('app')
         }
 
         $scope.app.getCategoryLink = function(stationSlug, categoryName){
-          return '/'+stationSlug+'/cat?name='+categoryName;
+          var base = $scope.app.isSettings() ? TRIX.baseUrl : '';
+          return base +  '/'+stationSlug+'/cat?name='+categoryName;
         }
 
         $scope.app.stopPropagation = function(e){
