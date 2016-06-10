@@ -1,18 +1,18 @@
 <div id="settings-colors">
 	<div class="p-sm pos-abt top-0 left-0 w-full md-whiteframe-z0 md-primary-hue-1 background">
-		<md-button class="pull-right font-bold" ng-click="openApplyThemeDialog($event)" translate="settings.colors.APPLY_THEME">
+		<md-button aria-label="nothing" class="pull-right font-bold" ng-click="openApplyThemeDialog($event)" translate="settings.colors.APPLY_THEME">
 			Aplicar Cores
 		</md-button>
-		<md-button class="pull-right font-bold" ng-click="setTheme()" >
+		<md-button aria-label="nothing" class="pull-right font-bold" ng-click="setTheme()" >
 			{{app.testingTheme ? 'settings.colors.RESET_THEME' : 'settings.colors.TEST_THEME'| translate}}
 		</md-button>
-		<md-button class="pull-right font-bold" ng-click="togglePalette()" translate="settings.COLOR_PALETTE">
+		<md-button aria-label="nothing" class="pull-right font-bold" ng-click="togglePalette()" translate="settings.COLOR_PALETTE">
 		  	Paleta de Cores
 		</md-button>
-		<md-button ng-click="isMobile = !isMobile" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
+		<md-button aria-label="nothing" ng-click="isMobile = !isMobile" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
       <i class="i-20" ng-class="{'mdi-hardware-desktop-windows': !isMobile, 'mdi-hardware-phone-android': isMobile }"></i>
     </md-button>
-    <!-- <md-button aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;">
+    <!-- <md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;">
       <i class="i-20 mdi-editor-format-color-fill"></i>
     </md-button> -->
 	</div>
@@ -91,7 +91,7 @@
                             Title
                           </div>
                         </div>
-                        <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                        <md-button aria-label="nothing" md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
                         <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
                         <md-content class="p text-base md-hue-1">
                           <h3>Paracosm</h3>
@@ -110,7 +110,7 @@
                             Title
                           </div>
                         </div>
-                        <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                        <md-button aria-label="nothing" md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
                         <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
                         <md-content class="p text-base md-hue-1">
                           <h3>Paracosm</h3>
@@ -129,7 +129,7 @@
                             Title
                           </div>
                         </div>
-                        <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                        <md-button aria-label="nothing" md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
                         <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
                         <md-content class="p text-base md-hue-1">
                           <h3>Paracosm</h3>
@@ -155,7 +155,7 @@
                             Title
                           </div>
                         </div>
-                        <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                        <md-button aria-label="nothing" md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
                         <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
                         <md-content class="p text-base md-hue-1">
                           <h3>Paracosm</h3>
@@ -176,7 +176,7 @@
                             Title
                           </div>
                         </div>
-                        <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                        <md-button aria-label="nothing" md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
                         <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
                         <md-content class="p text-base md-hue-1">
                           <h3>Paracosm</h3>
@@ -191,7 +191,7 @@
                 </md-tabs>
               </md-content>
               <!-- /mockup-grid -->
-            <md-button md-ink-ripple aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r m-b">
+            <md-button aria-label="nothing" md-ink-ripple aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r m-b">
               <i class="mdi-editor-mode-edit i-24"></i>
             </md-button>
           </md-content><!-- /content -->
@@ -313,13 +313,13 @@
         </div>
         <div class="p text-center m-t m-b-xxl p-t-md">
           <md-menu md-position-mode="target-right target">
-            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+            <md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
               <i class="mdi-editor-format-color-fill i-24" ng-class="{'palette-color-light': !isLight(backgroundPalette), 'palette-color-dark': isLight(backgroundPalette)}"
               ></i>
             </md-button>
             <md-menu-content width="3" class="no-padding">
               <md-menu-item ng-repeat="color in backgrounds">
-                <md-button ng-click="changeBackgroundColor(color);" style="background-color:{{color}};" ng-class="{'palette-color-light': !isLight(color), 'palette-color-dark': isLight(color)}">
+                <md-button aria-label="nothing" ng-click="changeBackgroundColor(color);" style="background-color:{{color}};" ng-class="{'palette-color-light': !isLight(color), 'palette-color-dark': isLight(color)}">
                     {{color}}
                 </md-button>
               </md-menu-item>

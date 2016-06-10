@@ -1,14 +1,14 @@
 <div id="settings-perspectives">
 	<div class="p-sm pos-abt top-0 left-0 w-full md-whiteframe-z0 md-primary-hue-1 background">
 
-	    <md-button class="pull-right md-icon-button" style="margin-top: 2px;" ng-click="toggleOptions()">
+	    <md-button aria-label="nothing" class="pull-right md-icon-button" style="margin-top: 2px;" ng-click="toggleOptions()">
 			<md-tooltip md-direction="top">
 	    		{{'settings.post.OPTIONS' | translate}}
 	  		</md-tooltip>
 			<i class="mdi mdi2-menu i-20"></i>
 		</md-button>
 
-		<md-button ng-click="isMobile = !isMobile" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
+		<md-button aria-label="nothing" ng-click="isMobile = !isMobile" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
 	      <i class="i-20" ng-class="{'mdi-hardware-desktop-windows': !isMobile, 'mdi-hardware-phone-android': isMobile }"></i>
 	    </md-button>
 
@@ -174,7 +174,7 @@
 
 	</div><!-- /container -->
 
-	<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated">
+	<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated">
 	  <md-tooltip md-direction="top">
 	    {{'titles.SAVE' | translate}}
 	  </md-tooltip>

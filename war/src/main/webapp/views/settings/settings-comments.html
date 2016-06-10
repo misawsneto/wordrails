@@ -68,13 +68,13 @@
                               </a> -->
                               <ul class="list-inline no-margin text-right">
                                 <li class="dropdown">
-                                  <md-button class="md-icon-button m-t md-warn" aria-label="More" ng-click="showDeleteCommentsDialog($event, [comment])">
+                                  <md-button aria-label="nothing" class="md-icon-button m-t md-warn" aria-label="More" ng-click="showDeleteCommentsDialog($event, [comment])">
                                     <i class="i-20 mdi2-delete ng-scope"></i>
                                   </md-button>
-                                  <md-button class="md-icon-button m-t" aria-label="More 2" ng-click="app.showComments({id: comment.postId})">
+                                  <md-button aria-label="nothing" class="md-icon-button m-t" aria-label="More 2" ng-click="app.showComments({id: comment.postId})">
                                     <i class="i-20 mdi2-comment-multiple-outline ng-scope"></i>
                                   </md-button>
-                                  <md-button class="md-icon-button m-t" aria-label="More" ng-click="app.showPostContent({id: comment.postId})">
+                                  <md-button aria-label="nothing" class="md-icon-button m-t" aria-label="More" ng-click="app.showPostContent({id: comment.postId})">
                                     <i class="i-20 mdi2-format-float-left ng-scope"></i>
                                   </md-button>
                                 </li>
@@ -115,7 +115,7 @@
   </div>
 </div>
 
-<md-button aria-label="menu" ng-if="comments && comments.length > 0" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-class="{'zoomIn': getSelectedComments().length > 0, 'zoomOut': getSelectedComments().length == 0}" ng-click="showDeleteCommentsDialog($event, getSelectedCommentsObjects())">
+<md-button aria-label="nothing" aria-label="menu" ng-if="comments && comments.length > 0" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-class="{'zoomIn': getSelectedComments().length > 0, 'zoomOut': getSelectedComments().length == 0}" ng-click="showDeleteCommentsDialog($event, getSelectedCommentsObjects())">
   <md-tooltip md-direction="top">
     {{'titles.REMOVE_ALL' | translate}}
   </md-tooltip>
@@ -134,10 +134,10 @@
         </div>
 
         <div class="text-center">
-          <md-button ng-click="deleteComments(); disabled = true;" ng-disabled="disabled">
+          <md-button aria-label="nothing" ng-click="deleteComments(); disabled = true;" ng-disabled="disabled">
             {{'titles.YES' | translate}}
           </md-button>
-          <md-button ng-click="cancel()">
+          <md-button aria-label="nothing" ng-click="cancel()">
             {{'titles.NO' | translate}}
           </md-button>
         <div>

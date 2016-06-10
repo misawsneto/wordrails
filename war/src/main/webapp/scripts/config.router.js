@@ -97,6 +97,32 @@ angular.module('app')
                 controller: 'SettingsPostCtrl'
               })
 
+              .state('app.preview', {
+                url: '/preview?id',
+                templateUrl: '/views/pages/read.html',
+                data : { titleTranslate: 'titles.POST', title: 'Publicação', folded: true },
+                resolve: {
+                  post: function($stateParams, $q, trix){
+                    var deferred = $q.defer();
+                    if($stateParams.id){
+                      trix.getPost($stateParams.id, 'postProjection').success(function(post){
+                        deferred.resolve(post);
+                      }).error(function(){
+                        return deferred.reject('Error loadin post');
+                      })
+                    }
+                    return deferred.promise;
+                  },
+                  station: function($stateParams, $q, trix){
+                    var deferred = $q.defer();
+                    deferred.resolve(null);
+                    return deferred.promise;
+                  },
+                  deps:load(['/scripts/controllers/app/read.js', '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css']).deps
+                },
+                controller: 'ReadCtrl'
+              })
+
               .state('app.stations', {
                 url: '/stations',
                 templateUrl: '/views/settings/settings-stations.html',

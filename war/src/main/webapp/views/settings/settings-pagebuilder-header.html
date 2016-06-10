@@ -1,9 +1,9 @@
 <div id="settings-colors" class="o-f-x-h">
     <div class="p-sm pos-abt top-0 left-0 w-full md-whiteframe-z0 md-primary-hue-1 background">
-      <!--<md-button class="pull-right font-bold" ng-click="toggleOptions()" >
+      <!--<md-button aria-label="nothing" class="pull-right font-bold" ng-click="toggleOptions()" >
           <i class="i-20 mdi2-settings m-r-sm"></i>{{'titles.OPTIONS' | translate}}
       </md-button>-->
-      <md-button ng-click="isMobile = !isMobile" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
+      <md-button aria-label="nothing" ng-click="isMobile = !isMobile" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
         <i class="i-20" ng-class="{'mdi-hardware-desktop-windows': !isMobile, 'mdi-hardware-phone-android': isMobile }"></i>
       </md-button>
     </div>
@@ -30,7 +30,7 @@
                     <a data-ng-href="#" data-ng-click="menu2.navigationState = tag.item"><span>{{tag.name}}</span></a>
                   </li>
                   <li data-more-menu-item>
-                    <md-button aria-label="Open demo menu" class="md-icon-button" style="margin-top: 5px;" >
+                    <md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button" style="margin-top: 5px;" >
                       <i class="mdi2-arrow-down-drop-circle-outline i-20"></i>
                     </md-button>
                   </li>
@@ -67,7 +67,7 @@
                 <ul style="margin:0;padding:0">
                   <li data-ng-repeat="tag in allTags">
                     <div class="p-h p-t m-b md-whiteframe-z1 pos-rlt">
-                      <div class="pos-abt top-0 right-0 font-bold p-sm">
+                      <div class="pos-abt top-0 right-0 font-bold p">
                         #{{$index + 1}}
                       </div>
                       <md-input-container class="w-xxl m-b-0">
@@ -79,13 +79,12 @@
                         <input type="text" id="testInput" ng-model="tag.name">
                       </md-input-container>
                       <div class="clear">
-                        <md-button class="no-margin m-b-sm btn-sm pull-right no-padding" style="min-height: 28px; line-height:28px;" data-ng-click="allTags.splice($index, 1)">{{'titles.REMOVE' | translate}}
+                        <md-button aria-label="nothing" class="no-margin m-b-sm btn-sm pull-right no-padding" style="min-height: 28px; line-height:28px;" data-ng-click="allTags.splice($index, 1)">{{'titles.REMOVE' | translate}}
                         </md-button>
                       </div>
                     </div>
                   </li>
                 </ul>
-                
                 <!--<p>add new : menu-item: <input ng-model="tagToAdd.item">, name: <input ng-model="tagToAdd.name"> <button data-ng-click="allTags.push(tagToAdd);tagToAdd = null;">add</button></p>-->
               </div>
             </div>

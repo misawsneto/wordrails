@@ -67,7 +67,7 @@
   </div>
 </div>
 
-<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg" ng-click="createNewStation($event)">
+<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg" ng-click="createNewStation($event)">
     <i class="mdi-content-add i-24"></i>
 </md-button>
 
@@ -105,13 +105,13 @@
         </div>
 
         <div class="pos-abt bottom-0 text-center w-full p-t p-b">
-          <md-button ng-click="app.cancelDialog();" class="m-0">
+          <md-button aria-label="nothing" ng-click="app.cancelDialog();" class="m-0">
             {{'titles.CANCEL' | translate}}
           </md-button>
-          <md-button ng-click="app.updateStation(app.stationObj); disabled = true;" ng-disabled="disabled" class="m-0" ng-if="app.editingStation">
+          <md-button aria-label="nothing" ng-click="app.updateStation(app.stationObj); disabled = true;" ng-disabled="disabled" class="m-0" ng-if="app.editingStation">
             {{'titles.SAVE' | translate}}
           </md-button>
-          <md-button ng-click="app.createStation(app.stationObj); disabled = true;" ng-disabled="disabled" class="m-0" ng-if="app.newStation">
+          <md-button aria-label="nothing" ng-click="app.createStation(app.stationObj); disabled = true;" ng-disabled="disabled" class="m-0" ng-if="app.newStation">
             {{'actions.CREATE' | translate}}
           </md-button>
         </div>
@@ -197,10 +197,10 @@
         </div>
 
         <div class="text-center">
-          <md-button ng-click="app.removeStation(app.stationObj.id); disabled = true;" ng-disabled="disabled">
+          <md-button aria-label="nothing" ng-click="app.removeStation(app.stationObj.id); disabled = true;" ng-disabled="disabled">
             {{'titles.YES' | translate}}
           </md-button>
-          <md-button ng-click="cancel()">
+          <md-button aria-label="nothing" ng-click="cancel()">
             {{'titles.NO' | translate}}
           </md-button>
         <div>

@@ -830,6 +830,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	// -------- load post
 	
 	if($state.params.id){
+		$scope.postId = $state.params.id
 			$scope.app.showLoadingProgress();
 	 	trix.getPost($state.params.id, "postProjection").success(function(response){
 			$scope.app.editingPost = response;
