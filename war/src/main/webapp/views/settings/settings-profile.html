@@ -287,7 +287,9 @@
                     <i class="mdi mdi2-delete i-20"></i>
                   </md-button>
                 </div>
-                <div class="p text-lg l-h-1x">{{publication.title}}</div>
+                <a ng-click="$event.stopPropagation()" ng-href="{{app.getPublicationUrl(publication.stationId, publication)}}" target="_blank">
+                  <div class="p text-u-l-hover text-lg l-h-1x">{{publication.title}}</div>
+                </a>
                 <div class="p-h p-t-xs">{{app.getLocalTime(publication.date)}}</div>
                 <div class="p-h p-v-xs m-t-sm clear pull-left" ng-if="publication.tags">
                   <span class="label r m-t-xs m-r-xs md-accent-default background" ng-repeat="tag in publication.tags">{{tag}}</span>
