@@ -228,7 +228,7 @@
 	  </div>
   </div>
 
-  <md-button aria-label="nothing" ui-sref="app.preview({id: postId})" aria-label="nothing" aria-label="Open demo menu" class="pos-abt md-icon-button" style="margin: 5px 0 0 0;" target="_blank">
+  <md-button aria-label="nothing" ui-sref="app.preview({id: postId ? postId : app.editingPost.id ? app.editingPost.id : null})" aria-label="nothing" aria-label="Open demo menu" class="pos-abt md-icon-button" style="margin: 5px 0 0 0;" target="_blank">
 		<md-tooltip md-direction="top">
       	{{'settings.post.menu.PREVIEW_POST' | translate}}
   	</md-tooltip>
