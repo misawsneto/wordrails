@@ -352,7 +352,8 @@ angular.module('app')
         }
 
         $scope.app.getCategoryLink = function(stationSlug, categoryName){
-          return '/'+stationSlug+'/cat?name='+categoryName;
+          var base = $scope.app.isSettings() ? TRIX.baseUrl : '';
+          return base +  '/'+stationSlug+'/cat?name='+categoryName;
         }
 
         $scope.app.stopPropagation = function(e){

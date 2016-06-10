@@ -17,13 +17,23 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
     $('#scroll-box').animate({scrollTop: 0}, 700, 'easeOutQuint');
   }
 
+  $timeout(function(){
+    $scope.scrollToTop();
+  })
+
   $scope.$on('$destroy',function(){
       if(intervalPromise)
           $interval.cancel(intervalPromise);   
   });
 
+  var masonryTimeout = null;
   $scope.reloadMasonry = function(){
-    $rootScope.$broadcast('masonry.reload');
+    if(masonryTimeout)
+      $timeout.cancel(masonryTimeout)
+    
+    masonryTimeout = $timeout(function(){
+      $rootScope.$broadcast('masonry.reload');
+    },200)
   }
 
   var findRelated = function(size, categories){
@@ -37,7 +47,7 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
             $scope.related.push(post);
           })
 
-          $scope.reloadMasonry();
+          
       }
     })
   }
