@@ -20,9 +20,10 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public interface PersonsApi {
 
-	class PersonInvitationDto {
+	class 	PersonInvitationDto {
 		public String emailTemplate;
 		public List<String> emails;
+		public List<Integer> stationIds;
 	}
 
 	class PersonCreateDto {
