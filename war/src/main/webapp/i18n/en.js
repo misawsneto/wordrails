@@ -56,6 +56,7 @@
 		"SAVE_DRAFT": "Save draft",
 		"SAVE_AS_DRAFT": "Save as draft",
 		"SAVE": "Save",
+		"APPLY": "Apply",
 		"TITLE": "Title",
 		"SUBTITLE": "Subtitle",
 		"HEADING": "Heading",

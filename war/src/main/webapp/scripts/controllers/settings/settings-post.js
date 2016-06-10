@@ -150,7 +150,15 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	
 	// --- slug
 	$scope.customizedLink = {
-		slug: ""
+		slug: "",
+		invalid: false
+	}
+
+	$scope.applyCustomizedLink = function(slug){
+		if(!$scope.app.editingPost)
+			$scope.app.editingPost = {};
+		$scope.app.editingPost.slug = slug;
+		$scope.postPermalinkMenuOpen = false;
 	}
 
 	// --- slug

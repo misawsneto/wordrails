@@ -56,6 +56,7 @@
 		"SAVE_DRAFT": "Salvar rascunho",
 		"SAVE_AS_DRAFT": "Salvar como rascunho",
 		"SAVE": "Salvar",
+		"APPLY": "Aplicar",
 		"TITLE": "Título",
 		"SUBTITLE": "Subtítulo",
 		"HEADING": "Chapéu",

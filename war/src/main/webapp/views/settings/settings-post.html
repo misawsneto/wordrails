@@ -189,7 +189,7 @@
           <label class="m-l" translate="settings.post.menu.CUSTOMIZE_LINK"></label>
           <input ng-model="customizedLink.slug" />
         </md-input-container>
-        <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE">
+        <md-button aria-label="nothing" class="pull-right font-bold no-margin" ng-click="applyCustomizedLink(customizedLink.slug)" translate="titles.APPLY">
 					Salvar
 				</md-button>
       </div>
