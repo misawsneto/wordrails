@@ -27,9 +27,9 @@
                   </div>
                   <!-- News Title -->
                   <div class="news-title" ng-bind-html="post.title"></div>
-                  <div class="fr-view text-md-l" ng-bind-html="post.body"></div>
+                  <div class="fr-view text-md-l read-style" ng-bind-html="post.body"></div>
                   <div class="news-comment-shares p-t-lg p-b-sm">
-                    <md-divider class="m-b-sm m-t"></md-divider>
+                    <md-divider class="m-b m-t"></md-divider>
                     <div class="p-b-xs">
                         <md-button ng-click="app.showSharesPostDialog($event, post)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
                         
@@ -89,6 +89,46 @@
                     
               </div>
           </div>
+          <!-- related -->
+          <div class="text-u-c p font-bold text-md-l m-b-sm" ng-if="related" ng-style="{'color': app.getMaterialColor('myPrimary', '500')}">
+            {{'titles.RELATED' | translate}}
+          </div>
+          <div class="row" masonry class="m-b pos-rlt animated fadeIn m-t-lg" reload-on-show ng-show="related">
+            <div ng-if="publication.id != post.id" class="col-lg-6 col-sm-6 col-xs-12 masonry-brick" ng-repeat="publication in related">
+              <!--  Vertical News Box -->
+              <div class="news md-whiteframe-z1 vertical z-depth-1 card">
+                <a ui-sref="app.userprofile({username: publication.authorUsername})">
+                  <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
+                  ng-style="app.getImagesPerson(publication, publication.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(publication)}">
+                    <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
+                  </div>
+                  <div class="inline p-t v-t font-500">
+                  {{publication.authorName}}
+                  </div>
+                </a>
+                <!-- News Image -->
+                <div class="news-image o-f-h">
+                    <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" ng-if="app.hasImage(publication);">
+                    <div  preload-bg-image="{{app.getImageLink(publication, 'medium')}}" class="zoom-hover h-full bg-cover" style="min-height: 230px;">
+                    </div>
+                    </a>
+                </div>
+                <div class="text-left p-h-sm w-full z-index-2" >
+                  <a target="_blank" ng-href="{{app.getCategoryLink(app.getStationById(publication.stationId).stationSlug, category.name)}}" class="badge m-t-sm p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in publication.categories">
+                    {{::category.name}}
+                  </a>
+                </div>
+                <!-- News Description -->
+                <div class="news-description p-t p-b-sm p-h">
+                    <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})">
+                    <div class="news-title text-lg" style="min-height: 66px"><p clamp="2"> {{::publication.title}} </p></div>
+                    <div class="news-content text-md"><p clamp="2">{{::publication.snippet}}</p></div>
+                    </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /related -->
       </div>
   </div>
 </div>

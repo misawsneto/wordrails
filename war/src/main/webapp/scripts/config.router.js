@@ -1274,7 +1274,7 @@ angular.module('app')
                 resolve: {
                   post: postDep,
                   station: stationDep,
-                  deps:load(['/scripts/controllers/app/read.js', '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css']).deps
+                  deps:load(['wu.masonry', '/scripts/controllers/app/read.js', '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css']).deps
                 }
               })
             .state('app.station', {

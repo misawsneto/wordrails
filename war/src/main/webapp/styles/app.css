@@ -8570,6 +8570,10 @@ md-switch[disabled] .md-bar {
   opacity: 0.9;
 }
 
+.opacity-095 {
+  opacity: 0.95;
+}
+
 .b-l-s {
   border-left-style: solid;
 }
@@ -8908,4 +8912,10 @@ button,
        -o-transition: all 0.2s ease-in-out;
           transition: all 0.2s ease-in-out;
   transition-property: border;
+}
+
+.read-style {
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  font-smooth: antialiased;
 }

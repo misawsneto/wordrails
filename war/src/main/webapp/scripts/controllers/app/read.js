@@ -22,5 +22,45 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
           $interval.cancel(intervalPromise);   
   });
 
+  $scope.reloadMasonry = function(){
+    $rootScope.$broadcast('masonry.reload');
+  }
+
+  var findRelated = function(size, categories){
+    trix.searchPosts(null, null, null, 'published', null, null, categories, null, 0, size, '-date', ['snippet', 'tags', 'categories', 'imageHash', 'state'], false).success(function(posts,a,b,c){
+        if(posts && posts.length > 0){
+          posts.reverse();
+          if(!$scope.related)
+            $scope.related = []
+
+          posts.forEach(function(post){
+            $scope.related.push(post);
+          })
+
+          $scope.reloadMasonry();
+      }
+    })
+  }
+
+  if($scope.post.terms && $scope.post.terms.length > 0){
+    if($scope.post.terms.length == 1){
+      findRelated(6, [$scope.post.terms[0].id]);
+    }
+
+    if($scope.post.terms.length == 2){
+      findRelated(3, [$scope.post.terms[0].id]);
+      findRelated(3, [$scope.post.terms[1].id]);
+    }
+
+    if($scope.post.terms.length > 2){
+      findRelated(2, [$scope.post.terms[0].id]);
+      findRelated(2, [$scope.post.terms[1].id]);
+      findRelated(2, [$scope.post.terms[2].id]);
+    }
+  }
+
   // --------- /scroll to top
+  readCtrl = $scope;
 }]);
+
+var readCtrl = null;
