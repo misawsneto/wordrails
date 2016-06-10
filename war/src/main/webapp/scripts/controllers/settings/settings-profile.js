@@ -324,6 +324,11 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
   }
 
   $scope.movePublicationToState = function(state){
+    if(!state || state == 5){
+      $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+      $mdDialog.cancel();
+      return;
+    }
     trix.getPost($scope.toMovePublication.id).success(function(response){
       response.state = intToState(state);
       trix.putPost(response).success(function(){
