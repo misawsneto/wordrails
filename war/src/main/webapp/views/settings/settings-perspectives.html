@@ -18,145 +18,83 @@
 		<div class="p-md">
 			<div class="color-selector-container">
 				<div class="content m-t-md">
-					<div class="mockup-browser animated fadeIn" ng-class="{'mobile': isMobile}">
+					<div class="mockup-browser animated fadeIn o-f-h" style="padding-bottom: 50px;" ng-class="{'mobile': isMobile, 'desktop': !isMobile}">
 
-						<div class="text-sm text-u-c pos-abt m-t-n-lg p-t-xs text-dg w-full text-center">
-							{{isMobile ? (isVertical ? 'ambiente móvel - modo vertical' : 'ambiente móvel - modo horizontal') : 'ambiente desktop'}}
-						</div>
 
-						<header class="mockup-header bg-light paint-area" style="padding:0">
-							<div class="mockup-content mockup-grid mockup-grid--spread pull-right">
-								<ul class="nav navbar-nav">
-									<li class="hidden-sm">
-										<a href class="i-24 mdi-view-dashboard mdi" style="padding:10px;" ng-class="{'opacity-0': !isMobile}">
-										</a>
-									</li>
-								</ul>
-							</div>
-						</header>
+					    <md-toolbar class="no-radius md-primary md-whiteframe-z1" style="min-height: 50px; height: 50px">
+					      <a md-ink-ripple ng-click="toggleDemo()" class="pull-left" style="    padding: 0 16px;
+					        line-height: 50px;
+					        max-width: 55px;">
+					      <i class="mdi-navigation-menu i-24"></i></a>
+					    </md-toolbar>
 
-						<section class="mockup-section bg-white"> 
-							<div class="mockup-content mockup-grid">
-								<div class="text-center p-sm w-full" ng-if="!termPerspectiveView.featuredRow.cells || termPerspectiveView.featuredRow.cells.length == 0">
-									<a ng-click="showAddFeaturedPost($event)" href="" class="text-xl"><span class="text-md font-thin">destaques</span> <i class="mdi mdi-plus-circle-outline v-middle"></i></a>
-								</div>
-								<div ng-if="termPerspectiveView.featuredRow.cells.length > 0" class="p-e-carousel">
-									<div class="pos-abt right-0 p-xs z-i-2 text-white" ng-class="{'p-r-xxl m-r-xxl': !isMobile}">
-										<a ng-click="app.stopPropagation($event)" popover-class="carousel-popover" popover-placement="bottom" popover-class class="text-shadow-dark perspective-editor-options-button" popover="" popover-template=" 'carousel-template.html' " type="button" popover-append-to-body="true">
-											<i class="i-24 mdi-dots-vertical mdi"></i>
-										</a>
-									</div>
-									<ul rn-carousel="" rn-carousel-index="carouselIndex2" rn-carousel-auto-slide="" rn-carousel-pause-on-hover="" rn-carousel-buffered="" class="carousel2 ng-scope p-e-carousel">
-										<li ng-repeat="cell in termPerspectiveView.featuredRow.cells">
-											<div ng-if="cell.postView.featuredImageHash" ng-style="getBackgroundImage(cell.postView, 'large')"
-													class="cell-wrap bg-cover">
-											</div>
-										</li>
-									</ul>
-										<div class="text-center pos-rlt m-t-n-lg text-md z-i-2 perspective-editor-options-button ">
-											<div rn-carousel-indicators="" ng-if="termPerspectiveView.featuredRow.cells.length > 1" slides="termPerspectiveView.featuredRow.cells" rn-carousel-index="carouselIndex2" class="">
-											</div>
-										</div>
-								</div>
 
-								<div ng-if="isMobile" ng-repeat="ordinaryRow in termPerspectiveView.ordinaryRows" class="ordinary-row">
-								
-									<div data-term-id="{{::ordinaryRow.termId}}" class="wrap info-flow-wrap" 
-									scroll="horizontalPaginate(ordinaryRow)" active="horizontalCallback()" sly-scroll style="margin:0" >
-									<div class="h4 p-xs text-u-c">
-										{{::ordinaryRow.termName}}
-									</div>
-									<div class="frame info-flow" style="overflow: hidden; height:130px">
-										<ul class="sly-clearfix info-flow-list" data-term-id="{{::ordinaryRow.termId}}">
-											<li class="cell" style="width:130px" ng-repeat="cell in ordinaryRow.cells">
-								
-												<div style="height:130px" class="news-item animated fadeIn" data-post-id="{{::cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.featuredImageHash}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
+					    	<div class="vbox">
+					      	<div class="row-row">
+					          <div class="cell">
+					            <div class="cell-inner">
+					            <md-tabs  md-border-bottom class="pos-abt bottom-0 right-0 left-0 top-0 md-primary md-hue-1" >
+					              	<md-tab label="1">
+					              		<md-tab-label>
+					              			<i class="mdi2-home i-20"></i>
+					              		</md-tab-label>
+					              		<md-tab-body>
+					              			<md-content>
+						                		<div class="p" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells">
+						                      <div class="card md-whiteframe-z1 no-margin">
+						                        <div class="item">
+						                        </div>
+						                        <md-content class="p text-base md-hue-1">
+						                          <p class="text-md font-500">{{cell.postView.title}}</p>
+						                          <p>
+						                            {{cell.postView.snippet | characters:220}}
+						                          </p>
+						                        </md-content>
+						                      </div>
+						                    </div>
+					                    </md-content>
+					                 	</md-tab-body>
+					              	</md-tab>
+					                <md-tab label="{{row.termName}}" ng-repeat="row in currentPerspective.termPerspectiveView.ordinaryRows">
+					                	<md-content>
+						                  <div class="p" ng-repeat="cell in row.cells">
+						                    <div class="card md-whiteframe-z1 no-margin">
+						                      <div class="item">
+						                      </div>
+						                      <md-content class="p text-base md-hue-1">
+						                        <p class="text-md font-500">{{cell.postView.title}}</p>
+						                        <p>
+						                          {{cell.postView.snippet | characters:220}}
+						                        </p>
+						                      </md-content>
+						                    </div>
+						                  </div>
+														</md-content>
+					                </md-tab>
+					              </md-tabs>
+					            </div>
+					          </div>
+					        </div>
+					      </div>
+					    <!-- /mockup-grid -->
 
-													<div class="pos-abt right-0 z-i-4 text-white" ng-class="{'p-r-xxl m-r-xxl': !isMobile}">
-														<a ng-click="app.stopPropagation($event)" class="text-shadow-dark perspective-editor-options-button">
-															<i class="i-20 mdi-dots-vertical mdi"></i>
-														</a>
-													</div>
-								
-													<div class="p-xs text-sm font-thin pos-abt bottom-0 text-shadow-dark text-white" style="z-index:3;">
-														{{::cell.postView.title | characters:60}}
-													</div>
-								
-													<div class="cell-wrap" ng-if="cell.postView.featuredImageHash">
-														<div class="w-full h-full" ng-style="getBackgroundImage(cell.postView, 'medium')"></div>
-													</div>
-												</div>
-								
-											</li>
-											<li syle="1px"></li>
-										</ul>
-									</div>
-									<div class="scrollbar info-flow-scroll">
-										<div class="handle">
-											<div class="mousearea"></div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</section>
-				</div>
-			</div>
+						
 
-			<div id="perspective-editor-terms" class="customizer editor-panel"
-				ng-class="{'active': termEditorActive, 'inactive': !termEditorActive && (webconfEditorActive || adsEditorActive)}" 
-				ng-if="termPerspectiveView">
-				<div id="perspective-editor-terms-tab" class="pe-tabs"
-					ng-click="activateTermsPanel()">
-					<ul class="color-tool">
-						<li class="text-2x text-white">
-							<div class="m-t-n-xs"><i class="mdi mdi-format-list-numbers"></i></div>
-						</li>
-					</ul>
-				</div>
-				<div class="m-b-sm p-l-sm text-md text-white">
-					Ordem das categorias
-				</div>
-				<div class="pos-rlt">
-					<div class="display-t-c p-r">
-						<ul class="no-style">
-							<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="text-white p-xxs">
-								{{$index + 1}}ª
-							</li>
-						</ul>
-					</div>
-					<div class="display-t-c clearfix">
-						<!-- <ul class="no-style" ui-jq="sortable" id="sortable"> -->
-						<ul class="no-style" ui-sortable ng-model="termPerspectiveView.ordinaryRows">
-							<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="sortable-term sortable-elem text-white p-xxs">
-								<div ng-click="removeCategory(row.termId)"
-								class="text-danger pull-right mdi mdi-close i-16 p-xxs"></div>
-								<div class="term-name">{{row.termName}}</div>
-							</li>
-						</ul>
 					</div>
 				</div>
-				<div class="text-right p-xs w-full m-t">
-					<button ng-click="showConfigCategory($event)"
-						md-ink-ripple="" class="md-btn-sm md-btn md-raised btn-fw bg-white">Categorias</button>
-				</div>
 			</div>
-
-
 		</div><!-- /container -->
-
-		<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated">
-		  <md-tooltip md-direction="top">
-		    {{'titles.SAVE' | translate}}
-		  </md-tooltip>
-		  <i class="mdi2-content-save i-24"></i>
-		</md-button>
-	
-		</div>
 	</div>
+
+	<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated">
+	  <md-tooltip md-direction="top">
+	    {{'titles.SAVE' | translate}}
+	  </md-tooltip>
+	  <i class="mdi2-content-save i-24"></i>
+	</md-button>
 </div>
 
-<md-sidenav class="md-background-hue-1 background md-sidenav-right md-whiteframe-z2 w-400" md-component-id="perspective-list">
+<md-sidenav class="md-sidenav-right md-whiteframe-z2 w-400" md-component-id="perspective-list">
 	  <md-toolbar class="md-theme-light">
 	    <h1 class="md-toolbar-tools" translate="titles.PERSPECTIVES"></h1>
 	  </md-toolbar>
@@ -166,6 +104,26 @@
           <div class="cell">
             <div class="cell-inner">
             	
+              <div class="m-t-sm p-h pos-rlt">
+                <ul style="margin:0;padding:0">
+                  <li data-ng-repeat="perspective in stationPerspectives">
+                    <div class="p-h p-t m-b md-whiteframe-z1 pos-rlt md-background-hue-1 background">
+                      <div class="pos-abt top-0 right-0 font-bold p">
+                        #{{$index + 1}}
+                      </div>
+                      <md-input-container class="w-xxl m-b-0">
+                        <label for="testInput">{{'titles.NAME' | translate}}</label>
+                        <input type="text" ng-model="perspective.name">
+                      </md-input-container>
+                      <div class="clear">
+                        <md-button aria-label="nothing" class="no-margin m-b-sm btn-sm pull-right no-padding" style="min-height: 28px; line-height:28px;" data-ng-click="allTags.splice($index, 1)">{{'titles.EDIT' | translate}}
+                        </md-button>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
             </div>
           </div>
         </div>

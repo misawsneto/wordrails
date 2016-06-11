@@ -7048,8 +7048,12 @@ bg-none {
 }
 
 #setting-perspective-editor .mockup-browser.mobile {
-  height: 600px;
-  max-width: 340px;
+  height: 700px;
+  max-width: 400px;
+}
+
+#setting-perspective-editor .mockup-browser.desktop {
+  height: 700px;
 }
 
 #setting-perspective-editor .mockup-section {
