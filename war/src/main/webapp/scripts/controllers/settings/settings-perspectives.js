@@ -33,7 +33,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
   trix.getStationStationPerspectives($scope.thisStation.id).success(function(response){
     $scope.stationPerspectives = response.stationPerspectives;
-      $scope.stationPerspectives.forEach(function(perspective, index){
+      $scope.stationPerspectives && $scope.stationPerspectives.forEach(function(perspective, index){
         if(perspective.id == $scope.thisStation.defaultPerspectiveId){
           perspective.selected = true;
           $scope.currentPerspective = perspective;
