@@ -148,7 +148,7 @@ angular.module('app')
                 data : { titleTranslate: 'titles.PERSPECTIVES', title: 'Perspectives', folded: true },
                 resolve:{
                   station: stationDep,
-                  deps: load(['angularFileUpload', '/scripts/controllers/settings/settings-perspectives.js']).deps
+                  deps: load(['wu.masonry', '/scripts/controllers/settings/settings-perspectives.js']).deps
                 },
                 controller: 'SettingsPerspectivesCtrl'
               })

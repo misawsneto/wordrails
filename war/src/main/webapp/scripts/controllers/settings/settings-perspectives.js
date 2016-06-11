@@ -22,6 +22,14 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       return body.simpleSnippet();
   }
 
+  $scope.getCategory = function(id){
+    var ret = null;
+    $scope.thisStation.categories && $scope.thisStation.categories.forEach(function(category){
+      if(id === category.id)
+        ret = category;
+    })
+    return ret;
+  }
 
   trix.getStationStationPerspectives($scope.thisStation.id).success(function(response){
     $scope.stationPerspectives = response.stationPerspectives;
@@ -35,8 +43,11 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
   })
 
 var getPerspectiveView = function(perspective){
-  trix.findPerspectiveView(perspective.id, null, null, 0, 50).success(function(termPerspective){
+  trix.findPerspectiveView(perspective.id, null, null, 0, 10).success(function(termPerspective){
     perspective.termPerspectiveView = termPerspective;
+    perspective.termPerspectiveView.ordinaryRows && perspective.termPerspectiveView.ordinaryRows.forEach(function(row){
+      row.category = $scope.getCategory(row.termId);
+    })
   })
 }
 

@@ -8,7 +8,14 @@
 			<i class="mdi mdi2-menu i-20 m-r-sm"></i> {{'titles.PERSPECTIVES' | translate}}
 		</md-button>
 
-		<md-button aria-label="nothing" ng-click="isMobile = !isMobile" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
+		<md-button aria-label="nothing" class="pull-left" style="margin: 5px 10px 0 10px;" ng-click="togglePerspectives()">
+			<md-tooltip md-direction="top">
+    		{{'titles.SAVE' | translate}}
+  		</md-tooltip>
+			<i class="mdi mdi2-content-save i-20 m-r-sm"></i> {{'titles.SAVE' | translate}}
+		</md-button>
+
+		<md-button aria-label="nothing" ng-click="isMobile = !isMobile; reloadMasonry();" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
       <i class="i-20" ng-class="{'mdi-hardware-desktop-windows': !isMobile, 'mdi-hardware-phone-android': isMobile }"></i>
     </md-button>
 
@@ -20,65 +27,85 @@
 				<div class="content m-t-md">
 					<div class="mockup-browser animated fadeIn o-f-h" style="padding-bottom: 50px;" ng-class="{'mobile': isMobile, 'desktop': !isMobile}">
 
+				    <md-toolbar class="no-radius md-primary md-whiteframe-z1" style="min-height: 50px; height: 50px">
+				      <a md-ink-ripple ng-click="toggleDemo()" class="pull-left" style="    padding: 0 16px;
+				        line-height: 50px;
+				        max-width: 55px;">
+				      <i class="mdi-navigation-menu i-24"></i></a>
+				    </md-toolbar>
 
-					    <md-toolbar class="no-radius md-primary md-whiteframe-z1" style="min-height: 50px; height: 50px">
-					      <a md-ink-ripple ng-click="toggleDemo()" class="pull-left" style="    padding: 0 16px;
-					        line-height: 50px;
-					        max-width: 55px;">
-					      <i class="mdi-navigation-menu i-24"></i></a>
-					    </md-toolbar>
+				    <div class="vbox">
+			        <div class="row-row">
+			          <div class="cell">
+			            <div class="cell-inner">
 
 
-					    	<div class="vbox">
-					      	<div class="row-row">
-					          <div class="cell">
-					            <div class="cell-inner">
-					            <md-tabs  md-border-bottom class="pos-abt bottom-0 right-0 left-0 top-0 md-primary md-hue-1" >
-					              	<md-tab label="1">
-					              		<md-tab-label>
-					              			<i class="mdi2-home i-20"></i>
-					              		</md-tab-label>
-					              		<md-tab-body>
-					              			<md-content>
-						                		<div class="p" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells">
-						                      <div class="card md-whiteframe-z1 no-margin">
-						                        <div class="item">
-						                        </div>
-						                        <md-content class="p text-base md-hue-1">
-						                          <p class="text-md font-500">{{cell.postView.title}}</p>
-						                          <p>
-						                            {{cell.postView.snippet | characters:220}}
-						                          </p>
-						                        </md-content>
-						                      </div>
-						                    </div>
-					                    </md-content>
-					                 	</md-tab-body>
-					              	</md-tab>
-					                <md-tab label="{{row.termName}}" ng-repeat="row in currentPerspective.termPerspectiveView.ordinaryRows">
-					                	<md-content>
-						                  <div class="p" ng-repeat="cell in row.cells">
-						                    <div class="card md-whiteframe-z1 no-margin">
-						                      <div class="item">
-						                      </div>
-						                      <md-content class="p text-base md-hue-1">
-						                        <p class="text-md font-500">{{cell.postView.title}}</p>
-						                        <p>
-						                          {{cell.postView.snippet | characters:220}}
-						                        </p>
-						                      </md-content>
-						                    </div>
-						                  </div>
-														</md-content>
-					                </md-tab>
-					              </md-tabs>
-					            </div>
-					          </div>
-					        </div>
-					      </div>
+            <md-tabs  md-border-bottom class="pos-abt bottom-0 right-0 left-0 top-0 md-primary md-hue-1" >
+            	<md-tab label="1">
+            		<md-tab-label>
+            			<i class="mdi2-home i-20"></i>
+            		</md-tab-label>
+            		<md-tab-body>
+            			<md-content>
+            				<div class="p-h-sm">
+            					<div class="row">
+	            					<div class="" ng-class="{'col-sm-7 col-sm-offset-1 ': !isMobile}">
+			                		<div class="p" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells">
+			                      <div class="card md-whiteframe-z1 no-margin">
+			                        <div class="item">
+			                        	<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="h-200 img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
+			                        	</div>
+			                        </div>
+			                        <md-content class="p text-base md-hue-1">
+			                          <p class="text-md font-500">{{cell.postView.title}}</p>
+			                          <p>
+			                            {{cell.postView.snippet | characters:220}}
+			                          </p>
+			                        </md-content>
+			                      </div>
+			                    </div>
+		                    </div>
+	                    </div>
+            				</div>
+                  </md-content>
+               	</md-tab-body>
+            	</md-tab>
+              <md-tab label="{{row.termName}}" ng-repeat="row in currentPerspective.termPerspectiveView.ordinaryRows">
+              	<md-content>
+              		<div class="">
+              			<div class="display-table bg-cover animated5x fadeIn w-full bg-cover m-b md-whiteframe-z2 h-200 text-center" ng-style="{{row.category | categoryImage:'large':true}}" >
+										    <div class="text-white display-cell v-m">
+										      <span style="border-radius: 30px; border: 2px solid;" class="md-whiteframe-z2 p p-v-sm text-3x text-lg text-shadow-lg font-500">{{::row.category.name}}</span>
+										      <div class="text-shadow-lg m-t-md font-normal h4">{{::row.category.description}}</div>
+										    </div>
+										</div>
+              		</div>
+              		<div class="p-h" ng-class="{'p-h-xxl': !isMobile}">
+              			<div class="row " reload-on-show masonry>
+		                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12': isMobile}" ng-repeat="cell in row.cells">
+		                    <div class="card w-full md-whiteframe-z1 no-margin">
+		                      <div class="item">
+		                      	<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="h-200 img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
+	                        	</div>
+		                      </div>
+		                      <md-content class="p text-base md-hue-1">
+		                        <p class="text-md font-500">{{cell.postView.title}}</p>
+		                        <p>
+		                          {{cell.postView.snippet | characters:220}}
+		                        </p>
+		                      </md-content>
+		                    </div>
+		                  </div>
+	                  </div>
+              		</div>
+								</md-content>
+              </md-tab>
+            </md-tabs>
 					    <!-- /mockup-grid -->
-
-						
+					    </div>
+					    </div>
+					    </div>
+					    </div>
 
 					</div>
 				</div>
