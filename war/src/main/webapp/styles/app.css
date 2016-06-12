@@ -7061,6 +7061,65 @@ bg-none {
   overflow: auto;
 }
 
+.mockup-browser {
+  position: relative;
+  margin: 0 auto;
+  color: #7B7B7F;
+  border-top: 30px solid #ACADAE;
+  border-right: 4px solid #ACADAE;
+  border-bottom: 20px solid #ACADAE;
+  border-left: 4px solid #ACADAE;
+  border-radius: 10px;
+  -webkit-user-select: none;
+   -khtml-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.mockup-browser::before {
+  position: absolute;
+  top: -20px;
+  left: 15px;
+  width: 10px;
+  height: 10px;
+  background: #fdb0ad;
+  border-radius: 50%;
+  content: '';
+  box-shadow: 20px 0 0 #fdeaa2, 40px 0 0 #d7edb4;
+}
+
+.browser-buttons::before {
+  position: absolute;
+  top: 9px;
+  z-index: 10;
+  width: 10px;
+  height: 10px;
+  background: #fdb0ad;
+  border-radius: 50%;
+  content: '';
+  box-shadow: 20px 0 0 #fdeaa2, 40px 0 0 #d7edb4;
+}
+
+.browser-buttons {
+  -webkit-transition: all 0.2s ease-in-out;
+     -moz-transition: all 0.2s ease-in-out;
+       -o-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+}
+
+.browser-buttons {
+  position: relative;
+  max-width: 900px;
+  padding-left: 20px;
+  margin: 0 auto;
+}
+
+.browser-buttons.mobile {
+  max-width: 400px;
+}
+
 .colorpicker-visible {
   z-index: 99999!important;
 }
@@ -7193,35 +7252,6 @@ bg-none {
 }
 
 /* Mockup */
-
-.mockup-browser {
-  position: relative;
-  margin: 0 auto;
-  color: #7B7B7F;
-  border-top: 30px solid #ACADAE;
-  border-right: 4px solid #ACADAE;
-  border-bottom: 20px solid #ACADAE;
-  border-left: 4px solid #ACADAE;
-  border-radius: 10px;
-  -webkit-user-select: none;
-   -khtml-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  -webkit-touch-callout: none;
-}
-
-.mockup-browser::before {
-  position: absolute;
-  top: -20px;
-  left: 15px;
-  width: 10px;
-  height: 10px;
-  background: #fdb0ad;
-  border-radius: 50%;
-  content: '';
-  box-shadow: 20px 0 0 #fdeaa2, 40px 0 0 #d7edb4;
-}
 
 .mockup-header {
   padding: 2em 0;

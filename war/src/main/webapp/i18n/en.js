@@ -107,7 +107,8 @@
 		"SHOW_ALL": "Show all",
 		"SKIP": "Skip",
 		"CLOSE": "Close",
-		"RELATED": "Related publications"
+		"RELATED": "Related publications",
+		"ADD": "Add"
 	},
 	"signin_signup": {
 		"OR": "or",

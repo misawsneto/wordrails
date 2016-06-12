@@ -8,12 +8,12 @@
 			<i class="mdi mdi2-menu i-20 m-r-sm"></i> {{'titles.PERSPECTIVES' | translate}}
 		</md-button>
 
-		<md-button aria-label="nothing" class="pull-left" style="margin: 5px 10px 0 10px;" ng-click="togglePerspectives()">
+		<!--<md-button aria-label="nothing" class="pull-left" style="margin: 5px 10px 0 10px;" ng-click="togglePerspectives()">
 			<md-tooltip md-direction="top">
     		{{'titles.SAVE' | translate}}
   		</md-tooltip>
 			<i class="mdi mdi2-content-save i-20 m-r-sm"></i> {{'titles.SAVE' | translate}}
-		</md-button>
+		</md-button>-->
 
 		<md-button aria-label="nothing" ng-click="isMobile = !isMobile; reloadMasonry();" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
       <i class="i-20" ng-class="{'mdi-hardware-desktop-windows': !isMobile, 'mdi-hardware-phone-android': isMobile }"></i>
@@ -24,7 +24,8 @@
 	<div id="setting-perspective-editor">
 		<div class="p-md">
 			<div class="color-selector-container">
-				<div class="content m-t-md">
+				<div class="content m-t-md pos-rlt">
+					<div class="browser-buttons" ng-class="{'mobile opacity-0': isMobile}"></div>
 					<div class="mockup-browser animated fadeIn o-f-h" style="padding-bottom: 50px;" ng-class="{'mobile': isMobile, 'desktop': !isMobile}">
 
 				    <md-toolbar class="no-radius md-primary md-whiteframe-z1" style="min-height: 50px; height: 50px">
@@ -49,7 +50,7 @@
 				            			<md-content>
 				            				<div class="p-h-sm">
 				            					<div class="row">
-					            					<div class="" ng-class="{'col-sm-7 col-sm-offset-1 ': !isMobile}">
+					            					<!--<div class="" ng-class="{'col-sm-7 col-sm-offset-1 ': !isMobile}">
 							                		<div class="p" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells">
 							                      <div class="card md-whiteframe-z1 no-margin">
 							                        <div class="item">
@@ -64,7 +65,30 @@
 							                        </md-content>
 							                      </div>
 							                    </div>
-						                    </div>
+						                    </div>-->
+						                    <div class="p" ng-class="{'col-sm-7 col-sm-offset-1': !isMobile, 'col-xs-12 p-r-sm': isMobile}" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells">
+							                    <div class="w-full no-margin" ng-class="{'md-whiteframe-z1 card': !isMobile}">
+							                      <div class="item" ng-if="!isMobile">
+							                      	<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="h-200 img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
+						                        	</div>
+							                      </div>
+							                      <md-content class="text-base" ng-class="{'p md-hue-1': !isMobile, 'display-table': isMobile}">
+							                      	<div class="inline" ng-class="{'w-lg': isMobile}">
+								                        <p class="font-500" ng-class="{'text-md': !isMobile, 'text-base': isMobile}">{{cell.postView.title}}</p>
+								                        <p ng-class="{'text-base': !isMobile, 'text-xs': isMobile}">
+								                          {{cell.postView.snippet | characters: !isMobile? 220 : 100}}
+								                        </p>
+							                      	</div>
+							                      	<div class="inline display-cell v-m text-right w-full" ng-if="isMobile">
+							                      		<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="img-responsive w-96 m-auto bg-cover">
+							                        	</div>
+							                      	</div>
+							                      </md-content>
+							                    </div>
+								                  <div class="" ng-if="isMobile && !$last" style="margin: 0 -15px -15px -15px;">
+								                  	<md-divider></md-divider>
+								                  </div>
+							                  </div>
 					                    </div>
 				            				</div>
 				                  </md-content>
@@ -134,11 +158,17 @@
 	  <md-toolbar class="md-theme-light">
 	    <h1 class="md-toolbar-tools" translate="titles.PERSPECTIVES"></h1>
 	  </md-toolbar>
+  	<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-abt right-0 top-0" style="margin-top: 34px;margin-right: 30px;">
+		  <md-tooltip md-direction="top">
+		    {{'titles.ADD' | translate}}
+		  </md-tooltip>
+		  <i class="mdi2-plus i-24"></i>
+		</md-button>
 	  <md-content class="pos-abt bottom-0 right-0 left-0 md-background-default background" style="top:64px">
 	  	<div id="" class="vbox">
         <div class="row-row">
           <div class="cell">
-            <div class="cell-inner">
+            <div class="cell-inner p-t-lg">
             	
               <div class="m-t-sm p-h pos-rlt">
                 <ul style="margin:0;padding:0">
