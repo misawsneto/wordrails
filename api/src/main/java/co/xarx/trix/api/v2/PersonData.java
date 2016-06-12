@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.Date;
 
 
 @Getter
@@ -27,5 +28,6 @@ public class PersonData implements Serializable, Identifiable {
 	private String twitter;
 
 	private String coverHash;
-	private String profilePictureHash;
+	private String imageHash;
+	private Date lastLogin;
 }

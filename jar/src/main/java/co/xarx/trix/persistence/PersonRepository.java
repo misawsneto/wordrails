@@ -76,4 +76,8 @@ public interface PersonRepository extends DatabaseRepository<Person, Integer> {
 	@SdkExclude
 	@RestResource(exported = true)
 	Page<Person> findAll(Pageable pageable);
+
+	@SdkExclude
+	@RestResource(exported = false)
+	List<Person> findByUsernameIn(List<String> usernames);
 }

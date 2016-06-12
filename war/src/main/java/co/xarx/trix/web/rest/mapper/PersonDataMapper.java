@@ -21,7 +21,8 @@ public interface PersonDataMapper {
 			@Mapping(target = "email", source = "email"),
 			@Mapping(target = "twitter", source = "twitterHandle"),
 			@Mapping(target = "coverHash", source = "coverHash"),
-			@Mapping(target = "profilePictureHash", source = "imageHash")
+			@Mapping(target = "imageHash", source = "imageHash"),
+			@Mapping(target = "lastLogin", source = "lastLogin")
 	})
 	PersonData asDto(Person entity);
 }

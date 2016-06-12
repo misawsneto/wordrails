@@ -31,46 +31,29 @@
 													</th>
 													<th>usuários</th>
 													<th style="min-width:170px;" class="text-center display-t-c v-m no-padding">último login</th>
-													<th style="min-width:110px;" class="text-center display-t-c v-m no-padding">
-														ativar/desativar
-													</th>
-													<th style="min-width:100px;" class="text-center display-t-c v-m no-padding">
-														administrador
-													</th>
 													<th style="width:30px;"></th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr ng-repeat="person in persons" class="b-l-3x b-l-s b-c-t" 	ng-style="person.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" ng-class="{'b-l-primary': isActivePerson(person)}">
+												<tr ng-repeat="permission in permissions" class="b-l-3x b-l-s b-c-t" 	ng-style="person.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" ng-class="{'b-l-primary': isActivePerson(person)}">
 													<td class="display-t-c v-m">
-														<md-checkbox aria-label="nothing" class="no-margin" ng-if="person.id != app.person.id"
-														 ng-model="person.selected" ng-true-value="true" ng-false-value="false" ng-click="app.stopPropagation($event)">
+														<md-checkbox aria-label="nothing" class="no-margin" ng-if="permission.person.id != app.person.id"
+														 ng-model="permission.selected" ng-true-value="true" ng-false-value="false" ng-click="app.stopPropagation($event)">
 														</md-checkbox>
 													</td>
 													<td class="display-t-c v-m clearfix">
 							              <span class="pull-left thumb-sm m-r">
-															<div ng-style="app.getUserImage(person, 'small', 'PROFILE_PICTURE', true)" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(person)}">
-																<i ng-if="!app.hasProfilePicture(person)" style="line-height: 36px;" class="mdi2-account i-24"></i>
+															<div ng-style="app.getUserImage(permission.person, 'small', 'PROFILE_PICTURE', true)" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(permission.person)}">
+																<i ng-if="!app.hasProfilePicture(permission.person)" style="line-height: 36px;" class="mdi2-account i-24"></i>
 															</div>
 							              </span>
 								              <span class="clear">
-								                <span class="text-md font-bold">{{person.name}}</span>
-								                <div class="text-muted clear text-ellipsis">{{person.username}} | {{person.email}}</div>
+								                <span class="text-md font-bold">{{permission.person.name}}</span>
+								                <div class="text-muted clear text-ellipsis">{{permission.person.username}} | {{permission.person.email}}</div>
 								              </span>
 													</td>
-													<td class="display-t-c v-m text-center" ng-if="!person.lastLogin"> - </td>
-													<td class="display-t-c v-m text-center" ng-if="person.lastLogin">{{app.getLocalTime(person.lastLogin)}}</td>
-													<td class="display-t-c v-m text-center">
-														<div ng-if="person.id != app.person.id" class="hidden-sm" ng-click="app.stopPropagation($event)">
-														 	<md-switch class="no-margin" ng-change="app.enableDisablePerson(person)" ng-model="person.enabled" ng-true-value="true" ng-false-value="false">
-								            	</md-switch>
-														</div>
-													</td>
-													<td class="display-t-c v-m text-center">
-														<md-checkbox aria-label="nothing" class="no-margin" ng-if="person.id != app.person.id" 
-														 ng-model="person.admin" ng-click="app.stopPropagation($event)">
-														</md-checkbox>
-													</td>
+													<td class="display-t-c v-m text-center" ng-if="!permission.person.lastLogin"> - </td>
+													<td class="display-t-c v-m text-center" ng-if="permission.person.lastLogin">{{app.getLocalTime(permission.person.lastLogin)}}</td>
 													<td class="display-t-c v-m">
                             <div ng-if="person.id != app.person.id" class="dropdown hidden-sm">
                               <ul class="list-inline no-margin">
