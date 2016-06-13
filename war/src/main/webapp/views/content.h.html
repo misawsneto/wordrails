@@ -176,7 +176,7 @@
   <div class="box-row">
     <md-toolbar md-scroll-shrink ng-if="true" style="min-height: 50px;">
       <div class="md-primary-hue-1 background custom-header" style="min-height: 50px;">
-        <ul class="nav nav-lines nav-md no-bg" ng-class="{'o-f-h': app.loadingTabs}" df-tab-menu menu-control="{{menu2.navigationState}}" style="height: 60px!important">
+        <ul class="nav nav-lines nav-md no-bg animated" ng-class="{'o-f-h fadeOut': app.loadingTabs, 'fadeIn': !app.loadingTabs}" df-tab-menu menu-control="{{menu2.navigationState}}" style="height: 60px">
           <li md-ink-ripple data-ng-repeat="category in app.perspectiveTerms" data-menu-item="{{category.item}}">
             <a data-ng-href="#" ><span>{{category.name}}</span></a>
           </li>
