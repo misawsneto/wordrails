@@ -8972,3 +8972,7 @@ ul.pgwSlider > li,
 .pgwSlider > .ps-list > li {
   font-size: 1.1rem!important;
 }
+
+.df-tab-menu.nav-lines > li:after {
+  margin-bottom: 1px;
+}

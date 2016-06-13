@@ -312,6 +312,9 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
         stylesheet.insertRule(".streamline {border-color: " + color + "}", index); index++;
         stylesheet.insertRule("#send-comment:not([disabled]){background-color: " + color + "}", index); index++;
       }
+      if(cssname === 'accent' && name === 'hue-1'){
+        stylesheet.insertRule(".df-tab-menu.nav-lines > li.active::after{border-bottom-color: " + color + "}", index); index++; 
+      }
       if(cssname === 'background' && name === 'default'){
         stylesheet.insertRule(".mdp-datepicker .md-content,"+
                               ".mdp-datepicker md-dialog-content,"+

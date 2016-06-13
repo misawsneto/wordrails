@@ -504,6 +504,38 @@ angular.module('app')
         $mdDialog.cancel();
       });
 
+      $scope.app.getStationCategories = function(){
+        var ret = null
+        if($scope.app.termPerspectiveView && $scope.app.termPerspectiveView.ordinaryRows){
+          ret = [];
+          $scope.app.termPerspectiveView.ordinaryRows && $scope.app.termPerspectiveView.ordinaryRows.forEach(function(row){
+            ret.push({
+              'id':row.termId,
+              'name':row.termName
+            })
+          })
+        }
+        return ret ? ret : $scope.app.perspectiveTerms;
+      }
+
+      $scope.app.termPerspectiveView = [];
+      $scope.$watch('app.termPerspectiveView', function(newValue, oldValue, scope) {
+        if(newValue){
+          loadPerspectiveTerms();
+        }
+      });
+
+      var loadPerspectiveTerms = function(){
+        $scope.app.loadingTabs = true;
+        $scope.app.perspectiveTerms = $scope.app.getStationCategories();
+          if($scope.app.perspectiveTerms && $scope.app.perspectiveTerms.length){
+            $timeout(function(){
+              $(window).trigger('resize');
+              $scope.app.loadingTabs = false;
+            })
+          }
+      }
+
       /**
        * Watch value of app.postObjectChanged and set alert messages.
        * @param  boolean newVal
