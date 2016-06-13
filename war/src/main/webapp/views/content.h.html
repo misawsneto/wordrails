@@ -178,8 +178,10 @@
       <div class="md-primary-hue-1 background">
         <div class="custom-header container" style="min-height: 50px;">
           <ul class="nav nav-lines nav-md no-bg animated" ng-class="{'o-f-h fadeOut': app.loadingTabs, 'fadeIn': !app.loadingTabs}" df-tab-menu menu-control="{{menu2.navigationState}}" style="height: 60px">
-            <li md-ink-ripple data-ng-repeat="category in app.perspectiveTerms" data-menu-item="{{category.item}}" class="text-md-l">
-              <a data-ng-href="#" ><span>{{category.name}}</span></a>
+            <li md-ink-ripple data-ng-repeat="category in app.perspectiveTerms" data-menu-item="{{category.item}}">
+              <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(app.termPerspectiveView.stationId).stationSlug, 'name': category.name})" >
+                <span>{{category.name}}</span>
+              </a>
             </li>
             <li data-more-menu-item>
               <md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button" style="margin-top: 10px;" >
