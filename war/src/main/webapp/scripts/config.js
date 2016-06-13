@@ -280,6 +280,7 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
         stylesheet.insertRule(".nav-lines > li.active:after{border-bottom-color: " + color + "}", index); index++;
         stylesheet.insertRule(".md-primary-default .nav-lines > li.active:after{border-bottom-color: " + contrastColor + "}", index); index++;
         stylesheet.insertRule(".sl-item {border-color: "+ color +"}", index); index++;
+        stylesheet.insertRule(".md-primary-default2.background {background-color: "+ color +"}", index); index++;
       }
 
       if(cssname === 'primary' && name === 'hue-1'){
@@ -310,6 +311,9 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
         stylesheet.insertRule(".not-trans.md-button:not([disabled]).md-icon-button:focus{ background-color: " + color + "}", index); index++
         stylesheet.insertRule(".streamline {border-color: " + color + "}", index); index++;
         stylesheet.insertRule("#send-comment:not([disabled]){background-color: " + color + "}", index); index++;
+      }
+      if(cssname === 'accent' && name === 'hue-1'){
+        stylesheet.insertRule(".df-tab-menu.nav-lines > li.active::after{border-bottom-color: " + color + "}", index); index++; 
       }
       if(cssname === 'background' && name === 'default'){
         stylesheet.insertRule(".mdp-datepicker .md-content,"+

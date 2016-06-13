@@ -6821,6 +6821,10 @@ bg-none {
   height: 100px;
 }
 
+.h-150 {
+  height: 150px;
+}
+
 .h-200 {
   height: 200px;
 }
@@ -8967,4 +8971,8 @@ button,
 ul.pgwSlider > li,
 .pgwSlider > .ps-list > li {
   font-size: 1.1rem!important;
+}
+
+.df-tab-menu.nav-lines > li:after {
+  margin-bottom: 1px;
 }

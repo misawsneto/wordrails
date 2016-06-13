@@ -35,6 +35,7 @@ app.controller('PageCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 	      }
 	    }
 
+
 }]);
 
 var pageCtrl = null;

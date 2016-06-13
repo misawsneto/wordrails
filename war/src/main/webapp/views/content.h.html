@@ -5,7 +5,7 @@
     <!--<a md-ink-ripple ng-click="openAside()" ng-hide="$state.current.data.child" class="navbar-item pull-left"><i class="mdi-navigation-menu i-24"></i></a>-->
     <!-- / -->
     <div class="navbar-header pull-left">
-      <a class="navbar-brand" ng-href="/" target="_self">
+      <a class="navbar-brand" ng-href="/">
         <!-- <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve" style="
               width: 24px; height: 24px;">
             <path d="M 50 0 L 100 14 L 92 80 Z" fill="rgba(139, 195, 74, 0.5)"></path>
@@ -174,10 +174,24 @@
   </div>
   <!-- Content -->
   <div class="box-row">
-    <!-- <md-toolbar md-scroll-shrink ng-if="true" style="min-height: 50px;">
-      <div class="md-primary-hue-1 background" style="min-height: 50px;">
+    <md-toolbar md-scroll-shrink style="min-height: 50px;" ng-class="{'show': !$state.includes('app.search'), 'hide': $state.includes('app.search')}">
+      <div class="md-primary-hue-1 background">
+        <div class="custom-header container" style="min-height: 50px;">
+          <ul class="nav nav-lines nav-md no-bg animated" ng-class="{'o-f-h fadeOut': app.loadingTabs, 'fadeIn': !app.loadingTabs}" df-tab-menu menu-control="{{menu2.navigationState}}" style="height: 60px">
+            <li ng-class="{'active': app.activeCategory.id === category.id}" md-ink-ripple data-ng-repeat="category in app.perspectiveTerms" data-menu-item="{{category.item}}">
+              <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(app.termPerspectiveView.stationId).stationSlug, 'name': category.name})" >
+                <span>{{category.name}}</span>
+              </a>
+            </li>
+            <li data-more-menu-item>
+              <md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button" style="margin-top: 10px;" >
+                <i class="mdi2-chevron-double-down i-20"></i>
+              </md-button>
+            </li>
+          </ul>        
+        </div>
       </div>
-    </md-toolbar> -->
+    </md-toolbar>
     <md-content id="scroll-box" class="box-cell o-f-x-h">
       <div id="app-content" class="box-inner">
         <!-- <div id="view" class="clearfix md-whiteframe-z0 no-radius" ng-class="$state.current.data.theme ? $state.current.data.theme.primary : app.setting.theme.primary"> -->

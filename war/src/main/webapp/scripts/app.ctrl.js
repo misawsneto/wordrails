@@ -346,11 +346,19 @@ angular.module('app')
         }
 
         $scope.app.fullCardCheck = function(index, post){
-          return $scope.app.hasImage(post) && (index%8 == 0 || index == 0) && !$scope.app.largeCardCheck(index-2, post) && $scope.app.largeCardCheck(index+3, post);
+          //return $scope.app.hasImage(post) && (index%8 == 0 || index == 0) && !$scope.app.largeCardCheck(index-2, post) && $scope.app.largeCardCheck(index+3, post);
+          var ind = index+1 + '';
+          var indLasDigit = ind.slice(ind.length - 1);
+
+          return indLasDigit == 1;
         }
 
         $scope.app.largeCardCheck = function(index, post){
-          return $scope.app.hasImage(post) && (index%3 == 0 && index != 0) && !$scope.app.fullCardCheck(index + 1, post)
+          // return $scope.app.hasImage(post) && (index%3 == 0 && index != 0) && !$scope.app.fullCardCheck(index + 1, post)
+          var ind = index+1 + '';
+          var indLasDigit = ind.slice(ind.length - 1);
+
+          return (indLasDigit == 5 || indLasDigit == 8 || indLasDigit == 0) && !$scope.app.fullCardCheck(index, post);
         }
 
         $scope.app.smallCardCheck = function(index){
@@ -496,6 +504,38 @@ angular.module('app')
         $mdDialog.cancel();
       });
 
+      $scope.app.getStationCategories = function(){
+        var ret = null
+        if($scope.app.termPerspectiveView && $scope.app.termPerspectiveView.ordinaryRows){
+          ret = [];
+          $scope.app.termPerspectiveView.ordinaryRows && $scope.app.termPerspectiveView.ordinaryRows.forEach(function(row){
+            ret.push({
+              'id':row.termId,
+              'name':row.termName
+            })
+          })
+        }
+        return ret ? ret : $scope.app.perspectiveTerms;
+      }
+
+      $scope.app.termPerspectiveView = [];
+      $scope.$watch('app.termPerspectiveView', function(newValue, oldValue, scope) {
+        if(newValue){
+          loadPerspectiveTerms();
+        }
+      });
+
+      var loadPerspectiveTerms = function(){
+        $scope.app.loadingTabs = true;
+        $scope.app.perspectiveTerms = $scope.app.getStationCategories();
+          if($scope.app.perspectiveTerms && $scope.app.perspectiveTerms.length){
+            $timeout(function(){
+              $(window).trigger('resize');
+              $scope.app.loadingTabs = false;
+            })
+          }
+      }
+
       /**
        * Watch value of app.postObjectChanged and set alert messages.
        * @param  boolean newVal
@@ -556,6 +596,8 @@ angular.module('app')
             }, 2000);
           }
         }
+
+        $scope.app.activeCategory = null;
       })
 
       // ---------- /theming ------------------

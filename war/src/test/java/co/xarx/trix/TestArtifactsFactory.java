@@ -43,7 +43,7 @@ public class TestArtifactsFactory {
 		post.bookmarksCount = 6;
 		post.readTime = 9;
 		post.featuredImage = createImage(Image.Type.POST);
-//		post.featuredVideoHash = generateToken();
+		post.featuredVideo = new Video("123", "youtube");
 		post.featuredAudioHash = generateToken();
 		post.lat = 132.51;
 		post.lng = 42.90;
