@@ -81,8 +81,8 @@ public class Video extends BaseEntity implements Serializable {
 	public String getExternalVideoUrl(){
 		if(getType().equals(EXTERNAL_VIDEO) && provider != null && identifier != null){
 			return VideoExternalProvider.providers.get(provider) +  identifier;
-		} return null;
-	}
+		}
 
-	public String url;
+		return null;
+	}
 }
