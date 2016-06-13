@@ -143,7 +143,19 @@ angular.module('app')
       }
     };
   })
-  ;
+  
+  .directive('pgwSlider', function($timeout) {
+    return {
+      // Restrict it to be an attribute in this case
+      restrict: 'A',
+      // responsible for registering DOM listeners as well as updating the DOM
+      link: function(scope, element, attrs) {
+        $timeout(function () {
+          $(element).pgwSlider(scope.$eval(attrs.pgwSlider));
+        });
+      }
+    };
+  });
 
 (function(angular) {
     'use strict';

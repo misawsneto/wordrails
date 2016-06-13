@@ -108,7 +108,8 @@
 		"SKIP": "Pular",
 		"CLOSE": "Fechar",
 		"RELATED": "Publicações relacionadas",
-		"ADD": "Adicionar"
+		"ADD": "Adicionar",
+		"LOAD_MORE": "Carregar mais"
 	},
 	"signin_signup": {
 		"OR": "ou",

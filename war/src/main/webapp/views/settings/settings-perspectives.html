@@ -47,36 +47,49 @@
 				            			<i class="mdi2-home i-20"></i>
 				            		</md-tab-label>
 				            		<md-tab-body>
-				            			<md-content>
-				            				<div class="p-h-sm">
-				            					<div class="row">
-					            					<!--<div class="" ng-class="{'col-sm-7 col-sm-offset-1 ': !isMobile}">
-							                		<div class="p" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells">
-							                      <div class="card md-whiteframe-z1 no-margin">
-							                        <div class="item">
-							                        	<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="h-200 img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
-							                        	</div>
-							                        </div>
-							                        <md-content class="p text-base md-hue-1">
-							                          <p class="text-md font-500">{{cell.postView.title}}</p>
-							                          <p>
-							                            {{cell.postView.snippet | characters:220}}
-							                          </p>
-							                        </md-content>
-							                      </div>
-							                    </div>
-						                    </div>-->
-						                    <div class="p" ng-class="{'col-sm-7 col-sm-offset-1': !isMobile, 'col-xs-12 p-r-sm': isMobile}" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells">
+				            			<md-content class="o-f-x-h">
+			            					<!--<div ng-if="currentPerspective.termPerspectiveView.featuredRow.cells" class="m-b" >
+															<div slider class="slider">
+																<ul class="slides md-whiteframe-z2">
+													        <li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells" index="0">
+												            <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
+					                        	</div>
+												            <!~~ <img src="http://lorempixel.com/580/250/nature/1" class="responsive-img"> ~~> <!~~ random image ~~>
+												            <div class="pos-abt bottom-0 left-0 p-h black-grad w-full">
+											                <h3 class="font-500 light grey-text text-lighten-4">{{::cell.postView.title}}</h3>
+											                <h4 class="light grey-text text-lighten-3">
+											                	{{::cell.postView.snippet | characters: 120}}
+											                </h4>
+												            </div>
+													        </li>
+														    </ul>
+													    </div>
+														</div>-->
+
+														<div class="clear pos-rlt p" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells">
+															<ul class="pgwSlider" pgw-slider="{verticalCentering:true, maxHeight: 400, selectionMode: 'click', }">
+															    <li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells">
+															    	<img ng-src="{{app.getImageLink(cell.postView, 'large')}}" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="bg-cover opacity-0" alt="{{cell.postView.title}}" data-description="{{cell.postView.snippet | characters:200}}">
+															    	<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z1 pos-abt top-0 bottom-0 right-0 left-0 bg-cover">
+					                        	</div>
+					                        	<span>{{cell.postView.title}}</span>
+														    	</li>
+															</ul>
+														</div>
+
+				            				<div class="" ng-class="{'p-h-xxl': !isMobile}">
+					                    <div class="row no-margin" reload-on-show masonry>
+							                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12 p-r-sm p-0 p-b': isMobile}" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells">
 							                    <div class="w-full no-margin" ng-class="{'md-whiteframe-z1 card': !isMobile}">
 							                      <div class="item" ng-if="!isMobile">
 							                      	<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="h-200 img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
 						                        	</div>
 							                      </div>
-							                      <md-content class="text-base" ng-class="{'p md-hue-1': !isMobile, 'display-table': isMobile}">
+							                      <md-content class="text-base" ng-class="{'p md-hue-1': !isMobile, 'display-table p': isMobile}">
 							                      	<div class="inline" ng-class="{'w-lg': isMobile}">
 								                        <p class="font-500" ng-class="{'text-md': !isMobile, 'text-base': isMobile}">{{cell.postView.title}}</p>
 								                        <p ng-class="{'text-base': !isMobile, 'text-xs': isMobile}">
-								                          {{cell.postView.snippet | characters: !isMobile? 220 : 100}}
+								                          {{cell.postView.snippet | characters: !isMobile ? 220 : 100}}
 								                        </p>
 							                      	</div>
 							                      	<div class="inline display-cell v-m text-right w-full" ng-if="isMobile">
@@ -89,7 +102,12 @@
 								                  	<md-divider></md-divider>
 								                  </div>
 							                  </div>
-					                    </div>
+						                  </div>
+						                  <div class="text-center p">
+					            					<md-button aria-label="nothing" aria-label="menu" class="md-accent">
+																  {{'titles.LOAD_MORE' | translate}}
+																</md-button>
+					            				</div>
 				            				</div>
 				                  </md-content>
 				               	</md-tab-body>
@@ -105,7 +123,7 @@
 														</div>
 				              		</div>
 				              		<div class="" ng-class="{'p-h-xxl': !isMobile}">
-				              			<div class="row " reload-on-show masonry>
+				              			<div class="row no-margin" reload-on-show masonry>
 						                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12': isMobile, 'p-r-sm': isMobile && !$first, 'p-0 p-b': ($first && isMobile)}" ng-repeat="cell in row.cells">
 						                    <div class="w-full no-margin" ng-class="{'md-whiteframe-z1 card': !isMobile}">
 						                      <div class="item" ng-if="!isMobile || $first">
@@ -130,6 +148,11 @@
 							                  </div>
 						                  </div>
 					                  </div>
+					                  <div class="text-center p">
+				            					<md-button aria-label="nothing" aria-label="menu" class="md-accent">
+															  {{'titles.LOAD_MORE' | translate}}
+															</md-button>
+				            				</div>
 				              		</div>
 												</md-content>
 				              </md-tab>

@@ -108,7 +108,8 @@
 		"SKIP": "Skip",
 		"CLOSE": "Close",
 		"RELATED": "Related publications",
-		"ADD": "Add"
+		"ADD": "Add",
+		"LOAD_MORE": "Load more"
 	},
 	"signin_signup": {
 		"OR": "or",
