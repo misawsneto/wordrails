@@ -105,10 +105,10 @@
 
 				            				<div class="" ng-class="{'p-h-xxl': !isMobile}">
 					                    <div class="row no-margin" reload-on-show masonry>
-							                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12 p-r-sm p-0 p-b': isMobile}" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells"
+							                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12 p-0 p-b': isMobile}" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells"
 																ng-mouseenter="cell.showOptions=true" ng-mouseleave="cell.showOptions=false">
 
-																	<md-button class="opacity-09 text-white pos-abt top-0 left-0 md-icon-button m-r-t z-index-5" ng-style="{'margin': !isMobile ? '16px' : '0' }">
+																	<md-button ng-if="cell.id || cell.fixed" class="opacity-09 text-white pos-abt top-0 left-0 md-icon-button m-r-t z-index-5" ng-style="{'margin': !isMobile ? '16px' : '0' }">
 																		<i class="i-24 mdi2-pin icon-text-shadow"></i>
 																	</md-button>
 
@@ -171,8 +171,13 @@
 				              		</div>
 				              		<div class="" ng-class="{'p-h-xxl': !isMobile}">
 				              			<div class="row no-margin" reload-on-show masonry>
-						                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12': isMobile, 'p-r-sm': isMobile && !$first, 'p-0 p-b': ($first && isMobile)}" ng-repeat="cell in row.cells"
+						                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12': isMobile, 'p-0 p-b': ($first && isMobile)}" ng-repeat="cell in row.cells"
 						                  ng-mouseenter="cell.showOptions=true" ng-mouseleave="cell.showOptions=false">
+																
+																<md-button ng-if="cell.id || cell.fixed" class="opacity-09 text-white pos-abt top-0 left-0 md-icon-button m-r-t z-index-5" ng-style="{'margin': !isMobile ? '16px' : '0' }">
+																	<i class="i-24 mdi2-pin icon-text-shadow"></i>
+																</md-button>
+
 						                    <div class="w-full no-margin" ng-class="{'md-whiteframe-z1 card': !isMobile}">
 						                      <div class="item" ng-if="!isMobile || $first">
 						                      	<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="h-200 img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">

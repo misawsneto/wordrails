@@ -1,5 +1,37 @@
 <div class="m-b">
   <div class="container">
+  <div class="pos-rlt">
+    <div class="clear pos-rlt m-b-lg" ng-if="app.termPerspectiveView.featuredRow.cells && $mdMedia('gt-sm')">
+      <ul class="pgwSlider" pgw-slider="{verticalCentering:true, maxHeight: 500, selectionMode: 'click', intervalDuration: 7000 }">
+        <li ng-repeat="cell in app.termPerspectiveView.featuredRow.cells">
+          <a ui-sref="app.read({'stationSlug': app.getStationById(cell.postView.stationId).stationSlug, 'postSlug': cell.postView.slug})">
+            <img ng-src="{{app.getImageLink(cell.postView, 'large')}}" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="bg-cover opacity-0" alt="{{cell.postView.title}}" data-description="{{cell.postView.snippet | characters:200}}">
+            <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z2 pos-abt top-0 bottom-0 right-0 left-0 bg-cover">
+            </div>
+            <span>{{cell.postView.title}}</span>
+          </a>
+        </li>
+      </ul>
+
+    </div>
+
+    <div ng-if="app.termPerspectiveView.featuredRow.cells && !$mdMedia('gt-sm')" class="pos-rlt" style="margin:-32px -15px 30px -15px">
+      <ul rn-carousel="" rn-carousel-index="carouselIndex" rn-carousel-auto-slide="" rn-carousel-pause-on-hover="" rn-carousel-buffered="" class="ng-scope h-300 image no-margin">
+        <li ng-repeat="cell in app.termPerspectiveView.featuredRow.cells">
+          <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z1 h-300 pos-abt top-0 bottom-0 right-0 left-0 bg-cover layer">
+            <div class="pos-abt bottom-0 right-0 left-0 pgwSlider">
+              <div class="ps-caption" style="display: block">{{cell.postView.title}}</div>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <div class="text-center opacity-08 pos-rlt m-t-n-lg text-md z-i-2 perspective-editor-options-button " style="margin-top: -34px">
+        <div class="text-shadow-sm text-lg" rn-carousel-indicators="" ng-if="app.termPerspectiveView.featuredRow.cells.length > 1" slides="app.termPerspectiveView.featuredRow.cells" rn-carousel-index="carouselIndex">
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div masonry class="m-b pos-rlt animated fadeIn" reload-on-show ng-show="app.termPerspectiveView">
     <div class="col-lg-4 col-sm-6 col-xs-12 masonry-brick" ng-repeat="cell in app.termPerspectiveView.homeRow.cells">
         <!--  Vertical News Box -->
@@ -96,10 +128,10 @@
 </div>
 </div>
 
-<div class="container">
+<!--<div class="container">
   <div class="row m-b">
       <div class="col l12 col m12 col s12">
-          <!-- blockquote -->
+          <!~~ blockquote ~~>
           <div class="blockquote z-depth-1 md-accent-default background">
               <span>Hot News:</span> Nullam Quies ante. rhoncus augue pharetra sed. Mauris tincidunt, nunc vitae tristique porta, nisi arcu pulvinar enim, in pretium mi ex quis felis. Integer pharetra sit amet ligula sit amet porttitor. Praesent condimentum augue ut ornare tempor. 
           </div>
@@ -110,16 +142,16 @@
 <div class="container">
   <div class="row m-b">
       <div class="col l6 col m6 col s12">
-          <!-- News Blog Box -->
+          <!~~ News Blog Box ~~>
           <div class="news-blog z-depth-1">
-              <!-- News Blog Image -->
+              <!~~ News Blog Image ~~>
               <div class="image">
                   <img class="responsive-img" src="http://placehold.it/350x235?text=News Image" alt="news Image">
               </div>
-              <!-- News Blog Category -->
+              <!~~ News Blog Category ~~>
               <div class="news-category">
                   <span class="purple">Life</span>
-                  <!-- Dropdown -->
+                  <!~~ Dropdown ~~>
                   <div class="news-dropdown">
                       <a class="dropdown-button" href="javascript:void(0);" data-activates="dropdown1"><i class="fa fa-ellipsis-v "></i></a>
                       <ul id="dropdown1" class="dropdown-content">
@@ -129,7 +161,7 @@
                       </ul>
                   </div>
               </div>
-              <!-- News Blog Description -->
+              <!~~ News Blog Description ~~>
               <div class="news-description">
                   <div class="news-time text-white">
                       21 min ago 
@@ -140,16 +172,16 @@
           </div>
       </div>
       <div class="col l6 col m6 col s12">
-          <!-- News Blog Box -->
+          <!~~ News Blog Box ~~>
           <div class="news-blog z-depth-1">
-              <!-- News Blog Video -->
+              <!~~ News Blog Video ~~>
               <div class="video-container no-controls">
                   <iframe src="//www.youtube.com/embed/Q8TXgCzxEnw?rel=0;autohide=1" allowfullscreen></iframe>
               </div>
-              <!-- News Blog Category -->
+              <!~~ News Blog Category ~~>
               <div class="news-category">
                   <span class="orange">Video</span>
-                  <!-- Dropdown -->
+                  <!~~ Dropdown ~~>
                   <div class="news-dropdown">
                       <a class="dropdown-button" href="javascript:void(0);" data-activates="dropdown2"><i class="fa fa-ellipsis-v "></i></a>
                       <ul id="dropdown2" class="dropdown-content">
@@ -159,7 +191,7 @@
                       </ul>
                   </div>
               </div>
-              <!-- News Blog Description -->
+              <!~~ News Blog Description ~~>
               <div class="news-description">
                   <div class="news-time text-white">
                       21 min ago 
@@ -175,12 +207,12 @@
 <div class="container">
   <div class="row m-b">
       <div class="col l6 col m6 col s12">
-          <!-- News Blog Solid Box -->
+          <!~~ News Blog Solid Box ~~>
           <div class="news-blog md-primary-default background z-depth-1">
-              <!-- News Blog Category -->
+              <!~~ News Blog Category ~~>
               <div class="news-category">
                     <span class="md-accent-default background">More</span>
-                    <!-- Dropdown -->
+                    <!~~ Dropdown ~~>
                       <div class="news-dropdown">
                           <a class="dropdown-button" href="javascript:void(0);" data-activates="dropdown3"><i class="fa fa-ellipsis-v "></i></a>
                           <ul id="dropdown3" class="dropdown-content">
@@ -190,7 +222,7 @@
                           </ul>
                       </div>
               </div>
-              <!-- News Blog Description -->
+              <!~~ News Blog Description ~~>
               <div class="news-description center-align">
                   <div class="quote"><i class="fa fa-quote-left" md-style="{'color': 'accent.300'}"></i></div>
                   <div class="news-title"> <a href="javascript:void(0);"> Nam erat nulla, auctor a eros vitae, hendrerit efficitur magna et bibendum leo metus vel magna.  </a></div>
@@ -199,16 +231,16 @@
           </div>
       </div>
       <div class="col l6 col m6 col s12">
-          <!-- News Blog Box -->
+          <!~~ News Blog Box ~~>
           <div class="news-blog z-depth-1">
-              <!-- News Blog Image -->
+              <!~~ News Blog Image ~~>
               <div class="image">
                   <img class="responsive-img" src="http://placehold.it/350x235?text=News Image" alt="news Image">
               </div>
-              <!-- News Blog Category -->
+              <!~~ News Blog Category ~~>
               <div class="news-category">
                     <span class="green">Money</span>
-                    <!-- Dropdown -->
+                    <!~~ Dropdown ~~>
                       <div class="news-dropdown">
                           <a class="dropdown-button" href="javascript:void(0);" data-activates="dropdown4"><i class="fa fa-ellipsis-v "></i></a>
                           <ul id="dropdown4" class="dropdown-content">
@@ -218,7 +250,7 @@
                           </ul>
                       </div>
               </div>
-              <!-- News Blog Description -->
+              <!~~ News Blog Description ~~>
               <div class="news-description">
                   <div class="news-time" md-style="{'background-color': 'accent.A100'}">
                       21 min ago 
@@ -235,16 +267,16 @@
   <div class="row m-b">
       <div class="col l6 col m12 col s12">
           <div class="z-depth-1">
-              <!-- Horizontal News Box -->
+              <!~~ Horizontal News Box ~~>
               <div class="news horizontal">
                   <div class="col l4 col m4 col s12 no-padding">
-                      <!-- News Image -->
+                      <!~~ News Image ~~>
                       <div class="news-image">
                           <img src="http://placehold.it/350x360?text=News Image" class="responsive-img" alt="news Image">
                       </div>
                   </div>
                   <div class="col l8 col m8 col s12 no-padding">
-                      <!-- News  Description -->
+                      <!~~ News  Description ~~>
                       <div class="news-description">
                           <div class="news-time">
                               <i class="fa fa-clock-o"></i> 9 min ago 
@@ -255,16 +287,16 @@
                   </div>
               </div>
               
-              <!-- Horizontal News Box -->
+              <!~~ Horizontal News Box ~~>
               <div class="news horizontal no-border">
                   <div class="col l4 col m4 col s12 no-padding">
-                      <!-- News Image -->
+                      <!~~ News Image ~~>
                       <div class="news-image">
                           <img src="http://placehold.it/350x360/f5f5f5?text=News Image" class="responsive-img" alt="news Image">
                       </div>
                   </div>
                   <div class="col l8 col m8 col s12 no-padding">
-                      <!-- News Description -->
+                      <!~~ News Description ~~>
                       <div class="news-description">
                           <div class="news-time">
                               <i class="fa fa-clock-o"></i> 9 min ago
@@ -278,13 +310,13 @@
       </div>
       
       <div class="col l3 col m6 col s12">
-          <!-- Vertical News Box -->
+          <!~~ Vertical News Box ~~>
           <div class="news vertical z-depth-1">
-              <!-- News Image -->
+              <!~~ News Image ~~>
               <div class="news-image">
                   <img src="http://placehold.it/350x235?text=News Image" class="responsive-img" alt="news Image">
               </div>
-              <!-- News Description -->
+              <!~~ News Description ~~>
               <div class="news-description">
                   <div class="news-time">
                       <i class="fa fa-clock-o"></i> 9 min ago 
@@ -296,13 +328,13 @@
       </div>
       
       <div class="col l3 col m6 col s12">
-          <!-- Vertical News Box -->
+          <!~~ Vertical News Box ~~>
           <div class="news vertical z-depth-1">
-              <!-- News Image -->
+              <!~~ News Image ~~>
               <div class="news-image">
                   <img src="http://placehold.it/350x235?text=News Image" class="responsive-img" alt="news Image">
               </div>
-              <!-- News Description -->
+              <!~~ News Description ~~>
               <div class="news-description">
                   <div class="news-time">
                       <i class="fa fa-clock-o"></i> 9 min ago 
@@ -320,13 +352,13 @@
       <div class="row m-b">
           <div class="col l3 col m6 col s12">
               <div class="col l12 col m12 col s12 no-padding">
-                  <!--  Vertical News Box -->
+                  <!~~  Vertical News Box ~~>
                   <div class="news vertical z-depth-1 margin-bottom-20">
-                      <!-- News Image -->
+                      <!~~ News Image ~~>
                       <div class="news-image">
                           <img src="http://placehold.it/350x235?text=News Image" class="responsive-img" alt="news Image">
                       </div>
-                      <!-- News Description -->
+                      <!~~ News Description ~~>
                       <div class="news-description">
                           <div class="news-time">
                               <i class="fa fa-clock-o"></i> 9 min ago 
@@ -337,13 +369,13 @@
                   </div>
               </div>
               <div class="col l12 col m12 col s12 no-padding">
-                  <!-- Vertical News Box -->
+                  <!~~ Vertical News Box ~~>
                   <div class="news vertical z-depth-1">
-                      <!-- News Image -->
+                      <!~~ News Image ~~>
                       <div class="news-image">
                           <img src="http://placehold.it/350x235?text=News Image" class="responsive-img" alt="news Image">
                       </div>
-                      <!-- News Description -->
+                      <!~~ News Description ~~>
                       <div class="news-description">
                           <div class="news-time">
                               <i class="fa fa-clock-o"></i> 9 min ago 
@@ -355,13 +387,13 @@
               </div>
           </div>
           <div class="col l6 col m6 col s12">
-              <!-- Vertical News Box -->
+              <!~~ Vertical News Box ~~>
               <div class="news vertical z-depth-1">
-                  <!-- News Image -->
+                  <!~~ News Image ~~>
                   <div class="news-image">
                       <img src="http://placehold.it/350x236?text=News Image" class="responsive-img" alt="news Image">
                   </div>
-                  <!-- News Description -->
+                  <!~~ News Description ~~>
                   <div class="news-description">
                       <div class="news-time">
                           <i class="fa fa-clock-o"></i> 9 min ago 
@@ -378,13 +410,13 @@
           
           <div class="col l3 col m12 col s12 no-padding">
               <div class="col l12 col m6 col s12">
-                  <!-- Vertical News Box -->
+                  <!~~ Vertical News Box ~~>
                   <div class="news vertical z-depth-1 margin-bottom-20">
-                      <!-- News Image -->
+                      <!~~ News Image ~~>
                       <div class="news-image">
                           <img src="http://placehold.it/350x235?text=News Image" class="responsive-img" alt="news Image">
                       </div>
-                      <!-- News Description -->
+                      <!~~ News Description ~~>
                       <div class="news-description">
                           <div class="news-time">
                               <i class="fa fa-clock-o"></i> 9 min ago 
@@ -395,13 +427,13 @@
                   </div>
               </div>
               <div class="col l12 col m6 col s12">
-                  <!-- Vertical News Box -->
+                  <!~~ Vertical News Box ~~>
                   <div class="news vertical z-depth-1">
-                      <!-- News Image -->
+                      <!~~ News Image ~~>
                       <div class="news-image">
                           <img src="http://placehold.it/350x235?text=News Image" class="responsive-img" alt="news Image">
                       </div>
-                      <!-- News Description -->
+                      <!~~ News Description ~~>
                       <div class="news-description">
                           <div class="news-time">
                               <i class="fa fa-clock-o"></i> 9 min ago 
@@ -420,9 +452,9 @@
   <section class="section">
       <div class="row m-b">
           <div class="col l9 col m12 col s12">
-              <!-- Thumbnail Slider -->
+              <!~~ Thumbnail Slider ~~>
               <div class="thumbnail-slider z-depth-1">
-                  <!-- Thumbnail Slider Category -->
+                  <!~~ Thumbnail Slider Category ~~>
                   <ul class="tabs">
                       <li class="tab"><a class="active" href="#News-category1">March Sadness</a></li>
                       <li class="tab"><a href="#News-category2">Snapshot</a></li>
@@ -430,7 +462,7 @@
                       <li class="tab"><a href="#News-category4">Prince Charles and Camilla visit the U.S.</a></li>
                       <li class="tab"><a href="#News-category5">Your Take: Readers Photos of the Aurora Borealis</a></li>
                   </ul>
-                  <!-- Thumbnail Slider 1 -->
+                  <!~~ Thumbnail Slider 1 ~~>
                   <div id="News-category1">
                       <div class="camera_wrap camera_magenta_skin" id="camera_wrap_1">
                           <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
@@ -471,7 +503,7 @@
                           </div>
                       </div>
                   </div>
-                  <!-- Thumbnail Slider 2 -->
+                  <!~~ Thumbnail Slider 2 ~~>
                   <div id="News-category2">
                       <div class="camera_wrap camera_magenta_skin" id="camera_wrap_2">
                           <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
@@ -512,7 +544,7 @@
                           </div>
                       </div>
                   </div>
-                  <!-- Thumbnail Slider 3 -->
+                  <!~~ Thumbnail Slider 3 ~~>
                   <div id="News-category3">
                        <div class="camera_wrap camera_magenta_skin" id="camera_wrap_3">
                           <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
@@ -553,7 +585,7 @@
                           </div>
                       </div>
                   </div>
-                  <!-- Thumbnail Slider 4 -->
+                  <!~~ Thumbnail Slider 4 ~~>
                   <div id="News-category4">
                        <div class="camera_wrap camera_magenta_skin" id="camera_wrap_4">
                           <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
@@ -594,7 +626,7 @@
                           </div>
                       </div>
                   </div>
-                  <!-- Thumbnail Slider 5 -->
+                  <!~~ Thumbnail Slider 5 ~~>
                   <div id="News-category5">
                        <div class="camera_wrap camera_magenta_skin" id="camera_wrap_5">
                           <div data-thumb="http://placehold.it/350x235?text=News Image?1443511387528" data-src="http://placehold.it/350x235?text=News Image?1443511387528">
@@ -638,16 +670,16 @@
               </div>
           </div>
           <div class="col l3 col m12 col s12">
-              <!-- News Sidebar -->
+              <!~~ News Sidebar ~~>
               <div class="sidbar-box z-depth-1">
                   <div class="sidebar-title">New Stories</div>
                   <div class="news-sidebar">
                       <div class="news-box">
-                          <!-- News Sidebar Image -->
+                          <!~~ News Sidebar Image ~~>
                           <div class="image">
                               <img src="http://placehold.it/350x235?text=News Image" alt="news Image">
                           </div>
-                          <!-- News Sidebar Detail -->
+                          <!~~ News Sidebar Detail ~~>
                           <div class="news-detail">
                               <div class="news-category">
                                   <a href="javascript:void(0);">World | 21 min ago </a>
@@ -659,11 +691,11 @@
                       </div>
                       
                       <div class="news-box">
-                          <!-- News Sidebar Image -->
+                          <!~~ News Sidebar Image ~~>
                           <div class="image">
                               <img src="http://placehold.it/350x235?text=News Image" alt="news Image">
                           </div>
-                          <!-- News Sidebar Detail -->
+                          <!~~ News Sidebar Detail ~~>
                           <div class="news-detail">
                               <div class="news-category">
                                   <a href="javascript:void(0);">Tech | 21 min ago </a>
@@ -675,11 +707,11 @@
                       </div>
                       
                       <div class="news-box">
-                        <!-- News Sidebar Image -->
+                        <!~~ News Sidebar Image ~~>
                           <div class="image">
                               <img src="http://placehold.it/350x235?text=News Image" alt="news Image">
                           </div>
-                          <!-- News Sidebar Detail -->
+                          <!~~ News Sidebar Detail ~~>
                           <div class="news-detail">
                               <div class="news-category">
                                   <a href="javascript:void(0);">Money | 21 min ago </a>
@@ -691,11 +723,11 @@
                       </div>
                       
                       <div class="news-box">
-                        <!-- News Sidebar Image -->
+                        <!~~ News Sidebar Image ~~>
                           <div class="image">
                               <img src="http://placehold.it/350x235?text=News Image" alt="news Image">
                           </div>
-                          <!-- News Sidebar Detail -->
+                          <!~~ News Sidebar Detail ~~>
                           <div class="news-detail">
                               <div class="news-category">
                                   <a href="javascript:void(0);">Life | 21 min ago </a>
@@ -707,11 +739,11 @@
                       </div>
                       
                       <div class="news-box">
-                          <!-- News Sidebar Image -->
+                          <!~~ News Sidebar Image ~~>
                           <div class="image">
                               <img src="http://placehold.it/350x235?text=News Image" alt="news Image">
                           </div>
-                          <!-- News Sidebar Detail -->
+                          <!~~ News Sidebar Detail ~~>
                           <div class="news-detail">
                               <div class="news-category">
                                   <a href="javascript:void(0);">World | 21 min ago </a>
@@ -723,11 +755,11 @@
                       </div>
                       
                       <div class="news-box">
-                          <!-- News Sidebar Image -->
+                          <!~~ News Sidebar Image ~~>
                           <div class="image">
                               <img src="http://placehold.it/350x235?text=News Image" alt="news Image">
                           </div>
-                          <!-- News Sidebar Detail -->
+                          <!~~ News Sidebar Detail ~~>
                           <div class="news-detail">
                               <div class="news-category">
                                   <a href="javascript:void(0);">Travel | 21 min ago </a>
@@ -743,4 +775,5 @@
       </div>
   </section>
 </div>
+  -->
 </div>
