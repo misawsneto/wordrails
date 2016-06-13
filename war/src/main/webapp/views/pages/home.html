@@ -1,9 +1,10 @@
 <div class="m-b">
   <div class="container">
   <div class="pos-rlt">
-    <div class="clear pos-rlt m-b-lg" ng-if="app.termPerspectiveView.featuredRow.cells && $mdMedia('gt-sm')">
+    <div class="clear pos-rlt m-b-lg p-sm" ng-if="app.termPerspectiveView.featuredRow.cells && $mdMedia('gt-sm')">
+      
       <ul class="pgwSlider" pgw-slider="{verticalCentering:true, maxHeight: 500, selectionMode: 'click', intervalDuration: 7000 }">
-        <li ng-repeat="cell in app.termPerspectiveView.featuredRow.cells">
+        <li ng-repeat="cell in app.termPerspectiveView.featuredRow.cells" class="md-whiteframe-z1">
           <a ui-sref="app.read({'stationSlug': app.getStationById(cell.postView.stationId).stationSlug, 'postSlug': cell.postView.slug})">
             <img ng-src="{{app.getImageLink(cell.postView, 'large')}}" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="bg-cover opacity-0" alt="{{cell.postView.title}}" data-description="{{cell.postView.snippet | characters:200}}">
             <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z2 pos-abt top-0 bottom-0 right-0 left-0 bg-cover">
