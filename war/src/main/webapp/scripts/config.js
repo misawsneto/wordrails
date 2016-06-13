@@ -280,6 +280,7 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
         stylesheet.insertRule(".nav-lines > li.active:after{border-bottom-color: " + color + "}", index); index++;
         stylesheet.insertRule(".md-primary-default .nav-lines > li.active:after{border-bottom-color: " + contrastColor + "}", index); index++;
         stylesheet.insertRule(".sl-item {border-color: "+ color +"}", index); index++;
+        stylesheet.insertRule(".md-primary-default2.background {background-color: "+ color +"}", index); index++;
       }
 
       if(cssname === 'primary' && name === 'hue-1'){
