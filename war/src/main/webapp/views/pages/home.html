@@ -35,7 +35,7 @@
 
 
 <div class="" infinite-scroll="paginate()" infinite-scroll-container='"#content .box-cell"' infinite-scroll-distance="1">
-  <div ng-if="app.termPerspectiveView.homeRow.cells" masonry="{percentPosition: true, columnWidth:1}" class="m-b pos-rlt" reload-on-show>
+  <div ng-if="app.termPerspectiveView.homeRow.cells" masonry="{percentPosition: true, columnWidth:1, transitionDuration: 0}" class="m-b pos-rlt" reload-on-show>
     
     <div class="col-xs-12 masonry-brick" ng-class="{'col-lg-12': app.fullCardCheck($index, cell.postView), 'col-lg-8 col-sm-6':!app.fullCardCheck($index, cell.postView) && app.largeCardCheck($index, cell.postView), 'col-lg-4 col-sm-6':!app.fullCardCheck($index, cell.postView) && !app.largeCardCheck($index, cell.postView)}" ng-repeat="cell in app.termPerspectiveView.homeRow.cells">
         
