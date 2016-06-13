@@ -368,7 +368,9 @@ angular.module('app')
         }
 
         $scope.app.focusOnSearch = function(){
-          $('id#search form input').focus();
+          $('#search form input').focus();
+
+
         }
 
         // ---------- /util -------------
