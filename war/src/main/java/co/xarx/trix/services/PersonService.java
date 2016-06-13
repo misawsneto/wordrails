@@ -61,7 +61,7 @@ public class PersonService {
 
 	public List<Person> invite(PersonsApi.PersonInvitationDto dto){
 		if(dto.emails == null || dto.emails.size() == 0 || dto.emailTemplate == null){
-			throw new BadRequestException("Invalid emails or temaplte");
+			throw new BadRequestException("Invalid emails or template");
 		}
 
 		List<Person> persons = personRepository.findByEmailIn(dto.emails);
@@ -77,9 +77,10 @@ public class PersonService {
 		}
 
 		if (dto.stationIds != null) {
-			for(Integer stationId: dto.stationIds) {
-				if(stationRepository.findOne(stationId) == null){
-					dto.stationIds.remove(stationId);
+			for(Iterator<Integer> it = dto.stationIds.iterator(); it.hasNext();){
+				Integer id = it.next();
+				if (stationRepository.findOne(id) == null) {
+					it.remove();
 				}
 			}
 		}
