@@ -7025,18 +7025,20 @@ bg-none {
           transition: all 0.2s ease-in-out;
 }
 
-.mockup-browser .md-fab {
+/*
+.mockup-browser .md-fab{
   position: absolute!important;
-}
+}*/
 
 .mockup-browser {
   max-width: 900px;
 }
 
+/*
 .mockup-browser .md-fab i {
-  margin-left: 1px;
   line-height: 40px;
-}
+  margin-left: 1px;
+}*/
 
 .mobile.mockup-browser {
   max-width: 300px;
@@ -8952,4 +8954,13 @@ button,
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
   font-smooth: antialiased;
+}
+
+.pgwSlider .ps-current {
+  font-size: 1.5rem!important;
+}
+
+ul.pgwSlider > li,
+.pgwSlider > .ps-list > li {
+  font-size: 1.1rem!important;
 }

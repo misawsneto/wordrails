@@ -66,8 +66,9 @@
 													    </div>
 														</div>-->
 
-														<div class="clear pos-rlt p" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells">
-															<ul class="pgwSlider" pgw-slider="{verticalCentering:true, maxHeight: 400, selectionMode: 'click', }">
+														<div class="clear pos-rlt p" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells && !isMobile"
+														ng-mouseenter="currentPerspective.termPerspectiveView.featuredRow.showOptions=true" ng-mouseleave="currentPerspective.termPerspectiveView.featuredRow.showOptions=false">
+															<ul class="pgwSlider" pgw-slider="{verticalCentering:true, maxHeight: 400, selectionMode: 'click', intervalDuration: 7000 }">
 															    <li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells">
 															    	<img ng-src="{{app.getImageLink(cell.postView, 'large')}}" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="bg-cover opacity-0" alt="{{cell.postView.title}}" data-description="{{cell.postView.snippet | characters:200}}">
 															    	<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z1 pos-abt top-0 bottom-0 right-0 left-0 bg-cover">
@@ -75,11 +76,26 @@
 					                        	<span>{{cell.postView.title}}</span>
 														    	</li>
 															</ul>
+
+															<div ng-if="currentPerspective.termPerspectiveView.featuredRow.showOptions" class="p" style="position: absolute; top:0; bottom:0; right:0; left:0;">
+																<div class="display-table text-center" style="background: rgba(0,0,0,0.5); height:100%; width: 100%;">
+																	<div class="display-cell v-m">
+																		<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent">
+																		  <md-tooltip md-direction="top">
+																		    {{'titles.EDIT' | translate}}
+																		  </md-tooltip>
+																		  <i class="mdi2-settings i-24"></i>
+																		</md-button>
+																	</div>
+																</div>
+															</div>
+
 														</div>
 
 				            				<div class="" ng-class="{'p-h-xxl': !isMobile}">
 					                    <div class="row no-margin" reload-on-show masonry>
-							                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12 p-r-sm p-0 p-b': isMobile}" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells">
+							                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12 p-r-sm p-0 p-b': isMobile}" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells"
+																ng-mouseenter="cell.showOptions=true" ng-mouseleave="cell.showOptions=false">
 							                    <div class="w-full no-margin" ng-class="{'md-whiteframe-z1 card': !isMobile}">
 							                      <div class="item" ng-if="!isMobile">
 							                      	<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="h-200 img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
@@ -101,6 +117,20 @@
 								                  <div class="" ng-if="isMobile && !$last" style="margin: 0 -15px -15px -15px;">
 								                  	<md-divider></md-divider>
 								                  </div>
+
+								                  <div ng-if="cell.showOptions" ng-class="{'p': !isMobile}" style="position: absolute; top:0; bottom:0; right:0; left:0;">
+																		<div class="display-table text-center" style="background: rgba(0,0,0,0.5); height:100%; width: 100%;">
+																			<div class="display-cell v-m">
+																				<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent">
+																				  <md-tooltip md-direction="top">
+																				    {{'titles.EDIT' | translate}}
+																				  </md-tooltip>
+																				  <i class="mdi2-settings i-24"></i>
+																				</md-button>
+																			</div>
+																		</div>
+																	</div>
+
 							                  </div>
 						                  </div>
 						                  <div class="text-center p">

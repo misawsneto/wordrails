@@ -1,6 +1,6 @@
 <div class="box">
   <!-- Content Navbar -->
-  <div class="navbar md-whiteframe-z1 no-radius md-primary-default background">
+  <div class="navbar md-whiteframe-z1 no-radius md-primary-default background" style="max-height:64px">
     <!-- Open side - Naviation on mobile -->
     <!--<a md-ink-ripple ng-click="openAside()" ng-hide="$state.current.data.child" class="navbar-item pull-left"><i class="mdi-navigation-menu i-24"></i></a>-->
     <!-- / -->
@@ -18,7 +18,7 @@
       </a>
     </div>
 
-    <div id="search" class="navbar-header h-full md-primary-default background animated" style="width: 55%" ng-class="{'fadeIn': app.search.show, 'fadeOut': !app.search.show}">
+    <div id="search" ng-if="$mdMedia('gt-sm')" class="navbar-header h-full md-primary-default background animated" style="width: 55%" ng-class="{'fadeIn': app.search.show, 'fadeOut': !app.search.show}">
       <div class="m-l-xxl box">
         <div class="box-col v-m p-h">
           <!-- bind to app.search.content -->
@@ -48,12 +48,17 @@
     <!-- / -->
     <!-- Common tools -->
     <ul class="nav nav-sm navbar-tool pull-right" ng-hide="$state.current.data.child">
-      <li class="animated" ng-class="{'fadeIn': !app.search.show, 'fadeOut': app.search.show}">
+      <li class="animated" ng-class="{'fadeIn': !app.search.show, 'fadeOut': app.search.show, 'hide': !$mdMedia('gt-sm')}">
         <a md-ink-ripple ng-click="app.search.show = true; app.focusOnSearch()">
           <i class="mdi-action-search i-24 p-h-sm"></i>
         </a>
       </li>
-      <li ng-if="app.person.id > 0" class="animated fadeIn dropdown ">
+      <li class="animated" ng-class="{'hide': $mdMedia('gt-sm')}">
+        <a md-ink-ripple ui-sref="app.search({q:''})">
+          <i class="mdi-action-search i-24 p-h-sm"></i>
+        </a>
+      </li>
+      <li ng-if="app.person.id > 0 && $mdMedia('gt-sm')" class="animated fadeIn dropdown">
         <a md-ink-ripple class="dropdown-toggle clear" data-toggle="dropdown">
           <i class="mdi2-bell-outline i-24 p-h-sm"></i>
         </a>
@@ -85,7 +90,7 @@
           <i class="mdi-social-person-outline i-24 p-h-sm"></i>
         </a>
       </li> -->
-      <li class="dropdown m-r-lg">
+      <li class="dropdown m-r-lg" ng-if="$mdMedia('gt-sm')">
         <a href class="dropdown-toggle clear" data-toggle="dropdown" ng-click="app.signInButton()">
           <!-- <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
             <img src="/images/a0.jpg" alt="...">
