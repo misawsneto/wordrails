@@ -8,6 +8,6 @@ public class VideoDataMap extends PropertyMap<Video, VideoData> {
 
 	@Override
 	protected void configure() {
-		map(source.getUrl(), destination.getUrl());
+		map(source.getExternalVideoUrl(), destination.getUrl());
 	}
 }

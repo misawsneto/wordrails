@@ -37,7 +37,7 @@ public class PostDataMap extends PropertyMap<Post, PostData> {
 		map().setNotified(source.isNotify());
 		using(new TermToIntegerConverter()).map(source.getTerms(), destination.getCategoriesIds());
 		map(source.getTerms(), destination.getCategories());
-		map(source.getFeaturedVideo().getUrl(), destination.getVideo().getUrl());
+		map(source.getFeaturedVideoUrl(), destination.getVideo().getUrl());
 
 //		Condition<Image, PostData> picsNull = c -> c.getSource().getPictures() == null;
 
