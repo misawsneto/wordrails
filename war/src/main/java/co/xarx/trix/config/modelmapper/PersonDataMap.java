@@ -8,7 +8,7 @@ public class PersonDataMap extends PropertyMap<Person, PersonData> {
 
 	@Override
 	protected void configure() {
-		map().setProfilePictureHash(source.getImageHash());
+		map().setImageHash(source.getImageHash());
 		map().setTwitter(source.getTwitterHandle());
 	}
 }

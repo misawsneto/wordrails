@@ -25,7 +25,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 	public class EmailService {
@@ -60,27 +59,16 @@ import java.util.Set;
 		// Assemble the email.
 		SendEmailRequest request = new SendEmailRequest().withSource(emailFrom).withDestination(destination).withMessage(message);
 
-		try
-		{
+		try {
 			AmazonSimpleEmailServiceClient client = new AmazonSimpleEmailServiceClient(new BasicAWSCredentials(USERNAME, PASSWORD));
 			Region REGION = Region.getRegion(Regions.US_EAST_1);
 			client.setRegion(REGION);
 			// Send the email.
 			client.sendEmail(request);
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
-	}
-
-	@Async
-	public void sendNetworkInvitation(Network network, Set<Invitation> invitations, Person inviter){
-		if(invitations!= null)
-		for (Invitation i : invitations){
-			notifyPersonCreation(network, i, inviter);
-		}
 	}
 
 	@Async

@@ -85,7 +85,8 @@ module.exports = {
                     'df-tab-menu/**',
                     'sly/dist/**',
                     'angular-sly/dist/**',
-                    'angular-scroll/**'
+                    'angular-scroll/**',
+                    'angular-carousel/dist/**'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

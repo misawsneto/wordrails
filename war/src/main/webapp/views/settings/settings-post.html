@@ -1,6 +1,6 @@
 <div class="p-xs top-0 left-0 w-full pos-abt md-whiteframe-z1 md-primary-hue-1 background">
 	<!-- menu -->
-	<md-button class="pull-right md-icon-button" style="margin-top: 2px;" ng-click="toggleOptions()">
+	<md-button aria-label="nothing" class="pull-right md-icon-button" style="margin-top: 2px;" ng-click="toggleOptions()">
 		<md-tooltip md-direction="top">
     	{{'settings.post.OPTIONS' | translate}}
   	</md-tooltip>
@@ -10,13 +10,13 @@
 	
 	<!-- publish -->
 	<div uib-dropdown class="inline pull-right" auto-close="disabled" is-open="postPublishMenuOpen">
-		<md-button ng-if="!app.checkState() || app.checkState() > 1" uib-dropdown-toggle class="pull-right font-bold visible-sm visible-md visible-lg">
+		<md-button aria-label="nothing" ng-if="!app.checkState() || app.checkState() > 1" uib-dropdown-toggle class="pull-right font-bold visible-sm visible-md visible-lg">
 			<i class="icon mdi2-send i-14 m-r-xs"></i> {{'titles.PUBLISH' | translate}}
 		</md-button>
-		<md-button ng-if="app.checkState() === 1" uib-dropdown-toggle class="pull-right font-bold visible-sm visible-md visible-lg" translate="actions.UPDATE">
+		<md-button aria-label="nothing" ng-if="app.checkState() === 1" uib-dropdown-toggle class="pull-right font-bold visible-sm visible-md visible-lg" translate="actions.UPDATE">
 			Atualizar
 		</md-button>
-		<md-button uib-dropdown-toggle class="pull-right md-icon-button visible-xs" style="margin: 5px 0 0 0;">
+		<md-button aria-label="nothing" uib-dropdown-toggle class="pull-right md-icon-button visible-xs" style="margin: 5px 0 0 0;">
 			<i class="mdi mdi2-send i-20"></i>
 		</md-button>
 		<div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="p-sm with-arrow z-index-5 dropdown-menu-scale pull-right">
@@ -28,7 +28,7 @@
 	      <div class="p-xs m-b-sm m-t-sm l-h-1x text-base">
 	      	{{'settings.post.menu.PUBLICATION_MSG' | translate}}
 	      </div>
-	  		<md-button ng-if="!app.editingPost.id || app.checkState() !== 2" class="font-bold no-margin m-b-sm" translate="titles.SAVE_AS_DRAFT" ng-click="saveAsDraft($event)">
+	  		<md-button aria-label="nothing" ng-if="!app.editingPost.id || app.checkState() !== 2" class="font-bold no-margin m-b-sm" translate="titles.SAVE_AS_DRAFT" ng-click="saveAsDraft($event)">
 			</md-button>
 			<md-divider class="m-b-sm"></md-divider>
 			<div class="block p-l-xs">
@@ -39,12 +39,12 @@
 	      	{{'settings.post.menu.AUTO_SAVE_MSG' | translate}}
 	      </div>
 	      <md-divider class="m-b-sm"></md-divider>
-	    	<md-button ng-if="!app.checkState() || app.checkState() > 1" class="pull-right font-bold no-margin" ng-click="publishPost()">
+	    	<md-button aria-label="nothing" ng-if="!app.checkState() || app.checkState() > 1" class="pull-right font-bold no-margin" ng-click="publishPost()">
 	    	{{'titles.PUBLISH' | translate}}
 			</md-button>
-			<md-button ng-if="app.editingPost.id && (!app.checkState() || app.checkState() > 0)" class="pull-right font-bold no-margin" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
+			<md-button aria-label="nothing" ng-if="app.editingPost.id && (!app.checkState() || app.checkState() > 0)" class="pull-right font-bold no-margin" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
 			</md-button>
-			<!--<md-button ng-if="app.checkState() === 1" class="pull-right font-bold no-margin" translate="actions.UPDATE">
+			<!--<md-button aria-label="nothing" ng-if="app.checkState() === 1" class="pull-right font-bold no-margin" translate="actions.UPDATE">
 			</md-button>-->
       </div>
 	  </div>
@@ -52,14 +52,14 @@
 	<!-- /publish -->
 
 	<!-- left links-->
-	<md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;" ng-click="showClearPostDialog($event)">
+	<md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;" ng-click="showClearPostDialog($event)">
 		<md-tooltip md-direction="top">
       	{{'settings.post.menu.CLEAR_POST' | translate}}
   	</md-tooltip>
   	<i class="mdi mdi2-delete i-20"></i>
 	</md-button>
 
-	<md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;" ng-click="showPostInfoDialog($event)">
+	<md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;" ng-click="showPostInfoDialog($event)">
 		<md-tooltip md-direction="top">
       {{'settings.post.menu.INFO' | translate}}
     	</md-tooltip>
@@ -68,7 +68,7 @@
 
   <!-- date button and dropdown -->
 	<div uib-dropdown class="inline" auto-close="disabled" is-open="postDateMenuOpen">
-		<md-button ng-click="resetPostDate();" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+		<md-button aria-label="nothing" ng-click="resetPostDate();" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
 				<md-tooltip md-direction="top">
           {{'settings.post.menu.POST_DATE' | translate}}
         </md-tooltip>
@@ -89,7 +89,7 @@
 	      <div class="pos-rlt">
         	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.POST_TIME' | translate}}" ng-model="postDate"></mdp-date-picker>
         </div>
-        <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
+        <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE">
 					Salvar
 				</md-button>
       </div>
@@ -99,7 +99,7 @@
 
 	<!-- schedule button and dropdown -->
 	<div uib-dropdown class="inline" auto-close="disabled" is-open="postScheduleMenuOpen" ng-if="postState !== 'PUBLISHED'">
-	  <md-button ng-click="resetScheduleDate();" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+	  <md-button aria-label="nothing" ng-click="resetScheduleDate();" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
 	  		<md-tooltip md-direction="top">
           {{'settings.post.menu.SCHEDULE_PUBLICATION' | translate}}
         </md-tooltip>
@@ -120,7 +120,7 @@
 	      <div class="pos-rlt">
         	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.SCHEDULED_TIME' | translate}}" ng-model="postScheduleDate"></mdp-date-picker>
         </div>
-        <md-button class="pull-right font-bold no-margin" translate="titles.SAVE" ng-click="showScheduleTime();">
+        <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE" ng-click="showScheduleTime();">
 					Salvar
 				</md-button>
       </div>
@@ -130,7 +130,7 @@
 
   <!-- auto delete button and dropdown -->
 	<div uib-dropdown class="inline" auto-close="disabled" is-open="postDeleteMenuOpen">
-		<md-button ng-click="resetDeleteDate();" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+		<md-button aria-label="nothing" ng-click="resetDeleteDate();" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
 				<md-tooltip md-direction="top">
           {{'settings.post.menu.DELETE_DATE' | translate}}
         </md-tooltip>
@@ -159,7 +159,7 @@
 	      <div class="pos-rlt">
         	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.DELETE_TIME' | translate}}" ng-model="postDeleteDate"></mdp-date-picker>
         </div>
-        <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
+        <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE">
 					Salvar
 				</md-button>
       </div>
@@ -169,7 +169,7 @@
 
 	<!-- customize link and dropdown -->
 	<div uib-dropdown class="inline" auto-close="disabled" is-open="postPermalinkMenuOpen">
-		<md-button uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+		<md-button aria-label="nothing" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
 			<md-tooltip md-direction="top">
         {{'settings.post.menu.CUSTOMIZE_LINK' | translate}}
       </md-tooltip>
@@ -189,7 +189,7 @@
           <label class="m-l" translate="settings.post.menu.CUSTOMIZE_LINK"></label>
           <input ng-model="customizedLink.slug" />
         </md-input-container>
-        <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
+        <md-button aria-label="nothing" class="pull-right font-bold no-margin" ng-click="applyCustomizedLink(customizedLink.slug)" translate="titles.APPLY">
 					Salvar
 				</md-button>
       </div>
@@ -197,14 +197,14 @@
   </div>
   <!-- /customize link and dropdown -->
 
-  <!-- <md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+  <!-- <md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
   	<md-tooltip md-direction="top">
       {{'settings.post.menu.ATTACH_POST' | translate}}
     </md-tooltip>
     <i class="mdi mdi2-library-plus i-20"></i>
   </md-button> -->
 	<div uib-dropdown class="inline" auto-close="disabled" is-open="postNotificatioMenuOpen">
-	  <md-button uib-dropdown-toggle  aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+	  <md-button aria-label="nothing" uib-dropdown-toggle  aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
 	  	<md-tooltip md-direction="top">
 	      {{'settings.post.menu.NOTIFY_STATION_USERS' | translate}}
 	    </md-tooltip>
@@ -220,7 +220,7 @@
 	      	{{'settings.post.NOTIFY_STATION_USERS_DESC' | translate}}
 	      </div>
 	      <div class="p-h-xs">
-		      <md-checkbox ng-model="app.editingPost.notify" class="">
+		      <md-checkbox aria-label="nothing" ng-model="app.editingPost.notify" class="">
 		      	{{'titles.NOTIFY' | translate}}
 		      </md-checkbox>
 	      </div>
@@ -228,7 +228,7 @@
 	  </div>
   </div>
 
-  <md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;" ng-click="showClearPostDialog($event)">
+  <md-button aria-label="nothing" ui-sref="app.preview({id: postId ? postId : app.editingPost.id ? app.editingPost.id : null})" aria-label="nothing" aria-label="Open demo menu" class="pos-abt md-icon-button" style="margin: 5px 0 0 0;" target="_blank">
 		<md-tooltip md-direction="top">
       	{{'settings.post.menu.PREVIEW_POST' | translate}}
   	</md-tooltip>
@@ -250,36 +250,36 @@
 							ng-style="{'background-image': 'url(' + postFeaturedImage + ')', 'background-position': app.imgToolsProps.x + '% ' + app.imgToolsProps.y + '%'}">
 								<md-fab-speed-dial md-open="openImageOptions" md-direction="up" class="md-scale pull-right p-t p-r p-b pos-abt bottom-0 right-0">
 								  <md-fab-trigger>
-								    <md-button aria-label="Add..." class="md-fab md-warn md-mini">
+								    <md-button aria-label="nothing" aria-label="Add..." class="md-fab md-warn md-mini">
 								    	<i class="mdi mdi2-settings i-20"></i>
 								    </md-button>
 								  </md-fab-trigger>
 								  <md-fab-actions>
-								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
+								    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
 								    	<md-tooltip md-direction="left">
 								      	{{'settings.post.TOGGLE_LANDSCAPE' | translate}}
 								  		</md-tooltip>
 								    	<i class="mdi i-20" ng-class="{'mdi2-crop-landscape': !landscape, 'mdi2-crop-square': landscape}"></i>
 								    </md-button>
-								    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="showImageCropDialog()">
+								    <md-button aria-label="nothing" aria-label="Add User" class="md-fab md-raised md-mini" ng-click="showImageCropDialog()">
 								    	<md-tooltip md-direction="left">
 								      	{{'settings.post.CROP_IMAGE' | translate}}
 								  		</md-tooltip>
 								    	<i class="mdi mdi2-crop i-20"></i>
 								    </md-button>
-								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showImageFocuspointDialog();">
+								    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showImageFocuspointDialog();">
 								    	<md-tooltip md-direction="left">
 								      	{{'settings.post.FOUCUS_POINT' | translate}}
 								  		</md-tooltip>
 								    	<i class="mdi mdi2-image-filter-center-focus i-20"></i>
 								    </md-button>
-								    <!-- <md-button aria-label="Add Group" class="md-fab md-raised md-mini">
+								    <!-- <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini">
 								    	<md-tooltip md-direction="left">
 								      	{{'settings.post.IMAGE_LIBRARY' | translate}}
 								    								  		</md-tooltip>
 								    	<i class="mdi mdi2-folder-image i-20"></i>
 								    </md-button> -->
-								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="removeFeaturedImage()">
+								    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="removeFeaturedImage()">
 								    	<md-tooltip md-direction="left">
 								      	{{'settings.post.REMOVE_FEATURED_IMAGE' | translate}}
 								  		</md-tooltip>
@@ -291,7 +291,7 @@
 							
 							<div ng-if="useVideo" class="block-800 h-400 animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md">
 								<embed-video width=800 height=400 iframe-id="video1" api="1" player_id="video1" ng-href="{{app.videoUrl}}"></embed-video>
-								<md-button ng-click="removeVideo();" class="md-fab md-accent md-raised md-mini pos-abt right-0 bottom-0 m-r m-b-xxl ">
+								<md-button aria-label="nothing" ng-click="removeVideo();" class="md-fab md-accent md-raised md-mini pos-abt right-0 bottom-0 m-r m-b-xxl ">
 									<md-tooltip md-direction="top">
 						      	{{'titles.REMOVE' | translate}} {{'titles.VIDEO' | translate}}
 						  		</md-tooltip>
@@ -320,7 +320,7 @@
 						      </vg-controls>
 						      <vg-overlay-play></vg-overlay-play>
 								</videogular>
-								<md-button ng-click="removeUploadedVideo();" class="md-fab md-raised md-mini pos-abt right-0 top-0 md-accent m-r m-t">
+								<md-button aria-label="nothing" ng-click="removeUploadedVideo();" class="md-fab md-raised md-mini pos-abt right-0 top-0 md-accent m-r m-t">
 									<md-tooltip md-direction="left">
 						      	{{'titles.REMOVE' | translate}} {{'titles.VIDEO' | translate}}
 						  		</md-tooltip>
@@ -354,7 +354,7 @@
 								    </vg-controls>
 								  </videogular>
 								<!-- /audio player -->
-								<md-button ng-click="removeUploadedAudio();" class="md-fab md-raised md-mini pos-abt right-0 top-0 md-accent m-r m-t">
+								<md-button aria-label="nothing" ng-click="removeUploadedAudio();" class="md-fab md-raised md-mini pos-abt right-0 top-0 md-accent m-r m-t">
 									<md-tooltip md-direction="left">
 						      	{{'titles.REMOVE' | translate}} {{'titles.AUDIO' | translate}}
 						  		</md-tooltip>
@@ -398,7 +398,7 @@
 								<!-- ng-mouseenter="openPlusOptions=true" ng-mouseleave="openPlusOptions=false" -->
 				      	<md-fab-speed-dial md-open="openPlusOptions"  md-direction="down" class="md-scale md-hover-full m-b-sm pull-right pos-abt z-index-1" style="margin-left: -80px;">
 								  <md-fab-trigger>
-								    <md-button aria-label="Add..." class="md-fab md-accent md-mini">
+								    <md-button aria-label="nothing" aria-label="Add..." class="md-fab md-accent md-mini">
 								    	<i class="mdi mdi2-plus i-20"></i>
 								    </md-button>
 								  </md-fab-trigger>
@@ -412,7 +412,7 @@
 									    	<i class="mdi mdi2-image-area i-20" style="vertical-align: 20%"></i>
 									  </div>
 
-									  <md-button ng-if="!showFeaturedMediaSelector()" ng-disabled="!showFeaturedMediaSelector()" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
+									  <md-button aria-label="nothing" ng-if="!showFeaturedMediaSelector()" ng-disabled="!showFeaturedMediaSelector()" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
 								    	<md-tooltip md-direction="right">
 								      	{{'settings.post.INSERT_FEATURED_IMAGE' | translate}}
 								  		</md-tooltip>
@@ -426,7 +426,7 @@
 									    	<i class="mdi mdi2-video i-20" style="vertical-align: 20%"></i>
 									  </div>
 
-									  <md-button ng-if="!showFeaturedMediaSelector()" ng-disabled="!showFeaturedMediaSelector()" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
+									  <md-button aria-label="nothing" ng-if="!showFeaturedMediaSelector()" ng-disabled="!showFeaturedMediaSelector()" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
 								    	<md-tooltip md-direction="right">
 								      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
 								  		</md-tooltip>
@@ -440,21 +440,21 @@
 									    	<i class="mdi mdi2-headphones i-20" style="vertical-align: 20%"></i>
 									  </div>
 
-									  <md-button ng-if="!showFeaturedMediaSelector()" ng-disabled="!showFeaturedMediaSelector()" aria-label="Add Group" class="md-fab md-raised md-mini md-raised" ng-click="toggleLandscape();">
+									  <md-button aria-label="nothing" ng-if="!showFeaturedMediaSelector()" ng-disabled="!showFeaturedMediaSelector()" aria-label="Add Group" class="md-fab md-raised md-mini md-raised" ng-click="toggleLandscape();">
 								    	<md-tooltip md-direction="right">
 								      	{{'settings.post.INSERT_FEATURED_AUDIO' | translate}}
 								  		</md-tooltip>
 								    	<i class="mdi i-20 mdi2-headphones text-dark"></i>
 								    </md-button>
 
-								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="useHeading = !useHeading">
+								    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="useHeading = !useHeading">
 								    	<md-tooltip md-direction="right">
 								      	{{'settings.post.ACTIVATE_DEACTIVATE_HEADING' | translate}}
 								  		</md-tooltip>
 								    	<i class="mdi i-20 text-dark mdi2-format-quote"></i>
 								    </md-button>
 
-								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="useSubheading = !useSubheading">
+								    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="useSubheading = !useSubheading">
 								    	<md-tooltip md-direction="right">
 								      	{{'settings.post.ACTIVATE_DEACTIVATE_SUBTITLE' | translate}}
 								  		</md-tooltip>
@@ -489,11 +489,11 @@
 </div> <!-- /abs -->
 
 
-<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg hide">
+<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg hide">
   <i class="mdi mdi2-eye i-24"></i>
 </md-button>
 
-<md-sidenav class="md-background-hue-1 background md-sidenav-right md-whiteframe-z2 w-400" md-component-id="more-options">
+<md-sidenav class="md-sidenav-right md-whiteframe-z2 w-400" md-component-id="more-options">
   <md-toolbar class="md-theme-light">
     <h1 class="md-toolbar-tools" translate="settings.post.OPTIONS"></h1>
   </md-toolbar>
@@ -509,7 +509,7 @@
 
 										<div class="p-t p-l p-r text-md" ng-if="!selectedStation">{{'settings.post.SELECT_STATION' | translate}}:</div>
 
-                  	<div class="p-l p-r text-lg">
+                  	<div class="p-l p-r text-md-l">
 	                  	<md-input-container class="w-full">
 												<md-select ng-model="selectedStation" placeholder="{{'titles.STATION' | translate}}">
 													<md-option ng-value="station" ng-repeat="station in stations">{{ station.name }}</md-option>
@@ -543,17 +543,17 @@
                               {{'settings.post.AUTOMATIC_SAVE' | translate}}</md-switch>
                   	</div>
                     <div>
-                      <md-checkbox ng-model="landscape" ng-change="landscape = !landscape; toggleLandscape();">
+                      <md-checkbox aria-label="nothing" ng-model="landscape" ng-change="landscape = !landscape; toggleLandscape();">
                         {{'settings.post.TOGGLE_LANDSCAPE' | translate}}
                       </md-checkbox>
                     </div>
                     <div>
-                      <md-checkbox ng-model="useHeading">
+                      <md-checkbox aria-label="nothing" ng-model="useHeading">
                         {{'titles.HEADING' | translate}}
                       </md-checkbox>
                     </div>
                     <div>
-                      <md-checkbox ng-model="useSubheading">
+                      <md-checkbox aria-label="nothing" ng-model="useSubheading">
                         {{'titles.SUBTITLE' | translate}}
                       </md-checkbox>
                     </div>
@@ -562,12 +562,12 @@
                   		{{'titles.NOTIFICATION' | translate}}
                   	</div>-->
                     <div class="m-t">
-                      <md-checkbox ng-model="app.editingPost.notify">
+                      <md-checkbox aria-label="nothing" ng-model="app.editingPost.notify">
                         {{'settings.post.NOTIFY_USERS' | translate}}
                       </md-checkbox>
                     </div>
                     <div class="text-center m-b-sm">
-						<md-button class="md-raised md-primary p-h md-whiteframe-z2" ng-click="showGeoNotificationDialog($event)">
+						<md-button aria-label="nothing" class="md-raised md-primary p-h md-whiteframe-z2" ng-click="showGeoNotificationDialog($event)">
 						<i class="mdi mdi2-google-maps i-20 m-r-sm v-m"></i>{{'titles.GEO_NOTIFICATION' | translate}}
 						</md-button>
                     </div>
@@ -586,7 +586,7 @@
 		            	</h4>
 			            <p class="clear text-ellipsis"> {{revision.payload.title}} </p>
 			          </div>
-			          <md-button class="md-secondary md-icon-button" aria-label="call" ng-click="restoreRevision(revision.payload)">
+			          <md-button aria-label="nothing" class="md-secondary md-icon-button" aria-label="call" ng-click="restoreRevision(revision.payload)">
 			          	<md-tooltip md-direction="bottom">
 										{{'settings.post.SHOW_VERSION' | translate}}
 			          	</md-tooltip>
@@ -602,12 +602,12 @@
         </div>
         <div class="pointer text-center p text-u-c font-bold pos-rlt" ng-click="showMoreOptions($event)">
         	<md-divider class="pos-abt top-0 left-0 right-0"></md-divider>
-          <md-button ng-if="!app.checkState() || app.checkState() > 1" class="md-raised md-primary p-h md-whiteframe-z2" ng-click="postPost(app.editingPost)">
+          <md-button aria-label="nothing" ng-if="!app.checkState() || app.checkState() > 1" class="md-raised md-primary p-h md-whiteframe-z2" ng-click="postPost(app.editingPost)">
           	<i class="icon mdi2-send i-14 m-r-sm"></i>{{'titles.PUBLISH' | translate}}
           </md-button>
-			<md-button ng-if="app.editingPost.id && app.checkState() === 1" class="md-raised md-primary p-h md-whiteframe-z2" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
+			<md-button aria-label="nothing" ng-if="app.editingPost.id && app.checkState() === 1" class="md-raised md-primary p-h md-whiteframe-z2" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
 			</md-button>
-          <md-button class="" ng-click="toggleOptions();">{{'titles.CLOSE' | translate}}</md-button>
+          <md-button aria-label="nothing" class="" ng-click="toggleOptions();">{{'titles.CLOSE' | translate}}</md-button>
         </div>
       </div>
 
@@ -621,10 +621,10 @@
 				{{'settings.post.messages.CHANGE_STATE_FROM_PUBLISHED_MSG' | translate}}
 			</div>
 			<div class="text-center p-t">
-				<md-button ng-click="app.cancelDialog();" class="m-0">
+				<md-button aria-label="nothing" ng-click="app.cancelDialog();" class="m-0">
 					{{'titles.CANCEL' | translate}}
 				</md-button>
-				<md-button ng-click="saveAsDraft(false, true);" class="m-0">
+				<md-button aria-label="nothing" ng-click="saveAsDraft(false, true);" class="m-0">
 					{{'titles.CONFIRM' | translate}}
 				</md-button>
 			</div>
@@ -648,13 +648,13 @@
 				{{'settings.post.messages.CONTENT_LOST_ALERT' | translate}}
 			</div>
 			<div class="text-center p-t">
-				<md-button ng-click="app.cancelDialog();" class="m-0">
+				<md-button aria-label="nothing" ng-click="app.cancelDialog();" class="m-0">
 					{{'titles.CANCEL' | translate}}
 				</md-button>
-				<md-button ng-click="app.clearPostContent();" class="m-0">
+				<md-button aria-label="nothing" ng-click="app.clearPostContent();" class="m-0">
 					{{'settings.post.CLEAR_CONTENT' | translate}}
 				</md-button>
-				<md-button ng-click="app.clearAndResetPost();" class="m-0">
+				<md-button aria-label="nothing" ng-click="app.clearAndResetPost();" class="m-0">
 					{{'settings.post.NEW_POST' | translate}}
 				</md-button>
 			</div>
@@ -673,10 +673,10 @@
 					<div class="p-md text-base text-left" translate="settings.post.GEO_NOTIFICATION_DESC">
 					</div>
 					<div class="pos-abt bottom-0 text-center w-full p-t p-b">
-						<md-button ng-click="app.cancelDialog();" class="m-0">
+						<md-button aria-label="nothing" ng-click="app.cancelDialog();" class="m-0">
 							{{'titles.CANCEL' | translate}}
 						</md-button>
-						<md-button ng-click="" class="m-0">
+						<md-button aria-label="nothing" ng-click="" class="m-0">
 							{{'titles.SAVE' | translate}}
 						</md-button>
 					</div>
@@ -722,10 +722,10 @@
 	  		<embed-video on-change="videoSelected(videoId, provider)" width=348 height=220 iframe-id="video2" api="1" player_id="video2" ng-href="{{app.videoUrl}}"></embed-video>
 	  	</div>
 	  	<div class="text-center m-t m-b pos-abt bottom-0 left-0 right-0">
-	  		<md-button ng-click="insertVideo()" class="m-b-0" ng-disabled="!validVideoUrl">
+	  		<md-button aria-label="nothing" ng-click="insertVideo()" class="m-b-0" ng-disabled="!validVideoUrl">
 	  			{{'actions.INSERT' | translate}}
 	  		</md-button>
-	  		<md-button ng-click="cancel()" class="m-b-0">
+	  		<md-button aria-label="nothing" ng-click="cancel()" class="m-b-0">
 	  			{{'titles.CANCEL' | translate}}
 	  		</md-button>
 	  	</div>
@@ -771,13 +771,13 @@
 			</div>
 			<!-- /video upload button -->
 			<div class="text-center m-t m-b pos-abt bottom-0 left-0 right-0">
-	  		<md-button ng-click="insertUploadedVideo()" class="m-b-0" ng-disabled="!uploadedVideo">
+	  		<md-button aria-label="nothing" ng-click="insertUploadedVideo()" class="m-b-0" ng-disabled="!uploadedVideo">
 	  			{{'actions.INSERT' | translate}}
 	  		</md-button>
-	  		<md-button ng-show="uploadedVideo" class="m-b-0" ng-click="uploadedVideo = null;">
+	  		<md-button aria-label="nothing" ng-show="uploadedVideo" class="m-b-0" ng-click="uploadedVideo = null;">
 	  			{{'titles.REMOVE' | translate}}
 	  		</md-button>
-	  		<md-button ng-click="cancel()" class="m-b-0">
+	  		<md-button aria-label="nothing" ng-click="cancel()" class="m-b-0">
 	  			{{'titles.CANCEL' | translate}}
 	  		</md-button>
 	  	</div>
@@ -810,13 +810,13 @@
 	  		<ng-audio-recorder id='audioInput' audio-model='recordedInput'>
 				  <!-- Start controls, exposed via recorder-->
 				  <div ng-if="recorder.isAvailable">
-				    <md-button ng-click="recorder.startRecord()" type="button" ng-disabled="recorder.status.isRecording">
+				    <md-button aria-label="nothing" ng-click="recorder.startRecord()" type="button" ng-disabled="recorder.status.isRecording">
 				        Start Record
 				    </md-button>
-				    <md-button ng-click="recorder.stopRecord()" type="button" ng-disabled="recorder.status.isRecording === false">
+				    <md-button aria-label="nothing" ng-click="recorder.stopRecord()" type="button" ng-disabled="recorder.status.isRecording === false">
 				        Stop Record
 				    </md-button>
-				    <md-button ng-click="recorder.playbackRecording()" type="button"
+				    <md-button aria-label="nothing" ng-click="recorder.playbackRecording()" type="button"
 				            ng-disabled="recorder.status.isRecording || !recorder.audioModel">
 				        Play Back
 				    </md-button>
@@ -829,10 +829,10 @@
 				</ng-audio-recorder>
 	  	</div>
 	  	<div class="text-center m-t m-b pos-abt bottom-0 left-0 right-0">
-	  		<md-button ng-click="insertAudio()" class="m-b-0" ng-disabled="!validAudioUrl">
+	  		<md-button aria-label="nothing" ng-click="insertAudio()" class="m-b-0" ng-disabled="!validAudioUrl">
 	  			{{'actions.INSERT' | translate}}
 	  		</md-button>
-	  		<md-button ng-click="cancel()" class="m-b-0">
+	  		<md-button aria-label="nothing" ng-click="cancel()" class="m-b-0">
 	  			{{'titles.CANCEL' | translate}}
 	  		</md-button>
 	  	</div>
@@ -881,13 +881,13 @@
 			</div>
 			<!-- /audio upload button -->
 			<div class="text-center m-t m-b pos-abt bottom-0 left-0 right-0">
-	  		<md-button ng-click="insertUploadedAudio()" class="m-b-0" ng-disabled="!uploadedAudio">
+	  		<md-button aria-label="nothing" ng-click="insertUploadedAudio()" class="m-b-0" ng-disabled="!uploadedAudio">
 	  			{{'actions.INSERT' | translate}}
 	  		</md-button>
-	  		<md-button ng-show="uploadedAudio" class="m-b-0" ng-click="uploadedAudio = null;">
+	  		<md-button aria-label="nothing" ng-show="uploadedAudio" class="m-b-0" ng-click="uploadedAudio = null;">
 	  			{{'titles.REMOVE' | translate}}
 	  		</md-button>
-	  		<md-button ng-click="cancel()" class="m-b-0">
+	  		<md-button aria-label="nothing" ng-click="cancel()" class="m-b-0">
 	  			{{'titles.CANCEL' | translate}}
 	  		</md-button>
 	  	</div>

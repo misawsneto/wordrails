@@ -56,6 +56,7 @@
 		"SAVE_DRAFT": "Salvar rascunho",
 		"SAVE_AS_DRAFT": "Salvar como rascunho",
 		"SAVE": "Salvar",
+		"APPLY": "Aplicar",
 		"TITLE": "Título",
 		"SUBTITLE": "Subtítulo",
 		"HEADING": "Chapéu",
@@ -105,7 +106,10 @@
 		"AT": "em",
 		"SHOW_ALL": "Mais",
 		"SKIP": "Pular",
-		"CLOSE": "Fechar"
+		"CLOSE": "Fechar",
+		"RELATED": "Publicações relacionadas",
+		"ADD": "Adicionar",
+		"LOAD_MORE": "Carregar mais"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -228,7 +232,12 @@
 			"SUBSECTION": "Subseção",
 			"SIDENAV": "Menu lateral",
 			"FOOTER": "Rodapé",
-			"HEADER": "Menu superior"
+			"HEADER": "Menu superior",
+			"header": {
+				"TABS": "Abas",
+				"MENU_ITEM": "Item",
+				"MENU_NAME": "Nome"
+			}
 		},
 		"users": {
 			"ENABLE_ALL_SELECTED": "Ativar usuários selecionados",
@@ -293,8 +302,8 @@
 				"NEW_POST_MSG": "Iniciar uma nova publicação por inteiro?",
 				"CHANGE_STATE_FROM_PUBLISHED_MSG": "Esta publicação não será visível se seu estado não estiver configurado para PUBLICADO. Tem certeza que deseja mudar o estado desta publicação?",
 				"NEW_PUBLICATION_INFO": "Você iniciou uma nova publicação",
-				"INVALID_TERMS_OR_STATIONS": "You need to set a station and category before creating/updating a publication",
-				"INVALID_TITLE_OR_BODY": "You need to set a title and body before creating/updating a publication"
+				"INVALID_TERMS_OR_STATIONS": "Você precisa definir uma estação e uma categoria antes de criar/atualizar uma publicação",
+				"INVALID_TITLE_OR_BODY": "Você precisa definir um título e corpo antes de criar/atualizar uma publicação"
 			},
 			"states": {
 				"PUBLISHED": "Publicado",

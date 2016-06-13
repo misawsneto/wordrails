@@ -541,7 +541,8 @@ footer.page-footer .footer-copyright{
 /********************* 4.1 News Slider ********************/
 
 .ps-caption > h2{ font-size: 29px; line-height: 35px; margin: 10px 0;}
-.pgwSlider  .ps-list a{ font-size: 16px; padding: 10px;}
+.pgwSlider  .ps-list a{ font-size: 16px; font-weight: 300; /*padding: 10px;*/}
+.pgwSlider .ps-caption a{ font-size: 20px; font-weight: 300;}
 .pgwSlider .ps-caption p{ color: #fff;}
 .pgwSlider .ps-caption {
   background: rgba(0, 0, 0, 0) linear-gradient(transparent, rgba(0, 0, 0, 0.85)) repeat scroll 0 0;
@@ -1032,6 +1033,7 @@ ul.pgwSlider > li span, .pgwSlider > .ps-list > li span
 
 /***************** 10.2 Slider ******************/
 
+.ps-current {box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26)!important;}
 .shop-slider .pgwSlider .ps-current{ width: 75%;}
 .shop-slider .ps-list {width: 25%;}
 .shop-slider .ps-caption{

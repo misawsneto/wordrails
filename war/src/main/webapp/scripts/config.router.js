@@ -97,6 +97,32 @@ angular.module('app')
                 controller: 'SettingsPostCtrl'
               })
 
+              .state('app.preview', {
+                url: '/preview?id',
+                templateUrl: '/views/pages/read.html',
+                data : { titleTranslate: 'titles.POST', title: 'Publicação', folded: true },
+                resolve: {
+                  post: function($stateParams, $q, trix){
+                    var deferred = $q.defer();
+                    if($stateParams.id){
+                      trix.getPost($stateParams.id, 'postProjection').success(function(post){
+                        deferred.resolve(post);
+                      }).error(function(){
+                        return deferred.reject('Error loadin post');
+                      })
+                    }
+                    return deferred.promise;
+                  },
+                  station: function($stateParams, $q, trix){
+                    var deferred = $q.defer();
+                    deferred.resolve(null);
+                    return deferred.promise;
+                  },
+                  deps:load(['/scripts/controllers/app/read.js', '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css']).deps
+                },
+                controller: 'ReadCtrl'
+              })
+
               .state('app.stations', {
                 url: '/stations',
                 templateUrl: '/views/settings/settings-stations.html',
@@ -122,7 +148,7 @@ angular.module('app')
                 data : { titleTranslate: 'titles.PERSPECTIVES', title: 'Perspectives', folded: true },
                 resolve:{
                   station: stationDep,
-                  deps: load(['angularFileUpload', '/scripts/controllers/settings/settings-perspectives.js']).deps
+                  deps: load(['wu.masonry', 'angular-carousel', '/scripts/controllers/settings/settings-perspectives.js', '/scripts/custom-pgwslider.js', '/libs/jquery/pgwslider/pgwslider.min.css']).deps
                 },
                 controller: 'SettingsPerspectivesCtrl'
               })
@@ -701,7 +727,7 @@ angular.module('app')
                 url: '/',
                 templateUrl: '/views/pages/home.html',
                 data : { title: 'Home', folded: false },
-                resolve: load(['wu.masonry', '/scripts/controllers/app/page.js']),
+                resolve: load(['wu.masonry', '/scripts/controllers/app/page.js', '/scripts/custom-pgwslider.js', '/libs/jquery/pgwslider/pgwslider.min.css', 'angular-carousel']),
                 controller: 'PageCtrl'
 
               })
@@ -1248,7 +1274,7 @@ angular.module('app')
                 resolve: {
                   post: postDep,
                   station: stationDep,
-                  deps:load(['/scripts/controllers/app/read.js', '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css']).deps
+                  deps:load(['wu.masonry', '/scripts/controllers/app/read.js', '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css']).deps
                 }
               })
             .state('app.station', {

@@ -18,7 +18,7 @@
 <div class="block-800 m-auto">
 
   <div class="clearfix m-b-xxl m-t-xxl" infinite-scroll="paginate()" infinite-scroll-container='"#content .box-cell"' infinite-scroll-distance="1">
-    <div class="row" masonry class="m-b pos-rlt animated fadeIn" reload-on-show ng-show="publications">
+    <div class="row" class="m-b pos-rlt animated fadeIn" reload-on-show ng-show="publications" masonry>
       <div class="col-lg-6 col-sm-6 col-xs-12 masonry-brick" ng-repeat="publication in publications">
         <!--  Vertical News Box -->
         <div class="news md-whiteframe-z1 vertical z-depth-1 card">
@@ -31,6 +31,8 @@
             {{publication.authorName}}
             </div>
           </a>
+          <div class="inline p-t v-t pull-right p-r-sm text-sm" style="opacity: 0.6" am-time-ago="publication.date">
+          </div>
           <!-- News Image -->
           <div class="news-image o-f-h">
               <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" ng-if="app.hasImage(publication);">

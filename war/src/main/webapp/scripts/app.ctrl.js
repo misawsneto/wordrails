@@ -116,15 +116,21 @@ angular.module('app')
         $timeout(function() { $document.find('#aside').length && $mdSidenav('aside').close(); });
       }
 
+      var masonryTimeout = null;
+      $scope.reloadMasonry = function(){
+        if(masonryTimeout)
+          $timeout.cancel(masonryTimeout)
+
+        masonryTimeout = $timeout(function(){
+          $rootScope.$broadcast('masonry.reload');
+        },200)
+      }
+
     }
   ])
 
   .controller('AppDataCtrl', ['$scope', '$state', '$log', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdMedia', 'amMoment',
     function (             $scope, $state, $log, $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar, $mdMedia, amMoment) {
-
-      $scope.reloadMasonry = function(){
-        $rootScope.$broadcast('masonry.reload');
-      }
 
       $rootScope.$mdMedia = $mdMedia;
       amMoment.changeLocale('pt');
@@ -292,6 +298,13 @@ angular.module('app')
             return TRIX.baseUrl;
         }
 
+        $scope.app.getPublicationUrl = function(stationId, post){
+          if(stationId && post)
+            return TRIX.baseUrl + '/' + $scope.app.getStationById(stationId).stationSlug  + '/' + post.slug;
+          else
+            return TRIX.baseUrl;
+        }
+
         $scope.app.goToPublicationLink = function(stationId, slug){
           if(stationId && slug)
             $state.go('app.read', {'stationSlug': $scope.app.getStationById(stationId), 'postSlug': slug})
@@ -333,11 +346,19 @@ angular.module('app')
         }
 
         $scope.app.fullCardCheck = function(index, post){
-          return $scope.app.hasImage(post) && (index%8 == 0 || index == 0) && !$scope.app.largeCardCheck(index-2, post) && $scope.app.largeCardCheck(index+3, post);
+          //return $scope.app.hasImage(post) && (index%8 == 0 || index == 0) && !$scope.app.largeCardCheck(index-2, post) && $scope.app.largeCardCheck(index+3, post);
+          var ind = index+1 + '';
+          var indLasDigit = ind.slice(ind.length - 1);
+
+          return indLasDigit == 1;
         }
 
         $scope.app.largeCardCheck = function(index, post){
-          return $scope.app.hasImage(post) && (index%3 == 0 && index != 0) && !$scope.app.fullCardCheck(index + 1, post)
+          // return $scope.app.hasImage(post) && (index%3 == 0 && index != 0) && !$scope.app.fullCardCheck(index + 1, post)
+          var ind = index+1 + '';
+          var indLasDigit = ind.slice(ind.length - 1);
+
+          return (indLasDigit == 5 || indLasDigit == 8 || indLasDigit == 0) && !$scope.app.fullCardCheck(index, post);
         }
 
         $scope.app.smallCardCheck = function(index){
@@ -345,7 +366,8 @@ angular.module('app')
         }
 
         $scope.app.getCategoryLink = function(stationSlug, categoryName){
-          return '/'+stationSlug+'/cat?name='+categoryName;
+          var base = $scope.app.isSettings() ? TRIX.baseUrl : '';
+          return base +  '/'+stationSlug+'/cat?name='+categoryName;
         }
 
         $scope.app.stopPropagation = function(e){
@@ -354,7 +376,9 @@ angular.module('app')
         }
 
         $scope.app.focusOnSearch = function(){
-          $('id#search form input').focus();
+          $('#search form input').focus();
+
+
         }
 
         // ---------- /util -------------
@@ -480,6 +504,38 @@ angular.module('app')
         $mdDialog.cancel();
       });
 
+      $scope.app.getStationCategories = function(){
+        var ret = null
+        if($scope.app.termPerspectiveView && $scope.app.termPerspectiveView.ordinaryRows){
+          ret = [];
+          $scope.app.termPerspectiveView.ordinaryRows && $scope.app.termPerspectiveView.ordinaryRows.forEach(function(row){
+            ret.push({
+              'id':row.termId,
+              'name':row.termName
+            })
+          })
+        }
+        return ret ? ret : $scope.app.perspectiveTerms;
+      }
+
+      $scope.app.termPerspectiveView = [];
+      $scope.$watch('app.termPerspectiveView', function(newValue, oldValue, scope) {
+        if(newValue){
+          loadPerspectiveTerms();
+        }
+      });
+
+      var loadPerspectiveTerms = function(){
+        $scope.app.loadingTabs = true;
+        $scope.app.perspectiveTerms = $scope.app.getStationCategories();
+          if($scope.app.perspectiveTerms && $scope.app.perspectiveTerms.length){
+            $timeout(function(){
+              $(window).trigger('resize');
+              $scope.app.loadingTabs = false;
+            })
+          }
+      }
+
       /**
        * Watch value of app.postObjectChanged and set alert messages.
        * @param  boolean newVal
@@ -540,6 +596,8 @@ angular.module('app')
             }, 2000);
           }
         }
+
+        $scope.app.activeCategory = null;
       })
 
       // ---------- /theming ------------------

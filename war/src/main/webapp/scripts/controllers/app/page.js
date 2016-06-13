@@ -7,10 +7,6 @@ app.controller('PageCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 
 		pageCtrl = $scope;
 
-		$scope.reloadMasonry = function(){
-			$rootScope.$broadcast('masonry.reload');
-		}
-
 		$scope.loadComments = function(cell){
 			if(!cell.showComments){
 				cell.loadingComments = true;
@@ -38,6 +34,7 @@ app.controller('PageCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 	          .toggle()
 	      }
 	    }
+
 
 }]);
 

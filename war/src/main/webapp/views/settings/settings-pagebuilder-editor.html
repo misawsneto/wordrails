@@ -10,7 +10,7 @@
 	<div class="p-v" ng-repeat="section in getSections(app.editingPage.sections)">
 		<md-divider ng-hide="previewMode"></md-divider>
 		<div class="w-full text-center" style="margin-top: -28px" ng-hide="previewMode">
-			<md-button class="md-accent md-fab md-mini" aria-label="Eat cake">
+			<md-button aria-label="nothing" class="md-accent md-fab md-mini" aria-label="Eat cake">
 				<md-tooltip md-direction="top">
 		    	{{'settings.pages.ADD_SECTION' | translate}}
 		  	</md-tooltip>
@@ -128,7 +128,7 @@
                     Title
                   </div>
                 </div>
-                <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                <md-button aria-label="nothing" md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
                 <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
                 <div class="p">
                   <h3>Paracosm</h3>
@@ -147,7 +147,7 @@
                     Title
                   </div>
                 </div>
-                <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                <md-button aria-label="nothing" md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
                 <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
                 <div class="p">
                   <h3>Paracosm</h3>
@@ -166,7 +166,7 @@
                     Title
                   </div>
                 </div>
-                <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                <md-button aria-label="nothing" md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
                 <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
                 <div class="p">
                   <h3>Paracosm</h3>
@@ -185,7 +185,7 @@
                     Title
                   </div>
                 </div>
-                <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                <md-button aria-label="nothing" md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
                 <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
                 <div class="p">
                   <h3>Paracosm</h3>
@@ -256,7 +256,7 @@
 	<div class="p-v" ng-hide="previewMode">
 		<md-divider></md-divider>
 		<div class="w-full text-center" style="margin-top: -28px">
-			<md-button class="md-accent md-fab md-mini" aria-label="Eat cake">
+			<md-button aria-label="nothing" class="md-accent md-fab md-mini" aria-label="Eat cake">
 				<md-tooltip md-direction="top">
 		    	{{'settings.pages.ADD_SECTION' | translate}}
 		  	</md-tooltip>
@@ -268,12 +268,12 @@
 	</div>
 </div>
 
-<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg" style="margin-right: 100px;">
+<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg" style="margin-right: 100px;">
 	<i class="mdi mdi2-content-save i-24"></i>
 </md-button>
 
 <div class="modal fade inactive" id="pagebuilder-tools" data-backdrop="false">
-  <div class="right w-xxl bg-white md-whiteframe-z2">
+  <div class="right w-300 bg-white md-whiteframe-z2">
     <div class="box">
       <div class="p p-h-md">
         <a data-dismiss="modal" class="pull-right text-muted-lt text-2x m-t-n inline p-sm">&times;</a>
@@ -298,12 +298,12 @@
 				    </md-slider-container>
 				    <div class="text-left">
 				    	<div class="p-r">
-				    		<md-checkbox ng-model="previewMode" class="text-u-c font-500">
+				    		<md-checkbox aria-label="nothing" ng-model="previewMode" class="text-u-c font-500">
 				    			{{'settings.pages.PREVIEW_MODE' | translate}}
 				    		</md-checkbox>
 				    	</div>
 				    	<div class="p-r">
-				    		<md-checkbox ng-model="app.editingPage.boxedLayout" class="text-u-c font-500">
+				    		<md-checkbox aria-label="nothing" ng-model="app.editingPage.boxedLayout" class="text-u-c font-500">
 				    			{{'settings.pages.BOXED_LAYOUT' | translate}}
 				    		</md-checkbox>
 				    	</div>

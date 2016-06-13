@@ -150,7 +150,15 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	
 	// --- slug
 	$scope.customizedLink = {
-		slug: ""
+		slug: "",
+		invalid: false
+	}
+
+	$scope.applyCustomizedLink = function(slug){
+		if(!$scope.app.editingPost)
+			$scope.app.editingPost = {};
+		$scope.app.editingPost.slug = slug;
+		$scope.postPermalinkMenuOpen = false;
 	}
 
 	// --- slug
@@ -830,6 +838,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	// -------- load post
 	
 	if($state.params.id){
+		$scope.postId = $state.params.id
 			$scope.app.showLoadingProgress();
 	 	trix.getPost($state.params.id, "postProjection").success(function(response){
 			$scope.app.editingPost = response;

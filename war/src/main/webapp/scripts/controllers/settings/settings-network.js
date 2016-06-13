@@ -1,7 +1,7 @@
 app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$translate', '$mdSidenav',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix , FileUploader, TRIX, cfpLoadingBar, $mdToast, $translate, $mdSidenav){
 
-		$scope.toggleRight = buildToggler('palette-selector');
+		$scope.toggleOptions = buildToggler('palette-selector');
 
 		$scope.settings = {'tab': 'settings'}
 

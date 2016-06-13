@@ -1,11 +1,11 @@
 <div class="box">
   <!-- Content Navbar -->
-  <div class="navbar md-whiteframe-z1 no-radius md-primary-default background">
+  <div class="navbar md-whiteframe-z1 no-radius md-primary-default background" style="max-height:64px">
     <!-- Open side - Naviation on mobile -->
     <!--<a md-ink-ripple ng-click="openAside()" ng-hide="$state.current.data.child" class="navbar-item pull-left"><i class="mdi-navigation-menu i-24"></i></a>-->
     <!-- / -->
     <div class="navbar-header pull-left">
-      <a class="navbar-brand" ng-href="/" target="_self">
+      <a class="navbar-brand" ng-href="/">
         <!-- <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve" style="
               width: 24px; height: 24px;">
             <path d="M 50 0 L 100 14 L 92 80 Z" fill="rgba(139, 195, 74, 0.5)"></path>
@@ -18,7 +18,7 @@
       </a>
     </div>
 
-    <div id="search" class="navbar-header h-full md-primary-default background animated" style="width: 55%" ng-class="{'fadeIn': app.search.show, 'fadeOut': !app.search.show}">
+    <div id="search" ng-if="$mdMedia('gt-sm')" class="navbar-header h-full md-primary-default background animated" style="width: 55%" ng-class="{'fadeIn': app.search.show, 'fadeOut': !app.search.show}">
       <div class="m-l-xxl box">
         <div class="box-col v-m p-h">
           <!-- bind to app.search.content -->
@@ -48,12 +48,17 @@
     <!-- / -->
     <!-- Common tools -->
     <ul class="nav nav-sm navbar-tool pull-right" ng-hide="$state.current.data.child">
-      <li class="animated" ng-class="{'fadeIn': !app.search.show, 'fadeOut': app.search.show}">
+      <li class="animated" ng-class="{'fadeIn': !app.search.show, 'fadeOut': app.search.show, 'hide': !$mdMedia('gt-sm')}">
         <a md-ink-ripple ng-click="app.search.show = true; app.focusOnSearch()">
           <i class="mdi-action-search i-24 p-h-sm"></i>
         </a>
       </li>
-      <li ng-if="app.person.id > 0" class="animated fadeIn dropdown ">
+      <li class="animated" ng-class="{'hide': $mdMedia('gt-sm')}">
+        <a md-ink-ripple ui-sref="app.search({q:''})">
+          <i class="mdi-action-search i-24 p-h-sm"></i>
+        </a>
+      </li>
+      <li ng-if="app.person.id > 0 && $mdMedia('gt-sm')" class="animated fadeIn dropdown">
         <a md-ink-ripple class="dropdown-toggle clear" data-toggle="dropdown">
           <i class="mdi2-bell-outline i-24 p-h-sm"></i>
         </a>
@@ -85,7 +90,7 @@
           <i class="mdi-social-person-outline i-24 p-h-sm"></i>
         </a>
       </li> -->
-      <li class="dropdown m-r-lg">
+      <li class="dropdown m-r-lg" ng-if="$mdMedia('gt-sm')">
         <a href class="dropdown-toggle clear" data-toggle="dropdown" ng-click="app.signInButton()">
           <!-- <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
             <img src="/images/a0.jpg" alt="...">
@@ -169,10 +174,24 @@
   </div>
   <!-- Content -->
   <div class="box-row">
-    <!-- <md-toolbar md-scroll-shrink ng-if="true" style="min-height: 50px;">
-      <div class="md-primary-hue-1 background" style="min-height: 50px;">
+    <md-toolbar md-scroll-shrink style="min-height: 50px;" ng-class="{'show': !$state.includes('app.search'), 'hide': $state.includes('app.search')}">
+      <div class="md-primary-hue-1 background">
+        <div class="custom-header container" style="min-height: 50px;">
+          <ul class="nav nav-lines nav-md no-bg animated" ng-class="{'o-f-h fadeOut': app.loadingTabs, 'fadeIn': !app.loadingTabs}" df-tab-menu menu-control="{{menu2.navigationState}}" style="height: 60px">
+            <li ng-class="{'active': app.activeCategory.id === category.id}" md-ink-ripple data-ng-repeat="category in app.perspectiveTerms" data-menu-item="{{category.item}}">
+              <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(app.termPerspectiveView.stationId).stationSlug, 'name': category.name})" >
+                <span>{{category.name}}</span>
+              </a>
+            </li>
+            <li data-more-menu-item>
+              <md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button" style="margin-top: 10px;" >
+                <i class="mdi2-chevron-double-down i-20"></i>
+              </md-button>
+            </li>
+          </ul>        
+        </div>
       </div>
-    </md-toolbar> -->
+    </md-toolbar>
     <md-content id="scroll-box" class="box-cell o-f-x-h">
       <div id="app-content" class="box-inner">
         <!-- <div id="view" class="clearfix md-whiteframe-z0 no-radius" ng-class="$state.current.data.theme ? $state.current.data.theme.primary : app.setting.theme.primary"> -->
@@ -349,7 +368,7 @@
   </md-dialog-content>
 </script>
 
-<md-sidenav class="md-background-hue-1 background md-sidenav-right md-whiteframe-z2 w-400" md-component-id="post-comments">
+<md-sidenav class="md-sidenav-right md-whiteframe-z2 w-400" md-component-id="post-comments">
     <md-toolbar class="md-theme-light">
       <h1 class="md-toolbar-tools" translate="titles.COMMENTS"></h1>
     </md-toolbar>

@@ -31,46 +31,29 @@
 													</th>
 													<th>usuários</th>
 													<th style="min-width:170px;" class="text-center display-t-c v-m no-padding">último login</th>
-													<th style="min-width:110px;" class="text-center display-t-c v-m no-padding">
-														ativar/desativar
-													</th>
-													<th style="min-width:100px;" class="text-center display-t-c v-m no-padding">
-														administrador
-													</th>
 													<th style="width:30px;"></th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr ng-repeat="person in persons" class="b-l-3x b-l-s b-c-t" 	ng-style="person.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" ng-class="{'b-l-primary': isActivePerson(person)}">
+												<tr ng-repeat="permission in permissions" class="b-l-3x b-l-s b-c-t" 	ng-style="person.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" ng-class="{'b-l-primary': isActivePerson(person)}">
 													<td class="display-t-c v-m">
-														<md-checkbox aria-label="nothing" class="no-margin" ng-if="person.id != app.person.id"
-														 ng-model="person.selected" ng-true-value="true" ng-false-value="false" ng-click="app.stopPropagation($event)">
+														<md-checkbox aria-label="nothing" class="no-margin" ng-if="permission.person.id != app.person.id"
+														 ng-model="permission.selected" ng-true-value="true" ng-false-value="false" ng-click="app.stopPropagation($event)">
 														</md-checkbox>
 													</td>
 													<td class="display-t-c v-m clearfix">
 							              <span class="pull-left thumb-sm m-r">
-															<div ng-style="app.getUserImage(person, 'small', 'PROFILE_PICTURE', true)" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(person)}">
-																<i ng-if="!app.hasProfilePicture(person)" style="line-height: 36px;" class="mdi2-account i-24"></i>
+															<div ng-style="app.getUserImage(permission.person, 'small', 'PROFILE_PICTURE', true)" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(permission.person)}">
+																<i ng-if="!app.hasProfilePicture(permission.person)" style="line-height: 36px;" class="mdi2-account i-24"></i>
 															</div>
 							              </span>
 								              <span class="clear">
-								                <span class="text-md font-bold">{{person.name}}</span>
-								                <div class="text-muted clear text-ellipsis">{{person.username}} | {{person.email}}</div>
+								                <span class="text-md font-bold">{{permission.person.name}}</span>
+								                <div class="text-muted clear text-ellipsis">{{permission.person.username}} | {{permission.person.email}}</div>
 								              </span>
 													</td>
-													<td class="display-t-c v-m text-center" ng-if="!person.lastLogin"> - </td>
-													<td class="display-t-c v-m text-center" ng-if="person.lastLogin">{{app.getLocalTime(person.lastLogin)}}</td>
-													<td class="display-t-c v-m text-center">
-														<div ng-if="person.id != app.person.id" class="hidden-sm" ng-click="app.stopPropagation($event)">
-														 	<md-switch class="no-margin" ng-change="app.enableDisablePerson(person)" ng-model="person.enabled" ng-true-value="true" ng-false-value="false">
-								            	</md-switch>
-														</div>
-													</td>
-													<td class="display-t-c v-m text-center">
-														<md-checkbox aria-label="nothing" class="no-margin" ng-if="person.id != app.person.id" 
-														 ng-model="person.admin" ng-click="app.stopPropagation($event)">
-														</md-checkbox>
-													</td>
+													<td class="display-t-c v-m text-center" ng-if="!permission.person.lastLogin"> - </td>
+													<td class="display-t-c v-m text-center" ng-if="permission.person.lastLogin">{{app.getLocalTime(permission.person.lastLogin)}}</td>
 													<td class="display-t-c v-m">
                             <div ng-if="person.id != app.person.id" class="dropdown hidden-sm">
                               <ul class="list-inline no-margin">
@@ -116,43 +99,43 @@
   <!-- /background -->
 <!-- </md-sidenav> -->
   
-  <!-- <md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg"
+  <!-- <md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg"
     ui-sref="app.post">
     <i class="mdi-editor-mode-edit i-24"></i>
   </md-button> -->
 
 	<md-fab-speed-dial md-direction="up" class="md-scale pos-fix right-0 bottom-0 m-r-lg m-b-md">
 	  <md-fab-trigger>
-	    <md-button aria-label="Add..." class="md-fab md-accent">
+	    <md-button aria-label="nothing" aria-label="Add..." class="md-fab md-accent">
 	    	<i class="mdi mdi2-menu i-24"></i>
 	    </md-button>
 	  </md-fab-trigger>
 	  <md-fab-actions>
-	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showAddUserDialog($event)">
+	    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showAddUserDialog($event)">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.ADD_USERS' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi i-20 mdi2-plus text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'enablePersons')">
+	    <md-button aria-label="nothing" aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'enablePersons')">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.ENABLE_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-account-check i-20 text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'disablePersons')">
+	    <md-button aria-label="nothing" aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'disablePersons')">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.DISABLE_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-account-off i-20 text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showBulkChangePermissions($event)">
+	    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showBulkChangePermissions($event)">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.PERMISSIONS_OF_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-key-variant i-20 text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showInviteUserDialog($event);">
+	    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showInviteUserDialog($event);">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.INVITE_USERS' | translate}}
 	  		</md-tooltip>
@@ -183,10 +166,10 @@
         </div>
 
         <div class="pos-abt bottom-0 text-center w-full p-t p-b">
-          <md-button ng-click="cancel()" class="m-0">
+          <md-button aria-label="nothing" ng-click="cancel()" class="m-0">
             {{'titles.CANCEL' | translate}}
           </md-button>
-          <md-button ng-click="saveProfile(editingPerson)" ng-disabled="disabled" class="m-0">
+          <md-button aria-label="nothing" ng-click="saveProfile(editingPerson)" ng-disabled="disabled" class="m-0">
             {{'titles.SAVE' | translate}}
           </md-button>
         </div>
@@ -257,10 +240,10 @@
         </div>
 
         <div class="pos-abt bottom-0 text-center w-full p-t p-b">
-          <md-button ng-click="cancel()" class="m-0">
+          <md-button aria-label="nothing" ng-click="cancel()" class="m-0">
             {{'titles.CANCEL' | translate}}
           </md-button>
-          <md-button ng-click="createPerson(addingPerson)" ng-disabled="disabled" class="m-0">
+          <md-button aria-label="nothing" ng-click="createPerson(addingPerson)" ng-disabled="disabled" class="m-0">
             {{'titles.SAVE' | translate}}
           </md-button>
         </div>
@@ -324,13 +307,13 @@
         </div>
 
         <div class="text-center">
-          <md-button ng-if="enableOrDisableOption === 'enablePersons'" ng-click="enablePersons(); disabled = true;" ng-disabled="disabled">
+          <md-button aria-label="nothing" ng-if="enableOrDisableOption === 'enablePersons'" ng-click="enablePersons(); disabled = true;" ng-disabled="disabled">
             {{'titles.YES' | translate}}
           </md-button>
-          <md-button ng-if="enableOrDisableOption === 'disablePersons'" ng-click="disablePersons(); disabled = true;" ng-disabled="disabled">
+          <md-button aria-label="nothing" ng-if="enableOrDisableOption === 'disablePersons'" ng-click="disablePersons(); disabled = true;" ng-disabled="disabled">
             {{'titles.YES' | translate}}
           </md-button>
-          <md-button ng-click="cancel()">
+          <md-button aria-label="nothing" ng-click="cancel()">
             {{'titles.NO' | translate}}
           </md-button>
         <div>
@@ -363,10 +346,10 @@
         </div>
 
         <div class="text-center">
-          <md-button ng-click="changePassword();" ng-disabled="disabled">
+          <md-button aria-label="nothing" ng-click="changePassword();" ng-disabled="disabled">
             {{'titles.CONFIRM' | translate}}
           </md-button>
-          <md-button ng-click="cancel()">
+          <md-button aria-label="nothing" ng-click="cancel()">
             {{'titles.CANCEL' | translate}}
           </md-button>
         <div>
@@ -385,7 +368,7 @@
         </div>
 
         <div class="text-center">
-          <md-button ng-click="cancel()">
+          <md-button aria-label="nothing" ng-click="cancel()">
             {{'titles.CANCEL' | translate}}
           </md-button>
         <div>
@@ -408,10 +391,10 @@
 
         <div class="text-right p-b-xs">
           <md-divider class="p-b-xs"></md-divider>
-          <md-button class="md-raised md-primary p-h" ng-click="invitatePeople()">
+          <md-button aria-label="nothing" class="md-raised md-primary p-h" ng-click="invitatePeople()">
             <i class="icon mdi2-send i-14 m-r-sm"></i>{{'titles.SEND_INVITE' | translate}}
           </md-button>
-          <md-button ng-click="cancel()">
+          <md-button aria-label="nothing" ng-click="cancel()">
             {{'titles.CANCEL' | translate}}
           </md-button>
         <div>
@@ -468,8 +451,8 @@
           
         </div>
         <div class="text-right">
-          <md-button ng-click="pe.applyPermissions(pe.adminStations, pe.stationRole)" class="no-margin m-r">Confirmar</md-button>
-          <md-button ng-click="cancel()" class="no-margin">Fechar</md-button>
+          <md-button aria-label="nothing" ng-click="pe.applyPermissions(pe.adminStations, pe.stationRole)" class="no-margin m-r">Confirmar</md-button>
+          <md-button aria-label="nothing" ng-click="cancel()" class="no-margin">Fechar</md-button>
         <div>
       </div>
     </md-content>
