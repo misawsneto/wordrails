@@ -2,6 +2,7 @@ app.controller('CategoryCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$md
 	function($scope , $rootScope,  $log ,  $timeout ,  $mdDialog ,  $state ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $interval, $mdSidenav, $translate, $filter, $localStorage, $sce, category){
 
 	$scope.category = category;
+	$scope.app.activeCategory = category;
 	$scope.postsPage = 0
 	var allLoaded = false;
 	var loading = false;

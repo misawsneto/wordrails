@@ -596,6 +596,8 @@ angular.module('app')
             }, 2000);
           }
         }
+
+        $scope.app.activeCategory = null;
       })
 
       // ---------- /theming ------------------
