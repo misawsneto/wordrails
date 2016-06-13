@@ -74,7 +74,6 @@ import java.util.Map;
 	@Async
 	public void notifyPersonCreation(Network network, Invitation invitation, Person inviter){
 		try {
-
 			String templateFile;
 
 			if(invitation.sendPlainPassword){

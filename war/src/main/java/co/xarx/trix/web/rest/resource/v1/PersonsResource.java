@@ -333,17 +333,13 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 		} else {
 			sendPlainPassword = true;
 		}
-		Person person = null;
+		;
 		try {
-			person = personFactory.create(dto.name, dto.username, dto.password, dto.email);
+			Person person = personFactory.create(dto.name, dto.username, dto.email, dto.password);
+			personService.notifyPersonCreation(person, sendPlainPassword);
+			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
 		} catch (PersonAlreadyExistsException e) {
 			e.printStackTrace();
-		}
-		personService.notifyPersonCreation(person, sendPlainPassword);
-
-		if (person != null) {
-			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
-		} else {
 			throw new BadRequestException();
 		}
 	}
