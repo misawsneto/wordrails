@@ -108,6 +108,7 @@
     "angular-sly": "^0.1.2",
     "ngSmoothScroll": "^2.0.0",
     "angular-scroll": "^1.0.0",
-    "froala-image-caption": "^1.0.2"
+    "froala-image-caption": "^1.0.2",
+    "angular-slick": "^0.2.1"
   }
 }

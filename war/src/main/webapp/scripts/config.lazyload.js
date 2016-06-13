@@ -3,6 +3,13 @@
 angular.module('app')
   .constant('MODULE_CONFIG', [
       {
+          name: 'angular-carousel',
+          files: [
+              '/libs/angular/angular-carousel/dist/angular-carousel.min.css',
+              '/libs/angular/angular-carousel/dist/angular-carousel.min.js'
+          ]
+      },
+      {
           name: 'duScroll',
           module: true,
           files: [
