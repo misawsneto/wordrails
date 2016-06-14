@@ -74,13 +74,13 @@
             <!-- News Description -->
             <div class="news-description p-t p-b-sm p-h">
                 <a ui-sref="app.read({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'postSlug': postView.slug})">
-                  <div class="news-title" ng-if="!app.largeCardCheck($index, postView) && app.hasImage(postView)" style="height: 66px">
+                  <div class="news-title o-f-h" ng-if="!app.largeCardCheck($index, postView) && app.hasImage(postView)" style="height: 66px">
                     <p clamp="2">{{::postView.title}}</p>
                   </div>
-                  <div class="news-title text-md" ng-if="app.largeCardCheck($index, postView)" style="height: 66px">
+                  <div class="news-title text-md o-f-h" ng-if="app.largeCardCheck($index, postView)" style="height: 66px">
                     <p clamp="2"> {{::postView.snippet}} </p>
                   </div>
-                  <div class="news-content" ng-if="!app.largeCardCheck($index, postView)" ng-style="{'height': app.hasImage(postView) ? '95px' : '161px'}" ng-if="!app.largeCardCheck($index, postView)"><p clamp="{{app.hasImage(postView) ? 4 : 7}}">{{::postView.snippet}}</p>
+                  <div class="news-content o-f-h" ng-if="!app.largeCardCheck($index, postView)" ng-style="{'height': app.hasImage(postView) ? '95px' : '161px'}" ng-if="!app.largeCardCheck($index, postView)"><p clamp="{{app.hasImage(postView) ? 4 : 7}}">{{::postView.snippet}}</p>
                   </div>
                 </a>
                 <div class="news-comment-shares z-index-2">
