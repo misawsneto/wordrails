@@ -1,1 +1,0 @@
-alter TABLE video MODIFY file_id INT(11);

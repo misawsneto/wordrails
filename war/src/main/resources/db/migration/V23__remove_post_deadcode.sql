@@ -11,4 +11,3 @@ ALTER TABLE post DROP imageLargeId;
 ALTER TABLE video DROP FOREIGN KEY FK_66ur0mmvrjwaf68rltacbpyml;
 DROP INDEX FK_66ur0mmvrjwaf68rltacbpyml ON video;
 ALTER TABLE video DROP file;
-ALTER TABLE video DROP file_id;
