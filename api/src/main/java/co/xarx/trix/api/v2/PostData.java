@@ -71,7 +71,7 @@ public class PostData implements Serializable, Identifiable {
 	private String externalVideoUrl;
 
 	private Date scheduledDate;
-	private boolean notified;
+	private Boolean notified = false;
 
 	public void setBody(String body) {
 		this.body = body;

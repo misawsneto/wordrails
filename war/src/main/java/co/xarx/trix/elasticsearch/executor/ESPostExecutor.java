@@ -33,7 +33,10 @@ public class ESPostExecutor implements Executor<PostData, PostStatement> {
 //		List<Post> posts = searchService.search(params, page, size);
 //		List<PostData> data = getPostDatas(posts);
 
-		return searchService.searchData(params, page, size);
+		ImmutablePage<PostData> postDatas = searchService.searchData(params, page, size);
+		if(postDatas == null)
+			postDatas = new ImmutablePage<>();
+		return postDatas;
 	}
 
 //	private List<PostData> getPostDatas(List<Post> posts) {
