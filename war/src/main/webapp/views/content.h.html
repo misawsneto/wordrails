@@ -175,7 +175,7 @@
     <md-toolbar md-scroll-shrink style="min-height: 50px;" ng-class="{'hide':$state.includes('app.search')}">
       <div class="md-primary-default background md-whiteframe-z1">
         <div class="custom-header container" style="min-height: 50px;">
-          <ul class="nav nav-lines nav-md no-bg animated text-md" ng-class="{'o-f-h fadeOut': app.loadingTabs, 'fadeIn': !app.loadingTabs}" df-tab-menu menu-control="{{menu2.navigationState}}" style="height: 54px">
+          <ul class="nav nav-lines nav-md no-bg animated text-base" ng-class="{'o-f-h fadeOut': app.loadingTabs, 'fadeIn': !app.loadingTabs}" df-tab-menu menu-control="{{menu2.navigationState}}" style="height: 52px">
             <li ng-class="{'active': app.activeCategory.id === category.id}" md-ink-ripple data-ng-repeat="category in app.perspectiveTerms" data-menu-item="{{category.item}}">
               <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(app.termPerspectiveView.stationId).stationSlug, 'name': category.name})" >
                 <span>{{category.name}}</span>
