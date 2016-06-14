@@ -27,7 +27,7 @@ public interface CommentRepository extends DatabaseRepository<Comment, Integer> 
 
 	@RestResource(exported = true)
 	@Query("SELECT comment FROM Comment comment WHERE comment.post.id = :postId ORDER BY comment.date DESC")
-	List<Comment> findPostCommentsOrderByDate(  @Param("postId") Integer postId, Pageable pageable);
+	List<Comment> findPostCommentsOrderByDate( @Param("postId")  Integer  postId, Pageable  pageable);
 
 	@RestResource(exported = false)
 	@Query("select comment from Comment comment join fetch comment.author where comment.id in (:ids)")
