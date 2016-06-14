@@ -8980,3 +8980,7 @@ ul.pgwSlider > li,
 .nav.nav-md > li.active > a {
   opacity: 1!important;
 }
+
+.df-tab-menu a {
+  color: inherit;
+}
