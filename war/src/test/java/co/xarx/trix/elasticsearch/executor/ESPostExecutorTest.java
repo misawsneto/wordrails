@@ -45,7 +45,12 @@ public class ESPostExecutorTest {
 
 		@Override
 		public ImmutablePage<PostData> searchData(PostStatement params, Integer page, Integer size) {
-			return null;
+			PostData post1 = new PostData();
+			post1.setTitle("post1");
+			PostData post2 = new PostData();
+			post2.setTitle("post2");
+
+			return new ImmutablePage<>(Lists.newArrayList(post1, post2), 0, 2);
 		}
 	}
 
