@@ -52,10 +52,14 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       perspective.termPerspectiveView.ordinaryRows && perspective.termPerspectiveView.ordinaryRows.forEach(function(row){
         row.category = $scope.getCategory(row.termId);
       })
+    }).error(function(){
+      $mdDialog.cancel();
     })
   }
 
   $scope.showAddPerspectiveDialog = function(event){
+    $scope.perspective = {};
+    $scope.disabled = false;
     $mdDialog.show({
       scope: $scope,        // use parent scope in template
       closeTo: {
@@ -72,6 +76,45 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     })
   }
 
+   $scope.showActivatePerspectiveDialog = function(event){
+    $scope.perspective = {};
+    $scope.disabled = false;
+    $mdDialog.show({
+      scope: $scope,        // use parent scope in template
+      closeTo: {
+        bottom: 1500
+      },
+      preserveScope: true, // do not forget this if use parent scope
+      controller: $scope.app.defaultDialog,
+      templateUrl: 'activate_perspective_dialog.html',
+      parent: angular.element(document.body),
+      targetEvent: event,
+      clickOutsideToClose:true
+      // onComplete: function(){
+        // }
+    })
+  }
+
+   $scope.showDeletePerspectiveDialog = function(event, perspective){
+    $scope.perspectiveToDelete = perspective;
+    $scope.perspective = {};
+    $scope.disabled = false;
+    $mdDialog.show({
+      scope: $scope,        // use parent scope in template
+      closeTo: {
+        bottom: 1500
+      },
+      preserveScope: true, // do not forget this if use parent scope
+      controller: $scope.app.defaultDialog,
+      templateUrl: 'delete_perspective_dialog.html',
+      parent: angular.element(document.body),
+      targetEvent: event,
+      clickOutsideToClose:true
+      // onComplete: function(){
+        // }
+    })
+  }
+
   $scope.addPerspective = function(perspective){
     var stationPerspective = {};
     stationPerspective.name = perspective.name;
@@ -80,12 +123,30 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
 
     trix.postStationPerspective(stationPerspective).success(function(response){
-      loadPerspectives();
+      $scope.stationPerspectives.push(response)
+      getPerspectiveView(response);
       $mdDialog.cancel();
       $scope.app.showSuccessToast('Perspectiva criada com sucesso.')
     }).error(function(response){
       $scope.app.showErrorToast('Erro ao criar perspectiva.')
+      $mdDialog.cancel();
     })
+  }
+
+  $scope.deletePerspective = function(perspective){
+    trix.deleteStationPerspective(perspective.id).success(function(){
+      for (var i = $scope.stationPerspectives.length - 1; i >= 0; i--) {
+        if($scope.stationPerspectives[i].id === perspective.id)
+          $scope.stationPerspectives.slice(i, 1)
+      }
+      $mdDialog.cancel();
+    }).error(function(){
+      $mdDialog.cancel();
+    })
+  }
+
+  $scope.setCurrentPerspective = function(perspective){
+    $scope.currentPerspective = perspective
   }
 
 settingsPerspectivesCtrl = $scope;

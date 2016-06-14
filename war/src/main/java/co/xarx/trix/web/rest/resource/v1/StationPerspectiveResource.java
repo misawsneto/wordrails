@@ -20,4 +20,9 @@ public class StationPerspectiveResource extends AbstractResource implements Stat
 	public void putStationPerspective(Integer id) throws IOException {
 		forward();
 	}
+
+	@Override
+	public void deleteStationPerspective(Integer id) throws IOException {
+		forward();
+	}
 }

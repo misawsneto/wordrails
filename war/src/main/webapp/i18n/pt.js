@@ -110,7 +110,8 @@
 		"CLOSE": "Fechar",
 		"RELATED": "Publicações relacionadas",
 		"ADD": "Adicionar",
-		"LOAD_MORE": "Carregar mais"
+		"LOAD_MORE": "Carregar mais",
+		"ACTIVATE": "Ativar"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -357,7 +358,12 @@
 			"AUTHENTICATED": "Todos os usuários autenticados nesta estação",
 			"STATION_LOGO": "Logotipo",
 			"STATION_CREATION_SUCCESS": "Estação foi criada com sucesso",
-			"STATION_REMOVED_SUCCESS": "Estação removida com sucesso"
+			"STATION_REMOVED_SUCCESS": "Estação removida com sucesso",
+			"perspective": {
+				"FIX_POST": "Fixar uma publicação nesta posição",
+				"ACTIVATE_PERSPECTIVE_MSG": "Tem certeza que deseja ativar esta perspectiva? Esta ação  modificará a forma de apresentação do conteúdo em todos os dispositivos.",
+				"REMOVE_PERSPECTIVE_MSG": "Tem certeza que deseja remover esta perspectiva? Esta operação não poderá ser desfeita."
+			}
 		},
 		"category": {
 			"STATION_CATEGORY": "Categorias da estação ",

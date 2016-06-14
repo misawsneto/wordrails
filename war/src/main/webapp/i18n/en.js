@@ -110,7 +110,8 @@
 		"CLOSE": "Close",
 		"RELATED": "Related publications",
 		"ADD": "Add",
-		"LOAD_MORE": "Load more"
+		"LOAD_MORE": "Load more",
+		"ACTIVATE": "Activate"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -357,7 +358,12 @@
 			"AUTHENTICATED": "All authenticated users on this station",
 			"STATION_LOGO": "Station logo",
 			"STATION_CREATION_SUCCESS": "Station was successfully created",
-			"STATION_REMOVED_SUCCESS": "Station was removed"
+			"STATION_REMOVED_SUCCESS": "Station was removed",
+			"perspective": {
+				"FIX_POST": "Fix a publication on this position",
+				"ACTIVATE_PERSPECTIVE_MSG": "Are you sure you wish to activate this perspective? This action will affect how the content is displayed on all devices.",
+				"REMOVE_PERSPECTIVE_MSG": "Are you sure you wish to remove this perspective? This operation cannot be undone."
+			}
 		},
 		"category": {
 			"STATION_CATEGORY": "Categories of ",

@@ -139,7 +139,7 @@
 																			<div class="display-cell v-m">
 																				<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent">
 																				  <md-tooltip md-direction="top">
-																				    {{'titles.EDIT' | translate}}
+																				    {{'settings.station.perspective.FIX_POST' | translate}}
 																				  </md-tooltip>
 																				  <i class="mdi2-pin i-24"></i>
 																				</md-button>
@@ -248,18 +248,20 @@
             	
               <div class="m-t-sm p-h pos-rlt">
                 <ul style="margin:0;padding:0">
-                  <li data-ng-repeat="perspective in stationPerspectives">
-                    <div class="p-h p-t m-b md-whiteframe-z1 pos-rlt md-background-hue-1 background">
+                  <li data-ng-repeat="perspective in stationPerspectives | orderBy: 'id'">
+                    <div class="p-h p-t m-b md-whiteframe-z1 pos-rlt" ng-class="{'md-background-hue-1 background': perspective.id !== currentPerspective.id, 'md-accent-hue-1 background': perspective.id === currentPerspective.id}">
                       <div class="pos-abt top-0 right-0 font-bold p">
                         #{{$index + 1}}
                       </div>
                       <div class="p-v-sm text-ellipsis tetx-md text-u-c">
                       	{{perspective.name}}
                       </div>
-                      <div class="clear">
-                      	<md-button aria-label="nothing" class="no-margin m-b-sm btn-sm pull-left no-padding" style="min-height: 28px; line-height:28px;" data-ng-click="allTags.splice($index, 1)">{{'titles.SHOW' | translate}}
+                      <div class="clear" style="height: 36px;">
+                      	<md-button ng-if="perspective.id !== currentPerspective.id" aria-label="nothing" class="no-margin m-b-sm btn-sm pull-left no-padding" style="min-height: 28px; line-height:28px;" ng-click="setCurrentPerspective(perspective);">{{'titles.SHOW' | translate}}
                         </md-button>
-                        <md-button aria-label="nothing" class="md-warn no-margin m-b-sm btn-sm pull-right no-padding" style="min-height: 28px; line-height:28px;" data-ng-click="allTags.splice($index, 1)">{{'titles.REMOVE' | translate}}
+                        <md-button ng-if="perspective.id !== thisStation.defaultPerspectiveId" aria-label="nothing" class="no-margin m-b-sm btn-sm pull-left no-padding" style="min-height: 28px; line-height:28px;" ng-click="showActivatePerspectiveDialog($event);">{{'titles.ACTIVATE' | translate}}
+                        </md-button>
+                        <md-button ng-if="perspective.id !== currentPerspective.id" aria-label="nothing" class="md-warn no-margin m-b-sm btn-sm pull-right no-padding" style="min-height: 28px; line-height:28px;" ng-click="showDeletePerspectiveDialog($event, perspective)">{{'titles.REMOVE' | translate}}
                         </md-button>
                       </div>
                     </div>
@@ -407,4 +409,46 @@
 			</div>
 		</md-content>
 	</md-dialog>
+</script>
+
+<script type="text/ng-template" id="activate_perspective_dialog.html">
+	<md-dialog aria-label="Remove Categories Dialog" id="remove-categories-dialog">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+        <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{'settings.station.perspective.ACTIVATE_PERSPECTIVE_MSG' | translate}}
+        </div>
+
+        <div class="text-center">
+          <md-button aria-label="nothing" ng-click="app.deleteCategory(); disabled = true;" ng-disabled="disabled">
+            {{'titles.YES' | translate}}
+          </md-button>
+          <md-button aria-label="nothing" ng-click="cancel()">
+            {{'titles.NO' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>
+
+<script type="text/ng-template" id="delete_perspective_dialog.html">
+	<md-dialog aria-label="Remove Categories Dialog" id="remove-categories-dialog">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+        <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{'settings.station.perspective.REMOVE_PERSPECTIVE_MSG' | translate}}
+        </div>
+
+        <div class="text-center">
+          <md-button aria-label="nothing" ng-click="deletePerspective(perspectiveToDelete); disabled = true;" ng-disabled="disabled">
+            {{'titles.YES' | translate}}
+          </md-button>
+          <md-button aria-label="nothing" ng-click="cancel()">
+            {{'titles.NO' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
 </script>

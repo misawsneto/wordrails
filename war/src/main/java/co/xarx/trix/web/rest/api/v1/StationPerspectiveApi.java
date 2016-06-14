@@ -17,4 +17,8 @@ public interface StationPerspectiveApi {
 	@Path("/{id}")
 	void putStationPerspective(@PathParam("id") Integer stationPerspectiveId) throws IOException;
 
+	@DELETE
+	@Path("/{id}")
+	void deleteStationPerspective(@PathParam("id") Integer stationPerspectiveId) throws IOException;
+
 }
