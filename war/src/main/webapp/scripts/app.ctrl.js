@@ -97,7 +97,7 @@ angular.module('app')
 
       function openPage() {
         $scope.app.search.content = '';
-        $scope.app.search.show = false;
+        $scope.app.search.show = true;
         $scope.closeAside();
         // goto top
         $location.hash('view');
