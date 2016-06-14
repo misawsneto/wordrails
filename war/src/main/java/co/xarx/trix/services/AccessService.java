@@ -24,7 +24,7 @@ public class AccessService {
 	public boolean hasPermissionOnAccessGroup(AccessGroup accessGroup) throws Throwable {
 		boolean isGrant = accessGroup.inclusion();
 
-		boolean hasPermissionOnTenant = hasPermissionOnProfile(isGrant, accessGroup.tenants());
+		boolean hasPermissionOnTenant = hasPermissionOnTenant(isGrant, accessGroup.tenants());
 		boolean hasPermissionOnProfile = hasPermissionOnProfile(isGrant, accessGroup.profiles());
 
 		return hasPermissionOnProfile || hasPermissionOnTenant;
