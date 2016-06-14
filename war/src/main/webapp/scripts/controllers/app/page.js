@@ -45,8 +45,8 @@ app.controller('PageCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 
 	    $scope.loadingPerspective = false;
 	    $scope.app.perspectivePaginate = function(){
-	    	$scope.app.termPerspectiveView.homeRow.page = $scope.page
 	    	if(!$scope.loadingPerspective && $scope.app.termPerspectiveView.homeRow && $scope.app.termPerspectiveView.homeRow.cells && !$scope.app.termPerspectiveView.homeRow.allLoaded){
+	    		$scope.app.termPerspectiveView.homeRow.page = $scope.page
 		    	$scope.loadingPerspective = true;
 		    	trix.getRowView($scope.app.currentStation.defaultPerspectiveId, $scope.app.termPerspectiveView.id, null, $scope.page, 20)
 		    	.success(function(response){
