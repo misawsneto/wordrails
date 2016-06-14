@@ -396,14 +396,14 @@
 						<div class="md-form-group float-label md-neutral-theme text-lg">
 							<md-input-container class="md-block p-b-sm" flex-gt-sm>
 			            	<label>Nova perspectiva</label>
-			            	<input ng-model="perspective.name" md-autofocus>
+			            	<input ng-model="perspectiveName" md-autofocus>
 		          			</md-input-container>
 					    </div>
 			  		</form>
 				</div>
 
 				<div class="text-center">
-					<md-button aria-label="nothing" ng-click="addPerspective(perspective); disabled = true;" ng-disabled="disabled" md-ink-ripple style="font-size:16px;" class="">{{'actions.CREATE' | translate}}</md-button>
+					<md-button aria-label="nothing" ng-click="addPerspective(perspectiveName); disabled = true;" ng-disabled="disabled" md-ink-ripple style="font-size:16px;" class="">{{'actions.CREATE' | translate}}</md-button>
 					<md-button aria-label="nothing" ng-click="cancel()" md-ink-ripple style="font-size:16px;" class="">{{'titles.CANCEL' | translate}}</md-button>
 				</div>
 			</div>
@@ -411,7 +411,7 @@
 	</md-dialog>
 </script>
 
-<script type="text/ng-template" id="activate_perspective_dialog.html">
+<script type="text/ng-template" id="activate-perspective-dialog.html">
 	<md-dialog aria-label="Remove Categories Dialog" id="remove-categories-dialog">
     <md-content role="document" class="md-background-hue-1 background">
       <div class="p-xs">
@@ -432,7 +432,7 @@
   </md-dialog>
 </script>
 
-<script type="text/ng-template" id="delete_perspective_dialog.html">
+<script type="text/ng-template" id="delete-perspective-dialog.html">
 	<md-dialog aria-label="Remove Categories Dialog" id="remove-categories-dialog">
     <md-content role="document" class="md-background-hue-1 background">
       <div class="p-xs">
@@ -452,3 +452,14 @@
     </md-content>
   </md-dialog>
 </script>
+
+<script type="text/ng-template" id="featured-post-dialog.html">
+  <md-dialog aria-label="change action">
+    <md-content style="background: white">
+      <div class="" id="email-template">
+      	<h1>asdf</h1>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>
+

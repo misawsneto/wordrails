@@ -58,8 +58,8 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
   }
 
   $scope.showAddPerspectiveDialog = function(event){
-    $scope.perspective = {};
     $scope.disabled = false;
+    $scope.perspectiveName = null;
     $mdDialog.show({
       scope: $scope,        // use parent scope in template
       closeTo: {
@@ -76,8 +76,8 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     })
   }
 
-   $scope.showActivatePerspectiveDialog = function(event){
-    $scope.perspective = {};
+   $scope.showActivatePerspectiveDialog = function(event, perspective){
+    $scope.perspectiveToActigate = perspective;
     $scope.disabled = false;
     $mdDialog.show({
       scope: $scope,        // use parent scope in template
@@ -86,7 +86,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       },
       preserveScope: true, // do not forget this if use parent scope
       controller: $scope.app.defaultDialog,
-      templateUrl: 'activate_perspective_dialog.html',
+      templateUrl: 'activate-perspective-dialog.html',
       parent: angular.element(document.body),
       targetEvent: event,
       clickOutsideToClose:true
@@ -97,7 +97,6 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
    $scope.showDeletePerspectiveDialog = function(event, perspective){
     $scope.perspectiveToDelete = perspective;
-    $scope.perspective = {};
     $scope.disabled = false;
     $mdDialog.show({
       scope: $scope,        // use parent scope in template
@@ -106,7 +105,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       },
       preserveScope: true, // do not forget this if use parent scope
       controller: $scope.app.defaultDialog,
-      templateUrl: 'delete_perspective_dialog.html',
+      templateUrl: 'delete-perspective-dialog.html',
       parent: angular.element(document.body),
       targetEvent: event,
       clickOutsideToClose:true
@@ -115,9 +114,27 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     })
   }
 
-  $scope.addPerspective = function(perspective){
+  $scope.showFeaturedPostsDialog = function(event, perspective){
+    $scope.disabled = false;
+    $mdDialog.show({
+      scope: $scope,        // use parent scope in template
+      closeTo: {
+        bottom: 1500
+      },
+      preserveScope: true, // do not forget this if use parent scope
+      controller: $scope.app.defaultDialog,
+      templateUrl: 'featured-post-dialog.html',
+      parent: angular.element(document.body),
+      targetEvent: event,
+      clickOutsideToClose:true
+      // onComplete: function(){
+        // }
+    })
+  }
+
+  $scope.addPerspective = function(perspectiveName){
     var stationPerspective = {};
-    stationPerspective.name = perspective.name;
+    stationPerspective.name = perspectiveName;
     stationPerspective.station = TRIX.baseUrl + "/api/stations/" + $scope.thisStation.id;
     stationPerspective.taxonomy = TRIX.baseUrl + "/api/stations/" + $scope.thisStation.categoriesTaxonomyId;
 
@@ -137,7 +154,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     trix.deleteStationPerspective(perspective.id).success(function(){
       for (var i = $scope.stationPerspectives.length - 1; i >= 0; i--) {
         if($scope.stationPerspectives[i].id === perspective.id)
-          $scope.stationPerspectives.slice(i, 1)
+          $scope.stationPerspectives.splice(i, 1)
       }
       $mdDialog.cancel();
     }).error(function(){

@@ -148,7 +148,7 @@ angular.module('app')
                 data : { titleTranslate: 'titles.PERSPECTIVES', title: 'Perspectives', folded: true },
                 resolve:{
                   station: stationDep,
-                  deps: load(['wu.masonry', 'angular-carousel', '/scripts/controllers/settings/settings-perspectives.js', '/scripts/custom-pgwslider.js', '/libs/jquery/pgwslider/pgwslider.min.css']).deps
+                  deps: load(['wu.masonry',  'dndLists', 'angular-carousel', '/scripts/controllers/settings/settings-perspectives.js', '/scripts/custom-pgwslider.js', '/libs/jquery/pgwslider/pgwslider.min.css']).deps
                 },
                 controller: 'SettingsPerspectivesCtrl'
               })

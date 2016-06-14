@@ -3,6 +3,12 @@
 angular.module('app')
   .constant('MODULE_CONFIG', [
       {
+          name: 'dndLists',
+          files: [
+            '/libs/angular/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js'
+          ]
+      },
+      {
           name: 'angular-carousel',
           files: [
               '/libs/angular/angular-carousel/dist/angular-carousel.min.css',
