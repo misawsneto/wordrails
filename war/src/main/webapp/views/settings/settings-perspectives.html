@@ -28,7 +28,7 @@
 					<div class="browser-buttons" ng-class="{'mobile opacity-0': isMobile}"></div>
 					<div class="mockup-browser animated fadeIn o-f-h" style="padding-bottom: 50px;" ng-class="{'mobile': isMobile, 'desktop': !isMobile}">
 
-				    <md-toolbar class="no-radius md-primary md-whiteframe-z1" style="min-height: 50px; height: 50px">
+				    <md-toolbar class="no-radius md-primary" style="min-height: 50px; height: 50px">
 				      <a md-ink-ripple ng-click="toggleDemo()" class="pull-left i-16" style="    padding: 0 16px;
 				        line-height: 50px;
 				        max-width: 55px;">
@@ -41,7 +41,7 @@
 			          <div class="cell">
 			            <div class="cell-inner">
 
-				            <md-tabs  md-border-bottom class="pos-abt bottom-0 right-0 left-0 top-0 md-primary md-hue-1" >
+				            <md-tabs  md-border-bottom class="pos-abt bottom-0 right-0 left-0 top-0 md-primary" >
 				            	<md-tab label="1">
 				            		<md-tab-label>
 				            			<i class="mdi2-home i-20"></i>
@@ -104,7 +104,7 @@
 														</div>
 
 				            				<div class="" ng-class="{'p-h-xxl': !isMobile}">
-					                    <div class="row no-margin" reload-on-show masonry>
+					                    <div class="row no-margin" reload-on-show masonry="{transitionDuration: 0}">
 							                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12 p-0 p-b': isMobile}" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells"
 																ng-mouseenter="cell.showOptions=true" ng-mouseleave="cell.showOptions=false">
 
@@ -162,17 +162,17 @@
 				              <md-tab label="{{row.termName}}" ng-repeat="row in currentPerspective.termPerspectiveView.ordinaryRows">
 				              	<md-content class="o-f-x-h">
 				              		<div class="" ng-if="!isMobile">
-				              			<div class="display-table bg-cover animated5x fadeIn w-full bg-cover m-b md-whiteframe-z2 h-200 text-center" ng-style="{{row.category | categoryImage:'large':true}}" >
-														    <div class="text-white display-cell v-m">
-														      <span style="border-radius: 30px; border: 2px solid;" class="md-whiteframe-z2 p p-v-sm text-3x text-lg text-shadow-lg font-500">{{::row.category.name}}</span>
-														      <div class="text-shadow-lg m-t-md font-normal h4">{{::row.category.description}}</div>
+				              			<!-- ng-style="{{category | categoryImage:'large':true}}" md-whiteframe-z2 -->
+														<div class="display-table animated5x fadeIn w-full bg-cover h-100 text-center"  style=" background-position: 50% 50%;">
+														    <div class="display-cell v-m">
+														      <span style="border-radius: 60px; border: 3px solid;" class="p p-v-sm text-3x text-md  font-500">{{::row.category.name}}</span>
+														      <div ng-if="row.category.description" class=" m-t-md font-normal h5">{{::row.category.description}}</div>
 														    </div>
 														</div>
 				              		</div>
 				              		<div class="" ng-class="{'p-h-xxl': !isMobile}">
-				              			<div class="row no-margin" reload-on-show masonry>
-						                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12': isMobile, 'p-0 p-b': ($first && isMobile)}" ng-repeat="cell in row.cells"
-						                  ng-mouseenter="cell.showOptions=true" ng-mouseleave="cell.showOptions=false">
+				              			<div class="row no-margin" reload-on-show masonry="{transitionDuration: 0}">
+						                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12': isMobile, 'p-0 p-b': ($first && isMobile)}" ng-repeat="cell in row.cells">
 																
 																<md-button ng-if="cell.id || cell.fixed" class="opacity-09 text-white pos-abt top-0 left-0 md-icon-button m-r-t z-index-5" ng-style="{'margin': !isMobile ? '16px' : '0' }">
 																	<i class="i-24 mdi2-pin icon-text-shadow"></i>
@@ -199,18 +199,6 @@
 							                  <div class="" ng-if="isMobile && !$last" style="margin: 0 -15px -15px -15px;">
 							                  	<md-divider></md-divider>
 							                  </div>
-							                  <div ng-if="cell.showOptions" ng-class="{'p': !isMobile}" style="position: absolute; top:0; bottom:0; right:0; left:0;">
-																	<div class="display-table text-center" style="background: rgba(0,0,0,0.5); height:100%; width: 100%;">
-																		<div class="display-cell v-m">
-																			<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent">
-																			  <md-tooltip md-direction="top">
-																			    {{'titles.EDIT' | translate}}
-																			  </md-tooltip>
-																			  <i class="mdi2-pin i-24"></i>
-																			</md-button>
-																		</div>
-																	</div>
-																</div>
 						                  </div>
 					                  </div>
 					                  <div class="text-center p">
