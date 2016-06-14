@@ -5,10 +5,10 @@
       <div ng-if="category.description" class=" m-t-md font-normal h4">{{::category.description}}</div>
     </div>
 </div>
-<div class="container" infinite-scroll="paginate()" infinite-scroll-container='"#content .box-cell"' infinite-scroll-distance="1">
-  <div ng-if="postViews" masonry="{percentPosition: true, columnWidth:1, transitionDuration: 0}" class="m-b pos-rlt" reload-on-show>
+<div class="container row pos-rlt" infinite-scroll="paginate()" infinite-scroll-container='"#content .box-cell"' infinite-scroll-distance="1">
+  <div ng-if="postViews" reload-on-show>
     
-    <div class="col-xs-12 masonry-brick" ng-class="{'col-lg-12': app.fullCardCheck($index, postView), 'col-lg-8 col-sm-6':!app.fullCardCheck($index, postView) && app.largeCardCheck($index, postView), 'col-lg-4 col-sm-6':!app.fullCardCheck($index, postView) && !app.largeCardCheck($index, postView)}" ng-repeat="postView in postViews">
+    <div class="col-xs-12" ng-class="{'col-lg-12': app.fullCardCheck($index, postView), 'col-lg-8 col-sm-6':!app.fullCardCheck($index, postView) && app.largeCardCheck($index, postView), 'col-lg-4 col-sm-6':!app.fullCardCheck($index, postView) && !app.largeCardCheck($index, postView)}" ng-repeat="postView in postViews">
         
         <a ui-sref="app.read({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'postSlug': postView.slug})">
         <div class="h-500 pos-rlt o-f-h md-whiteframe-z2 m-b-md" ng-if="app.fullCardCheck($index, postView)">
@@ -66,7 +66,7 @@
                 </div>
                 </a>
             </div>
-            <div class="text-left p-h-sm w-full z-index-2" >
+            <div class="text-left p-h-sm w-full z-index-2" style="height: 42px; overflow: hidden;">
               <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postView.categories">
                 {{::category.name}}
               </a>

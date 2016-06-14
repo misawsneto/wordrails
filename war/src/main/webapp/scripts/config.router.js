@@ -727,7 +727,7 @@ angular.module('app')
                 url: '/',
                 templateUrl: '/views/pages/home.html',
                 data : { title: 'Home', folded: false },
-                resolve: load(['wu.masonry', '/scripts/controllers/app/page.js', '/scripts/custom-pgwslider.js', '/libs/jquery/pgwslider/pgwslider.min.css', 'angular-carousel']),
+                resolve: load(['/scripts/controllers/app/page.js', '/scripts/custom-pgwslider.js', '/libs/jquery/pgwslider/pgwslider.min.css', 'angular-carousel']),
                 controller: 'PageCtrl'
 
               })
@@ -762,7 +762,7 @@ angular.module('app')
                      
                     return deferred.promise;
                   },
-                  deps:load(['wu.masonry', '/scripts/controllers/app/category.js']).deps
+                  deps:load(['/scripts/controllers/app/category.js']).deps
                 }
               })
               .state('app.wall', {
