@@ -104,6 +104,7 @@
 		"SELECT_ALL": "Selecionar todos",
 		"DESELECT_ALL": "Desselecionar todos",
 		"AT": "em",
+		"SHOW": "Exibir",
 		"SHOW_ALL": "Mais",
 		"SKIP": "Pular",
 		"CLOSE": "Fechar",
@@ -172,7 +173,8 @@
 			"USER_MANAGEMENT_HEADER": "Faça a gestão dos usuários",
 			"USER_MANAGEMENT_DESC": "",
 			"POST_MANAGEMENT_HEADER": "Gerencie todas publicação",
-			"POST_MANAGEMENT_DESC": ""
+			"POST_MANAGEMENT_DESC": "",
+			"COMMENTS_MANAGEMENT_HEADER": "Gerencie comentários"
 		},
 		"aside":{
 			"DASHBOARD": "Painel",

@@ -31,26 +31,62 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     return ret;
   }
 
-  trix.getStationStationPerspectives($scope.thisStation.id).success(function(response){
-    $scope.stationPerspectives = response.stationPerspectives;
-      $scope.stationPerspectives && $scope.stationPerspectives.forEach(function(perspective, index){
-        if(perspective.id == $scope.thisStation.defaultPerspectiveId){
-          perspective.selected = true;
-          $scope.currentPerspective = perspective;
-        }
-      getPerspectiveView(perspective)
-    });
-  })
-
-var getPerspectiveView = function(perspective){
-  trix.findPerspectiveView(perspective.id, null, null, 0, 10).success(function(termPerspective){
-    perspective.termPerspectiveView = termPerspective;
-    perspective.termPerspectiveView.ordinaryRows && perspective.termPerspectiveView.ordinaryRows.forEach(function(row){
-      row.category = $scope.getCategory(row.termId);
+  var loadPerspectives = function(){
+    trix.getStationStationPerspectives($scope.thisStation.id).success(function(response){
+      $scope.stationPerspectives = response.stationPerspectives;
+        $scope.stationPerspectives && $scope.stationPerspectives.forEach(function(perspective, index){
+          if(perspective.id == $scope.thisStation.defaultPerspectiveId){
+            perspective.selected = true;
+            $scope.currentPerspective = perspective;
+          }
+        getPerspectiveView(perspective)
+      });
     })
-  })
-}
+  }
 
+  loadPerspectives();
+
+  var getPerspectiveView = function(perspective){
+    trix.findPerspectiveView(perspective.id, null, null, 0, 10).success(function(termPerspective){
+      perspective.termPerspectiveView = termPerspective;
+      perspective.termPerspectiveView.ordinaryRows && perspective.termPerspectiveView.ordinaryRows.forEach(function(row){
+        row.category = $scope.getCategory(row.termId);
+      })
+    })
+  }
+
+  $scope.showAddPerspectiveDialog = function(event){
+    $mdDialog.show({
+      scope: $scope,        // use parent scope in template
+      closeTo: {
+        bottom: 1500
+      },
+      preserveScope: true, // do not forget this if use parent scope
+      controller: $scope.app.defaultDialog,
+      templateUrl: 'add-perspective-dialog.html',
+      parent: angular.element(document.body),
+      targetEvent: event,
+      clickOutsideToClose:true
+      // onComplete: function(){
+        // }
+    })
+  }
+
+  $scope.addPerspective = function(perspective){
+    var stationPerspective = {};
+    stationPerspective.name = perspective.name;
+    stationPerspective.station = TRIX.baseUrl + "/api/stations/" + $scope.thisStation.id;
+    stationPerspective.taxonomy = TRIX.baseUrl + "/api/stations/" + $scope.thisStation.categoriesTaxonomyId;
+
+
+    trix.postStationPerspective(stationPerspective).success(function(response){
+      loadPerspectives();
+      $mdDialog.cancel();
+      $scope.app.showSuccessToast('Perspectiva criada com sucesso.')
+    }).error(function(response){
+      $scope.app.showErrorToast('Erro ao criar perspectiva.')
+    })
+  }
 
 settingsPerspectivesCtrl = $scope;
 

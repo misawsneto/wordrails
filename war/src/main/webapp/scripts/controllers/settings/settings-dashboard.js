@@ -5,20 +5,20 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
       $scope.app.person.seenWelcome = $localStorage.seenWelcome;
     }
 
-	if(!$scope.app.person.seenWelcome){
-		$mdDialog.show({
-        scope: $scope,        // use parent scope in template
-        closeTo: {
-          bottom: 1500
-        },
-        preserveScope: true, // do not forget this if use parent scope
-        controller: $scope.app.defaultDialog,
-        templateUrl: 'welcolme-dialog.html',
-        parent: angular.element(document.body),
-        clickOutsideToClose:false,
-        escapeToClose: false
-      })
-	}
+	// if(!$scope.app.person.seenWelcome){
+	// 	$mdDialog.show({
+ //        scope: $scope,        // use parent scope in template
+ //        closeTo: {
+ //          bottom: 1500
+ //        },
+ //        preserveScope: true, // do not forget this if use parent scope
+ //        controller: $scope.app.defaultDialog,
+ //        templateUrl: 'welcolme-dialog.html',
+ //        parent: angular.element(document.body),
+ //        clickOutsideToClose:false,
+ //        escapeToClose: false
+ //      })
+	// }
 
 	$scope.setSeen = function(){
       $localStorage.seenWelcome = true;

@@ -234,7 +234,7 @@
 	  <md-toolbar class="md-theme-light">
 	    <h1 class="md-toolbar-tools" translate="titles.PERSPECTIVES"></h1>
 	  </md-toolbar>
-  	<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-abt right-0 top-0" style="margin-top: 34px;margin-right: 30px;">
+  	<md-button ng-click="showAddPerspectiveDialog($event);" aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-abt right-0 top-0" style="margin-top: 34px;margin-right: 30px;">
 		  <md-tooltip md-direction="top">
 		    {{'titles.ADD' | translate}}
 		  </md-tooltip>
@@ -253,12 +253,13 @@
                       <div class="pos-abt top-0 right-0 font-bold p">
                         #{{$index + 1}}
                       </div>
-                      <md-input-container class="w-xxl m-b-0">
-                        <label for="testInput">{{'titles.NAME' | translate}}</label>
-                        <input type="text" ng-model="perspective.name">
-                      </md-input-container>
+                      <div class="p-v-sm text-ellipsis tetx-md text-u-c">
+                      	{{perspective.name}}
+                      </div>
                       <div class="clear">
-                        <md-button aria-label="nothing" class="no-margin m-b-sm btn-sm pull-right no-padding" style="min-height: 28px; line-height:28px;" data-ng-click="allTags.splice($index, 1)">{{'titles.EDIT' | translate}}
+                      	<md-button aria-label="nothing" class="no-margin m-b-sm btn-sm pull-left no-padding" style="min-height: 28px; line-height:28px;" data-ng-click="allTags.splice($index, 1)">{{'titles.SHOW' | translate}}
+                        </md-button>
+                        <md-button aria-label="nothing" class="md-warn no-margin m-b-sm btn-sm pull-right no-padding" style="min-height: 28px; line-height:28px;" data-ng-click="allTags.splice($index, 1)">{{'titles.REMOVE' | translate}}
                         </md-button>
                       </div>
                     </div>
@@ -383,3 +384,27 @@
 		  </md-content>
 		</md-dialog>
 	</script>
+
+	<script type="text/ng-template" id="add-perspective-dialog.html">
+	<md-dialog aria-label="Add Categories Dialog" id="add-categories-dialog">
+		<md-content role="document" class="md-background-hue-1 background">
+			<div class="p-xs">
+				<div class="md-dialog-content-body text-lg p-r p-l w-xxl p-t">
+					<form ng-submit="app.addCategory(perspective);">
+						<div class="md-form-group float-label md-neutral-theme text-lg">
+							<md-input-container class="md-block p-b-sm" flex-gt-sm>
+			            	<label>Nova perspectiva</label>
+			            	<input ng-model="perspective.name" md-autofocus>
+		          			</md-input-container>
+					    </div>
+			  		</form>
+				</div>
+
+				<div class="text-center">
+					<md-button aria-label="nothing" ng-click="addPerspective(perspective); disabled = true;" ng-disabled="disabled" md-ink-ripple style="font-size:16px;" class="">{{'actions.CREATE' | translate}}</md-button>
+					<md-button aria-label="nothing" ng-click="cancel()" md-ink-ripple style="font-size:16px;" class="">{{'titles.CANCEL' | translate}}</md-button>
+				</div>
+			</div>
+		</md-content>
+	</md-dialog>
+</script>

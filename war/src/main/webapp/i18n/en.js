@@ -104,6 +104,7 @@
 		"SELECT_ALL": "Select all",
 		"DESELECT_ALL": "Deselect all",
 		"AT": "at",
+		"SHOW": "Show",
 		"SHOW_ALL": "Show all",
 		"SKIP": "Skip",
 		"CLOSE": "Close",
@@ -172,7 +173,8 @@
 			"USER_MANAGEMENT_HEADER": "Faça a gestão dos usuários",
 			"USER_MANAGEMENT_DESC": "",
 			"POST_MANAGEMENT_HEADER": "Gerencie todas publicação",
-			"POST_MANAGEMENT_DESC": ""
+			"POST_MANAGEMENT_DESC": "",
+			"COMMENTS_MANAGEMENT_HEADER": "View and manage all comments"
 		},
 		"aside":{
 			"DASHBOARD": "Dashboard",
