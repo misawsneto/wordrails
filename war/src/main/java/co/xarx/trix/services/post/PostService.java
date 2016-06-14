@@ -65,7 +65,7 @@ public class PostService {
 			List<Person> personFromStation = Lists.newArrayList(personPermissionService.getPersonFromStation(post.station.getId()));
 			List<Integer> personIds = personFromStation.stream().map(Person::getId).collect(Collectors.toList());
 
-			personIds.remove(authProvider.getLoggedPerson().getId());
+//			personIds.remove(authProvider.getLoggedPerson().getId());
 
 			mobileDevices = mobileDeviceRepository.findByPersonIds(personIds);
 		}
