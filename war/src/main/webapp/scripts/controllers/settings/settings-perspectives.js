@@ -1,6 +1,8 @@
 app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog', '$mdToast', '$filter', '$translate', '$mdConstant', '$mdSidenav', 'station',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog, $mdToast, $filter, $translate, $mdConstant, $mdSidenav, station ){
 
+    // ---- init
+
 	$scope.togglePerspectives = buildToggler('perspective-list');
 
 	$scope.thisStation = station;
@@ -56,6 +58,10 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       $mdDialog.cancel();
     })
   }
+
+  // ------ init
+
+  // ------ dialogs
 
   $scope.showAddPerspectiveDialog = function(event){
     $scope.disabled = false;
@@ -114,8 +120,18 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     })
   }
 
+  $scope.editingFeaturedRow = null;
+  $scope.$watch('currentPerspective.termPerspectiveView.featuredRow', function(newValue, oldValue, scope) {
+    if(newValue && newValue.cells.length > 0)
+      $scope.editingFeaturedRow = newValue ? angular.copy(newValue) : null; 
+  });
+
   $scope.showFeaturedPostsDialog = function(event){
     $scope.disabled = false;
+    var fRow = currentPerspective.termPerspectiveView.featuredRow;
+    if(fRow && fRow.cells.length > 0)
+      $scope.editingFeaturedRow = fRow ? angular.copy(fRow) : null; 
+    
     $mdDialog.show({
       scope: $scope,        // use parent scope in template
       closeTo: {
@@ -160,7 +176,6 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     stationPerspective.station = TRIX.baseUrl + "/api/stations/" + $scope.thisStation.id;
     stationPerspective.taxonomy = TRIX.baseUrl + "/api/stations/" + $scope.thisStation.categoriesTaxonomyId;
 
-
     trix.postStationPerspective(stationPerspective).success(function(response){
       $scope.stationPerspectives.push(response)
       getPerspectiveView(response);
@@ -188,8 +203,38 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     $scope.currentPerspective = perspective
   }
 
+  // -------- /dialogs
+
+  // ------ perspective operations
+    // $scope.editingFeaturedRow
+    $scope.perspectiveChanged = false;
+
+    $scope.applyFeaturedPosts = function(){
+      $mdDialog.cancel();
+      $scope.perspectiveChanged = true;
+      $scope.currentPerspective.termPerspectiveView.featuredRow = $scope.editingFeaturedRow;
+      $scope.reloadingCarousel = true;
+      $timeout(function(){
+        $scope.reloadingCarousel = false;
+      },100)
+    }
+
+    $scope.addFeaturedPosts = function(post){
+      if(!$scope.app.hasImage(post)){
+        $scope.app.showErrorToast('Apenas publicações que contém imagens podem ser adicionadas aos destaques');
+        return;
+      }
+
+      if(!$scope.editingFeaturedRow){
+        $scope.editingFeaturedRow = {cells: []};
+      }
+
+      $scope.editingFeaturedRow.cells.push({postView: post})
+    }
+  // ------ /perspective operations
+
   // -------- search post ---------
-    $scope.postSearchCtrl = {
+  $scope.postSearchCtrl = {
     'page': 0,
     'allLoaded': false,
     'window': 20

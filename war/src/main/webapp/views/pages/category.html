@@ -5,10 +5,10 @@
       <div ng-if="category.description" class=" m-t-md font-normal h4">{{::category.description}}</div>
     </div>
 </div>
-<div class="container row pos-rlt" infinite-scroll="paginate()" infinite-scroll-container='"#content .box-cell"' infinite-scroll-distance="1">
+<div class="container row pos-rlt " infinite-scroll="paginate()" infinite-scroll-container='"#content .box-cell"' infinite-scroll-distance="1">
   <div ng-if="postViews" reload-on-show>
     
-    <div class="col-xs-12" ng-class="{'col-lg-12': app.fullCardCheck($index, postView), 'col-lg-8 col-sm-6':!app.fullCardCheck($index, postView) && app.largeCardCheck($index, postView), 'col-lg-4 col-sm-6':!app.fullCardCheck($index, postView) && !app.largeCardCheck($index, postView)}" ng-repeat="postView in postViews">
+    <div class="col-xs-12 animated fadeIn" ng-class="{'col-lg-12': app.fullCardCheck($index, postView), 'col-lg-8 col-sm-6':!app.fullCardCheck($index, postView) && app.largeCardCheck($index, postView), 'col-lg-4 col-sm-6':!app.fullCardCheck($index, postView) && !app.largeCardCheck($index, postView)}" ng-repeat="postView in postViews">
         
         <a ui-sref="app.read({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'postSlug': postView.slug})">
         <div class="h-500 pos-rlt o-f-h md-whiteframe-z2 m-b-md" ng-if="app.fullCardCheck($index, postView)">
