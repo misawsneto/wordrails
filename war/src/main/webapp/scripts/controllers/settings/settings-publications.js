@@ -85,7 +85,7 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
     if(!$scope.loading && !$scope.publicationsCtrl.allLoaded){
       $scope.loading = true;
 
-      trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, $scope.publicationsCtrl.page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response,a,b,c){
+      trix.searchPosts($scope.searchQuery, null, [$scope.thisStation.id], tabToState().toLowerCase(), null, null, null, null, $scope.publicationsCtrl.page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response,a,b,c){
         handleSuccess(response);
         $scope.totalPublicationsCount = c.totalElements;
         $scope.loading = false;

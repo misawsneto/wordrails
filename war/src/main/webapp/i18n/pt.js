@@ -111,7 +111,8 @@
 		"RELATED": "Publicações relacionadas",
 		"ADD": "Adicionar",
 		"LOAD_MORE": "Carregar mais",
-		"ACTIVATE": "Ativar"
+		"ACTIVATE": "Ativar",
+		"FEATURED_POSTS": "Destaques"
 	},
 	"signin_signup": {
 		"OR": "ou",

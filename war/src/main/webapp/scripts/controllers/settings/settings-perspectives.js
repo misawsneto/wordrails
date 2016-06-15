@@ -114,7 +114,29 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     })
   }
 
-  $scope.showFeaturedPostsDialog = function(event, perspective){
+  $scope.showFeaturedPostsDialog = function(event){
+    $scope.disabled = false;
+    $mdDialog.show({
+      scope: $scope,        // use parent scope in template
+      closeTo: {
+        bottom: 1500
+      },
+      preserveScope: true, // do not forget this if use parent scope
+      controller: $scope.app.defaultDialog,
+      templateUrl: 'featured-post-dialog.html',
+      parent: angular.element(document.body),
+      targetEvent: event,
+      clickOutsideToClose:true
+      // onComplete: function(){
+        // }
+    })
+  }
+
+  $scope.postToPinIndex = null;
+  $scope.postToPin = null;
+  $scope.showFeaturedPostsDialog = function(event, index, post){
+    $scope.resetPostSearch();
+    $scope.postToPin = post;
     $scope.disabled = false;
     $mdDialog.show({
       scope: $scope,        // use parent scope in template
@@ -165,6 +187,59 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
   $scope.setCurrentPerspective = function(perspective){
     $scope.currentPerspective = perspective
   }
+
+  // -------- search post ---------
+    $scope.postSearchCtrl = {
+    'page': 0,
+    'allLoaded': false,
+    'window': 20
+  }
+
+  $scope.resetPostSearch = function(){
+    $scope.postSearchCtrl.page = 0;
+    $scope.postSearchCtrl.allLoaded = false;
+    $scope.postSearchResults = [];
+  }
+
+  $scope.paginateSearch = function(){
+    if(!$scope.loadingSearch && !$scope.postSearchCtrl.allLoaded){
+      $scope.loadingSearch = true;
+
+      trix.searchPosts($scope.searchQuery, null, null, 'published', null, null, null, null, $scope.postSearchCtrl.page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response,a,b,c){
+        handleSuccess(response);
+        $scope.searchTotalElements = c.totalElements;
+        $scope.loadingSearch = false;
+      }).error(function(){
+        $scope.loadingSearch = false;
+        $scope.postSearchCtrl.allLoaded = true;
+      })
+    }
+  }
+
+  var handleSuccess = function(posts, a,b){
+    if(posts && posts.length > 0){
+      posts.reverse();
+
+        if(!$scope.postSearchResults)
+          $scope.postSearchResults = []
+
+        posts.forEach(function(post){
+          addSnippet(post);
+          $scope.postSearchResults.push(post);
+        })
+        $scope.postSearchCtrl.page++;
+        // if(posts.length < $scope.postSearchCtrl.window)
+        //   $scope.postSearchCtrl.allLoaded = true;
+    }else
+      $scope.postSearchCtrl.allLoaded = true;
+  }
+
+
+  $scope.doSearchPosts = function(){
+    $scope.resetPostSearch();
+    $scope.paginateSearch();
+  }
+  // -------- /search post --------
 
 settingsPerspectivesCtrl = $scope;
 
