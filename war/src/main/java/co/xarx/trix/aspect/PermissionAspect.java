@@ -33,13 +33,14 @@ public class PermissionAspect {
 
 	@AfterReturning("within(co.xarx.trix.persistence.StationRepository+) && execution(* *..save(*)) && args(entity)")
 	public void saveStation(Station entity) {
-		MutableAcl acl = savePermission(Station.class, entity.getId(), Permissions.ADMINISTRATION);
+		MutableAcl acl = savePermission(Station.class, entity.getId(), getPermissionAdmin());
 		if(acl == null) {
 			acl = getAcl(Station.class, entity.getId());
 		}
-		boolean grantingReadPermission = entity.visibility.equals(Station.UNRESTRICTED);
+		boolean anonymousCanRead = entity.visibility.equals(Station.UNRESTRICTED);
 		if(acl != null) {
-			setPermission(Permissions.READ, new GrantedAuthoritySid("ROLE_ANONYMOUS"), acl, grantingReadPermission);
+			setPermission(Permissions.READ, new GrantedAuthoritySid("ROLE_ANONYMOUS"), acl, anonymousCanRead);
+			setPermission(Permissions.READ, new GrantedAuthoritySid("ROLE_ADMIN"), acl, true);
 		}
 	}
 
@@ -53,6 +54,19 @@ public class PermissionAspect {
 	public void saveComment(Comment entity) {
 		Permission permission = getPermissionRWD();
 		savePermissionWithParent(Comment.class, entity.getId(), permission, Post.class, entity.post.id);
+	}
+
+	@SuppressWarnings("Duplicates")
+	private Permission getPermissionAdmin() {
+		CumulativePermission permission = new CumulativePermission();
+		permission.set(Permissions.READ);
+		permission.set(Permissions.MODERATION);
+		permission.set(Permissions.CREATE);
+		permission.set(Permissions.WRITE);
+		permission.set(Permissions.DELETE);
+		permission.set(Permissions.ADMINISTRATION);
+
+		return permission;
 	}
 
 	@SuppressWarnings("Duplicates")

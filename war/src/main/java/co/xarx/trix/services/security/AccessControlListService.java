@@ -26,12 +26,19 @@ public class AccessControlListService {
 		this.aclService = aclService;
 	}
 
-	public boolean hasPermission(Class clazz, Integer objectId, Sid sid, Permission permission) {
+	public boolean hasPermission(Class clazz, Integer objectId, Sid sid, Permission... permission) {
 		ObjectIdentityImpl oi = new ObjectIdentityImpl(clazz, objectId);
 		Acl acl = aclService.readAclById(oi);
 		AccessControlEntry ace = findAce(acl.getEntries(), sid);
 
-		return ace != null && Permissions.containsPermission(ace.getPermission(), permission);
+		if(ace == null) return false;
+
+		boolean hasPermission = false;
+		for (Permission p : permission) {
+			hasPermission |= Permissions.containsPermission(ace.getPermission(), p);
+		}
+
+		return hasPermission;
 
 	}
 

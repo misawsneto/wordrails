@@ -85,7 +85,7 @@ public class PostService {
 
 	public NotificationView getCreatePostNotification(Post post, Integer networkId) {
 		String hash = StringUtil.generateRandomString(10, "Aa#");
-		NotificationView notification = new NotificationView(post.title, post.title, hash, !profile.equals("prod"));
+		NotificationView notification = new NotificationView(post.title, post.title, hash, false);
 		notification.type = Notification.Type.POST_ADDED.toString();
 		notification.networkId = networkId;
 		notification.post = postConverter.convertTo(post);
