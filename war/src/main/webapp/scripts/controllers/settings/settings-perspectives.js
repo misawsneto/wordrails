@@ -209,10 +209,27 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     // $scope.editingFeaturedRow
     $scope.perspectiveChanged = false;
 
-    $scope.applyFeaturedPost = function(){
+    $scope.applyFeaturedPosts = function(){
+      $mdDialog.cancel();
       $scope.perspectiveChanged = true;
       $scope.currentPerspective.termPerspectiveView.featuredRow = $scope.editingFeaturedRow;
+      $scope.reloadingCarousel = true;
+      $timeout(function(){
+        $scope.reloadingCarousel = false;
+      },100)
+    }
 
+    $scope.addFeaturedPosts = function(post){
+      if(!$scope.app.hasImage(post)){
+        $scope.app.showErrorToast('Apenas publicações que contém imagens podem ser adicionadas aos destaques');
+        return;
+      }
+
+      if(!$scope.editingFeaturedRow){
+        $scope.editingFeaturedRow = {cells: []};
+      }
+
+      $scope.editingFeaturedRow.cells.push({postView: post})
     }
   // ------ /perspective operations
 

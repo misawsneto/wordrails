@@ -49,7 +49,7 @@
 				            		<md-tab-body>
 				            			<md-content class="o-f-x-h">
 
-														<div class="clear pos-rlt p" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells && !isMobile"
+														<div class="clear pos-rlt p" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells && !isMobile && !reloadingCarousel"
 														ng-mouseenter="currentPerspective.termPerspectiveView.featuredRow.showOptions=true" ng-mouseleave="currentPerspective.termPerspectiveView.featuredRow.showOptions=false">
 															<ul class="pgwSlider" pgw-slider="{verticalCentering:true, maxHeight: 400, selectionMode: 'click', intervalDuration: 7000 }">
 														    <li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells">
@@ -74,7 +74,7 @@
 															</div>
 														</div>
 
-														<div ng-if="currentPerspective.termPerspectiveView.featuredRow.cells && isMobile"
+														<div ng-if="currentPerspective.termPerspectiveView.featuredRow.cells && isMobile && !reloadingCarousel"
 														ng-mouseenter="currentPerspective.termPerspectiveView.featuredRow.showOptions=true" ng-mouseleave="currentPerspective.termPerspectiveView.featuredRow.showOptions=false" class="pos-rlt">
 															<ul rn-carousel="" rn-carousel-index="carouselIndex" rn-carousel-auto-slide="" rn-carousel-pause-on-hover="" rn-carousel-buffered="" class="ng-scope h-200 image no-margin">
 																<li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells">
@@ -494,7 +494,7 @@
                           <a href class="font-500 block">{{publication.authorName}}</a>
                         </div>
                       </div>
-                      <md-button class="fade-in-hover-el pull-right">
+                      <md-button class="fade-in-hover-el pull-right" ng-click="addFeaturedPosts(publication)">
                       	{{'titles.ADD' | translate}}
                       </md-button>
                     </div>
@@ -525,7 +525,7 @@
           </div>
           	<md-divider></md-divider>
           <div class="clear">
-          	<md-button class="pull-right font-500 md-accent" translate="titles.APPLY">
+          	<md-button class="pull-right font-500 md-accent" translate="titles.APPLY" ng-click="applyFeaturedPosts();">
           	</md-button>
           	<md-button class="pull-right font-500" ng-click="cancel();" translate="titles.CANCEL">
           	</md-button>
