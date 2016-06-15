@@ -28,19 +28,19 @@ public class PersonFactoryImpl implements PersonFactory {
 	}
 
 	@Override
-	public Person create(String name, String email, String password) throws PersonAlreadyExistsException {
+	public Person create(String name, String email, String password, boolean validated) throws PersonAlreadyExistsException {
 		Assert.notNull(email);
 		Assert.notNull(password);
 		String username = generateUsernameFromName(name);
-		return createAndSavePerson(name, username, email, password);
+		return createAndSavePerson(name, username, email, password, validated);
 	}
 
 	@Override
-	public Person create(String name, String username, String email, String password) throws PersonAlreadyExistsException {
+	public Person create(String name, String username, String email, String password, boolean validated) throws PersonAlreadyExistsException {
 		Assert.hasText(email);
 		Assert.hasText(username);
 		Assert.hasText(password);
-		return createAndSavePerson(name, username, email, password);
+		return createAndSavePerson(name, username, email, password, validated);
 	}
 
 	@Override
@@ -49,10 +49,10 @@ public class PersonFactoryImpl implements PersonFactory {
 		Assert.notNull(name);
 		Assert.notNull(socialUser);
 		String username = generateUsernameFromName(name);
-		return createAndSavePerson(name, username, email, socialUser);
+		return createAndSavePerson(name, username, email, socialUser, true);
 	}
 
-	private Person createAndSavePerson(String name, String username, String email, Object extraParam) throws PersonAlreadyExistsException {
+	private Person createAndSavePerson(String name, String username, String email, Object extraParam, boolean validated) throws PersonAlreadyExistsException {
 		if (personRepository.findByUsername(username) != null) {
 			throw new PersonAlreadyExistsException("User with username " + username + " already exists");
 		} else if (personRepository.findByEmail(email) != null) {
@@ -60,6 +60,7 @@ public class PersonFactoryImpl implements PersonFactory {
 		}
 
 		Person person = newPerson(name, username, email);
+		person.validated = validated;
 		User user;
 		try {
 			if (extraParam instanceof String) {
@@ -67,7 +68,6 @@ public class PersonFactoryImpl implements PersonFactory {
 				person.validated = false;
 			} else {
 				user = userFactory.create(person.getUsername(), (SocialUser) extraParam);
-				person.validated = true;
 			}
 		} catch (UserAlreadyExistsException e) {
 			user = userRepository.findUserByUsername(person.getUsername());

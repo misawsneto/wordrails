@@ -20,7 +20,7 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public interface PersonsApi {
 
-	class 	PersonInvitationDto {
+	class PersonInvitationDto {
 		public String emailTemplate;
 		public List<String> emails;
 		public List<Integer> stationIds;
@@ -123,8 +123,17 @@ public interface PersonsApi {
 	void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword);
 
 	@POST
+	@Path("/add")
+	@PreAuthorize("isAuthenticated()")
+	Response addPerson(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException;
+
+	@POST
 	@Path("/create")
 	Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException;
+
+	@GET
+	@Path("/validate/{hash}")
+	Response validatePersonEmail(@PathParam("hash") String hash);
 
 	@POST
 	@Path("/invitePerson")

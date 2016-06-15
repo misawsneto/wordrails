@@ -6,10 +6,7 @@ import co.xarx.trix.api.PersonData;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.converter.PostConverter;
-import co.xarx.trix.domain.Network;
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.User;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.PersonEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
@@ -144,7 +141,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 		loadedPerson.email = person.email;
 		loadedPerson.name = person.name;
 
-		User user = null;
+		User user;
 		if (!person.username.equals(loggedPerson.username)) {
 			loadedPerson.user.username = person.username;
 			loadedPerson.username = person.username;
@@ -191,7 +188,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 
 		loadedPerson.email = person.email;
 
-		User user = null;
+		User user;
 		if (!person.username.equals(loadedPerson.username)) {
 			loadedPerson.user.username = person.username;
 			loadedPerson.username = person.username;
@@ -326,22 +323,33 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
-	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
-		boolean sendPlainPassword = false;
-		if (dto.password == null || "".equals(dto.password)) {
-			dto.password = StringUtil.generateRandomString(6, "aA#");
-		} else {
-			sendPlainPassword = true;
-		}
-		;
+	public Response addPerson(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
 		try {
-			Person person = personFactory.create(dto.name, dto.username, dto.email, dto.password);
-			personService.notifyPersonCreation(person, sendPlainPassword);
+			Person person = personService.createPerson(dto);
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
 		} catch (PersonAlreadyExistsException e) {
 			e.printStackTrace();
-			throw new BadRequestException();
+			return Response.status(Status.CONFLICT).build();
 		}
+	}
+
+	@Override
+	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
+		try {
+			Person person = personService.createPerson(dto);
+			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
+		} catch (PersonAlreadyExistsException e) {
+			e.printStackTrace();
+			throw new BadRequestException(e.getMessage());
+		}
+	}
+
+	@Override
+	public Response validatePersonEmail(String hash){
+		if(personService.validateEmail(hash) == null){
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		return Response.status(Status.OK).build();
 	}
 
 	@Override

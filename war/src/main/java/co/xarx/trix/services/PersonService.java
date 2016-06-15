@@ -9,7 +9,10 @@ import co.xarx.trix.persistence.InvitationRepository;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.StationRepository;
+import co.xarx.trix.services.person.PersonAlreadyExistsException;
+import co.xarx.trix.services.person.PersonFactory;
 import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -41,22 +44,46 @@ public class PersonService {
 	private EmailService emailService;
 	private PersonRepository personRepository;
 	private NetworkRepository networkRepository;
-	private InvitationRepository invitationRepository;
 	private StationRepository stationRepository;
+	private InvitationRepository invitationRepository;
+	private PersonFactory personFactory;
 
 	@Autowired
-	public PersonService(PersonRepository personRepository, EmailService emailService,
-						 NetworkRepository networkRepository, InvitationRepository invitationRepository,
-						 AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex,
-						 StationRepository stationRepository) {
+	public PersonService(PersonRepository personRepository, EmailService emailService, NetworkRepository networkRepository, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory) {
 		this.client = client;
 		this.authService = authService;
 		this.emailService = emailService;
+		this.personFactory = personFactory;
 		this.nginxAccessIndex = nginxAccessIndex;
 		this.personRepository = personRepository;
 		this.stationRepository = stationRepository;
 		this.networkRepository = networkRepository;
 		this.invitationRepository = invitationRepository;
+	}
+
+	public Person createPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException {
+		boolean validated = false;
+		if(dto.password == null || "".equals(dto.password)){
+			dto.password = StringUtil.generateRandomString(6, "aA#");
+			validated = true;
+		}
+
+		Person person = personFactory.create(dto.name, dto.username, dto.email, dto.password, validated);
+		notifyPersonCreation(person);
+		return person;
+	}
+
+	public Person validateEmail(String hash) throws BadRequestException {
+		Assert.notNull(hash, "Hash cannot be null");
+		Invitation invitation = invitationRepository.findByHash(hash);
+
+		if(invitation == null || invitation.getPerson() == null){
+			return null;
+		}
+		Person person = invitation.getPerson();
+		person.validated = true;
+		personRepository.save(person);
+		return person;
 	}
 
 	public List<Person> invite(PersonsApi.PersonInvitationDto dto){
@@ -93,7 +120,7 @@ public class PersonService {
 		dto.emailTemplate = dto.emailTemplate.replaceAll("\\%7D\\%7D", "}}");
 
 		for(String email: dto.emails){
-			Invitation invitation = new Invitation(network.getRealDomain(), false);
+			Invitation invitation = new Invitation(network.getRealDomain());
 			invitation.email = email;
 			invitation.invitationStations = dto.stationIds;
 			invitationRepository.save(invitation);
@@ -103,12 +130,14 @@ public class PersonService {
 		return persons;
 	}
 
-	public void notifyPersonCreation(Person person, boolean sendPlainPassword){
+	public void notifyPersonCreation(Person person){
 		Network network = networkRepository.findByTenantId(person.getTenantId());
-		Invitation invitation = new Invitation(network.getRealDomain(), sendPlainPassword);
+		Invitation invitation = new Invitation(network.getRealDomain());
 		invitation.setPerson(person);
 
-		invitationRepository.save(invitation);
+		if(person.validated){
+			invitationRepository.save(invitation);
+		}
 
 		emailService.notifyPersonCreation(network, invitation, authService.getLoggedPerson());
 	}
