@@ -113,7 +113,7 @@
 															</div>
 														</div>
 
-				            				<div class="" ng-class="{'p-h-xxl': !isMobile}">
+				            				<div  ng-class="{'p-h-xxl': !isMobile}">
 					                    <div class="row no-margin" reload-on-show masonry="{transitionDuration: 0}">
 							                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12 p-0 p-b': isMobile}" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells"
 																ng-mouseenter="cell.showOptions=true" ng-mouseleave="cell.showOptions=false">
@@ -140,7 +140,7 @@
 							                      	</div>
 							                      </md-content>
 							                    </div>
-								                  <div class="" ng-if="isMobile && !$last" style="margin: 0 -15px -15px -15px;">
+								                  <div  ng-if="isMobile && !$last" style="margin: 0 -15px -15px -15px;">
 								                  	<md-divider></md-divider>
 								                  </div>
 
@@ -171,7 +171,7 @@
 
 				              <md-tab label="{{row.termName}}" ng-repeat="row in currentPerspective.termPerspectiveView.ordinaryRows">
 				              	<md-content class="o-f-x-h">
-				              		<div class="" ng-if="!isMobile">
+				              		<div  ng-if="!isMobile">
 				              			<!-- ng-style="{{category | categoryImage:'large':true}}" md-whiteframe-z2 -->
 														<div class="display-table animated5x fadeIn w-full bg-cover h-100 text-center"  style=" background-position: 50% 50%;">
 														    <div class="display-cell v-m">
@@ -180,7 +180,7 @@
 														    </div>
 														</div>
 				              		</div>
-				              		<div class="" ng-class="{'p-h-xxl': !isMobile}">
+				              		<div  ng-class="{'p-h-xxl': !isMobile}">
 				              			<div class="row no-margin" reload-on-show masonry="{transitionDuration: 0}">
 						                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12': isMobile, 'p-0 p-b': ($first && isMobile)}" ng-repeat="cell in row.cells">
 																
@@ -202,7 +202,7 @@
 						                      	</div>
 						                      </md-content>
 						                    </div>
-							                  <div class="" ng-if="isMobile && !$last" style="margin: 0 -15px -15px -15px;">
+							                  <div  ng-if="isMobile && !$last" style="margin: 0 -15px -15px -15px;">
 							                  	<md-divider></md-divider>
 							                  </div>
 						                  </div>
@@ -247,7 +247,7 @@
 		  <i class="mdi2-plus i-24"></i>
 		</md-button>
 	  <md-content class="pos-abt bottom-0 right-0 left-0 md-background-default background" style="top:64px">
-	  	<div id="" class="vbox">
+	  	<div class="vbox">
         <div class="row-row">
           <div class="cell">
             <div class="cell-inner p-t-lg">
@@ -409,8 +409,8 @@
 				</div>
 
 				<div class="text-center">
-					<md-button aria-label="nothing" ng-click="addPerspective(perspectiveName); disabled = true;" ng-disabled="disabled" md-ink-ripple style="font-size:16px;" class="">{{'actions.CREATE' | translate}}</md-button>
-					<md-button aria-label="nothing" ng-click="cancel()" md-ink-ripple style="font-size:16px;" class="">{{'titles.CANCEL' | translate}}</md-button>
+					<md-button aria-label="nothing" ng-click="addPerspective(perspectiveName); disabled = true;" ng-disabled="disabled" md-ink-ripple style="font-size:16px;" >{{'actions.CREATE' | translate}}</md-button>
+					<md-button aria-label="nothing" ng-click="cancel()" md-ink-ripple style="font-size:16px;" >{{'titles.CANCEL' | translate}}</md-button>
 				</div>
 			</div>
 		</md-content>
@@ -462,7 +462,16 @@
 <script type="text/ng-template" id="featured-post-dialog.html">
   <md-dialog aria-label="change action">
     <md-content style="background: white">
-      <div class="w-900" id="email-template">
+      <div class="w-900" 
+      </div>
+    </md-content>
+  </md-dialog>
+</script>
+
+<script type="text/ng-template" id="featured-post-dialog.html">
+  <md-dialog aria-label="change action">
+    <md-content style="background: white">
+      <div class="w-900" 
 
       	<div class="p text-u-c font-bold text-md-l">
       		<i class="mdi2-view-carousel p-r-sm i-24 icon v-m"></i>{{'titles.FEATURED_POSTS' | translate}}

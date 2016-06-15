@@ -42,7 +42,7 @@
 
         <!--  Vertical News Box -->
         <div class="news md-whiteframe-z1 vertical z-depth-1 card" ng-if="!app.fullCardCheck($index, postView)">
-            <div class="">
+            <div >
               <a ui-sref="app.userprofile({username: postView.authorUsername})">
                 <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
                 ng-style="app.getImagesPerson(postView, postView.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(postView)}">

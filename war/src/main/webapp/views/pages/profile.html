@@ -69,7 +69,7 @@
               </div>
               <div class="news-comment animated fadeInDown" ng-if="publication.showComments" style="margin:6px -16px -8px -16px;">
 
-                <md-divider class=""></md-divider>
+                <md-divider ></md-divider>
 
                 <div wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" id="comment-list-{{::publication.id}}" class="comment-list h-m-200 o-f-a scroller" style="overflow-y: hidden; position: relative;">
                   <ul infinite-scroll="publication.paginateComments(publication)" class="m-0" infinite-scroll-container="'#comment-list-' + publication.id" infinite-scroll-distance="1">
@@ -93,7 +93,7 @@
                   </ul>
                 </div>
                   
-                <md-divider ng-if="publication.comments && publication.comments.length" class=""></md-divider>
+                <md-divider ng-if="publication.comments && publication.comments.length" ></md-divider>
 
                 <div class="p inline w-full">
                   <div class="pull-left user-avatar rounded w-36 bg-white pos-rlt background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}" ng-class="{'md-primary-hue-1': !app.userImageSmall}">
