@@ -18,7 +18,7 @@
 
     <div ng-if="app.termPerspectiveView.featuredRow.cells && !$mdMedia('gt-sm')" class="pos-rlt" style="margin:-32px -15px 30px -15px">
       <ul rn-carousel="" rn-carousel-index="carouselIndex" rn-carousel-auto-slide="" rn-carousel-pause-on-hover="" rn-carousel-buffered="" class="ng-scope h-300 image no-margin">
-        <li class="" ng-repeat="cell in app.termPerspectiveView.featuredRow.cells">
+        <li  ng-repeat="cell in app.termPerspectiveView.featuredRow.cells">
           <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z1 h-300 pos-abt top-0 bottom-0 right-0 left-0 bg-cover layer animated fadeIn">
             <div class="pos-abt bottom-0 right-0 left-0 pgwSlider">
               <div class="ps-caption" style="display: block">{{cell.postView.title}}</div>
@@ -35,7 +35,7 @@
 
 
 <div class="row pos-rlt" infinite-scroll="app.perspectivePaginate()" infinite-scroll-container='"#content .box-cell"' infinite-scroll-distance="1">
-  <div class="" ng-if="app.termPerspectiveView.homeRow.cells">
+  <div  ng-if="app.termPerspectiveView.homeRow.cells">
     
     <div class="col-xs-12 animated fadeIn" ng-class="{'col-lg-12': app.fullCardCheck($index, cell.postView), 'col-lg-8 col-sm-6':!app.fullCardCheck($index, cell.postView) && app.largeCardCheck($index, cell.postView), 'col-lg-4 col-sm-6':!app.fullCardCheck($index, cell.postView) && !app.largeCardCheck($index, cell.postView)}" ng-repeat="cell in app.termPerspectiveView.homeRow.cells">
         
@@ -71,7 +71,7 @@
 
         <!--  Vertical News Box -->
         <div class="news md-whiteframe-z1 vertical z-depth-1 card" ng-if="!app.fullCardCheck($index, cell.postView)">
-            <div class="">
+            <div >
               <a ui-sref="app.userprofile({username: cell.postView.authorUsername})">
                 <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
                 ng-style="app.getImagesPerson(cell.postView, cell.postView.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(cell.postView)}">

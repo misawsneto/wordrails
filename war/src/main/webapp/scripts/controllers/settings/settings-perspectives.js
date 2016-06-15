@@ -36,7 +36,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
   var loadPerspectives = function(){
     trix.getStationStationPerspectives($scope.thisStation.id).success(function(response){
       $scope.stationPerspectives = response.stationPerspectives;
-        $scope.stationPerspectives && $scope.stationPerspectives.forEach(function(perspective, index){
+        $scope.stationPerspectives && $scope.stationPerspectives.forEach(function(perspective){
           if(perspective.id == $scope.thisStation.defaultPerspectiveId){
             perspective.selected = true;
             $scope.currentPerspective = perspective;
@@ -121,16 +121,15 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
   }
 
   $scope.editingFeaturedRow = null;
-  $scope.$watch('currentPerspective.termPerspectiveView.featuredRow', function(newValue, oldValue, scope) {
-    if(newValue && newValue.cells.length > 0)
-      $scope.editingFeaturedRow = newValue ? angular.copy(newValue) : null; 
-  });
 
   $scope.showFeaturedPostsDialog = function(event){
     $scope.disabled = false;
-    var fRow = currentPerspective.termPerspectiveView.featuredRow;
+    $scope.resetPostSearch();
+    var fRow = $scope.currentPerspective.termPerspectiveView.featuredRow;
     if(fRow && fRow.cells.length > 0)
-      $scope.editingFeaturedRow = fRow ? angular.copy(fRow) : null; 
+      $scope.editingFeaturedRow = fRow ? angular.copy(fRow) : null;
+    else
+      $scope.editingFeaturedRow = {cells: []}
     
     $mdDialog.show({
       scope: $scope,        // use parent scope in template
@@ -149,10 +148,11 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
   }
 
   $scope.postToPinIndex = null;
-  $scope.postToPin = null;
-  $scope.showFeaturedPostsDialog = function(event, index, post){
+  $scope.cellToPin = null;
+  $scope.showPinPostDialog = function(event, index, cellToPin){
     $scope.resetPostSearch();
-    $scope.postToPin = post;
+    $scope.cellToPin = cellToPin;
+    $scope.postToPinIndex = index;
     $scope.disabled = false;
     $mdDialog.show({
       scope: $scope,        // use parent scope in template
@@ -161,7 +161,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       },
       preserveScope: true, // do not forget this if use parent scope
       controller: $scope.app.defaultDialog,
-      templateUrl: 'featured-post-dialog.html',
+      templateUrl: 'pin-post-dialog.html',
       parent: angular.element(document.body),
       targetEvent: event,
       clickOutsideToClose:true
@@ -201,6 +201,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
   $scope.setCurrentPerspective = function(perspective){
     $scope.currentPerspective = perspective
+    reloadCarousel();
   }
 
   // -------- /dialogs
@@ -213,6 +214,10 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       $mdDialog.cancel();
       $scope.perspectiveChanged = true;
       $scope.currentPerspective.termPerspectiveView.featuredRow = $scope.editingFeaturedRow;
+      reloadCarousel();
+    }
+
+    var reloadCarousel = function(){
       $scope.reloadingCarousel = true;
       $timeout(function(){
         $scope.reloadingCarousel = false;
@@ -225,11 +230,26 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
         return;
       }
 
-      if(!$scope.editingFeaturedRow){
-        $scope.editingFeaturedRow = {cells: []};
-      }
-
       $scope.editingFeaturedRow.cells.push({postView: post})
+    }
+
+    $scope.addPinPost = function(postView){
+      $scope.cellToPin.postView = postView;
+      $scope.cellToPin.fixed = true;
+      $timeout(function(){
+        $scope.reloadMasonry();
+      },1000);
+      $mdDialog.cancel();
+    }
+
+    $scope.removeFeaturedPost = function(post){
+      if($scope.editingFeaturedRow && $scope.editingFeaturedRow.cells && $scope.editingFeaturedRow.cells.length > 0){
+        var cells = $scope.editingFeaturedRow.cells;
+        for (var i = cells.length - 1; i >= 0; i--) {
+          if(cells[i].postView && cells[i].postView.id === post.id)
+            cells.splice(i, 1);
+        }
+      }
     }
   // ------ /perspective operations
 
