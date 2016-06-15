@@ -883,3 +883,70 @@ ul.pgwSlider>li, .pgwSlider>.ps-list>li{
 .df-tab-menu a{
 	color: inherit!important;
 }
+
+.simpleDemo ul[dnd-list],
+.simpleDemo ul[dnd-list] > li {
+  position: relative;
+}
+
+/**
+ * The dnd-list should always have a min-height,
+ * otherwise you can't drop to it once it's empty
+ */
+
+.simpleDemo ul[dnd-list] {
+  min-height: 42px;
+  padding-left: 0;
+}
+
+/**
+ * The dndDraggingSource class will be applied to
+ * the source element of a drag operation. It makes
+ * sense to hide it to give the user the feeling
+ * that he's actually moving it.
+ */
+
+.simpleDemo ul[dnd-list] .dndDraggingSource {
+  display: none;
+}
+
+/**
+ * An element with .dndPlaceholder class will be
+ * added to the dnd-list while the user is dragging
+ * over it.
+ */
+
+.simpleDemo ul[dnd-list] .dndPlaceholder {
+  display: block;
+  min-height: 54px;
+  margin-left: 16px;
+  margin-right: 16px;
+  background-color: #ddd;
+}
+
+.simpleDemo ul[dnd-list] li:nth-child(2) {
+  margin-top: 16px;
+}
+
+/**
+ * The dnd-lists's child elements currently MUST have
+ * position: relative. Otherwise we can not determine
+ * whether the mouse pointer is in the upper or lower
+ * half of the element we are dragging over. In other
+ * browsers we can use event.offsetY for this.
+ */
+
+.simpleDemo ul[dnd-list] li {
+  display: block;
+  margin-bottom: -1px;
+  background-color: #fff;
+}
+
+/**
+ * Show selected elements in green
+ */
+
+.simpleDemo ul[dnd-list] li.selected {
+  color: #3c763d;
+  background-color: #dff0d8;
+}

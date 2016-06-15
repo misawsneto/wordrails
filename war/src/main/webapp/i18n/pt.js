@@ -363,7 +363,8 @@
 			"perspective": {
 				"FIX_POST": "Fixar uma publicação nesta posição",
 				"ACTIVATE_PERSPECTIVE_MSG": "Tem certeza que deseja ativar esta perspectiva? Esta ação  modificará a forma de apresentação do conteúdo em todos os dispositivos.",
-				"REMOVE_PERSPECTIVE_MSG": "Tem certeza que deseja remover esta perspectiva? Esta operação não poderá ser desfeita."
+				"REMOVE_PERSPECTIVE_MSG": "Tem certeza que deseja remover esta perspectiva? Esta operação não poderá ser desfeita.",
+				"PERSPECTIVE_ORDER_MSG": "Arraste para ordernar"
 			}
 		},
 		"category": {

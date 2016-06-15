@@ -456,7 +456,7 @@
 <script type="text/ng-template" id="featured-post-dialog.html">
   <md-dialog aria-label="change action">
     <md-content style="background: white">
-      <div class="w-800" id="email-template">
+      <div class="w-900" id="email-template">
 
       	<div class="p text-u-c font-bold text-md-l">
       		<i class="mdi2-view-carousel p-r-sm i-24 icon v-m"></i>{{'titles.FEATURED_POSTS' | translate}}
@@ -484,7 +484,7 @@
                         </div>
                         {{publication.snippet | characters:120}}
                       </div>
-                      <div class="list-group-item b-n p-sm p-b-0 inline v-m">
+                      <div class="list-group-item b-n p-sm p-b-0 inline v-m fade-in-hover-container">
                         <a href class="pull-left m-r-sm">
                           <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1 text-center md-primary-hue-1 background">
                             <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-16" style="top: 16%;position: relative;"></i>
@@ -494,14 +494,34 @@
                           <a href class="font-500 block">{{publication.authorName}}</a>
                         </div>
                       </div>
+                      <md-button class="fade-in-hover-el pull-right">
+                      	{{'titles.ADD' | translate}}
+                      </md-button>
                     </div>
                   </div>
                   <md-divider></md-divider>
                 </li>
               </ul> 
           </div>
-          <div class="w-300 inline" style="height:300px; max-height:300px; overflow: auto;">
-          		asdfafs
+          <div class="w-400 inline p-h pull-right simpleDemo" style="height:300px; max-height:300px; overflow: auto;">
+          	<div class="text-center text-u-c p-sm font-500">
+          		{{'settings.station.perspective.PERSPECTIVE_ORDER_MSG' | translate}}
+          	</div>
+          	<ul class="m-b p-b" dnd-list="editingFeaturedRow.cells" ng-if="editingFeaturedRow != null && editingFeaturedRow.cells.length > 0">
+	          	<li ng-repeat="cell in editingFeaturedRow.cells"
+			          	dnd-draggable="cell"
+					        dnd-moved="editingFeaturedRow.cells.splice($index, 1)"
+					        dnd-effect-allowed="move"
+					        dnd-selected="models.selected = cell" class="pos-rlt">
+
+	          		<div class="md-whiteframe-z1 p m pos-rlt" >
+		        			<div class="pos-abt top-0 right-0 font-bold p-sm">
+	                  #{{$index + 1}}
+	                </div>
+	          			<span class="text-ellipsis font-bold block text-md">{{cell.postView.title}}</span>
+	          		</div>
+	          	</li>
+          	</ul>
           </div>
           	<md-divider></md-divider>
           <div class="clear">

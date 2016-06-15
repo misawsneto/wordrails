@@ -114,8 +114,15 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     })
   }
 
+  $scope.editingFeaturedRow = null;
+  $scope.$watch('currentPerspective.termPerspectiveView.featuredRow', function(newValue, oldValue, scope) {
+    if(newValue && newValue.cells.length > 0)
+      $scope.editingFeaturedRow = newValue ? angular.copy(newValue) : null; 
+  });
+
   $scope.showFeaturedPostsDialog = function(event){
     $scope.disabled = false;
+    
     $mdDialog.show({
       scope: $scope,        // use parent scope in template
       closeTo: {

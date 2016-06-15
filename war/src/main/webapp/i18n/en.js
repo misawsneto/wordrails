@@ -363,7 +363,8 @@
 			"perspective": {
 				"FIX_POST": "Fix a publication on this position",
 				"ACTIVATE_PERSPECTIVE_MSG": "Are you sure you wish to activate this perspective? This action will affect how the content is displayed on all devices.",
-				"REMOVE_PERSPECTIVE_MSG": "Are you sure you wish to remove this perspective? This operation cannot be undone."
+				"REMOVE_PERSPECTIVE_MSG": "Are you sure you wish to remove this perspective? This operation cannot be undone.",
+				"PERSPECTIVE_ORDER_MSG": "Drag and Sort"
 			}
 		},
 		"category": {
