@@ -559,8 +559,8 @@ angular.module('app')
         if(oldVal && (('title' in oldVal) || ('body' in oldVal))){
           // post has been edited
 
-          var newBody = newVal.body ? newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
-          var oldBody = oldVal.body ? oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+          var newBody = newVal && newVal.body ? newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+          var oldBody = oldVal && oldVal.body ? oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
 
           if(newVal && (newVal.title !== oldVal.title || newBody !== oldBody)){
             // set post changed so $scope.watch can see app.postObjectChanged
