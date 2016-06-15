@@ -890,6 +890,16 @@ ul.pgwSlider>li, .pgwSlider>.ps-list>li{
 }
 
 /**
+ * For the correct positioning of the placeholder element, the dnd-list and
+ * it's children must have position: relative
+ */
+
+.simpleDemo ul[dnd-list],
+.simpleDemo ul[dnd-list] > li {
+  position: relative;
+}
+
+/**
  * The dnd-list should always have a min-height,
  * otherwise you can't drop to it once it's empty
  */
@@ -924,7 +934,7 @@ ul.pgwSlider>li, .pgwSlider>.ps-list>li{
   background-color: #ddd;
 }
 
-.simpleDemo ul[dnd-list] li:nth-child(2) {
+.simpleDemo ul[dnd-list] li:nth-child(2), .simpleDemo ul[dnd-list] li:nth-child(1) {
   margin-top: 16px;
 }
 

@@ -1,7 +1,7 @@
 <div class="m-b">
   <div class="container">
   <div class="pos-rlt">
-    <div class="clear pos-rlt m-b-lg p-sm" ng-if="app.termPerspectiveView.featuredRow.cells && $mdMedia('gt-sm')">
+    <div class="clear pos-rlt m-b-lg p-sm animated fadeIn" ng-if="app.termPerspectiveView.featuredRow.cells && $mdMedia('gt-sm')">
       
       <ul class="pgwSlider" pgw-slider="{verticalCentering:true, maxHeight: 500, selectionMode: 'click', intervalDuration: 7000 }">
         <li ng-repeat="cell in app.termPerspectiveView.featuredRow.cells" class="md-whiteframe-z1">
@@ -18,7 +18,7 @@
 
     <div ng-if="app.termPerspectiveView.featuredRow.cells && !$mdMedia('gt-sm')" class="pos-rlt" style="margin:-32px -15px 30px -15px">
       <ul rn-carousel="" rn-carousel-index="carouselIndex" rn-carousel-auto-slide="" rn-carousel-pause-on-hover="" rn-carousel-buffered="" class="ng-scope h-300 image no-margin">
-        <li ng-repeat="cell in app.termPerspectiveView.featuredRow.cells">
+        <li class="animated fadeIn" ng-repeat="cell in app.termPerspectiveView.featuredRow.cells">
           <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z1 h-300 pos-abt top-0 bottom-0 right-0 left-0 bg-cover layer">
             <div class="pos-abt bottom-0 right-0 left-0 pgwSlider">
               <div class="ps-caption" style="display: block">{{cell.postView.title}}</div>
@@ -35,7 +35,7 @@
 
 
 <div class="row pos-rlt" infinite-scroll="app.perspectivePaginate()" infinite-scroll-container='"#content .box-cell"' infinite-scroll-distance="1">
-  <div ng-if="app.termPerspectiveView.homeRow.cells" reload-on-show>
+  <div class="animated fadeIn" ng-if="app.termPerspectiveView.homeRow.cells">
     
     <div class="col-xs-12" ng-class="{'col-lg-12': app.fullCardCheck($index, cell.postView), 'col-lg-8 col-sm-6':!app.fullCardCheck($index, cell.postView) && app.largeCardCheck($index, cell.postView), 'col-lg-4 col-sm-6':!app.fullCardCheck($index, cell.postView) && !app.largeCardCheck($index, cell.postView)}" ng-repeat="cell in app.termPerspectiveView.homeRow.cells">
         

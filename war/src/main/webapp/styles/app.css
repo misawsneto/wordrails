@@ -9058,7 +9058,7 @@ ul.pgwSlider > li,
   background-color: #ddd;
 }
 
-.simpleDemo ul[dnd-list] li:nth-child(2) {
+.simpleDemo ul[dnd-list] li:nth-child(2), .simpleDemo ul[dnd-list] li:nth-child(1) {
   margin-top: 16px;
 }
 

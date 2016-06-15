@@ -167,7 +167,6 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     stationPerspective.station = TRIX.baseUrl + "/api/stations/" + $scope.thisStation.id;
     stationPerspective.taxonomy = TRIX.baseUrl + "/api/stations/" + $scope.thisStation.categoriesTaxonomyId;
 
-
     trix.postStationPerspective(stationPerspective).success(function(response){
       $scope.stationPerspectives.push(response)
       getPerspectiveView(response);
@@ -196,7 +195,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
   }
 
   // -------- search post ---------
-    $scope.postSearchCtrl = {
+  $scope.postSearchCtrl = {
     'page': 0,
     'allLoaded': false,
     'window': 20
@@ -221,6 +220,10 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
         $scope.postSearchCtrl.allLoaded = true;
       })
     }
+  }
+
+  $scope.applyFeaturedPost = function(){
+    
   }
 
   var handleSuccess = function(posts, a,b){
