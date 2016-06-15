@@ -83,9 +83,14 @@ public class StationPermissionService {
 			permission.set(Permissions.DELETE);
 		}
 		if (publisher) {
+			permission.set(Permissions.WRITE);
 			permission.set(Permissions.CREATE);
 		}
 		if (admin) {
+			permission.set(MODERATION);
+			permission.set(Permissions.CREATE);
+			permission.set(Permissions.WRITE);
+			permission.set(Permissions.DELETE);
 			permission.set(Permissions.ADMINISTRATION);
 		}
 
