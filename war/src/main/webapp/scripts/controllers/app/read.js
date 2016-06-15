@@ -18,7 +18,7 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
   }
 
   $timeout(function(){
-    $scope.scrollToTop();
+    $('#scroll-box').animate({scrollTop: 0}, 0, 'easeOutQuint');
   })
 
   $scope.$on('$destroy',function(){

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -177,6 +178,7 @@ public class PerspectiveResource implements PerspectiveApi {
 					rowView.type = Row.HOME_ROW;
 					cells = perspectiveService.fillPostsNotPositionedInHomeRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 				}
+				Collections.sort(cells);
 				rowView.id = row.id;
 				rowView.cells = cellConverter.convertToViews(cells, withBody != null ? withBody : false);
 				rowView.termId = term.id;
@@ -206,6 +208,7 @@ public class PerspectiveResource implements PerspectiveApi {
 					rowView.type = Row.HOME_ROW;
 					cells = perspectiveService.fillPostsNotPositionedInHomeRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 				}
+				Collections.sort(cells);
 				rowView.id = row.id;
 				rowView.cells = cellConverter.convertToViews(cells, withBody != null ? withBody : false);
 				rowView.termId = null;

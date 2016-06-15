@@ -240,6 +240,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
         $scope.reloadMasonry();
       },1000);
       $mdDialog.cancel();
+      $scope.perspectiveChanged = true;
     }
 
     $scope.removeFeaturedPost = function(post){
@@ -251,6 +252,33 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
         }
       }
     }
+
+    $scope.updatePerspecitve = function(){
+      var perspective = angular.copy($scope.currentPerspective.termPerspectiveView);
+      perspective.ordinaryRows = null;
+
+      if(perspective.featuredRow && perspective.featuredRow.cells){
+        row = perspective.featuredRow
+        for (var i = 0; i < row.cells.length; i++) {
+          row.cells[i].postView.postId = row.cells[i].postView.id;
+          row.cells[i].index = i;
+        };
+      }
+
+      if(perspective.homeRow && perspective.homeRow.cells){
+        row = perspective.homeRow
+        for (var i = row.cells.length - 1; i >= 0; i--) {
+          row.cells[i].postView.postId = row.cells[i].postView.id;
+          if(!(row.cells[i].id || row.cells[i].fixed))
+            row.cells.splice(i, 1)
+        };
+      }
+
+      trix.putTermView(perspective).success(function(){
+        $scope.app.showSuccessToast('Perspectiva atualizada.')
+      })
+    }
+
   // ------ /perspective operations
 
   // -------- search post ---------
@@ -270,7 +298,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     if(!$scope.loadingSearch && !$scope.postSearchCtrl.allLoaded){
       $scope.loadingSearch = true;
 
-      trix.searchPosts($scope.searchQuery, null, null, 'published', null, null, null, null, $scope.postSearchCtrl.page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response,a,b,c){
+      trix.searchPosts($scope.searchQuery, null, [$scope.thisStation.id], 'published', null, null, null, null, $scope.postSearchCtrl.page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response,a,b,c){
         handleSuccess(response);
         $scope.searchTotalElements = c.totalElements;
         $scope.loadingSearch = false;

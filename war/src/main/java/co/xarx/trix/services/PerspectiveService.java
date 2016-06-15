@@ -175,7 +175,15 @@ public class PerspectiveService {
 				cellRepository.deleteInBatch(difference.cellsToDelete);
 			}
 			newRow.cells = difference.cellsToSave;
-			rowRepository.save(newRow);
+			Collections.sort(newRow.cells);
+			Row oldRow = rowRepository.findOne(newRow.id);
+			oldRow.cells = newRow.cells;
+			if (oldRow.cells != null) {
+				for (Cell cell : oldRow.cells) {
+					cellRepository.save(cell);
+				}
+			}
+			rowRepository.save(oldRow);
 		} else {
 			if (type.equals(Row.FEATURED_ROW) && termPerspective.featuredRow != null) {
 				rowRepository.delete(termPerspective.featuredRow);
