@@ -473,9 +473,10 @@
 	            <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-md-l bg-t" ng-model="searchQuery">
 	          </form>
 	        </div>
-
+					
+					<div class="b-t">
 					<div id="search-results" class="md-background-hue-1 background pos-rlt w-500 inline" style="height:300px; max-height:300px; overflow: auto;">
-              <ul class="list-group bg-t m-b-lg" data-collapsible="expandable" infinite-scroll="paginateSearch()" infinite-scroll-distance="1" infinite-scroll-container='"#search-results"' >
+              <ul class="list-group bg-t m-b-lg b-l" data-collapsible="expandable" infinite-scroll="paginateSearch()" infinite-scroll-distance="1" infinite-scroll-container='"#search-results"' >
                 <li style="padding: 0; border-bottom: none; border-top: none;" class="no-border-radius list-group-item no-bg b-l-2x r-0 fade-in-hover-container" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in postSearchResults" ng-click="activatePublication(publication);" style="cursor: inherit;" ng-style="publication.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null">
                   <div class="p-sm">
                     <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
@@ -507,10 +508,10 @@
                   </div>
                   <md-divider></md-divider>
                 </li>
-              </ul> 
+              </ul>
           </div>
-          <div class="w-400 inline p-h pull-right simpleDemo" style="height:300px; max-height:300px; overflow: auto;">
-          	<div class="text-center text-u-c p-sm font-500">
+          <div class="w-400 inline p-h pull-left simpleDemo" style="height:300px; max-height:300px; overflow: auto;">
+          	<div class="text-center text-u-c p-sm font-500" ng-if="editingFeaturedRow.cells.length > 0">
           		{{'settings.station.perspective.PERSPECTIVE_ORDER_MSG' | translate}}
           	</div>
           	<ul class="m-b p-b" dnd-list="editingFeaturedRow.cells" ng-if="editingFeaturedRow != null && editingFeaturedRow.cells.length > 0">
@@ -533,6 +534,7 @@
 	          		</div>
 	          	</li>
           	</ul>
+          </div>
           </div>
           	<md-divider></md-divider>
           <div class="clear">
