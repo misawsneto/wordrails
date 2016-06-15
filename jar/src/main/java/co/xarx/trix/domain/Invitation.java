@@ -17,10 +17,9 @@ import java.util.UUID;
 //@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "network_id"}))
 public class Invitation extends BaseEntity {
 
-	public Invitation(String baseUrl, boolean sendPlainPassword){
+	public Invitation(String baseUrl){
 		this.hash = UUID.randomUUID().toString();
 		this.invitationUrl = "http://" + baseUrl + "/access/invitation?hash=" + hash;
-		this.sendPlainPassword = sendPlainPassword;
 	}
 
 	@Id
@@ -34,9 +33,6 @@ public class Invitation extends BaseEntity {
 
 	@Transient
 	public String invitationUrl;
-
-	@Transient
-	public boolean sendPlainPassword;
 
 	@OneToOne
 	@JoinColumn(name = "person_id")
