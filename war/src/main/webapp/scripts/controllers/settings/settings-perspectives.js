@@ -1,6 +1,8 @@
 app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog', '$mdToast', '$filter', '$translate', '$mdConstant', '$mdSidenav', 'station',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog, $mdToast, $filter, $translate, $mdConstant, $mdSidenav, station ){
 
+    // ---- init
+
 	$scope.togglePerspectives = buildToggler('perspective-list');
 
 	$scope.thisStation = station;
@@ -56,6 +58,10 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       $mdDialog.cancel();
     })
   }
+
+  // ------ init
+
+  // ------ dialogs
 
   $scope.showAddPerspectiveDialog = function(event){
     $scope.disabled = false;
@@ -122,6 +128,9 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
   $scope.showFeaturedPostsDialog = function(event){
     $scope.disabled = false;
+    var fRow = currentPerspective.termPerspectiveView.featuredRow;
+    if(fRow && fRow.cells.length > 0)
+      $scope.editingFeaturedRow = fRow ? angular.copy(fRow) : null; 
     
     $mdDialog.show({
       scope: $scope,        // use parent scope in template
@@ -194,6 +203,19 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     $scope.currentPerspective = perspective
   }
 
+  // -------- /dialogs
+
+  // ------ perspective operations
+    // $scope.editingFeaturedRow
+    $scope.perspectiveChanged = false;
+
+    $scope.applyFeaturedPost = function(){
+      $scope.perspectiveChanged = true;
+      $scope.currentPerspective.termPerspectiveView.featuredRow = $scope.editingFeaturedRow;
+
+    }
+  // ------ /perspective operations
+
   // -------- search post ---------
   $scope.postSearchCtrl = {
     'page': 0,
@@ -220,10 +242,6 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
         $scope.postSearchCtrl.allLoaded = true;
       })
     }
-  }
-
-  $scope.applyFeaturedPost = function(){
-    
   }
 
   var handleSuccess = function(posts, a,b){
