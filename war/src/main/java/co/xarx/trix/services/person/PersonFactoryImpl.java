@@ -37,9 +37,9 @@ public class PersonFactoryImpl implements PersonFactory {
 
 	@Override
 	public Person create(String name, String username, String email, String password) throws PersonAlreadyExistsException {
-		Assert.notNull(email);
-		Assert.notNull(username);
-		Assert.notNull(password);
+		Assert.hasText(email);
+		Assert.hasText(username);
+		Assert.hasText(password);
 		return createAndSavePerson(name, username, email, password);
 	}
 
@@ -64,8 +64,10 @@ public class PersonFactoryImpl implements PersonFactory {
 		try {
 			if (extraParam instanceof String) {
 				user = userFactory.create(person.getUsername(), (String) extraParam);
+				person.validated = false;
 			} else {
 				user = userFactory.create(person.getUsername(), (SocialUser) extraParam);
+				person.validated = true;
 			}
 		} catch (UserAlreadyExistsException e) {
 			user = userRepository.findUserByUsername(person.getUsername());
