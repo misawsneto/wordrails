@@ -45,6 +45,13 @@ app.controller('BookmarksCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$m
 						person.bookmarkPosts.splice(i, 1);
 					}
 				}
+
+				for (var i = $scope.app.person.bookmarkPosts.length - 1; i >= 0; i--) {
+					if($scope.app.person.bookmarkPosts[i] == post.id){
+						$scope.app.person.bookmarkPosts.splice(i, 1);
+					}
+				}
+
 				trix.putPerson(person).success(function(){
 					for (var i = $scope.postViews.length - 1; i >= 0; i--) {
 						if($scope.postViews[i].id == post.id){
