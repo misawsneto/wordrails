@@ -6,6 +6,7 @@ import co.xarx.trix.domain.AppleCertificate;
 import co.xarx.trix.domain.Notification;
 import co.xarx.trix.persistence.AppleCertificateRepository;
 import com.notnoop.apns.APNS;
+import com.notnoop.apns.ApnsNotification;
 import com.notnoop.apns.ApnsService;
 import org.eclipse.persistence.jpa.jpql.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,8 @@ public class APNSClient implements NotificationServerClient {
 				.instantDeliveryOrSilentNotification()
 				.build();
 
-		service.push(devices, payload);
+		Collection<? extends ApnsNotification> push = service.push(devices, payload);
+		System.out.println(push);
 	}
 
 	@Override
