@@ -361,7 +361,8 @@
 			"STATION_CREATION_SUCCESS": "Station was successfully created",
 			"STATION_REMOVED_SUCCESS": "Station was removed",
 			"perspective": {
-				"FIX_POST": "Fix a publication on this position",
+				"FIX_POST": "Fix publication",
+				"FIX_POST_MSG": "Fix a publication at position number ",
 				"ACTIVATE_PERSPECTIVE_MSG": "Are you sure you wish to activate this perspective? This action will affect how the content is displayed on all devices.",
 				"REMOVE_PERSPECTIVE_MSG": "Are you sure you wish to remove this perspective? This operation cannot be undone.",
 				"PERSPECTIVE_ORDER_MSG": "Drag and Sort"

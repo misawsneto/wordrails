@@ -147,9 +147,9 @@
 								                  <div ng-if="cell.showOptions" ng-class="{'p': !isMobile}" style="position: absolute; top:0; bottom:0; right:0; left:0;">
 																		<div class="display-table text-center" style="background: rgba(0,0,0,0.5); height:100%; width: 100%;">
 																			<div class="display-cell v-m">
-																				<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent">
+																				<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent" ng-click="showPinPostDialog($event, $index, cell)">
 																				  <md-tooltip md-direction="top">
-																				    {{'settings.station.perspective.FIX_POST' | translate}}
+																				    {{'settings.station.perspective.FIX_POST_MSG' | translate}} {{$index + 1}}
 																				  </md-tooltip>
 																				  <i class="mdi2-pin i-24"></i>
 																				</md-button>
@@ -459,10 +459,59 @@
   </md-dialog>
 </script>
 
-<script type="text/ng-template" id="featured-post-dialog.html">
+<script type="text/ng-template" id="pin-post-dialog.html">
   <md-dialog aria-label="change action">
     <md-content style="background: white">
-      <div class="w-900" 
+      <div class="w-600">
+      	<div class="p p-b-0 text-md-l font-bold">
+      		<i class="mdi2-pin p-r-sm i-24 icon v-m"></i>
+      		{{'settings.station.perspective.FIX_POST_MSG' | translate}} {{postToPinIndex + 1}}
+      	</div>
+      	<div class="search-with-filter m md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2 m-b-md">
+          <form ng-submit="doSearchPosts()">
+            <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-md-l bg-t" ng-model="searchQuery">
+          </form>
+        </div>
+				<div id="search-results" class="md-background-hue-1 background pos-rlt inline b-t" style="height:300px; max-height:300px; overflow: auto;">
+          <ul class="list-group bg-t m-b-lg b-l" data-collapsible="expandable" infinite-scroll="paginateSearch()" infinite-scroll-distance="1" infinite-scroll-container='"#search-results"' >
+            <li style="padding: 0; border-bottom: none; border-top: none;" class="no-border-radius list-group-item no-bg b-l-2x r-0 fade-in-hover-container" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in postSearchResults" ng-click="activatePublication(publication);" style="cursor: inherit;" ng-style="publication.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null">
+              <div class="p-sm">
+                <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
+                  <div preload-bg-image="{{app.getImageLink(publication, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
+                  </div>
+                </a>
+                <div class="clear font-thin">
+                  <div class="m-r-xxl">
+                    <a ng-href="{{app.getPublicationUrl(publication.stationId, publication)}}" target="_blank" class="text-u-l-hover font-bold block text-md">{{publication.title}}</a>
+                    <div  class="text-sm font-normal p-v-sm text-muted">
+                      {{app.getLocalTime(publication.date)}}
+                    </div>
+                    {{publication.snippet | characters:120}}
+                  </div>
+                  <div class="list-group-item b-n p-sm p-b-0 inline v-m fade-in-hover-container">
+                    <a href class="pull-left m-r-sm">
+                      <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1 text-center md-primary-hue-1 background">
+                        <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-16" style="top: 16%;position: relative;"></i>
+                      </div>
+                    </a>
+                    <div class="clear font-normal p-xs">
+                      <a href class="font-500 block">{{publication.authorName}}</a>
+                    </div>
+                  </div>
+                  <md-button class="fade-in-hover-el pull-right" ng-click="addPinPost(publication)">
+                  	{{'settings.station.perspective.FIX_POST' | translate}}
+                  </md-button>
+                </div>
+              </div>
+              <md-divider></md-divider>
+            </li>
+          </ul>
+        </div>
+        <md-divider></md-divider>
+        <div class="clear">
+        	<md-button class="pull-right font-500" ng-click="cancel();" translate="titles.CANCEL">
+        	</md-button>
+        </div>
       </div>
     </md-content>
   </md-dialog>
@@ -471,7 +520,7 @@
 <script type="text/ng-template" id="featured-post-dialog.html">
   <md-dialog aria-label="change action">
     <md-content style="background: white">
-      <div class="w-900" 
+      <div class="w-900">
 
       	<div class="p text-u-c font-bold text-md-l">
       		<i class="mdi2-view-carousel p-r-sm i-24 icon v-m"></i>{{'titles.FEATURED_POSTS' | translate}}

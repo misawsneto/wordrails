@@ -36,7 +36,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
   var loadPerspectives = function(){
     trix.getStationStationPerspectives($scope.thisStation.id).success(function(response){
       $scope.stationPerspectives = response.stationPerspectives;
-        $scope.stationPerspectives && $scope.stationPerspectives.forEach(function(perspective, index){
+        $scope.stationPerspectives && $scope.stationPerspectives.forEach(function(perspective){
           if(perspective.id == $scope.thisStation.defaultPerspectiveId){
             perspective.selected = true;
             $scope.currentPerspective = perspective;
@@ -148,10 +148,11 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
   }
 
   $scope.postToPinIndex = null;
-  $scope.postToPin = null;
-  $scope.showPinPostDialog = function(event, index, post){
+  $scope.cellToPin = null;
+  $scope.showPinPostDialog = function(event, index, cellToPin){
     $scope.resetPostSearch();
-    $scope.postToPin = post;
+    $scope.cellToPin = cellToPin;
+    $scope.postToPinIndex = index;
     $scope.disabled = false;
     $mdDialog.show({
       scope: $scope,        // use parent scope in template
@@ -160,7 +161,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       },
       preserveScope: true, // do not forget this if use parent scope
       controller: $scope.app.defaultDialog,
-      templateUrl: 'featured-post-dialog.html',
+      templateUrl: 'pin-post-dialog.html',
       parent: angular.element(document.body),
       targetEvent: event,
       clickOutsideToClose:true
@@ -230,6 +231,15 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       }
 
       $scope.editingFeaturedRow.cells.push({postView: post})
+    }
+
+    $scope.addPinPost = function(postView){
+      $scope.cellToPin.postView = postView;
+      $scope.cellToPin.fixed = true;
+      $timeout(function(){
+        $scope.reloadMasonry();
+      },1000);
+      $mdDialog.cancel();
     }
 
     $scope.removeFeaturedPost = function(post){
