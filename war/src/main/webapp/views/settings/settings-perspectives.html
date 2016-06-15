@@ -514,11 +514,16 @@
 					        dnd-effect-allowed="move"
 					        dnd-selected="models.selected = cell" class="pos-rlt">
 
-	          		<div class="md-whiteframe-z1 p m pos-rlt" >
+	          		<div class="md-whiteframe-z1 p m pos-rlt drag fade-in-hover-container">
 		        			<div class="pos-abt top-0 right-0 font-bold p-sm">
 	                  #{{$index + 1}}
 	                </div>
 	          			<span class="text-ellipsis font-bold block text-md">{{cell.postView.title}}</span>
+	          			<div class="pos-abt top-0 left-0 font-bold fade-in-hover-el">
+	                  <md-button class="md-fab md-warn md-mini" ng-click="removeFeaturedPost(cell.postView)">
+	                  	<i class="mdi2-close i-24"></i>
+	                  </md-button>
+	                </div>
 	          		</div>
 	          	</li>
           	</ul>

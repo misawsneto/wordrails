@@ -231,6 +231,16 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
       $scope.editingFeaturedRow.cells.push({postView: post})
     }
+
+    $scope.removeFeaturedPost = function(post){
+      if($scope.editingFeaturedRow && $scope.editingFeaturedRow.cells && $scope.editingFeaturedRow.cells.length > 0){
+        var cells = $scope.editingFeaturedRow.cells;
+        for (var i = cells.length - 1; i >= 0; i--) {
+          if(cells[i].postView && cells[i].postView.id === post.id)
+            cells.splice(i, 1);
+        }
+      }
+    }
   // ------ /perspective operations
 
   // -------- search post ---------
