@@ -121,16 +121,15 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
   }
 
   $scope.editingFeaturedRow = null;
-  $scope.$watch('currentPerspective.termPerspectiveView.featuredRow', function(newValue, oldValue, scope) {
-    if(newValue && newValue.cells.length > 0)
-      $scope.editingFeaturedRow = newValue ? angular.copy(newValue) : null; 
-  });
 
   $scope.showFeaturedPostsDialog = function(event){
     $scope.disabled = false;
-    var fRow = currentPerspective.termPerspectiveView.featuredRow;
+    $scope.resetPostSearch();
+    var fRow = $scope.currentPerspective.termPerspectiveView.featuredRow;
     if(fRow && fRow.cells.length > 0)
-      $scope.editingFeaturedRow = fRow ? angular.copy(fRow) : null; 
+      $scope.editingFeaturedRow = fRow ? angular.copy(fRow) : null;
+    else
+      $scope.editingFeaturedRow = {cells: []}
     
     $mdDialog.show({
       scope: $scope,        // use parent scope in template
@@ -150,7 +149,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
   $scope.postToPinIndex = null;
   $scope.postToPin = null;
-  $scope.showFeaturedPostsDialog = function(event, index, post){
+  $scope.showPinPostDialog = function(event, index, post){
     $scope.resetPostSearch();
     $scope.postToPin = post;
     $scope.disabled = false;
@@ -201,6 +200,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
   $scope.setCurrentPerspective = function(perspective){
     $scope.currentPerspective = perspective
+    reloadCarousel();
   }
 
   // -------- /dialogs
@@ -213,6 +213,10 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       $mdDialog.cancel();
       $scope.perspectiveChanged = true;
       $scope.currentPerspective.termPerspectiveView.featuredRow = $scope.editingFeaturedRow;
+      reloadCarousel();
+    }
+
+    var reloadCarousel = function(){
       $scope.reloadingCarousel = true;
       $timeout(function(){
         $scope.reloadingCarousel = false;
@@ -223,10 +227,6 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       if(!$scope.app.hasImage(post)){
         $scope.app.showErrorToast('Apenas publicações que contém imagens podem ser adicionadas aos destaques');
         return;
-      }
-
-      if(!$scope.editingFeaturedRow){
-        $scope.editingFeaturedRow = {cells: []};
       }
 
       $scope.editingFeaturedRow.cells.push({postView: post})

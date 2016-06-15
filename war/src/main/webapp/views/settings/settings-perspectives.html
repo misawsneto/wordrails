@@ -49,6 +49,12 @@
 				            		<md-tab-body>
 				            			<md-content class="o-f-x-h">
 
+				            				<div class="p-sm text-center" ng-if="!currentPerspective.termPerspectiveView.featuredRow || !currentPerspective.termPerspectiveView.featuredRow.cells">
+				            					<md-button class="md-accent md-fab md-mini" ng-click="showFeaturedPostsDialog($event)">
+				            						<i class="mdi2-view-carousel i-24 "></i>
+				            					</md-button>
+				            				</div>
+
 														<div class="clear pos-rlt p" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells && !isMobile && !reloadingCarousel"
 														ng-mouseenter="currentPerspective.termPerspectiveView.featuredRow.showOptions=true" ng-mouseleave="currentPerspective.termPerspectiveView.featuredRow.showOptions=false">
 															<ul class="pgwSlider" pgw-slider="{verticalCentering:true, maxHeight: 400, selectionMode: 'click', intervalDuration: 7000 }">
@@ -174,10 +180,6 @@
 				              			<div class="row no-margin" reload-on-show masonry="{transitionDuration: 0}">
 						                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12': isMobile, 'p-0 p-b': ($first && isMobile)}" ng-repeat="cell in row.cells">
 																
-																<md-button ng-if="cell.id || cell.fixed" class="opacity-09 text-white pos-abt top-0 left-0 md-icon-button m-r-t z-index-5" ng-style="{'margin': !isMobile ? '16px' : '0' }">
-																	<i class="i-24 mdi2-pin icon-text-shadow"></i>
-																</md-button>
-
 						                    <div class="w-full no-margin" ng-class="{'md-whiteframe-z1 card': !isMobile}">
 						                      <div class="item" ng-if="!isMobile || $first">
 						                      	<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="h-200 img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
