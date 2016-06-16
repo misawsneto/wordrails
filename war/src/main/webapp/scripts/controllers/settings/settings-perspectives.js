@@ -334,6 +334,14 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
   }
   // -------- /search post --------
 
+  $scope.previewMode = false
+  $scope.getSectionGridStyle = function(){
+    if(!$scope.previewMode)
+      return {'border': 'rgba(85, 85, 85, 0.5) 1px dashed'}
+    else 
+      return {};
+  }
+
 settingsPerspectivesCtrl = $scope;
 
 }]);
