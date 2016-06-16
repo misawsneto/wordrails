@@ -1189,7 +1189,7 @@ angular.module('app')
             }else{
               if(!$scope.app.person.bookmarkPosts)
                 $scope.app.person.bookmarkPosts = [];
-              $scope.app.person.bookmarkPosts.push(post.id)
+              $scope.app.person.bookmarkPosts.unshift(post.id)
             }
             $mdDialog.cancel();
             $scope.disabled = $scope.bookmarkApply = false;

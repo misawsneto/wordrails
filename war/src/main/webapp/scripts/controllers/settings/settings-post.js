@@ -867,8 +867,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	    if(oldVal && (('title' in oldVal) || ('body' in oldVal))){
 	      // post has been edited
 
-	      var newBody = newVal.body ? newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
-	      var oldBody = oldVal.body ? oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+	      var newBody = newVal && newVal.body ? newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+	      var oldBody = oldVal && oldVal.body ? oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
 
 	      if(newVal && (newVal.title !== oldVal.title || newBody !== oldBody)){
 	        
@@ -879,7 +879,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	        	} 
 	        	if($scope.app.checkState() == 2 && $scope.automaticSave){
 	        		AUTO_SAVE = $timeout(function(){
-	        			$scope.saveAsDraft(null, true)
+	        			if($scope.app.checkState() == 2)
+	        				$scope.saveAsDraft(null, true)
 	        		},10000)
 	        	}
 	        }
