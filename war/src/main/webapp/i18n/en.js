@@ -299,6 +299,7 @@
 			"NEW_POST": "New publication",
 			"NOTIFY_STATION_USERS_DESC": "Notify station users on their devices.",
 			"NOTIFY_USERS": "Notify users",
+			"PUBLISHED_AS_DRAFT": "Publicado como rascunho",
 			"messages":{
 				"PAGE_CHANGE_ALERT": "You have edited your publication and there's unsaved content.",
 				"CLEAR_CONTENT_MSG": "Clear all publication content.",

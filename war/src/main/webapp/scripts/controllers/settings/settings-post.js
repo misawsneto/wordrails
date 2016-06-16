@@ -1077,8 +1077,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}
 
 		trix.postPost(post).success(function(response){
-			if($scope.app.checkState == 2)
-				$scope.app.showSuccessToast($filter('translate')('settings.post.UPDATE_SUCCESS'));
+			if($scope.app.checkState() == 2)
+				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISHED_AS_DRAFT'));
 			else
 				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
 
