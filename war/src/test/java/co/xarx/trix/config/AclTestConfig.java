@@ -26,7 +26,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
@@ -68,11 +67,6 @@ public class AclTestConfig {
 	}
 
 	@Bean
-	public PermissionGrantingStrategy aclPermissionGrantingStrategy() throws IOException {
-		return new BitMaskPermissionGrantingStrategy(aclAuditLogger());
-	}
-
-	@Bean
 	public AuditLogger aclAuditLogger() {
 		return new ConsoleAuditLogger();
 	}
@@ -86,7 +80,7 @@ public class AclTestConfig {
 
 	@Bean
 	public PermissionGrantingStrategy permissionGrantingStrategy() {
-		return new BitMaskPermissionGrantingStrategy(aclAuditLogger());
+		return new BitMaskPermissionGrantingStrategy();
 	}
 
 

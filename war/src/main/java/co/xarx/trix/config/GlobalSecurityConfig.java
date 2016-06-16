@@ -74,11 +74,6 @@ public class GlobalSecurityConfig extends GlobalMethodSecurityConfiguration {
 	}
 
 	@Bean
-	public PermissionGrantingStrategy aclPermissionGrantingStrategy() throws IOException {
-		return new BitMaskPermissionGrantingStrategy(aclAuditLogger());
-	}
-
-	@Bean
 	public AuditLogger aclAuditLogger() {
 		return new ConsoleAuditLogger();
 	}
@@ -97,7 +92,7 @@ public class GlobalSecurityConfig extends GlobalMethodSecurityConfiguration {
 
 	@Bean
 	public PermissionGrantingStrategy permissionGrantingStrategy() {
-		return new BitMaskPermissionGrantingStrategy(aclAuditLogger());
+		return new BitMaskPermissionGrantingStrategy();
 	}
 
 

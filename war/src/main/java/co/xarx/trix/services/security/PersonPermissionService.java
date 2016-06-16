@@ -41,11 +41,13 @@ public class PersonPermissionService {
 		for (ObjectIdentity oi : acls.keySet()) {
 			Acl acl = acls.get(oi);
 			int stationId = Math.toIntExact((long) oi.getIdentifier());
-			AccessControlEntry ace = aclService.findAce(acl.getEntries(), sid);
+			List<AccessControlEntry> aces = aclService.findAce(acl.getEntries(), sid);
 
-			if (ace != null) {
-				PermissionData permissionData = aclService.getPermissionData(ace.getPermission());
-				result.getStationPermissions().add(result.new Permission(stationId, permissionData));
+			if (aces != null) {
+				for (AccessControlEntry ace : aces) {
+					PermissionData permissionData = aclService.getPermissionData(ace.getPermission());
+					result.getStationPermissions().add(result.new Permission(stationId, permissionData));
+				}
 			}
 		}
 
@@ -73,11 +75,13 @@ public class PersonPermissionService {
 		UserPermissionData result = new UserPermissionData();
 
 		MutableAcl acl = aclService.findAcl(stationId);
-		AccessControlEntry ace = aclService.findAce(acl.getEntries(), sid);
+		List<AccessControlEntry> aces = aclService.findAce(acl.getEntries(), sid);
 
-		PermissionData permissionData = aclService.getPermissionData(ace.getPermission());
-		UserPermissionData.Permission permission = result.new Permission(stationId, permissionData);
-		result.getStationPermissions().add(permission);
+		for (AccessControlEntry ace : aces) {
+			PermissionData permissionData = aclService.getPermissionData(ace.getPermission());
+			UserPermissionData.Permission permission = result.new Permission(stationId, permissionData);
+			result.getStationPermissions().add(permission);
+		}
 
 		return result;
 	}
