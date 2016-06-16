@@ -12,17 +12,6 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
       station.main = true;
 		}
 
-    $scope.createSlugsFromName = function(){
-      $scope.app.stations && $scope.app.stations.forEach(function(station){
-        trix.getStation(station.id).success(function(response){
-          if(!response.stationSlug){
-            response.stationSlug = response.name.toSlug();
-            trix.putStation(response)
-          }
-        })
-      });
-    }
-
     $scope.editStation = function(event, station){
       $scope.app.newStation = false;
       $scope.app.editingStation = true;
@@ -84,7 +73,9 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
     $scope.app.updateStation = function(station){
       station.network = TRIX.baseUrl + "/api/networks/" + $scope.app.network.id;
       if(station.name == null || station.name.trim() !== ''){
-        trix.putStation(station).success(function(stationId){
+        var stationCopy = angular.copy(station);
+        stationCopy.logo = null;
+        trix.putStation(stationCopy).success(function(stationId){
           $scope.app.stations.forEach(function(st){
             if(st.id === station.id){
               angular.extend(st, station)
@@ -142,7 +133,6 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
       $scope.showStationConfigDialog(event)
     }
 
-    //$scope.createSlugsFromName();
 
     settingsStationsCtrl = $scope;
 	}])
