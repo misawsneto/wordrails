@@ -1075,6 +1075,12 @@ angular.module('app')
 
         post.newComment = '';
         post.postComment = function(postObj, body){
+
+          if($scope.app.person.id == 0){
+            $scope.app.signInButton();
+            return;
+          }
+
           postObj.newComment = '';
           var comment = {
             post: PostDto.getSelf(postObj),
@@ -1117,6 +1123,10 @@ angular.module('app')
 
       $scope.app.newComment = '';
       $scope.app.postComment = function(post, body){
+        if($scope.app.person.id == 0){
+          $scope.app.signInButton();
+          return;
+        }
         var comment = {
           post: PostDto.getSelf(post),
           author: PersonDto.getSelf($scope.app.person),
@@ -1177,6 +1187,11 @@ angular.module('app')
       $scope.bookmarkApply = false;
       $scope.app.toggleBookmark = function(post){
 
+        if($scope.app.person.id == 0){
+          $scope.app.signInButton();
+          return;
+        }
+
         if(!$scope.bookmarkApply){
           $scope.bookmarkApply = true;
           trix.toggleBookmark(post.id).success(function(person){
@@ -1208,6 +1223,11 @@ angular.module('app')
 
       $scope.recommendApply = false;
       $scope.app.toggleRecommend = function(post){
+
+        if($scope.app.person.id == 0){
+          $scope.app.signInButton();
+          return;
+        }
 
         if(!$scope.recommendApply){
           $scope.recommendApply = true;

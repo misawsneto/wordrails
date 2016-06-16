@@ -5,7 +5,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
 	$scope.togglePerspectives = buildToggler('perspective-list');
 
-	$scope.thisStation = station;
+	$scope.thisStation = angular.copy(station);
 
 		function buildToggler(navID) {
 	    return function() {
@@ -54,9 +54,20 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       perspective.termPerspectiveView.ordinaryRows && perspective.termPerspectiveView.ordinaryRows.forEach(function(row){
         row.category = $scope.getCategory(row.termId);
       })
+      loadCategories(perspective.termPerspectiveView);
     }).error(function(){
       $mdDialog.cancel();
     })
+  }
+
+  var loadCategories = function(termPerspectiveView){
+    termPerspectiveView.allCategories = angular.copy($scope.thisStation.categories);
+    termPerspectiveView.ordinaryRows && termPerspectiveView.ordinaryRows.forEach(function(row, index){
+      termPerspectiveView.allCategories && termPerspectiveView.allCategories.forEach(function(category, index){
+        if(row.termId == category.id)
+          category.checked = true;
+      });
+    });
   }
 
   // ------ init
@@ -170,6 +181,27 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     })
   }
 
+  $scope.showCategoriesConfigDialog = function(event){
+    $scope.disabled = false;
+    $mdDialog.show({
+      scope: $scope,        // use parent scope in template
+      closeTo: {
+        bottom: 1500
+      },
+      preserveScope: true, // do not forget this if use parent scope
+      controller: $scope.app.defaultDialog,
+      templateUrl: 'categories-config-dialog.html',
+      parent: angular.element(document.body),
+      targetEvent: event,
+      clickOutsideToClose:true
+      // onComplete: function(){
+        // }
+    })
+  }
+  // -------- /dialogs
+
+  // ------ perspective operations
+
   $scope.addPerspective = function(perspectiveName){
     var stationPerspective = {};
     stationPerspective.name = perspectiveName;
@@ -204,9 +236,6 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     reloadCarousel();
   }
 
-  // -------- /dialogs
-
-  // ------ perspective operations
     // $scope.editingFeaturedRow
     $scope.perspectiveChanged = false;
 
@@ -255,7 +284,6 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
     $scope.updatePerspecitve = function(){
       var perspective = angular.copy($scope.currentPerspective.termPerspectiveView);
-      perspective.ordinaryRows = null;
 
       if(perspective.featuredRow && perspective.featuredRow.cells){
         row = perspective.featuredRow
@@ -264,6 +292,14 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
           row.cells[i].index = i;
         };
       }
+
+      perspective.ordinaryRows && perspective.ordinaryRows.forEach(function(row, index){
+        row.index = index;
+        for (var i = row.cells.length - 1; i >= 0; i--) {
+          if(!(row.cells[i].id || row.cells[i].new))
+            row.cells.splice(i, 1)
+        };
+      });
 
       if(perspective.homeRow && perspective.homeRow.cells){
         row = perspective.homeRow
@@ -333,6 +369,74 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     $scope.paginateSearch();
   }
   // -------- /search post --------
+  // -------- category definition ---------
+  
+   function addCategory(rows, term){
+      var addedRow ={
+        index: rows.length,
+        termId: term.id,
+        termName: term.name,
+        category: {name: term.name, id: term.id},
+        termPerspectiveId: $scope.currentPerspective.termPerspectiveView.id,
+        type: 'O'
+      }
+      term.checked = true;
+      trix.getRowView($scope.currentPerspective.id, $scope.currentPerspective.termPerspectiveView.id, term.id, 0, 10)
+          .success(function(response){
+            if(response.cells && response.cells.length > 0){
+                   addedRow.cells = response.cells;
+                   rows.push(addedRow)
+            }else{
+              rowViewNotFound(rows, term, addedRow);
+            }
+        }).error(function(){
+          rowViewNotFound(rows, term, addedRow) 
+        })
+    }
+
+    var rowViewNotFound = function(rows, term, addedRow){
+      trix.findPostsByTerm(term.id, 0, 10).success(function(posts){
+        addedRow.cells = []
+        posts && posts.forEach(function(post, index){
+           addedRow.cells.push({
+             'index': index,
+             'postView': post,
+           });
+        });
+        rows.push(addedRow);
+      })
+    }
+
+    $scope.removeCategory = function(termId){
+      var perspective = $scope.currentPerspective.termPerspectiveView
+      if(perspective.ordinaryRows){
+        var rows = perspective.ordinaryRows
+        for (var i = rows.length - 1; i >= 0; i--) {
+          if(rows[i].termId == termId)
+            rows.splice(i, 1)
+        };
+      }
+
+      $scope.currentPerspective.termPerspectiveView.allCategories && 
+      $scope.currentPerspective.termPerspectiveView.allCategories.forEach(function(category, index){
+        if(category.id == termId && category.checked)
+          category.checked = false;
+      });
+
+      perspective.ordinaryRows && perspective.ordinaryRows.forEach(function(row, index){
+        row.index = index;
+      });
+    }
+
+    $scope.checkCategory = function(term){
+      var perspective = $scope.currentPerspective.termPerspectiveView
+      if(term.checked)
+        addCategory(perspective.ordinaryRows, term);
+      else
+        $scope.removeCategory(term.id)
+    }
+
+  // -------- /category deifinition --------
 
 settingsPerspectivesCtrl = $scope;
 
