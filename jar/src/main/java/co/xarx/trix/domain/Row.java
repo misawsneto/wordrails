@@ -1,6 +1,7 @@
 package co.xarx.trix.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Row extends BaseEntity implements Comparable<Row> {
 	public static final String FEATURED_ROW = "F";
 	public static final String ORDINARY_ROW = "O";

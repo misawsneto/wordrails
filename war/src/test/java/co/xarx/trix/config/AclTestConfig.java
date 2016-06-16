@@ -117,17 +117,17 @@ public class AclTestConfig {
 		return aclService;
 	}
 
-	@Bean
-	public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
-		DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
-		try {
-			DataSource dataSource = context.getBean(DataSource.class);
-			expressionHandler.setPermissionEvaluator(permissionEvaluator(dataSource));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return expressionHandler;
-	}
+//	@Bean
+//	public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
+//		DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+//		try {
+//			DataSource dataSource = context.getBean(DataSource.class);
+//			expressionHandler.setPermissionEvaluator(permissionEvaluator(dataSource));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		return expressionHandler;
+//	}
 
 	@Bean
 	public SecurityEvaluationContextExtension securityEvaluationContextExtension() {

@@ -559,8 +559,8 @@ angular.module('app')
         if(oldVal && (('title' in oldVal) || ('body' in oldVal))){
           // post has been edited
 
-          var newBody = newVal.body ? newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
-          var oldBody = oldVal.body ? oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+          var newBody = newVal && newVal.body ? newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+          var oldBody = oldVal && oldVal.body ? oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
 
           if(newVal && (newVal.title !== oldVal.title || newBody !== oldBody)){
             // set post changed so $scope.watch can see app.postObjectChanged
@@ -1075,6 +1075,12 @@ angular.module('app')
 
         post.newComment = '';
         post.postComment = function(postObj, body){
+
+          if($scope.app.person.id == 0){
+            $scope.app.signInButton();
+            return;
+          }
+
           postObj.newComment = '';
           var comment = {
             post: PostDto.getSelf(postObj),
@@ -1117,6 +1123,10 @@ angular.module('app')
 
       $scope.app.newComment = '';
       $scope.app.postComment = function(post, body){
+        if($scope.app.person.id == 0){
+          $scope.app.signInButton();
+          return;
+        }
         var comment = {
           post: PostDto.getSelf(post),
           author: PersonDto.getSelf($scope.app.person),
@@ -1177,6 +1187,11 @@ angular.module('app')
       $scope.bookmarkApply = false;
       $scope.app.toggleBookmark = function(post){
 
+        if($scope.app.person.id == 0){
+          $scope.app.signInButton();
+          return;
+        }
+
         if(!$scope.bookmarkApply){
           $scope.bookmarkApply = true;
           trix.toggleBookmark(post.id).success(function(person){
@@ -1189,7 +1204,7 @@ angular.module('app')
             }else{
               if(!$scope.app.person.bookmarkPosts)
                 $scope.app.person.bookmarkPosts = [];
-              $scope.app.person.bookmarkPosts.push(post.id)
+              $scope.app.person.bookmarkPosts.unshift(post.id)
             }
             $mdDialog.cancel();
             $scope.disabled = $scope.bookmarkApply = false;
@@ -1208,6 +1223,11 @@ angular.module('app')
 
       $scope.recommendApply = false;
       $scope.app.toggleRecommend = function(post){
+
+        if($scope.app.person.id == 0){
+          $scope.app.signInButton();
+          return;
+        }
 
         if(!$scope.recommendApply){
           $scope.recommendApply = true;
