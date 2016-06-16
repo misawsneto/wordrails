@@ -73,4 +73,8 @@ app.controller('BookmarksCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$m
 			})
 		}
 
+	bookmarksCtrl = $scope;
+
 }]);
+
+var bookmarksCtrl = null;

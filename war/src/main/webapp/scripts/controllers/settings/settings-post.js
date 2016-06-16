@@ -867,25 +867,34 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	    if(oldVal && (('title' in oldVal) || ('body' in oldVal))){
 	      // post has been edited
 
-	      var newBody = newVal.body ? newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
-	      var oldBody = oldVal.body ? oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+	      var newBody = newVal && newVal.body ? newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+	      var oldBody = oldVal && oldVal.body ? oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
 
 	      if(newVal && (newVal.title !== oldVal.title || newBody !== oldBody)){
 	        
-	        if($scope.selectedStation && $scope.app.getTermList($scope.selectedStation.termTree)){ // save automatic
-	        	// window.console && console.log($scope..selectedStation, $scope.app.getTermList($scope.selectedStation.termTree))
-	        	if(AUTO_SAVE){
-	        		$timeout.cancel(AUTO_SAVE);
-	        	} 
-	        	if($scope.app.checkState() == 2 && $scope.automaticSave){
-	        		AUTO_SAVE = $timeout(function(){
-	        			$scope.saveAsDraft(null, true)
-	        		},10000)
-	        	}
-	        }
+	        autoSaveDraft();
 	      }
 	    }
 	  }, true);
+
+	$scope.$watch('selectedStation', function(newVal, oldVal) {
+		autoSaveDraft();
+	});
+
+	var autoSaveDraft = function(){
+		if($scope.selectedStation && $scope.app.getTermList($scope.selectedStation.termTree)){ // save automatic
+	    	// window.console && console.log($scope..selectedStation, $scope.app.getTermList($scope.selectedStation.termTree))
+	    	if(AUTO_SAVE){
+	    		$timeout.cancel(AUTO_SAVE);
+	    	} 
+	    	if($scope.app.checkState() == 2 && $scope.automaticSave){
+	    		AUTO_SAVE = $timeout(function(){
+	    			if($scope.app.checkState() == 2 && $scope.automaticSave && ($scope.selectedStation && $scope.app.getTermList($scope.selectedStation.termTree)))
+	    				$scope.saveAsDraft(null, true)
+	    		},10000)
+	    	}
+	    }
+	}
 
 	$scope.restoreRevision = function(post){
 		$scope.app.showLoadingProgress();
@@ -1076,8 +1085,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}
 
 		trix.postPost(post).success(function(response){
-			if($scope.app.checkState == 2)
-				$scope.app.showSuccessToast($filter('translate')('settings.post.UPDATE_SUCCESS'));
+			if($scope.app.checkState() == 2)
+				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISHED_AS_DRAFT'));
 			else
 				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
 
