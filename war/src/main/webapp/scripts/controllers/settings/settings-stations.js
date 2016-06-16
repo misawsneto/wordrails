@@ -31,6 +31,7 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
     }
 
     $scope.showStationConfigDialog = function(event){
+      $scope.disabled = false;
       $mdDialog.show({
         scope: $scope,        // use parent scope in template
           closeTo: {
@@ -68,10 +69,10 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
     $scope.app.createStation = function(station){
       station.network = TRIX.baseUrl + "/api/networks/" + $scope.app.network.id;
       if(station.name == null || station.name.trim() !== ''){
-        trix.postStation(station).success(function(stationId, stations, headers){
+        trix.postStation(station).success(function(st){
           $scope.app.showSuccessToast($filter('translate')('settings.station.STATION_CREATION_SUCCESS'))
           $mdDialog.cancel();
-          trix.getStation(stationId).success(function(stationResponse){
+          trix.getStation(st.id).success(function(stationResponse){
             $scope.app.stations.push(stationResponse);
           })
         });
@@ -83,7 +84,7 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
     $scope.app.updateStation = function(station){
       station.network = TRIX.baseUrl + "/api/networks/" + $scope.app.network.id;
       if(station.name == null || station.name.trim() !== ''){
-        trix.putStation(station).success(function(stationId, stations, headers){
+        trix.putStation(station).success(function(stationId){
           $scope.app.stations.forEach(function(st){
             if(st.id === station.id){
               angular.extend(st, station)
@@ -98,6 +99,7 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
     }
 
     $scope.showRemoveStationDialog = function(station){
+      $scope.disabled = false;
       $scope.app.stationObj = station;
       $mdDialog.show({
         scope: $scope,        // use parent scope in template
@@ -117,7 +119,7 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
     }
 
     $scope.app.removeStation = function(id){
-      trix.forceDeleteStation(id).success(function(response, stations, headers){
+      trix.forceDeleteStation(id).success(function(response){
         $scope.app.showSuccessToast($filter('translate')('settings.station.STATION_REMOVED_SUCCESS'))
         $mdDialog.cancel();
         for(var i = $scope.app.stations.length - 1; i >= 0; i--) {

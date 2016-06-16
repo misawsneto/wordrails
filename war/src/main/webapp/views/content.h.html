@@ -172,17 +172,17 @@
   </div>
   <!-- Content -->
   <div class="box-row">
-    <md-toolbar md-scroll-shrink style="min-height: 50px;" ng-class="{'hide':$state.includes('app.search')}">
+    <md-toolbar md-scroll-shrink style="min-height: 50px;" class="" ng-class="{'hide':$state.includes('app.search') || $state.includes('app.bookmarks')}">
       <div class="md-primary-default background md-whiteframe-z1">
         <div class="custom-header container" style="min-height: 50px;">
-          <ul class="nav nav-lines nav-md no-bg animated text-base material-top-menu" ng-class="{'o-f-h fadeOut': app.loadingTabs, 'fadeIn': !app.loadingTabs}" df-tab-menu menu-control="{{menu2.navigationState}}" style="height: 52px">
-            <li class="material-top-menu-item" 
+          <ul class="nav nav-lines nav-md no-bg animated text-base material-top-menu" ng-class="{'o-f-h fadeOut': app.loadingTabs}" df-tab-menu menu-control="{{menu2.navigationState}}" style="height: 52px">
+            <li class="material-top-menu-item animated fadeIn" 
              ng-class="{'active': app.activeCategory.id === category.id}" md-ink-ripple data-ng-repeat="category in app.perspectiveTerms" data-menu-item="{{category.item}}">
-              <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(app.termPerspectiveView.stationId).stationSlug, 'name': category.name})" >
+              <a ui-sref="app.station.categoryPage({'stationSlug': app.getStationById(app.termPerspectiveView.stationId).stationSlug, 'name': category.name})" >
                 <span>{{category.name}}</span>
               </a>
             </li>
-            <li data-more-menu-item style="position: relative; float: left; display: block; right: 50%;">
+            <li data-more-menu-item>
               <md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button" style="margin-top: 5px;" >
                 <i class="mdi2-chevron-double-down i-20"></i>
               </md-button>

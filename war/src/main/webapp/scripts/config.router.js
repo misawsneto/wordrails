@@ -36,21 +36,21 @@ angular.module('app')
           layout = '/views/layout.h.html';aside = '/views/aside.h.html';content= '/views/content.h.html';
         }
 
-        var stationDep = function($stateParams, $q, trix){
-          var deferred = $q.defer();
+        var stationDep = function($stateParams, trix){
           var stationObj = null;
+
           initData.stations.forEach(function(station){
             if(station.stationSlug == $stateParams.stationSlug)
               stationObj = station;
           })
 
           if(stationObj)
-            deferred.resolve(stationObj);
+            return stationObj;
           else
             document.location.href = '/404';
 
            
-          return deferred.promise;
+          return stationObj;
         }
 
         var createSettingsRoutes = function(){
@@ -727,29 +727,51 @@ angular.module('app')
                 url: '/',
                 templateUrl: '/views/pages/home.html',
                 data : { title: 'Home', folded: false },
-                resolve: load(['/scripts/controllers/app/page.js', '/scripts/custom-pgwslider.js', '/libs/jquery/pgwslider/pgwslider.min.css', 'angular-carousel']),
+                resolve: {
+                  station: function(){return null;},
+                  deps:load(['/scripts/controllers/app/page.js', '/scripts/custom-pgwslider.js', '/libs/jquery/pgwslider/pgwslider.min.css', 'angular-carousel']).deps
+                },
                 controller: 'PageCtrl'
-
               })
-              .state('app.stationHome', {
-                url: '/{stationSlug}/home',
+              .state('app.station', {
+                url: '/{stationSlug}',
+                abstract: true,
+                template: '<div ui-view></div>',
+                data : { title: 'Home', folded: false },
+                controller: 'StationCtrl',
+                resolve: {
+                  termPerspectiveView: function($stateParams, trix, $q){
+                    var deferred = $q.defer()
+                    var station = stationDep($stateParams);
+                    trix.findPerspectiveView(station.defaultPerspectiveId, null, null, 0, 10).success(function(termPerspective){
+                      termPerspective.station = station;
+                      deferred.resolve(termPerspective);
+                    }).error(function(){
+                      document.location.href = '/404';
+                    })          
+                    return deferred.promise;
+                  },
+                  deps:load(['/scripts/controllers/app/station.js']).deps
+                }
+              })
+              .state('app.station.stationHome', {
+                url: '/home',
                 templateUrl: '/views/pages/home.html',
                 data : { title: 'Home', folded: false },
-                resolve: load(['wu.masonry', '/scripts/controllers/app/page.js'])
+                resolve: {
+                  station: stationDep,
+                  deps:load(['/scripts/controllers/app/page.js', '/scripts/custom-pgwslider.js', '/libs/jquery/pgwslider/pgwslider.min.css', 'angular-carousel']).deps
+                },
+                controller: 'PageCtrl'
               })
-              .state('app.categoryPage', {
-                url: '/{stationSlug}/cat?name',
+              .state('app.station.categoryPage', {
+                url: '/cat?name',
                 templateUrl: '/views/pages/category.html',
                 data : { title: 'Category', folded: false },
                 controller: 'CategoryCtrl',
                 resolve: {
                   category: function($stateParams, $q, trix){
                     var deferred = $q.defer();
-                     // if(initData.person.id == 0){
-                     //   document.location.href = '/access/signin?next=/settings';
-                     // }else{
-                     //  deferred.resolve(initData);
-                     // }
                      initData.stations.forEach(function(station){
                         if(station.stationSlug == $stateParams.stationSlug)
                           station.categories && station.categories.forEach(function(category){
@@ -1266,8 +1288,8 @@ angular.module('app')
             }
 
             $stateProvider
-            .state('app.read', {
-                url: '/{stationSlug}/{postSlug}',
+            .state('app.station.read', {
+                url: '/{postSlug}',
                 templateUrl: '/views/pages/read.html',
                 data : { title: 'Read', folded: false },
                 controller: 'ReadCtrl',
@@ -1277,16 +1299,6 @@ angular.module('app')
                   deps:load(['wu.masonry', '/scripts/controllers/app/read.js', '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css']).deps
                 }
               })
-            .state('app.station', {
-                url: '/{stationSlug}',
-                templateUrl: '/views/pages/station.html',
-                data : { title: 'Station', folded: false },
-                controller: 'StationCtrl',
-                resolve: {
-                  station: stationDep,
-                  deps:load(['/scripts/controllers/app/station.js']).deps
-                }
-            })
           }
         
           function load(srcs, callback) {

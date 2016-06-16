@@ -73,6 +73,10 @@ app.controller('BookmarksCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$m
 			})
 		}
 
+	  $timeout(function(){
+		$scope.app.removeTermTabs();
+	  })
+
 	bookmarksCtrl = $scope;
 
 }]);

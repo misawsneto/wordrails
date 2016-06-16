@@ -118,7 +118,7 @@
                 </a>
                 <!-- News Image -->
                 <div class="news-image o-f-h">
-                    <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" ng-if="app.hasImage(publication);">
+                    <a ui-sref="app.station.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" ng-if="app.hasImage(publication);">
                     <div  preload-bg-image="{{app.getImageLink(publication, 'medium')}}" class="zoom-hover h-full bg-cover" style="min-height: 230px;">
                     </div>
                     </a>
@@ -130,7 +130,7 @@
                 </div>
                 <!-- News Description -->
                 <div class="news-description p-t p-b-sm p-h">
-                    <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})">
+                    <a ui-sref="app.station.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})">
                     <div class="news-title text-lg" style="min-height: 66px"><p clamp="2"> {{::publication.title}} </p></div>
                     <div class="news-content text-md"><p clamp="2">{{::publication.snippet}}</p></div>
                     </a>
@@ -143,7 +143,7 @@
   </div>
 </div>
 
-<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}" ng-click="scrollToTop();">
+<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated hide" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}" ng-click="scrollToTop();">
   <!-- <md-tooltip md-direction="top">
     {{'titles.REMOVE_ALL' | translate}}
   </md-tooltip> -->

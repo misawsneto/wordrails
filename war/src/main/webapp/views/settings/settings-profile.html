@@ -206,7 +206,7 @@
             <div class="pos-rlt">
               <div class="animated" ng-if="publication" ng-class="{'fadeIn': publication && publication.selected, 'fadeOut': !publication.selected}">
                 <div class="text-left p-h-sm w-full z-index-2" ng-class="{'pos-abt': publication.postFeaturedImage}">
-                  <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x badge-lg md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in publication.terms">
+                  <a ui-sref="app.station.categoryPage({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x badge-lg md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in publication.terms">
                     {{category.name}}
                   </a>
                 </div>

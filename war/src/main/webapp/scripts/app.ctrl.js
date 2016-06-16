@@ -160,14 +160,7 @@ angular.module('app')
         // ---------- util-trix -------------
         $scope.app = angular.extend($scope.app, appData)
         $scope.app.name = $scope.app.network.name
-        $scope.app.currentStation = trixService.selectDefaultStation($scope.app.stations, $scope.app.currentStation ? $scope.app.currentStation.stationId : null);
-        $scope.app.stationsPermissions = trixService.getStationPermissions(angular.copy($scope.app));
-
-        var id = $scope.app.currentStation.defaultPerspectiveId
-        trix.findPerspectiveView(id, null, null, 0, 10).success(function(termPerspective){
-          $scope.app.termPerspectiveView = termPerspective
-        })
-
+        
         $scope.app.showSimpleDialog = function(message){
           $scope.app.simpleDialogMessage = message;
           // show term alert
@@ -307,7 +300,7 @@ angular.module('app')
 
         $scope.app.goToPublicationLink = function(stationId, slug){
           if(stationId && slug)
-            $state.go('app.read', {'stationSlug': $scope.app.getStationById(stationId), 'postSlug': slug})
+            $state.go('app.station.read', {'stationSlug': $scope.app.getStationById(stationId), 'postSlug': slug})
         }
 
         $scope.app.getMaterialColor = function(colorA, hueA){
@@ -518,24 +511,6 @@ angular.module('app')
         return ret ? ret : $scope.app.perspectiveTerms;
       }
 
-      $scope.app.termPerspectiveView = [];
-      $scope.$watch('app.termPerspectiveView', function(newValue, oldValue, scope) {
-        if(newValue){
-          loadPerspectiveTerms();
-        }
-      });
-
-      var loadPerspectiveTerms = function(){
-        $scope.app.loadingTabs = true;
-        $scope.app.perspectiveTerms = $scope.app.getStationCategories();
-          if($scope.app.perspectiveTerms && $scope.app.perspectiveTerms.length){
-            $timeout(function(){
-              $(window).trigger('resize');
-              $scope.app.loadingTabs = false;
-            })
-          }
-      }
-
       /**
        * Watch value of app.postObjectChanged and set alert messages.
        * @param  boolean newVal
@@ -599,6 +574,44 @@ angular.module('app')
 
         $scope.app.activeCategory = null;
       })
+
+      $scope.app.loadPerspective = function(station){
+        trix.findPerspectiveView(station.defaultPerspectiveId, null, null, 0, 10).success(function(termPerspective){
+          $scope.app.termPerspectiveView = termPerspective;
+          if($scope.app.termPerspectiveView.homeRow && $scope.app.termPerspectiveView.homeRow.cells){
+            $scope.app.termPerspectiveView.homeRow.allLoaded = false;
+            var length = $scope.app.termPerspectiveView.homeRow.cells.length >= 10 ? 10 : $scope.app.termPerspectiveView.homeRow.cells.length;
+              $scope.app.termPerspectiveView.homeRow.cells = $scope.app.termPerspectiveView.homeRow.cells.slice(0,length);
+          }
+          $scope.app.loadPerspectiveTerms();
+        })
+      }
+
+      $scope.app.removeTermTabs = function(){
+        $scope.app.loadingTabs = true;
+        $scope.app.perspectiveTerms = null;
+        $timeout(function(){
+          $(window).trigger('resize');
+          $scope.app.loadingTabs = false;
+        }, 100)
+      }
+
+      $scope.app.loadPerspectiveTerms = function(){
+        $scope.app.loadingTabs = true;
+        $scope.app.perspectiveTerms = null
+        $timeout(function(){
+          $(window).trigger('resize');
+          $timeout(function(){
+            $scope.app.perspectiveTerms = $scope.app.getStationCategories();
+              if($scope.app.perspectiveTerms && $scope.app.perspectiveTerms.length){
+                $timeout(function(){
+                  $(window).trigger('resize');
+                  $scope.app.loadingTabs = false;
+                })
+              }
+          },700);
+        })
+      }
 
       // ---------- /theming ------------------
 
