@@ -15,5 +15,9 @@ app.controller('StationCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdD
         $scope.app.loadPerspectiveTerms()
     }
 
+    $timeout(function(){
+    $('#scroll-box').animate({scrollTop: 0}, 0, 'easeOutQuint');
+  })
+
   // --------- /scroll to top
 }]);
