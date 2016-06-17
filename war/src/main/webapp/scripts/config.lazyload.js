@@ -3,6 +3,12 @@
 angular.module('app')
   .constant('MODULE_CONFIG', [
       {
+          name: 'satellizer',
+          files: [
+            '/libs/angular/satellizer/satellizer.min.js'
+          ]
+      },
+      {
           name: 'dndLists',
           files: [
             '/libs/angular/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js'

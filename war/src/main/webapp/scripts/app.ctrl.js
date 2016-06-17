@@ -54,9 +54,9 @@ angular.module('app')
       } else {
         $localStorage.appSetting = $scope.app.setting;
       }
-      $scope.$watch('app.setting', function(){
-        $localStorage.appSetting = $scope.app.setting;
-      }, true);
+      // $scope.$watch('app.setting', function(){
+      //   $localStorage.appSetting = $scope.app.setting;
+      // }, true);
 
       // angular translate
       $scope.langs = {en:'English', zh_CN:'中文'};
@@ -129,8 +129,8 @@ angular.module('app')
     }
   ])
 
-  .controller('AppDataCtrl', ['$scope', '$state', '$log', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdMedia', 'amMoment',
-    function (             $scope, $state, $log, $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar, $mdMedia, amMoment) {
+  .controller('AppDataCtrl', ['$scope', '$state', '$log', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdMedia', 'amMoment', '$auth',
+    function (             $scope, $state, $log, $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar, $mdMedia, amMoment, $auth) {
 
       $rootScope.$mdMedia = $mdMedia;
       amMoment.changeLocale('pt');
@@ -160,6 +160,12 @@ angular.module('app')
         // ---------- util-trix -------------
         $scope.app = angular.extend($scope.app, appData)
         $scope.app.name = $scope.app.network.name
+
+        if($scope.app.network.facebookAppID){
+          $scope.app.socialSignIn = function(provider) {
+            $auth.authenticate(provider);
+          };
+        }
         
         $scope.app.showSimpleDialog = function(message){
           $scope.app.simpleDialogMessage = message;

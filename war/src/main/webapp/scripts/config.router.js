@@ -17,8 +17,8 @@ angular.module('app')
     ]
   )
   .config(
-    [          '$stateProvider', '$urlRouterProvider', 'MODULE_CONFIG', '$translateProvider', '$locationProvider',
-      function ( $stateProvider,   $urlRouterProvider,  MODULE_CONFIG ,  $translateProvider ,  $locationProvider) {
+    [          '$stateProvider', '$urlRouterProvider', 'MODULE_CONFIG', '$translateProvider', '$locationProvider', '$authProvider',
+      function ( $stateProvider,   $urlRouterProvider,  MODULE_CONFIG ,  $translateProvider ,  $locationProvider ,  $authProvider) {
 
         $locationProvider.html5Mode({
           enabled: true,
@@ -34,6 +34,13 @@ angular.module('app')
           layout = '/views/layout.html';aside = '/views/aside.html';content= '/views/content.html';
         }else{
           layout = '/views/layout.h.html';aside = '/views/aside.h.html';content= '/views/content.h.html';
+        }
+
+        if(initData && initData.network && initData.network.facebookAppID){
+          $authProvider.facebook({
+            clientId: initData.network.facebookAppID,
+            responseType: 'token'
+          });
         }
 
         var stationDep = function($stateParams, trix){

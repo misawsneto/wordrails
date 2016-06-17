@@ -269,7 +269,7 @@
     <div class="text-color m text-center" ng-if="app.signState !== 'signup' && app.signState !== 'forgot'">
       <div class="m-b m-t text-md text-u-c font-500">{{'signin_signup.SIGNIN' | translate}}</div>
       <div class="text-center">
-        <md-button class="md-fab md-mini" style="background: #3B5999" aria-label="Use Android">
+        <md-button class="md-fab md-mini" style="background: #3B5999" aria-label="Use Android" ng-click="app.socialSignIn('facebook')">
           <i class="mdi2-facebook i-24 text-white"></i>
         </md-button>
         <!--<md-button class="md-fab md-mini" style="background: #5EA9DD" aria-label="Use Android">
