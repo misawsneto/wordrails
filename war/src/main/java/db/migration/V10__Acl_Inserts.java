@@ -142,9 +142,13 @@ public class V10__Acl_Inserts extends SpringContextMigration {
 				}
 
 				boolean anonymousCanRead = stationRole.station.getVisibility().equals(Station.UNRESTRICTED);
-				acl.insertAce(acl.getEntries().size(), Permissions.READ, new GrantedAuthoritySid("ROLE_ANONYMOUS"), anonymousCanRead);
+				acl.insertAce(acl.getEntries().size(), Permissions.READ,
+						new GrantedAuthoritySid("ROLE_USER"), anonymousCanRead);
+				acl.insertAce(acl.getEntries().size(), Permissions.READ,
+						new GrantedAuthoritySid("ROLE_ANONYMOUS"), anonymousCanRead);
 				acl.insertAce(acl.getEntries().size(), permission, sid, true);
-				acl.insertAce(acl.getEntries().size(), getAdmPermission(), new GrantedAuthoritySid("ROLE_ADMIN"), true);
+				acl.insertAce(acl.getEntries().size(), getAdmPermission(),
+						new GrantedAuthoritySid("ROLE_ADMIN"), true);
 			}
 			aclService.updateAcl(acl);
 		}

@@ -218,27 +218,15 @@
 	</filter-mapping>
 
 	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-name>NetworkDomainFilter</filter-name>
 		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
-		<filter-name>NetworkDomainFilter</filter-name>
+		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
-		<!--<url-pattern>/index.jsp</url-pattern>-->
-		<!--<url-pattern>/search/*</url-pattern>-->
-		<!--<url-pattern>/post/*</url-pattern>-->
-		<!--<url-pattern>/bookmarks/*</url-pattern>-->
-		<!--<url-pattern>/notifications/*</url-pattern>-->
-		<!--<url-pattern>/settings/*</url-pattern>-->
-		<!--<url-pattern>/publications/*</url-pattern>-->
-		<!--<url-pattern>/user/*</url-pattern>-->
-		<!--<url-pattern>/read/*</url-pattern>-->
-		<!--<url-pattern>/login/*</url-pattern>-->
-		<!--<url-pattern>/api/*</url-pattern>-->
-		<!--<url-pattern>/mystats/*</url-pattern>-->
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
