@@ -129,8 +129,8 @@ angular.module('app')
     }
   ])
 
-  .controller('AppDataCtrl', ['$scope', '$state', '$log', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdMedia', 'amMoment', '$auth',
-    function (             $scope, $state, $log, $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar, $mdMedia, amMoment, $auth) {
+  .controller('AppDataCtrl', ['$scope', '$state', '$log', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdMedia', 'amMoment', '$auth', '$http', '$ocLazyLoad',
+    function (             $scope, $state, $log, $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar, $mdMedia, amMoment, $auth, $http, $ocLazyLoad) {
 
       $rootScope.$mdMedia = $mdMedia;
       amMoment.changeLocale('pt');
@@ -163,7 +163,38 @@ angular.module('app')
 
         if($scope.app.network.facebookAppID){
           $scope.app.socialSignIn = function(provider) {
-            $auth.authenticate(provider);
+            $scope.app.loading = true;
+            if(provider === 'facebook'){
+              // authenticate w facebook
+              $auth.authenticate(provider).then(function(success){ 
+                // load facebook user data
+                $http.get('https://graph.facebook.com/me?access_token=' + success.access_token, {withCredentials: false}).success(function(response){
+                  // signin with facebook
+                  trix.socialLogin(response.id, success.access_token, provider).success(function(){
+                    // get init data
+                    trix.allInitData().success(function(response){
+                      appData = initData = response;
+                      startApp();
+                      $mdDialog.cancel();
+                      trix.setUsername(initData.person.username);
+                      $scope.app.loading = false;
+                    }).error(function(){
+                      $scope.app.loading = false;
+                    });
+                  })
+                }).error(function(){
+                  $scope.app.loading = true;  
+                })
+              }).catch(function(error){
+                $scope.app.loading = true;
+              });
+            } else if(provider === 'google') {
+              $auth.authenticate(provider).then(function(success){
+
+              }).catch(function(error){
+
+              });
+            }
           };
         }
         
