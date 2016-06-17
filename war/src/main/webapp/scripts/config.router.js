@@ -43,6 +43,13 @@ angular.module('app')
           });
         }
 
+        if(initData && initData.network && initData.network.googleAppID){
+          $authProvider.facebook({
+            clientId: initData.network.googleAppID,
+            responseType: 'token'
+          });
+        }
+
         var stationDep = function($stateParams, trix){
           var stationObj = null;
 
