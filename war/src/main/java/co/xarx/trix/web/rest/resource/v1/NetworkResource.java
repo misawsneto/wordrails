@@ -110,6 +110,11 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 			themeView.backgroundColors == null || themeView.primaryColors.size() < 14)
 				throw new BadRequestException("Invalid Theme");
 
+		network.navbarColor = themeView.primaryColors != null ? themeView.primaryColors.get("500") : "#30307E";
+		network.mainColor = themeView.secondaryColors != null ? themeView.secondaryColors.get("300") : " #BC26C5 ";
+		network.backgroundColor = themeView.backgroundColors != null ? themeView.backgroundColors.get("500") :
+				"#EFEFEF";
+
 		network.primaryColors = themeView.primaryColors;
 		network.secondaryColors = themeView.secondaryColors;
 		network.alertColors = themeView.alertColors;

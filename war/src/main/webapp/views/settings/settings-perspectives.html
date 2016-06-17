@@ -24,7 +24,7 @@
          <i class="mdi mdi2-content-save i-20 m-r-sm"></i> {{'titles.SAVE' | translate}}
          </md-button>-->
       <md-button aria-label="nothing" ng-click="isMobile = !isMobile; reloadMasonry();" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
-         <i class="i-20" ng-class="{'mdi-hardware-desktop-windows': !isMobile, 'mdi-hardware-phone-android': isMobile }"></i>
+         <i class="i-20" ng-class="{'mdi-hardware-desktop-windows': isMobile, 'mdi-hardware-phone-android': !isMobile }"></i>
       </md-button>
    </div>
    <div id="setting-perspective-editor">

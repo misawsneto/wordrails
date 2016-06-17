@@ -190,9 +190,9 @@ angular.module('app')
               });
             } else if(provider === 'google') {
               $auth.authenticate(provider).then(function(success){
-
+                window.console && console.log(success)
               }).catch(function(error){
-
+                $scope.app.loading = false;
               });
             }
           };
@@ -903,7 +903,7 @@ angular.module('app')
 
       $scope.app.showSigninDialog = function(event){
         // show term alert
-        
+        $scope.app.loading = false;
         $mdDialog.show({
           scope: $scope,        // use parent scope in template
           closeTo: {
