@@ -14,37 +14,43 @@ public class BitMaskPermissionGrantingStrategy implements PermissionGrantingStra
 
 		List<Permission> permissionsToCheckOnParent = new ArrayList<>();
 		permissionsToCheckOnParent.addAll(permission);
-		boolean hasPermission = false;
+		boolean isAllowed = false;
 		p: for (Permission p : permission) {
+			boolean hasPermission = true;
 			List<AccessControlEntry> entries = filterAceByPermissionAndSids(acl.getEntries(), p, sids);
 
-			if (entries == null)
-				continue;
+			if (entries == null || entries.isEmpty()) {
+				hasPermission = false;
+			}
 
-			for (AccessControlEntry entry : entries) {
+			if (hasPermission) {
+				for (AccessControlEntry entry : entries) {
 
-				boolean toDeny = !entry.isGranting();
-				if (toDeny) {
-					hasPermission = false;
-					permissionsToCheckOnParent.remove(p); //don't need to check on parent, since this permission is
-					// already denied
-					continue p; //for this permission it is denied. let's go to next to see if it can have a
-					// permission that is allowed on all sids
-				} else {
-					hasPermission = true;
+					boolean toDeny = !entry.isGranting();
+					if (toDeny) {
+						isAllowed = false;
+						permissionsToCheckOnParent.remove(p); //don't need to check on parent, since this permission is
+						// already denied
+						continue p; //for this permission it is denied. let's go to next to see if it can have a
+						// permission that is allowed on all sids
+					} else {
+						isAllowed = true;
+					}
 				}
 			}
 
-			if (hasPermission)
-				break;
+			boolean hasParent = acl.isEntriesInheriting() && (acl.getParentAcl() != null);
+			if (hasParent) {
+				boolean hasPermissionOnParent = acl.getParentAcl().isGranted(permissionsToCheckOnParent, sids, false);
+				if (hasPermission) {
+					isAllowed &= hasPermissionOnParent;
+				} else {
+					isAllowed |= hasPermissionOnParent;
+				}
+			}
 		}
 
-		boolean hasParent = acl.isEntriesInheriting() && (acl.getParentAcl() != null);
-		if (hasParent) {
-			hasPermission &= acl.getParentAcl().isGranted(permissionsToCheckOnParent, sids, false);
-		}
-
-		return hasPermission;
+		return isAllowed;
 	}
 
 

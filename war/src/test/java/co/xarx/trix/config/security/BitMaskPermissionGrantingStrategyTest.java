@@ -97,22 +97,22 @@ public class BitMaskPermissionGrantingStrategyTest {
 					Collections.singletonList(this.sid), false);
 		}
 
-		private boolean isAllAllowed() {
-			return isAllowed(READ)
-					&& isAllowed(WRITE)
-					&& isAllowed(CREATE)
-					&& isAllowed(MODERATION)
-					&& isAllowed(DELETE)
-					&& isAllowed(ADMINISTRATION);
+		private void isAllAllowed() {
+			assertTrue(isAllowed(READ));
+			assertTrue(isAllowed(WRITE));
+			assertTrue(isAllowed(CREATE));
+			assertTrue(isAllowed(MODERATION));
+			assertTrue(isAllowed(DELETE));
+			assertTrue(isAllowed(ADMINISTRATION));
 		}
 
-		private boolean isAllDenied() {
-			return !isAllowed(READ)
-					&& !isAllowed(WRITE)
-					&& !isAllowed(CREATE)
-					&& !isAllowed(MODERATION)
-					&& !isAllowed(DELETE)
-					&& !isAllowed(ADMINISTRATION);
+		private void isAllDenied() {
+			assertFalse(isAllowed(READ));
+			assertFalse(isAllowed(WRITE));
+			assertFalse(isAllowed(CREATE));
+			assertFalse(isAllowed(MODERATION));
+			assertFalse(isAllowed(DELETE));
+			assertFalse(isAllowed(ADMINISTRATION));
 		}
 	}
 
@@ -138,7 +138,7 @@ public class BitMaskPermissionGrantingStrategyTest {
 	public void User1OnPost1() throws Exception {
 		AllowedPermissions permissions = new AllowedPermissions(post1, user1);
 
-		assertTrue(permissions.isAllDenied());
+		permissions.isAllDenied();
 		assertFalse(permissions.isAllowed(READ, CREATE, WRITE, DELETE, MODERATION));
 	}
 
@@ -146,21 +146,28 @@ public class BitMaskPermissionGrantingStrategyTest {
 	public void User2OnStation1() throws Exception {
 		AllowedPermissions permissions = new AllowedPermissions(station1, user2);
 
-		assertTrue(permissions.isAllAllowed());
+		permissions.isAllAllowed();
 	}
 
 	@Test
 	public void User2OnStation2() throws Exception {
 		AllowedPermissions permissions = new AllowedPermissions(station2, user2);
 
-		assertTrue(permissions.isAllDenied());
+		permissions.isAllDenied();
+	}
+
+	@Test
+	public void User2OnPost1() throws Exception {
+		AllowedPermissions permissions = new AllowedPermissions(post1, user2);
+
+		permissions.isAllAllowed();
 	}
 
 	@Test
 	public void User2OnPost2() throws Exception {
 		AllowedPermissions permissions = new AllowedPermissions(post2, user2);
 
-		assertTrue(permissions.isAllDenied());
+		permissions.isAllDenied();
 	}
 
 	@Test
@@ -175,27 +182,27 @@ public class BitMaskPermissionGrantingStrategyTest {
 	public void AnonOnStation2() throws Exception {
 		AllowedPermissions permissions = new AllowedPermissions(station2, anon);
 
-		assertTrue(permissions.isAllDenied());
+		permissions.isAllDenied();
 	}
 
 	@Test
 	public void AnonOnPost2() throws Exception {
 		AllowedPermissions permissions = new AllowedPermissions(post2, anon);
 
-		assertTrue(permissions.isAllDenied());
+		permissions.isAllDenied();
 	}
 
 	@Test
 	public void AdminOnStation1() throws Exception {
 		AllowedPermissions permissions = new AllowedPermissions(station1, admin);
 
-		assertTrue(permissions.isAllAllowed());
+		permissions.isAllAllowed();
 	}
 
 	@Test
 	public void AdminOnStation2() throws Exception {
 		AllowedPermissions permissions = new AllowedPermissions(station2, admin);
 
-		assertTrue(permissions.isAllAllowed());
+		permissions.isAllAllowed();
 	}
 }
