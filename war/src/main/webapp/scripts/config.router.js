@@ -44,7 +44,7 @@ angular.module('app')
         }
 
         if(initData && initData.network && initData.network.googleAppID){
-          $authProvider.facebook({
+          $authProvider.google({
             clientId: initData.network.googleAppID,
             responseType: 'token'
           });
