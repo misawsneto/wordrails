@@ -17,8 +17,6 @@ public class NetworkDomainFilter implements Filter {
 
 	@Autowired
 	private NetworkService networkService;
-//	@Autowired
-//	private TenantProvider tenantProvider;
 
 	@Override
 	public void destroy() {
@@ -64,5 +62,6 @@ public class NetworkDomainFilter implements Filter {
 		response.setDateHeader("Expires", 0);
 
 		chain.doFilter(req, res);
+		TenantContextHolder.setCurrentTenantId(null);
 	}
 }
