@@ -6,12 +6,9 @@ import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.util.StringUtil;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -23,10 +20,12 @@ public class NetworkService {
 	private Map<String, Integer> domains; //key=domain, value=networkId
 
 	private NetworkRepository networkRepository;
+	private EmailService emailService;
 
 	@Autowired
-	public NetworkService(NetworkRepository networkRepository) {
+	public NetworkService(NetworkRepository networkRepository, EmailService emailService) {
 		this.networkRepository = networkRepository;
+		this.emailService = emailService;
 		tenantIds = Maps.newConcurrentMap();
 		domains = Maps.newConcurrentMap();
 
@@ -80,21 +79,25 @@ public class NetworkService {
 		return tenantId;
 	}
 
-	public String getNetworkInvitationTemplate() {
+	public String getNetworkValidationTemplate() throws IOException {
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		Network network = networkRepository.findByTenantId(tenantId);
 
-		try {
-			String templateFile;
-			templateFile = "complete-subscription-email.html";
-			String filePath = new ClassPathResource(templateFile).getFile().getAbsolutePath();
-			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-			String template = new String(bytes, Charset.forName("UTF-8"));
-			template = 	template.replaceAll("\\{\\{invitationTemplate}}", network.invitationMessage);
-			return template;
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		return null;
+		String template = getEmailTemplate();
+		return template.replaceAll("\\{\\{invitationTemplate}}", network.invitationMessage);
+	}
+
+	public String getNetworkInvitationTemplate() throws IOException {
+		String tenantId = TenantContextHolder.getCurrentTenantId();
+		Network network = networkRepository.findByTenantId(tenantId);
+
+		String template = getEmailTemplate();
+		return template.replaceAll("\\{\\{invitationTemplate}}", network.invitationMessage);
+	}
+
+	public String getEmailTemplate() throws IOException {
+		String templateFile;
+		templateFile = "complete-subscription-email.html";
+		return emailService.loadTemplateHTML(templateFile);
 	}
 }

@@ -112,6 +112,9 @@ public class Network extends BaseEntity implements Serializable {
 
 	public boolean configured;
 
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean emailSignUpValidationEnabled;
+
 	@OneToOne
 	public Image favicon;
 
@@ -161,6 +164,9 @@ public class Network extends BaseEntity implements Serializable {
 
 	@Lob
 	public String invitationMessage;
+
+	@Lob
+	public String validationMessage;
 
 	@Override
 	public String toString() {
