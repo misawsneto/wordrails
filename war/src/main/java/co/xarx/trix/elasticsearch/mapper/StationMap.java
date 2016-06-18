@@ -8,7 +8,7 @@ public class StationMap extends PropertyMap<Station, ESStation> {
 
 	@Override
 	protected void configure() {
-		map().setLogo(source.logo.getHashs());
+		map().setLogo(source.logo.getHashes());
 		map().setTenantId(source.getTenantId());
 	}
 }

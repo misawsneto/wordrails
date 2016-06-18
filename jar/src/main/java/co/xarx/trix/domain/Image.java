@@ -100,7 +100,7 @@ public class Image extends BaseEntity implements Serializable {
 	protected Image() {
 		this.sizes = new HashSet<>();
 		this.pictures = new HashSet<>();
-		this.hashs = new HashMap<>();
+		this.hashes = new HashMap<>();
 	}
 
 	public Image(Type type) {
@@ -155,7 +155,7 @@ public class Image extends BaseEntity implements Serializable {
 			uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "sizeTag", "image_id"}))
 	@MapKeyColumn(name = "sizeTag", nullable = false)
 	@Column(name = "hash", nullable = false)
-	private Map<String, String> hashs;
+	private Map<String, String> hashes;
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	private boolean vertical = false;
@@ -199,7 +199,7 @@ public class Image extends BaseEntity implements Serializable {
 
 	private void createOrUpdate() {
 		for(Picture pic : getPictures()) {
-			getHashs().put(pic.sizeTag, pic.file.hash);
+			getHashes().put(pic.sizeTag, pic.file.hash);
 		}
 	}
 
@@ -211,18 +211,18 @@ public class Image extends BaseEntity implements Serializable {
 	@Deprecated
 	@SdkInclude
 	public String getLargeHash() {
-		return getHashs().get(SIZE_LARGE);
+		return getHashes().get(SIZE_LARGE);
 	}
 
 	@Deprecated
 	@SdkInclude
 	public String getMediumHash() {
-		return getHashs().get(SIZE_MEDIUM);
+		return getHashes().get(SIZE_MEDIUM);
 	}
 
 	@Deprecated
 	@SdkInclude
 	public String getSmallHash() {
-		return getHashs().get(SIZE_SMALL);
+		return getHashes().get(SIZE_SMALL);
 	}
 }
