@@ -58,7 +58,7 @@ public class PersonPermissionService {
 		return result;
 	}
 
-	public List<Station> getStationsWithPermission(Sid sid, Permission p) {
+	public List<Station> getStationsWithPermission(Permission p) {
 		List<Station> result = new ArrayList<>();
 		List<Station> stations = stationRepository.findAll();
 

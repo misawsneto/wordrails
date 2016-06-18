@@ -90,7 +90,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 
 
 		//Stations Permissions
-		List<Station> stations = personPermissionService.getStationsWithPermission(authProvider.getCurrentSid(), READ);
+		List<Station> stations = personPermissionService.getStationsWithPermission(READ);
 		List<StationPermission> stationPermissionDtos = stationPermissionService.getStationPermissions(stations);
 
 		personPermissions.stationPermissions = stationPermissionDtos;
