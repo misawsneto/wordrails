@@ -76,7 +76,7 @@ public class ModelMapperTest {
 		ESStation esStation = modelMapper.map(station, ESStation.class);
 
 		assertEquals(station.id, esStation.id);
-		assertEquals(station.logo.getHashs(), esStation.logo);
+		assertEquals(station.logo.getHashes(), esStation.logo);
 	}
 
 	@Test

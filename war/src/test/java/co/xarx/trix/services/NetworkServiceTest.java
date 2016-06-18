@@ -20,6 +20,7 @@ public class NetworkServiceTest {
 
 	private NetworkService networkService;
 	private NetworkRepository networkRepository;
+	private EmailService emailService;
 
 	@Before
 	public void setUp() throws Exception {
@@ -39,7 +40,7 @@ public class NetworkServiceTest {
 
 		when(networkRepository.findAll()).thenReturn(networkList);
 
-		networkService = new NetworkService(networkRepository);
+		networkService = new NetworkService(networkRepository, emailService);
 	}
 
 	@Test
