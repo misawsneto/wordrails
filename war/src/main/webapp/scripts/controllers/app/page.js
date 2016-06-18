@@ -31,20 +31,26 @@ app.controller('PageCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
     		}
 	    }
 
-	    if($state.includes('app.home')){
-	    	if(!$scope.app.termPerspectiveView || ($scope.thisStation.id !== $scope.app.termPerspectiveView.stationId)){
-	    		if($scope.app.termPerspectiveView && $scope.app.termPerspectiveView.featuredRow)
-	    			$scope.app.termPerspectiveView = null;
-	    		$scope.app.loadPerspective($scope.thisStation);
-	    	}else{
-	    		if($scope.app.perspectiveTerms == null)
-	    			$scope.app.loadPerspectiveTerms()
-	    	}
-	    }
+    if($state.includes('app.home')){
+    	if(!$scope.app.termPerspectiveView || ($scope.thisStation.id !== $scope.app.termPerspectiveView.stationId)){
+    		if($scope.app.termPerspectiveView && $scope.app.termPerspectiveView.featuredRow)
+    			$scope.app.termPerspectiveView = null;
+    		$scope.app.loadPerspective($scope.thisStation);
+    	}else{
+    		if($scope.app.perspectiveTerms == null)
+    			$scope.app.loadPerspectiveTerms()
+    	}
+    }
 
-	    $timeout(function(){
-    $('#scroll-box').animate({scrollTop: 0}, 0, 'easeOutQuint');
-  })
+    if($scope.app.termPerspectiveView && $scope.app.termPerspectiveView.homeRow && $scope.app.termPerspectiveView.homeRow.cells){
+      $scope.app.termPerspectiveView.homeRow.allLoaded = false;
+      var length = $scope.app.termPerspectiveView.homeRow.cells.length >= 10 ? 10 : $scope.app.termPerspectiveView.homeRow.cells.length;
+        $scope.app.termPerspectiveView.homeRow.cells = $scope.app.termPerspectiveView.homeRow.cells.slice(0,length);
+    }
+
+	  $timeout(function(){
+	    $('#scroll-box').animate({scrollTop: 0}, 0, 'easeOutQuint');
+	  })
 
 	pageCtrl = $scope;
 }]);
