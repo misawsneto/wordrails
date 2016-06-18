@@ -64,9 +64,9 @@ public class PersonService {
 
 	public Person createFromInvite(PersonsApi.PersonCreateDto dto, String inviteHash) throws PersonAlreadyExistsException {
 		Assert.hasText(inviteHash);
-		Person person = null;
+		Person newcomer = null;
 		try {
-			person = createPerson(dto);
+			newcomer = personFactory.create(dto.name, dto.username, dto.email, dto.password);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -74,16 +74,16 @@ public class PersonService {
 		Invitation invitation = invitationRepository.findByHash(inviteHash);
 
 		if (invitation != null
-				&& invitation.email == person.email
+				&& invitation.email == newcomer.email
 				&& invitation.invitationStations != null
 				&& invitation.invitationStations.size() > 0) {
 			StationRolesUpdate update = new StationRolesUpdate();
 			update.stationsIds = invitation.invitationStations;
-			update.usernames = Arrays.asList(person.username);
+			update.usernames = Arrays.asList(newcomer.username);
 			stationPermissionService.updateStationsPermissions(update, authService.getLoggedUsername());
 		}
 
-		return person;
+		return newcomer;
 	}
 
 	public Person createPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException {
