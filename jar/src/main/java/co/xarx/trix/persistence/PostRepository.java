@@ -77,7 +77,7 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 
 	@RestResource(exported = false)
 	@Query("select post from Post post " +
-			"where post.id in " +
+			"where post.state = 'PUBLISHED' AND post.id in " +
 			"(select p.id from Post p join p.terms t where p.station.id = :stationId and t.id in (:termsIds) and p.id not in (:idsToExclude)) " +
 			"order by post.date desc")
 	List<Post> findPostsNotPositioned(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, @Param("idsToExclude") List<Integer> idsToExclude, Pageable pageable);

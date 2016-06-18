@@ -163,7 +163,6 @@ angular.module('app')
 
         if($scope.app.network.facebookAppID){
           $scope.app.socialSignIn = function(provider) {
-            $scope.app.loading = true;
             if(provider === 'facebook'){
               // authenticate w facebook
               $auth.authenticate(provider).then(function(success){ 
@@ -183,10 +182,10 @@ angular.module('app')
                     });
                   })
                 }).error(function(){
-                  $scope.app.loading = true;  
+                  $scope.app.loading = false;  
                 })
               }).catch(function(error){
-                $scope.app.loading = true;
+                $scope.app.loading = false;
               });
             } else if(provider === 'google') {
               $auth.authenticate(provider).then(function(success){
@@ -869,7 +868,16 @@ angular.module('app')
       // ----------- signin-signup-forgot --------------
       $scope.app.signOut = function(){
         trix.logout().success(function(){
-          document.location.href = '/';
+          //document.location.href = '/';
+           trix.allInitData().success(function(response){
+            appData = initData = response;
+            startApp();
+            $mdDialog.cancel();
+            trix.setUsername(initData.person.username);
+            $scope.app.loading = false;
+          }).error(function(){
+            $scope.app.loading = false;
+          });
           trix.resetUsername('');
         })
       }
