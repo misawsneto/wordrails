@@ -163,7 +163,6 @@ angular.module('app')
 
         if($scope.app.network.facebookAppID){
           $scope.app.socialSignIn = function(provider) {
-            $scope.app.loading = true;
             if(provider === 'facebook'){
               // authenticate w facebook
               $auth.authenticate(provider).then(function(success){ 
@@ -183,10 +182,10 @@ angular.module('app')
                     });
                   })
                 }).error(function(){
-                  $scope.app.loading = true;  
+                  $scope.app.loading = false;  
                 })
               }).catch(function(error){
-                $scope.app.loading = true;
+                $scope.app.loading = false;
               });
             } else if(provider === 'google') {
               $auth.authenticate(provider).then(function(success){
