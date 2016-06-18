@@ -5,27 +5,6 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 
     $scope.app.loadComments($scope.post)
 
-  var intervalPromise;
-  intervalPromise = $interval(function(){
-    if($('#scroll-box').scrollTop() > 400 && $('main').height() - 400)
-      $scope.showScrollUp = true;
-    else
-      $scope.showScrollUp = false;
-  }, 500);
-
-  $scope.scrollToTop = function(){
-    $('#scroll-box').animate({scrollTop: 0}, 700, 'easeOutQuint');
-  }
-
-  $timeout(function(){
-    $('#scroll-box').animate({scrollTop: 0}, 0, 'easeOutQuint');
-  })
-
-  $scope.$on('$destroy',function(){
-      if(intervalPromise)
-          $interval.cancel(intervalPromise);   
-  });
-
   var findRelated = function(size, categories){
     trix.searchPosts(null, null, null, 'published', null, null, categories, null, 0, size, '-date', ['snippet', 'tags', 'categories', 'imageHash', 'state'], false).success(function(posts,a,b,c){
         if(posts && posts.length > 0){
@@ -61,6 +40,28 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
   }
 
   // --------- /scroll to top
+  
+  var intervalPromise;
+  intervalPromise = $interval(function(){
+    if($('#scroll-box').scrollTop() > 400 && $('main').height() - 400)
+      $scope.showScrollUp = true;
+    else
+      $scope.showScrollUp = false;
+  }, 500);
+
+  $scope.scrollToTop = function(){
+    $('#scroll-box').animate({scrollTop: 0}, 700, 'easeOutQuint');
+  }
+
+  $timeout(function(){
+    $('#scroll-box').animate({scrollTop: 0}, 700, 'easeOutQuint');
+  })
+
+  $scope.$on('$destroy',function(){
+      if(intervalPromise)
+          $interval.cancel(intervalPromise);   
+  });
+
   readCtrl = $scope;
 }]);
 

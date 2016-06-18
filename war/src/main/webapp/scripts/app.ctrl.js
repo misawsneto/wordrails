@@ -868,13 +868,18 @@ angular.module('app')
       // ----------- signin-signup-forgot --------------
       $scope.app.signOut = function(){
         trix.logout().success(function(){
-          //document.location.href = '/';
            trix.allInitData().success(function(response){
             appData = initData = response;
             startApp();
             $mdDialog.cancel();
             trix.setUsername(initData.person.username);
             $scope.app.loading = false;
+
+            if($scope.isSettings())
+              document.location.href = '/';
+            else
+              $state.go('app.home')
+            
           }).error(function(){
             $scope.app.loading = false;
           });
