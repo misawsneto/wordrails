@@ -9,8 +9,10 @@ import co.xarx.trix.domain.Station;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,12 +27,14 @@ public class PersonPermissionService {
 	private AccessControlListService aclService;
 	private StationRepository stationRepository;
 	private PersonRepository personRepository;
+	private PermissionEvaluator permissionEvaluator;
 
 	@Autowired
-	public PersonPermissionService(AccessControlListService aclService, StationRepository stationRepository, PersonRepository personRepository) {
+	public PersonPermissionService(AccessControlListService aclService, StationRepository stationRepository, PersonRepository personRepository, PermissionEvaluator permissionEvaluator) {
 		this.aclService = aclService;
 		this.stationRepository = stationRepository;
 		this.personRepository = personRepository;
+		this.permissionEvaluator = permissionEvaluator;
 	}
 
 	public UserPermissionData getPermissions(Sid sid) {
@@ -59,7 +63,8 @@ public class PersonPermissionService {
 		List<Station> stations = stationRepository.findAll();
 
 		for (Station station : stations) {
-			boolean hasPermission = aclService.hasPermission(Station.class, station.getId(), sid, p);
+			boolean hasPermission = permissionEvaluator.hasPermission(SecurityContextHolder.getContext()
+					.getAuthentication(), station.getId(), Station.class.getName(), p);
 			boolean isPermissionOfCreate = Permissions.containsPermission(p, CREATE);
 			if(isPermissionOfCreate)
 				hasPermission = hasPermission || station.isWritable();

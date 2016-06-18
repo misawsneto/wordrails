@@ -25,6 +25,8 @@ import co.xarx.trix.services.person.PersonFactory;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.Authenticator;
 import co.xarx.trix.services.security.StationPermissionService;
+import co.xarx.trix.services.user.UserAlreadyExistsException;
+import co.xarx.trix.services.user.UserFactory;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.StringUtil;
@@ -75,6 +77,8 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	private NetworkService networkService;
 	@Autowired
 	private PersonFactory personFactory;
+	@Autowired
+	private UserFactory userFactory;
 	@Autowired
 	private PersonService personService;
 	@Autowired
@@ -333,14 +337,19 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 		} else {
 			sendPlainPassword = true;
 		}
-		;
 		try {
-			Person person = personFactory.create(dto.name, dto.username, dto.email, dto.password);
-			personService.notifyPersonCreation(person, sendPlainPassword);
+			Person person = personRepository.findByEmail(dto.email);
+
+			if (person == null) {
+				User user = userFactory.create(dto.username, dto.password);
+				person = personFactory.create(dto.name, dto.email, user);
+				personService.notifyPersonCreation(person, sendPlainPassword);
+			}
+
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
-		} catch (PersonAlreadyExistsException e) {
+		} catch (PersonAlreadyExistsException | UserAlreadyExistsException e) {
 			e.printStackTrace();
-			throw new BadRequestException();
+			return Response.status(Status.BAD_REQUEST).entity("Email already used by another user").build();
 		}
 	}
 
