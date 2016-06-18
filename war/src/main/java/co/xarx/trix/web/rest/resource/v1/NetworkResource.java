@@ -1,10 +1,7 @@
 package co.xarx.trix.web.rest.resource.v1;
 
 import co.xarx.trix.annotation.IgnoreMultitenancy;
-import co.xarx.trix.api.PersonPermissions;
-import co.xarx.trix.api.StationPermission;
-import co.xarx.trix.api.StringResponse;
-import co.xarx.trix.api.ThemeView;
+import co.xarx.trix.api.*;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.PostEventHandler;
@@ -396,10 +393,40 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	 * Get the default invitation html template taking in to account the invitationMessage set by the admin at
 	 * configuration screen.
 	 */
-	public StringResponse getNetworkInvitationTemplate() throws IOException {
-		String template = networkService.getNetworkInvitationTemplate();
-		StringResponse stringResponse = new StringResponse();
-		stringResponse.response = template;
-		return stringResponse;
+	public Response getNetworkInvitationTemplate(){
+		String template;
+		try {
+			template = networkService.getNetworkInvitationTemplate();
+			StringResponse stringResponse = new StringResponse();
+			stringResponse.response = template;
+			return Response.status(Status.OK).entity(objectMapper.writeValueAsString(stringResponse)).build();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return Response.status(Status.NOT_IMPLEMENTED).build();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return Response.status(Status.SERVICE_UNAVAILABLE).build();
+		}
+	}
+
+	@Override
+	/**
+	 * Get the default validation html template taking in to account the validationMessage set by the admin at
+	 * configuration screen.
+	 */
+	public Response getNetworkValidationTemplate(){
+		String template;
+		try {
+			template = networkService.getNetworkValidationTemplate();
+			StringResponse stringResponse = new StringResponse();
+			stringResponse.response = template;
+			return Response.status(Status.OK).entity(objectMapper.writeValueAsString(stringResponse)).build();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return Response.status(Status.NOT_IMPLEMENTED).build();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return Response.status(Status.SERVICE_UNAVAILABLE).build();
+		}
 	}
 }
