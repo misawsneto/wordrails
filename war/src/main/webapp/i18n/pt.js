@@ -174,7 +174,7 @@
 			"CREATE_PAGES_DESC": "",
 			"USER_MANAGEMENT_HEADER": "Faça a gestão dos usuários",
 			"USER_MANAGEMENT_DESC": "",
-			"POST_MANAGEMENT_HEADER": "Gerencie todas publicação",
+			"POST_MANAGEMENT_HEADER": "Gerencie todas as publicações",
 			"POST_MANAGEMENT_DESC": "",
 			"COMMENTS_MANAGEMENT_HEADER": "Gerencie comentários"
 		},
