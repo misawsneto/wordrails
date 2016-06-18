@@ -172,7 +172,7 @@
   </div>
   <!-- Content -->
   <div class="box-row">
-    <md-toolbar md-scroll-shrink style="min-height: 50px;" class="" ng-class="{'hide':$state.includes('app.search') || $state.includes('app.bookmarks')}">
+    <md-toolbar class="font-bold" md-scroll-shrink style="min-height: 50px;" class="" ng-class="{'hide':$state.includes('app.search') || $state.includes('app.bookmarks')}">
       <div class="md-primary-default background md-whiteframe-z1">
         <div class="custom-header container" style="min-height: 50px;">
           <ul class="nav nav-lines nav-md no-bg animated text-base material-top-menu" ng-class="{'o-f-h fadeOut': app.loadingTabs}" df-tab-menu menu-control="{{menu2.navigationState}}" style="height: 52px">
@@ -283,7 +283,7 @@
         </md-button>-->
       </div>
         <div class="p-t-sm text-md" translate="signin_signup.OR">ou</div>
-      <form name="form" ng-submit="app.signIn(person)" class="text-md w-xxl">
+      <form name="form" ng-submit="app.signIn(person)" class="text-md w-xl">
         <div class="p" style="padding-bottom: 0">
           <md-input-container class="w-full m-b-0">
             <label for="testInput">{{'titles.USERNAME' | translate}}</label>
