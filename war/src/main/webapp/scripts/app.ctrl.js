@@ -875,11 +875,11 @@ angular.module('app')
             trix.setUsername(initData.person.username);
             $scope.app.loading = false;
 
-            if($scope.isSettings())
+            if($scope.app.isSettings())
               document.location.href = '/';
             else
               $state.go('app.home')
-            
+
           }).error(function(){
             $scope.app.loading = false;
           });
