@@ -183,7 +183,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="">
+                      <div >
                         {{station.description}}
                       </div>
                     </div>
@@ -200,7 +200,7 @@
                     <div class="m-b-lg m-t-lg">
                       <ul class="bg-t" infinite-scroll="paginate()" infinite-scroll-container='"#search-container"' infinite-scroll-distance="1">
                         <li class="md-whiteframe-z1 md-background-hue-1 background fade-in-hover-container" ng-repeat="publication in publications">
-                          <div class="pos-rlt">
+                          <div class="pos-rlt animated fadeIn">
                             <div class="list-group-item b-n p">
                               <a ui-sref="app.userprofile({username: publication.authorUsername})">
                                 <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="pull-left m-r-sm bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1 text-center md-primary-hue-1 background">
@@ -215,7 +215,7 @@
                               </div>
                             </div>
                             <div class="clear font-thin">
-                                <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" class="pull-left w-full" ng-if="app.hasImage(publication)" style="height: 196px;">
+                                <a ui-sref="app.station.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" class="pull-left w-full" ng-if="app.hasImage(publication)" style="height: 196px;">
                                   <div preload-bg-image="{{app.getImageLink(publication, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
                                   </div>
                                 </a>
@@ -226,14 +226,14 @@
                               <div class="animated animated1x md-background-hue-1 background" >
                                 <div class="clear font-thin">
                                   <div class="m-r-xxl text-md">
-                                    <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" class="font-500 block text-md-l">{{publication.title}}</a>
+                                    <a ui-sref="app.station.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" class="font-500 block text-md-l">{{publication.title}}</a>
                                     <div  class="text-base font-normal p-v-sm">
                                       {{app.getLocalTime(publication.date)}}
                                     </div>
                                     <div class="m-b-sm">
                                       <span class="label r m-t-xs m-r-xs md-accent-default background" ng-repeat="tag in publication.tags">{{tag}}</span>
                                     </div>
-                                    <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})">
+                                    <a ui-sref="app.station.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})">
                                     {{publication.snippet | characters:220}}
                                     </a>
                                   </div>

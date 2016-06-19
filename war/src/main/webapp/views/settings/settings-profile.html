@@ -184,7 +184,7 @@
                   </div>
                 </div>
               </div>
-              <div class="" ng-class="{'animated fadeIn show': publication.selected, 'hide': !publication.selected}">
+              <div  ng-class="{'animated fadeIn show': publication.selected, 'hide': !publication.selected}">
                 <div class="list-group-item b-n p-sm p-t-sm no-padding-h">
                   <a href class="pull-left m-r-sm">
                     <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1 text-center md-primary-hue-1 background">
@@ -206,7 +206,7 @@
             <div class="pos-rlt">
               <div class="animated" ng-if="publication" ng-class="{'fadeIn': publication && publication.selected, 'fadeOut': !publication.selected}">
                 <div class="text-left p-h-sm w-full z-index-2" ng-class="{'pos-abt': publication.postFeaturedImage}">
-                  <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x badge-lg md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in publication.terms">
+                  <a ui-sref="app.station.categoryPage({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x badge-lg md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in publication.terms">
                     {{category.name}}
                   </a>
                 </div>
@@ -355,37 +355,37 @@
     </md-toolbar>
     <div class="p w-x col-400 scrollable md-background-hue-1 background">
         <div class="pos-rlt p">
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.NAME' | translate}}</label>
             <input type="text" id="testInput" ng-model="editingPerson.name" md-autofocus>
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.USERNAME' | translate}}</label>
             <input type="text" id="testInput" ng-model="editingPerson.username">
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.EMAIL' | translate}}</label>
             <input type="text" id="testInput" ng-model="editingPerson.email">
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.PASSWORD' | translate}}</label>
             <input type="password" id="testInput" ng-model="editingPerson.password">
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0" ng-class="{'animated fadeIn': editingPerson.password, 'hide': !editingPerson.password}">
             <label for="testInput">{{'settings.profile.CONFIRM_PASSWORD' | translate}}</label>
             <input type="password" id="testInput" ng-model="editingPerson.passwordConfirm">
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.BIOGRAPHY' | translate}}</label>
             <textarea type="text" id="testInput" columns="1" ng-model="editingPerson.bio"></textarea>

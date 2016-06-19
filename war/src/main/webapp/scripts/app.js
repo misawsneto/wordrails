@@ -29,5 +29,6 @@ angular
     'oc.lazyLoad',
     'angular-loading-bar',
     'trix',
-    'material.core.colors'
+    'material.core.colors',
+    'satellizer'
   ]);

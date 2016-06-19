@@ -1,6 +1,6 @@
 package co.xarx.trix.services.person;
 
-public class PersonAlreadyExistsException extends Exception {
+public class PersonAlreadyExistsException extends RuntimeException {
 
 	private static final String MESSAGE = "User already exists";
 

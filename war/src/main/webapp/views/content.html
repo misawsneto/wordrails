@@ -80,7 +80,7 @@
             </div>
             <input class="form-control input-lg no-bg no-border md-autofocus p-l-xxl p-r-xxl" placeholder="{{'titles.SEARCH' | translate }}" ng-model="app.search.content">
             <div class="pos-abt right-0 top-0 m-t-xs">
-              <!-- <a class="" ng-click="app.search.show=false; app.search.content=''"><i class="mdi2-close i-24"></i>
+              <!-- <a  ng-click="app.search.show=false; app.search.content=''"><i class="mdi2-close i-24"></i>
                         </a> -->
               <!-- <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-icon-button pull-right" ng-click="app.search.show=false; app.search.content=''"><i class="mdi2-close i-20"></i></md-button> -->
             </div>
@@ -178,7 +178,7 @@
           <div class="cell-inner">
 
             <div class="text-left p-h-sm w-full z-index-2" ng-class="{'pos-abt': app.postLoaded.postFeaturedImage}">
-              <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(app.postLoaded.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x badge-lg md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in app.postLoaded.terms">
+              <a ui-sref="app.station.categoryPage({'stationSlug': app.getStationById(app.postLoaded.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x badge-lg md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in app.postLoaded.terms">
                 {{category.name}}
               </a>
             </div>
@@ -341,7 +341,7 @@
               </div>
             </div>
           </div>
-          <div class="">
+          <div >
             {{loadedPerson.bio}}
           </div>
         </div>

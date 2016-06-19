@@ -87,7 +87,8 @@ module.exports = {
                     'angular-sly/dist/**',
                     'angular-scroll/**',
                     'angular-carousel/dist/**',
-                    'angular-drag-and-drop-lists/**'
+                    'angular-drag-and-drop-lists/**',
+                    'satellizer/**'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',
@@ -153,19 +154,6 @@ module.exports = {
             {src: '**', cwd: 'bower_components/bootstrap/dist/fonts', dest: 'fonts', expand: true}
         ]
     },
-    // webapp: {
-    //     files: [
-    //         {expand: true, src: '**', cwd: 'api',     dest: 'angular/api'},
-    //         {expand: true, src: '**', cwd: 'apps',    dest: 'angular/apps'},
-    //         {expand: true, src: '**', cwd: 'fonts',   dest: 'angular/fonts'},
-    //         {expand: true, src: '**', cwd: 'i18n',    dest: 'angular/i18n'},
-    //         {expand: true, src: '**', cwd: 'images',  dest: 'angular/images'},
-    //         {expand: true, src: '**', cwd: 'scripts', dest: 'angular/scripts'},
-    //         {expand: true, src: '**', cwd: 'styles',  dest: 'angular/styles'},
-    //         {expand: true, src: '**', cwd: 'views',   dest: 'angular/views'},
-    //         {src: 'index.min.html', dest: 'angular/index.html'}
-    //     ]
-    // },
     html: {
         files: [
             {expand: true, src: '**', cwd: 'api',       dest: 'html/api'},

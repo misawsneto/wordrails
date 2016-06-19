@@ -144,6 +144,10 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
       })
   }
 
+  $timeout(function(){
+    $scope.app.removeTermTabs();
+  })
+
 	searchCtrl = $scope;
 }]);
 

@@ -455,6 +455,7 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 						alertColors: $scope.app.makeColorsJsonObject($scope.palettes[2].colors),
 						backgroundColors: $scope.app.makeColorsJsonObject($scope.computeColors($scope.backgroundPalette))
     	    			}
+
     	trix.updateTheme(newTheme).success(function(){
     		$scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
     		$mdDialog.cancel();

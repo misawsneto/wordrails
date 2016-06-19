@@ -81,7 +81,7 @@ public class InitService {
 
 
 		List<StationView> stationViews = new ArrayList<>();
-		List<Station> stations = personPermissionService.getStationsWithPermission(authProvider.getCurrentSid(), READ);
+		List<Station> stations = personPermissionService.getStationsWithPermission(READ);
 		for (Station station : stations) {
 			StationView stationView = modelMapper.map(station, StationView.class);
 			List<Term> terms = termRepository.findByTaxonomyId(station.categoriesTaxonomyId);

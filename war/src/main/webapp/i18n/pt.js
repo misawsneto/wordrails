@@ -174,7 +174,7 @@
 			"CREATE_PAGES_DESC": "",
 			"USER_MANAGEMENT_HEADER": "Faça a gestão dos usuários",
 			"USER_MANAGEMENT_DESC": "",
-			"POST_MANAGEMENT_HEADER": "Gerencie todas publicação",
+			"POST_MANAGEMENT_HEADER": "Gerencie todas as publicações",
 			"POST_MANAGEMENT_DESC": "",
 			"COMMENTS_MANAGEMENT_HEADER": "Gerencie comentários"
 		},
@@ -278,7 +278,7 @@
 				"ATTACH_POST": "Anexar outras publicações",
 				"NOTIFY_STATION_USERS": "Notificar usuários",
 				"PUBLICATION_MSG": "O conteúdo será publicado ao clicar em Publicar.",
-				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada minuto uma vez que o título, conteúdo, estações e categorias sejam inseridos. Para desabilitar esta função, verifique a opção \"Salvar automaticamente\" em \"Opções de publicação\". As versões da publicação pode ser visualizado no menu \"Opções de publicação\"."
+				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada alteração uma vez que o título, conteúdo, estações e categorias sejam inseridos. Para desabilitar esta função, verifique a opção \"Salvar automaticamente\" em \"Opções de publicação\". As versões da publicação pode ser visualizado no menu \"Opções de publicação\"."
 			},
 			"ACTIVATE_DEACTIVATE_HEADING": "Ativar/Desativar chapéu",
 			"ACTIVATE_DEACTIVATE_SUBTITLE": "Ativar/Desativar subtítulo",
@@ -299,6 +299,7 @@
 			"NEW_POST": "Nova publicação",
 			"NOTIFY_STATION_USERS_DESC": "Notificar usuários da estação em seus dispositivos.",
 			"NOTIFY_USERS": "Notificar usuários",
+			"PUBLISHED_AS_DRAFT": "Rascunho salvo",
 			"messages":{
 				"PAGE_CHANGE_ALERT": "Você possui conteúdo que ainda não foi salvo.",
 				"CLEAR_CONTENT_MSG": "Limpar todo o conteúdo desta publicação?",
@@ -361,7 +362,8 @@
 			"STATION_CREATION_SUCCESS": "Estação foi criada com sucesso",
 			"STATION_REMOVED_SUCCESS": "Estação removida com sucesso",
 			"perspective": {
-				"FIX_POST": "Fixar uma publicação nesta posição",
+				"FIX_POST": "Fixar publicação",
+				"FIX_POST_MSG": "Fixar uma publicação na posição ",
 				"ACTIVATE_PERSPECTIVE_MSG": "Tem certeza que deseja ativar esta perspectiva? Esta ação  modificará a forma de apresentação do conteúdo em todos os dispositivos.",
 				"REMOVE_PERSPECTIVE_MSG": "Tem certeza que deseja remover esta perspectiva? Esta operação não poderá ser desfeita.",
 				"PERSPECTIVE_ORDER_MSG": "Arraste para ordernar"

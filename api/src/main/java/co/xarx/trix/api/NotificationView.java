@@ -25,5 +25,5 @@ public class NotificationView implements Serializable {
 	public String postTitle;
 	public String postSnippet;
 	public PostView post;
-	public boolean test = true;
+	public boolean test = false;
 }

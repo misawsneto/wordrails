@@ -129,7 +129,7 @@
   <!-- /schedule button and dropdown -->
 
   <!-- auto delete button and dropdown -->
-	<div uib-dropdown class="inline" auto-close="disabled" is-open="postDeleteMenuOpen">
+	<div uib-dropdown class="inline hide" auto-close="disabled" is-open="postDeleteMenuOpen">
 		<md-button aria-label="nothing" ng-click="resetDeleteDate();" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
 				<md-tooltip md-direction="top">
           {{'settings.post.menu.DELETE_DATE' | translate}}
@@ -220,7 +220,7 @@
 	      	{{'settings.post.NOTIFY_STATION_USERS_DESC' | translate}}
 	      </div>
 	      <div class="p-h-xs">
-		      <md-checkbox aria-label="nothing" ng-model="app.editingPost.notify" class="">
+		      <md-checkbox aria-label="nothing" ng-model="app.editingPost.notify" >
 		      	{{'titles.NOTIFY' | translate}}
 		      </md-checkbox>
 	      </div>
@@ -607,7 +607,7 @@
           </md-button>
 			<md-button aria-label="nothing" ng-if="app.editingPost.id && app.checkState() === 1" class="md-raised md-primary p-h md-whiteframe-z2" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
 			</md-button>
-          <md-button aria-label="nothing" class="" ng-click="toggleOptions();">{{'titles.CLOSE' | translate}}</md-button>
+          <md-button aria-label="nothing"  ng-click="toggleOptions();">{{'titles.CLOSE' | translate}}</md-button>
         </div>
       </div>
 

@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -23,7 +22,7 @@ import java.util.Set;
 @Entity
 @JsonIgnoreProperties(value = {
 		"logoHash", "logoMediumHash"
-}, allowGetters = true)
+}, allowGetters = true, ignoreUnknown = true)
 public class Station extends BaseEntity implements Serializable {
 	public static final String RESTRICTED = "RESTRICTED";
 	public static final String RESTRICTED_TO_NETWORKS = "RESTRICTED_TO_NETWORKS";

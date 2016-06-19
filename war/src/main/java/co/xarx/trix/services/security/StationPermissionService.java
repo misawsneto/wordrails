@@ -67,42 +67,35 @@ public class StationPermissionService {
 				.collect(Collectors.toList());
 	}
 
-	public void updateStationsPermissions(List<Sid> sids, List<Integer> stationIds, boolean publisher, boolean
+	public void updateStationsPermissions(List<Sid> sids, List<Integer> stationIds, boolean writer, boolean
 			editor, boolean admin) {
 		Assert.notEmpty(sids, "Sids must have elements");
 		Assert.notEmpty(stationIds, "Station ids must have elements");
 
 
-		CumulativePermission permission = new CumulativePermission();
-		permission.set(Permissions.READ);
+		CumulativePermission permission = Permissions.getReader();
 
 		if (editor) {
-			permission.set(MODERATION);
-			permission.set(Permissions.CREATE);
-			permission.set(Permissions.WRITE);
-			permission.set(Permissions.DELETE);
+			permission = Permissions.getEditor();
 		}
-		if (publisher) {
-			permission.set(Permissions.WRITE);
-			permission.set(Permissions.CREATE);
+		if (writer) {
+			permission = Permissions.getWriter();
 		}
 		if (admin) {
-			permission.set(MODERATION);
-			permission.set(Permissions.CREATE);
-			permission.set(Permissions.WRITE);
-			permission.set(Permissions.DELETE);
-			permission.set(Permissions.ADMINISTRATION);
+			permission = Permissions.getAdmin();
 		}
 
 		Map<ObjectIdentity, MutableAcl> acls = aclService.findAcls(stationIds);
 		for (MutableAcl acl : acls.values()) {
 			List<AccessControlEntry> entries = acl.getEntries();
 			for (Sid sid : sids) {
-				AccessControlEntry ace = aclService.findAce(entries, sid);
-				if(ace == null) {
+				List<AccessControlEntry> aces = aclService.findAce(entries, sid);
+				if(aces == null) {
 					acl.insertAce(acl.getEntries().size(), permission, sid, true);
 				} else {
-					acl.updateAce(entries.indexOf(ace), permission);
+					for (AccessControlEntry ace : aces) {
+						acl.updateAce(entries.indexOf(ace), permission);
+					}
 				}
 
 				aclService.updateAcl(acl);

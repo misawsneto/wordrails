@@ -6,8 +6,9 @@ import co.xarx.trix.domain.User;
 import co.xarx.trix.domain.social.SocialUser;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserRepository;
-import co.xarx.trix.services.person.PersonAlreadyExistsException;
 import co.xarx.trix.services.person.PersonFactory;
+import co.xarx.trix.services.user.UserAlreadyExistsException;
+import co.xarx.trix.services.user.UserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,17 +25,20 @@ import java.util.Map;
 @Component
 public class Authenticator {
 
+	private UserFactory userFactory;
 	private PersonFactory personFactory;
+
 	private PersonRepository personRepository;
 	private UserRepository userRepository;
 	private Map<String, OAuthAuthenticator> authenticators;
 
 	@Autowired
-	public Authenticator(PersonFactory personFactory, PersonRepository personRepository, UserRepository
-			userRepository, GoogleAuthenticator googleAuthenticator, FacebookAuthenticator facebookAuthenticator) {
+	public Authenticator(UserRepository userRepository, GoogleAuthenticator googleAuthenticator,
+						 FacebookAuthenticator facebookAuthenticator, UserFactory userFactory, PersonFactory personFactory, PersonRepository personRepository) {
+		this.userRepository = userRepository;
+		this.userFactory = userFactory;
 		this.personFactory = personFactory;
 		this.personRepository = personRepository;
-		this.userRepository = userRepository;
 		authenticators = new HashMap<>();
 		authenticators.put("google", googleAuthenticator);
 		authenticators.put("facebook", facebookAuthenticator);
@@ -60,14 +64,19 @@ public class Authenticator {
 			OAuthAuthenticator authenticator = getAuthenticator(providerId);
 			SocialUser socialUser = authenticator.oauth(userId, appId, appSecret, accessToken);
 
-			Person person;
-			try {
-				person = personFactory.create(socialUser.getName(), socialUser.getEmail(), socialUser);
-			} catch (PersonAlreadyExistsException e) {
-				person = personRepository.findByEmail(socialUser.getEmail());
-			}
+			Person person = personRepository.findByEmail(socialUser.getEmail());
 
-			user = person.user;
+			if(person != null) {
+				userFactory.createConnection(person.getUser(), socialUser);
+				user = person.getUser();
+			} else {
+				try {
+					user = userFactory.create(socialUser);
+					personFactory.create(socialUser.getName(), socialUser.getEmail(), user);
+				} catch (UserAlreadyExistsException e) {
+					user = userRepository.findUserByEmail(socialUser.getEmail());
+				}
+			}
 		} else {
 			OAuthAuthenticator authenticator = getAuthenticator(providerId);
 

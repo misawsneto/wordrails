@@ -278,7 +278,7 @@
 				"ATTACH_POST": "Attach other publications to this one",
 				"NOTIFY_STATION_USERS": "Notify users",
 				"PUBLICATION_MSG": "The content will be published when you click Publish.",
-				"AUTO_SAVE_MSG": "Drafts will be saved automatically every minute once the title, content, station and categories are set. All publication versions can be accessed through the \"Publication options\" menu."
+				"AUTO_SAVE_MSG": "Drafts will be saved automatically uppon every change once the title, content, station and categories are set. All publication versions can be accessed through the \"Publication options\" menu."
 			},
 			"ACTIVATE_DEACTIVATE_HEADING": "Activate/Deactivate heading",
 			"ACTIVATE_DEACTIVATE_SUBTITLE": "Activate/Deactivate subtitle",
@@ -299,6 +299,7 @@
 			"NEW_POST": "New publication",
 			"NOTIFY_STATION_USERS_DESC": "Notify station users on their devices.",
 			"NOTIFY_USERS": "Notify users",
+			"PUBLISHED_AS_DRAFT": "Draft saved",
 			"messages":{
 				"PAGE_CHANGE_ALERT": "You have edited your publication and there's unsaved content.",
 				"CLEAR_CONTENT_MSG": "Clear all publication content.",
@@ -361,7 +362,8 @@
 			"STATION_CREATION_SUCCESS": "Station was successfully created",
 			"STATION_REMOVED_SUCCESS": "Station was removed",
 			"perspective": {
-				"FIX_POST": "Fix a publication on this position",
+				"FIX_POST": "Fix publication",
+				"FIX_POST_MSG": "Fix a publication at position number ",
 				"ACTIVATE_PERSPECTIVE_MSG": "Are you sure you wish to activate this perspective? This action will affect how the content is displayed on all devices.",
 				"REMOVE_PERSPECTIVE_MSG": "Are you sure you wish to remove this perspective? This operation cannot be undone.",
 				"PERSPECTIVE_ORDER_MSG": "Drag and Sort"

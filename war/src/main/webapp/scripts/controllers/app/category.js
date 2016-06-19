@@ -50,6 +50,10 @@ app.controller('CategoryCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$md
     $('#scroll-box').animate({scrollTop: 0}, 700, 'easeOutQuint');
   }
 
+  $timeout(function(){
+    $('#scroll-box').animate({scrollTop: 0}, 0);
+  })
+
   $scope.$on('$destroy',function(){
       if(intervalPromise)
           $interval.cancel(intervalPromise);   

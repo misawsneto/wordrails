@@ -107,7 +107,7 @@ app.controller('ProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$stat
   
   var intervalPromise;
   intervalPromise = $interval(function(){
-    if($('#scroll-box').scrollTop() > 400)
+    if($('#scroll-box').scrollTop() > 400 && $('main').height() - 400)
       $scope.showScrollUp = true;
     else
       $scope.showScrollUp = false;
@@ -116,6 +116,10 @@ app.controller('ProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$stat
   $scope.scrollToTop = function(){
     $('#scroll-box').animate({scrollTop: 0}, 700, 'easeOutQuint');
   }
+
+  $timeout(function(){
+    $('#scroll-box').animate({scrollTop: 0}, 0);
+  })
 
   $scope.$on('$destroy',function(){
       if(intervalPromise)

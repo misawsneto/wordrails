@@ -1,537 +1,606 @@
 <div id="settings-perspectives">
-	<div class="p-sm pos-abt top-0 left-0 w-full md-whiteframe-z0 md-primary-hue-1 background">
-
-    <md-button aria-label="nothing" class="pull-right" style="margin: 5px 10px 0 10px;" ng-click="togglePerspectives()">
-			<md-tooltip md-direction="top">
-	    		{{'settings.post.OPTIONS' | translate}}
-	  		</md-tooltip>
-			<i class="mdi mdi2-menu i-20 m-r-sm"></i> {{'titles.PERSPECTIVES' | translate}}
-		</md-button>
-
-		<!--<md-button aria-label="nothing" class="pull-left" style="margin: 5px 10px 0 10px;" ng-click="togglePerspectives()">
-			<md-tooltip md-direction="top">
-    		{{'titles.SAVE' | translate}}
-  		</md-tooltip>
-			<i class="mdi mdi2-content-save i-20 m-r-sm"></i> {{'titles.SAVE' | translate}}
-		</md-button>-->
-
-		<md-button aria-label="nothing" ng-click="isMobile = !isMobile; reloadMasonry();" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
-      <i class="i-20" ng-class="{'mdi-hardware-desktop-windows': !isMobile, 'mdi-hardware-phone-android': isMobile }"></i>
-    </md-button>
-
-	</div>
-
-	<div id="setting-perspective-editor">
-		<div class="p-md">
-			<div class="color-selector-container">
-				<div class="content m-t-md pos-rlt">
-					<div class="browser-buttons" ng-class="{'mobile opacity-0': isMobile}"></div>
-					<div class="mockup-browser animated fadeIn o-f-h" style="padding-bottom: 50px;" ng-class="{'mobile': isMobile, 'desktop': !isMobile}">
-
-				    <md-toolbar class="no-radius md-primary" style="min-height: 50px; height: 50px">
-				      <a md-ink-ripple ng-click="toggleDemo()" class="pull-left i-16" style="    padding: 0 16px;
-				        line-height: 50px;
-				        max-width: 55px;">
-				      <i class="mdi-navigation-menu i-24"></i></a>
-				      <div class="pos-abt top-0 p m-l-xxl" style="padding: 11px">{{thisStation.name}}</div>
-				    </md-toolbar>
-
-				    <div class="vbox">
-			        <div class="row-row">
-			          <div class="cell">
-			            <div class="cell-inner">
-
-				            <md-tabs  md-border-bottom class="pos-abt bottom-0 right-0 left-0 top-0 md-primary" >
-				            	<md-tab label="1">
-				            		<md-tab-label>
-				            			<i class="mdi2-home i-20"></i>
-				            		</md-tab-label>
-				            		<md-tab-body>
-				            			<md-content class="o-f-x-h">
-
-														<div class="clear pos-rlt p" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells && !isMobile && !reloadingCarousel"
-														ng-mouseenter="currentPerspective.termPerspectiveView.featuredRow.showOptions=true" ng-mouseleave="currentPerspective.termPerspectiveView.featuredRow.showOptions=false">
-															<ul class="pgwSlider" pgw-slider="{verticalCentering:true, maxHeight: 400, selectionMode: 'click', intervalDuration: 7000 }">
-														    <li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells">
-														    	<img ng-src="{{app.getImageLink(cell.postView, 'large')}}" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="bg-cover opacity-0" alt="{{cell.postView.title}}" data-description="{{cell.postView.snippet | characters:200}}">
-														    	<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z1 pos-abt top-0 bottom-0 right-0 left-0 bg-cover">
-				                        	</div>
-				                        	<span>{{cell.postView.title}}</span>
-													    	</li>
-															</ul>
-
-															<div ng-if="currentPerspective.termPerspectiveView.featuredRow.showOptions" class="p" style="position: absolute; top:0; bottom:0; right:0; left:0;">
-																<div class="display-table text-center" style="background: rgba(0,0,0,0.5); height:100%; width: 100%;">
-																	<div class="display-cell v-m">
-																		<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent" ng-click="showFeaturedPostsDialog($event)">
-																		  <md-tooltip md-direction="top">
-																		    {{'titles.EDIT' | translate}}
-																		  </md-tooltip>
-																		  <i class="mdi2-settings i-24"></i>
-																		</md-button>
-																	</div>
-																</div>
-															</div>
-														</div>
-
-														<div ng-if="currentPerspective.termPerspectiveView.featuredRow.cells && isMobile && !reloadingCarousel"
-														ng-mouseenter="currentPerspective.termPerspectiveView.featuredRow.showOptions=true" ng-mouseleave="currentPerspective.termPerspectiveView.featuredRow.showOptions=false" class="pos-rlt">
-															<ul rn-carousel="" rn-carousel-index="carouselIndex" rn-carousel-auto-slide="" rn-carousel-pause-on-hover="" rn-carousel-buffered="" class="ng-scope h-200 image no-margin">
-																<li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells">
-																	<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z1 h-200 pos-abt top-0 bottom-0 right-0 left-0 bg-cover layer">
-																		<div class="pos-abt bottom-0 right-0 left-0 pgwSlider">
-																			<div class="ps-caption" style="display: block">{{cell.postView.title}}</div>
-																		</div>
-				                        	</div>
-																</li>
-															</ul>
-															<div class="text-center opacity-08 pos-rlt m-t-n-lg text-md z-i-2 perspective-editor-options-button " style="margin-top: -34px">
-																<div class="text-shadow-sm text-lg" rn-carousel-indicators="" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells.length > 1" slides="currentPerspective.termPerspectiveView.featuredRow.cells" rn-carousel-index="carouselIndex">
-																</div>
-															</div>
-															<div ng-if="currentPerspective.termPerspectiveView.featuredRow.showOptions" class="" style="position: absolute; top:0; bottom:0; right:0; left:0;">
-																<div class="display-table text-center" style="background: rgba(0,0,0,0.5); height:100%; width: 100%;">
-																	<div class="display-cell v-m">
-																		<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent">
-																		  <md-tooltip md-direction="top">
-																		    {{'titles.EDIT' | translate}}
-																		  </md-tooltip>
-																		  <i class="mdi2-settings i-24"></i>
-																		</md-button>
-																	</div>
-																</div>
-															</div>
-														</div>
-
-				            				<div class="" ng-class="{'p-h-xxl': !isMobile}">
-					                    <div class="row no-margin" reload-on-show masonry="{transitionDuration: 0}">
-							                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12 p-0 p-b': isMobile}" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells"
-																ng-mouseenter="cell.showOptions=true" ng-mouseleave="cell.showOptions=false">
-
-																	<md-button ng-if="cell.id || cell.fixed" class="opacity-09 text-white pos-abt top-0 left-0 md-icon-button m-r-t z-index-5" ng-style="{'margin': !isMobile ? '16px' : '0' }">
-																		<i class="i-24 mdi2-pin icon-text-shadow"></i>
-																	</md-button>
-
-							                    <div class="w-full no-margin" ng-class="{'md-whiteframe-z1 card': !isMobile}">
-							                      <div class="item" ng-if="!isMobile">
-							                      	<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="h-200 img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
-						                        	</div>
-							                      </div>
-							                      <md-content class="text-base" ng-class="{'p md-hue-1': !isMobile, 'display-table p': isMobile}">
-							                      	<div class="inline" ng-class="{'w-lg': isMobile}">
-								                        <p class="font-500" ng-class="{'text-md': !isMobile, 'text-base': isMobile}">{{cell.postView.title}}</p>
-								                        <p ng-class="{'text-base': !isMobile, 'text-xs': isMobile}">
-								                          {{cell.postView.snippet | characters: !isMobile ? 220 : 100}}
-								                        </p>
-							                      	</div>
-							                      	<div class="inline display-cell v-m text-right w-full" ng-if="isMobile">
-							                      		<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="img-responsive w-96 m-auto bg-cover">
-							                        	</div>
-							                      	</div>
-							                      </md-content>
-							                    </div>
-								                  <div class="" ng-if="isMobile && !$last" style="margin: 0 -15px -15px -15px;">
-								                  	<md-divider></md-divider>
-								                  </div>
-
-								                  <div ng-if="cell.showOptions" ng-class="{'p': !isMobile}" style="position: absolute; top:0; bottom:0; right:0; left:0;">
-																		<div class="display-table text-center" style="background: rgba(0,0,0,0.5); height:100%; width: 100%;">
-																			<div class="display-cell v-m">
-																				<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent">
-																				  <md-tooltip md-direction="top">
-																				    {{'settings.station.perspective.FIX_POST' | translate}}
-																				  </md-tooltip>
-																				  <i class="mdi2-pin i-24"></i>
-																				</md-button>
-																			</div>
-																		</div>
-																	</div>
-
-							                  </div>
-						                  </div>
-						                  <div class="text-center p">
-					            					<md-button aria-label="nothing" aria-label="menu" class="md-accent">
-																  {{'titles.LOAD_MORE' | translate}}
-																</md-button>
-					            				</div>
-				            				</div>
-				                  </md-content>
-				               	</md-tab-body>
-				            	</md-tab>
-
-				              <md-tab label="{{row.termName}}" ng-repeat="row in currentPerspective.termPerspectiveView.ordinaryRows">
-				              	<md-content class="o-f-x-h">
-				              		<div class="" ng-if="!isMobile">
-				              			<!-- ng-style="{{category | categoryImage:'large':true}}" md-whiteframe-z2 -->
-														<div class="display-table animated5x fadeIn w-full bg-cover h-100 text-center"  style=" background-position: 50% 50%;">
-														    <div class="display-cell v-m">
-														      <span style="border-radius: 60px; border: 3px solid;" class="p p-v-sm text-3x text-md  font-500">{{::row.category.name}}</span>
-														      <div ng-if="row.category.description" class=" m-t-md font-normal h5">{{::row.category.description}}</div>
-														    </div>
-														</div>
-				              		</div>
-				              		<div class="" ng-class="{'p-h-xxl': !isMobile}">
-				              			<div class="row no-margin" reload-on-show masonry="{transitionDuration: 0}">
-						                  <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12': isMobile, 'p-0 p-b': ($first && isMobile)}" ng-repeat="cell in row.cells">
-																
-																<md-button ng-if="cell.id || cell.fixed" class="opacity-09 text-white pos-abt top-0 left-0 md-icon-button m-r-t z-index-5" ng-style="{'margin': !isMobile ? '16px' : '0' }">
-																	<i class="i-24 mdi2-pin icon-text-shadow"></i>
-																</md-button>
-
-						                    <div class="w-full no-margin" ng-class="{'md-whiteframe-z1 card': !isMobile}">
-						                      <div class="item" ng-if="!isMobile || $first">
-						                      	<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="h-200 img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
-					                        	</div>
-						                      </div>
-						                      <md-content class="text-base" ng-class="{'p md-hue-1': !isMobile, 'display-table': isMobile, 'p': ($first && isMobile)}">
-						                      	<div class="inline" ng-class="{'w-lg': isMobile && !$first}">
-							                        <p class="font-500" ng-class="{'text-md': !isMobile, 'text-base': isMobile}">{{cell.postView.title}}</p>
-							                        <p ng-class="{'text-base': !isMobile, 'text-xs': isMobile}">
-							                          {{cell.postView.snippet | characters: !isMobile || $first ? 220 : 100}}
-							                        </p>
-						                      	</div>
-						                      	<div class="inline display-cell v-m text-right w-full" ng-if="isMobile && !$first">
-						                      		<div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="img-responsive w-96 m-auto bg-cover">
-						                        	</div>
-						                      	</div>
-						                      </md-content>
-						                    </div>
-							                  <div class="" ng-if="isMobile && !$last" style="margin: 0 -15px -15px -15px;">
-							                  	<md-divider></md-divider>
-							                  </div>
-						                  </div>
-					                  </div>
-					                  <div class="text-center p">
-				            					<md-button aria-label="nothing" aria-label="menu" class="md-accent">
-															  {{'titles.LOAD_MORE' | translate}}
-															</md-button>
-				            				</div>
-				              		</div>
-												</md-content>
-				              </md-tab>
-				            </md-tabs>
-									    <!-- /mockup-grid -->
-							    </div>
-						    </div>
-					    </div>
-				    </div>
-						<!-- /vbox -->	
-					</div>
-				</div>
-			</div>
-		</div><!-- /container -->
-	</div>
-
-	<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-disabled="!perspectiveChanged">
-	  <md-tooltip md-direction="top">
-	    {{'titles.SAVE' | translate}}
-	  </md-tooltip>
-	  <i class="mdi2-content-save i-24"></i>
-	</md-button>
-</div>
-
-<md-sidenav class="md-sidenav-right md-whiteframe-z2 w-400" md-component-id="perspective-list">
-	  <md-toolbar class="md-theme-light">
-	    <h1 class="md-toolbar-tools" translate="titles.PERSPECTIVES"></h1>
-	  </md-toolbar>
-  	<md-button ng-click="showAddPerspectiveDialog($event);" aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-abt right-0 top-0" style="margin-top: 34px;margin-right: 30px;">
-		  <md-tooltip md-direction="top">
-		    {{'titles.ADD' | translate}}
-		  </md-tooltip>
-		  <i class="mdi2-plus i-24"></i>
-		</md-button>
-	  <md-content class="pos-abt bottom-0 right-0 left-0 md-background-default background" style="top:64px">
-	  	<div id="" class="vbox">
-        <div class="row-row">
-          <div class="cell">
-            <div class="cell-inner p-t-lg">
-            	
-              <div class="m-t-sm p-h pos-rlt">
-                <ul style="margin:0;padding:0">
-                  <li data-ng-repeat="perspective in stationPerspectives | orderBy: 'id'">
-                    <div class="p-h p-t m-b md-whiteframe-z1 pos-rlt" ng-class="{'md-background-hue-1 background': perspective.id !== currentPerspective.id, 'md-accent-hue-1 background': perspective.id === currentPerspective.id}">
-                      <div class="pos-abt top-0 right-0 font-bold p">
-                        #{{$index + 1}}
-                      </div>
-                      <div class="p-v-sm text-ellipsis tetx-md text-u-c">
-                      	{{perspective.name}}
-                      </div>
-                      <div class="clear" style="height: 36px;">
-                      	<md-button ng-if="perspective.id !== currentPerspective.id" aria-label="nothing" class="no-margin m-b-sm btn-sm pull-left no-padding" style="min-height: 28px; line-height:28px;" ng-click="setCurrentPerspective(perspective);">{{'titles.SHOW' | translate}}
-                        </md-button>
-                        <md-button ng-if="perspective.id !== thisStation.defaultPerspectiveId" aria-label="nothing" class="no-margin m-b-sm btn-sm pull-left no-padding" style="min-height: 28px; line-height:28px;" ng-click="showActivatePerspectiveDialog($event);">{{'titles.ACTIVATE' | translate}}
-                        </md-button>
-                        <md-button ng-if="perspective.id !== currentPerspective.id" aria-label="nothing" class="md-warn no-margin m-b-sm btn-sm pull-right no-padding" style="min-height: 28px; line-height:28px;" ng-click="showDeletePerspectiveDialog($event, perspective)">{{'titles.REMOVE' | translate}}
-                        </md-button>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
-            </div>
-          </div>
-        </div>
+   <div class="p-sm pos-abt top-0 left-0 w-full md-whiteframe-z0 md-primary-hue-1 background">
+      <div class="pull-left text-md-l p-sm m-t-xs">
+         {{thisStation.name}} • {{currentPerspective.name}}
       </div>
+
+			<md-button aria-label="nothing" style="margin: 5px 10px 0 20px;" ng-click="showCategoriesConfigDialog($event)">
+         <md-tooltip md-direction="top">
+            {{'titles.CATEGORIES' | translate}}
+         </md-tooltip>
+         <i class="mdi mdi2-menu i-20 m-r-sm v-m"></i> {{'titles.CATEGORIES' | translate}}
+      </md-button>
+
+      <md-button aria-label="nothing" class="pull-right" style="margin: 5px 10px 0 10px;" ng-click="togglePerspectives()">
+         <md-tooltip md-direction="top">
+            {{'settings.post.OPTIONS' | translate}}
+         </md-tooltip>
+         <i class="mdi mdi2-view-quilt i-20 m-r-sm"></i> {{'titles.PERSPECTIVES' | translate}}
+      </md-button>
+      <!--<md-button aria-label="nothing" class="pull-left" style="margin: 5px 10px 0 10px;" ng-click="togglePerspectives()">
+         <md-tooltip md-direction="top">
+          		{{'titles.SAVE' | translate}}
+         	</md-tooltip>
+         <i class="mdi mdi2-content-save i-20 m-r-sm"></i> {{'titles.SAVE' | translate}}
+         </md-button>-->
+      <md-button aria-label="nothing" ng-click="isMobile = !isMobile; reloadMasonry();" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
+         <i class="i-20" ng-class="{'mdi-hardware-desktop-windows': isMobile, 'mdi-hardware-phone-android': !isMobile }"></i>
+      </md-button>
+   </div>
+   <div id="setting-perspective-editor">
+      <div class="p-md">
+         <div class="color-selector-container">
+            <div class="m-t-md pos-rlt">
+               <div class="browser-buttons" ng-class="{'mobile opacity-0': isMobile}"></div>
+               <div class="mockup-browser animated fadeIn o-f-h" style="padding-bottom: 50px;" ng-class="{'mobile': isMobile, 'desktop': !isMobile}">
+                  <md-toolbar class="no-radius md-primary" style="min-height: 50px; height: 50px">
+                     <a md-ink-ripple ng-click="toggleDemo()" class="pull-left i-16" style="    padding: 0 16px;
+                        line-height: 50px;
+                        max-width: 55px;">
+                     <i class="mdi-navigation-menu i-24"></i></a>
+                     <div class="pos-abt top-0 p m-l-xxl" style="padding: 11px">{{thisStation.name}}</div>
+                  </md-toolbar>
+                  <div class="vbox">
+                     <div class="row-row">
+                        <div class="cell">
+                           <div class="cell-inner">
+                              <md-tabs  md-border-bottom class="pos-abt bottom-0 right-0 left-0 top-0 md-primary" >
+                                 <md-tab label="1">
+                                    <md-tab-label>
+                                       <i class="mdi2-home i-20"></i>
+                                    </md-tab-label>
+                                    <md-tab-body>
+                                       <md-content class="o-f-x-h">
+                                          <div class="p-sm text-center" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells.length === 0">
+                                             <md-button class="md-accent md-fab md-mini" ng-click="showFeaturedPostsDialog($event)">
+                                                <i class="mdi2-view-carousel i-24 "></i>
+                                             </md-button>
+                                          </div>
+                                          <div class="clear pos-rlt p animated fadeIn" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells.length > 0 && !isMobile && !reloadingCarousel"
+                                             ng-mouseenter="currentPerspective.termPerspectiveView.featuredRow.showOptions=true" ng-mouseleave="currentPerspective.termPerspectiveView.featuredRow.showOptions=false">
+                                             <ul class="pgwSlider" pgw-slider="{verticalCentering:true, maxHeight: 400, selectionMode: 'click', intervalDuration: 7000 }">
+                                                <li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells">
+                                                   <img ng-src="{{app.getImageLink(cell.postView, 'large')}}" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="bg-cover opacity-0" alt="{{cell.postView.title}}" data-description="{{cell.postView.snippet | characters:200}}">
+                                                   <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z1 pos-abt top-0 bottom-0 right-0 left-0 bg-cover">
+                                                   </div>
+                                                   <span>{{cell.postView.title}}</span>
+                                                </li>
+                                             </ul>
+                                             <div ng-if="currentPerspective.termPerspectiveView.featuredRow.showOptions" class="p" style="position: absolute; top:0; bottom:0; right:0; left:0;">
+                                                <div class="display-table text-center" style="background: rgba(0,0,0,0.5); height:100%; width: 100%;">
+                                                   <div class="display-cell v-m">
+                                                      <md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent" ng-click="showFeaturedPostsDialog($event)">
+                                                         <md-tooltip md-direction="top">
+                                                            {{'titles.EDIT' | translate}}
+                                                         </md-tooltip>
+                                                         <i class="mdi2-settings i-24"></i>
+                                                      </md-button>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                          <div class="pos-rlt animated fadeIn" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells.length >0  && isMobile && !reloadingCarousel"
+                                             ng-mouseenter="currentPerspective.termPerspectiveView.featuredRow.showOptions=true" ng-mouseleave="currentPerspective.termPerspectiveView.featuredRow.showOptions=false" class="pos-rlt">
+                                             <ul rn-carousel="" rn-carousel-index="carouselIndex" rn-carousel-auto-slide="" rn-carousel-pause-on-hover="" rn-carousel-buffered="" class="ng-scope h-200 image no-margin">
+                                                <li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells">
+                                                   <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z1 h-200 pos-abt top-0 bottom-0 right-0 left-0 bg-cover layer">
+                                                      <div class="pos-abt bottom-0 right-0 left-0 pgwSlider">
+                                                         <div class="ps-caption" style="display: block">{{cell.postView.title}}</div>
+                                                      </div>
+                                                   </div>
+                                                </li>
+                                             </ul>
+                                             <div class="text-center opacity-08 pos-rlt m-t-n-lg text-md z-i-2 perspective-editor-options-button " style="margin-top: -34px">
+                                                <div class="text-shadow-sm text-lg" rn-carousel-indicators="" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells.length > 1" slides="currentPerspective.termPerspectiveView.featuredRow.cells" rn-carousel-index="carouselIndex">
+                                                </div>
+                                             </div>
+                                             <div ng-if="currentPerspective.termPerspectiveView.featuredRow.showOptions" style="position: absolute; top:0; bottom:0; right:0; left:0;">
+                                                <div class="display-table text-center" style="background: rgba(0,0,0,0.5); height:100%; width: 100%;">
+                                                   <div class="display-cell v-m">
+                                                      <md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent" ng-click="showFeaturedPostsDialog($event)">
+                                                         <md-tooltip md-direction="top">
+                                                            {{'titles.EDIT' | translate}}
+                                                         </md-tooltip>
+                                                         <i class="mdi2-settings i-24"></i>
+                                                      </md-button>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                          <div  ng-class="{'p-h-xxl': !isMobile}">
+                                             <div class="row no-margin" reload-on-show masonry="{transitionDuration: 0}">
+                                                <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12 p-0 p-b': isMobile}" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells"
+                                                   ng-mouseenter="cell.showOptions=true" ng-mouseleave="cell.showOptions=false">
+                                                   <md-button ng-if="cell.id || cell.fixed" class="opacity-09 text-white pos-abt top-0 left-0 md-icon-button m-r-t z-index-5" ng-style="{'margin': !isMobile ? '16px' : '0' }">
+                                                      <i class="i-24 mdi2-pin icon-text-shadow"></i>
+                                                   </md-button>
+                                                   <div class="w-full no-margin" ng-class="{'md-whiteframe-z1 card': !isMobile}">
+                                                      <div class="item" ng-if="!isMobile">
+                                                         <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="h-200 img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
+                                                         </div>
+                                                      </div>
+                                                      <md-content class="text-base" ng-class="{'p md-hue-1': !isMobile, 'display-table p': isMobile}">
+                                                         <div class="inline" ng-class="{'w-lg': isMobile}">
+                                                            <p class="font-500" ng-class="{'text-md': !isMobile, 'text-base': isMobile}">{{cell.postView.title}}</p>
+                                                            <p ng-class="{'text-base': !isMobile, 'text-xs': isMobile}">
+                                                               {{cell.postView.snippet | characters: !isMobile ? 220 : 100}}
+                                                            </p>
+                                                         </div>
+                                                         <div class="inline display-cell v-m text-right w-full" ng-if="isMobile">
+                                                            <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="img-responsive w-96 m-auto bg-cover">
+                                                            </div>
+                                                         </div>
+                                                      </md-content>
+                                                   </div>
+                                                   <div  ng-if="isMobile && !$last" style="margin: 0 -15px -15px -15px;">
+                                                      <md-divider></md-divider>
+                                                   </div>
+                                                   <div ng-if="cell.showOptions" ng-class="{'p': !isMobile}" style="position: absolute; top:0; bottom:0; right:0; left:0;">
+                                                      <div class="display-table text-center" style="background: rgba(0,0,0,0.5); height:100%; width: 100%;">
+                                                         <div class="display-cell v-m">
+                                                            <md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent" ng-click="showPinPostDialog($event, $index, cell)">
+                                                               <md-tooltip md-direction="top">
+                                                                  {{'settings.station.perspective.FIX_POST_MSG' | translate}} {{$index + 1}}
+                                                               </md-tooltip>
+                                                               <i class="mdi2-pin i-24"></i>
+                                                            </md-button>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div class="text-center p" ng-if="currentPerspective.termPerspectiveView.homeRow.cells && currentPerspective.termPerspectiveView.homeRow.cells.length > 0">
+                                                <md-button aria-label="nothing" aria-label="menu" class="md-accent">
+                                                   {{'titles.LOAD_MORE' | translate}}
+                                                </md-button>
+                                             </div>
+                                          </div>
+                                       </md-content>
+                                    </md-tab-body>
+                                 </md-tab>
+                                 <md-tab label="{{row.termName}}" ng-repeat="row in currentPerspective.termPerspectiveView.ordinaryRows">
+                                    <md-content class="o-f-x-h">
+                                       <div  ng-if="!isMobile">
+                                          <!-- ng-style="{{category | categoryImage:'large':true}}" md-whiteframe-z2 -->
+                                          <div class="display-table animated5x fadeIn w-full bg-cover h-100 text-center"  style=" background-position: 50% 50%;">
+                                             <div class="display-cell v-m">
+                                                <span style="border-radius: 60px; border: 3px solid;" class="p p-v-sm text-3x text-md  font-500">{{::row.category.name}}</span>
+                                                <div ng-if="row.category.description" class=" m-t-md font-normal h5">{{::row.category.description}}</div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div  ng-class="{'p-h-xxl': !isMobile}">
+                                          <div class="row no-margin" reload-on-show masonry="{transitionDuration: 0}">
+                                             <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12': isMobile, 'p-0 p-b': ($first && isMobile)}" ng-repeat="cell in row.cells">
+                                                <div class="w-full no-margin" ng-class="{'md-whiteframe-z1 card': !isMobile}">
+                                                   <div class="item" ng-if="!isMobile || $first">
+                                                      <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="h-200 img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
+                                                      </div>
+                                                   </div>
+                                                   <md-content class="text-base" ng-class="{'p md-hue-1': !isMobile, 'display-table': isMobile, 'p': ($first && isMobile)}">
+                                                      <div class="inline" ng-class="{'w-lg': isMobile && !$first}">
+                                                         <p class="font-500" ng-class="{'text-md': !isMobile, 'text-base': isMobile}">{{cell.postView.title}}</p>
+                                                         <p ng-class="{'text-base': !isMobile, 'text-xs': isMobile}">
+                                                            {{cell.postView.snippet | characters: !isMobile || $first ? 220 : 100}}
+                                                         </p>
+                                                      </div>
+                                                      <div class="inline display-cell v-m text-right w-full" ng-if="isMobile && !$first">
+                                                         <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="img-responsive w-96 m-auto bg-cover">
+                                                         </div>
+                                                      </div>
+                                                   </md-content>
+                                                </div>
+                                                <div  ng-if="isMobile && !$last" style="margin: 0 -15px -15px -15px;">
+                                                   <md-divider></md-divider>
+                                                </div>
+                                             </div>
+                                          </div>
+                                          <div class="text-center p" ng-if="currentPerspective.termPerspectiveView.homeRow.cells && currentPerspective.termPerspectiveView.homeRow.cells.length > 0">
+                                             <md-button aria-label="nothing" aria-label="menu" class="md-accent">
+                                                {{'titles.LOAD_MORE' | translate}}
+                                             </md-button>
+                                          </div>
+                                       </div>
+                                    </md-content>
+                                 </md-tab>
+                              </md-tabs>
+                              <!-- /mockup-grid -->
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- /vbox -->	
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- /container -->
+   </div>
+   <md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-disabled="!perspectiveChanged" ng-click="updatePerspecitve();">
+      <md-tooltip md-direction="top">
+         {{'titles.SAVE' | translate}}
+      </md-tooltip>
+      <i class="mdi2-content-save i-24"></i>
+   </md-button>
+</div>
+<md-sidenav class="md-sidenav-right md-whiteframe-z2 w-400" md-component-id="perspective-list">
+   <md-toolbar class="md-theme-light">
+      <h1 class="md-toolbar-tools" translate="titles.PERSPECTIVES"></h1>
+   </md-toolbar>
+   <md-button ng-click="showAddPerspectiveDialog($event);" aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-abt right-0 top-0" style="margin-top: 34px;margin-right: 30px;">
+      <md-tooltip md-direction="top">
+         {{'titles.ADD' | translate}}
+      </md-tooltip>
+      <i class="mdi2-plus i-24"></i>
+   </md-button>
+   <md-content class="pos-abt bottom-0 right-0 left-0 md-background-default background" style="top:64px">
+      <div class="vbox">
+         <div class="row-row">
+            <div class="cell">
+               <div class="cell-inner p-t-lg">
+                  <div class="m-t-sm p-h pos-rlt">
+                     <ul style="margin:0;padding:0">
+                        <li data-ng-repeat="perspective in stationPerspectives | orderBy: 'id'">
+                           <div class="p-h p-t m-b md-whiteframe-z1 pos-rlt" ng-class="{'md-background-hue-1 background': perspective.id !== currentPerspective.id, 'md-accent-hue-1 background': perspective.id === currentPerspective.id}">
+                              <div class="pos-abt top-0 right-0 font-bold p">
+                                 #{{$index + 1}}
+                              </div>
+                              <div class="p-v-sm text-ellipsis tetx-md text-u-c">
+                                 {{perspective.name}}
+                              </div>
+                              <div class="clear" style="height: 36px;">
+                                 <md-button ng-if="perspective.id !== currentPerspective.id" aria-label="nothing" class="no-margin m-b-sm btn-sm pull-left no-padding" style="min-height: 28px; line-height:28px;" ng-click="setCurrentPerspective(perspective);">{{'titles.SHOW' | translate}}
+                                 </md-button>
+                                 <md-button ng-if="perspective.id !== thisStation.defaultPerspectiveId" aria-label="nothing" class="no-margin m-b-sm btn-sm pull-left no-padding" style="min-height: 28px; line-height:28px;" ng-click="showActivatePerspectiveDialog($event);">{{'titles.ACTIVATE' | translate}}
+                                 </md-button>
+                                 <md-button ng-if="perspective.id !== currentPerspective.id" aria-label="nothing" class="md-warn no-margin m-b-sm btn-sm pull-right no-padding" style="min-height: 28px; line-height:28px;" ng-click="showDeletePerspectiveDialog($event, perspective)">{{'titles.REMOVE' | translate}}
+                                 </md-button>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </md-content>
+</md-sidenav>
+<script type="text/ng-template" id="carousel-template.html">
+   <div id="perspective-editor-popover-id" class="perspective-editor-popover w-xl" click-outside="pe.clickOutside()"
+   	outside-if-not="delete-cell">
+   	<a ng-click="pe.clickOutside(); app.stopPropagation($event);" class="popover-close-button text-lg pull-right" tooltip="Fechar" tooltip-append-to-body="true" tooltip-placement="top">×</a>
+   	<div class="text-center p-xxs text-md m-b">
+   		destaques
+   	</div>
+   	<div class="pos-rlt">
+   		<div class="display-t-c p-r">
+   			<ul class="no-style">
+   				<li ng-repeat="cell in termPerspectiveView.featuredRow.cells" class="p-xxs sortable-elem">
+   					{{$index + 1}}ª
+   				</li>
+   			</ul>
+   		</div>
+   		<div class="display-t-c clearfix" style="min-width: 285px">
+   			<ul class="no-style w-full" ui-sortable ng-model="termPerspectiveView.featuredRow.cells">
+   				<li ng-repeat="cell in termPerspectiveView.featuredRow.cells" class="font-thin sortable-elem clearfix p-xxs">
+   					<div class=" ">
+   						<a angular-ripple id="delete-cell" class="border-radius-50 p-sm mdi-delete mdi pull-right" ng-click="$parent.removeFeaturedPost(cell.postView)">
+   						</a>
+   						<span class="clear m-r"
+   						tooltip="{{cell.postView.title}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
+   							{{cell.postView.title | characters:75}}
+   						</span>
+   					</div>
+   				</li>
+   			</ul>
+   		</div>
+   	</div>
+   	<div class="text-center p-xs w-full b-t m-t-sm">
+   		<a href="" class="text-md" ng-click="showAddFeaturedPost();pe.clickOutside();">
+   			<span class=" font-thin">adicionar</span>
+   			<i class="mdi mdi-plus-circle-outline v-middle"></i>
+   		</a>
+   	</div>
+   </div>
+</script>
+<script type="text/ng-template" id="add_post.html">
+   <md-dialog aria-label="Adicionar notícia" id="perspective-editor-dialog">
+    	<md-content>
+   		<div class="p">
+   			<form ng-submit="pe.submitSearch()">
+   				<div class="input-group">
+   					<input ng-model="pe.searchQuery" class="input-lg w-full form-control" placeholder="Busque por notícias" />
+   					<span class="input-group-btn">
+   	      <button class="btn btn-default btn-lg i-24" type="submit" style="padding: 6px 12px">
+   	      	<i class="mdi mdi-magnify"></i>
+   	      </button>
+   	     </span>
+   				</div>
+   			</form>
+   			<div class="p-xxs perspective-editor-search-results m-t-sm" >
+   				<ul class="no-style">
+   					<li ng-repeat="postView in pe.searchResults" class="clearfix p-xxs font-thin" ng-class="{'opacity-07 bg-light': !pe.cellAddValidation(postView)}">
+   	      <span ng-if="postView.featuredImageHash" style="height: 50px" class="bg-cover pull-left thumb m-r" ng-style="app.getBackgroundImage(postView, 'medium')">
+   	      </span>
+   	      <span class="pull-right" ng-if="pe.cellAddValidation(postView)"
+   	      tooltip="Adicionar" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="300">
+   							<a ng-click="pe.addCell(postView)" angular-ripple class="border-radius-50 text-lg p-sm mdi-plus mdi"></a>
+   						</span>
+   						<span class="pull-right" ng-if="!pe.cellAddValidation(postView)">
+   							<a ng-click="pe.removeCell(postView)" angular-ripple class="border-radius-50 text-lg p-sm mdi-close mdi animated bounceIn text-danger"></a>
+   						</span>
+   	      <span class="clear m-r-xxl">
+   	        <span>{{postView.title}}</span>
+   	        <small class="text-muted clear text-ellipsis" ng-bind-html="postView.snippet">
+   	        </small>
+   	      </span>
+   	    </li>
+   	    <li ng-if="pe.searchResults.length > 0">
+   	    	<div class="p-xs text-center">
+   	    		<button ng-click="pe.paginateSearch()" md-ink-ripple class="md-btn md-flat btn-fw">mais</button>
+   	    	</div>
+   	    </li>
+   				</ul>
+   			</div>
+   			<div class="pos-abt bottom-0 right-0 p-sm">
+   				<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
+   			<div>
+   		</div>
+     </md-content>
+   </md-dialog>
+</script>
+<script type="text/ng-template" id="config_category.html">
+   <md-dialog aria-label="Adicionar notícia" id="perspective-editor-dialog">
+    	<md-content>
+    		<div class="p">
+    			<div class="text-lg text-center">Selectione as categorias desejadas</div>
+   			<div class="p-xxs perspective-editor-category-selector m-t-sm tree well">
+   				<ul class="normal-wrap perspective-editor-category-selector-list">
+   					<li ng-repeat="term in pe.terms">
+   						<span class="check-term" ng-click="pe.checkCategory(term)">
+   					 		<md-checkbox md-no-ink ng-model="term.checked" class="pull-left"></md-checkbox>
+   					 	</span>
+   					 	<span class="leaf box-shadow" tooltip="{{term.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
+   					 		{{term.name}}
+   					 	</span>
+   				 	</li>
+   			 	</ul>
+   			</div>
+   			<div class="pos-abt bottom-0 right-0 p-sm">
+   				<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
+   			</div>
+   		</div>
+     </md-content>
+   </md-dialog>
+</script>
+<script type="text/ng-template" id="add-perspective-dialog.html">
+   <md-dialog aria-label="Add Categories Dialog" id="add-categories-dialog">
+   	<md-content role="document" class="md-background-hue-1 background">
+   		<div class="p-xs">
+   			<div class="md-dialog-content-body text-lg p-r p-l w-xxl p-t">
+   				<form ng-submit="app.addCategory(perspective);">
+   					<div class="md-form-group float-label md-neutral-theme text-lg">
+   						<md-input-container class="md-block p-b-sm" flex-gt-sm>
+   		            	<label>Nova perspectiva</label>
+   		            	<input ng-model="perspectiveName" md-autofocus>
+   	          			</md-input-container>
+   				    </div>
+   		  		</form>
+   			</div>
+   
+   			<div class="text-center">
+   				<md-button aria-label="nothing" ng-click="addPerspective(perspectiveName); disabled = true;" ng-disabled="disabled" md-ink-ripple style="font-size:16px;" >{{'actions.CREATE' | translate}}</md-button>
+   				<md-button aria-label="nothing" ng-click="cancel()" md-ink-ripple style="font-size:16px;" >{{'titles.CANCEL' | translate}}</md-button>
+   			</div>
+   		</div>
+   	</md-content>
+   </md-dialog>
+</script>
+<script type="text/ng-template" id="activate-perspective-dialog.html">
+   <md-dialog aria-label="Remove Categories Dialog" id="remove-categories-dialog">
+      <md-content role="document" class="md-background-hue-1 background">
+        <div class="p-xs">
+          <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
+            {{'settings.station.perspective.ACTIVATE_PERSPECTIVE_MSG' | translate}}
+          </div>
+   
+          <div class="text-center">
+            <md-button aria-label="nothing" ng-click="app.deleteCategory(); disabled = true;" ng-disabled="disabled">
+              {{'titles.YES' | translate}}
+            </md-button>
+            <md-button aria-label="nothing" ng-click="cancel()">
+              {{'titles.NO' | translate}}
+            </md-button>
+          <div>
+        </div>
+      </md-content>
+    </md-dialog>
+</script>
+<script type="text/ng-template" id="delete-perspective-dialog.html">
+   <md-dialog aria-label="Remove Categories Dialog" id="remove-categories-dialog">
+      <md-content role="document" class="md-background-hue-1 background">
+        <div class="p-xs">
+          <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
+            {{'settings.station.perspective.REMOVE_PERSPECTIVE_MSG' | translate}}
+          </div>
+   
+          <div class="text-center">
+            <md-button aria-label="nothing" ng-click="deletePerspective(perspectiveToDelete); disabled = true;" ng-disabled="disabled">
+              {{'titles.YES' | translate}}
+            </md-button>
+            <md-button aria-label="nothing" ng-click="cancel()">
+              {{'titles.NO' | translate}}
+            </md-button>
+          <div>
+        </div>
+      </md-content>
+    </md-dialog>
+</script>
+<script type="text/ng-template" id="pin-post-dialog.html">
+   <md-dialog aria-label="change action">
+     <md-content style="background: white">
+       <div class="w-600">
+       	<div class="p p-b-0 text-md-l font-bold">
+       		<i class="mdi2-pin p-r-sm i-24 icon v-m"></i>
+       		{{'settings.station.perspective.FIX_POST_MSG' | translate}} {{postToPinIndex + 1}}
+       	</div>
+       	<div class="search-with-filter m md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2 m-b-md">
+           <form ng-submit="doSearchPosts()">
+             <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-md-l bg-t" ng-model="searchQuery">
+           </form>
+         </div>
+   		<div id="search-results" class="md-background-hue-1 background pos-rlt inline b-t" style="height:300px; max-height:300px; overflow: auto;">
+           <ul class="list-group bg-t m-b-lg b-l" data-collapsible="expandable" infinite-scroll="paginateSearch()" infinite-scroll-distance="1" infinite-scroll-container='"#search-results"' >
+             <li style="padding: 0; border-bottom: none; border-top: none;" class="no-border-radius list-group-item no-bg b-l-2x r-0 fade-in-hover-container" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in postSearchResults" ng-click="activatePublication(publication);" style="cursor: inherit;" ng-style="publication.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null">
+               <div class="p-sm">
+                 <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
+                   <div preload-bg-image="{{app.getImageLink(publication, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
+                   </div>
+                 </a>
+                 <div class="clear font-thin">
+                   <div class="m-r-xxl">
+                     <a ng-href="{{app.getPublicationUrl(publication.stationId, publication)}}" target="_blank" class="text-u-l-hover font-bold block text-md">{{publication.title}}</a>
+                     <div  class="text-sm font-normal p-v-sm text-muted">
+                       {{app.getLocalTime(publication.date)}}
+                     </div>
+                     {{publication.snippet | characters:120}}
+                   </div>
+                   <div class="list-group-item b-n p-sm p-b-0 inline v-m fade-in-hover-container">
+                     <a href class="pull-left m-r-sm">
+                       <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1 text-center md-primary-hue-1 background">
+                         <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-16" style="top: 16%;position: relative;"></i>
+                       </div>
+                     </a>
+                     <div class="clear font-normal p-xs">
+                       <a href class="font-500 block">{{publication.authorName}}</a>
+                     </div>
+                   </div>
+                   <md-button class="fade-in-hover-el pull-right" ng-click="addPinPost(publication)">
+                   	{{'settings.station.perspective.FIX_POST' | translate}}
+                   </md-button>
+                 </div>
+               </div>
+               <md-divider></md-divider>
+             </li>
+           </ul>
+         </div>
+         <md-divider></md-divider>
+         <div class="clear">
+         	<md-button class="pull-right font-500" ng-click="cancel();" translate="titles.CANCEL">
+         	</md-button>
+         </div>
+       </div>
+     </md-content>
+   </md-dialog>
+</script>
+<script type="text/ng-template" id="featured-post-dialog.html">
+   <md-dialog aria-label="change action">
+     <md-content style="background: white">
+       <div class="w-900">
+   
+       	<div class="p text-u-c font-bold text-md-l">
+       		<i class="mdi2-view-carousel p-r-sm i-24 icon v-m"></i>{{'titles.FEATURED_POSTS' | translate}}
+       	</div>
+       	
+        	<div class="search-with-filter m-r m-l md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2 m-b-md">
+            <form ng-submit="doSearchPosts()">
+              <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-md-l bg-t" ng-model="searchQuery">
+            </form>
+          </div>
+   			
+   			<div class="b-t">
+   			<div id="search-results" class="md-background-hue-1 background pos-rlt w-500 inline" style="height:300px; max-height:300px; overflow: auto;">
+               <ul class="list-group bg-t m-b-lg b-l" data-collapsible="expandable" infinite-scroll="paginateSearch()" infinite-scroll-distance="1" infinite-scroll-container='"#search-results"' >
+                 <li style="padding: 0; border-bottom: none; border-top: none;" class="no-border-radius list-group-item no-bg b-l-2x r-0 fade-in-hover-container" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in postSearchResults" ng-click="activatePublication(publication);" style="cursor: inherit;" ng-style="publication.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null">
+                   <div class="p-sm">
+                     <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
+                       <div preload-bg-image="{{app.getImageLink(publication, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
+                       </div>
+                     </a>
+                     <div class="clear font-thin">
+                       <div class="m-r-xxl">
+                         <a ng-href="{{app.getPublicationUrl(publication.stationId, publication)}}" target="_blank" class="text-u-l-hover font-bold block text-md">{{publication.title}}</a>
+                         <div  class="text-sm font-normal p-v-sm text-muted">
+                           {{app.getLocalTime(publication.date)}}
+                         </div>
+                         {{publication.snippet | characters:120}}
+                       </div>
+                       <div class="list-group-item b-n p-sm p-b-0 inline v-m fade-in-hover-container">
+                         <a href class="pull-left m-r-sm">
+                           <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1 text-center md-primary-hue-1 background">
+                             <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-16" style="top: 16%;position: relative;"></i>
+                           </div>
+                         </a>
+                         <div class="clear font-normal p-xs">
+                           <a href class="font-500 block">{{publication.authorName}}</a>
+                         </div>
+                       </div>
+                       <md-button class="fade-in-hover-el pull-right" ng-click="addFeaturedPosts(publication)">
+                       	{{'titles.ADD' | translate}}
+                       </md-button>
+                     </div>
+                   </div>
+                   <md-divider></md-divider>
+                 </li>
+               </ul>
+           </div>
+           <div class="w-400 inline p-h pull-left simpleDemo" style="height:300px; max-height:300px; overflow: auto;">
+           	<div class="text-center text-u-c p-sm font-500" ng-if="editingFeaturedRow.cells.length > 0">
+           		{{'settings.station.perspective.PERSPECTIVE_ORDER_MSG' | translate}}
+           	</div>
+           	<ul class="m-b p-b" dnd-list="editingFeaturedRow.cells" ng-if="editingFeaturedRow != null && editingFeaturedRow.cells.length > 0">
+            	<li ng-repeat="cell in editingFeaturedRow.cells"
+   	          	dnd-draggable="cell"
+   			        dnd-moved="editingFeaturedRow.cells.splice($index, 1)"
+   			        dnd-effect-allowed="move"
+   			        dnd-selected="models.selected = cell" class="pos-rlt">
+   
+            		<div class="md-whiteframe-z1 p m pos-rlt drag fade-in-hover-container">
+           			<div class="pos-abt top-0 right-0 font-bold p-sm">
+                    #{{$index + 1}}
+                  </div>
+            			<span class="text-ellipsis font-bold block text-md">{{cell.postView.title}}</span>
+            			<div class="pos-abt top-0 left-0 font-bold fade-in-hover-el">
+                    <md-button class="md-fab md-warn md-mini" ng-click="removeFeaturedPost(cell.postView)">
+                    	<i class="mdi2-close i-24"></i>
+                    </md-button>
+                  </div>
+            		</div>
+            	</li>
+           	</ul>
+           </div>
+           </div>
+           	<md-divider></md-divider>
+           <div class="clear">
+           	<md-button class="pull-right font-500 md-accent" translate="titles.APPLY" ng-click="applyFeaturedPosts();">
+           	</md-button>
+           	<md-button class="pull-right font-500" ng-click="cancel();" translate="titles.CANCEL">
+           	</md-button>
+           </div>
+       </div>
+     </md-content>
+   </md-dialog>
+</script>
+
+<script type="text/ng-template" id="categories-config-dialog.html">
+	<md-dialog aria-label="change action">
+     <md-content style="background: white">
+       <div class="w-900 h-300 p-sm">
+  			<div class="text-lg text-center">Selectione as categorias desejadas</div>
+				<div class="wrapper-xxs perspective-editor-category-selector m-t-sm tree well">
+					<ul class="">
+						<li ng-repeat="category in currentPerspective.termPerspectiveView.allCategories">
+					 		<md-checkbox md-no-ink ng-model="category.checked" ng-change="checkCategory(category);">
+					 			{{category.name}}
+					 		</md-checkbox>
+					 	</li>
+				 	</ul>
+				</div>
+				<div class="clear">
+					<md-button class="pull-right" ng-click="cancel()" >Fechar</md-button>
+				</div>
+			</div>
 	  </md-content>
-  </md-sidenav>
-
-  <script type="text/ng-template" id="carousel-template.html">
-		<div id="perspective-editor-popover-id" class="perspective-editor-popover w-xl" click-outside="pe.clickOutside()"
-			outside-if-not="delete-cell">
-			<a ng-click="pe.clickOutside(); app.stopPropagation($event);" class="popover-close-button text-lg pull-right" tooltip="Fechar" tooltip-append-to-body="true" tooltip-placement="top">×</a>
-			<div class="text-center p-xxs text-md m-b">
-				destaques
-			</div>
-			<div class="pos-rlt">
-				<div class="display-t-c p-r">
-					<ul class="no-style">
-						<li ng-repeat="cell in termPerspectiveView.featuredRow.cells" class="p-xxs sortable-elem">
-							{{$index + 1}}ª
-						</li>
-					</ul>
-				</div>
-				<div class="display-t-c clearfix" style="min-width: 285px">
-					<ul class="no-style w-full" ui-sortable ng-model="termPerspectiveView.featuredRow.cells">
-						<li ng-repeat="cell in termPerspectiveView.featuredRow.cells" class="font-thin sortable-elem clearfix p-xxs">
-							<div class=" ">
-								<a angular-ripple id="delete-cell" class="border-radius-50 p-sm mdi-delete mdi pull-right" ng-click="$parent.removeFeaturedPost(cell.postView)">
-								</a>
-								<span class="clear m-r"
-								tooltip="{{cell.postView.title}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
-									{{cell.postView.title | characters:75}}
-								</span>
-							</div>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="text-center p-xs w-full b-t m-t-sm">
-				<a href="" class="text-md" ng-click="showAddFeaturedPost();pe.clickOutside();">
-					<span class=" font-thin">adicionar</span>
-					<i class="mdi mdi-plus-circle-outline v-middle"></i>
-				</a>
-			</div>
-		</div>
-	</script>
-
-	<script type="text/ng-template" id="add_post.html">
-		<md-dialog aria-label="Adicionar notícia" id="perspective-editor-dialog">
-	  	<md-content>
-				<div class="p">
-					<form ng-submit="pe.submitSearch()">
-						<div class="input-group">
-							<input ng-model="pe.searchQuery" class="input-lg w-full form-control" placeholder="Busque por notícias" />
-							<span class="input-group-btn">
-			      <button class="btn btn-default btn-lg i-24" type="submit" style="padding: 6px 12px">
-			      	<i class="mdi mdi-magnify"></i>
-			      </button>
-			     </span>
-						</div>
-					</form>
-					<div class="p-xxs perspective-editor-search-results m-t-sm" >
-						<ul class="no-style">
-							<li ng-repeat="postView in pe.searchResults" class="clearfix p-xxs font-thin" ng-class="{'opacity-07 bg-light': !pe.cellAddValidation(postView)}">
-			      <span ng-if="postView.featuredImageHash" style="height: 50px" class="bg-cover pull-left thumb m-r" ng-style="app.getBackgroundImage(postView, 'medium')">
-			      </span>
-			      <span class="pull-right" ng-if="pe.cellAddValidation(postView)"
-			      tooltip="Adicionar" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="300">
-									<a ng-click="pe.addCell(postView)" angular-ripple class="border-radius-50 text-lg p-sm mdi-plus mdi"></a>
-								</span>
-								<span class="pull-right" ng-if="!pe.cellAddValidation(postView)">
-									<a ng-click="pe.removeCell(postView)" angular-ripple class="border-radius-50 text-lg p-sm mdi-close mdi animated bounceIn text-danger"></a>
-								</span>
-			      <span class="clear m-r-xxl">
-			        <span>{{postView.title}}</span>
-			        <small class="text-muted clear text-ellipsis" ng-bind-html="postView.snippet">
-			        </small>
-			      </span>
-			    </li>
-			    <li ng-if="pe.searchResults.length > 0">
-			    	<div class="p-xs text-center">
-			    		<button ng-click="pe.paginateSearch()" md-ink-ripple class="md-btn md-flat btn-fw">mais</button>
-			    	</div>
-			    </li>
-						</ul>
-					</div>
-					<div class="pos-abt bottom-0 right-0 p-sm">
-						<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
-					<div>
-				</div>
-		  </md-content>
-		</md-dialog>
-	</script>
-
-	<script type="text/ng-template" id="config_category.html">
-		<md-dialog aria-label="Adicionar notícia" id="perspective-editor-dialog">
-	  	<md-content>
-	  		<div class="p">
-	  			<div class="text-lg text-center">Selectione as categorias desejadas</div>
-					<div class="p-xxs perspective-editor-category-selector m-t-sm tree well">
-						<ul class="normal-wrap perspective-editor-category-selector-list">
-							<li ng-repeat="term in pe.terms">
-								<span class="check-term" ng-click="pe.checkCategory(term)">
-							 		<md-checkbox md-no-ink ng-model="term.checked" class="pull-left"></md-checkbox>
-							 	</span>
-							 	<span class="leaf box-shadow" tooltip="{{term.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
-							 		{{term.name}}
-							 	</span>
-						 	</li>
-					 	</ul>
-					</div>
-					<div class="pos-abt bottom-0 right-0 p-sm">
-						<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
-					</div>
-				</div>
-		  </md-content>
-		</md-dialog>
-	</script>
-
-	<script type="text/ng-template" id="add-perspective-dialog.html">
-	<md-dialog aria-label="Add Categories Dialog" id="add-categories-dialog">
-		<md-content role="document" class="md-background-hue-1 background">
-			<div class="p-xs">
-				<div class="md-dialog-content-body text-lg p-r p-l w-xxl p-t">
-					<form ng-submit="app.addCategory(perspective);">
-						<div class="md-form-group float-label md-neutral-theme text-lg">
-							<md-input-container class="md-block p-b-sm" flex-gt-sm>
-			            	<label>Nova perspectiva</label>
-			            	<input ng-model="perspectiveName" md-autofocus>
-		          			</md-input-container>
-					    </div>
-			  		</form>
-				</div>
-
-				<div class="text-center">
-					<md-button aria-label="nothing" ng-click="addPerspective(perspectiveName); disabled = true;" ng-disabled="disabled" md-ink-ripple style="font-size:16px;" class="">{{'actions.CREATE' | translate}}</md-button>
-					<md-button aria-label="nothing" ng-click="cancel()" md-ink-ripple style="font-size:16px;" class="">{{'titles.CANCEL' | translate}}</md-button>
-				</div>
-			</div>
-		</md-content>
 	</md-dialog>
 </script>
-
-<script type="text/ng-template" id="activate-perspective-dialog.html">
-	<md-dialog aria-label="Remove Categories Dialog" id="remove-categories-dialog">
-    <md-content role="document" class="md-background-hue-1 background">
-      <div class="p-xs">
-        <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
-          {{'settings.station.perspective.ACTIVATE_PERSPECTIVE_MSG' | translate}}
-        </div>
-
-        <div class="text-center">
-          <md-button aria-label="nothing" ng-click="app.deleteCategory(); disabled = true;" ng-disabled="disabled">
-            {{'titles.YES' | translate}}
-          </md-button>
-          <md-button aria-label="nothing" ng-click="cancel()">
-            {{'titles.NO' | translate}}
-          </md-button>
-        <div>
-      </div>
-    </md-content>
-  </md-dialog>
-</script>
-
-<script type="text/ng-template" id="delete-perspective-dialog.html">
-	<md-dialog aria-label="Remove Categories Dialog" id="remove-categories-dialog">
-    <md-content role="document" class="md-background-hue-1 background">
-      <div class="p-xs">
-        <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
-          {{'settings.station.perspective.REMOVE_PERSPECTIVE_MSG' | translate}}
-        </div>
-
-        <div class="text-center">
-          <md-button aria-label="nothing" ng-click="deletePerspective(perspectiveToDelete); disabled = true;" ng-disabled="disabled">
-            {{'titles.YES' | translate}}
-          </md-button>
-          <md-button aria-label="nothing" ng-click="cancel()">
-            {{'titles.NO' | translate}}
-          </md-button>
-        <div>
-      </div>
-    </md-content>
-  </md-dialog>
-</script>
-
-<script type="text/ng-template" id="featured-post-dialog.html">
-  <md-dialog aria-label="change action">
-    <md-content style="background: white">
-      <div class="w-900" id="email-template">
-
-      	<div class="p text-u-c font-bold text-md-l">
-      		<i class="mdi2-view-carousel p-r-sm i-24 icon v-m"></i>{{'titles.FEATURED_POSTS' | translate}}
-      	</div>
-      	
-	      	<div class="search-with-filter m-r m-l md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2 m-b-md">
-	          <form ng-submit="doSearchPosts()">
-	            <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-md-l bg-t" ng-model="searchQuery">
-	          </form>
-	        </div>
-
-					<div id="search-results" class="md-background-hue-1 background pos-rlt w-500 inline" style="height:300px; max-height:300px; overflow: auto;">
-              <ul class="list-group bg-t m-b-lg" data-collapsible="expandable" infinite-scroll="paginateSearch()" infinite-scroll-distance="1" infinite-scroll-container='"#search-results"' >
-                <li style="padding: 0; border-bottom: none; border-top: none;" class="no-border-radius list-group-item no-bg b-l-2x r-0 fade-in-hover-container" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in postSearchResults" ng-click="activatePublication(publication);" style="cursor: inherit;" ng-style="publication.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null">
-                  <div class="p-sm">
-                    <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
-                      <div preload-bg-image="{{app.getImageLink(publication, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
-                      </div>
-                    </a>
-                    <div class="clear font-thin">
-                      <div class="m-r-xxl">
-                        <a ng-href="{{app.getPublicationUrl(publication.stationId, publication)}}" target="_blank" class="text-u-l-hover font-bold block text-md">{{publication.title}}</a>
-                        <div  class="text-sm font-normal p-v-sm text-muted">
-                          {{app.getLocalTime(publication.date)}}
-                        </div>
-                        {{publication.snippet | characters:120}}
-                      </div>
-                      <div class="list-group-item b-n p-sm p-b-0 inline v-m fade-in-hover-container">
-                        <a href class="pull-left m-r-sm">
-                          <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1 text-center md-primary-hue-1 background">
-                            <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-16" style="top: 16%;position: relative;"></i>
-                          </div>
-                        </a>
-                        <div class="clear font-normal p-xs">
-                          <a href class="font-500 block">{{publication.authorName}}</a>
-                        </div>
-                      </div>
-                      <md-button class="fade-in-hover-el pull-right" ng-click="addFeaturedPosts(publication)">
-                      	{{'titles.ADD' | translate}}
-                      </md-button>
-                    </div>
-                  </div>
-                  <md-divider></md-divider>
-                </li>
-              </ul> 
-          </div>
-          <div class="w-400 inline p-h pull-right simpleDemo" style="height:300px; max-height:300px; overflow: auto;">
-          	<div class="text-center text-u-c p-sm font-500">
-          		{{'settings.station.perspective.PERSPECTIVE_ORDER_MSG' | translate}}
-          	</div>
-          	<ul class="m-b p-b" dnd-list="editingFeaturedRow.cells" ng-if="editingFeaturedRow != null && editingFeaturedRow.cells.length > 0">
-	          	<li ng-repeat="cell in editingFeaturedRow.cells"
-			          	dnd-draggable="cell"
-					        dnd-moved="editingFeaturedRow.cells.splice($index, 1)"
-					        dnd-effect-allowed="move"
-					        dnd-selected="models.selected = cell" class="pos-rlt">
-
-	          		<div class="md-whiteframe-z1 p m pos-rlt" >
-		        			<div class="pos-abt top-0 right-0 font-bold p-sm">
-	                  #{{$index + 1}}
-	                </div>
-	          			<span class="text-ellipsis font-bold block text-md">{{cell.postView.title}}</span>
-	          		</div>
-	          	</li>
-          	</ul>
-          </div>
-          	<md-divider></md-divider>
-          <div class="clear">
-          	<md-button class="pull-right font-500 md-accent" translate="titles.APPLY" ng-click="applyFeaturedPosts();">
-          	</md-button>
-          	<md-button class="pull-right font-500" ng-click="cancel();" translate="titles.CANCEL">
-          	</md-button>
-          </div>
-      </div>
-    </md-content>
-  </md-dialog>
-</script>
-

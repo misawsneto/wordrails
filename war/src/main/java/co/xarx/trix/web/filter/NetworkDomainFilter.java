@@ -17,8 +17,6 @@ public class NetworkDomainFilter implements Filter {
 
 	@Autowired
 	private NetworkService networkService;
-//	@Autowired
-//	private TenantProvider tenantProvider;
 
 	@Override
 	public void destroy() {
@@ -42,6 +40,10 @@ public class NetworkDomainFilter implements Filter {
 			response.sendRedirect("/home");
 		} else {
 			String tenantId = networkService.getTenantFromHost(host);
+			String currentTenantId = TenantContextHolder.getCurrentTenantId();
+			if(currentTenantId != null && !currentTenantId.equals(tenantId)) {
+				System.out.println("RED FLAG!!!! REQUEST IS FOR TENANT " + tenantId + " BUT IN SESSION WAS SET " + currentTenantId);
+			}
 
 			if (tenantId == null) {
 				response.sendRedirect("/404.html");
@@ -60,5 +62,6 @@ public class NetworkDomainFilter implements Filter {
 		response.setDateHeader("Expires", 0);
 
 		chain.doFilter(req, res);
+		TenantContextHolder.setCurrentTenantId(null);
 	}
 }

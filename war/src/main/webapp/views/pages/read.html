@@ -38,7 +38,7 @@
                   <!-- News Title -->
                   <div class="news-title" ng-bind-html="post.title"></div>
                   <div class="fr-view text-md-l read-style" ng-bind-html="post.body"></div>
-                  <div class="news-comment-shares p-t-lg p-b-sm">
+                  <div class="news-comment-shares p-t-lg p-b-sm" ng-if="!$state.includes('app.preview')">
                     <md-divider class="m-b m-t"></md-divider>
                     <div class="p-b-xs">
                         <md-button ng-click="app.showSharesPostDialog($event, post)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
@@ -58,7 +58,7 @@
                     <!~~ Comment Share it button ~~>
                     <div class="clearfix"></div>-->
                     
-                  <div class="p-v inline w-full">
+                  <div class="p-v inline w-full" ng-if="!$state.includes('app.preview')">
                     <div class="pull-left user-avatar rounded w-50 bg-white pos-rlt background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}" ng-class="{'md-primary-hue-1': !app.userImageSmall}">
                       <i ng-if="!app.userImageSmall" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
                     </div>
@@ -66,7 +66,7 @@
                     <!--<md-button style="width: 36px; height: 36px; padding: 6px;" class="md-button not-trans m-0 md-icon-button pull-right md-accent-default background" ng-click="post.postComment(post, post.newComment)" ng-disabled="!post.newComment">
                       <i class="mdi2-send i-16"></i>
                     </md-button>-->
-                    <div class="" style="margin-left: 60px;"> 
+                    <div  style="margin-left: 60px;"> 
                       <textarea id="comment-box" msd-elastic class="p-sm text-md" style="min-height: 50px;" rows="1" ng-keydown="reloadMasonry()" ng-model="post.newComment" style="resize: none;" placeholder="{{'titles.COMMENT' | translate }}"></textarea>
                     </div>
                     <div class="text-right">
@@ -118,7 +118,7 @@
                 </a>
                 <!-- News Image -->
                 <div class="news-image o-f-h">
-                    <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" ng-if="app.hasImage(publication);">
+                    <a ui-sref="app.station.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" ng-if="app.hasImage(publication);">
                     <div  preload-bg-image="{{app.getImageLink(publication, 'medium')}}" class="zoom-hover h-full bg-cover" style="min-height: 230px;">
                     </div>
                     </a>
@@ -130,7 +130,7 @@
                 </div>
                 <!-- News Description -->
                 <div class="news-description p-t p-b-sm p-h">
-                    <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})">
+                    <a ui-sref="app.station.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})">
                     <div class="news-title text-lg" style="min-height: 66px"><p clamp="2"> {{::publication.title}} </p></div>
                     <div class="news-content text-md"><p clamp="2">{{::publication.snippet}}</p></div>
                     </a>
@@ -143,7 +143,7 @@
   </div>
 </div>
 
-<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}" ng-click="scrollToTop();">
+<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated hide" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}" ng-click="scrollToTop();">
   <!-- <md-tooltip md-direction="top">
     {{'titles.REMOVE_ALL' | translate}}
   </md-tooltip> -->

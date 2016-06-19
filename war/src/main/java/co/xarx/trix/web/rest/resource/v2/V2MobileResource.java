@@ -18,12 +18,12 @@ import java.sql.Blob;
 import java.sql.SQLException;
 
 @Component
-public class V2MobileApiImpl extends AbstractResource implements V2MobileApi {
+public class V2MobileResource extends AbstractResource implements V2MobileApi {
 
 	private MobileService mobileService;
 
 	@Autowired
-	public V2MobileApiImpl(MobileService mobileService) {
+	public V2MobileResource(MobileService mobileService) {
 		this.mobileService = mobileService;
 	}
 
