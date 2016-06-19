@@ -2,7 +2,7 @@
   <!-- Content Navbar -->
   <div class="navbar no-radius md-primary-default background" style="max-height:64px">
     <!-- Open side - Naviation on mobile -->
-    <a ng-if="app.permissions.stationPermissions.length > 1" md-ink-ripple ng-click="openAside()" ng-hide="$state.current.data.child" class="navbar-item pull-left"><i class="mdi-navigation-menu i-24"></i></a>
+    <a ng-if="app.personPermissions.stationPermissions.length > 1" md-ink-ripple ng-click="openAside()" ng-hide="$state.current.data.child" class="navbar-item pull-left"><i class="mdi-navigation-menu i-24"></i></a>
     <!-- / -->
     <div class="navbar-header pull-left">
       <a class="navbar-brand" ng-href="/">
@@ -172,17 +172,17 @@
   </div>
   <!-- Content -->
   <div class="box-row">
-    <md-toolbar md-scroll-shrink style="min-height: 50px;" ng-class="{'hide':$state.includes('app.search')}">
+    <md-toolbar class="font-bold" md-scroll-shrink style="min-height: 50px;" class="" ng-class="{'hide':$state.includes('app.search') || $state.includes('app.bookmarks')}">
       <div class="md-primary-default background md-whiteframe-z1">
         <div class="custom-header container" style="min-height: 50px;">
-          <ul class="nav nav-lines nav-md no-bg animated text-base material-top-menu" ng-class="{'o-f-h fadeOut': app.loadingTabs, 'fadeIn': !app.loadingTabs}" df-tab-menu menu-control="{{menu2.navigationState}}" style="height: 52px">
-            <li class="material-top-menu-item" 
+          <ul class="nav nav-lines nav-md no-bg animated text-base material-top-menu" ng-class="{'o-f-h fadeOut': app.loadingTabs}" df-tab-menu menu-control="{{menu2.navigationState}}" style="height: 52px">
+            <li class="material-top-menu-item animated fadeIn" 
              ng-class="{'active': app.activeCategory.id === category.id}" md-ink-ripple data-ng-repeat="category in app.perspectiveTerms" data-menu-item="{{category.item}}">
-              <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(app.termPerspectiveView.stationId).stationSlug, 'name': category.name})" >
+              <a ui-sref="app.station.categoryPage({'stationSlug': app.getStationById(app.termPerspectiveView.stationId).stationSlug, 'name': category.name})" >
                 <span>{{category.name}}</span>
               </a>
             </li>
-            <li data-more-menu-item style="position: relative; float: left; display: block; right: 50%;">
+            <li data-more-menu-item>
               <md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button" style="margin-top: 5px;" >
                 <i class="mdi2-chevron-double-down i-20"></i>
               </md-button>
@@ -269,21 +269,21 @@
     <div class="text-color m text-center" ng-if="app.signState !== 'signup' && app.signState !== 'forgot'">
       <div class="m-b m-t text-md text-u-c font-500">{{'signin_signup.SIGNIN' | translate}}</div>
       <div class="text-center">
-        <md-button class="md-fab md-mini" style="background: #3B5999" aria-label="Use Android">
-          <i class="mdi2-facebook i-24 text-white"></i>
+        <md-button class="text-white text-md-l" style="background: #3B5999" aria-label="Use Android" ng-click="app.socialSignIn('facebook')">
+          <i class="mdi2-facebook i-24 text-white v-m"></i>  <span class="m-r m-l-sm">Facebook</span>
         </md-button>
         <!--<md-button class="md-fab md-mini" style="background: #5EA9DD" aria-label="Use Android">
           <i class="mdi2-twitter i-24 text-white"></i>
         </md-button>-->
-        <md-button class="md-fab md-mini" style="background: #DC4A38" aria-label="Use Android">
+        <!--<md-button class="md-fab md-mini" style="background: #DC4A38" aria-label="Use Android" ng-click="app.socialSignIn('google')">
           <i class="mdi2-google-plus text-white i-24"></i>
-        </md-button>
+        </md-button>-->
         <!--<md-button class="md-fab md-mini" style="background: #0177B5" aria-label="Use Android">
           <i class="mdi2-linkedin i-24 text-white"></i>
         </md-button>-->
       </div>
         <div class="p-t-sm text-md" translate="signin_signup.OR">ou</div>
-      <form name="form" ng-submit="app.signIn(person)" class="text-md w-xxl">
+      <form name="form" ng-submit="app.signIn(person)" class="text-md w-xl">
         <div class="p" style="padding-bottom: 0">
           <md-input-container class="w-full m-b-0">
             <label for="testInput">{{'titles.USERNAME' | translate}}</label>

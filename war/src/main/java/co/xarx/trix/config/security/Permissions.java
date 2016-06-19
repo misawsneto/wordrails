@@ -1,6 +1,7 @@
 package co.xarx.trix.config.security;
 
 import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.acls.domain.CumulativePermission;
 import org.springframework.security.acls.model.Permission;
 
 public final class Permissions extends BasePermission {
@@ -15,5 +16,43 @@ public final class Permissions extends BasePermission {
 
 	public static boolean containsPermission(Permission cumulativePermission, Permission singlePermission) {
 		return (cumulativePermission.getMask() & singlePermission.getMask()) == singlePermission.getMask();
+	}
+
+	public static CumulativePermission getOwner() {
+		CumulativePermission permission = getReader();
+		permission.set(WRITE);
+		permission.set(DELETE);
+
+		return permission;
+	}
+
+	public static CumulativePermission getAdmin() {
+		CumulativePermission permission = getEditor();
+		permission.set(ADMINISTRATION);
+
+		return permission;
+	}
+
+	public static CumulativePermission getWriter() {
+		CumulativePermission permission = getReader();
+		permission.set(WRITE);
+		permission.set(CREATE);
+
+		return permission;
+	}
+
+	public static CumulativePermission getEditor() {
+		CumulativePermission permission = getWriter();
+		permission.set(MODERATION);
+		permission.set(DELETE);
+
+		return permission;
+	}
+
+	public static CumulativePermission getReader() {
+		CumulativePermission permission = new CumulativePermission();
+		permission.set(READ);
+
+		return permission;
 	}
 }

@@ -54,9 +54,9 @@ angular.module('app')
       } else {
         $localStorage.appSetting = $scope.app.setting;
       }
-      $scope.$watch('app.setting', function(){
-        $localStorage.appSetting = $scope.app.setting;
-      }, true);
+      // $scope.$watch('app.setting', function(){
+      //   $localStorage.appSetting = $scope.app.setting;
+      // }, true);
 
       // angular translate
       $scope.langs = {en:'English', zh_CN:'中文'};
@@ -129,8 +129,8 @@ angular.module('app')
     }
   ])
 
-  .controller('AppDataCtrl', ['$scope', '$state', '$log', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdMedia', 'amMoment',
-    function (             $scope, $state, $log, $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar, $mdMedia, amMoment) {
+  .controller('AppDataCtrl', ['$scope', '$state', '$log', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdMedia', 'amMoment', '$auth', '$http', '$ocLazyLoad',
+    function (             $scope, $state, $log, $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar, $mdMedia, amMoment, $auth, $http, $ocLazyLoad) {
 
       $rootScope.$mdMedia = $mdMedia;
       amMoment.changeLocale('pt');
@@ -160,14 +160,43 @@ angular.module('app')
         // ---------- util-trix -------------
         $scope.app = angular.extend($scope.app, appData)
         $scope.app.name = $scope.app.network.name
-        $scope.app.currentStation = trixService.selectDefaultStation($scope.app.stations, $scope.app.currentStation ? $scope.app.currentStation.stationId : null);
-        $scope.app.stationsPermissions = trixService.getStationPermissions(angular.copy($scope.app));
 
-        var id = $scope.app.currentStation.defaultPerspectiveId
-        trix.findPerspectiveView(id, null, null, 0, 10).success(function(termPerspective){
-          $scope.app.termPerspectiveView = termPerspective
-        })
-
+        if($scope.app.network.facebookAppID){
+          $scope.app.socialSignIn = function(provider) {
+            if(provider === 'facebook'){
+              // authenticate w facebook
+              $auth.authenticate(provider).then(function(success){ 
+                // load facebook user data
+                $http.get('https://graph.facebook.com/me?access_token=' + success.access_token, {withCredentials: false}).success(function(response){
+                  // signin with facebook
+                  trix.socialLogin(response.id, success.access_token, provider).success(function(){
+                    // get init data
+                    trix.allInitData().success(function(response){
+                      appData = initData = response;
+                      startApp();
+                      $mdDialog.cancel();
+                      trix.setUsername(initData.person.username);
+                      $scope.app.loading = false;
+                    }).error(function(){
+                      $scope.app.loading = false;
+                    });
+                  })
+                }).error(function(){
+                  $scope.app.loading = false;  
+                })
+              }).catch(function(error){
+                $scope.app.loading = false;
+              });
+            } else if(provider === 'google') {
+              $auth.authenticate(provider).then(function(success){
+                window.console && console.log(success)
+              }).catch(function(error){
+                $scope.app.loading = false;
+              });
+            }
+          };
+        }
+        
         $scope.app.showSimpleDialog = function(message){
           $scope.app.simpleDialogMessage = message;
           // show term alert
@@ -307,7 +336,7 @@ angular.module('app')
 
         $scope.app.goToPublicationLink = function(stationId, slug){
           if(stationId && slug)
-            $state.go('app.read', {'stationSlug': $scope.app.getStationById(stationId), 'postSlug': slug})
+            $state.go('app.station.read', {'stationSlug': $scope.app.getStationById(stationId), 'postSlug': slug})
         }
 
         $scope.app.getMaterialColor = function(colorA, hueA){
@@ -518,24 +547,6 @@ angular.module('app')
         return ret ? ret : $scope.app.perspectiveTerms;
       }
 
-      $scope.app.termPerspectiveView = [];
-      $scope.$watch('app.termPerspectiveView', function(newValue, oldValue, scope) {
-        if(newValue){
-          loadPerspectiveTerms();
-        }
-      });
-
-      var loadPerspectiveTerms = function(){
-        $scope.app.loadingTabs = true;
-        $scope.app.perspectiveTerms = $scope.app.getStationCategories();
-          if($scope.app.perspectiveTerms && $scope.app.perspectiveTerms.length){
-            $timeout(function(){
-              $(window).trigger('resize');
-              $scope.app.loadingTabs = false;
-            })
-          }
-      }
-
       /**
        * Watch value of app.postObjectChanged and set alert messages.
        * @param  boolean newVal
@@ -599,6 +610,44 @@ angular.module('app')
 
         $scope.app.activeCategory = null;
       })
+
+      $scope.app.loadPerspective = function(station){
+        trix.findPerspectiveView(station.defaultPerspectiveId, null, null, 0, 10).success(function(termPerspective){
+          $scope.app.termPerspectiveView = termPerspective;
+          if($scope.app.termPerspectiveView.homeRow && $scope.app.termPerspectiveView.homeRow.cells){
+            $scope.app.termPerspectiveView.homeRow.allLoaded = false;
+            var length = $scope.app.termPerspectiveView.homeRow.cells.length >= 10 ? 10 : $scope.app.termPerspectiveView.homeRow.cells.length;
+              $scope.app.termPerspectiveView.homeRow.cells = $scope.app.termPerspectiveView.homeRow.cells.slice(0,length);
+          }
+          $scope.app.loadPerspectiveTerms();
+        })
+      }
+
+      $scope.app.removeTermTabs = function(){
+        $scope.app.loadingTabs = true;
+        $scope.app.perspectiveTerms = null;
+        $timeout(function(){
+          $(window).trigger('resize');
+          $scope.app.loadingTabs = false;
+        }, 100)
+      }
+
+      $scope.app.loadPerspectiveTerms = function(){
+        $scope.app.loadingTabs = true;
+        $scope.app.perspectiveTerms = null
+        $timeout(function(){
+          $(window).trigger('resize');
+          $timeout(function(){
+            $scope.app.perspectiveTerms = $scope.app.getStationCategories();
+              if($scope.app.perspectiveTerms && $scope.app.perspectiveTerms.length){
+                $timeout(function(){
+                  $(window).trigger('resize');
+                  $scope.app.loadingTabs = false;
+                })
+              }
+          },700);
+        })
+      }
 
       // ---------- /theming ------------------
 
@@ -819,7 +868,21 @@ angular.module('app')
       // ----------- signin-signup-forgot --------------
       $scope.app.signOut = function(){
         trix.logout().success(function(){
-          document.location.href = '/';
+           trix.allInitData().success(function(response){
+            appData = initData = response;
+            startApp();
+            $mdDialog.cancel();
+            trix.setUsername(initData.person.username);
+            $scope.app.loading = false;
+
+            if($scope.app.isSettings())
+              document.location.href = '/';
+            else
+              $state.go('app.home')
+
+          }).error(function(){
+            $scope.app.loading = false;
+          });
           trix.resetUsername('');
         })
       }
@@ -853,7 +916,7 @@ angular.module('app')
 
       $scope.app.showSigninDialog = function(event){
         // show term alert
-        
+        $scope.app.loading = false;
         $mdDialog.show({
           scope: $scope,        // use parent scope in template
           closeTo: {

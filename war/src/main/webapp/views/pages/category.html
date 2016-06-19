@@ -10,7 +10,7 @@
     
     <div class="col-xs-12 animated fadeIn" ng-class="{'col-lg-12': app.fullCardCheck($index, postView), 'col-lg-8 col-sm-6':!app.fullCardCheck($index, postView) && app.largeCardCheck($index, postView), 'col-lg-4 col-sm-6':!app.fullCardCheck($index, postView) && !app.largeCardCheck($index, postView)}" ng-repeat="postView in postViews">
         
-        <a ui-sref="app.read({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'postSlug': postView.slug})">
+        <a ui-sref="app.station.read({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'postSlug': postView.slug})">
         <div class="h-500 pos-rlt o-f-h md-whiteframe-z2 m-b-md" ng-if="app.fullCardCheck($index, postView)">
           <div preload-bg-image="{{app.getImageLink(postView, 'large')}}" class="h-full bg-cover md-primary-default background">
             <div class="color-1 p black-grad-inverse">
@@ -29,7 +29,7 @@
 
             <div class="black-grad w-full pos-abt bottom-0 p">
               <div class="text-left p-v w-full z-index-2 text-md" >
-                <span ui-sref="app.categoryPage({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'name': category.name})" class="badge p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postView.categories">
+                <span ui-sref="app.station.categoryPage({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'name': category.name})" class="badge p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postView.categories">
                   {{::category.name}}
                 </span>
               </div>
@@ -57,7 +57,7 @@
             </div>
             <!-- News Image -->
             <div class="news-image o-f-h">
-                <a ui-sref="app.read({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'postSlug': postView.slug})">
+                <a ui-sref="app.station.read({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'postSlug': postView.slug})">
                 <div class="pos-rlt">
                   <div  preload-bg-image="{{app.getImageLink(postView, 'medium')}}" class="zoom-hover h-full bg-cover h-full bg-cover" ng-class="{'m-h-325': app.largeCardCheck($index, postView), 'm-h-230': !app.largeCardCheck($index, postView), 'md-primary-default2 background': !app.hasImage(postView)}">
                       <!-- <img class="responsive-img materialboxed" ng-src="{{postView | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
@@ -67,13 +67,13 @@
                 </a>
             </div>
             <div class="text-left p-h-sm w-full z-index-2" style="height: 42px; overflow: hidden;">
-              <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postView.categories">
+              <a ui-sref="app.station.categoryPage({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postView.categories">
                 {{::category.name}}
               </a>
             </div>
             <!-- News Description -->
             <div class="news-description p-t p-b-sm p-h">
-                <a ui-sref="app.read({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'postSlug': postView.slug})">
+                <a ui-sref="app.station.read({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'postSlug': postView.slug})">
                   <div class="news-title o-f-h" ng-if="!app.largeCardCheck($index, postView) && app.hasImage(postView)" style="height: 66px">
                     <p clamp="2">{{::postView.title}}</p>
                   </div>
@@ -112,7 +112,7 @@
   <i class="mdi2-chevron-double-up i-32"></i>
 </div>-->
 
-<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}" ng-click="scrollToTop();">
+<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated hide" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}" ng-click="scrollToTop();">
   <!-- <md-tooltip md-direction="top">
     {{'titles.REMOVE_ALL' | translate}}
   </md-tooltip> -->

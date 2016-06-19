@@ -8,9 +8,7 @@ import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.model.*;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static co.xarx.trix.config.security.Permissions.MODERATION;
@@ -20,37 +18,26 @@ import static org.springframework.security.acls.domain.BasePermission.*;
 public class AccessControlListService {
 
 	private MutableAclService aclService;
+	private PermissionGrantingStrategy grantingStrategy;
 
 	@Autowired
-	public AccessControlListService(MutableAclService aclService) {
+	public AccessControlListService(MutableAclService aclService, PermissionGrantingStrategy grantingStrategy) {
 		this.aclService = aclService;
+		this.grantingStrategy = grantingStrategy;
 	}
 
 	public boolean hasPermission(Class clazz, Integer objectId, Sid sid, Permission... permission) {
 		ObjectIdentityImpl oi = new ObjectIdentityImpl(clazz, objectId);
 		Acl acl = aclService.readAclById(oi);
-		AccessControlEntry ace = findAce(acl.getEntries(), sid);
 
-		if(ace == null) return false;
-
-		boolean hasPermission = false;
-		for (Permission p : permission) {
-			hasPermission |= Permissions.containsPermission(ace.getPermission(), p);
-		}
-
-		return hasPermission;
-
+		return grantingStrategy.isGranted(acl, Arrays.asList(permission), Collections.singletonList(sid), false);
 	}
 
 
-	AccessControlEntry findAce(List<AccessControlEntry> entries, Sid sid) {
-		for (AccessControlEntry entry : entries) {
-			if (entry.getSid().equals(sid)) {
-				return entry;
-			}
-		}
-
-		return null;
+	List<AccessControlEntry> findAce(List<AccessControlEntry> entries, Sid sid) {
+		return entries.stream()
+				.filter(entry -> entry.getSid().equals(sid))
+				.collect(Collectors.toList());
 	}
 
 	PermissionData getPermissionData(Permission p) {

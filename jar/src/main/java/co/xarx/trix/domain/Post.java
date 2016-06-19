@@ -20,7 +20,7 @@ import java.util.Set;
 @Entity
 @JsonIgnoreProperties(value = {
 		"imageHash", "imageLargeHash", "imageMediumHash", "imageSmallHash"
-}, allowGetters = true)
+}, allowGetters = true, ignoreUnknown = true)
 public class Post extends BaseEntity implements Serializable, ElasticSearchEntity{
 
 	public static final String STATE_DRAFT = "DRAFT";

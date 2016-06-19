@@ -87,7 +87,8 @@ module.exports = {
                     'angular-sly/dist/**',
                     'angular-scroll/**',
                     'angular-carousel/dist/**',
-                    'angular-drag-and-drop-lists/**'
+                    'angular-drag-and-drop-lists/**',
+                    'satellizer/**'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

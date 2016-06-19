@@ -35,7 +35,7 @@
           </div>
           <!-- News Image -->
           <div class="news-image o-f-h">
-              <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" ng-if="app.hasImage(publication);">
+              <a ui-sref="app.station.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" ng-if="app.hasImage(publication);">
               <div  preload-bg-image="{{app.getImageLink(publication, 'medium')}}" class="zoom-hover h-full bg-cover" style="min-height: 230px;">
               </div>
               </a>
@@ -47,7 +47,7 @@
           </div>
           <!-- News Description -->
           <div class="news-description p-t p-b-sm p-h">
-              <a ui-sref="app.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})">
+              <a ui-sref="app.station.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})">
               <div class="news-title" style="min-height: 66px"><p clamp="3"> {{::publication.title}} </p></div>
               <div class="news-content"><p clamp="4">{{::publication.snippet}}</p></div>
               </a>

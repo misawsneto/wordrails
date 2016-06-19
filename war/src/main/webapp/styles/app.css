@@ -9013,6 +9013,11 @@ ul.pgwSlider > li,
   color: inherit!important;
 }
 
+.simpleDemo ul[dnd-list],
+.simpleDemo ul[dnd-list] > li {
+  position: relative;
+}
+
 /**
  * For the correct positioning of the placeholder element, the dnd-list and
  * it's children must have position: relative
@@ -9053,12 +9058,13 @@ ul.pgwSlider > li,
 .simpleDemo ul[dnd-list] .dndPlaceholder {
   display: block;
   min-height: 54px;
-  margin-left: 16px;
   margin-right: 16px;
+  margin-left: 16px;
   background-color: #ddd;
 }
 
-.simpleDemo ul[dnd-list] li:nth-child(2), .simpleDemo ul[dnd-list] li:nth-child(1) {
+.simpleDemo ul[dnd-list] li:nth-child(2),
+.simpleDemo ul[dnd-list] li:nth-child(1) {
   margin-top: 16px;
 }
 
@@ -9096,10 +9102,6 @@ ul.pgwSlider > li,
   cursor: grabbing;
 }
 
-ul.material-top-menu{
-  list-style: none; position: relative; float: left; display: block; left: 50%;
-}
-
-ul.material-top-menu > li.material-top-menu-item{
-  position: relative; float: left; display: block; right: 50%;
+.df-tab-menu > li {
+  float: none!important;
 }

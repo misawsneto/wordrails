@@ -7,7 +7,7 @@
     <title>${networkName}</title>
     ${requestedEntityMetas}
     <link rel="shortcut icon" href="${faviconLink}" type="image/x-icon" />
-  <meta name="description" content="material, material design, angular material, app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components" />
+  <meta name="description" content="" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
   <link rel="stylesheet" href="/libs/assets/animate.css/animate.css" type="text/css" />
@@ -71,6 +71,7 @@
   <script src="/libs/angular/angular-translate-storage-local/angular-translate-storage-local.js"></script>
   <!-- loading-bar -->
   <script src="/libs/angular/angular-loading-bar/build/loading-bar.js"></script>
+  <script src="/libs/angular/satellizer/satellizer.min.js"></script>
 
 <!-- App -->
   <script src="/js/BaseTrix.js"></script>

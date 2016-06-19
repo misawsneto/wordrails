@@ -152,15 +152,6 @@
 	</filter>
 	<!-- Cache -->
 
-	<!--<filter>-->
-		<!--<filter-name>PostFilter</filter-name>-->
-		<!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
-		<!--<init-param>-->
-			<!--<param-name>targetBeanName</param-name>-->
-			<!--<param-value>postFilter</param-value>-->
-		<!--</init-param>-->
-	<!--</filter>-->
-
 	<filter>
 		<filter-name>NetworkDomainFilter</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -197,15 +188,6 @@
 		</init-param>-->
 	</filter>
 
-	<filter>
-		<filter-name>PathEntityFilter</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-		<init-param>
-			<param-name>targetBeanName</param-name>
-			<param-value>pathEntityFilter</param-value>
-		</init-param>
-	</filter>
-
 	<filter-mapping>
 		<filter-name>NotFoundFilter</filter-name>
 		<url-pattern>/data/*</url-pattern>
@@ -218,33 +200,15 @@
 	</filter-mapping>
 
 	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
-	<filter-mapping>
 		<filter-name>NetworkDomainFilter</filter-name>
 		<url-pattern>/*</url-pattern>
-		<!--<url-pattern>/index.jsp</url-pattern>-->
-		<!--<url-pattern>/search/*</url-pattern>-->
-		<!--<url-pattern>/post/*</url-pattern>-->
-		<!--<url-pattern>/bookmarks/*</url-pattern>-->
-		<!--<url-pattern>/notifications/*</url-pattern>-->
-		<!--<url-pattern>/settings/*</url-pattern>-->
-		<!--<url-pattern>/publications/*</url-pattern>-->
-		<!--<url-pattern>/user/*</url-pattern>-->
-		<!--<url-pattern>/read/*</url-pattern>-->
-		<!--<url-pattern>/login/*</url-pattern>-->
-		<!--<url-pattern>/api/*</url-pattern>-->
-		<!--<url-pattern>/mystats/*</url-pattern>-->
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
-		<filter-name>PathEntityFilter</filter-name>
+		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
@@ -253,26 +217,9 @@
 	</filter-mapping>
 
 	<filter-mapping>
-		<filter-name>PathEntityFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-
-	<filter-mapping>
 		<filter-name>PersonDataFilter</filter-name>
 		<url-pattern>/index.jsp</url-pattern>
 		<url-pattern>/settings.jsp</url-pattern>
-		<url-pattern>/search/*</url-pattern>
-		<url-pattern>/post/*</url-pattern>
-		<url-pattern>/bookmarks/*</url-pattern>
-		<url-pattern>/notifications/*</url-pattern>
-		<url-pattern>/settings/*</url-pattern>
-		<url-pattern>/access/*</url-pattern>
-		<url-pattern>/publications/*</url-pattern>
-		<url-pattern>/user/*</url-pattern>
-		<url-pattern>/read/*</url-pattern>
-		<url-pattern>/mystats/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
@@ -294,14 +241,6 @@
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
-
-	<!--<filter-mapping>-->
-		<!--<filter-name>PostFilter</filter-name>-->
-		<!--<url-pattern>/api/posts</url-pattern>-->
-		<!--<url-pattern>/api/posts/*</url-pattern>-->
-		<!--<dispatcher>FORWARD</dispatcher>-->
-		<!--<dispatcher>REQUEST</dispatcher>-->
-	<!--</filter-mapping>-->
 
 	<filter-mapping>
 		<filter-name>CacheFilter</filter-name>
