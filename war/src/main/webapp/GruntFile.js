@@ -9,9 +9,9 @@ module.exports = function(grunt) {
     gtx.config(gruntConfig);
 
     // We need our bower components in order to develop
-    gtx.alias('build:webapp', ['recess:less', 'clean:webapp', 'copy:libs', 'concat:froala', 'concat:froalacss', 'concat:leafletcss','concat:leafletjs','concat:masonry', 'concat:videogular', /*'copy:webapp'*/, /*'recess:webapp'*/, /*'concat:webapp'*/, /*'uglify:webapp'*/]);
-    gtx.alias('build:html', ['clean:html', 'copy:html', 'recess:html', 'swig:html', 'concat:html', 'uglify:html']);
-    gtx.alias('build:landing', ['copy:landing', 'swig:landing']);
+    gtx.alias('build:webapp', ['recess:less', 'clean:webapp', 'copy:libs', 'concat:froala', 'concat:froalacss', 'concat:leafletcss','concat:leafletjs','concat:masonry', 'concat:videogular', 'recess:webapp', 'concat:webapp', 'uglify:webapp']);
+    // gtx.alias('build:html', ['clean:html', 'copy:html', 'recess:html', 'swig:html', 'concat:html', 'uglify:html']);
+    // gtx.alias('build:landing', ['copy:landing', 'swig:landing']);
 
     gtx.alias('release', ['bower-install-simple', 'bump-commit']);
     gtx.alias('release-patch', ['bump-only:patch', 'release']);

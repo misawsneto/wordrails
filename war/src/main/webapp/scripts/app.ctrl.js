@@ -906,7 +906,7 @@ angular.module('app')
         });
       }
 
-      if($scope.app.person)
+      if($scope.app.person && $scope.app.person.id > 0)
         trix.setUsername($scope.app.person.username);
 
       $scope.app.signInButton =  function(){
