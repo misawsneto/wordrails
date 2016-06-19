@@ -8,7 +8,6 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ElasticSearchService;
-import co.xarx.trix.services.SchedulerService;
 import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.services.security.PostPermissionService;
 import co.xarx.trix.util.StringUtil;
@@ -26,8 +25,6 @@ public class PostEventHandler {
 
 	@Autowired
 	private PostService postService;
-	@Autowired
-	private SchedulerService schedulerService;
 	@Autowired
 	private CellRepository cellRepository;
 	@Autowired
@@ -81,22 +78,14 @@ public class PostEventHandler {
 
 	@HandleAfterCreate
 	public void handleAfterCreate(Post post) {
-		if (post.state.equals(Post.STATE_SCHEDULED)) {
-			schedulerService.schedule(post.id, post.scheduledDate);
-		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
-			if (post.notify)
-				postService.sendNewPostNotification(post);
-
+		if (post.state.equals(Post.STATE_PUBLISHED)) {
+			if (post.notify) postService.sendNewPostNotification(post);
 		}
 		elasticSearchService.mapThenSave(post, ESPost.class);
 	}
 
 	@HandleAfterSave
 	public void handleAfterSave(Post post) {
-		if (post.state.equals(Post.STATE_SCHEDULED)) {
-			schedulerService.schedule(post.id, post.scheduledDate);
-		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
-		}
 		elasticSearchService.mapThenSave(post, ESPost.class);
 		auditService.saveChange(post);
 	}
