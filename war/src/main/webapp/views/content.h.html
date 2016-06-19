@@ -100,7 +100,7 @@
           <md-button ng-if="!app.isLogged()" class="md-primary-hue-1 background">
             {{'signin_signup.SIGNIN' | translate}}
           </md-button>
-          <span class="hidden-sm hidden-md" ng-if="app.isLogged()">{{app.person.name}}</span>
+          <span class="hidden-sm hidden-md" ng-if="app.isLogged()">{{::app.person.name}}</span>
           <b class="caret m-r" ng-if="app.isLogged()"></b>
         </a>
         <!-- dropdown -->
@@ -177,9 +177,10 @@
         <div class="custom-header container" style="min-height: 50px;">
           <ul class="nav nav-lines nav-md no-bg animated text-base material-top-menu" ng-class="{'o-f-h fadeOut': app.loadingTabs}" df-tab-menu menu-control="{{menu2.navigationState}}" style="height: 52px">
             <li class="material-top-menu-item animated fadeIn" 
-             ng-class="{'active': app.activeCategory.id === category.id}" md-ink-ripple data-ng-repeat="category in app.perspectiveTerms" data-menu-item="{{category.item}}">
+             ng-class="{'active': app.activeCategory.id === category.id}" md-ink-ripple data-ng-repeat="category in app.perspectiveTerms" 
+             data-menu-item="{{category.item}}">
               <a ng-href="{{::'/' + app.getStationById(app.termPerspectiveView.stationId).stationSlug + '/cat?name=' + category.name}}" >
-                <span>{{category.name}}</span>
+                <span>{{::category.name}}</span>
               </a>
             </li>
             <li data-more-menu-item>
