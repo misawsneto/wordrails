@@ -2,16 +2,15 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.api.StationRolesUpdate;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.Invitation;
-import co.xarx.trix.domain.Network;
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.PersonValidation;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.person.PersonAlreadyExistsException;
 import co.xarx.trix.services.person.PersonFactory;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.StationPermissionService;
+import co.xarx.trix.services.user.UserAlreadyExistsException;
+import co.xarx.trix.services.user.UserFactory;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +36,7 @@ public class PersonService {
 
 	private Client client;
 	private String nginxAccessIndex;
+	private UserFactory userFactory;
 	private AuthService authService;
 	private EmailService emailService;
 	private PersonFactory personFactory;
@@ -48,9 +48,10 @@ public class PersonService {
 	private PersonValidationRepository personValidationRepository;
 
 	@Autowired
-	public PersonService(PersonRepository personRepository, EmailService emailService, NetworkRepository networkRepository, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository) {
+	public PersonService(PersonRepository personRepository, EmailService emailService, NetworkRepository networkRepository, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory) {
 		this.client = client;
 		this.authService = authService;
+		this.userFactory = userFactory;
 		this.emailService = emailService;
 		this.personFactory = personFactory;
 		this.nginxAccessIndex = nginxAccessIndex;
@@ -62,36 +63,34 @@ public class PersonService {
 		this.personValidationRepository = personValidationRepository;
 	}
 
-	public Person createFromInvite(PersonsApi.PersonCreateDto dto, String inviteHash) throws PersonAlreadyExistsException {
+	public Person createFromInvite(PersonsApi.PersonCreateDto dto, String inviteHash) throws PersonAlreadyExistsException, UserAlreadyExistsException {
 		Assert.hasText(inviteHash);
-		Person newcomer = null;
-		try {
-			newcomer = personFactory.create(dto.name, dto.username, dto.email, dto.password);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+		User newUser = userFactory.create(dto.username, dto.password);
+		Person newPerson = personFactory.create(dto.name, dto.email, newUser);
 
 		Invitation invitation = invitationRepository.findByHash(inviteHash);
 
 		if (invitation != null
-				&& invitation.email == newcomer.email
+				&& invitation.email == newPerson.email
 				&& invitation.invitationStations != null
 				&& invitation.invitationStations.size() > 0) {
 			StationRolesUpdate update = new StationRolesUpdate();
 			update.stationsIds = invitation.invitationStations;
-			update.usernames = Arrays.asList(newcomer.username);
+			update.usernames = Arrays.asList(newPerson.username);
 			stationPermissionService.updateStationsPermissions(update, authService.getLoggedUsername());
 		}
 
-		return newcomer;
+		return newPerson;
 	}
 
-	public Person createPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException {
-		Person newcomer = personFactory.create(dto.name, dto.username, dto.email, dto.password);
+	public Person createPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException, UserAlreadyExistsException {
+		User newUser = userFactory.create(dto.username, dto.password);
+		Person newPerson = personFactory.create(dto.name, dto.email, newUser);
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 
 		PersonValidation validation = new PersonValidation();
-		validation.setPerson(newcomer);
+		validation.setPerson(newPerson);
 		personValidationRepository.save(validation);
 
 		try {
@@ -99,21 +98,22 @@ public class PersonService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return newcomer;
+		return newPerson;
 	}
 
-	public Person addPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException {
+	public Person addPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException, UserAlreadyExistsException {
 		dto.password = StringUtil.generateRandomString(6, "aA#");
 
-		Person newcomer = personFactory.create(dto.name, dto.username, dto.email, dto.password);
+		User newUser = userFactory.create(dto.username, dto.password);
+		Person newPerson = personFactory.create(dto.name, dto.email, newUser);
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 
 		try {
-			emailService.sendCredentials(network, authService.getLoggedPerson(), newcomer);
+			emailService.sendCredentials(network, authService.getLoggedPerson(), newPerson);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return newcomer;
+		return newPerson;
 	}
 
 	public Person validateEmail(String hash) throws BadRequestException {

@@ -334,32 +334,24 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
 		} catch (PersonAlreadyExistsException e) {
 			e.printStackTrace();
-			return Response.status(Status.CONFLICT).build();
+			return Response.status(Status.CONFLICT).entity("Email already used by another user").build();
+		} catch (UserAlreadyExistsException e) {
+			e.printStackTrace();
+			return Response.status(Status.CONFLICT).entity("Username already used by another user").build();
 		}
 	}
 
 	@Override
 	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
-		boolean sendPlainPassword = false;
-		if (dto.password == null || "".equals(dto.password)) {
-			dto.password = StringUtil.generateRandomString(6, "aA#");
-		} else {
-			sendPlainPassword = true;
-		}
 		try {
 			Person person = personService.createPerson(dto);
-			Person person = personRepository.findByEmail(dto.email);
-
-			if (person == null) {
-				User user = userFactory.create(dto.username, dto.password);
-				person = personFactory.create(dto.name, dto.email, user);
-				personService.notifyPersonCreation(person, sendPlainPassword);
-			}
-
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
-		} catch (PersonAlreadyExistsException | UserAlreadyExistsException e) {
+		} catch (PersonAlreadyExistsException e) {
 			e.printStackTrace();
-			return Response.status(Status.BAD_REQUEST).entity("Email already used by another user").build();
+			return Response.status(Status.CONFLICT).entity("Email already used by another user").build();
+		} catch (UserAlreadyExistsException e) {
+			e.printStackTrace();
+			return Response.status(Status.CONFLICT).entity("Username already used by another user").build();
 		}
 	}
 
@@ -371,6 +363,9 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 		} catch (PersonAlreadyExistsException e) {
 			e.printStackTrace();
 			return Response.status(Status.CONFLICT).build();
+		} catch (UserAlreadyExistsException e) {
+			e.printStackTrace();
+			return Response.status(Status.CONFLICT).entity("Username already used by another user").build();
 		}
 	}
 
