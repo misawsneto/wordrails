@@ -28,7 +28,7 @@
 </head>
 <body ng-app="app">
   <div class="app" ui-view ng-controller="AppCtrl" ng-class="{'bg-cover o-f-h': $state.includes('access')}" ng-style="$state.includes('access') && app.network.splashImageHash ? app.getSplash() : null"></div>
-<script src="scripts/app.min.js"></script>
+<script src="scripts/app.src.js"></script>
 
 </body>
 </html>
