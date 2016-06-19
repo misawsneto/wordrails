@@ -390,8 +390,8 @@ angular.module('app')
           return (indLasDigit == 5 || indLasDigit == 'b') && !$scope.app.fullCardCheck(index, post);
         }
 
-        $scope.app.smallCardCheck = function(index){
-          return !$scope.app.largeCardCheck(index);
+        $scope.app.smallCardCheck = function(index, post){
+          return !$scope.app.largeCardCheck(index, post) && !$scope.app.fullCardCheck(index, post);
         }
 
         $scope.app.getCategoryLink = function(stationSlug, categoryName){
