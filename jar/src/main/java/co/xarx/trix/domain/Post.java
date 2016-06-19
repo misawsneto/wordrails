@@ -21,14 +21,13 @@ import java.util.Set;
 @JsonIgnoreProperties(value = {
 		"imageHash", "imageLargeHash", "imageMediumHash", "imageSmallHash"
 }, allowGetters = true, ignoreUnknown = true)
-public class Post extends BaseEntity implements Serializable, ElasticSearchEntity{
+public class Post extends BaseEntity implements Serializable, ElasticSearchEntity {
 
 	public static final String STATE_DRAFT = "DRAFT";
 	public static final String STATE_NO_AUTHOR = "NOAUTHOR";
 	public static final String STATE_TRASH = "TRASH";
 	public static final String STATE_PUBLISHED = "PUBLISHED";
 	public static final String STATE_UNPUBLISHED = "UNPUBLISHED";
-	public static final String STATE_SCHEDULED = "SCHEDULED";
 
 	private static final long serialVersionUID = 7468718930497246401L;
 
