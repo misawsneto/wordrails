@@ -118,7 +118,7 @@ app.controller('ProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$stat
   }
 
   $timeout(function(){
-    $('#scroll-box').animate({scrollTop: 0}, 700, 'easeOutQuint');
+    $('#scroll-box').animate({scrollTop: 0}, 0);
   })
 
   $scope.$on('$destroy',function(){

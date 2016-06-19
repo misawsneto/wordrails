@@ -51,7 +51,7 @@ app.controller('CategoryCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$md
   }
 
   $timeout(function(){
-    $('#scroll-box').animate({scrollTop: 0}, 700, 'easeOutQuint');
+    $('#scroll-box').animate({scrollTop: 0}, 0);
   })
 
   $scope.$on('$destroy',function(){
