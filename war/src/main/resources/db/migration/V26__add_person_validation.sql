@@ -1,1 +1,0 @@
-ALTER TABLE person ADD validated BOOLEAN NULL;

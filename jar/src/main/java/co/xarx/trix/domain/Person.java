@@ -84,10 +84,6 @@ public class Person extends BaseEntity implements Serializable {
 	@ManyToOne
 	public Image cover;
 
-	//Persons created before that feature are set to null
-	@Column
-	public Boolean validated;
-
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date lastLogin;

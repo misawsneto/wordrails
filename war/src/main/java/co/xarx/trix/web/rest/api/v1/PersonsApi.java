@@ -31,7 +31,6 @@ public interface PersonsApi {
 		public String username;
 		public String email;
 		public String password;
-		public boolean emailNotification;
 	}
 
 	class PersonAuthDto {
@@ -132,14 +131,18 @@ public interface PersonsApi {
 	@Path("/create")
 	Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException;
 
+	@POST
+	@Path("/create/{inviteHash}")
+	Response signUpFromInvite(PersonCreateDto dto, @PathParam("inviteHash") String inviteHash) throws ConflictException, BadRequestException, IOException;
+
 	@GET
 	@Path("/validate/{hash}")
 	Response validatePersonEmail(@PathParam("hash") String hash);
 
 	@POST
 	@Path("/invitePerson")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response invitePerson(PersonInvitationDto dto) throws ConflictException, BadRequestException, IOException;
-
 
 	@GET
 	@Path("/stats/count")

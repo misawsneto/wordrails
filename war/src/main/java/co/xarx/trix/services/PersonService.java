@@ -1,17 +1,16 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.api.StationRolesUpdate;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.Invitation;
-import co.xarx.trix.domain.Network;
-import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.BadRequestException;
-import co.xarx.trix.persistence.InvitationRepository;
-import co.xarx.trix.persistence.NetworkRepository;
-import co.xarx.trix.persistence.PersonRepository;
-import co.xarx.trix.persistence.StationRepository;
+import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.person.PersonAlreadyExistsException;
 import co.xarx.trix.services.person.PersonFactory;
 import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.services.security.StationPermissionService;
+import co.xarx.trix.services.user.UserAlreadyExistsException;
+import co.xarx.trix.services.user.UserFactory;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
@@ -40,18 +36,22 @@ public class PersonService {
 
 	private Client client;
 	private String nginxAccessIndex;
+	private UserFactory userFactory;
 	private AuthService authService;
 	private EmailService emailService;
+	private PersonFactory personFactory;
 	private PersonRepository personRepository;
 	private NetworkRepository networkRepository;
 	private StationRepository stationRepository;
 	private InvitationRepository invitationRepository;
-	private PersonFactory personFactory;
+	private StationPermissionService stationPermissionService;
+	private PersonValidationRepository personValidationRepository;
 
 	@Autowired
-	public PersonService(PersonRepository personRepository, EmailService emailService, NetworkRepository networkRepository, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory) {
+	public PersonService(PersonRepository personRepository, EmailService emailService, NetworkRepository networkRepository, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory) {
 		this.client = client;
 		this.authService = authService;
+		this.userFactory = userFactory;
 		this.emailService = emailService;
 		this.personFactory = personFactory;
 		this.nginxAccessIndex = nginxAccessIndex;
@@ -59,30 +59,82 @@ public class PersonService {
 		this.stationRepository = stationRepository;
 		this.networkRepository = networkRepository;
 		this.invitationRepository = invitationRepository;
+		this.stationPermissionService = stationPermissionService;
+		this.personValidationRepository = personValidationRepository;
 	}
 
-	public Person createPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException {
-		boolean validated = false;
-		if(dto.password == null || "".equals(dto.password)){
-			dto.password = StringUtil.generateRandomString(6, "aA#");
-			validated = true;
+	public Person createFromInvite(PersonsApi.PersonCreateDto dto, String inviteHash) throws PersonAlreadyExistsException, UserAlreadyExistsException {
+		Assert.hasText(inviteHash);
+
+		User newUser = userFactory.create(dto.username, dto.password);
+		Person newPerson = personFactory.create(dto.name, dto.email, newUser);
+
+		Invitation invitation = invitationRepository.findByHash(inviteHash);
+
+		if (invitation != null
+				&& invitation.email == newPerson.email
+				&& invitation.invitationStations != null
+				&& invitation.invitationStations.size() > 0) {
+			StationRolesUpdate update = new StationRolesUpdate();
+			update.stationsIds = invitation.invitationStations;
+			update.usernames = Arrays.asList(newPerson.username);
+			stationPermissionService.updateStationsPermissions(update, authService.getLoggedUsername());
 		}
 
-		Person person = personFactory.create(dto.name, dto.username, dto.email, dto.password, validated);
-		notifyPersonCreation(person);
-		return person;
+		return newPerson;
+	}
+
+	public Person createPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException, UserAlreadyExistsException {
+		User newUser = userFactory.create(dto.username, dto.password);
+		Person newPerson = personFactory.create(dto.name, dto.email, newUser);
+		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+
+		PersonValidation validation = new PersonValidation();
+		validation.setPerson(newPerson);
+		personValidationRepository.save(validation);
+
+		try {
+			emailService.validatePersonCreation(network, authService.getLoggedPerson(), validation);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return newPerson;
+	}
+
+	public Person addPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException, UserAlreadyExistsException {
+		dto.password = StringUtil.generateRandomString(6, "aA#");
+
+		User newUser = userFactory.create(dto.username, dto.password);
+		Person newPerson = personFactory.create(dto.name, dto.email, newUser);
+		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+
+		try {
+			emailService.sendCredentials(network, authService.getLoggedPerson(), newPerson);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return newPerson;
 	}
 
 	public Person validateEmail(String hash) throws BadRequestException {
-		Assert.notNull(hash, "Hash cannot be null");
-		Invitation invitation = invitationRepository.findByHash(hash);
+		PersonValidation validation = personValidationRepository.findByHash(hash);
 
-		if(invitation == null || invitation.getPerson() == null){
+		if(validation == null && validation.getPerson() != null){
 			return null;
 		}
-		Person person = invitation.getPerson();
-		person.validated = true;
-		personRepository.save(person);
+
+		String tenantId = TenantContextHolder.getCurrentTenantId();
+		Network network = networkRepository.findByTenantId(tenantId);
+
+		Person person = validation.getPerson();
+		validation.validated = true;
+
+		if (network.isEmailSignUpValidationEnabled()) {
+			person.user.enabled = true;
+			personRepository.save(person);
+		}
+
+		personValidationRepository.save(validation);
 		return person;
 	}
 
@@ -96,10 +148,7 @@ public class PersonService {
 		if(persons != null && persons.size() > 0){
 			for (Iterator<String> iterator = dto.emails.iterator(); iterator.hasNext();) {
 				String email = iterator.next();
-				for (Person p: persons) {
-					if (p.email.equals(email))
-						iterator.remove();
-				}
+				persons.stream().filter(p -> p.email.equals(email)).forEach(p -> iterator.remove());
 			}
 		}
 
@@ -124,22 +173,13 @@ public class PersonService {
 			invitation.email = email;
 			invitation.invitationStations = dto.stationIds;
 			invitationRepository.save(invitation);
+			if(dto.emailTemplate.equals("")){
+				dto.emailTemplate = network.getInvitationMessage();
+			}
 			emailService.sendInvitation(network, invitation, authService.getLoggedPerson(), dto.emailTemplate);
 		}
 
 		return persons;
-	}
-
-	public void notifyPersonCreation(Person person){
-		Network network = networkRepository.findByTenantId(person.getTenantId());
-		Invitation invitation = new Invitation(network.getRealDomain());
-		invitation.setPerson(person);
-
-		if(person.validated){
-			invitationRepository.save(invitation);
-		}
-
-		emailService.notifyPersonCreation(network, invitation, authService.getLoggedPerson());
 	}
 
 	public List<Map<String, Object>> getUserTimeline(String username) {

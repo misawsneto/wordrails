@@ -1,6 +1,7 @@
 package co.xarx.trix.services.security;
 
 import co.xarx.trix.api.StationPermission;
+import co.xarx.trix.api.StationRolesUpdate;
 import co.xarx.trix.api.v2.PermissionData;
 import co.xarx.trix.api.v2.PersonData;
 import co.xarx.trix.api.v2.StationPermissionData;
@@ -49,6 +50,13 @@ public class StationPermissionService {
 		this.permissionEvaluator = permissionEvaluator;
 		this.personRepository = personRepository;
 		this.mapper = mapper;
+	}
+
+	public void updateStationsPermissions(StationRolesUpdate dto, String loggedUsername){
+		dto.usernames.remove(loggedUsername);
+
+		List<Sid> sids = dto.usernames.stream().map(PrincipalSid::new).collect(Collectors.toList());
+		updateStationsPermissions(sids, dto.stationsIds, dto.writer, dto.editor, dto.admin);
 	}
 
 	public List<Integer> findStationsWithReadPermission() {

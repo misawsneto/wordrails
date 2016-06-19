@@ -31,6 +31,7 @@ import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysema.commons.lang.Assert;
 import lombok.NoArgsConstructor;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -329,40 +330,48 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	@Override
 	public Response addPerson(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
 		try {
-			Person person = personService.createPerson(dto);
+			Person person = personService.addPerson(dto);
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
 		} catch (PersonAlreadyExistsException e) {
 			e.printStackTrace();
-			return Response.status(Status.CONFLICT).build();
+			return Response.status(Status.CONFLICT).entity("Email already used by another user").build();
+		} catch (UserAlreadyExistsException e) {
+			e.printStackTrace();
+			return Response.status(Status.CONFLICT).entity("Username already used by another user").build();
 		}
 	}
 
 	@Override
 	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
-		boolean sendPlainPassword = false;
-		if (dto.password == null || "".equals(dto.password)) {
-			dto.password = StringUtil.generateRandomString(6, "aA#");
-		} else {
-			sendPlainPassword = true;
-		}
 		try {
-			Person person = personRepository.findByEmail(dto.email);
-
-			if (person == null) {
-				User user = userFactory.create(dto.username, dto.password);
-				person = personFactory.create(dto.name, dto.email, user);
-				personService.notifyPersonCreation(person, sendPlainPassword);
-			}
-
+			Person person = personService.createPerson(dto);
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
-		} catch (PersonAlreadyExistsException | UserAlreadyExistsException e) {
+		} catch (PersonAlreadyExistsException e) {
 			e.printStackTrace();
-			return Response.status(Status.BAD_REQUEST).entity("Email already used by another user").build();
+			return Response.status(Status.CONFLICT).entity("Email already used by another user").build();
+		} catch (UserAlreadyExistsException e) {
+			e.printStackTrace();
+			return Response.status(Status.CONFLICT).entity("Username already used by another user").build();
+		}
+	}
+
+	@Override
+	public Response signUpFromInvite(PersonCreateDto dto, String inviteHash) throws ConflictException, BadRequestException, IOException {
+		try {
+			Person person = personService.createFromInvite(dto, inviteHash);
+			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
+		} catch (PersonAlreadyExistsException e) {
+			e.printStackTrace();
+			return Response.status(Status.CONFLICT).build();
+		} catch (UserAlreadyExistsException e) {
+			e.printStackTrace();
+			return Response.status(Status.CONFLICT).entity("Username already used by another user").build();
 		}
 	}
 
 	@Override
 	public Response validatePersonEmail(String hash){
+		Assert.hasText(hash, "A valid hash mush be sent");
 		if(personService.validateEmail(hash) == null){
 			return Response.status(Status.NOT_FOUND).build();
 		}
@@ -370,12 +379,15 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
-	public Response invitePerson(PersonsApi.PersonInvitationDto dto) throws ConflictException, BadRequestException,
-			IOException {
-		personService.invite(dto);
+	public Response invitePerson(PersonsApi.PersonInvitationDto dto) throws ConflictException, IOException {
+		try{
+			personService.invite(dto);
+		} catch (BadRequestException e){
+			e.printStackTrace();
+			return Response.status(Status.BAD_REQUEST).build();
+		}
 		return Response.status(Status.CREATED).build();
 	}
-
 
 	@Override
 	public ContentResponse<Integer> countPersonsByNetwork(@QueryParam("q") String q) {
@@ -417,22 +429,24 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	public Response disablePerson(Integer personId) {
 		Person self = authProvider.getLoggedPerson();
 		Person person = personRepository.findOne(personId);
-		if (!self.id.equals(person.id)) {
+		if (person != null && !self.id.equals(person.id)) {
 			person.user.enabled = false;
 			personRepository.save(person);
+			return Response.status(Status.CREATED).build();
 		}
-		return Response.status(Status.CREATED).build();
+		return Response.status(Status.NOT_FOUND).build();
 	}
 
 	@Override
 	public Response enablePerson(Integer personId) {
 		Person self = authProvider.getLoggedPerson();
 		Person person = personRepository.findOne(personId);
-		if (!self.id.equals(person.id)) {
+		if (person != null && !self.id.equals(person.id)) {
 			person.user.enabled = true;
 			personRepository.save(person);
+			return Response.status(Status.CREATED).build();
 		}
-		return Response.status(Status.CREATED).build();
+		return Response.status(Status.NOT_FOUND).build();
 	}
 
 	@Override
