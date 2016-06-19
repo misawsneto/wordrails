@@ -68,6 +68,7 @@ public class Authenticator {
 
 			if(person != null) {
 				userFactory.createConnection(person.getUser(), socialUser);
+				user = person.getUser();
 			} else {
 				try {
 					user = userFactory.create(socialUser);
