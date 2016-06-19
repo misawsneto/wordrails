@@ -146,5 +146,23 @@ module.exports = {
       'libs/angular/videogular-poster/vg-poster.min.js'
     ],
     dest:'scripts/videogular.all.js'
+  },
+  homejs:{
+    src:[
+      'libs/angular/df-tab-menu/build/df-tab-menu.min.js',
+      'libs/angular/angularjs-socialshare/dist/angular-socialshare.min.js',
+      'libs/angular/angular-elastic/elastic.js',
+      'libs/angular/ngInfiniteScroll/build/ng-infinite-scroll.min.js',
+      'scripts/services/trix.js',
+      'libs/theming/tinycolor/tinycolor.js',
+      'libs/angular/mdPickers/dist/mdPickers.min.js',
+      'libs/angular/ng-directive-lazy-image/release/lazy-image.min.js',
+      'libs/angular/angular-moment/angular-moment.min.js',
+      'libs/angular/materialize/dist/js/materialize.min.js',
+      'libs/angular/angular-materialize/src/angular-materialize.js',
+      'libs/angular/perfect-scrollbar/js/perfect-scrollbar.min.js',
+      'libs/angular/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js'
+    ],
+    dest:'scripts/home.all.js'
   }
 }

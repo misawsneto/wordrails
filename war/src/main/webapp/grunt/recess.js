@@ -35,12 +35,13 @@ module.exports = {
             compress: true
         }
     },
-    html: {
-        files: {
-            'html/styles/app.min.css': [
-                'libs/jquery/bootstrap/dist/css/bootstrap.css',
-                'styles/font.css',
-                'styles/app.css'
+    homecss: {
+        files:{
+            'styles/home.all.min.css': [
+                'libs/angular/df-tab-menu/css/df-tab-menu.css',
+                'libs/angular/mdPickers/dist/mdPickers.min.css',
+                'libs/angular/ng-directive-lazy-image/release/lazy-image-style.min.css',
+                'libs/angular/perfect-scrollbar/css/perfect-scrollbar.min.css'
             ]
         },
         options: {
