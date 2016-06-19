@@ -141,7 +141,7 @@ angular.module('app')
                 url: '/stations',
                 templateUrl: '/views/settings/settings-stations.html',
                 data : { titleTranslate: 'titles.STATIONS', title: 'Estações', folded: false },
-                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-stations.js']),
+                resolve: load(['/scripts/controllers/settings/settings-stations.js']),
                 controller: 'SettingsStationsCtrl'
               })
 
@@ -151,7 +151,7 @@ angular.module('app')
                 data : { titleTranslate: 'titles.CATEGORIES', title: 'Categorias', folded: false },
                 resolve:{
                   station: stationDep,
-                  deps:load(['angularFileUpload', '/scripts/controllers/settings/settings-categories.js','angularSpectrumColorpicker']).deps
+                  deps:load(['/scripts/controllers/settings/settings-categories.js','angularSpectrumColorpicker']).deps
                 },
                 controller: 'SettingsCategoriesCtrl'
               })
@@ -172,7 +172,7 @@ angular.module('app')
                 data : { titleTranslate: 'titles.PERMISSIONS', title: 'Permissions', folded: false },
                 resolve:{
                   station: stationDep, 
-                  deps: load(['angularFileUpload', '/scripts/controllers/settings/settings-station-permissions.js']).deps
+                  deps: load(['/scripts/controllers/settings/settings-station-permissions.js']).deps
                 },
                 controller: 'SettingsStationPermissionsCtrl'
               })
@@ -184,7 +184,7 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'angularFileUpload', '/scripts/controllers/settings/settings-users.js?', 'froala']);
+                        return $ocLazyLoad.load(['/scripts/controllers/settings/settings-users.js?', 'froala']);
                     }]
                   },
                   controller:'SettingsUsersCtrl'
@@ -208,7 +208,7 @@ angular.module('app')
                 url: '/network',
                 templateUrl: '/views/settings/settings-network.html',
                 data : { titleTranslate: 'titles.NETWORK', title: 'Rede', folded: false },
-                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js']),
+                resolve: load(['/scripts/controllers/settings/settings-network.js']),
                 controller: 'SettingsNetworkCtrl'
               })
               .state('app.publications', {
@@ -216,11 +216,11 @@ angular.module('app')
                 reloadOnSearch: false,
                 templateUrl: '/views/settings/settings-publications.html',
                 data : { titleTranslate: 'titles.PUBLICATIONS', title: 'Publicações', folded: true },
-                // resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-publications.js']),
+                // resolve: load(['/scripts/controllers/settings/settings-publications.js']),
                 resolve: {
                   deps: ['$ocLazyLoad', '$templateCache',
                     function( $ocLazyLoad, $templateCache ){
-                      return $ocLazyLoad.load(['angularFileUpload', '/scripts/controllers/settings/settings-publications.js'])
+                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-publications.js'])
                   }]
                 },
                 controller: 'SettingsPublicationsCtrl'
@@ -230,11 +230,11 @@ angular.module('app')
                 reloadOnSearch: false,
                 templateUrl: '/views/settings/settings-comments.html',
                 data : { titleTranslate: 'titles.COMMENTS', title: 'Comentários', folded: false },
-                // resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-publications.js']),
+                // resolve: load(['/scripts/controllers/settings/settings-publications.js']),
                 resolve: {
                   deps: ['$ocLazyLoad', '$templateCache',
                     function( $ocLazyLoad, $templateCache ){
-                      return $ocLazyLoad.load(['angularFileUpload', '/scripts/controllers/settings/settings-comments.js'])
+                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-comments.js'])
                   }]
                 },
                 controller: 'SettingsCommentsCtrl'
@@ -244,11 +244,11 @@ angular.module('app')
                 reloadOnSearch: false,
                 templateUrl: '/views/settings/settings-media-library.html',
                 data : { titleTranslate: 'titles.COMMENTS', title: 'Comentários', folded: false },
-                // resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-publications.js']),
+                // resolve: load(['/scripts/controllers/settings/settings-publications.js']),
                 resolve: {
                   deps: ['$ocLazyLoad', '$templateCache',
                     function( $ocLazyLoad, $templateCache ){
-                      return $ocLazyLoad.load(['angularFileUpload', '/scripts/controllers/settings/settings-media-library.js'])
+                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-media-library.js'])
                   }]
                 },
                 controller: 'SettingsMediaLibraryCtrl'
@@ -257,7 +257,7 @@ angular.module('app')
                 url: '/colors',
                 templateUrl: '/views/settings/settings-colors.html',
                 data : { titleTranslate: 'titles.THEMING', title: 'Aparência', folded: false },
-                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
+                resolve: load(['/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
                     '/styles/theming.css', '/libs/jquery/slimScroll/jquery.slimscroll.min.js']),
                 controller: 'ColorGeneratorCtrl'
               })
@@ -278,21 +278,21 @@ angular.module('app')
                 url: '/list',
                 templateUrl: '/views/settings/settings-pagebuilder-list.html',
                 data : { title: 'Page Builder', folded: true },
-                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-pagebuilder-list.js']),
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-list.js']),
                 controller: 'PageBuilderListCtrl'
               })
               .state('app.pagebuilder.editor', {
                 url: '/editor',
                 templateUrl: '/views/settings/settings-pagebuilder-editor.html',
                 data : { title: 'Page Builder', folded: true },
-                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-pagebuilder-editor.js']),
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-editor.js']),
                 controller: 'PageBuilderEditorCtrl'
               })
               .state('app.pagebuilder.stationcolors', {
                 url: '/stationcolors',
                 templateUrl: '/views/settings/settings-colors.html',
                 data : { title: 'Page Builder', folded: true },
-                  resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
+                  resolve: load(['/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
                     '/styles/theming.css', '/libs/jquery/slimScroll/jquery.slimscroll.min.js']),
                 controller: 'ColorGeneratorCtrl'
               })
@@ -560,7 +560,7 @@ angular.module('app')
                   templateUrl: '/views/ui/form/file-upload.html',
                   data : { title: 'File upload' },
                   controller: 'UploadCtrl',
-                  resolve: load(['angularFileUpload', '/scripts/controllers/upload.js'])
+                  resolve: load(['/scripts/controllers/upload.js'])
                 })
                 .state('ui.form.image-crop', {
                   url: '/image-crop',
@@ -709,7 +709,8 @@ angular.module('app')
                   // }
                   return deferred.promise;
                 },
-                deps:load( ['digitalfondue.dftabmenu','720kb.socialshare','monospaced.elastic','angularFileUpload','infinite-scroll', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
+                //deps:load( ['digitalfondue.dftabmenu','720kb.socialshare','monospaced.elastic','angularFileUpload','infinite-scroll', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
+                deps:load( ['/scripts/home.all.js', '/styles/home.all.min.css', 'angularFileUpload'] ).deps
               },
               url: '',
               views: {

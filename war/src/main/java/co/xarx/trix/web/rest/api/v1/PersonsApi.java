@@ -49,7 +49,7 @@ public interface PersonsApi {
 	@GET
 	@Path("/{id}")
 	@Transactional
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("isAuthenticated()")
 	void findPerson(@PathParam("id") Integer id) throws IOException;
 
 	@GET
@@ -60,6 +60,7 @@ public interface PersonsApi {
 	@PUT
 	@Path("/update")
 	@Transactional
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response update(Person person);
 
 	@PUT
