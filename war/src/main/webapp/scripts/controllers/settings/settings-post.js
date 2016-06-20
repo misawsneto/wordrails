@@ -140,7 +140,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.changeScheduledDate = function(scheduledDate){
 		if(!$scope.app.editingPost)
 			$scope.app.editingPost = {};
-		
+
 		$scope.app.editingPost.scheduleDate = $scope.postScheduleDate = scheduledDate;
 		$scope.postScheduleMenuOpen = false;
 		$scope.app.editingPost.state = "PUBLISHED";
@@ -1134,7 +1134,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}
 
 		trix.postPost(post).success(function(response){
-			if($scope.app.checkState() == 2)
+			if($scope.app.checkState() == 2 && $scope.app.editingPost.state)
 				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISHED_AS_DRAFT'));
 			else
 				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
