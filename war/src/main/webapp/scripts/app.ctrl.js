@@ -376,7 +376,7 @@ angular.module('app')
 
         $scope.app.fullCardCheck = function(index, post){
           //return $scope.app.hasImage(post) && (index%8 == 0 || index == 0) && !$scope.app.largeCardCheck(index-2, post) && $scope.app.largeCardCheck(index+3, post);
-          var ind = index+1 + '';
+          var ind = Number(index+1).toString(14);
           var indLasDigit = ind.slice(ind.length - 1);
 
           return indLasDigit == 1;
@@ -384,14 +384,14 @@ angular.module('app')
 
         $scope.app.largeCardCheck = function(index, post){
           // return $scope.app.hasImage(post) && (index%3 == 0 && index != 0) && !$scope.app.fullCardCheck(index + 1, post)
-          var ind = index+1 + '';
+          var ind = Number(index+1).toString(14);
           var indLasDigit = ind.slice(ind.length - 1);
 
-          return (indLasDigit == 5 || indLasDigit == 8 || indLasDigit == 0) && !$scope.app.fullCardCheck(index, post);
+          return (indLasDigit == 5 || indLasDigit == 'b') && !$scope.app.fullCardCheck(index, post);
         }
 
-        $scope.app.smallCardCheck = function(index){
-          return !$scope.app.largeCardCheck(index);
+        $scope.app.smallCardCheck = function(index, post){
+          return !$scope.app.largeCardCheck(index, post) && !$scope.app.fullCardCheck(index, post);
         }
 
         $scope.app.getCategoryLink = function(stationSlug, categoryName){
