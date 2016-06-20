@@ -138,13 +138,19 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.postScheduleMenuOpen = false;
 	$scope.changeScheduledDate = function(scheduledDate){
-		$scope.scheduleDate = $scope.postScheduleDate = scheduledDate;
+		if(!$scope.app.editingPost)
+			$scope.app.editingPost = {};
+		
+		$scope.app.editingPost.scheduleDate = $scope.postScheduleDate = scheduledDate;
 		$scope.postScheduleMenuOpen = false;
 		$scope.app.editingPost.state = "PUBLISHED";
 	}
 
 	$scope.removeScheduledDate = function(){
-		$scope.scheduleDate = $scope.postScheduleDate = null;
+		if(!$scope.app.editingPost)
+			$scope.app.editingPost = {};
+
+		$scope.app.editingPost.scheduleDate = $scope.postScheduleDate = null;
 		$scope.app.editingPost.state = "DRAFT";	
 		$scope.postScheduleUpdateble = true;
 	}

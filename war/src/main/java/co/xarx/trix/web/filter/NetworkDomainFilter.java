@@ -57,11 +57,9 @@ public class NetworkDomainFilter implements Filter {
 //			tenantProvider.setTenantId(tenantId);
 		}
 
-		if (request.getPathInfo() != null && (request.getPathInfo().equals("") || request.getPathInfo().equals("/"))){
-			response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
-			response.setHeader("Pragma", "no-cache");
-			response.setDateHeader("Expires", 0);
-		}
+		response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
 
 		chain.doFilter(req, res);
 		TenantContextHolder.setCurrentTenantId(null);

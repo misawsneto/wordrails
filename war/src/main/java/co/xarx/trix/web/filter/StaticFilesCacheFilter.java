@@ -14,8 +14,10 @@ public class StaticFilesCacheFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-		httpServletResponse.addHeader("Cache-control", "public, max-age=31536000");
 		chain.doFilter(request, response);
+
+		httpServletResponse.setHeader("Pragma", "cache");
+		httpServletResponse.setHeader("Cache-control", "public, max-age=31536000");
 	}
 
 	@Override
