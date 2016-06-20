@@ -43,7 +43,7 @@ public class ESCommentService extends AbstractElasticSearchService {
 
 		applyTenantFilter(f);
 		applyTypeFilter(f, Constants.ObjectType.COMMENT);
-		applyDateFilter(f, params.getFrom(), params.getUntil());
+		applyDateFilter(f, params.getFrom(), params.getUntil(), "date");
 		applyShouldFilter(f, params.getAuthors(), "authorId");
 		applyShouldFilter(f, params.getStations(), "stationId");
 		applyShouldFilter(f, params.getPosts(), "postId");
