@@ -45,9 +45,9 @@ public class AbstractElasticSearchService {
 		q.must(termFilter("tenantId", TenantContextHolder.getCurrentTenantId().toLowerCase()));
 	}
 
-	protected void applyDateFilter(BoolFilterBuilder f, String from, String until) {
+	protected void applyDateFilter(BoolFilterBuilder f, String from, String until, String field) {
 		if(from != null || until != null) {
-			RangeFilterBuilder dateFilter = rangeFilter("date");
+			RangeFilterBuilder dateFilter = rangeFilter(field);
 
 			if(from != null)
 				dateFilter.from(from);

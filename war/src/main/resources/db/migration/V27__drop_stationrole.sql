@@ -1,0 +1,1 @@
+DROP TABLE trix_dev.person_station_role;

@@ -18,6 +18,10 @@ public class ESPost implements ElasticSearchEntity {
 
 	private static final long serialVersionUID = 5686194740310479290L;
 
+	public ESPost() {
+		this.scheduledDate = new Date(0);
+	}
+
 	@Id
 	public Integer id;
 	public String tenantId;

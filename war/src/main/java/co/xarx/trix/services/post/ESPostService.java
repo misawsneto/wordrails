@@ -37,10 +37,8 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.time.Instant;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.FilterBuilders.boolFilter;
@@ -143,12 +141,6 @@ public class ESPostService extends AbstractElasticSearchService {
 			mainQuery = mainQuery.must(matchQuery("authorId", personId));
 		}
 
-		if (publicationType != null) {
-			mainQuery = mainQuery.must(matchQuery("state", publicationType));
-		} else {
-			mainQuery = mainQuery.must(matchQuery("state", Post.STATE_PUBLISHED));
-		}
-
 		if (postIds != null) {
 			BoolQueryBuilder postQuery = boolQuery();
 			for (Integer postId : postIds) {
@@ -163,6 +155,18 @@ public class ESPostService extends AbstractElasticSearchService {
 				stationQuery.should(matchQuery("stationId", String.valueOf(stationId)));
 			}
 			mainQuery = mainQuery.must(stationQuery);
+		}
+
+		if (publicationType != null) {
+			mainQuery = mainQuery.must(matchQuery("state", publicationType));
+		} else if (publicationType.equals("SCHEDULED")) {
+			mainQuery = mainQuery.must(matchQuery("state", Post.STATE_PUBLISHED))
+					.should(rangeQuery("scheduledDate").gt(new Date()));
+		} else {
+			mainQuery = mainQuery.must(matchQuery("state", Post.STATE_PUBLISHED))
+					.should(matchQuery("scheduledDate", new Date(0)))
+					.should(rangeQuery("scheduledDate").lt(new Date()))
+					.minimumNumberShouldMatch(1);
 		}
 
 		return mainQuery;
@@ -197,7 +201,7 @@ public class ESPostService extends AbstractElasticSearchService {
 		applyTenantFilter(f);
 		applyStateFilter(f, p.getState());
 		applyTypeFilter(f, Constants.ObjectType.POST);
-		applyDateFilter(f, p.getFrom(), p.getUntil());
+		applyDateFilter(f, p.getFrom(), p.getUntil(), "date");
 		applyShouldFilter(f, p.getAuthors(), "authorId");
 		applyShouldFilter(f, p.getStations(), "stationId");
 		applyShouldFilter(f, p.getTags(), "tags");
@@ -257,8 +261,17 @@ public class ESPostService extends AbstractElasticSearchService {
 	}
 
 	private void applyStateFilter(BoolFilterBuilder f, String state) {
+		long now = Instant.now().toEpochMilli();
 		if (state != null && !state.isEmpty()) {
-			f.must(queryFilter(queryStringQuery(state).defaultField("state")));
+			if (state.equals("SCHEDULED")) {
+				f.must(queryFilter(queryStringQuery("PUBLISHED").defaultField("state")));
+				applyDateFilter(f, String.valueOf(now), null, "scheduledDate");
+			} else if (state.equals("PUBLISHED")) {
+				f.must(queryFilter(queryStringQuery("PUBLISHED").defaultField("state")));
+				applyDateFilter(f, null, String.valueOf(now), "scheduledDate");
+			} else {
+				f.must(queryFilter(queryStringQuery(state).defaultField("state")));
+			}
 		}
 	}
 }
