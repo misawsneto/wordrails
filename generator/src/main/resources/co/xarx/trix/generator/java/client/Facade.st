@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -85,6 +86,8 @@ public class $facade$ {
 		Converter _converter = new GsonConverter(_gson);
 
 		OkHttpClient _okHttpClient = new OkHttpClient();
+	    _okHttpClient.setConnectTimeout(10, TimeUnit.MINUTES);
+	    _okHttpClient.setReadTimeout(10, TimeUnit.MINUTES);
 
 		if(_cacheMaxSize > 0){
 			Cache _cache = new Cache(_cacheDirectory, _cacheMaxSize);
