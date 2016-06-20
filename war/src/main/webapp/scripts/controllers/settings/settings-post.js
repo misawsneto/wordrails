@@ -138,8 +138,15 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.postScheduleMenuOpen = false;
 	$scope.changeScheduledDate = function(scheduledDate){
-		$scope.postScheduleDate = scheduledDate;
+		$scope.scheduleDate = $scope.postScheduleDate = scheduledDate;
 		$scope.postScheduleMenuOpen = false;
+		$scope.app.editingPost.state = "PUBLISHED";
+	}
+
+	$scope.removeScheduledDate = function(){
+		$scope.scheduleDate = $scope.postScheduleDate = null;
+		$scope.app.editingPost.state = "DRAFT";	
+		$scope.postScheduleUpdateble = true;
 	}
 
 	$scope.checkIfScheduled = function(){
@@ -277,6 +284,10 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.app.getStateText = function(state){
 		// if(!$scope.app.editingPost)
 		// 	return null;
+
+		if($scope.checkIfScheduled()){
+			return $filter('translate')('settings.post.states.SCHEDULED');
+		}
 
 		state = state ? state : $scope.app.editingPost ? $scope.app.editingPost.state : null;
 		if(!state)
@@ -1018,8 +1029,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if(post.station)
 			post.station = StationDto.getSelf(post.station);
 
-		if(!$scope.postScheduleUpdateble)
-			post.scheduledDate = $scope.postScheduleDate;
+		// if(!$scope.postScheduleUpdateble)
+		// 	post.scheduledDate = $scope.postScheduleDate;
 
 		// if($scope.app.checkState() > 1){
 		// 	$scope.postScheduleUpdateble = true;

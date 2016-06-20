@@ -123,8 +123,8 @@
 	        	</mdp-time-picker>
 	          </div>
 	        <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE" ng-click="changeScheduledDate(postScheduleDate); postScheduleMenuOpen = false;">
-						Salvar
-					</md-button>
+				{{'titles.SAVE' | translate}}
+			</md-button>
 	      </div>
 	      <div class="w-lg" ng-if="checkIfScheduled()">
 	      	{{'settings.post.SCHEDULED_MSG' | translate}}
@@ -135,6 +135,9 @@
       			<md-button ng-click="app.editingPost.scheduledDate = null;">
       				{{'settings.post.RESCHEDULE' | translate}}
       			</md-button>
+      			<md-button class="" ng-click="removeScheduledDate(); resetScheduleDate();">
+					{{'titles.CANCEL' | translate}}
+				</md-button>
       		</div>
 	      </div>
 	  </div>
