@@ -32,7 +32,7 @@ public class NetworkDomainFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) res;
 		String host = request.getHeader("Host");
 
-		if(host == null) {
+		if (host == null) {
 			throw new BadRequestException("Host is null");
 		}
 
@@ -41,7 +41,7 @@ public class NetworkDomainFilter implements Filter {
 		} else {
 			String tenantId = networkService.getTenantFromHost(host);
 			String currentTenantId = TenantContextHolder.getCurrentTenantId();
-			if(currentTenantId != null && !currentTenantId.equals(tenantId)) {
+			if (currentTenantId != null && !currentTenantId.equals(tenantId)) {
 				System.out.println("RED FLAG!!!! REQUEST IS FOR TENANT " + tenantId + " BUT IN SESSION WAS SET " + currentTenantId);
 			}
 
@@ -57,9 +57,11 @@ public class NetworkDomainFilter implements Filter {
 //			tenantProvider.setTenantId(tenantId);
 		}
 
-		response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
-		response.setHeader("Pragma", "no-cache");
-		response.setDateHeader("Expires", 0);
+		if (request.getPathInfo() != null && (request.getPathInfo().equals("") || request.getPathInfo().equals("/"))){
+			response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
+			response.setHeader("Pragma", "no-cache");
+			response.setDateHeader("Expires", 0);
+		}
 
 		chain.doFilter(req, res);
 		TenantContextHolder.setCurrentTenantId(null);

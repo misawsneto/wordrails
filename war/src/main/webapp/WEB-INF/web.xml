@@ -150,6 +150,10 @@
 		<filter-name>CacheFilter</filter-name>
 		<filter-class>co.xarx.trix.web.filter.CacheFilter</filter-class>
 	</filter>
+	<filter>
+		<filter-name>StaticFilesCacheFilter</filter-name>
+		<filter-class>co.xarx.trix.web.filter.StaticFilesCacheFilter</filter-class>
+	</filter>
 	<!-- Cache -->
 
 	<filter>
@@ -245,6 +249,12 @@
 	<filter-mapping>
 		<filter-name>CacheFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>StaticFilesCacheFilter</filter-name>
+		<url-pattern>/libs/*</url-pattern>
+		<url-pattern>/styles/*</url-pattern>
 	</filter-mapping>
 
 	<error-page>

@@ -9105,3 +9105,9 @@ ul.pgwSlider > li,
 .df-tab-menu > li {
   float: none!important;
 }
+
+.fr-view video {  
+   width:100%; 
+   max-width:500px; 
+   height:auto; 
+}

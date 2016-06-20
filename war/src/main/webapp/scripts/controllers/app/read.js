@@ -3,6 +3,9 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 
 		$scope.post = post;
 
+    post.body = '<br><video src="http://d3a3w0au60g0o7.cloudfront.net/demo/videos/19435ba18199c4b4cf967391768b3fc3" controls=""></video><br><br><video src="http://d3a3w0au60g0o7.cloudfront.net/demo/videos/f9052abae769c6f2aaa9041e2a459f48" controls=""></video><br>'
+    $scope.post.body = $sce.trustAsHtml(post.body)
+
     $scope.app.loadComments($scope.post)
 
   var findRelated = function(size, categories){
