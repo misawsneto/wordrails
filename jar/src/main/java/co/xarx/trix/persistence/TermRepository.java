@@ -4,19 +4,20 @@ import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Taxonomy;
 import co.xarx.trix.domain.Term;
-
-import java.util.List;
-
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
+
 @RepositoryRestResource(exported = true)
-public interface TermRepository extends DatabaseRepository<Term, Integer> {
+public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPredicateExecutor<Term> {
 
 	@Override
 	@SdkExclude

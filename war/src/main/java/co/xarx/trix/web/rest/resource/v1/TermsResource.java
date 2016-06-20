@@ -55,6 +55,11 @@ public class TermsResource extends AbstractResource implements TermsApi {
 	}
 
 	@Override
+	public void getTermsPosts() throws IOException {
+		forward();
+	}
+
+	@Override
 	public void postTerm() throws IOException {
 		forward();
 	}
