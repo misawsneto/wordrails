@@ -17,9 +17,7 @@ import org.eclipse.persistence.jpa.jpql.Assert;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.Fuzziness;
-import org.elasticsearch.index.query.BoolFilterBuilder;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHitField;
 import org.elasticsearch.search.highlight.HighlightBuilder;
@@ -37,10 +35,7 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.FilterBuilders.boolFilter;
@@ -143,12 +138,6 @@ public class ESPostService extends AbstractElasticSearchService {
 			mainQuery = mainQuery.must(matchQuery("authorId", personId));
 		}
 
-		if (publicationType != null) {
-			mainQuery = mainQuery.must(matchQuery("state", publicationType));
-		} else {
-			mainQuery = mainQuery.must(matchQuery("state", Post.STATE_PUBLISHED));
-		}
-
 		if (postIds != null) {
 			BoolQueryBuilder postQuery = boolQuery();
 			for (Integer postId : postIds) {
@@ -163,6 +152,18 @@ public class ESPostService extends AbstractElasticSearchService {
 				stationQuery.should(matchQuery("stationId", String.valueOf(stationId)));
 			}
 			mainQuery = mainQuery.must(stationQuery);
+		}
+
+		if (publicationType != null) {
+			mainQuery = mainQuery.must(matchQuery("state", publicationType));
+		} else if (publicationType.equals("SCHEDULED")) {
+			mainQuery = mainQuery.must(matchQuery("state", Post.STATE_PUBLISHED))
+					.should(rangeQuery("scheduledDate").gt(new Date()));
+		} else {
+			mainQuery = mainQuery.must(matchQuery("state", Post.STATE_PUBLISHED))
+					.should(matchQuery("scheduledDate", new Date(0)))
+					.should(rangeQuery("scheduledDate").lt(new Date()))
+					.minimumNumberShouldMatch(1);
 		}
 
 		return mainQuery;
