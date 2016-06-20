@@ -1021,11 +1021,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if(!$scope.postScheduleUpdateble)
 			post.scheduledDate = $scope.postScheduleDate;
 
-		if($scope.app.checkState() > 1){
-			$scope.postScheduleUpdateble = true;
-			post.scheduledDate = null;
-			$scope.postScheduleDate = null;
-		}
+		// if($scope.app.checkState() > 1){
+		// 	$scope.postScheduleUpdateble = true;
+		// 	post.scheduledDate = null;
+		// 	$scope.postScheduleDate = null;
+		// }
 
 		return post;
 		// return {"author":"http://demo.xarx.rocks/api/persons/51","body":"...","bookmarksCount":0,"commentsCount":0,"date":1462880877015,"imageLandscape":false,"lat":-8.04325205,"lng":-34.94544256,"notify":false,"readTime":0,"readsCount":0,"recommendsCount":0,"state":"PUBLISHED","station":"http://demo.xarx.rocks/api/stations/11","subheading":"","title":"Abcd55","topper":""}
