@@ -34,6 +34,6 @@ public interface CommentRepository extends DatabaseRepository<Comment, Integer> 
 	List<Comment> findAllWithAuthors(@Param("ids") List<Integer> ids, Sort sort);
 
 	@RestResource(exported = false)
-	@Query("select count(*) from Comment comment where comment.post.state = 'PUBLISHED'")
+	@Query("select count(*) from Comment comment where (comment.post.state = 'PUBLISHED' AND (comment.post.scheduledDate is null OR comment.post.scheduledDate < current_timestamp))")
 	Long countPublished();
 }

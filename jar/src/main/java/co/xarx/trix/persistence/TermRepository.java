@@ -81,10 +81,11 @@ public interface TermRepository extends DatabaseRepository<Term, Integer> {
 	List<Term> findByTaxonomyId(@Param("taxonomyId") Integer taxonomyId);
 
 	@RestResource(exported = false)
-	@Query(value="SELECT post FROM Post post left join post.terms term where post.state = 'PUBLISHED' and post.stationId = :stationId and term.name = :tagName")
+	@Query(value="SELECT post FROM Post post left join post.terms term where (post.state = 'PUBLISHED' AND (post.scheduledDate is null OR post.scheduledDate < current_timestamp)) and post.stationId = :stationId and term.name = :tagName")
 	List<Post> findPostsByCategoryAndStationId(@Param("tagName") String tagName, @Param("stationId")Integer stationId, Pageable pageable);
 
 	@RestResource(exported = false)
-	@Query(value="SELECT post FROM Post post join post.terms term where post.state = 'PUBLISHED' and term.id = :termId")
+	@Query(value="SELECT post FROM Post post join post.terms term where (post.state = 'PUBLISHED' AND (post.scheduledDate is null OR post.scheduledDate < current_timestamp)) and term.id = " +
+			":termId")
 	List<Post> findPostsByTerm(@Param("termId") Integer termId, Pageable pageable);
 }

@@ -300,6 +300,8 @@
 			"NOTIFY_STATION_USERS_DESC": "Notify station users on their devices.",
 			"NOTIFY_USERS": "Notify users",
 			"PUBLISHED_AS_DRAFT": "Draft saved",
+			"SCHEDULED_MSG": "Scheduled date and time:",
+			"RESCHEDULE": "Reschedule",
 			"messages":{
 				"PAGE_CHANGE_ALERT": "You have edited your publication and there's unsaved content.",
 				"CLEAR_CONTENT_MSG": "Clear all publication content.",

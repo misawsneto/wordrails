@@ -46,8 +46,13 @@ public interface PostProjection {
 
 	Integer getCommentsCount();
 
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	Date getCreatedAt();
+
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	Date getUpdatedAt();
 
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	Date getScheduledDate();
 
 	String getExternalVideoUrl();
