@@ -6,6 +6,7 @@ import co.xarx.trix.domain.Term;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.PropertyMap;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,13 @@ public class PostMap<T extends Post> extends PropertyMap<T, ESPost> {
 		}
 	}
 
+	class ScheduledDateCondition extends AbstractConverter<Date, Date> {
+
+		@Override
+		protected Date convert(Date source) {
+			return source != null ? source : new Date(0);
+		}
+	}
 
 	@Override
 	protected void configure() {
@@ -30,6 +38,7 @@ public class PostMap<T extends Post> extends PropertyMap<T, ESPost> {
 		map().setFeaturedImageCaption(source.getFeaturedImage().getCaption());
 		map().setFeaturedImageCredits(source.getFeaturedImage().getCredits());
 		map().setFeaturedImageTitle(source.getFeaturedImage().getTitle());
+		using(new ScheduledDateCondition()).map(source.getScheduledDate(), destination.scheduledDate);
 		using(new TermToIntegerConverter()).map(source.getTerms(), destination.categories);
 	}
 }

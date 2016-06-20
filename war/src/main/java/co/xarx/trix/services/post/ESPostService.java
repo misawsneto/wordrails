@@ -38,10 +38,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.FilterBuilders.boolFilter;
@@ -144,12 +141,6 @@ public class ESPostService extends AbstractElasticSearchService {
 			mainQuery = mainQuery.must(matchQuery("authorId", personId));
 		}
 
-		if (publicationType != null) {
-			mainQuery = mainQuery.must(matchQuery("state", publicationType));
-		} else {
-			mainQuery = mainQuery.must(matchQuery("state", Post.STATE_PUBLISHED));
-		}
-
 		if (postIds != null) {
 			BoolQueryBuilder postQuery = boolQuery();
 			for (Integer postId : postIds) {
@@ -164,6 +155,18 @@ public class ESPostService extends AbstractElasticSearchService {
 				stationQuery.should(matchQuery("stationId", String.valueOf(stationId)));
 			}
 			mainQuery = mainQuery.must(stationQuery);
+		}
+
+		if (publicationType != null) {
+			mainQuery = mainQuery.must(matchQuery("state", publicationType));
+		} else if (publicationType.equals("SCHEDULED")) {
+			mainQuery = mainQuery.must(matchQuery("state", Post.STATE_PUBLISHED))
+					.should(rangeQuery("scheduledDate").gt(new Date()));
+		} else {
+			mainQuery = mainQuery.must(matchQuery("state", Post.STATE_PUBLISHED))
+					.should(matchQuery("scheduledDate", new Date(0)))
+					.should(rangeQuery("scheduledDate").lt(new Date()))
+					.minimumNumberShouldMatch(1);
 		}
 
 		return mainQuery;
