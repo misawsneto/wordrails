@@ -20,6 +20,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 
+import java.util.Date;
 import java.util.List;
 
 @RepositoryRestResource(exported = true)
@@ -65,17 +66,17 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 //	@CacheEvict(value = "postsIds")
 //	<S extends Post> List<S> save(Iterable<S> entities);
 
-	@Query("select post from Post post join post.terms t where post.station.id = :stationId and t.id in (:termsIds) and (post.state = 'PUBLISHED' OR post.scheduledDate < current_date) group by post order by post.date desc")
+	@Query("select post from Post post join post.terms t where post.station.id = :stationId and t.id in (:termsIds) and (post.state = 'PUBLISHED' AND (post.scheduledDate is null OR post.scheduledDate < current_timestamp)) group by post order by post.date desc")
 	List<Post> findPostsPublished(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, Pageable pageable);
 
-	@Query("SELECT post FROM Post post where post.station.id = :stationId and (post.state = 'PUBLISHED' OR post.scheduledDate < current_timestamp) ORDER BY post.date DESC")
+	@Query("SELECT post FROM Post post where post.station.id = :stationId and (post.state = 'PUBLISHED' AND (post.scheduledDate is null OR post.scheduledDate < current_timestamp)) ORDER BY post.date DESC")
 	List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
 
 	// ---------------------------------- NOT EXPOSED ----------------------------------
 
 	@RestResource(exported = false)
 	@Query("select post from Post post " +
-			"where (post.state = 'PUBLISHED' OR post.scheduledDate < current_timestamp) AND post.id in " +
+			"where (post.state = 'PUBLISHED' AND (post.scheduledDate is null OR post.scheduledDate < current_timestamp)) AND post.id in " +
 			"(select p.id from Post p join p.terms t where p.station.id = :stationId and t.id in (:termsIds) and p.id not in (:idsToExclude)) " +
 			"order by post.date desc")
 	List<Post> findPostsNotPositioned(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, @Param("idsToExclude") List<Integer> idsToExclude, Pageable pageable);
@@ -90,7 +91,7 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 
 	@RestResource(exported = false)
 	@Query("SELECT post FROM Post post where " +
-			"post.author.id = :personId AND (post.state = 'PUBLISHED' OR post.scheduledDate < current_timestamp) AND post.station.id in (:stationIds) order by post.id DESC")
+			"post.author.id = :personId AND (post.state = 'PUBLISHED' AND (post.scheduledDate is null OR post.scheduledDate < current_timestamp())) AND post.station.id in (:stationIds) order by post.id DESC")
 	List<Post> findPostByPersonIdAndStations(@Param("personId") Integer personId, @Param("stationIds") List<Integer> stationIds, Pageable pageable);
 
 	@RestResource(exported = false)

@@ -99037,12 +99037,12 @@ DocumentDto.getSelf = function(object){
 	return TRIX_BACKEND + "/api/documents/" + id;
 }
 
-function ImageDto(id, caption, credits, hashs, largeHash, mediumHash, originalHash, smallHash, title, vertical) {
+function ImageDto(id, caption, credits, hashes, largeHash, mediumHash, originalHash, smallHash, title, vertical) {
 	return {
 		id: id,
 		caption: caption,
 		credits: credits,
-		hashs: hashs,
+		hashes: hashes,
 		largeHash: largeHash,
 		mediumHash: mediumHash,
 		originalHash: originalHash,
@@ -99070,7 +99070,7 @@ MenuEntryDto.getSelf = function(object){
 	return TRIX_BACKEND + "/api/menuEntries/" + id;
 }
 
-function NetworkDto(id, addStationRolesOnSignup, alertColors, allowSignup, allowSocialLogin, allowSponsors, appleStoreAddress, backgroundColor, backgroundColors, categoriesTaxonomyId, configured, defaultOrientationMode, defaultReadMode, domain, facebookAppID, facebookLink, facebookLoginAllowed, faviconHash, faviconId, flurryAppleKey, flurryKey, googleAppID, googleLoginAllowed, googlePlusLink, homeTabName, info, instagramLink, invitationMessage, linkedInLink, loginFooterMessage, loginImageHash, loginImageId, loginImageSmallHash, logoImageHash, logoImageId, mainColor, name, navbarColor, navbarSecondaryColor, networkCreationToken, newsFontSize, pinterestLink, playStoreAddress, primaryColors, primaryFont, secondaryColors, secondaryFont, splashImageHash, splashImageId, stationMenuName, subdomain, titleFontSize, trackingId, twitterLink, webFooter, youtubeLink) {
+function NetworkDto(id, addStationRolesOnSignup, alertColors, allowSignup, allowSocialLogin, allowSponsors, appleStoreAddress, backgroundColor, backgroundColors, categoriesTaxonomyId, configured, defaultOrientationMode, defaultReadMode, domain, emailSignUpValidationEnabled, facebookAppID, facebookLink, facebookLoginAllowed, faviconHash, faviconId, flurryAppleKey, flurryKey, googleAppID, googleLoginAllowed, googlePlusLink, homeTabName, info, instagramLink, invitationMessage, linkedInLink, loginFooterMessage, loginImageHash, loginImageId, loginImageSmallHash, logoImageHash, logoImageId, mainColor, name, navbarColor, navbarSecondaryColor, networkCreationToken, newsFontSize, pinterestLink, playStoreAddress, primaryColors, primaryFont, secondaryColors, secondaryFont, splashImageHash, splashImageId, stationMenuName, subdomain, titleFontSize, trackingId, twitterLink, validationMessage, webFooter, youtubeLink) {
 	return {
 		id: id,
 		addStationRolesOnSignup: addStationRolesOnSignup,
@@ -99086,6 +99086,7 @@ function NetworkDto(id, addStationRolesOnSignup, alertColors, allowSignup, allow
 		defaultOrientationMode: defaultOrientationMode,
 		defaultReadMode: defaultReadMode,
 		domain: domain,
+		emailSignUpValidationEnabled: emailSignUpValidationEnabled,
 		facebookAppID: facebookAppID,
 		facebookLink: facebookLink,
 		facebookLoginAllowed: facebookLoginAllowed,
@@ -99126,6 +99127,7 @@ function NetworkDto(id, addStationRolesOnSignup, alertColors, allowSignup, allow
 		titleFontSize: titleFontSize,
 		trackingId: trackingId,
 		twitterLink: twitterLink,
+		validationMessage: validationMessage,
 		webFooter: webFooter,
 		youtubeLink: youtubeLink
 	};
@@ -102420,20 +102422,6 @@ var trix = angular.module('trix', [])
 		}
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findStationTaxonomy) {
-			window.console && console.log("findStationTaxonomy");
-		}
-		this.findStationTaxonomy = function(stationId, projection) {
-			var config = {};
-			config.params = {
-				stationId: stationId,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/taxonomies/search/findStationTaxonomy",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
 		if (this.findByTypeAndName) {
 			window.console && console.log("findByTypeAndName");
 		}
@@ -102445,6 +102433,20 @@ var trix = angular.module('trix', [])
 			}
 			config.params["projection"] = projection;
 			return $http.get(_config.url + "/api/taxonomies/search/findByTypeAndName",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findStationTaxonomy) {
+			window.console && console.log("findStationTaxonomy");
+		}
+		this.findStationTaxonomy = function(stationId, projection) {
+			var config = {};
+			config.params = {
+				stationId: stationId,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/taxonomies/search/findStationTaxonomy",  config)
 		};
 
 		/*-------------------------- Relationship -----------------------------------------------*/
@@ -102572,20 +102574,31 @@ var trix = angular.module('trix', [])
 		}
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findRootsPage) {
-			window.console && console.log("findRootsPage");
+		if (this.countTerms) {
+			window.console && console.log("countTerms");
 		}
-		this.findRootsPage = function(taxonomyId, page, size, sort, projection) {
+		this.countTerms = function(termsIds, projection) {
 			var config = {};
 			config.params = {
-				taxonomyId: taxonomyId,
-				page: page,
-				size: size,
-				sort: sort,
+				termsIds: termsIds,
 
 			}
 			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/findRootsPage",  config)
+			return $http.get(_config.url + "/api/terms/search/countTerms",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findByTaxonomyId) {
+			window.console && console.log("findByTaxonomyId");
+		}
+		this.findByTaxonomyId = function(taxonomyId, projection) {
+			var config = {};
+			config.params = {
+				taxonomyId: taxonomyId,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/terms/search/findByTaxonomyId",  config)
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
@@ -102603,17 +102616,20 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.countTerms) {
-			window.console && console.log("countTerms");
+		if (this.findRootsPage) {
+			window.console && console.log("findRootsPage");
 		}
-		this.countTerms = function(termsIds, projection) {
+		this.findRootsPage = function(taxonomyId, page, size, sort, projection) {
 			var config = {};
 			config.params = {
-				termsIds: termsIds,
+				taxonomyId: taxonomyId,
+				page: page,
+				size: size,
+				sort: sort,
 
 			}
 			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/countTerms",  config)
+			return $http.get(_config.url + "/api/terms/search/findRootsPage",  config)
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
@@ -102634,17 +102650,17 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findByTaxonomyId) {
-			window.console && console.log("findByTaxonomyId");
+		if (this.findTermsByPostId) {
+			window.console && console.log("findTermsByPostId");
 		}
-		this.findByTaxonomyId = function(taxonomyId, projection) {
+		this.findTermsByPostId = function(postId, projection) {
 			var config = {};
 			config.params = {
-				taxonomyId: taxonomyId,
+				postId: postId,
 
 			}
 			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/findByTaxonomyId",  config)
+			return $http.get(_config.url + "/api/terms/search/findTermsByPostId",  config)
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
@@ -102659,20 +102675,6 @@ var trix = angular.module('trix', [])
 			}
 			config.params["projection"] = projection;
 			return $http.get(_config.url + "/api/terms/search/findByPerspectiveId",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findTermsByPostId) {
-			window.console && console.log("findTermsByPostId");
-		}
-		this.findTermsByPostId = function(postId, projection) {
-			var config = {};
-			config.params = {
-				postId: postId,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/findTermsByPostId",  config)
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
@@ -105899,7 +105901,7 @@ angular.module('app')
 
         $scope.app.fullCardCheck = function(index, post){
           //return $scope.app.hasImage(post) && (index%8 == 0 || index == 0) && !$scope.app.largeCardCheck(index-2, post) && $scope.app.largeCardCheck(index+3, post);
-          var ind = index+1 + '';
+          var ind = Number(index+1).toString(14);
           var indLasDigit = ind.slice(ind.length - 1);
 
           return indLasDigit == 1;
@@ -105907,14 +105909,14 @@ angular.module('app')
 
         $scope.app.largeCardCheck = function(index, post){
           // return $scope.app.hasImage(post) && (index%3 == 0 && index != 0) && !$scope.app.fullCardCheck(index + 1, post)
-          var ind = index+1 + '';
+          var ind = Number(index+1).toString(14);
           var indLasDigit = ind.slice(ind.length - 1);
 
-          return (indLasDigit == 5 || indLasDigit == 8 || indLasDigit == 0) && !$scope.app.fullCardCheck(index, post);
+          return (indLasDigit == 5 || indLasDigit == 'b') && !$scope.app.fullCardCheck(index, post);
         }
 
-        $scope.app.smallCardCheck = function(index){
-          return !$scope.app.largeCardCheck(index);
+        $scope.app.smallCardCheck = function(index, post){
+          return !$scope.app.largeCardCheck(index, post) && !$scope.app.fullCardCheck(index, post);
         }
 
         $scope.app.getCategoryLink = function(stationSlug, categoryName){

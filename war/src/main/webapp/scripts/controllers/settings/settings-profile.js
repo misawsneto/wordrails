@@ -45,7 +45,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
   $scope.saveProfile = function(){
   	trix.updatePerson($scope.editingPerson).error(function(data, status, header){
-  		var error = data.error;
+  		var error = data.message;
 
   		if(error.indexOf('Password no equal') > -1)
   			$scope.app.showErrorToast('Confirme que as senhas sejam iguais e tente novamente')

@@ -17,7 +17,9 @@ import org.eclipse.persistence.jpa.jpql.Assert;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.Fuzziness;
-import org.elasticsearch.index.query.*;
+import org.elasticsearch.index.query.BoolFilterBuilder;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHitField;
 import org.elasticsearch.search.highlight.HighlightBuilder;
@@ -35,7 +37,11 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.*;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.FilterBuilders.boolFilter;
@@ -259,7 +265,13 @@ public class ESPostService extends AbstractElasticSearchService {
 
 	private void applyStateFilter(BoolFilterBuilder f, String state) {
 		if (state != null && !state.isEmpty()) {
-			f.must(queryFilter(queryStringQuery(state).defaultField("state")));
+			if (state.equals("SCHEDULED")) {
+				f.must(queryFilter(queryStringQuery("PUBLISHED").defaultField("state")));
+				long now = Instant.now().toEpochMilli();
+				f.must(FilterBuilders.rangeFilter("scheduledDate").gt(now));
+			} else {
+				f.must(queryFilter(queryStringQuery(state).defaultField("state")));
+			}
 		}
 	}
 }

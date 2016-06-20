@@ -6,105 +6,156 @@
     </div>
 </div>
 <div class="container row pos-rlt " infinite-scroll="paginate()" infinite-scroll-container='"#content .box-cell"' infinite-scroll-distance="1">
-  <div ng-if="postViews" reload-on-show>
-    
-    <div class="col-xs-12 animated fadeIn" ng-class="{'col-lg-12': app.fullCardCheck($index, postView), 'col-lg-8 col-sm-6':!app.fullCardCheck($index, postView) && app.largeCardCheck($index, postView), 'col-lg-4 col-sm-6':!app.fullCardCheck($index, postView) && !app.largeCardCheck($index, postView)}" ng-repeat="postView in postViews">
-        
-        <a ui-sref="app.station.read({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'postSlug': postView.slug})">
-        <div class="h-500 pos-rlt o-f-h md-whiteframe-z2 m-b-md" ng-if="app.fullCardCheck($index, postView)">
-          <div preload-bg-image="{{app.getImageLink(postView, 'large')}}" class="h-full bg-cover md-primary-default background">
-            <div class="color-1 p black-grad-inverse">
-              <md-button ng-click="app.stopPropagation($event);app.toggleRecommend(postView)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(postView)}"><i class="mdi2-heart i-16"></i></md-button>
+  <div ng-if="postViews">
 
-              <span class="v-m p-v-sm m-r-sm text-white ">{{postView.recommendsCount}}</span>
+  <div ng-repeat="postView in postViews">
+   <div ng-if="app.fullCardCheck($index, postView)" class="col-lg-12 col-sm-12 col-xs-12 animated fadeIn">
+      
 
-              <md-button ng-click="app.stopPropagation($event);app.toggleBookmark(postView)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(postView)}"><i class="mdi2-bookmark i-16"></i></md-button>
-              
-              <md-button ng-click="app.stopPropagation($event);app.showSharesPostDialog($event, postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
-
-              <span class="v-m p-v-sm m-r-sm text-white pull-right">{{postView.commentsCount}}</span>
-              
-              <md-button style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="app.stopPropagation($event);app.showComments(postView);"><i class="mdi2-comment i-16"></i></md-button>
+      <a ng-href="{{::'/' + app.getStationById(postView.stationId).stationSlug + '/' + postView.slug}}">
+         <div class="h-500 pos-rlt o-f-h md-whiteframe-z2 m-b-md" ng-if="app.fullCardCheck($index, postView)">
+            <div preload-bg-image="{{app.getImageLink(postView, 'large')}}" class="h-full bg-cover md-primary-default background">
+               <div class="color-1 p black-grad-inverse">
+                  <md-button aria-label="nothing" ng-click="app.stopPropagation($event);app.toggleRecommend(postView)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(postView)}"><i class="mdi2-heart i-16"></i></md-button>
+                  <span class="v-m p-v-sm m-r-sm text-white ">{{postView.recommendsCount}}</span>
+                  <md-button aria-label="nothing" ng-click="app.stopPropagation($event);app.toggleBookmark(postView)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(postView)}"><i class="mdi2-bookmark i-16"></i></md-button>
+                  <md-button aria-label="nothing" ng-click="app.stopPropagation($event);app.showSharesPostDialog($event, postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+                  <span class="v-m p-v-sm m-r-sm text-white pull-right">{{postView.commentsCount}}</span>
+                  <md-button aria-label="nothing" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="app.stopPropagation($event);app.showComments(postView);"><i class="mdi2-comment i-16"></i></md-button>
+               </div>
+               <div class="black-grad w-full pos-abt bottom-0 p">
+                  <div class="text-left p-v w-full z-index-2 text-md" >
+                     <span ng-href="{{::'/' + app.getStationById(postView.stationId).stationSlug + '/cat?name=' + category.name}}" class="badge p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postView.categories">
+                     {{::category.name}}
+                     </span>
+                  </div>
+                  <div class="text-lg text-white text-shadow">
+                     <p clamp="3">{{::postView.title}}</p>
+                  </div>
+                  <div class="text-md text-white text-shadow">
+                     <p clamp="2">{{::postView.snippet}}</p>
+                  </div>
+               </div>
             </div>
+         </div>
+      </a>
 
-            <div class="black-grad w-full pos-abt bottom-0 p">
-              <div class="text-left p-v w-full z-index-2 text-md" >
-                <span ui-sref="app.station.categoryPage({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'name': category.name})" class="badge p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postView.categories">
-                  {{::category.name}}
-                </span>
-              </div>
-              <div class="text-lg text-white text-shadow"><p clamp="3">{{::postView.title}}</p></div>
-              <div class="text-md text-white text-shadow"><p clamp="2">{{::postView.snippet}}</p></div>
-            </div>
-          </div>
-        </div>
-        </a>
 
-        <!--  Vertical News Box -->
-        <div class="news md-whiteframe-z1 vertical z-depth-1 card" ng-if="!app.fullCardCheck($index, postView)">
-            <div >
-              <a ui-sref="app.userprofile({username: postView.authorUsername})">
-                <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
-                ng-style="app.getImagesPerson(postView, postView.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(postView)}">
+   </div>
+
+   <div ng-if="app.largeCardCheck($index, postView)" class="animated fadeIn col-lg-8 col-sm-6">
+      <!--  Vertical News Box -->
+      <div class="news md-whiteframe-z1 vertical z-depth-1 card" ng-if="!app.fullCardCheck($index, postView)">
+         <div >
+            <a ui-sref="app.userprofile({username: postView.authorUsername})">
+               <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover md-primary-hue-1 background" 
+                  ng-style="app.getImagesPerson(postView, postView.authorId, 'small', 'PROFILE_PICTURE', true) ">
                   <i ng-if="!app.hasAuthorImage(postView)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
-                </div>
-                <div class="inline p-t v-t font-500" ui-sref="app.userprofile({username: postView.authorUsername})">
-                {{::postView.authorName}}
-                </div>
-              </a>
-              <div class="inline p-t v-t pull-right p-r-sm text-sm" style="opacity: 0.6" am-time-ago="postView.date">
+               </div>
+               <div class="inline p-t v-t font-500" ui-sref="app.userprofile({username: postView.authorUsername})">
+                  {{::postView.authorName}}
+               </div>
+            </a>
+            <div class="inline p-t v-t pull-right p-r-sm text-sm" style="opacity: 0.6" am-time-ago="postView.date">
+            </div>
+         </div>
+         <!-- News Image -->
+         <div class="news-image o-f-h">
+            <a ng-href="{{::'/' + app.getStationById(postView.stationId).stationSlug + '/' + postView.slug}}">
+               <div class="pos-rlt">
+                  <div  preload-bg-image="{{::app.getImageLink(postView, 'medium')}}" class="zoom-hover h-full bg-cover h-full bg-cover m-h-325 md-primary-default2 background">
+                     <!-- <img class="responsive-img materialboxed" ng-src="{{postView | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
+                  </div>
+                  <div class="black-grad w-full text-lg pos-abt bottom-0 text-white text-shadow p">{{::postView.title}}</div>
+               </div>
+            </a>
+         </div>
+         <div class="text-left p-h-sm w-full z-index-2" style="height: 42px; overflow: hidden;">
+            <a ng-href="{{::'/' + app.getStationById(postView.stationId).stationSlug + '/cat?name=' + category.name}}" class="badge m-t-sm p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postView.categories">
+            {{::category.name}}
+            </a>
+         </div>
+         <!-- News Description -->
+         <div class="news-description p-t p-b-sm p-h">
+            <a ng-href="{{::'/' + app.getStationById(postView.stationId).stationSlug + '/' + postView.slug}}">
+               <div class="news-title text-md o-f-h" ng-if="app.largeCardCheck($index, postView)" style="height: 66px">
+                  <p clamp="2"> {{::postView.snippet}} </p>
+               </div>
+            </a>
+            <div class="news-comment-shares z-index-2">
+               <md-divider class="m-b-sm m-t"></md-divider>
+               <div class="p-b-xs">
+                  <md-button aria-label="nothing" ng-click="app.toggleRecommend(postView)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(postView)}"><i class="mdi2-heart i-16"></i></md-button>
+                  <span class="v-m p-v-sm m-r-sm">{{postView.recommendsCount}}</span>
+                  <md-button aria-label="nothing" ng-click="app.toggleBookmark(postView)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(postView)}"><i class="mdi2-bookmark i-16"></i></md-button>
+                  <md-button aria-label="nothing" ng-click="app.showSharesPostDialog($event,postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+                  <span class="pull-right v-m p-v-sm m-r-sm">{{postView.commentsCount}}</span>
+                  <md-button aria-label="nothing" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="app.showComments(postView)"><i class="mdi2-comment i-16"></i></md-button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div ng-if="app.smallCardCheck($index, postView)" class="animated fadeIn col-lg-4 col-sm-6">
+      <!--  Vertical News Box -->
+      <div class="news md-whiteframe-z1 vertical z-depth-1 card" ng-if="!app.fullCardCheck($index, postView)">
+         <div >
+            <a ui-sref="app.userprofile({username: postView.authorUsername})">
+               <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover md-primary-hue-1 background" 
+                  ng-style="app.getImagesPerson(postView, postView.authorId, 'small', 'PROFILE_PICTURE', true) ">
+                  <i ng-if="!app.hasAuthorImage(postView)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
+               </div>
+               <div class="inline p-t v-t font-500" ui-sref="app.userprofile({username: postView.authorUsername})">
+                  {{::postView.authorName}}
+               </div>
+            </a>
+            <div class="inline p-t v-t pull-right p-r-sm text-sm" style="opacity: 0.6" am-time-ago="postView.date">
+            </div>
+         </div>
+         <!-- News Image -->
+         <div class="news-image o-f-h">
+            <a ng-href="{{::'/' + app.getStationById(postView.stationId).stationSlug + '/' + postView.slug}}">
+               <div class="pos-rlt">
+                  <div  preload-bg-image="{{::app.getImageLink(postView, 'medium')}}" class="zoom-hover h-full bg-cover h-full bg-cover m-h-230 md-primary-default2 background">
+                     <!-- <img class="responsive-img materialboxed" ng-src="{{postView | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
+                  </div>
+                  <div ng-if="!app.hasImage(postView)" class="black-grad w-full text-lg pos-abt bottom-0 text-white text-shadow p">{{::postView.title}}</div>
+               </div>
+            </a>
+         </div>
+         <div class="text-left p-h-sm w-full z-index-2" style="height: 42px; overflow: hidden;">
+            <a ng-href="{{::'/' + app.getStationById(postView.stationId).stationSlug + '/cat?name=' + category.name}}" class="badge m-t-sm p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postView.categories">
+            {{::category.name}}
+            </a>
+         </div>
+         <!-- News Description -->
+         <div class="news-description p-t p-b-sm p-h">
+            <a ng-href="{{::'/' + app.getStationById(postView.stationId).stationSlug + '/' + postView.slug}}">
+              <div class="news-title o-f-h" ng-if="app.hasImage(postView)" style="height: 66px">
+                <p clamp="2">{{::postView.title}}</p>
               </div>
+              <div class="news-content o-f-h" ng-style="{'height': app.hasImage(postView) ? '95px' : '161px'}" ng-if="!app.largeCardCheck($index, postView)"><p clamp="{{app.hasImage(postView) ? 4 : 7}}">{{::postView.snippet}}</p>
+              </div>
+            </a>
+            <div class="news-comment-shares z-index-2">
+               <md-divider class="m-b-sm m-t"></md-divider>
+               <div class="p-b-xs">
+                  <md-button aria-label="nothing" ng-click="app.toggleRecommend(postView)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(postView)}"><i class="mdi2-heart i-16"></i></md-button>
+                  <span class="v-m p-v-sm m-r-sm">{{postView.recommendsCount}}</span>
+                  <md-button aria-label="nothing" ng-click="app.toggleBookmark(postView)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(postView)}"><i class="mdi2-bookmark i-16"></i></md-button>
+                  <md-button aria-label="nothing" ng-click="app.showSharesPostDialog($event,postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+                  <span class="pull-right v-m p-v-sm m-r-sm">{{postView.commentsCount}}</span>
+                  <md-button aria-label="nothing" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="app.showComments(postView)"><i class="mdi2-comment i-16"></i></md-button>
+               </div>
             </div>
-            <!-- News Image -->
-            <div class="news-image o-f-h">
-                <a ui-sref="app.station.read({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'postSlug': postView.slug})">
-                <div class="pos-rlt">
-                  <div  preload-bg-image="{{app.getImageLink(postView, 'medium')}}" class="zoom-hover h-full bg-cover h-full bg-cover" ng-class="{'m-h-325': app.largeCardCheck($index, postView), 'm-h-230': !app.largeCardCheck($index, postView), 'md-primary-default2 background': !app.hasImage(postView)}">
-                      <!-- <img class="responsive-img materialboxed" ng-src="{{postView | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
-                  </div>
-                  <div ng-if="app.largeCardCheck($index, postView) || !app.hasImage(postView)" class="black-grad w-full text-lg pos-abt bottom-0 text-white text-shadow p">{{::postView.title}}</div>
-                </div>
-                </a>
-            </div>
-            <div class="text-left p-h-sm w-full z-index-2" style="height: 42px; overflow: hidden;">
-              <a ui-sref="app.station.categoryPage({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in postView.categories">
-                {{::category.name}}
-              </a>
-            </div>
-            <!-- News Description -->
-            <div class="news-description p-t p-b-sm p-h">
-                <a ui-sref="app.station.read({'stationSlug': app.getStationById(postView.stationId).stationSlug, 'postSlug': postView.slug})">
-                  <div class="news-title o-f-h" ng-if="!app.largeCardCheck($index, postView) && app.hasImage(postView)" style="height: 66px">
-                    <p clamp="2">{{::postView.title}}</p>
-                  </div>
-                  <div class="news-title text-md o-f-h" ng-if="app.largeCardCheck($index, postView)" style="height: 66px">
-                    <p clamp="2"> {{::postView.snippet}} </p>
-                  </div>
-                  <div class="news-content o-f-h" ng-if="!app.largeCardCheck($index, postView)" ng-style="{'height': app.hasImage(postView) ? '95px' : '161px'}" ng-if="!app.largeCardCheck($index, postView)"><p clamp="{{app.hasImage(postView) ? 4 : 7}}">{{::postView.snippet}}</p>
-                  </div>
-                </a>
-                <div class="news-comment-shares z-index-2">
-                    <md-divider class="m-b-sm m-t"></md-divider>
+         </div>
+      </div>
+   </div>
 
-                    <div class="p-b-xs">
-                        <md-button ng-click="app.toggleRecommend(postView)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(postView)}"><i class="mdi2-heart i-16"></i></md-button>
 
-                        <span class="v-m p-v-sm m-r-sm">{{postView.recommendsCount}}</span>
-
-                        <md-button ng-click="app.toggleBookmark(postView)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(postView)}"><i class="mdi2-bookmark i-16"></i></md-button>
-                        
-                        <md-button ng-click="app.showSharesPostDialog($event,postView)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
-
-                        <span class="pull-right v-m p-v-sm m-r-sm">{{postView.commentsCount}}</span>
-                        
-                        <md-button style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="app.showComments(postView)"><i class="mdi2-comment i-16"></i></md-button>
-                    </div>
-
-                </div>
-                <md-progress-linear class="pos-abt bottom-0 left-0" ng-if="loadingComments" md-mode="indeterminate"></md-progress-linear>
-            </div>
-        </div>
-    </div>
+</div>
+    
   </div>
 </div>
 
