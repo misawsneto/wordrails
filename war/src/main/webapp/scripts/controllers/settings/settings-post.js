@@ -106,21 +106,26 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	// --- post date
 	$scope.postDateUpdateble = true;
+	$scope.postDate = new Date();
 	$scope.resetPostDate = function(){
 		if(!$scope.postDateUpdateble)
 			return;
 		$scope.postDate = new Date();
 		$scope.postDate.setSeconds(null);
 		$scope.postDate.setMilliseconds(null);
+		$scope.postDateUpdateble = false;
 	}
 
+	$scope.postDateMenuOpen = false;
 	$scope.changePostDate = function(date){
-		$scope.postDateUpdateble = false;
+		$scope.postDate = date;
+		$scope.postDateMenuOpen = false;
 	}
 	// --- /post date
 	
 	// --- post schedule
 	$scope.postScheduleUpdateble = true;
+	$scope.postScheduleDate = new Date();
 	$scope.resetScheduleDate = function(){
 		if(!$scope.postScheduleUpdateble)
 			return;
@@ -128,8 +133,26 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.postScheduleDate = addMinutes($scope.postScheduleDate, 15);
 		$scope.postScheduleDate.setSeconds(null);
 		$scope.postScheduleDate.setMilliseconds(null);
-		$scope.postScheduleUpdateble = true;
+		$scope.postScheduleUpdateble = false;
 	}
+
+	$scope.postScheduleMenuOpen = false;
+	$scope.changeScheduledDate = function(scheduledDate){
+		$scope.postScheduleDate = scheduledDate;
+		$scope.postScheduleMenuOpen = false;
+	}
+
+	$scope.checkIfScheduled = function(){
+		if($scope.app.editingPost){
+			var post = $scope.app.editingPost;
+			if(post.state === 'PUBLISHED' && post.scheduledDate && (post.scheduledDate > new Date().getTime())){
+				return true;
+			}else{
+				return false;
+			}
+		}
+	}
+
 	// --- /post schedule
 
 	// --- post delete
@@ -242,8 +265,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			return 1;
 		}else if(state == "DRAFT"){
 			return 2;
-		}else if(state == "SCHEDULED"){
-			return 3;
+		// }else if(state == "SCHEDULED"){
+		// 	return 3;
 		}else if(state == "TRASH"){
 			return 4;
 		}else{
@@ -994,6 +1017,15 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		if(post.station)
 			post.station = StationDto.getSelf(post.station);
+
+		if(!$scope.postScheduleUpdateble)
+			post.scheduledDate = $scope.postScheduleDate;
+
+		if($scope.app.checkState() > 1){
+			$scope.postScheduleUpdateble = true;
+			post.scheduledDate = null;
+			$scope.postScheduleDate = null;
+		}
 
 		return post;
 		// return {"author":"http://demo.xarx.rocks/api/persons/51","body":"...","bookmarksCount":0,"commentsCount":0,"date":1462880877015,"imageLandscape":false,"lat":-8.04325205,"lng":-34.94544256,"notify":false,"readTime":0,"readsCount":0,"recommendsCount":0,"state":"PUBLISHED","station":"http://demo.xarx.rocks/api/stations/11","subheading":"","title":"Abcd55","topper":""}

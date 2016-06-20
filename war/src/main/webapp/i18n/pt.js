@@ -300,6 +300,8 @@
 			"NOTIFY_STATION_USERS_DESC": "Notificar usuários da estação em seus dispositivos.",
 			"NOTIFY_USERS": "Notificar usuários",
 			"PUBLISHED_AS_DRAFT": "Rascunho salvo",
+			"SCHEDULED_MSG": "Agendado para:",
+			"RESCHEDULE": "Reagendar",
 			"messages":{
 				"PAGE_CHANGE_ALERT": "Você possui conteúdo que ainda não foi salvo.",
 				"CLEAR_CONTENT_MSG": "Limpar todo o conteúdo desta publicação?",

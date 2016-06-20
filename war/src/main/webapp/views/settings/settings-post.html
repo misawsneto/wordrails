@@ -87,18 +87,18 @@
       		<mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.POST_DATE' | translate}}" ng-model="postDate"></mdp-date-picker>
 	      </div>
 	      <div class="pos-rlt">
-        	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.POST_TIME' | translate}}" ng-model="postDate"></mdp-date-picker>
+        	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.POST_TIME' | translate}}" ng-model="postDate"></mdp-time-picker>
         </div>
-        <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE">
-					Salvar
-				</md-button>
+        <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE" ng-click="changePostDate(postDate); postDateMenuOpen = false;"">
+			Salvar
+		</md-button>
       </div>
 	  </div>
   </div>
   <!-- /date button and dropdown -->
 
 	<!-- schedule button and dropdown -->
-	<div uib-dropdown class="inline" auto-close="disabled" is-open="postScheduleMenuOpen" ng-if="postState !== 'PUBLISHED'">
+	<div uib-dropdown class="inline" auto-close="disabled" is-open="postScheduleMenuOpen">
 	  <md-button aria-label="nothing" ng-click="resetScheduleDate();" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
 	  		<md-tooltip md-direction="top">
           {{'settings.post.menu.SCHEDULE_PUBLICATION' | translate}}
@@ -106,24 +106,37 @@
 	    <i class="mdi mdi2-calendar-clock i-20"></i>
 	  </md-button>
 	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="dropdown-menu-scale p-sm with-arrow z-index-5">
-	  	<div class="arrow lft" ></div>
-      <div class="pull-right">
-        <a ng-click="postScheduleMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
-      </div>
-      <div class="w">
-	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
-	      	{{'settings.post.SCHEDULED_DATE_DESC' | translate}}
+	  		<div class="arrow lft" ></div>
+	      <div class="pull-right">
+	        <a ng-click="postScheduleMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
 	      </div>
-      	<div class="pos-rlt">
-      		<mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.SCHEDULED_DATE' | translate}}" ng-model="postScheduleDate"></mdp-date-picker>
+	      <div class="w" ng-if="!checkIfScheduled()">
+		      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
+		      	{{'settings.post.SCHEDULED_DATE_DESC' | translate}}
+		      </div>
+	      	<div class="pos-rlt">
+	      		<mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.SCHEDULED_DATE' | translate}}" ng-model="postScheduleDate">
+	      		</mdp-date-picker>
+		      </div>
+		      <div class="pos-rlt">
+	        	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.SCHEDULED_TIME' | translate}}" ng-model="postScheduleDate">
+	        	</mdp-time-picker>
+	          </div>
+	        <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE" ng-click="changeScheduledDate(postScheduleDate); postScheduleMenuOpen = false;">
+						Salvar
+					</md-button>
 	      </div>
-	      <div class="pos-rlt">
-        	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.SCHEDULED_TIME' | translate}}" ng-model="postScheduleDate"></mdp-date-picker>
-        </div>
-        <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE" ng-click="showScheduleTime();">
-					Salvar
-				</md-button>
-      </div>
+	      <div class="w-lg" ng-if="checkIfScheduled()">
+	      	{{'settings.post.SCHEDULED_MSG' | translate}}
+	      	<div class="p-xs p-t-md text-md-l text-center">
+	      		{{app.getLocalTime(app.editingPost.scheduledDate)}}
+	      	</div>
+      		<div class="p-t text-center">
+      			<md-button ng-click="app.editingPost.scheduledDate = null;">
+      				{{'settings.post.RESCHEDULE' | translate}}
+      			</md-button>
+      		</div>
+	      </div>
 	  </div>
   </div>
   <!-- /schedule button and dropdown -->
@@ -157,7 +170,7 @@
       		<mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.DELETE_DATE' | translate}}" ng-model="postDeleteDate"></mdp-date-picker>
 	      </div>
 	      <div class="pos-rlt">
-        	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.DELETE_TIME' | translate}}" ng-model="postDeleteDate"></mdp-date-picker>
+        	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.DELETE_TIME' | translate}}" ng-model="postDeleteDate"></mdp-time-picker>
         </div>
         <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE">
 					Salvar
