@@ -19,7 +19,6 @@ import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolFilterBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHitField;
@@ -199,7 +198,7 @@ public class ESPostService extends AbstractElasticSearchService {
 		applyTenantFilter(f);
 		applyStateFilter(f, p.getState());
 		applyTypeFilter(f, Constants.ObjectType.POST);
-		applyDateFilter(f, p.getFrom(), p.getUntil());
+		applyDateFilter(f, p.getFrom(), p.getUntil(), "date");
 		applyShouldFilter(f, p.getAuthors(), "authorId");
 		applyShouldFilter(f, p.getStations(), "stationId");
 		applyShouldFilter(f, p.getTags(), "tags");
@@ -259,11 +258,14 @@ public class ESPostService extends AbstractElasticSearchService {
 	}
 
 	private void applyStateFilter(BoolFilterBuilder f, String state) {
+		long now = Instant.now().toEpochMilli();
 		if (state != null && !state.isEmpty()) {
 			if (state.equals("SCHEDULED")) {
 				f.must(queryFilter(queryStringQuery("PUBLISHED").defaultField("state")));
-				long now = Instant.now().toEpochMilli();
-				f.must(FilterBuilders.rangeFilter("scheduledDate").gt(now));
+				applyDateFilter(f, String.valueOf(now), null, "scheduledDate");
+			} else if (state.equals("PUBLISHED")) {
+				f.must(queryFilter(queryStringQuery("PUBLISHED").defaultField("state")));
+				applyDateFilter(f, null, String.valueOf(now), "scheduledDate");
 			} else {
 				f.must(queryFilter(queryStringQuery(state).defaultField("state")));
 			}
