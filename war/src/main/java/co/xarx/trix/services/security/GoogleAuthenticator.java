@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Verb;
-import org.scribe.utils.MapUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -54,10 +53,10 @@ public class GoogleAuthenticator implements OAuthAuthenticator {
 	private Response oauthRequest(String userId, String accessToken) throws IOException {
 		OAuthRequest request = new OAuthRequest(Verb.GET, "https://www.googleapis.com/plus/v1/people/" + userId + "?fields=cover/coverPhoto/url,emails,id,name,image");
 		request.addHeader("Authorization", "Bearer " + accessToken);
-		System.out.println(MapUtils.toString(request.getOauthParameters()));
-		System.out.println(MapUtils.toString(request.getHeaders()));
+//		System.out.println(MapUtils.toString(request.getOauthParameters()));
+//		System.out.println(MapUtils.toString(request.getHeaders()));
 		Response response = request.send();
-		System.out.println(response.getBody());
+//		System.out.println(response.getBody());
 
 		return response;
 	}

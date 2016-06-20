@@ -1,7 +1,6 @@
 package co.xarx.trix.web.rest.resource.v1;
 
 import co.xarx.trix.api.*;
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.QPost;
@@ -27,7 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Component
 @NoArgsConstructor
@@ -70,7 +72,6 @@ public class PostsResource extends AbstractResource implements PostApi {
 
 	@Override
 	public void findBySlug() throws ServletException, IOException {
-		System.out.println("Find by slug: " + TenantContextHolder.getCurrentTenantId());
 		forward();
 	}
 
