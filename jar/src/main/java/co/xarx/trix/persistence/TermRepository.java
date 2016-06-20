@@ -85,7 +85,6 @@ public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPr
 	@Query(value="SELECT post FROM Post post left join post.terms term where (post.state = 'PUBLISHED' AND (post.scheduledDate is null OR post.scheduledDate < current_timestamp)) and post.stationId = :stationId and term.name = :tagName")
 	List<Post> findPostsByCategoryAndStationId(@Param("tagName") String tagName, @Param("stationId")Integer stationId, Pageable pageable);
 
-	@RestResource(exported = false)
 	@Query(value="SELECT post FROM Post post join post.terms term where (post.state = 'PUBLISHED' AND (post.scheduledDate is null OR post.scheduledDate < current_timestamp)) and term.id = " +
 			":termId")
 	List<Post> findPostsByTerm(@Param("termId") Integer termId, Pageable pageable);
