@@ -31,17 +31,22 @@ public class PasswordService {
 		this.networkRepository = networkRepository;
 	}
 
-	public void resetPassword(String email){
+	public User resetPassword(String email){
 		Assert.hasText(email, "Null email");
 		User user = userRepository.findUserByEmail(email);
+
+		if(user == null){
+			return null;
+		}
 
 		PasswordReset passwordReset = new PasswordReset();
 		passwordReset.setUser(user);
 		passwordReset.setHash(UUID.randomUUID().toString());
 
 		passwordResetRepository.save(passwordReset);
-
 		emailService.sendSimpleMail(email, "Recuperação de senha", createEmailBody(user.getUsername(), passwordReset.hash));
+
+		return user;
 	}
 
 	@Transactional

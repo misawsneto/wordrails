@@ -73,7 +73,9 @@ public class AuthResource extends AbstractResource implements AuthApi {
 
 	@Override
 	public Response resetPassword(String email) {
-		passwordService.resetPassword(email);
+		if(passwordService.resetPassword(email) == null){
+			return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
+		}
 		return Response.status(Response.Status.OK).build();
 	}
 
