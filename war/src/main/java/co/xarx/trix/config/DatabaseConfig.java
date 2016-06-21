@@ -3,7 +3,7 @@ package co.xarx.trix.config;
 import co.xarx.trix.config.database.RepositoryFactoryBean;
 import co.xarx.trix.config.flyway.FlywayIntegrator;
 import co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence;
-import com.jolbox.bonecp.BoneCPDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.FieldRetrievingFactoryBean;
 import org.springframework.context.annotation.Bean;
@@ -38,17 +38,14 @@ public class DatabaseConfig {
 
 	@Bean
 	public DataSource dataSource() {
-		BoneCPDataSource ds = new BoneCPDataSource();
-		ds.setDriverClass("com.mysql.jdbc.Driver");
+		HikariDataSource ds = new HikariDataSource();
+		ds.setDriverClassName("com.mysql.jdbc.Driver");
 		ds.setJdbcUrl(url);
 		ds.setUsername(username);
 		ds.setPassword(password);
-		ds.setPartitionCount(3);
-		ds.setMinConnectionsPerPartition(3);
-		ds.setMaxConnectionsPerPartition(128);
-		ds.setAcquireIncrement(5);
-		ds.setIdleMaxAgeInSeconds(60);
-		ds.setMaxConnectionAgeInSeconds(120);
+		ds.addDataSourceProperty("cachePrepStmts", "true");
+		ds.addDataSourceProperty("prepStmtCacheSize", "250");
+		ds.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 
 		return ds;
 	}
@@ -88,6 +85,8 @@ public class DatabaseConfig {
 				setProperty("hibernate.current_session_context_class", "thread");
 				setProperty("hibernate.default_batch_fetch_size", "200");
 				setProperty("hibernate.classloading.use_current_tccl_as_parent", "false");
+				setProperty("hibernate.connection.characterEncoding", "utf8");
+				setProperty("hibernate.temp.use_jdbc_metadata_defaults", "false");
 			}
 		};
 	}

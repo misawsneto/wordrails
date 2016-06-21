@@ -29,10 +29,14 @@ public class NetworkService {
 		tenantIds = Maps.newConcurrentMap();
 		domains = Maps.newConcurrentMap();
 
-		List<Network> networks = networkRepository.findAll();
-		for (Network n : networks) {
-			tenantIds.put(n.tenantId, n.id);
-			if (n.domain != null) domains.put(n.domain, n.id);
+		List<Object[]> networks = networkRepository.findIdsAndDomain();
+		for (Object[] n : networks) {
+			Integer id = (Integer) n[0];
+			String domain = (String) n[1];
+			String tenantId = (String) n[2];
+			tenantIds.put(tenantId, id);
+			if (domain != null)
+				domains.put(domain, id);
 		}
 	}
 
