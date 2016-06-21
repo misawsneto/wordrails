@@ -253,8 +253,10 @@
 
 	<filter-mapping>
 		<filter-name>StaticFilesCacheFilter</filter-name>
+		<url-pattern>/js/*</url-pattern>
 		<url-pattern>/libs/*</url-pattern>
 		<url-pattern>/styles/*</url-pattern>
+		<url-pattern>/scripts/*</url-pattern>
 	</filter-mapping>
 
 	<error-page>

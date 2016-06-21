@@ -84,7 +84,7 @@ angular.module('app')
                    }
                   return deferred.promise;
                 },
-                deps:load( ['/styles/home.css?' + GLOBAL_URL_HASH+  '', '720kb.socialshare', 'infinite-scroll', 'angularFileUpload', '/scripts/services/trix.js?' + GLOBAL_URL_HASH + '', '/libs/theming/tinycolor/tinycolor.js?' + GLOBAL_URL_HASH + '', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize', 'perfect_scrollbar', 'monospaced.elastic'] ).deps
+                deps:load( ['/styles/home.css?' + GLOBAL_URL_HASH, '720kb.socialshare', 'infinite-scroll', 'angularFileUpload', '/scripts/services/trix.js?' + GLOBAL_URL_HASH , '/libs/theming/tinycolor/tinycolor.js?' + GLOBAL_URL_HASH , 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize', 'perfect_scrollbar', 'monospaced.elastic'] ).deps
               },
               url: '/settings',
               views: {
@@ -107,7 +107,7 @@ angular.module('app')
                 data : { titleTranslate: 'titles.POST', title: 'Publicação', folded: true },
                 resolve: load([
                   'com.2fdevs.videogular','com.2fdevs.videogular.plugins.controls','com.2fdevs.videogular.plugins.overlayplay','com.2fdevs.videogular.plugins.poster',
-                  /*'recorderServiceProvider', 'angularAudioRecorder',*/'videosharing-embed','/libs/angular/lifely-focuspoint/dist/focuspoint.css?' + GLOBAL_URL_HASH+  '', 'leaflet-directive', 'ngJcrop', 'froala', 'monospaced.elastic', 'angularFileUpload', '/scripts/controllers/settings/settings-post.js', '/scripts/controllers/settings/settings-post-geolocation.js?' + GLOBAL_URL_HASH + '']),
+                  /*'recorderServiceProvider', 'angularAudioRecorder',*/'videosharing-embed','/libs/angular/lifely-focuspoint/dist/focuspoint.css?' + GLOBAL_URL_HASH, 'leaflet-directive', 'ngJcrop', 'froala', 'monospaced.elastic', 'angularFileUpload', '/scripts/controllers/settings/settings-post.js?' + GLOBAL_URL_HASH, '/scripts/controllers/settings/settings-post-geolocation.js?' + GLOBAL_URL_HASH ]),
                 controller: 'SettingsPostCtrl'
               })
 
@@ -132,7 +132,7 @@ angular.module('app')
                     deferred.resolve(null);
                     return deferred.promise;
                   },
-                  deps:load(['/scripts/controllers/app/read.js?' + GLOBAL_URL_HASH + '', '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css?' + GLOBAL_URL_HASH+  '']).deps
+                  deps:load(['/scripts/controllers/app/read.js?' + GLOBAL_URL_HASH , '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css?' + GLOBAL_URL_HASH]).deps
                 },
                 controller: 'ReadCtrl'
               })
@@ -141,7 +141,7 @@ angular.module('app')
                 url: '/stations',
                 templateUrl: '/views/settings/settings-stations.html',
                 data : { titleTranslate: 'titles.STATIONS', title: 'Estações', folded: false },
-                resolve: load(['/scripts/controllers/settings/settings-stations.js?' + GLOBAL_URL_HASH + '']),
+                resolve: load(['/scripts/controllers/settings/settings-stations.js?' + GLOBAL_URL_HASH ]),
                 controller: 'SettingsStationsCtrl'
               })
 
@@ -151,7 +151,7 @@ angular.module('app')
                 data : { titleTranslate: 'titles.CATEGORIES', title: 'Categorias', folded: false },
                 resolve:{
                   station: stationDep,
-                  deps:load(['/scripts/controllers/settings/settings-categories.js?' + GLOBAL_URL_HASH + '','angularSpectrumColorpicker']).deps
+                  deps:load(['/scripts/controllers/settings/settings-categories.js?' + GLOBAL_URL_HASH ,'angularSpectrumColorpicker']).deps
                 },
                 controller: 'SettingsCategoriesCtrl'
               })
@@ -162,7 +162,7 @@ angular.module('app')
                 data : { titleTranslate: 'titles.PERSPECTIVES', title: 'Perspectives', folded: true },
                 resolve:{
                   station: stationDep,
-                  deps: load(['wu.masonry',  'dndLists', 'angular-carousel', '/scripts/controllers/settings/settings-perspectives.js?' + GLOBAL_URL_HASH + '', '/scripts/custom-pgwslider.js?' + GLOBAL_URL_HASH + '', '/libs/jquery/pgwslider/pgwslider.min.css?' + GLOBAL_URL_HASH+  '']).deps
+                  deps: load(['wu.masonry',  'dndLists', 'angular-carousel', '/scripts/controllers/settings/settings-perspectives.js?' + GLOBAL_URL_HASH , '/scripts/custom-pgwslider.js?' + GLOBAL_URL_HASH , '/libs/jquery/pgwslider/pgwslider.min.css?' + GLOBAL_URL_HASH]).deps
                 },
                 controller: 'SettingsPerspectivesCtrl'
               })
@@ -172,7 +172,7 @@ angular.module('app')
                 data : { titleTranslate: 'titles.PERMISSIONS', title: 'Permissions', folded: false },
                 resolve:{
                   station: stationDep, 
-                  deps: load(['/scripts/controllers/settings/settings-station-permissions.js?' + GLOBAL_URL_HASH + '']).deps
+                  deps: load(['/scripts/controllers/settings/settings-station-permissions.js?' + GLOBAL_URL_HASH ]).deps
                 },
                 controller: 'SettingsStationPermissionsCtrl'
               })
@@ -193,7 +193,7 @@ angular.module('app')
                 url: '/profile',
                 templateUrl: '/views/settings/settings-profile.html',
                 data : { titleTranslate: 'settings.aside.MY_PROFILE', title: 'Perfil', folded: true },
-                resolve: load(['/scripts/controllers/settings/settings-profile.js?' + GLOBAL_URL_HASH + '', 'ngJcrop']),
+                resolve: load(['/scripts/controllers/settings/settings-profile.js?' + GLOBAL_URL_HASH , 'ngJcrop']),
                 controller:'SettingsProfileCtrl'
               })
 
@@ -202,13 +202,13 @@ angular.module('app')
                 url: '/chart',
                 templateUrl: '/views/ui/chart/chart.html',
                 data : { title: 'Charts' },
-                resolve: load('/scripts/controllers/chart.js?' + GLOBAL_URL_HASH + '')
+                resolve: load('/scripts/controllers/chart.js?' + GLOBAL_URL_HASH )
               })
               .state('app.network', {
                 url: '/network',
                 templateUrl: '/views/settings/settings-network.html',
                 data : { titleTranslate: 'titles.NETWORK', title: 'Rede', folded: false },
-                resolve: load(['/scripts/controllers/settings/settings-network.js?' + GLOBAL_URL_HASH + '']),
+                resolve: load(['/scripts/controllers/settings/settings-network.js?' + GLOBAL_URL_HASH ]),
                 controller: 'SettingsNetworkCtrl'
               })
               .state('app.publications', {
@@ -216,11 +216,11 @@ angular.module('app')
                 reloadOnSearch: false,
                 templateUrl: '/views/settings/settings-publications.html',
                 data : { titleTranslate: 'titles.PUBLICATIONS', title: 'Publicações', folded: true },
-                // resolve: load(['/scripts/controllers/settings/settings-publications.js?' + GLOBAL_URL_HASH + '']),
+                // resolve: load(['/scripts/controllers/settings/settings-publications.js?' + GLOBAL_URL_HASH ]),
                 resolve: {
                   deps: ['$ocLazyLoad', '$templateCache',
                     function( $ocLazyLoad, $templateCache ){
-                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-publications.js?' + GLOBAL_URL_HASH + ''])
+                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-publications.js?' + GLOBAL_URL_HASH ])
                   }]
                 },
                 controller: 'SettingsPublicationsCtrl'
@@ -230,11 +230,11 @@ angular.module('app')
                 reloadOnSearch: false,
                 templateUrl: '/views/settings/settings-comments.html',
                 data : { titleTranslate: 'titles.COMMENTS', title: 'Comentários', folded: false },
-                // resolve: load(['/scripts/controllers/settings/settings-publications.js?' + GLOBAL_URL_HASH + '']),
+                // resolve: load(['/scripts/controllers/settings/settings-publications.js?' + GLOBAL_URL_HASH ]),
                 resolve: {
                   deps: ['$ocLazyLoad', '$templateCache',
                     function( $ocLazyLoad, $templateCache ){
-                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-comments.js?' + GLOBAL_URL_HASH + ''])
+                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-comments.js?' + GLOBAL_URL_HASH ])
                   }]
                 },
                 controller: 'SettingsCommentsCtrl'
@@ -244,11 +244,11 @@ angular.module('app')
                 reloadOnSearch: false,
                 templateUrl: '/views/settings/settings-media-library.html',
                 data : { titleTranslate: 'titles.COMMENTS', title: 'Comentários', folded: false },
-                // resolve: load(['/scripts/controllers/settings/settings-publications.js?' + GLOBAL_URL_HASH + '']),
+                // resolve: load(['/scripts/controllers/settings/settings-publications.js?' + GLOBAL_URL_HASH ]),
                 resolve: {
                   deps: ['$ocLazyLoad', '$templateCache',
                     function( $ocLazyLoad, $templateCache ){
-                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-media-library.js?' + GLOBAL_URL_HASH + ''])
+                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-media-library.js?' + GLOBAL_URL_HASH ])
                   }]
                 },
                 controller: 'SettingsMediaLibraryCtrl'
@@ -257,15 +257,15 @@ angular.module('app')
                 url: '/colors',
                 templateUrl: '/views/settings/settings-colors.html',
                 data : { titleTranslate: 'titles.THEMING', title: 'Aparência', folded: false },
-                resolve: load(['/scripts/controllers/settings/settings-network.js?' + GLOBAL_URL_HASH + '', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js?' + GLOBAL_URL_HASH + '',
-                    '/styles/theming.css?' + GLOBAL_URL_HASH+  '', '/libs/jquery/slimScroll/jquery.slimscroll.min.js?' + GLOBAL_URL_HASH + '']),
+                resolve: load(['/scripts/controllers/settings/settings-network.js?' + GLOBAL_URL_HASH , 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js?' + GLOBAL_URL_HASH ,
+                    '/styles/theming.css?' + GLOBAL_URL_HASH, '/libs/jquery/slimScroll/jquery.slimscroll.min.js?' + GLOBAL_URL_HASH ]),
                 controller: 'ColorGeneratorCtrl'
               })
               .state('app.dashboard', {
                 url: '/dashboard',
                 templateUrl: '/views/pages/dashboard.html',
                 data : { title: 'Dashboard', folded: false },
-                resolve: load(['/scripts/controllers/settings/settings-dashboard.js?' + GLOBAL_URL_HASH + '']),
+                resolve: load(['/scripts/controllers/settings/settings-dashboard.js?' + GLOBAL_URL_HASH ]),
                 controller: 'DashboardCtrl'
               })
               .state('app.pagebuilder', {
@@ -278,50 +278,50 @@ angular.module('app')
                 url: '/list',
                 templateUrl: '/views/settings/settings-pagebuilder-list.html',
                 data : { title: 'Page Builder', folded: true },
-                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-list.js?' + GLOBAL_URL_HASH + '']),
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-list.js?' + GLOBAL_URL_HASH ]),
                 controller: 'PageBuilderListCtrl'
               })
               .state('app.pagebuilder.editor', {
                 url: '/editor',
                 templateUrl: '/views/settings/settings-pagebuilder-editor.html',
                 data : { title: 'Page Builder', folded: true },
-                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-editor.js?' + GLOBAL_URL_HASH + '']),
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-editor.js?' + GLOBAL_URL_HASH ]),
                 controller: 'PageBuilderEditorCtrl'
               })
               .state('app.pagebuilder.stationcolors', {
                 url: '/stationcolors',
                 templateUrl: '/views/settings/settings-colors.html',
                 data : { title: 'Page Builder', folded: true },
-                  resolve: load(['/scripts/controllers/settings/settings-network.js?' + GLOBAL_URL_HASH + '', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js?' + GLOBAL_URL_HASH + '',
-                    '/styles/theming.css?' + GLOBAL_URL_HASH+  '', '/libs/jquery/slimScroll/jquery.slimscroll.min.js?' + GLOBAL_URL_HASH + '']),
+                  resolve: load(['/scripts/controllers/settings/settings-network.js?' + GLOBAL_URL_HASH , 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js?' + GLOBAL_URL_HASH ,
+                    '/styles/theming.css?' + GLOBAL_URL_HASH, '/libs/jquery/slimScroll/jquery.slimscroll.min.js?' + GLOBAL_URL_HASH ]),
                 controller: 'ColorGeneratorCtrl'
               })
               .state('app.pagebuilder.header', {
                 url: '/header',
                 templateUrl: '/views/settings/settings-pagebuilder-header.html',
                 data : { title: 'Header', folded: true },
-                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js?' + GLOBAL_URL_HASH + '']),
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js?' + GLOBAL_URL_HASH ]),
                 controller: 'PageBuilderHeaderCtrl'
               })
               .state('app.pagebuilder.sidemenu', {
                 url: '/header',
                 templateUrl: '/views/settings/settings-pagebuilder-sidemenu.html',
                 data : { title: 'Sidemenu', folded: true },
-                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js?' + GLOBAL_URL_HASH + '']),
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js?' + GLOBAL_URL_HASH ]),
                 controller: 'PageBuilderSidemenuCtrl'
               })
               .state('app.pagebuilder.footer', {
                 url: '/header',
                 templateUrl: '/views/settings/settings-pagebuilder-footer.html',
                 data : { title: 'Page Builder', folded: true },
-                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js?' + GLOBAL_URL_HASH + '']),
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js?' + GLOBAL_URL_HASH ]),
                 controller: 'PageBuilderFooterCtrl'
               })
               .state('app.analysis', {
                 url: '/analysis',
                 templateUrl: '/views/pages/dashboard.analysis.html',
                 data : { title: 'Analysis' },
-                resolve: load(['/scripts/controllers/chart.js?' + GLOBAL_URL_HASH + '','/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH + ''])
+                resolve: load(['/scripts/controllers/chart.js?' + GLOBAL_URL_HASH ,'/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH ])
               })
               .state('app.wall', {
                 url: '/wall',
@@ -333,7 +333,7 @@ angular.module('app')
                 templateUrl: '/apps/todo/todo.html',
                 data : { title: 'Todo', theme: { primary: 'indigo-800'} },
                 controller: 'TodoCtrl',
-                resolve: load('/apps/todo/todo.js?' + GLOBAL_URL_HASH + '')
+                resolve: load('/apps/todo/todo.js?' + GLOBAL_URL_HASH )
               })
               .state('app.todo.list', {
                   url: '/{fold}'
@@ -348,7 +348,7 @@ angular.module('app')
                 templateUrl: '/apps/note/list.html',
                 data : { title: 'Note'},
                 controller: 'NoteCtrl',
-                resolve: load(['/apps/note/note.js?' + GLOBAL_URL_HASH + '', '/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH + ''])
+                resolve: load(['/apps/note/note.js?' + GLOBAL_URL_HASH , '/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH ])
               })
               .state('app.note.item', {
                 url: '/{id}',
@@ -356,7 +356,7 @@ angular.module('app')
                   '': {
                     templateUrl: '/apps/note/item.html',
                     controller: 'NoteItemCtrl',
-                    resolve: load(['/apps/note/note.js?' + GLOBAL_URL_HASH + '', '/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH + ''])
+                    resolve: load(['/apps/note/note.js?' + GLOBAL_URL_HASH , '/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH ])
                   },
                   'navbar@': {
                     templateUrl: '/apps/note/navbar.html',
@@ -369,7 +369,7 @@ angular.module('app')
                   url: '/inbox',
                   templateUrl: '/apps/inbox/inbox.html',
                   data : { title: 'Inbox', folded: false },
-                  resolve: load( ['/apps/inbox/inbox.js?' + GLOBAL_URL_HASH + '','/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH + ''] )
+                  resolve: load( ['/apps/inbox/inbox.js?' + GLOBAL_URL_HASH ,'/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH ] )
               })
               .state('app.inbox.list', {
                   url: '/inbox/{fold}',
@@ -463,14 +463,14 @@ angular.module('app')
                 .state('ui.component.uibootstrap', {
                   url: '/uibootstrap',
                   templateUrl: '/views/ui/component/uibootstrap.html',
-                  resolve: load('/scripts/controllers/bootstrap.js?' + GLOBAL_URL_HASH + ''),
+                  resolve: load('/scripts/controllers/bootstrap.js?' + GLOBAL_URL_HASH ),
                   data : { title: 'UI Bootstrap' }
                 })
               // material routers
               .state('ui.material', {
                 url: '/material',
                 template: '<div ui-view></div>',
-                resolve: load('/scripts/controllers/material.js?' + GLOBAL_URL_HASH + '')
+                resolve: load('/scripts/controllers/material.js?' + GLOBAL_URL_HASH )
               })
                 .state('ui.material.button', {
                   url: '/button',
@@ -532,49 +532,49 @@ angular.module('app')
                   templateUrl: '/views/ui/form/select.html',
                   data : { title: 'Selects' },
                   controller: 'SelectCtrl',
-                  resolve: load(['ui.select','/scripts/controllers/select.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['ui.select','/scripts/controllers/select.js?' + GLOBAL_URL_HASH ])
                 })
                 .state('ui.form.editor', {
                   url: '/editor',
                   templateUrl: '/views/ui/form/editor.html',
                   data : { title: 'Editor' },
                   controller: 'EditorCtrl',
-                  resolve: load(['textAngular','/scripts/controllers/editor.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['textAngular','/scripts/controllers/editor.js?' + GLOBAL_URL_HASH ])
                 })
                 .state('ui.form.slider', {
                   url: '/slider',
                   templateUrl: '/views/ui/form/slider.html',
                   data : { title: 'Slider' },
                   controller: 'SliderCtrl',
-                  resolve: load('/scripts/controllers/slider.js?' + GLOBAL_URL_HASH + '')
+                  resolve: load('/scripts/controllers/slider.js?' + GLOBAL_URL_HASH )
                 })
                 .state('ui.form.tree', {
                   url: '/tree',
                   templateUrl: '/views/ui/form/tree.html',
                   data : { title: 'Tree' },
                   controller: 'TreeCtrl',
-                  resolve: load('/scripts/controllers/tree.js?' + GLOBAL_URL_HASH + '')
+                  resolve: load('/scripts/controllers/tree.js?' + GLOBAL_URL_HASH )
                 })
                 .state('ui.form.file-upload', {
                   url: '/file-upload',
                   templateUrl: '/views/ui/form/file-upload.html',
                   data : { title: 'File upload' },
                   controller: 'UploadCtrl',
-                  resolve: load(['/scripts/controllers/upload.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['/scripts/controllers/upload.js?' + GLOBAL_URL_HASH ])
                 })
                 .state('ui.form.image-crop', {
                   url: '/image-crop',
                   templateUrl: '/views/ui/form/image-crop.html',
                   data : { title: 'Image Crop' },
                   controller: 'ImgCropCtrl',
-                  resolve: load(['ngImgCrop','/scripts/controllers/imgcrop.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['ngImgCrop','/scripts/controllers/imgcrop.js?' + GLOBAL_URL_HASH ])
                 })
                 .state('ui.form.editable', {
                   url: '/editable',
                   templateUrl: '/views/ui/form/xeditable.html',
                   data : { title: 'Xeditable' },
                   controller: 'XeditableCtrl',
-                  resolve: load(['xeditable','/scripts/controllers/xeditable.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['xeditable','/scripts/controllers/xeditable.js?' + GLOBAL_URL_HASH ])
                 })
               // table routers
               .state('ui.table', {
@@ -591,7 +591,7 @@ angular.module('app')
                   templateUrl: '/views/ui/table/smart.html',
                   data : { title: 'Smart' },
                   controller: 'TableCtrl',
-                  resolve: load(['smart-table', '/scripts/controllers/table.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['smart-table', '/scripts/controllers/table.js?' + GLOBAL_URL_HASH ])
                 })
                 .state('ui.table.datatable', {
                   url: '/datatable',
@@ -608,28 +608,28 @@ angular.module('app')
                   templateUrl: '/views/ui/table/nggrid.html',
                   data : { title: 'NG Grid' },
                   controller: 'NGGridCtrl',
-                  resolve: load(['ngGrid','/scripts/controllers/nggrid.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['ngGrid','/scripts/controllers/nggrid.js?' + GLOBAL_URL_HASH ])
                 })
                 .state('ui.table.uigrid', {
                   url: '/uigrid',
                   templateUrl: '/views/ui/table/uigrid.html',
                   data : { title: 'UI Grid' },
                   controller: "UiGridCtrl",
-                  resolve: load(['ui.grid', '/scripts/controllers/uigrid.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['ui.grid', '/scripts/controllers/uigrid.js?' + GLOBAL_URL_HASH ])
                 })
                 .state('ui.table.editable', {
                   url: '/editable',
                   templateUrl: '/views/ui/table/editable.html',
                   data : { title: 'Editable' },
                   controller: 'XeditableCtrl',
-                  resolve: load(['xeditable','/scripts/controllers/xeditable.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['xeditable','/scripts/controllers/xeditable.js?' + GLOBAL_URL_HASH ])
                 })
               // chart
               .state('ui.chart', {
                 url: '/chart',
                 templateUrl: '/views/ui/chart/chart.html',
                 data : { title: 'Charts' },
-                resolve: load('/scripts/controllers/chart.js?' + GLOBAL_URL_HASH + '')
+                resolve: load('/scripts/controllers/chart.js?' + GLOBAL_URL_HASH )
               })
               // map routers
               .state('ui.map', {
@@ -641,14 +641,14 @@ angular.module('app')
                   templateUrl: '/views/ui/map/google.html',
                   data : { title: 'Gmap' },
                   controller: 'GoogleMapCtrl',
-                  resolve: load(['ui.map', '/scripts/controllers/load-google-maps.js?' + GLOBAL_URL_HASH + '', '/scripts/controllers/googlemap.js?' + GLOBAL_URL_HASH + ''], function(){ return loadGoogleMaps(); })
+                  resolve: load(['ui.map', '/scripts/controllers/load-google-maps.js?' + GLOBAL_URL_HASH , '/scripts/controllers/googlemap.js?' + GLOBAL_URL_HASH ], function(){ return loadGoogleMaps(); })
                 })
                 .state('ui.map.vector', {
                   url: '/vector',
                   templateUrl: '/views/ui/map/vector.html',
                   data : { title: 'Vector' },
                   controller: 'VectorMapCtrl',
-                  resolve: load('/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH + '')
+                  resolve: load('/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH )
                 })
 
             .state('page', {
@@ -709,8 +709,8 @@ angular.module('app')
                   // }
                   return deferred.promise;
                 },
-                //deps:load( ['digitalfondue.dftabmenu','720kb.socialshare','monospaced.elastic','angularFileUpload','infinite-scroll', '/scripts/services/trix.js?' + GLOBAL_URL_HASH + '', '/libs/theming/tinycolor/tinycolor.js?' + GLOBAL_URL_HASH + '', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
-                deps:load( ['/scripts/home.all.js?' + GLOBAL_URL_HASH + '', '/styles/home.all.min.css?' + GLOBAL_URL_HASH+  '', 'angularFileUpload'] ).deps
+                //deps:load( ['digitalfondue.dftabmenu','720kb.socialshare','monospaced.elastic','angularFileUpload','infinite-scroll', '/scripts/services/trix.js?' + GLOBAL_URL_HASH , '/libs/theming/tinycolor/tinycolor.js?' + GLOBAL_URL_HASH , 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
+                deps:load( ['/scripts/home.all.js?' + GLOBAL_URL_HASH , '/styles/home.all.min.css?' + GLOBAL_URL_HASH, 'angularFileUpload'] ).deps
               },
               url: '',
               views: {
@@ -730,13 +730,13 @@ angular.module('app')
                 url: '/dashboard',
                 templateUrl: '/views/pages/dashboard.html',
                 data : { title: 'Dashboard', folded: false },
-                resolve: load(['/scripts/controllers/chart.js?' + GLOBAL_URL_HASH + '','/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH + ''])
+                resolve: load(['/scripts/controllers/chart.js?' + GLOBAL_URL_HASH ,'/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH ])
               })
               .state('app.analysis', {
                 url: '/analysis',
                 templateUrl: '/views/pages/dashboard.analysis.html',
                 data : { title: 'Analysis' },
-                resolve: load(['/scripts/controllers/chart.js?' + GLOBAL_URL_HASH + '','/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH + ''])
+                resolve: load(['/scripts/controllers/chart.js?' + GLOBAL_URL_HASH ,'/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH ])
               })
               .state('app.home', {
                 url: '/',
@@ -744,7 +744,7 @@ angular.module('app')
                 data : { title: 'Home', folded: false },
                 resolve: {
                   station: function(){return null;},
-                  deps:load(['/scripts/controllers/app/page.js?' + GLOBAL_URL_HASH + '', '/scripts/custom-pgwslider.js?' + GLOBAL_URL_HASH + '', '/libs/jquery/pgwslider/pgwslider.min.css?' + GLOBAL_URL_HASH+  '', 'angular-carousel']).deps
+                  deps:load(['/scripts/controllers/app/page.js?' + GLOBAL_URL_HASH , '/scripts/custom-pgwslider.js?' + GLOBAL_URL_HASH , '/libs/jquery/pgwslider/pgwslider.min.css?' + GLOBAL_URL_HASH, 'angular-carousel']).deps
                 },
                 controller: 'PageCtrl'
               })
@@ -766,7 +766,7 @@ angular.module('app')
                     })          
                     return deferred.promise;
                   },
-                  deps:load(['/scripts/controllers/app/station.js?' + GLOBAL_URL_HASH + '']).deps
+                  deps:load(['/scripts/controllers/app/station.js?' + GLOBAL_URL_HASH ]).deps
                 }
               })
               .state('app.station.stationHome', {
@@ -775,7 +775,7 @@ angular.module('app')
                 data : { title: 'Home', folded: false },
                 resolve: {
                   station: stationDep,
-                  deps:load(['/scripts/controllers/app/page.js?' + GLOBAL_URL_HASH + '', '/scripts/custom-pgwslider.js?' + GLOBAL_URL_HASH + '', '/libs/jquery/pgwslider/pgwslider.min.css?' + GLOBAL_URL_HASH+  '', 'angular-carousel']).deps
+                  deps:load(['/scripts/controllers/app/page.js?' + GLOBAL_URL_HASH , '/scripts/custom-pgwslider.js?' + GLOBAL_URL_HASH , '/libs/jquery/pgwslider/pgwslider.min.css?' + GLOBAL_URL_HASH, 'angular-carousel']).deps
                 },
                 controller: 'PageCtrl'
               })
@@ -799,7 +799,7 @@ angular.module('app')
                      
                     return deferred.promise;
                   },
-                  deps:load(['/scripts/controllers/app/category.js?' + GLOBAL_URL_HASH + '']).deps
+                  deps:load(['/scripts/controllers/app/category.js?' + GLOBAL_URL_HASH ]).deps
                 }
               })
               .state('app.wall', {
@@ -812,7 +812,7 @@ angular.module('app')
                 templateUrl: '/apps/todo/todo.html',
                 data : { title: 'Todo', theme: { primary: 'indigo-800'} },
                 controller: 'TodoCtrl',
-                resolve: load('/apps/todo/todo.js?' + GLOBAL_URL_HASH + '')
+                resolve: load('/apps/todo/todo.js?' + GLOBAL_URL_HASH )
               })
               .state('app.todo.list', {
                   url: '/{fold}'
@@ -827,7 +827,7 @@ angular.module('app')
                 templateUrl: '/apps/note/list.html',
                 data : { title: 'Note'},
                 controller: 'NoteCtrl',
-                resolve: load(['/apps/note/note.js?' + GLOBAL_URL_HASH + '', '/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH + ''])
+                resolve: load(['/apps/note/note.js?' + GLOBAL_URL_HASH , '/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH ])
               })
               .state('app.note.item', {
                 url: '/{id}',
@@ -835,7 +835,7 @@ angular.module('app')
                   '': {
                     templateUrl: '/apps/note/item.html',
                     controller: 'NoteItemCtrl',
-                    resolve: load(['/apps/note/note.js?' + GLOBAL_URL_HASH + '', '/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH + ''])
+                    resolve: load(['/apps/note/note.js?' + GLOBAL_URL_HASH , '/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH ])
                   },
                   'navbar@': {
                     templateUrl: '/apps/note/navbar.html',
@@ -848,7 +848,7 @@ angular.module('app')
                   url: '/inbox',
                   templateUrl: '/apps/inbox/inbox.html',
                   data : { title: 'Inbox', folded: false },
-                  resolve: load( ['/apps/inbox/inbox.js?' + GLOBAL_URL_HASH + '','/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH + ''] )
+                  resolve: load( ['/apps/inbox/inbox.js?' + GLOBAL_URL_HASH ,'/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH ] )
               })
               .state('app.inbox.list', {
                   url: '/inbox/{fold}',
@@ -942,14 +942,14 @@ angular.module('app')
                 .state('ui.component.uibootstrap', {
                   url: '/uibootstrap',
                   templateUrl: '/views/ui/component/uibootstrap.html',
-                  resolve: load('/scripts/controllers/bootstrap.js?' + GLOBAL_URL_HASH + ''),
+                  resolve: load('/scripts/controllers/bootstrap.js?' + GLOBAL_URL_HASH ),
                   data : { title: 'UI Bootstrap' }
                 })
               // material routers
               .state('ui.material', {
                 url: '/material',
                 template: '<div ui-view></div>',
-                resolve: load('/scripts/controllers/material.js?' + GLOBAL_URL_HASH + '')
+                resolve: load('/scripts/controllers/material.js?' + GLOBAL_URL_HASH )
               })
                 .state('ui.material.button', {
                   url: '/button',
@@ -1011,49 +1011,49 @@ angular.module('app')
                   templateUrl: '/views/ui/form/select.html',
                   data : { title: 'Selects' },
                   controller: 'SelectCtrl',
-                  resolve: load(['ui.select','/scripts/controllers/select.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['ui.select','/scripts/controllers/select.js?' + GLOBAL_URL_HASH ])
                 })
                 .state('ui.form.editor', {
                   url: '/editor',
                   templateUrl: '/views/ui/form/editor.html',
                   data : { title: 'Editor' },
                   controller: 'EditorCtrl',
-                  resolve: load(['textAngular','/scripts/controllers/editor.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['textAngular','/scripts/controllers/editor.js?' + GLOBAL_URL_HASH ])
                 })
                 .state('ui.form.slider', {
                   url: '/slider',
                   templateUrl: '/views/ui/form/slider.html',
                   data : { title: 'Slider' },
                   controller: 'SliderCtrl',
-                  resolve: load('/scripts/controllers/slider.js?' + GLOBAL_URL_HASH + '')
+                  resolve: load('/scripts/controllers/slider.js?' + GLOBAL_URL_HASH )
                 })
                 .state('ui.form.tree', {
                   url: '/tree',
                   templateUrl: '/views/ui/form/tree.html',
                   data : { title: 'Tree' },
                   controller: 'TreeCtrl',
-                  resolve: load('/scripts/controllers/tree.js?' + GLOBAL_URL_HASH + '')
+                  resolve: load('/scripts/controllers/tree.js?' + GLOBAL_URL_HASH )
                 })
                 .state('ui.form.file-upload', {
                   url: '/file-upload',
                   templateUrl: '/views/ui/form/file-upload.html',
                   data : { title: 'File upload' },
                   controller: 'UploadCtrl',
-                  resolve: load(['angularFileUpload', '/scripts/controllers/upload.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['angularFileUpload', '/scripts/controllers/upload.js?' + GLOBAL_URL_HASH ])
                 })
                 .state('ui.form.image-crop', {
                   url: '/image-crop',
                   templateUrl: '/views/ui/form/image-crop.html',
                   data : { title: 'Image Crop' },
                   controller: 'ImgCropCtrl',
-                  resolve: load(['ngImgCrop','/scripts/controllers/imgcrop.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['ngImgCrop','/scripts/controllers/imgcrop.js?' + GLOBAL_URL_HASH ])
                 })
                 .state('ui.form.editable', {
                   url: '/editable',
                   templateUrl: '/views/ui/form/xeditable.html',
                   data : { title: 'Xeditable' },
                   controller: 'XeditableCtrl',
-                  resolve: load(['xeditable','/scripts/controllers/xeditable.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['xeditable','/scripts/controllers/xeditable.js?' + GLOBAL_URL_HASH ])
                 })
               // table routers
               .state('ui.table', {
@@ -1070,7 +1070,7 @@ angular.module('app')
                   templateUrl: '/views/ui/table/smart.html',
                   data : { title: 'Smart' },
                   controller: 'TableCtrl',
-                  resolve: load(['smart-table', '/scripts/controllers/table.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['smart-table', '/scripts/controllers/table.js?' + GLOBAL_URL_HASH ])
                 })
                 .state('ui.table.datatable', {
                   url: '/datatable',
@@ -1087,28 +1087,28 @@ angular.module('app')
                   templateUrl: '/views/ui/table/nggrid.html',
                   data : { title: 'NG Grid' },
                   controller: 'NGGridCtrl',
-                  resolve: load(['ngGrid','/scripts/controllers/nggrid.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['ngGrid','/scripts/controllers/nggrid.js?' + GLOBAL_URL_HASH ])
                 })
                 .state('ui.table.uigrid', {
                   url: '/uigrid',
                   templateUrl: '/views/ui/table/uigrid.html',
                   data : { title: 'UI Grid' },
                   controller: "UiGridCtrl",
-                  resolve: load(['ui.grid', '/scripts/controllers/uigrid.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['ui.grid', '/scripts/controllers/uigrid.js?' + GLOBAL_URL_HASH ])
                 })
                 .state('ui.table.editable', {
                   url: '/editable',
                   templateUrl: '/views/ui/table/editable.html',
                   data : { title: 'Editable' },
                   controller: 'XeditableCtrl',
-                  resolve: load(['xeditable','/scripts/controllers/xeditable.js?' + GLOBAL_URL_HASH + ''])
+                  resolve: load(['xeditable','/scripts/controllers/xeditable.js?' + GLOBAL_URL_HASH ])
                 })
               // chart
               .state('ui.chart', {
                 url: '/chart',
                 templateUrl: '/views/ui/chart/chart.html',
                 data : { title: 'Charts' },
-                resolve: load('/scripts/controllers/chart.js?' + GLOBAL_URL_HASH + '')
+                resolve: load('/scripts/controllers/chart.js?' + GLOBAL_URL_HASH )
               })
               // map routers
               .state('ui.map', {
@@ -1120,14 +1120,14 @@ angular.module('app')
                   templateUrl: '/views/ui/map/google.html',
                   data : { title: 'Gmap' },
                   controller: 'GoogleMapCtrl',
-                  resolve: load(['ui.map', '/scripts/controllers/load-google-maps.js?' + GLOBAL_URL_HASH + '', '/scripts/controllers/googlemap.js?' + GLOBAL_URL_HASH + ''], function(){ return loadGoogleMaps(); })
+                  resolve: load(['ui.map', '/scripts/controllers/load-google-maps.js?' + GLOBAL_URL_HASH , '/scripts/controllers/googlemap.js?' + GLOBAL_URL_HASH ], function(){ return loadGoogleMaps(); })
                 })
                 .state('ui.map.vector', {
                   url: '/vector',
                   templateUrl: '/views/ui/map/vector.html',
                   data : { title: 'Vector' },
                   controller: 'VectorMapCtrl',
-                  resolve: load('/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH + '')
+                  resolve: load('/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH )
                 })
 
             .state('page', {
@@ -1187,7 +1187,7 @@ angular.module('app')
                 url: '/s?q',
                 templateUrl: '/views/pages/search.html',
                 data : { titleTranslate: 'titles.SEARCH', title: 'Busca', folded: true },
-                resolve: load(['/scripts/controllers/app/search.js?' + GLOBAL_URL_HASH + '', 'wu.masonry']),
+                resolve: load(['/scripts/controllers/app/search.js?' + GLOBAL_URL_HASH , 'wu.masonry']),
                 controller: 'SearchCtrl'
               })
         .state('app.bookmarks', {
@@ -1212,7 +1212,7 @@ angular.module('app')
                 }
                 return deferred.promise;
               },
-              deps:load(['wu.masonry', '/scripts/controllers/app/bookmarks.js?' + GLOBAL_URL_HASH + '']).deps
+              deps:load(['wu.masonry', '/scripts/controllers/app/bookmarks.js?' + GLOBAL_URL_HASH ]).deps
             }
           })
         .state('app.userprofile', {
@@ -1234,7 +1234,7 @@ angular.module('app')
                 });
                 return deferred.promise;
               },
-              deps:load(['wu.masonry', '/scripts/controllers/app/profile.js?' + GLOBAL_URL_HASH + '']).deps
+              deps:load(['wu.masonry', '/scripts/controllers/app/profile.js?' + GLOBAL_URL_HASH ]).deps
             }
           })
           .state('access', {
@@ -1250,32 +1250,32 @@ angular.module('app')
                 // }
                 return deferred.promise;
               },
-              deps:load( ['angularFileUpload', '/scripts/services/trix.js?' + GLOBAL_URL_HASH + '', '/libs/theming/tinycolor/tinycolor.js?' + GLOBAL_URL_HASH + '', 'mdPickers', 'afkl.lazyImage', 'perfect_scrollbar', 'angularMoment'] ).deps
+              deps:load( ['angularFileUpload', '/scripts/services/trix.js?' + GLOBAL_URL_HASH , '/libs/theming/tinycolor/tinycolor.js?' + GLOBAL_URL_HASH , 'mdPickers', 'afkl.lazyImage', 'perfect_scrollbar', 'angularMoment'] ).deps
             },
             controller: 'AppDataCtrl'
           })
           .state('access.signin', {
             url: '/signin?next',
             templateUrl: '/views/pages/signin.html',
-            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH + '']),
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
             controller: 'AppSigninCtrl'
           })
           .state('access.signup', {
             url: '/signup',
             templateUrl: '/views/pages/signup.html',
-            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH + '']),
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
             controller: 'AppSignupCtrl'
           })
           .state('access.forgot-password', {
             url: '/forgot-password',
             templateUrl: '/views/pages/forgot-password.html',
-            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH + '']),
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
             controller: 'AppForgotCtrl'
           })
           .state('access.createnetwork', {
             url: '/createnetwork',
             templateUrl: '/views/pages/create-network.html',
-            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH + '']),
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
             controller: 'AppNetworkCtrl'
           })
           .state('access.lockme', {
@@ -1311,7 +1311,7 @@ angular.module('app')
                 resolve: {
                   post: postDep,
                   station: stationDep,
-                  deps:load(['wu.masonry', '/scripts/controllers/app/read.js?' + GLOBAL_URL_HASH + '', '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css?' + GLOBAL_URL_HASH+  '']).deps
+                  deps:load(['wu.masonry', '/scripts/controllers/app/read.js?' + GLOBAL_URL_HASH , '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css?' + GLOBAL_URL_HASH]).deps
                 }
               })
           }
