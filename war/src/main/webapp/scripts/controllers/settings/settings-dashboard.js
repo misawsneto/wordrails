@@ -36,9 +36,7 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	$scope.loadingPublished = true;
 	trix.searchPosts(null, null, null, 'PUBLISHED', null, null, null, null, 0, 11, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(posts){
 	    if(posts && posts.length > 0){
-	      posts.reverse();
 	      $scope.publications = posts;
-
 	    }
 
 	    $scope.loadingPublished = false;
@@ -49,7 +47,6 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	  $scope.loadingScheduled = true;
 	trix.searchPosts(null, null, null, 'SCHEDULED', null, null, null, null, 0, 5, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(posts){
 	    if(posts && posts.length > 0){
-	      posts.reverse();
 	      $scope.scheduled = posts;
 	    }
 
@@ -61,7 +58,6 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	  $scope.loadingDrafts = true;
 	trix.searchPosts(null, null, null, 'DRAFT', null, null, null, null, 0, 5, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(posts){
 	    if(posts && posts.length > 0){
-	      posts.reverse();
 	      $scope.drafts = posts;
 	    }
 

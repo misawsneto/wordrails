@@ -34,7 +34,6 @@ app.controller('ProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$stat
 
   var handleSuccess = function(posts){
     if(posts && posts.length > 0){
-      posts.reverse();
 
         if(!$scope.publications)
           $scope.publications = []

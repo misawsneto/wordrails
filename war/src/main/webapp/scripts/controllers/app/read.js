@@ -10,7 +10,6 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
   var findRelated = function(size, categories){
     trix.searchPosts(null, null, null, 'published', null, null, categories, null, 0, size, '-date', ['snippet', 'tags', 'categories', 'imageHash', 'state'], false).success(function(posts,a,b,c){
         if(posts && posts.length > 0){
-          posts.reverse();
           if(!$scope.related)
             $scope.related = []
 

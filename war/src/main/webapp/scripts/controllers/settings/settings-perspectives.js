@@ -347,8 +347,6 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
   var handleSuccess = function(posts, a,b){
     if(posts && posts.length > 0){
-      posts.reverse();
-
         if(!$scope.postSearchResults)
           $scope.postSearchResults = []
 
