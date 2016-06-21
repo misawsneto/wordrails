@@ -1,4 +1,4 @@
-<div ng-if="app.hasImage(post) && post.imageLandscape" preload-bg-image="{{app.getImageLink(post, 'large')}}" class="pos-rlt display-table animated5x fadeIn w-full bg-cover m-b-xl md-whiteframe-z2 h-400 text-center" style="margin-top: -32px; background-position: 50% 50%;">
+<div ng-if="app.hasImage(post) && post.imageLandscape" preload-bg-image="{{app.getImageLink(post, 'large')}}" class="pos-rlt display-table animated5x fadeIn w-full bg-cover md-whiteframe-z2 h-500 text-center" ng-class="{'h-500': $mdMedia('gt-sm'),'h-400': !$mdMedia('gt-sm')}" style="margin-top: -16px; background-position: 50% 50%;">
   <md-button ng-if="post.author.id == app.person.id" ng-href="{{'/settings/post?id=' + post.id}}" target="_blank" aria-label="menu" class="md-fab md-accent pos-abt right-0 bottom-0 m-r m-b">
     <i class="mdi2-pencil i-24"></i>
   </md-button>
@@ -10,7 +10,7 @@
           <md-button ng-if="post.author.id == app.person.id && !app.hasImage(post)" ng-href="{{'/settings/post?id=' + post.id}}" target="_blank" aria-label="menu" class="md-fab md-accent pos-abt right-0 top-0 m-r-md m-t">
             <i class="mdi2-pencil i-24"></i>
           </md-button>
-          <div class="news-single z-depth-1 card">
+          <div class="news-single z-depth-1 card" ng-class="{'m-t-n-80': app.hasImage(post) && post.imageLandscape}">
               <!-- News Single Image -->
               <div alt="news Image" ng-if="app.hasImage(post) && !post.imageLandscape" preload-bg-image="{{app.getImageLink(post, 'large')}}" class="responsive-img h-400 bg-cover pos-rlt">
                 <md-button ng-if="post.author.id == app.person.id" ng-href="{{'/settings/post?id=' + post.id}}" target="_blank" aria-label="menu" class="md-fab md-accent pos-abt right-0 bottom-0 m-r" style="margin-bottom: -26px;">
@@ -82,7 +82,7 @@
                         <div class="p-v pos-rlt">
                           <div class="display-t-c inline p-h-xs">
                             <div ng-style="app.getUserImage(comment.author, 'small', 'PROFILE_PICTURE', true)" style="height: 50px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(comment.author)}">
-                              <i ng-if="!app.hasProfilePicture(comment.author)" style="line-height: 36px;" class="mdi2-account i-20"></i>
+                              <i ng-if="!app.hasProfilePicture(comment.author)" style="line-height: 46px;" class="mdi2-account i-32"></i>
                             </div>
                           </div>
                           <div class="p-l-sm display-t-c v-m inline w-full text-md">

@@ -50840,14 +50840,11 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 })(window, window.angular);
 
 /**
- * @license AngularJS v1.5.7
- * (c) 2010-2016 Google, Inc. http://angularjs.org
+ * @license AngularJS v1.2.29
+ * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
-(function(window, angular) {'use strict';
-
-/* global ngTouchClickDirectiveFactory: false,
- */
+(function(window, angular, undefined) {'use strict';
 
 /**
  * @ngdoc module
@@ -50871,108 +50868,6 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 /* global -ngTouch */
 var ngTouch = angular.module('ngTouch', []);
 
-ngTouch.provider('$touch', $TouchProvider);
-
-function nodeName_(element) {
-  return angular.lowercase(element.nodeName || (element[0] && element[0].nodeName));
-}
-
-/**
- * @ngdoc provider
- * @name $touchProvider
- *
- * @description
- * The `$touchProvider` allows enabling / disabling {@link ngTouch.ngClick ngTouch's ngClick directive}.
- */
-$TouchProvider.$inject = ['$provide', '$compileProvider'];
-function $TouchProvider($provide, $compileProvider) {
-
-  /**
-   * @ngdoc method
-   * @name  $touchProvider#ngClickOverrideEnabled
-   *
-   * @param {boolean=} enabled update the ngClickOverrideEnabled state if provided, otherwise just return the
-   * current ngClickOverrideEnabled state
-   * @returns {*} current value if used as getter or itself (chaining) if used as setter
-   *
-   * @kind function
-   *
-   * @description
-   * Call this method to enable/disable {@link ngTouch.ngClick ngTouch's ngClick directive}. If enabled,
-   * the default ngClick directive will be replaced by a version that eliminates the 300ms delay for
-   * click events on browser for touch-devices.
-   *
-   * The default is `false`.
-   *
-   */
-  var ngClickOverrideEnabled = false;
-  var ngClickDirectiveAdded = false;
-  this.ngClickOverrideEnabled = function(enabled) {
-    if (angular.isDefined(enabled)) {
-
-      if (enabled && !ngClickDirectiveAdded) {
-        ngClickDirectiveAdded = true;
-
-        // Use this to identify the correct directive in the delegate
-        ngTouchClickDirectiveFactory.$$moduleName = 'ngTouch';
-        $compileProvider.directive('ngClick', ngTouchClickDirectiveFactory);
-
-        $provide.decorator('ngClickDirective', ['$delegate', function($delegate) {
-          if (ngClickOverrideEnabled) {
-            // drop the default ngClick directive
-            $delegate.shift();
-          } else {
-            // drop the ngTouch ngClick directive if the override has been re-disabled (because
-            // we cannot de-register added directives)
-            var i = $delegate.length - 1;
-            while (i >= 0) {
-              if ($delegate[i].$$moduleName === 'ngTouch') {
-                $delegate.splice(i, 1);
-                break;
-              }
-              i--;
-            }
-          }
-
-          return $delegate;
-        }]);
-      }
-
-      ngClickOverrideEnabled = enabled;
-      return this;
-    }
-
-    return ngClickOverrideEnabled;
-  };
-
-  /**
-  * @ngdoc service
-  * @name $touch
-  * @kind object
-  *
-  * @description
-  * Provides the {@link ngTouch.$touch#ngClickOverrideEnabled `ngClickOverrideEnabled`} method.
-  *
-  */
-  this.$get = function() {
-    return {
-      /**
-       * @ngdoc method
-       * @name  $touch#ngClickOverrideEnabled
-       *
-       * @returns {*} current value of `ngClickOverrideEnabled` set in the {@link ngTouch.$touchProvider $touchProvider},
-       * i.e. if {@link ngTouch.ngClick ngTouch's ngClick} directive is enabled.
-       *
-       * @kind function
-       */
-      ngClickOverrideEnabled: function() {
-        return ngClickOverrideEnabled;
-      }
-    };
-  };
-
-}
-
 /* global ngTouch: false */
 
     /**
@@ -50985,7 +50880,8 @@ function $TouchProvider($provide, $compileProvider) {
      *
      * Requires the {@link ngTouch `ngTouch`} module to be installed.
      *
-     * `$swipe` is used by the `ngSwipeLeft` and `ngSwipeRight` directives in `ngTouch`.
+     * `$swipe` is used by the `ngSwipeLeft` and `ngSwipeRight` directives in `ngTouch`, and by
+     * `ngCarousel` in a separate component.
      *
      * # Usage
      * The `$swipe` service is an object with a single method: `bind`. `bind` takes an element
@@ -50997,40 +50893,17 @@ ngTouch.factory('$swipe', [function() {
   // The total distance in any direction before we make the call on swipe vs. scroll.
   var MOVE_BUFFER_RADIUS = 10;
 
-  var POINTER_EVENTS = {
-    'mouse': {
-      start: 'mousedown',
-      move: 'mousemove',
-      end: 'mouseup'
-    },
-    'touch': {
-      start: 'touchstart',
-      move: 'touchmove',
-      end: 'touchend',
-      cancel: 'touchcancel'
-    }
-  };
-
   function getCoordinates(event) {
-    var originalEvent = event.originalEvent || event;
-    var touches = originalEvent.touches && originalEvent.touches.length ? originalEvent.touches : [originalEvent];
-    var e = (originalEvent.changedTouches && originalEvent.changedTouches[0]) || touches[0];
+    var touches = event.touches && event.touches.length ? event.touches : [event];
+    var e = (event.changedTouches && event.changedTouches[0]) ||
+        (event.originalEvent && event.originalEvent.changedTouches &&
+            event.originalEvent.changedTouches[0]) ||
+        touches[0].originalEvent || touches[0];
 
     return {
       x: e.clientX,
       y: e.clientY
     };
-  }
-
-  function getEvents(pointerTypes, eventType) {
-    var res = [];
-    angular.forEach(pointerTypes, function(pointerType) {
-      var eventName = POINTER_EVENTS[pointerType][eventType];
-      if (eventName) {
-        res.push(eventName);
-      }
-    });
-    return res.join(' ');
   }
 
   return {
@@ -51041,13 +50914,9 @@ ngTouch.factory('$swipe', [function() {
      * @description
      * The main method of `$swipe`. It takes an element to be watched for swipe motions, and an
      * object containing event handlers.
-     * The pointer types that should be used can be specified via the optional
-     * third argument, which is an array of strings `'mouse'` and `'touch'`. By default,
-     * `$swipe` will listen for `mouse` and `touch` events.
      *
      * The four events are `start`, `move`, `end`, and `cancel`. `start`, `move`, and `end`
-     * receive as a parameter a coordinates object of the form `{ x: 150, y: 310 }` and the raw
-     * `event`. `cancel` receives the raw `event` as its single parameter.
+     * receive as a parameter a coordinates object of the form `{ x: 150, y: 310 }`.
      *
      * `start` is called on either `mousedown` or `touchstart`. After this event, `$swipe` is
      * watching for `touchmove` or `mousemove` events. These events are ignored until the total
@@ -51067,7 +50936,7 @@ ngTouch.factory('$swipe', [function() {
      * as described above.
      *
      */
-    bind: function(element, eventHandlers, pointerTypes) {
+    bind: function(element, eventHandlers) {
       // Absolute total movement, used to control swipe vs. scroll.
       var totalX, totalY;
       // Coordinates of the start position.
@@ -51077,8 +50946,7 @@ ngTouch.factory('$swipe', [function() {
       // Whether a swipe is active.
       var active = false;
 
-      pointerTypes = pointerTypes || ['mouse', 'touch'];
-      element.on(getEvents(pointerTypes, 'start'), function(event) {
+      element.on('touchstart mousedown', function(event) {
         startCoords = getCoordinates(event);
         active = true;
         totalX = 0;
@@ -51086,15 +50954,13 @@ ngTouch.factory('$swipe', [function() {
         lastPos = startCoords;
         eventHandlers['start'] && eventHandlers['start'](startCoords, event);
       });
-      var events = getEvents(pointerTypes, 'cancel');
-      if (events) {
-        element.on(events, function(event) {
-          active = false;
-          eventHandlers['cancel'] && eventHandlers['cancel'](event);
-        });
-      }
 
-      element.on(getEvents(pointerTypes, 'move'), function(event) {
+      element.on('touchcancel', function(event) {
+        active = false;
+        eventHandlers['cancel'] && eventHandlers['cancel'](event);
+      });
+
+      element.on('touchmove mousemove', function(event) {
         if (!active) return;
 
         // Android will send a touchcancel if it thinks we're starting to scroll.
@@ -51128,7 +50994,7 @@ ngTouch.factory('$swipe', [function() {
         }
       });
 
-      element.on(getEvents(pointerTypes, 'end'), function(event) {
+      element.on('touchend mouseup', function(event) {
         if (!active) return;
         active = false;
         eventHandlers['end'] && eventHandlers['end'](getCoordinates(event), event);
@@ -51137,24 +51003,13 @@ ngTouch.factory('$swipe', [function() {
   };
 }]);
 
-/* global ngTouch: false,
-  nodeName_: false
-*/
+/* global ngTouch: false */
 
 /**
  * @ngdoc directive
  * @name ngClick
- * @deprecated
  *
  * @description
- * <div class="alert alert-danger">
- * **DEPRECATION NOTICE**: Beginning with Angular 1.5, this directive is deprecated and by default **disabled**.
- * The directive will receive no further support and might be removed from future releases.
- * If you need the directive, you can enable it with the {@link ngTouch.$touchProvider $touchProvider#ngClickOverrideEnabled}
- * function. We also recommend that you migrate to [FastClick](https://github.com/ftlabs/fastclick).
- * To learn more about the 300ms delay, this [Telerik article](http://developer.telerik.com/featured/300-ms-click-delay-ios-8/)
- * gives a good overview.
- * </div>
  * A more powerful replacement for the default ngClick designed to be used on touchscreen
  * devices. Most mobile browsers wait about 300ms after a tap-and-release before sending
  * the click event. This version handles them immediately, and then prevents the
@@ -51186,7 +51041,15 @@ ngTouch.factory('$swipe', [function() {
     </example>
  */
 
-var ngTouchClickDirectiveFactory = ['$parse', '$timeout', '$rootElement',
+ngTouch.config(['$provide', function($provide) {
+  $provide.decorator('ngClickDirective', ['$delegate', function($delegate) {
+    // drop the default ngClick directive
+    $delegate.shift();
+    return $delegate;
+  }]);
+}]);
+
+ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
     function($parse, $timeout, $rootElement) {
   var TAP_DURATION = 750; // Shorter than 750ms is a tap, longer is a taphold or drag.
   var MOVE_TOLERANCE = 12; // 12px seems to work in most mobile browsers.
@@ -51206,7 +51069,7 @@ var ngTouchClickDirectiveFactory = ['$parse', '$timeout', '$rootElement',
   // double-tapping, and then fire a click event.
   //
   // This delay sucks and makes mobile apps feel unresponsive.
-  // So we detect touchstart, touchcancel and touchend ourselves and determine when
+  // So we detect touchstart, touchmove, touchcancel and touchend ourselves and determine when
   // the user has tapped on something.
   //
   // What happens when the browser then generates a click event?
@@ -51218,7 +51081,7 @@ var ngTouchClickDirectiveFactory = ['$parse', '$timeout', '$rootElement',
   // So the sequence for a tap is:
   // - global touchstart: Sets an "allowable region" at the point touched.
   // - element's touchstart: Starts a touch
-  // (- touchcancel ends the touch, no click follows)
+  // (- touchmove or touchcancel ends the touch, no click follows)
   // - element's touchend: Determines if the tap is valid (didn't move too far away, didn't hold
   //   too long) and fires the user's tap handler. The touchend also calls preventGhostClick().
   // - preventGhostClick() removes the allowable region the global touchstart created.
@@ -51248,7 +51111,7 @@ var ngTouchClickDirectiveFactory = ['$parse', '$timeout', '$rootElement',
   // Splices out the allowable region from the list after it has been used.
   function checkAllowableRegions(touchCoordinates, x, y) {
     for (var i = 0; i < touchCoordinates.length; i += 2) {
-      if (hit(touchCoordinates[i], touchCoordinates[i + 1], x, y)) {
+      if (hit(touchCoordinates[i], touchCoordinates[i+1], x, y)) {
         touchCoordinates.splice(i, i + 2);
         return true; // allowable region
       }
@@ -51282,7 +51145,7 @@ var ngTouchClickDirectiveFactory = ['$parse', '$timeout', '$rootElement',
       lastLabelClickCoordinates = null;
     }
     // remember label click coordinates to prevent click busting of trigger click event on input
-    if (nodeName_(event.target) === 'label') {
+    if (event.target.tagName.toLowerCase() === 'label') {
       lastLabelClickCoordinates = [x, y];
     }
 
@@ -51298,7 +51161,7 @@ var ngTouchClickDirectiveFactory = ['$parse', '$timeout', '$rootElement',
     event.preventDefault();
 
     // Blur focused form elements
-    event.target && event.target.blur && event.target.blur();
+    event.target && event.target.blur();
   }
 
 
@@ -51313,7 +51176,7 @@ var ngTouchClickDirectiveFactory = ['$parse', '$timeout', '$rootElement',
     $timeout(function() {
       // Remove the allowable region.
       for (var i = 0; i < touchCoordinates.length; i += 2) {
-        if (touchCoordinates[i] == x && touchCoordinates[i + 1] == y) {
+        if (touchCoordinates[i] == x && touchCoordinates[i+1] == y) {
           touchCoordinates.splice(i, i + 2);
           return;
         }
@@ -51353,7 +51216,7 @@ var ngTouchClickDirectiveFactory = ['$parse', '$timeout', '$rootElement',
       tapping = true;
       tapElement = event.target ? event.target : event.srcElement; // IE uses srcElement.
       // Hack for Safari, which can target text nodes instead of containers.
-      if (tapElement.nodeType == 3) {
+      if(tapElement.nodeType == 3) {
         tapElement = tapElement.parentNode;
       }
 
@@ -51361,12 +51224,14 @@ var ngTouchClickDirectiveFactory = ['$parse', '$timeout', '$rootElement',
 
       startTime = Date.now();
 
-      // Use jQuery originalEvent
-      var originalEvent = event.originalEvent || event;
-      var touches = originalEvent.touches && originalEvent.touches.length ? originalEvent.touches : [originalEvent];
-      var e = touches[0];
+      var touches = event.touches && event.touches.length ? event.touches : [event];
+      var e = touches[0].originalEvent || touches[0];
       touchStartX = e.clientX;
       touchStartY = e.clientY;
+    });
+
+    element.on('touchmove', function(event) {
+      resetState();
     });
 
     element.on('touchcancel', function(event) {
@@ -51376,15 +51241,12 @@ var ngTouchClickDirectiveFactory = ['$parse', '$timeout', '$rootElement',
     element.on('touchend', function(event) {
       var diff = Date.now() - startTime;
 
-      // Use jQuery originalEvent
-      var originalEvent = event.originalEvent || event;
-      var touches = (originalEvent.changedTouches && originalEvent.changedTouches.length) ?
-          originalEvent.changedTouches :
-          ((originalEvent.touches && originalEvent.touches.length) ? originalEvent.touches : [originalEvent]);
-      var e = touches[0];
+      var touches = (event.changedTouches && event.changedTouches.length) ? event.changedTouches :
+          ((event.touches && event.touches.length) ? event.touches : [event]);
+      var e = touches[0].originalEvent || touches[0];
       var x = e.clientX;
       var y = e.clientY;
-      var dist = Math.sqrt(Math.pow(x - touchStartX, 2) + Math.pow(y - touchStartY, 2));
+      var dist = Math.sqrt( Math.pow(x - touchStartX, 2) + Math.pow(y - touchStartY, 2) );
 
       if (tapping && diff < TAP_DURATION && dist < MOVE_TOLERANCE) {
         // Call preventGhostClick so the clickbuster will catch the corresponding click.
@@ -51430,7 +51292,7 @@ var ngTouchClickDirectiveFactory = ['$parse', '$timeout', '$rootElement',
     });
 
   };
-}];
+}]);
 
 /* global ngTouch: false */
 
@@ -51443,9 +51305,6 @@ var ngTouchClickDirectiveFactory = ['$parse', '$timeout', '$rootElement',
  * A leftward swipe is a quick, right-to-left slide of the finger.
  * Though ngSwipeLeft is designed for touch-based devices, it will work with a mouse click and drag
  * too.
- *
- * To disable the mouse click and drag functionality, add `ng-swipe-disable-mouse` to
- * the `ng-swipe-left` or `ng-swipe-right` DOM Element.
  *
  * Requires the {@link ngTouch `ngTouch`} module to be installed.
  *
@@ -51536,10 +51395,6 @@ function makeSwipeDirective(directiveName, direction, eventName) {
             deltaY / deltaX < MAX_VERTICAL_RATIO;
       }
 
-      var pointerTypes = ['touch'];
-      if (!angular.isDefined(attr['ngSwipeDisableMouse'])) {
-        pointerTypes.push('mouse');
-      }
       $swipe.bind(element, {
         'start': function(coords, event) {
           startCoords = coords;
@@ -51556,7 +51411,7 @@ function makeSwipeDirective(directiveName, direction, eventName) {
             });
           }
         }
-      }, pointerTypes);
+      });
     };
   }]);
 }
@@ -103511,7 +103366,7 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
       stylesheet.insertRule(".md-" + cssname + "-" + name + ".background { background-color: " + color + "; " + contrast + " }", index ); index++;
 
       if(cssname === 'primary' && name === 'default'){
-        stylesheet.insertRule(".fr-toolbar { border-color: " + color + "}", index); index++;
+        stylesheet.insertRule(".fr-toolbar { border-color: " + color + "!important}", index); index++;
         stylesheet.insertRule(".nav-lines > li.active:after{border-bottom-color: " + color + "}", index); index++;
         stylesheet.insertRule(".md-primary-default .nav-lines > li.active:after{border-bottom-color: " + contrastColor + "}", index); index++;
         stylesheet.insertRule(".sl-item {border-color: "+ color +"}", index); index++;
@@ -103763,201 +103618,201 @@ angular.module('app')
       {
           name: 'dndLists',
           files: [
-            '/libs/angular/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js'
+            '/libs/angular/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'angular-carousel',
           files: [
-              '/libs/angular/angular-carousel/dist/angular-carousel.min.css',
-              '/libs/angular/angular-carousel/dist/angular-carousel.min.js'
+              '/libs/angular/angular-carousel/dist/angular-carousel.min.css?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/angular-carousel/dist/angular-carousel.min.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'duScroll',
           module: true,
           files: [
-              '/libs/angular/angular-scroll/angular-scroll.min.js'
+              '/libs/angular/angular-scroll/angular-scroll.min.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'ui.select',
           module: true,
           files: [
-              '/libs/angular/angular-ui-select/dist/select.min.js',
-              '/libs/angular/angular-ui-select/dist/select.min.css'
+              '/libs/angular/angular-ui-select/dist/select.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/angular-ui-select/dist/select.min.css?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'angular-sly',
           module: true,
           files: [
-              '/libs/angular/sly/dis/sly.min.js',
-              '/libs/angular/angular-sly/dis/angular-sly.min.js'
+              '/libs/angular/sly/dis/sly.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/angular-sly/dis/angular-sly.min.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'digitalfondue.dftabmenu',
           module: true,
           files: [
-            '/libs/angular/df-tab-menu/build/df-tab-menu.min.js',
-            '/libs/angular/df-tab-menu/css/df-tab-menu.css'
+            '/libs/angular/df-tab-menu/build/df-tab-menu.min.js?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/df-tab-menu/css/df-tab-menu.css?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: '720kb.socialshare',
           module: true,
           files: [
-            '/libs/angular/angularjs-socialshare/dist/angular-socialshare.min.js',
+            '/libs/angular/angularjs-socialshare/dist/angular-socialshare.min.js?' + GLOBAL_URL_HASH + '',
           ]
       },
       {
           name: 'perfect_scrollbar',
           module: true,
           files: [
-            '/libs/angular/perfect-scrollbar/js/perfect-scrollbar.min.js',
-            '/libs/angular/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js',
-            '/libs/angular/perfect-scrollbar/css/perfect-scrollbar.min.css',
-            '/libs/angular/angular-perfect-scrollbar/src/angular-perfect-scrollbar.js',
+            '/libs/angular/perfect-scrollbar/js/perfect-scrollbar.min.js?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/perfect-scrollbar/css/perfect-scrollbar.min.css?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/angular-perfect-scrollbar/src/angular-perfect-scrollbar.js?' + GLOBAL_URL_HASH + '',
           ]
       },
       {
         name: 'wavesurfer.angular',
         module: true,
         files: [
-            '/libs/angular/underscore/underscore-min.js',
-            '/libs/angular/wavesurfer.js/dist/wavesurfer.min.js',
-            '/libs/angular/wavesurfer-angular/dist/js/wavesurfer-angular.min.js',
-            '/libs/angular/wavesurfer-angular/dist/css/wavesurfer.angular.min.css'
+            '/libs/angular/underscore/underscore-min.js?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/wavesurfer.js?' + GLOBAL_URL_HASH + '/dist/wavesurfer.min.js?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/wavesurfer-angular/dist/js/wavesurfer-angular.min.js?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/wavesurfer-angular/dist/css/wavesurfer.angular.min.css?' + GLOBAL_URL_HASH + ''
         ]
       },
       {
         name: 'angularMoment',
         module: true,
         files:[
-          '/libs/angular/angular-moment/angular-moment.min.js',
+          '/libs/angular/angular-moment/angular-moment.min.js?' + GLOBAL_URL_HASH + '',
         ]
       },
       {
         name: 'ui.materialize',
         module: true,
         files:[
-          '/libs/angular/materialize/dist/js/materialize.min.js',
-          '/libs/angular/angular-materialize/src/angular-materialize.js'
+          '/libs/angular/materialize/dist/js/materialize.min.js?' + GLOBAL_URL_HASH + '',
+          '/libs/angular/angular-materialize/src/angular-materialize.js?' + GLOBAL_URL_HASH + ''
         ]
       },
       {
         name:'com.2fdevs.videogular',
         module: true,
         files: [
-            '/scripts/videogular.all.js',
-            '/libs/angular/videogular-themes-default/videogular.min.css'
+            '/scripts/videogular.all.js?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/videogular-themes-default/videogular.min.css?' + GLOBAL_URL_HASH + ''
         ]
       },
       {
         name:'com.2fdevs.videogular.plugins.controls',
         module: true,
         files: [
-            '/scripts/videogular.all.js'
+            '/scripts/videogular.all.js?' + GLOBAL_URL_HASH + ''
         ]
       },
       {
         name:'com.2fdevs.videogular.plugins.overlayplay',
         module: true,
         files: [
-            '/scripts/videogular.all.js'
+            '/scripts/videogular.all.js?' + GLOBAL_URL_HASH + ''
         ]
       },
       {
         name:'com.2fdevs.videogular.plugins.poster',
         module: true,
         files: [
-            '/scripts/videogular.all.js'
+            '/scripts/videogular.all.js?' + GLOBAL_URL_HASH + ''
         ]
       },
       {
           name: 'videosharing-embed',
           module: true,
           files: [
-              '/libs/angular/ng-videosharing-embed/build/ng-videosharing-embed.min.js'
+              '/libs/angular/ng-videosharing-embed/build/ng-videosharing-embed.min.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'angularAudioRecorder',
           module: true,
           files: [
-              '/libs/angular/angularAudioRecorder/dist/angular-audio-recorder.min.js',
-              '/libs/angular/wavesurfer.js/dist/wavesurfer.min.js'
+              '/libs/angular/angularAudioRecorder/dist/angular-audio-recorder.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/wavesurfer.js?' + GLOBAL_URL_HASH + '/dist/wavesurfer.min.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
         name: 'recorderServiceProvider',
         module: true,
           files: [
-              '/libs/angular/angularAudioRecorder/dist/angular-audio-recorder.min.js',
+              '/libs/angular/angularAudioRecorder/dist/angular-audio-recorder.min.js?' + GLOBAL_URL_HASH + '',
           ]
       },
       {
           name: 'afkl.lazyImage',
           module: true,
           files: [
-              '/libs/angular/ng-directive-lazy-image/release/lazy-image.min.js',
-              '/libs/angular/ng-directive-lazy-image/release/lazy-image-style.min.css'
+              '/libs/angular/ng-directive-lazy-image/release/lazy-image.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/ng-directive-lazy-image/release/lazy-image-style.min.css?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'infinite-scroll',
           module: true,
           files: [
-              '/libs/angular/ngInfiniteScroll/build/ng-infinite-scroll.min.js'
+              '/libs/angular/ngInfiniteScroll/build/ng-infinite-scroll.min.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
         name: 'leaflet-directive',
         module: true,
           files: [
-            '/libs/angular/angular-leaflet-directive/dist/angular-leaflet-directive.min.js',
-            '/styles/leafletcss.all.css',
-            '/scripts/leafletjs.all.js',
+            '/libs/angular/angular-leaflet-directive/dist/angular-leaflet-directive.min.js?' + GLOBAL_URL_HASH + '',
+            '/styles/leafletcss.all.css?' + GLOBAL_URL_HASH + '',
+            '/scripts/leafletjs.all.js?' + GLOBAL_URL_HASH + '',
           ]
       },
       {
         name: 'ui.ace',
         module: true,
           files: [
-            '/libs/angular/ace-builds/src-min-noconflict/ace.js',
-            '/libs/angular/angular-ui-ace/ui-ace.min.js'
+            '/libs/angular/ace-builds/src-min-noconflict/ace.js?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/angular-ui-ace/ui-ace.min.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
         name: 'wu.masonry',
         module: true,
           files: [
-            '/scripts/masonry.all.js'
+            '/scripts/masonry.all.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
         name: 'ngJcrop',
         module: true,
           files: [
-            '/libs/jquery/jcrop/css/jquery.Jcrop.min.css',
-            '/libs/jquery/jcrop/js/jquery.Jcrop.min.js',
-            '/libs/angular/ng-jcrop/ng-jcrop.js'
+            '/libs/jquery/jcrop/css/jquery.Jcrop.min.css?' + GLOBAL_URL_HASH + '',
+            '/libs/jquery/jcrop/js/jquery.Jcrop.min.js?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/ng-jcrop/ng-jcrop.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'mdDateTime',
           module: true,
           files: [
-            '/libs/angular/md-date-time/dist/md-date-time.js',
-            '/libs/angular/md-date-time/dist/md-date-time.css'
+            '/libs/angular/md-date-time/dist/md-date-time.js?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/md-date-time/dist/md-date-time.css?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'monospaced.elastic',
           module: true,
           files: [
-            '/libs/angular/angular-elastic/elastic.js'
+            '/libs/angular/angular-elastic/elastic.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
@@ -103965,191 +103820,191 @@ angular.module('app')
           module: true,
           files: [
             // froala style
-            '/styles/froala.all.css',
-            '/scripts/froala.all.js',
-            '/libs/angular/angular-froala/src/angular-froala.js',
-            '/libs/angular/angular-froala/src/froala-sanitize.js'
+            '/styles/froala.all.css?' + GLOBAL_URL_HASH + '',
+            '/scripts/froala.all.js?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/angular-froala/src/angular-froala.js?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/angular-froala/src/froala-sanitize.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'ngMaterial.components',
           module: true,
           files: [
-            '/libs/angular/angular-material-components/dist/angular-material-components.min.js',
-            '/libs/angular/angular-material-components/dist/angular-material-components.min.css'
+            '/libs/angular/angular-material-components/dist/angular-material-components.min.js?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/angular-material-components/dist/angular-material-components.min.css?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'ngMaterialDatePicker',
           module: true,
           files: [
-            '/libs/angular/angular-material-datetimepicker/css/material-datetimepicker.min.css',
-            '/libs/angular/angular-material-datetimepicker/js/angular-material-datetimepicker.min.js'
+            '/libs/angular/angular-material-datetimepicker/css/material-datetimepicker.min.css?' + GLOBAL_URL_HASH + '',
+            '/libs/angular/angular-material-datetimepicker/js/angular-material-datetimepicker.min.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'mdPickers',
           files: [
-              '/libs/angular/mdPickers/dist/mdPickers.min.css',
-              '/libs/angular/mdPickers/dist/mdPickers.min.js'
+              '/libs/angular/mdPickers/dist/mdPickers.min.css?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/mdPickers/dist/mdPickers.min.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'textAngular',
           module: true,
           files: [
-              '/libs/angular/textAngular/dist/textAngular-sanitize.min.js',
-              '/libs/angular/textAngular/dist/textAngular.min.js'
+              '/libs/angular/textAngular/dist/textAngular-sanitize.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/textAngular/dist/textAngular.min.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'vr.directives.slider',
           module: true,
           files: [
-              '/libs/angular/venturocket-angular-slider/build/angular-slider.min.js',
-              '/libs/angular/venturocket-angular-slider/angular-slider.css'
+              '/libs/angular/venturocket-angular-slider/build/angular-slider.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/venturocket-angular-slider/angular-slider.css?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'angularBootstrapNavTree',
           module: true,
           files: [
-              '/libs/angular/angular-bootstrap-nav-tree/dist/abn_tree_directive.js',
-              '/libs/angular/angular-bootstrap-nav-tree/dist/abn_tree.css'
+              '/libs/angular/angular-bootstrap-nav-tree/dist/abn_tree_directive.js?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/angular-bootstrap-nav-tree/dist/abn_tree.css?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'angularFileUpload',
           module: true,
           files: [
-              '/libs/angular/angular-file-upload/angular-file-upload.js'
+              '/libs/angular/angular-file-upload/angular-file-upload.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'ngImgCrop',
           module: true,
           files: [
-              '/libs/angular/ngImgCrop/compile/minified/ng-img-crop.js',
-              '/libs/angular/ngImgCrop/compile/minified/ng-img-crop.css'
+              '/libs/angular/ngImgCrop/compile/minified/ng-img-crop.js?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/ngImgCrop/compile/minified/ng-img-crop.css?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'smart-table',
           module: true,
           files: [
-              '/libs/angular/angular-smart-table/dist/smart-table.min.js'
+              '/libs/angular/angular-smart-table/dist/smart-table.min.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'ui.map',
           module: true,
           files: [
-              '/libs/angular/angular-ui-map/ui-map.js'
+              '/libs/angular/angular-ui-map/ui-map.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'ngGrid',
           module: true,
           files: [
-              '/libs/angular/ng-grid/build/ng-grid.min.js',
-              '/libs/angular/ng-grid/ng-grid.min.css',
-              '/libs/angular/ng-grid/ng-grid.bootstrap.css'
+              '/libs/angular/ng-grid/build/ng-grid.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/ng-grid/ng-grid.min.css?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/ng-grid/ng-grid.bootstrap.css?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'ui.grid',
           module: true,
           files: [
-              '/libs/angular/angular-ui-grid/ui-grid.min.js',
-              '/libs/angular/angular-ui-grid/ui-grid.min.css',
-              '/libs/angular/angular-ui-grid/ui-grid.bootstrap.css'
+              '/libs/angular/angular-ui-grid/ui-grid.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/angular-ui-grid/ui-grid.min.css?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/angular-ui-grid/ui-grid.bootstrap.css?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'xeditable',
           module: true,
           files: [
-              '/libs/angular/angular-xeditable/dist/js/xeditable.min.js',
-              '/libs/angular/angular-xeditable/dist/css/xeditable.css'
+              '/libs/angular/angular-xeditable/dist/js/xeditable.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/angular/angular-xeditable/dist/css/xeditable.css?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'smart-table',
           module: true,
           files: [
-              '/libs/angular/angular-smart-table/dist/smart-table.min.js'
+              '/libs/angular/angular-smart-table/dist/smart-table.min.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'pgwslider',
           module: false,
           files:[
-              '/libs/jquery/pgwslider/pgwslider.min.css',
-              '/libs/jquery/pgwslider/pgwslider.min.js'
+              '/libs/jquery/pgwslider/pgwslider.min.css?' + GLOBAL_URL_HASH + '',
+              '/libs/jquery/pgwslider/pgwslider.min.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'dataTable',
           module: false,
           files: [
-              '/libs/jquery/datatables/media/js/jquery.dataTables.min.js',
-              '/libs/jquery/plugins/integration/bootstrap/3/dataTables.bootstrap.js',
-              '/libs/jquery/plugins/integration/bootstrap/3/dataTables.bootstrap.css'
+              '/libs/jquery/datatables/media/js/jquery.dataTables.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/jquery/plugins/integration/bootstrap/3/dataTables.bootstrap.js?' + GLOBAL_URL_HASH + '',
+              '/libs/jquery/plugins/integration/bootstrap/3/dataTables.bootstrap.css?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'footable',
           module: false,
           files: [
-              '/libs/jquery/footable/dist/footable.all.min.js',
-              '/libs/jquery/footable/css/footable.core.css'
+              '/libs/jquery/footable/dist/footable.all.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/jquery/footable/css/footable.core.css?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'easyPieChart',
           module: false,
           files: [
-              '/libs/jquery/jquery.easy-pie-chart/dist/jquery.easypiechart.fill.js'
+              '/libs/jquery/jquery.easy-pie-chart/dist/jquery.easypiechart.fill.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'sparkline',
           module: false,
           files: [
-              '/libs/jquery/jquery.sparkline/dist/jquery.sparkline.retina.js'
+              '/libs/jquery/jquery.sparkline/dist/jquery.sparkline.retina.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'plot',
           module: false,
           files: [
-              '/libs/jquery/flot/jquery.flot.js',
-              '/libs/jquery/flot/jquery.flot.resize.js',
-              '/libs/jquery/flot/jquery.flot.pie.js',
-              '/libs/jquery/flot.tooltip/js/jquery.flot.tooltip.min.js',
-              '/libs/jquery/flot-spline/js/jquery.flot.spline.min.js',
-              '/libs/jquery/flot.orderbars/js/jquery.flot.orderBars.js'
+              '/libs/jquery/flot/jquery.flot.js?' + GLOBAL_URL_HASH + '',
+              '/libs/jquery/flot/jquery.flot.resize.js?' + GLOBAL_URL_HASH + '',
+              '/libs/jquery/flot/jquery.flot.pie.js?' + GLOBAL_URL_HASH + '',
+              '/libs/jquery/flot.tooltip/js/jquery.flot.tooltip.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/jquery/flot-spline/js/jquery.flot.spline.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/jquery/flot.orderbars/js/jquery.flot.orderBars.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'vectorMap',
           module: false,
           files: [
-              '/libs/jquery/bower-jvectormap-2/jquery-jvectormap-2.0.0.min.js',
-              '/libs/jquery/bower-jvectormap-2/jquery-jvectormap-2.0.0.css', 
-              '/libs/jquery/bower-jvectormap-2/jquery-jvectormap-world-mill-en.js',
-              '/libs/jquery/bower-jvectormap-2/jquery-jvectormap-us-aea-en.js'
+              '/libs/jquery/bower-jvectormap-2/jquery-jvectormap-2.0.0.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/jquery/bower-jvectormap-2/jquery-jvectormap-2.0.0.css?' + GLOBAL_URL_HASH + '', 
+              '/libs/jquery/bower-jvectormap-2/jquery-jvectormap-world-mill-en.js?' + GLOBAL_URL_HASH + '',
+              '/libs/jquery/bower-jvectormap-2/jquery-jvectormap-us-aea-en.js?' + GLOBAL_URL_HASH + ''
           ]
       },
       {
           name: 'angularSpectrumColorpicker',
           module: true,
           files: [
-              '/libs/theming/spectrum/spectrum.js',
-              '/libs/theming/spectrum/spectrum.css',
-              '/libs/theming/angular-spectrum-colorpicker/dist/angular-spectrum-colorpicker.min.js',
-              '/libs/theming/tinycolor/tinycolor.js',
-              '/libs/theming/angular-toArrayFilter/toArrayFilter.js'
+              '/libs/theming/spectrum/spectrum.js?' + GLOBAL_URL_HASH + '',
+              '/libs/theming/spectrum/spectrum.css?' + GLOBAL_URL_HASH + '',
+              '/libs/theming/angular-spectrum-colorpicker/dist/angular-spectrum-colorpicker.min.js?' + GLOBAL_URL_HASH + '',
+              '/libs/theming/tinycolor/tinycolor.js?' + GLOBAL_URL_HASH + '',
+              '/libs/theming/angular-toArrayFilter/toArrayFilter.js?' + GLOBAL_URL_HASH + ''
           ]
       }
     ]
@@ -104248,7 +104103,7 @@ angular.module('app')
                    }
                   return deferred.promise;
                 },
-                deps:load( ['/styles/home.css', '720kb.socialshare', 'infinite-scroll', 'angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize', 'perfect_scrollbar', 'monospaced.elastic'] ).deps
+                deps:load( ['/styles/home.css?' + GLOBAL_URL_HASH+  '', '720kb.socialshare', 'infinite-scroll', 'angularFileUpload', '/scripts/services/trix.js?' + GLOBAL_URL_HASH + '', '/libs/theming/tinycolor/tinycolor.js?' + GLOBAL_URL_HASH + '', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize', 'perfect_scrollbar', 'monospaced.elastic'] ).deps
               },
               url: '/settings',
               views: {
@@ -104271,7 +104126,7 @@ angular.module('app')
                 data : { titleTranslate: 'titles.POST', title: 'Publicação', folded: true },
                 resolve: load([
                   'com.2fdevs.videogular','com.2fdevs.videogular.plugins.controls','com.2fdevs.videogular.plugins.overlayplay','com.2fdevs.videogular.plugins.poster',
-                  /*'recorderServiceProvider', 'angularAudioRecorder',*/'videosharing-embed','/libs/angular/lifely-focuspoint/dist/focuspoint.css', 'leaflet-directive', 'ngJcrop', 'froala', 'monospaced.elastic', 'angularFileUpload', '/scripts/controllers/settings/settings-post.js', '/scripts/controllers/settings/settings-post-geolocation.js']),
+                  /*'recorderServiceProvider', 'angularAudioRecorder',*/'videosharing-embed','/libs/angular/lifely-focuspoint/dist/focuspoint.css?' + GLOBAL_URL_HASH+  '', 'leaflet-directive', 'ngJcrop', 'froala', 'monospaced.elastic', 'angularFileUpload', '/scripts/controllers/settings/settings-post.js', '/scripts/controllers/settings/settings-post-geolocation.js?' + GLOBAL_URL_HASH + '']),
                 controller: 'SettingsPostCtrl'
               })
 
@@ -104296,7 +104151,7 @@ angular.module('app')
                     deferred.resolve(null);
                     return deferred.promise;
                   },
-                  deps:load(['/scripts/controllers/app/read.js', '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css']).deps
+                  deps:load(['/scripts/controllers/app/read.js?' + GLOBAL_URL_HASH + '', '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css?' + GLOBAL_URL_HASH+  '']).deps
                 },
                 controller: 'ReadCtrl'
               })
@@ -104305,7 +104160,7 @@ angular.module('app')
                 url: '/stations',
                 templateUrl: '/views/settings/settings-stations.html',
                 data : { titleTranslate: 'titles.STATIONS', title: 'Estações', folded: false },
-                resolve: load(['/scripts/controllers/settings/settings-stations.js']),
+                resolve: load(['/scripts/controllers/settings/settings-stations.js?' + GLOBAL_URL_HASH + '']),
                 controller: 'SettingsStationsCtrl'
               })
 
@@ -104315,7 +104170,7 @@ angular.module('app')
                 data : { titleTranslate: 'titles.CATEGORIES', title: 'Categorias', folded: false },
                 resolve:{
                   station: stationDep,
-                  deps:load(['/scripts/controllers/settings/settings-categories.js','angularSpectrumColorpicker']).deps
+                  deps:load(['/scripts/controllers/settings/settings-categories.js?' + GLOBAL_URL_HASH + '','angularSpectrumColorpicker']).deps
                 },
                 controller: 'SettingsCategoriesCtrl'
               })
@@ -104326,7 +104181,7 @@ angular.module('app')
                 data : { titleTranslate: 'titles.PERSPECTIVES', title: 'Perspectives', folded: true },
                 resolve:{
                   station: stationDep,
-                  deps: load(['wu.masonry',  'dndLists', 'angular-carousel', '/scripts/controllers/settings/settings-perspectives.js', '/scripts/custom-pgwslider.js', '/libs/jquery/pgwslider/pgwslider.min.css']).deps
+                  deps: load(['wu.masonry',  'dndLists', 'angular-carousel', '/scripts/controllers/settings/settings-perspectives.js?' + GLOBAL_URL_HASH + '', '/scripts/custom-pgwslider.js?' + GLOBAL_URL_HASH + '', '/libs/jquery/pgwslider/pgwslider.min.css?' + GLOBAL_URL_HASH+  '']).deps
                 },
                 controller: 'SettingsPerspectivesCtrl'
               })
@@ -104336,7 +104191,7 @@ angular.module('app')
                 data : { titleTranslate: 'titles.PERMISSIONS', title: 'Permissions', folded: false },
                 resolve:{
                   station: stationDep, 
-                  deps: load(['/scripts/controllers/settings/settings-station-permissions.js']).deps
+                  deps: load(['/scripts/controllers/settings/settings-station-permissions.js?' + GLOBAL_URL_HASH + '']).deps
                 },
                 controller: 'SettingsStationPermissionsCtrl'
               })
@@ -104348,7 +104203,7 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['/scripts/controllers/settings/settings-users.js?', 'froala']);
+                        return $ocLazyLoad.load(['/scripts/controllers/settings/settings-users.js?' + GLOBAL_URL_HASH + '?', 'froala']);
                     }]
                   },
                   controller:'SettingsUsersCtrl'
@@ -104357,7 +104212,7 @@ angular.module('app')
                 url: '/profile',
                 templateUrl: '/views/settings/settings-profile.html',
                 data : { titleTranslate: 'settings.aside.MY_PROFILE', title: 'Perfil', folded: true },
-                resolve: load(['/scripts/controllers/settings/settings-profile.js', 'ngJcrop']),
+                resolve: load(['/scripts/controllers/settings/settings-profile.js?' + GLOBAL_URL_HASH + '', 'ngJcrop']),
                 controller:'SettingsProfileCtrl'
               })
 
@@ -104366,13 +104221,13 @@ angular.module('app')
                 url: '/chart',
                 templateUrl: '/views/ui/chart/chart.html',
                 data : { title: 'Charts' },
-                resolve: load('/scripts/controllers/chart.js')
+                resolve: load('/scripts/controllers/chart.js?' + GLOBAL_URL_HASH + '')
               })
               .state('app.network', {
                 url: '/network',
                 templateUrl: '/views/settings/settings-network.html',
                 data : { titleTranslate: 'titles.NETWORK', title: 'Rede', folded: false },
-                resolve: load(['/scripts/controllers/settings/settings-network.js']),
+                resolve: load(['/scripts/controllers/settings/settings-network.js?' + GLOBAL_URL_HASH + '']),
                 controller: 'SettingsNetworkCtrl'
               })
               .state('app.publications', {
@@ -104380,11 +104235,11 @@ angular.module('app')
                 reloadOnSearch: false,
                 templateUrl: '/views/settings/settings-publications.html',
                 data : { titleTranslate: 'titles.PUBLICATIONS', title: 'Publicações', folded: true },
-                // resolve: load(['/scripts/controllers/settings/settings-publications.js']),
+                // resolve: load(['/scripts/controllers/settings/settings-publications.js?' + GLOBAL_URL_HASH + '']),
                 resolve: {
                   deps: ['$ocLazyLoad', '$templateCache',
                     function( $ocLazyLoad, $templateCache ){
-                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-publications.js'])
+                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-publications.js?' + GLOBAL_URL_HASH + ''])
                   }]
                 },
                 controller: 'SettingsPublicationsCtrl'
@@ -104394,11 +104249,11 @@ angular.module('app')
                 reloadOnSearch: false,
                 templateUrl: '/views/settings/settings-comments.html',
                 data : { titleTranslate: 'titles.COMMENTS', title: 'Comentários', folded: false },
-                // resolve: load(['/scripts/controllers/settings/settings-publications.js']),
+                // resolve: load(['/scripts/controllers/settings/settings-publications.js?' + GLOBAL_URL_HASH + '']),
                 resolve: {
                   deps: ['$ocLazyLoad', '$templateCache',
                     function( $ocLazyLoad, $templateCache ){
-                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-comments.js'])
+                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-comments.js?' + GLOBAL_URL_HASH + ''])
                   }]
                 },
                 controller: 'SettingsCommentsCtrl'
@@ -104408,11 +104263,11 @@ angular.module('app')
                 reloadOnSearch: false,
                 templateUrl: '/views/settings/settings-media-library.html',
                 data : { titleTranslate: 'titles.COMMENTS', title: 'Comentários', folded: false },
-                // resolve: load(['/scripts/controllers/settings/settings-publications.js']),
+                // resolve: load(['/scripts/controllers/settings/settings-publications.js?' + GLOBAL_URL_HASH + '']),
                 resolve: {
                   deps: ['$ocLazyLoad', '$templateCache',
                     function( $ocLazyLoad, $templateCache ){
-                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-media-library.js'])
+                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-media-library.js?' + GLOBAL_URL_HASH + ''])
                   }]
                 },
                 controller: 'SettingsMediaLibraryCtrl'
@@ -104421,15 +104276,15 @@ angular.module('app')
                 url: '/colors',
                 templateUrl: '/views/settings/settings-colors.html',
                 data : { titleTranslate: 'titles.THEMING', title: 'Aparência', folded: false },
-                resolve: load(['/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
-                    '/styles/theming.css', '/libs/jquery/slimScroll/jquery.slimscroll.min.js']),
+                resolve: load(['/scripts/controllers/settings/settings-network.js?' + GLOBAL_URL_HASH + '', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js?' + GLOBAL_URL_HASH + '',
+                    '/styles/theming.css?' + GLOBAL_URL_HASH+  '', '/libs/jquery/slimScroll/jquery.slimscroll.min.js?' + GLOBAL_URL_HASH + '']),
                 controller: 'ColorGeneratorCtrl'
               })
               .state('app.dashboard', {
                 url: '/dashboard',
                 templateUrl: '/views/pages/dashboard.html',
                 data : { title: 'Dashboard', folded: false },
-                resolve: load(['/scripts/controllers/settings/settings-dashboard.js']),
+                resolve: load(['/scripts/controllers/settings/settings-dashboard.js?' + GLOBAL_URL_HASH + '']),
                 controller: 'DashboardCtrl'
               })
               .state('app.pagebuilder', {
@@ -104442,50 +104297,50 @@ angular.module('app')
                 url: '/list',
                 templateUrl: '/views/settings/settings-pagebuilder-list.html',
                 data : { title: 'Page Builder', folded: true },
-                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-list.js']),
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-list.js?' + GLOBAL_URL_HASH + '']),
                 controller: 'PageBuilderListCtrl'
               })
               .state('app.pagebuilder.editor', {
                 url: '/editor',
                 templateUrl: '/views/settings/settings-pagebuilder-editor.html',
                 data : { title: 'Page Builder', folded: true },
-                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-editor.js']),
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-editor.js?' + GLOBAL_URL_HASH + '']),
                 controller: 'PageBuilderEditorCtrl'
               })
               .state('app.pagebuilder.stationcolors', {
                 url: '/stationcolors',
                 templateUrl: '/views/settings/settings-colors.html',
                 data : { title: 'Page Builder', folded: true },
-                  resolve: load(['/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
-                    '/styles/theming.css', '/libs/jquery/slimScroll/jquery.slimscroll.min.js']),
+                  resolve: load(['/scripts/controllers/settings/settings-network.js?' + GLOBAL_URL_HASH + '', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js?' + GLOBAL_URL_HASH + '',
+                    '/styles/theming.css?' + GLOBAL_URL_HASH+  '', '/libs/jquery/slimScroll/jquery.slimscroll.min.js?' + GLOBAL_URL_HASH + '']),
                 controller: 'ColorGeneratorCtrl'
               })
               .state('app.pagebuilder.header', {
                 url: '/header',
                 templateUrl: '/views/settings/settings-pagebuilder-header.html',
                 data : { title: 'Header', folded: true },
-                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js']),
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js?' + GLOBAL_URL_HASH + '']),
                 controller: 'PageBuilderHeaderCtrl'
               })
               .state('app.pagebuilder.sidemenu', {
                 url: '/header',
                 templateUrl: '/views/settings/settings-pagebuilder-sidemenu.html',
                 data : { title: 'Sidemenu', folded: true },
-                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js']),
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js?' + GLOBAL_URL_HASH + '']),
                 controller: 'PageBuilderSidemenuCtrl'
               })
               .state('app.pagebuilder.footer', {
                 url: '/header',
                 templateUrl: '/views/settings/settings-pagebuilder-footer.html',
                 data : { title: 'Page Builder', folded: true },
-                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js']),
+                resolve: load(['/scripts/controllers/settings/settings-pagebuilder-menus.js?' + GLOBAL_URL_HASH + '']),
                 controller: 'PageBuilderFooterCtrl'
               })
               .state('app.analysis', {
                 url: '/analysis',
                 templateUrl: '/views/pages/dashboard.analysis.html',
                 data : { title: 'Analysis' },
-                resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js'])
+                resolve: load(['/scripts/controllers/chart.js?' + GLOBAL_URL_HASH + '','/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH + ''])
               })
               .state('app.wall', {
                 url: '/wall',
@@ -104497,7 +104352,7 @@ angular.module('app')
                 templateUrl: '/apps/todo/todo.html',
                 data : { title: 'Todo', theme: { primary: 'indigo-800'} },
                 controller: 'TodoCtrl',
-                resolve: load('/apps/todo/todo.js')
+                resolve: load('/apps/todo/todo.js?' + GLOBAL_URL_HASH + '')
               })
               .state('app.todo.list', {
                   url: '/{fold}'
@@ -104512,7 +104367,7 @@ angular.module('app')
                 templateUrl: '/apps/note/list.html',
                 data : { title: 'Note'},
                 controller: 'NoteCtrl',
-                resolve: load(['/apps/note/note.js', '/libs/jquery/moment/min/moment-with-locales.min.js'])
+                resolve: load(['/apps/note/note.js?' + GLOBAL_URL_HASH + '', '/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH + ''])
               })
               .state('app.note.item', {
                 url: '/{id}',
@@ -104520,7 +104375,7 @@ angular.module('app')
                   '': {
                     templateUrl: '/apps/note/item.html',
                     controller: 'NoteItemCtrl',
-                    resolve: load(['/apps/note/note.js', '/libs/jquery/moment/min/moment-with-locales.min.js'])
+                    resolve: load(['/apps/note/note.js?' + GLOBAL_URL_HASH + '', '/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH + ''])
                   },
                   'navbar@': {
                     templateUrl: '/apps/note/navbar.html',
@@ -104533,7 +104388,7 @@ angular.module('app')
                   url: '/inbox',
                   templateUrl: '/apps/inbox/inbox.html',
                   data : { title: 'Inbox', folded: false },
-                  resolve: load( ['/apps/inbox/inbox.js','/libs/jquery/moment/min/moment-with-locales.min.js'] )
+                  resolve: load( ['/apps/inbox/inbox.js?' + GLOBAL_URL_HASH + '','/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH + ''] )
               })
               .state('app.inbox.list', {
                   url: '/inbox/{fold}',
@@ -104627,14 +104482,14 @@ angular.module('app')
                 .state('ui.component.uibootstrap', {
                   url: '/uibootstrap',
                   templateUrl: '/views/ui/component/uibootstrap.html',
-                  resolve: load('/scripts/controllers/bootstrap.js'),
+                  resolve: load('/scripts/controllers/bootstrap.js?' + GLOBAL_URL_HASH + ''),
                   data : { title: 'UI Bootstrap' }
                 })
               // material routers
               .state('ui.material', {
                 url: '/material',
                 template: '<div ui-view></div>',
-                resolve: load('/scripts/controllers/material.js')
+                resolve: load('/scripts/controllers/material.js?' + GLOBAL_URL_HASH + '')
               })
                 .state('ui.material.button', {
                   url: '/button',
@@ -104696,49 +104551,49 @@ angular.module('app')
                   templateUrl: '/views/ui/form/select.html',
                   data : { title: 'Selects' },
                   controller: 'SelectCtrl',
-                  resolve: load(['ui.select','/scripts/controllers/select.js'])
+                  resolve: load(['ui.select','/scripts/controllers/select.js?' + GLOBAL_URL_HASH + ''])
                 })
                 .state('ui.form.editor', {
                   url: '/editor',
                   templateUrl: '/views/ui/form/editor.html',
                   data : { title: 'Editor' },
                   controller: 'EditorCtrl',
-                  resolve: load(['textAngular','/scripts/controllers/editor.js'])
+                  resolve: load(['textAngular','/scripts/controllers/editor.js?' + GLOBAL_URL_HASH + ''])
                 })
                 .state('ui.form.slider', {
                   url: '/slider',
                   templateUrl: '/views/ui/form/slider.html',
                   data : { title: 'Slider' },
                   controller: 'SliderCtrl',
-                  resolve: load('/scripts/controllers/slider.js')
+                  resolve: load('/scripts/controllers/slider.js?' + GLOBAL_URL_HASH + '')
                 })
                 .state('ui.form.tree', {
                   url: '/tree',
                   templateUrl: '/views/ui/form/tree.html',
                   data : { title: 'Tree' },
                   controller: 'TreeCtrl',
-                  resolve: load('/scripts/controllers/tree.js')
+                  resolve: load('/scripts/controllers/tree.js?' + GLOBAL_URL_HASH + '')
                 })
                 .state('ui.form.file-upload', {
                   url: '/file-upload',
                   templateUrl: '/views/ui/form/file-upload.html',
                   data : { title: 'File upload' },
                   controller: 'UploadCtrl',
-                  resolve: load(['/scripts/controllers/upload.js'])
+                  resolve: load(['/scripts/controllers/upload.js?' + GLOBAL_URL_HASH + ''])
                 })
                 .state('ui.form.image-crop', {
                   url: '/image-crop',
                   templateUrl: '/views/ui/form/image-crop.html',
                   data : { title: 'Image Crop' },
                   controller: 'ImgCropCtrl',
-                  resolve: load(['ngImgCrop','/scripts/controllers/imgcrop.js'])
+                  resolve: load(['ngImgCrop','/scripts/controllers/imgcrop.js?' + GLOBAL_URL_HASH + ''])
                 })
                 .state('ui.form.editable', {
                   url: '/editable',
                   templateUrl: '/views/ui/form/xeditable.html',
                   data : { title: 'Xeditable' },
                   controller: 'XeditableCtrl',
-                  resolve: load(['xeditable','/scripts/controllers/xeditable.js'])
+                  resolve: load(['xeditable','/scripts/controllers/xeditable.js?' + GLOBAL_URL_HASH + ''])
                 })
               // table routers
               .state('ui.table', {
@@ -104755,7 +104610,7 @@ angular.module('app')
                   templateUrl: '/views/ui/table/smart.html',
                   data : { title: 'Smart' },
                   controller: 'TableCtrl',
-                  resolve: load(['smart-table', '/scripts/controllers/table.js'])
+                  resolve: load(['smart-table', '/scripts/controllers/table.js?' + GLOBAL_URL_HASH + ''])
                 })
                 .state('ui.table.datatable', {
                   url: '/datatable',
@@ -104772,28 +104627,28 @@ angular.module('app')
                   templateUrl: '/views/ui/table/nggrid.html',
                   data : { title: 'NG Grid' },
                   controller: 'NGGridCtrl',
-                  resolve: load(['ngGrid','/scripts/controllers/nggrid.js'])
+                  resolve: load(['ngGrid','/scripts/controllers/nggrid.js?' + GLOBAL_URL_HASH + ''])
                 })
                 .state('ui.table.uigrid', {
                   url: '/uigrid',
                   templateUrl: '/views/ui/table/uigrid.html',
                   data : { title: 'UI Grid' },
                   controller: "UiGridCtrl",
-                  resolve: load(['ui.grid', '/scripts/controllers/uigrid.js'])
+                  resolve: load(['ui.grid', '/scripts/controllers/uigrid.js?' + GLOBAL_URL_HASH + ''])
                 })
                 .state('ui.table.editable', {
                   url: '/editable',
                   templateUrl: '/views/ui/table/editable.html',
                   data : { title: 'Editable' },
                   controller: 'XeditableCtrl',
-                  resolve: load(['xeditable','/scripts/controllers/xeditable.js'])
+                  resolve: load(['xeditable','/scripts/controllers/xeditable.js?' + GLOBAL_URL_HASH + ''])
                 })
               // chart
               .state('ui.chart', {
                 url: '/chart',
                 templateUrl: '/views/ui/chart/chart.html',
                 data : { title: 'Charts' },
-                resolve: load('/scripts/controllers/chart.js')
+                resolve: load('/scripts/controllers/chart.js?' + GLOBAL_URL_HASH + '')
               })
               // map routers
               .state('ui.map', {
@@ -104805,14 +104660,14 @@ angular.module('app')
                   templateUrl: '/views/ui/map/google.html',
                   data : { title: 'Gmap' },
                   controller: 'GoogleMapCtrl',
-                  resolve: load(['ui.map', '/scripts/controllers/load-google-maps.js', '/scripts/controllers/googlemap.js'], function(){ return loadGoogleMaps(); })
+                  resolve: load(['ui.map', '/scripts/controllers/load-google-maps.js?' + GLOBAL_URL_HASH + '', '/scripts/controllers/googlemap.js?' + GLOBAL_URL_HASH + ''], function(){ return loadGoogleMaps(); })
                 })
                 .state('ui.map.vector', {
                   url: '/vector',
                   templateUrl: '/views/ui/map/vector.html',
                   data : { title: 'Vector' },
                   controller: 'VectorMapCtrl',
-                  resolve: load('/scripts/controllers/vectormap.js')
+                  resolve: load('/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH + '')
                 })
 
             .state('page', {
@@ -104873,8 +104728,8 @@ angular.module('app')
                   // }
                   return deferred.promise;
                 },
-                //deps:load( ['digitalfondue.dftabmenu','720kb.socialshare','monospaced.elastic','angularFileUpload','infinite-scroll', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
-                deps:load( ['/scripts/home.all.js', '/styles/home.all.min.css', 'angularFileUpload'] ).deps
+                //deps:load( ['digitalfondue.dftabmenu','720kb.socialshare','monospaced.elastic','angularFileUpload','infinite-scroll', '/scripts/services/trix.js?' + GLOBAL_URL_HASH + '', '/libs/theming/tinycolor/tinycolor.js?' + GLOBAL_URL_HASH + '', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
+                deps:load( ['/scripts/home.all.js?' + GLOBAL_URL_HASH + '', '/styles/home.all.min.css?' + GLOBAL_URL_HASH+  '', 'angularFileUpload'] ).deps
               },
               url: '',
               views: {
@@ -104894,13 +104749,13 @@ angular.module('app')
                 url: '/dashboard',
                 templateUrl: '/views/pages/dashboard.html',
                 data : { title: 'Dashboard', folded: false },
-                resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js'])
+                resolve: load(['/scripts/controllers/chart.js?' + GLOBAL_URL_HASH + '','/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH + ''])
               })
               .state('app.analysis', {
                 url: '/analysis',
                 templateUrl: '/views/pages/dashboard.analysis.html',
                 data : { title: 'Analysis' },
-                resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js'])
+                resolve: load(['/scripts/controllers/chart.js?' + GLOBAL_URL_HASH + '','/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH + ''])
               })
               .state('app.home', {
                 url: '/',
@@ -104908,7 +104763,7 @@ angular.module('app')
                 data : { title: 'Home', folded: false },
                 resolve: {
                   station: function(){return null;},
-                  deps:load(['/scripts/controllers/app/page.js', '/scripts/custom-pgwslider.js', '/libs/jquery/pgwslider/pgwslider.min.css', 'angular-carousel']).deps
+                  deps:load(['/scripts/controllers/app/page.js?' + GLOBAL_URL_HASH + '', '/scripts/custom-pgwslider.js?' + GLOBAL_URL_HASH + '', '/libs/jquery/pgwslider/pgwslider.min.css?' + GLOBAL_URL_HASH+  '', 'angular-carousel']).deps
                 },
                 controller: 'PageCtrl'
               })
@@ -104930,7 +104785,7 @@ angular.module('app')
                     })          
                     return deferred.promise;
                   },
-                  deps:load(['/scripts/controllers/app/station.js']).deps
+                  deps:load(['/scripts/controllers/app/station.js?' + GLOBAL_URL_HASH + '']).deps
                 }
               })
               .state('app.station.stationHome', {
@@ -104939,7 +104794,7 @@ angular.module('app')
                 data : { title: 'Home', folded: false },
                 resolve: {
                   station: stationDep,
-                  deps:load(['/scripts/controllers/app/page.js', '/scripts/custom-pgwslider.js', '/libs/jquery/pgwslider/pgwslider.min.css', 'angular-carousel']).deps
+                  deps:load(['/scripts/controllers/app/page.js?' + GLOBAL_URL_HASH + '', '/scripts/custom-pgwslider.js?' + GLOBAL_URL_HASH + '', '/libs/jquery/pgwslider/pgwslider.min.css?' + GLOBAL_URL_HASH+  '', 'angular-carousel']).deps
                 },
                 controller: 'PageCtrl'
               })
@@ -104963,7 +104818,7 @@ angular.module('app')
                      
                     return deferred.promise;
                   },
-                  deps:load(['/scripts/controllers/app/category.js']).deps
+                  deps:load(['/scripts/controllers/app/category.js?' + GLOBAL_URL_HASH + '']).deps
                 }
               })
               .state('app.wall', {
@@ -104976,7 +104831,7 @@ angular.module('app')
                 templateUrl: '/apps/todo/todo.html',
                 data : { title: 'Todo', theme: { primary: 'indigo-800'} },
                 controller: 'TodoCtrl',
-                resolve: load('/apps/todo/todo.js')
+                resolve: load('/apps/todo/todo.js?' + GLOBAL_URL_HASH + '')
               })
               .state('app.todo.list', {
                   url: '/{fold}'
@@ -104991,7 +104846,7 @@ angular.module('app')
                 templateUrl: '/apps/note/list.html',
                 data : { title: 'Note'},
                 controller: 'NoteCtrl',
-                resolve: load(['/apps/note/note.js', '/libs/jquery/moment/min/moment-with-locales.min.js'])
+                resolve: load(['/apps/note/note.js?' + GLOBAL_URL_HASH + '', '/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH + ''])
               })
               .state('app.note.item', {
                 url: '/{id}',
@@ -104999,7 +104854,7 @@ angular.module('app')
                   '': {
                     templateUrl: '/apps/note/item.html',
                     controller: 'NoteItemCtrl',
-                    resolve: load(['/apps/note/note.js', '/libs/jquery/moment/min/moment-with-locales.min.js'])
+                    resolve: load(['/apps/note/note.js?' + GLOBAL_URL_HASH + '', '/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH + ''])
                   },
                   'navbar@': {
                     templateUrl: '/apps/note/navbar.html',
@@ -105012,7 +104867,7 @@ angular.module('app')
                   url: '/inbox',
                   templateUrl: '/apps/inbox/inbox.html',
                   data : { title: 'Inbox', folded: false },
-                  resolve: load( ['/apps/inbox/inbox.js','/libs/jquery/moment/min/moment-with-locales.min.js'] )
+                  resolve: load( ['/apps/inbox/inbox.js?' + GLOBAL_URL_HASH + '','/libs/jquery/moment/min/moment-with-locales.min.js?' + GLOBAL_URL_HASH + ''] )
               })
               .state('app.inbox.list', {
                   url: '/inbox/{fold}',
@@ -105106,14 +104961,14 @@ angular.module('app')
                 .state('ui.component.uibootstrap', {
                   url: '/uibootstrap',
                   templateUrl: '/views/ui/component/uibootstrap.html',
-                  resolve: load('/scripts/controllers/bootstrap.js'),
+                  resolve: load('/scripts/controllers/bootstrap.js?' + GLOBAL_URL_HASH + ''),
                   data : { title: 'UI Bootstrap' }
                 })
               // material routers
               .state('ui.material', {
                 url: '/material',
                 template: '<div ui-view></div>',
-                resolve: load('/scripts/controllers/material.js')
+                resolve: load('/scripts/controllers/material.js?' + GLOBAL_URL_HASH + '')
               })
                 .state('ui.material.button', {
                   url: '/button',
@@ -105175,49 +105030,49 @@ angular.module('app')
                   templateUrl: '/views/ui/form/select.html',
                   data : { title: 'Selects' },
                   controller: 'SelectCtrl',
-                  resolve: load(['ui.select','/scripts/controllers/select.js'])
+                  resolve: load(['ui.select','/scripts/controllers/select.js?' + GLOBAL_URL_HASH + ''])
                 })
                 .state('ui.form.editor', {
                   url: '/editor',
                   templateUrl: '/views/ui/form/editor.html',
                   data : { title: 'Editor' },
                   controller: 'EditorCtrl',
-                  resolve: load(['textAngular','/scripts/controllers/editor.js'])
+                  resolve: load(['textAngular','/scripts/controllers/editor.js?' + GLOBAL_URL_HASH + ''])
                 })
                 .state('ui.form.slider', {
                   url: '/slider',
                   templateUrl: '/views/ui/form/slider.html',
                   data : { title: 'Slider' },
                   controller: 'SliderCtrl',
-                  resolve: load('/scripts/controllers/slider.js')
+                  resolve: load('/scripts/controllers/slider.js?' + GLOBAL_URL_HASH + '')
                 })
                 .state('ui.form.tree', {
                   url: '/tree',
                   templateUrl: '/views/ui/form/tree.html',
                   data : { title: 'Tree' },
                   controller: 'TreeCtrl',
-                  resolve: load('/scripts/controllers/tree.js')
+                  resolve: load('/scripts/controllers/tree.js?' + GLOBAL_URL_HASH + '')
                 })
                 .state('ui.form.file-upload', {
                   url: '/file-upload',
                   templateUrl: '/views/ui/form/file-upload.html',
                   data : { title: 'File upload' },
                   controller: 'UploadCtrl',
-                  resolve: load(['angularFileUpload', '/scripts/controllers/upload.js'])
+                  resolve: load(['angularFileUpload', '/scripts/controllers/upload.js?' + GLOBAL_URL_HASH + ''])
                 })
                 .state('ui.form.image-crop', {
                   url: '/image-crop',
                   templateUrl: '/views/ui/form/image-crop.html',
                   data : { title: 'Image Crop' },
                   controller: 'ImgCropCtrl',
-                  resolve: load(['ngImgCrop','/scripts/controllers/imgcrop.js'])
+                  resolve: load(['ngImgCrop','/scripts/controllers/imgcrop.js?' + GLOBAL_URL_HASH + ''])
                 })
                 .state('ui.form.editable', {
                   url: '/editable',
                   templateUrl: '/views/ui/form/xeditable.html',
                   data : { title: 'Xeditable' },
                   controller: 'XeditableCtrl',
-                  resolve: load(['xeditable','/scripts/controllers/xeditable.js'])
+                  resolve: load(['xeditable','/scripts/controllers/xeditable.js?' + GLOBAL_URL_HASH + ''])
                 })
               // table routers
               .state('ui.table', {
@@ -105234,7 +105089,7 @@ angular.module('app')
                   templateUrl: '/views/ui/table/smart.html',
                   data : { title: 'Smart' },
                   controller: 'TableCtrl',
-                  resolve: load(['smart-table', '/scripts/controllers/table.js'])
+                  resolve: load(['smart-table', '/scripts/controllers/table.js?' + GLOBAL_URL_HASH + ''])
                 })
                 .state('ui.table.datatable', {
                   url: '/datatable',
@@ -105251,28 +105106,28 @@ angular.module('app')
                   templateUrl: '/views/ui/table/nggrid.html',
                   data : { title: 'NG Grid' },
                   controller: 'NGGridCtrl',
-                  resolve: load(['ngGrid','/scripts/controllers/nggrid.js'])
+                  resolve: load(['ngGrid','/scripts/controllers/nggrid.js?' + GLOBAL_URL_HASH + ''])
                 })
                 .state('ui.table.uigrid', {
                   url: '/uigrid',
                   templateUrl: '/views/ui/table/uigrid.html',
                   data : { title: 'UI Grid' },
                   controller: "UiGridCtrl",
-                  resolve: load(['ui.grid', '/scripts/controllers/uigrid.js'])
+                  resolve: load(['ui.grid', '/scripts/controllers/uigrid.js?' + GLOBAL_URL_HASH + ''])
                 })
                 .state('ui.table.editable', {
                   url: '/editable',
                   templateUrl: '/views/ui/table/editable.html',
                   data : { title: 'Editable' },
                   controller: 'XeditableCtrl',
-                  resolve: load(['xeditable','/scripts/controllers/xeditable.js'])
+                  resolve: load(['xeditable','/scripts/controllers/xeditable.js?' + GLOBAL_URL_HASH + ''])
                 })
               // chart
               .state('ui.chart', {
                 url: '/chart',
                 templateUrl: '/views/ui/chart/chart.html',
                 data : { title: 'Charts' },
-                resolve: load('/scripts/controllers/chart.js')
+                resolve: load('/scripts/controllers/chart.js?' + GLOBAL_URL_HASH + '')
               })
               // map routers
               .state('ui.map', {
@@ -105284,14 +105139,14 @@ angular.module('app')
                   templateUrl: '/views/ui/map/google.html',
                   data : { title: 'Gmap' },
                   controller: 'GoogleMapCtrl',
-                  resolve: load(['ui.map', '/scripts/controllers/load-google-maps.js', '/scripts/controllers/googlemap.js'], function(){ return loadGoogleMaps(); })
+                  resolve: load(['ui.map', '/scripts/controllers/load-google-maps.js?' + GLOBAL_URL_HASH + '', '/scripts/controllers/googlemap.js?' + GLOBAL_URL_HASH + ''], function(){ return loadGoogleMaps(); })
                 })
                 .state('ui.map.vector', {
                   url: '/vector',
                   templateUrl: '/views/ui/map/vector.html',
                   data : { title: 'Vector' },
                   controller: 'VectorMapCtrl',
-                  resolve: load('/scripts/controllers/vectormap.js')
+                  resolve: load('/scripts/controllers/vectormap.js?' + GLOBAL_URL_HASH + '')
                 })
 
             .state('page', {
@@ -105351,7 +105206,7 @@ angular.module('app')
                 url: '/s?q',
                 templateUrl: '/views/pages/search.html',
                 data : { titleTranslate: 'titles.SEARCH', title: 'Busca', folded: true },
-                resolve: load(['/scripts/controllers/app/search.js', 'wu.masonry']),
+                resolve: load(['/scripts/controllers/app/search.js?' + GLOBAL_URL_HASH + '', 'wu.masonry']),
                 controller: 'SearchCtrl'
               })
         .state('app.bookmarks', {
@@ -105376,7 +105231,7 @@ angular.module('app')
                 }
                 return deferred.promise;
               },
-              deps:load(['wu.masonry', '/scripts/controllers/app/bookmarks.js']).deps
+              deps:load(['wu.masonry', '/scripts/controllers/app/bookmarks.js?' + GLOBAL_URL_HASH + '']).deps
             }
           })
         .state('app.userprofile', {
@@ -105398,7 +105253,7 @@ angular.module('app')
                 });
                 return deferred.promise;
               },
-              deps:load(['wu.masonry', '/scripts/controllers/app/profile.js']).deps
+              deps:load(['wu.masonry', '/scripts/controllers/app/profile.js?' + GLOBAL_URL_HASH + '']).deps
             }
           })
           .state('access', {
@@ -105414,32 +105269,32 @@ angular.module('app')
                 // }
                 return deferred.promise;
               },
-              deps:load( ['angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'perfect_scrollbar', 'angularMoment'] ).deps
+              deps:load( ['angularFileUpload', '/scripts/services/trix.js?' + GLOBAL_URL_HASH + '', '/libs/theming/tinycolor/tinycolor.js?' + GLOBAL_URL_HASH + '', 'mdPickers', 'afkl.lazyImage', 'perfect_scrollbar', 'angularMoment'] ).deps
             },
             controller: 'AppDataCtrl'
           })
           .state('access.signin', {
             url: '/signin?next',
             templateUrl: '/views/pages/signin.html',
-            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js']),
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH + '']),
             controller: 'AppSigninCtrl'
           })
           .state('access.signup', {
             url: '/signup',
             templateUrl: '/views/pages/signup.html',
-            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js']),
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH + '']),
             controller: 'AppSignupCtrl'
           })
           .state('access.forgot-password', {
             url: '/forgot-password',
             templateUrl: '/views/pages/forgot-password.html',
-            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js']),
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH + '']),
             controller: 'AppForgotCtrl'
           })
           .state('access.createnetwork', {
             url: '/createnetwork',
             templateUrl: '/views/pages/create-network.html',
-            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js']),
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH + '']),
             controller: 'AppNetworkCtrl'
           })
           .state('access.lockme', {
@@ -105475,7 +105330,7 @@ angular.module('app')
                 resolve: {
                   post: postDep,
                   station: stationDep,
-                  deps:load(['wu.masonry', '/scripts/controllers/app/read.js', '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css']).deps
+                  deps:load(['wu.masonry', '/scripts/controllers/app/read.js?' + GLOBAL_URL_HASH + '', '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css?' + GLOBAL_URL_HASH+  '']).deps
                 }
               })
           }
