@@ -25,7 +25,7 @@ import static org.springframework.context.annotation.FilterType.ANNOTATION;
 		includeFilters = {
 				@ComponentScan.Filter(type = ANNOTATION, value = {IntegrationTestBean.class})
 		})
-public class ApplicationTestConfig {
+public class ApplicationTestConfig{
 
 	@Bean
 	public ObjectMapper simpleMapper() {
