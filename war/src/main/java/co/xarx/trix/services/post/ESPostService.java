@@ -266,7 +266,7 @@ public class ESPostService extends AbstractElasticSearchService {
 			if (state.equalsIgnoreCase("SCHEDULED")) {
 				f.must(queryFilter(queryStringQuery("PUBLISHED").defaultField("state")));
 				applyDateFilter(f, String.valueOf(now), null, "scheduledDate");
-			} else if (state.equals("PUBLISHED")) {
+			} else if (state.equalsIgnoreCase("PUBLISHED")) {
 				f.must(queryFilter(queryStringQuery("PUBLISHED").defaultField("state")));
 				applyDateFilter(f, null, String.valueOf(now), "scheduledDate");
 			} else {
