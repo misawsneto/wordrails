@@ -44,7 +44,7 @@
     "oclazyload": "^1.0.9",
     "textAngular": "^1.5.1",
     "venturocket-angular-slider": "~0.3.2",
-    "jquery": "^2.2.4",
+    "jquery": "2.2.4",
     "animate.css": "^3.5.2",
     "bootstrap": "^3.3.6",
     "bower-jvectormap-2": "*",
