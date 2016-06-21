@@ -59,7 +59,7 @@
                                           <div class="clear pos-rlt p animated fadeIn" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells.length > 0 && !isMobile && !reloadingCarousel"
                                              ng-mouseenter="currentPerspective.termPerspectiveView.featuredRow.showOptions=true" ng-mouseleave="currentPerspective.termPerspectiveView.featuredRow.showOptions=false">
                                              <ul class="pgwSlider" pgw-slider="{verticalCentering:true, maxHeight: 400, selectionMode: 'click', intervalDuration: 7000 }">
-                                                <li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells">
+                                                <li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells | orderBy: 'index'">
                                                    <img ng-src="{{app.getImageLink(cell.postView, 'large')}}" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="bg-cover opacity-0" alt="{{cell.postView.title}}" data-description="{{cell.postView.snippet | characters:200}}">
                                                    <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z1 pos-abt top-0 bottom-0 right-0 left-0 bg-cover">
                                                    </div>
@@ -82,7 +82,7 @@
                                           <div class="pos-rlt animated fadeIn" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells.length >0  && isMobile && !reloadingCarousel"
                                              ng-mouseenter="currentPerspective.termPerspectiveView.featuredRow.showOptions=true" ng-mouseleave="currentPerspective.termPerspectiveView.featuredRow.showOptions=false" class="pos-rlt">
                                              <ul rn-carousel="" rn-carousel-index="carouselIndex" rn-carousel-auto-slide="" rn-carousel-pause-on-hover="" rn-carousel-buffered="" class="ng-scope h-200 image no-margin">
-                                                <li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells">
+                                                <li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells | orderBy: 'index'">
                                                    <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z1 h-200 pos-abt top-0 bottom-0 right-0 left-0 bg-cover layer">
                                                       <div class="pos-abt bottom-0 right-0 left-0 pgwSlider">
                                                          <div class="ps-caption" style="display: block">{{cell.postView.title}}</div>
