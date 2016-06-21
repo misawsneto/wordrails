@@ -16,7 +16,7 @@ public class StaticFilesCacheFilter implements Filter {
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
 		httpServletResponse.setHeader("Pragma", "cache");
-		httpServletResponse.setHeader("Cache-control", "public, max-age=31536000");
+		httpServletResponse.setHeader("Cache-control", "Public, max-age=31536000");
 		chain.doFilter(request, response);
 	}
 

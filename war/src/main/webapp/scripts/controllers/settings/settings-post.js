@@ -141,7 +141,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if(!$scope.app.editingPost)
 			$scope.app.editingPost = {};
 
-		$scope.app.editingPost.scheduleDate = $scope.postScheduleDate = scheduledDate;
+		$scope.app.editingPost.scheduledDate = $scope.postScheduleDate = scheduledDate;
 		$scope.postScheduleMenuOpen = false;
 		$scope.app.editingPost.state = "PUBLISHED";
 	}
@@ -150,7 +150,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if(!$scope.app.editingPost)
 			$scope.app.editingPost = {};
 
-		$scope.app.editingPost.scheduleDate = $scope.postScheduleDate = null;
+		$scope.app.editingPost.scheduledDate = $scope.postScheduleDate = null;
 		$scope.app.editingPost.state = "DRAFT";	
 		$scope.postScheduleUpdateble = true;
 	}
