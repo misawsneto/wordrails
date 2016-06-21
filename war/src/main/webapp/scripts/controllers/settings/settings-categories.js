@@ -32,6 +32,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
   $scope.showDeleteCategoryDialog = function(category, ev){
     $scope.app.toDeleteCategory = category;
     $scope.parentCategory = parent;
+    $scope.disabled = false;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
           closeTo: {
