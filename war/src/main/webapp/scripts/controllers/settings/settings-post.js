@@ -272,6 +272,10 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		// 	return null;
 
 		state = state ? state : $scope.app.editingPost ? $scope.app.editingPost.state : null;
+
+		if($scope.app.editingPost && $scope.app.editingPost.scheduledDate)
+			return 3;
+
 		if(!state)
 			return 2;
 		if(state == "PUBLISHED"){
