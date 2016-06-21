@@ -232,13 +232,13 @@ public class StatisticsService {
 		return statsData;
 	}
 
-	public Map countPostReads(List<Integer> postIds){
-		Map postReads = new HashMap<Integer, Integer>();
+	public Map<Integer, Integer> countPostReads(List<Integer> postIds){
+		Map postReads = new HashMap();
 		postIds.forEach( postId -> postReads.put(postId, countTotals(postId, "nginx_access.postId", nginxAccessIndex)));
 		return postReads;
 	}
 
-	public Map getFileStats(){
+	public Map<String, Integer> getFileStats(){
 		List<Object[]> mimeSums = fileRepository.sumFilesSizeByMime(TenantContextHolder.getCurrentTenantId());
 		Map map = new HashMap<>();
 
@@ -269,14 +269,12 @@ public class StatisticsService {
 	}
 
 	public Map getStationReaders(Integer stationId){
-		List<Person> persons = (List<Person>) personPermissionService.getPersonFromStation(stationId);
+		List<Person> persons = personPermissionService.getPersonFromStation(stationId);
 
-		if(persons.size() == 0) return new HashMap<>();
+		if (persons == null || persons.size() == 0) return null;
 
 		List<Integer> ids = new ArrayList<>();
-		persons.forEach(person -> {
-			ids.add(person.id);
-		});
+		persons.forEach(person -> ids.add(person.id));
 
 		List<MobileDevice> mobileDevices = mobileDeviceRepository.findByPersonIds(ids);
 		Map<String, Integer> stationReaders = new HashMap<>();

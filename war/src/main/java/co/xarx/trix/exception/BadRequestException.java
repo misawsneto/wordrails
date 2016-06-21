@@ -1,9 +1,9 @@
 package co.xarx.trix.exception;
 
+import org.springframework.validation.FieldError;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.validation.FieldError;
 
 public class BadRequestException extends RuntimeException{
 	
@@ -11,7 +11,7 @@ public class BadRequestException extends RuntimeException{
 
 	private static final String MESSAGE = "Invalid Data";
 	
-	public List<FieldError> errors = new ArrayList<FieldError>(); 
+	public List<FieldError> errors = new ArrayList<FieldError>();
 	
 	public BadRequestException() {
 		super(MESSAGE);

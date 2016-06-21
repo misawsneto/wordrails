@@ -13,7 +13,6 @@ import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.StringUtil;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +61,7 @@ public class PostService {
 		if (stationRepository.isUnrestricted(post.getStationId())) {
 			mobileDevices = mobileDeviceRepository.findAll();
 		} else {
-			List<Person> personFromStation = Lists.newArrayList(personPermissionService.getPersonFromStation(post.station.getId()));
+			List<Person> personFromStation = personPermissionService.getPersonFromStation(post.station.getId());
 			List<Integer> personIds = personFromStation.stream().map(Person::getId).collect(Collectors.toList());
 
 //			personIds.remove(authProvider.getLoggedPerson().getId());
