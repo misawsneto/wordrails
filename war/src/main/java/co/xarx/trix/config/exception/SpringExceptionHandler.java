@@ -165,7 +165,8 @@ public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		if (e instanceof java.net.SocketException) {
-			handleExceptionInternal(e, ExceptionUtils.getRootCauseMessage(e), headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
+			return handleExceptionInternal(e, ExceptionUtils.getRootCauseMessage(e), headers, HttpStatus
+					.INTERNAL_SERVER_ERROR, request);
 		}
 		
 		logError(e);
