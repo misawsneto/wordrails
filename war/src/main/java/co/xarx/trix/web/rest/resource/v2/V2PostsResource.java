@@ -12,7 +12,7 @@ import co.xarx.trix.services.post.PostModerationService;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.services.security.PostPermissionService;
 import co.xarx.trix.util.ImmutablePage;
-import co.xarx.trix.util.RestUtil;
+import co.xarx.trix.util.SpringDataUtil;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2PostsApi;
@@ -73,11 +73,10 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 			}
 		}
 
-
 		Set<String> postEmbeds = Sets.newHashSet("video", "image", "audio", "author", "categories", "body", "snippet");
 		super.removeNotEmbeddedData(embeds, pageOfData.items(), PostData.class, postEmbeds);
 
-		return Response.ok().entity(RestUtil.getPageData(pageOfData, orders)).build();
+		return Response.ok().entity(SpringDataUtil.getPageData(pageOfData, orders)).build();
 	}
 
 	@Override

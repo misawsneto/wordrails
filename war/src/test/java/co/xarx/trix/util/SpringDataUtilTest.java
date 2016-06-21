@@ -9,7 +9,7 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 
-public class RestUtilTest {
+public class SpringDataUtilTest {
 
 	@Test
 	public void testPageable() throws Exception {
@@ -19,7 +19,7 @@ public class RestUtilTest {
 		orders.add("attribute1");
 		orders.add("-attribute2");
 
-		Pageable pageable = RestUtil.getPageable(page, size, orders);
+		Pageable pageable = SpringDataUtil.getPageable(page, size, orders);
 
 		assertEquals(pageable.getPageNumber(), 1);
 		assertEquals(pageable.getPageSize(), 10);

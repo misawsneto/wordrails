@@ -7,6 +7,7 @@ import co.xarx.trix.persistence.CommentRepository;
 import co.xarx.trix.services.AbstractSearchService;
 import co.xarx.trix.services.security.PermissionFilterService;
 import co.xarx.trix.util.ImmutablePage;
+import co.xarx.trix.util.SpringDataUtil;
 import co.xarx.trix.web.rest.mapper.CommentDataMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -32,7 +33,7 @@ public class CommentSearchService extends AbstractSearchService {
 		this.permissionFilterService = permissionFilterService;
 	}
 
-	public ImmutablePage<CommentData> search(CommentStatement params, Integer page, Integer size, Sort sort) {
+	public ImmutablePage<CommentData> search(CommentStatement params, Integer page, Integer size) {
 		List<Integer> searchResults = searchIds(params);
 		List<CommentData> result;
 		if (searchResults.isEmpty())
@@ -40,6 +41,7 @@ public class CommentSearchService extends AbstractSearchService {
 
 		List<Integer> idsToGetFromDB = getPaginatedIds(searchResults, page, size);
 
+		Sort sort = SpringDataUtil.getSort(params.getOrders());
 		List<Comment> entities = idsToGetFromDB.size() > 0 ? commentRepository.findAllWithAuthors(idsToGetFromDB, sort)
 		: new ArrayList<>();
 
