@@ -12,6 +12,7 @@ import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
@@ -32,8 +33,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
@@ -73,15 +76,26 @@ public class StatisticsService {
 		this.personPermissionService = personPermissionService;
 	}
 
-	public Map getPorpularNetworks(){
+	@PostConstruct
+	public void init() throws ExecutionException, InterruptedException {
+		boolean isThereNginxIndex = client.admin().indices().exists(new IndicesExistsRequest(nginxAccessIndex)).get().isExists();
+		boolean isThereAnalyticsIndex = client.admin().indices().exists(new IndicesExistsRequest(analyticsIndex)).get().isExists();
+
+		Assert.isTrue(isThereNginxIndex, "Big problem! Index is not there: " + nginxAccessIndex);
+		Assert.isTrue(isThereAnalyticsIndex, "Big problem! Index is not there: " + analyticsIndex);
+	}
+
+	public Map getPorpularNetworks() throws Exception {
 		return findMostPopular("tenantId", null, null, 10);
 	}
 
-	public List<String> getNginxFields(){
+	public List<String> getNginxFields() throws Exception {
 		ClusterState cs = client.admin().cluster().prepareState().setIndices(nginxAccessIndex).execute().actionGet().getState();
 
 		IndexMetaData indexMetaData = cs.getMetaData().index(nginxAccessIndex);
-		Assert.notNull(indexMetaData, "The data cannot be retrived: No index metadata");
+		if (indexMetaData == null) {
+			throw new Exception("The data cannot be retrived: No index metadata");
+		}
 
 		MappingMetaData mappingMetaData = indexMetaData.mapping(ACCESS_TYPE);
 		Map<String, Object> map = null;
@@ -110,7 +124,7 @@ public class StatisticsService {
 		return fieldList;
 	}
 
-	private boolean isValidField(String field){
+	private boolean isValidField(String field) throws Exception {
 		if(getNginxFields().contains(field)) {
 			return true;
 		} else return false;
@@ -120,9 +134,10 @@ public class StatisticsService {
 		return begin != null && end != null && begin < end;
 	}
 
-	public HashMap findMostPopular(String field, Long startTimestamp, Long endTimestamp, Integer size){
-		Assert.hasText(field, "Field is null");
-		Assert.isTrue(isValidField(field), "Invalid field");
+	public HashMap findMostPopular(String field, Long startTimestamp, Long endTimestamp, Integer size) throws Exception {
+		if(!isValidField(field)) {
+			throw new Exception("Invalid field");
+		}
 
 		String term = "by_" + field;
 
@@ -437,7 +452,9 @@ public class StatisticsService {
 	}
 
 	public Integer countTotals(Integer id, String entity, String index) {
-		return (int) client.prepareSearch(index).setQuery(boolQuery().must(termQuery(entity, id)).must(termQuery("verb", "get"))).execute().actionGet().getHits().getTotalHits();
+		return (int) client.prepareSearch(index).setQuery(boolQuery()
+						.must(termQuery(entity, id))
+						.must(termQuery("verb", "get"))).execute().actionGet().getHits().getTotalHits();
 	}
 
 	public Integer countTotals(String id, String entity, String index) {
