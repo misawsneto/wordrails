@@ -257,6 +257,7 @@
 		<url-pattern>/libs/*</url-pattern>
 		<url-pattern>/styles/*</url-pattern>
 		<url-pattern>/scripts/*</url-pattern>
+		<url-pattern>/views/*</url-pattern>
 	</filter-mapping>
 
 	<error-page>
