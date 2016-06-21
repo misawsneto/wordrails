@@ -37,7 +37,6 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
 
   var handleSuccess = function(posts){
     if(posts && posts.length > 0){
-      posts.reverse();
 
         if(!$scope.publications)
           $scope.publications = []

@@ -4,15 +4,12 @@ import co.xarx.trix.api.v2.CommentData;
 import co.xarx.trix.domain.page.query.statement.CommentStatement;
 import co.xarx.trix.services.comment.CommentSearchService;
 import co.xarx.trix.services.comment.CommentService;
-import co.xarx.trix.util.RestUtil;
+import co.xarx.trix.util.ImmutablePage;
+import co.xarx.trix.util.SpringDataUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2CommentsApi;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.DELETE;
@@ -48,18 +45,13 @@ public class V2CommentsResource extends AbstractResource implements V2CommentsAp
 
 		CommentStatement params = new CommentStatement(query, authors, posts, stations, from, until, orders);
 
-		Sort sort = RestUtil.getSort(params.getOrders());
+		ImmutablePage<CommentData> pageOfData = commentSearchService.search(params, page, size);
 
-		List<CommentData> data = commentSearchService.search(params, page, size, sort);
 
 		Set<String> allEmbeds = Sets.newHashSet("author");
+		super.removeNotEmbeddedData(embeds, pageOfData.items(), CommentData.class, allEmbeds);
 
-		super.removeNotEmbeddedData(embeds, data, CommentData.class, allEmbeds);
-
-		Pageable pageable = RestUtil.getPageable(page, size, orders);
-		Page p = new PageImpl(data, pageable, data.size());
-
-		return Response.ok().entity(p).build();
+		return Response.ok().entity(SpringDataUtil.getPageData(pageOfData, orders)).build();
 	}
 
 	@DELETE

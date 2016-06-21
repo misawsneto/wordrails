@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,7 +21,6 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 
-import java.util.Date;
 import java.util.List;
 
 @RepositoryRestResource(exported = true)
@@ -48,6 +48,10 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@RestResource(exported = true)
 	@PostFilter("hasPermission(filterObject, 'read')")
 	List<Post> findAll();
+
+	@SdkExclude
+	@Query("select p from Post p where p.id in (:ids)")
+	List<Post> findByIds(@Param("ids") Iterable<Integer> ids, Sort sort);
 
 	@Override
 	@SdkExclude

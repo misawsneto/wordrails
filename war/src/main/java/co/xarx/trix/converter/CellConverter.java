@@ -35,9 +35,9 @@ public class CellConverter extends AbstractConverter<Cell, CellView> {
 		if(cellView.id != null){
 			cell = cellRepository.findOne(cellView.id);
 		}else{
-			cell.index = cellView.index;
 			cell.post = postConverter.convertFrom(cellView.postView);
 		}
+		cell.index = cellView.index;
 		return cell;
 	}
 

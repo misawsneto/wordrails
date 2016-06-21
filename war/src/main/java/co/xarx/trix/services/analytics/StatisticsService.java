@@ -446,11 +446,11 @@ public class StatisticsService {
 
 	public Map<String,Integer> dashboardStats() {
 		Map<String, Integer> ret = new LinkedHashMap<>();
-		Long posts = postRepository.countByState(Post.STATE_PUBLISHED.toString());
-		Long comments = commentRepository.countPublished();
+		Long posts = postRepository.countByState(Post.STATE_PUBLISHED);
+		Long comments = commentRepository.count();
 
 		ret.put("post", posts != null ? posts.intValue() : 0);
-		ret.put("comment", comments != null ? comments.intValue() : 0);
+		ret.put("comment", comments.intValue());
 
 		return ret;
 	}

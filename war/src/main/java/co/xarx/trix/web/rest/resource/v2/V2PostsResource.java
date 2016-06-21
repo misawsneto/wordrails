@@ -12,7 +12,7 @@ import co.xarx.trix.services.post.PostModerationService;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.services.security.PostPermissionService;
 import co.xarx.trix.util.ImmutablePage;
-import co.xarx.trix.util.RestUtil;
+import co.xarx.trix.util.SpringDataUtil;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2PostsApi;
@@ -65,19 +65,18 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 
 		PostStatement params = new PostStatement(query, authors, stations, state, from, until, categories, tags, orders);
 
-		ImmutablePage<PostData> pageOfPosts = postSearchService.searchData(params, page, size);
+		ImmutablePage<PostData> pageOfData = postSearchService.searchData(params, page, size);
 
 		if (embeds.contains("snippet")) {
-			for (PostData post : pageOfPosts) {
+			for (PostData post : pageOfData) {
 				post.setSnippet(StringUtil.simpleSnippet(post.getBody()));
 			}
 		}
 
-
 		Set<String> postEmbeds = Sets.newHashSet("video", "image", "audio", "author", "categories", "body", "snippet");
-		super.removeNotEmbeddedData(embeds, pageOfPosts.items(), PostData.class, postEmbeds);
+		super.removeNotEmbeddedData(embeds, pageOfData.items(), PostData.class, postEmbeds);
 
-		return Response.ok().entity(RestUtil.getPageData(pageOfPosts, orders)).build();
+		return Response.ok().entity(SpringDataUtil.getPageData(pageOfData, orders)).build();
 	}
 
 	@Override

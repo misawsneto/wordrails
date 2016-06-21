@@ -32,7 +32,7 @@ public class RepositoryExtractor {
 		repositoryQueries = new HashMap<>();
 		repositoryEntities = new HashMap<>();
 
-		Set<Class<?>> classes = excludeIgnoredRepositories(repositoryClasses);
+		Set<Class> classes = excludeIgnoredRepositories(repositoryClasses);
 
 		log.info("Generating SDK for the following repositories:");
 		for (Class<?> aClass : classes) {
@@ -129,9 +129,16 @@ public class RepositoryExtractor {
 		Type[] types = method.getGenericParameterTypes();
 
 		Map<Type, Annotation[]> annotatedTypes = new HashMap<>();
+		Map<Type, Annotation[]> pageableTypes = new HashMap<>();
 		for (int i = 0; i < types.length; ++i) {
-			annotatedTypes.put(types[i], annotations[i]);
+			if (Pageable.class.equals(types[i])) {
+				pageableTypes.put(types[i], annotations[i]);
+			} else {
+				annotatedTypes.put(types[i], annotations[i]);
+			}
 		}
+
+		annotatedTypes.putAll(pageableTypes); //ensures that pageable is always last
 
 		query.parameters = getQueryParameters(annotatedTypes);
 
