@@ -2,6 +2,7 @@ package co.xarx.trix.web.rest.resource.v1;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.AuthCredential;
+import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.AuthCredentialRepository;
 import co.xarx.trix.services.PasswordService;
 import co.xarx.trix.services.security.Authenticator;
@@ -81,7 +82,11 @@ public class AuthResource extends AbstractResource implements AuthApi {
 
 	@Override
 	public Response updatePassword(String hash, String password) {
-		passwordService.updatePassword(hash, password);
-		return Response.status(Response.Status.OK).build();
+		try {
+			passwordService.updatePassword(hash, password);
+			return Response.status(Response.Status.OK).build();
+		} catch (BadRequestException e) {
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 }
