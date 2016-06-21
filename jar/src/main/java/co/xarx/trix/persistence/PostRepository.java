@@ -49,6 +49,7 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@PostFilter("hasPermission(filterObject, 'read')")
 	List<Post> findAll();
 
+	@SdkExclude
 	@Query("select p from Post p where p.id in (:ids)")
 	List<Post> findByIds(@Param("ids") Iterable<Integer> ids, Sort sort);
 
