@@ -6,6 +6,7 @@ import co.xarx.trix.domain.page.query.statement.CommentStatement;
 import co.xarx.trix.persistence.CommentRepository;
 import co.xarx.trix.services.AbstractSearchService;
 import co.xarx.trix.services.security.PermissionFilterService;
+import co.xarx.trix.util.ImmutablePage;
 import co.xarx.trix.web.rest.mapper.CommentDataMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -31,25 +32,25 @@ public class CommentSearchService extends AbstractSearchService {
 		this.permissionFilterService = permissionFilterService;
 	}
 
-	public List<CommentData> search(CommentStatement params, Integer page, Integer size, Sort sort) {
+	public ImmutablePage<CommentData> search(CommentStatement params, Integer page, Integer size, Sort sort) {
 		List<Integer> searchResults = searchIds(params);
-		List<CommentData> result = new ArrayList<>();
+		List<CommentData> result;
 		if (searchResults.isEmpty())
-			return result;
+			return new ImmutablePage<>(page);
 
 		List<Integer> idsToGetFromDB = getPaginatedIds(searchResults, page, size);
 
 		List<Comment> entities = idsToGetFromDB.size() > 0 ? commentRepository.findAllWithAuthors(idsToGetFromDB, sort)
-		: new ArrayList<Comment>();
+		: new ArrayList<>();
 
 		if (entities == null)
-			return result;
+			return new ImmutablePage<>(page);
 
 		result = entities.stream()
 				.map(entity -> commentDataMapper.asDto(entity))
 				.collect(Collectors.toList());
 
-		return result;
+		return new ImmutablePage(result, page, searchResults.size());
 	}
 
 	private List<Integer> searchIds(CommentStatement params) {
