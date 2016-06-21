@@ -12,7 +12,6 @@ import org.springframework.security.acls.model.Sid;
 import org.springframework.util.Assert;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 import static co.xarx.trix.config.security.Permissions.*;
 import static org.junit.Assert.assertFalse;
@@ -22,9 +21,10 @@ public class BitMaskPermissionGrantingStrategyTest {
 
 
 	private Sid user1; //reader on station1, writer on station2
-	private Sid user2; //admin on station1, forbidden to read station2
-	private Sid anon; //can read station1 but not station2
-	private Sid admin; //admin on both stations
+	private Sid user2; //roleAdmin on station1, forbidden to read station2
+	private Sid roleAnon; //can read station1 but not station2
+	private Sid roleAdmin; //roleAdmin on both stations
+	private Sid roleUser;
 
 	private IMAcl station1; //public
 	private IMAcl post1; //belongs to station1
@@ -54,18 +54,22 @@ public class BitMaskPermissionGrantingStrategyTest {
 		AccessControlEntryImpl user2St2 = ace(station2, user2, getAdmin(), false);
 		AccessControlEntryImpl user2Post2 = ace(post2, user2, getOwner(), true);
 
-		anon = new GrantedAuthoritySid("ROLE_ANONYMOUS");
-		AccessControlEntryImpl anonSt1 = ace(station1, anon, getReader(), true);
-		AccessControlEntryImpl anonSt2 = ace(station2, anon, getReader(), false);
+		roleUser = new GrantedAuthoritySid("ROLE_USER");
+		AccessControlEntryImpl userSt1 = ace(station1, roleUser, getReader(), true);
 
-		admin = new GrantedAuthoritySid("ROLE_ADMIN");
-		AccessControlEntryImpl adminSt1 = ace(station1, admin, getAdmin(), true);
-		AccessControlEntryImpl adminSt2 = ace(station2, admin, getAdmin(), true);
+		roleAnon = new GrantedAuthoritySid("ROLE_ANONYMOUS");
+		AccessControlEntryImpl anonSt1 = ace(station1, roleAnon, getReader(), true);
+		AccessControlEntryImpl anonSt2 = ace(station2, roleAnon, getReader(), false);
+
+		roleAdmin = new GrantedAuthoritySid("ROLE_ADMIN");
+		AccessControlEntryImpl adminSt1 = ace(station1, roleAdmin, getAdmin(), true);
+		AccessControlEntryImpl adminSt2 = ace(station2, roleAdmin, getAdmin(), true);
 
 		station1.addEntry(user1St1);
 		station1.addEntry(user2St1);
 		station1.addEntry(anonSt1);
 		station1.addEntry(adminSt1);
+		station1.addEntry(userSt1);
 
 		station2.addEntry(user1St2);
 		station2.addEntry(user2St2);
@@ -82,19 +86,19 @@ public class BitMaskPermissionGrantingStrategyTest {
 
 	private class AllowedPermissions {
 
-		private final Sid sid;
+		private final Sid[] sids;
 		private final IMAcl acl;
 
-		public AllowedPermissions(IMAcl acl, Sid sid) {
+		public AllowedPermissions(IMAcl acl, Sid... sids) {
 			this.acl = acl;
-			this.sid = sid;
+			this.sids = sids;
 		}
 
 		private boolean isAllowed(Permission... permission) {
 			Assert.notEmpty(permission);
 			return grantingStrategy.isGranted(this.acl,
 					Arrays.asList(permission),
-					Collections.singletonList(this.sid), false);
+					Arrays.asList(this.sids), false);
 		}
 
 		private void isAllAllowed() {
@@ -172,7 +176,7 @@ public class BitMaskPermissionGrantingStrategyTest {
 
 	@Test
 	public void AnonOnStation1() throws Exception {
-		AllowedPermissions permissions = new AllowedPermissions(station1, anon);
+		AllowedPermissions permissions = new AllowedPermissions(station1, roleAnon);
 
 		assertTrue(permissions.isAllowed(READ));
 		assertFalse(permissions.isAllowed(CREATE, WRITE, DELETE, MODERATION));
@@ -180,29 +184,43 @@ public class BitMaskPermissionGrantingStrategyTest {
 
 	@Test
 	public void AnonOnStation2() throws Exception {
-		AllowedPermissions permissions = new AllowedPermissions(station2, anon);
+		AllowedPermissions permissions = new AllowedPermissions(station2, roleAnon);
 
 		permissions.isAllDenied();
 	}
 
 	@Test
 	public void AnonOnPost2() throws Exception {
-		AllowedPermissions permissions = new AllowedPermissions(post2, anon);
+		AllowedPermissions permissions = new AllowedPermissions(post2, roleAnon);
 
 		permissions.isAllDenied();
 	}
 
 	@Test
 	public void AdminOnStation1() throws Exception {
-		AllowedPermissions permissions = new AllowedPermissions(station1, admin);
+		AllowedPermissions permissions = new AllowedPermissions(station1, roleAdmin);
 
 		permissions.isAllAllowed();
 	}
 
 	@Test
 	public void AdminOnStation2() throws Exception {
-		AllowedPermissions permissions = new AllowedPermissions(station2, admin);
+		AllowedPermissions permissions = new AllowedPermissions(station2, roleAdmin);
 
 		permissions.isAllAllowed();
+	}
+
+	@Test
+	public void UserOnStation1() throws Exception {
+		AllowedPermissions permissions = new AllowedPermissions(station1, roleUser);
+
+		assertTrue(permissions.isAllowed(READ));
+	}
+
+	@Test
+	public void UserOnStation2() throws Exception {
+		AllowedPermissions permissions = new AllowedPermissions(station2, roleUser);
+
+		assertFalse(permissions.isAllowed(READ));
 	}
 }
