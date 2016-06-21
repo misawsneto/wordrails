@@ -1066,6 +1066,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.publishPost = function(){
+		$scope.removeScheduledDate();
 		var post = angular.copy($scope.app.editingPost)
 		post.state = 'PUBLISHED';
 		if(post.id){
