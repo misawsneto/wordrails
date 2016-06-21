@@ -136,7 +136,7 @@ public class StatisticsService {
 
 	public HashMap findMostPopular(String field, Long startTimestamp, Long endTimestamp, Integer size) throws Exception {
 		if(!isValidField(field)) {
-			throw new Exception("Invalid field");
+			throw new Exception("Invalid field in nginx: " + field);
 		}
 
 		String term = "by_" + field;
@@ -255,7 +255,7 @@ public class StatisticsService {
 
 	public Map<String, Integer> getFileStats(){
 		List<Object[]> mimeSums = fileRepository.sumFilesSizeByMime(TenantContextHolder.getCurrentTenantId());
-		Map map = new HashMap<>();
+		Map<String, Integer> map = new HashMap<>();
 
 		mimeSums.stream().filter(tuple -> tuple[0] != null && tuple[1] != null)
 				.forEach(tuple -> map.put((String) tuple[0], (int) (long) tuple[1]));
@@ -351,7 +351,6 @@ public class StatisticsService {
 	}
 
 	public Interval getInterval(String end, String start){
-		Assert.notNull(end, "Invalid date. Expected yyyy-MM-dd");
 		DateTime endDate = dateTimeFormatter.parseDateTime(end);
 
 		if(start != null && !start.isEmpty()){
@@ -405,7 +404,6 @@ public class StatisticsService {
 
 		search.setQuery(query);
 		search.addAggregation(AggregationBuilders.dateHistogram(queryName).field(orderField).interval(DateHistogram.Interval.DAY));
-//		search.addSort(SortBuilders.fieldSort("@timestamp").order(SortOrder.DESC));
 
 		SearchResponse response = search.execute().actionGet();
 		DateHistogram histogram = response.getAggregations().get(queryName);

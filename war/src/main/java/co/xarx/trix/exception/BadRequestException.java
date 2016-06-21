@@ -11,7 +11,7 @@ public class BadRequestException extends RuntimeException{
 
 	private static final String MESSAGE = "Invalid Data";
 	
-	public List<FieldError> errors = new ArrayList<FieldError>();
+	public List<FieldError> errors = new ArrayList<FieldError>(); 
 	
 	public BadRequestException() {
 		super(MESSAGE);
