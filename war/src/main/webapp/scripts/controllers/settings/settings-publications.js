@@ -98,7 +98,7 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
   var handleSuccess = function(posts, a,b){
     if(posts && posts.length > 0){
-      posts.reverse();
+      //posts.reverse();
 
         if(!$scope.publications)
           $scope.publications = []
