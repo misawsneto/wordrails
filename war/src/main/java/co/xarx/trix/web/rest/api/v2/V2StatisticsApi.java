@@ -25,6 +25,7 @@ public interface V2StatisticsApi {
 	@GET
 	@Path("/popularNetworks")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("isAuthenticated()")
 	Response getPopularNetworks(@QueryParam("page") Integer page, @QueryParam("size") Integer size);
 
 	@GET
