@@ -159,7 +159,7 @@ public class ESPostService extends AbstractElasticSearchService {
 
 		if (publicationType != null) {
 			mainQuery = mainQuery.must(matchQuery("state", publicationType));
-		} else if (publicationType.equals("SCHEDULED")) {
+		} else if (publicationType.equalsIgnoreCase("SCHEDULED")) {
 			mainQuery = mainQuery.must(matchQuery("state", Post.STATE_PUBLISHED))
 					.should(rangeQuery("scheduledDate").gt(new Date()));
 		} else {
@@ -263,7 +263,7 @@ public class ESPostService extends AbstractElasticSearchService {
 	private void applyStateFilter(BoolFilterBuilder f, String state) {
 		long now = Instant.now().toEpochMilli();
 		if (state != null && !state.isEmpty()) {
-			if (state.equals("SCHEDULED")) {
+			if (state.equalsIgnoreCase("SCHEDULED")) {
 				f.must(queryFilter(queryStringQuery("PUBLISHED").defaultField("state")));
 				applyDateFilter(f, String.valueOf(now), null, "scheduledDate");
 			} else if (state.equals("PUBLISHED")) {
