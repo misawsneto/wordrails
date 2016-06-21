@@ -23,70 +23,95 @@ public class V2StatisticsResource implements V2StatisticsApi {
 											 Long startTime,
 											 Long endTime,
 											 String field){
-		Map map = statisticsService.findMostPopular(field, startTime, endTime, size);
-		return Response.status(Response.Status.OK).entity(map).build();
+		if(field == null || field.isEmpty()) return badRequest("field");
+		Map map;
+		try {
+			map = statisticsService.findMostPopular(field, startTime, endTime, size);
+			return ok(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return badRequest("field");
+		}
 	}
 
 	@Override
 	public Response getPopularNetworks(Integer page, Integer size){
-		Map popular = statisticsService.getPorpularNetworks();
-		return Response.status(Response.Status.OK).entity(popular).build();
+		Map popular;
+		try {
+			popular = statisticsService.getPorpularNetworks();
+			return ok(popular);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("There is a problem with Stats Index").build();
+		}
 	}
 
 	@Override
 	public Response postStats(String end, String start, Integer postId) throws IOException {
+		if(end == null || end.isEmpty()) badRequest("end");
+
 		StatsData statsData = statisticsService.postStats(end, start, postId);
-		return Response.status(Response.Status.OK).entity(statsData).build();
+		return ok(statsData);
 	}
 
 	@Override
 	public Response authorStats(String end, String start, Integer authorId) throws IOException {
+		if (end == null || end.isEmpty()) badRequest("end");
 		StatsData statsData = statisticsService.authorStats(end, start, authorId);
-		return Response.status(Response.Status.OK).entity(statsData).build();
+		return ok(statsData);
 	}
 
 	@Override
 	public Response networkStats(String end, String start) throws IOException {
+		if (end == null || end.isEmpty()) badRequest("end");
 		StatsData networkData = statisticsService.networkStats(end, start);
-		return Response.status(Response.Status.OK).entity(networkData).build();
+		return ok(networkData);
 	}
 
 	@Override
 	public Response stationStats(String end, String start, Integer stationId) throws IOException {
+		if (end == null || end.isEmpty()) badRequest("end");
 		StatsData stationData = statisticsService.stationStats(end, start, stationId);
-		return Response.status(Response.Status.OK).entity(stationData).build();
+		return ok(stationData);
 	}
 
 	@Override
 	public Response getNetworkUsedSpace() {
 		Map<String, Integer> storage = statisticsService.getFileStats();
-		return Response.status(Response.Status.OK).entity(storage).build();
+		return ok(storage);
 	}
 
 	@Override
 	public Response countReadsByPostIds(List<Integer> postIds) {
 		Map<Integer, Integer> countReads = statisticsService.countPostReads(postIds);
-		return Response.status(Response.Status.OK).entity(countReads).build();
+		return ok(countReads);
 	}
 
 	@Override
 	public Response countReadersByStation(Integer stationId) {
-		if(stationId == null){
-			return Response.status(Response.Status.BAD_REQUEST).build();
-		}
+		if(stationId == null) return badRequest("stationId");
 
 		Map<String, Integer> map = statisticsService.getStationReaders(stationId);
 
-		if(map == null){
-			return Response.status(Response.Status.NOT_FOUND).entity(map).build();
-		}
-
-		return Response.status(Response.Status.OK).entity(map).build();
+		if(map == null) return notFound("Station");
+		return ok(map);
 	}
 
 	@Override
 	public Response dashboardStats() {
 		Map<String, Integer> dashboard = statisticsService.dashboardStats();
 		return Response.status(Response.Status.OK).entity(dashboard).build();
+	}
+
+	public Response badRequest(String fieldName){
+		return Response.status(Response.Status.BAD_REQUEST).entity(fieldName + " must be defined").build();
+	}
+
+	public Response notFound(String fieldName){
+		return Response.status(Response.Status.NOT_FOUND).entity(fieldName + " not found").build();
+	}
+
+	public Response ok(Object object){
+		return Response.status(Response.Status.OK).entity(object).build();
 	}
 }
