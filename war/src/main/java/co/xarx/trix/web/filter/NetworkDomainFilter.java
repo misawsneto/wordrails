@@ -32,6 +32,7 @@ public class NetworkDomainFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) res;
 		String host = request.getHeader("Host");
 
+
 		if (host == null) {
 			throw new BadRequestException("Host is null");
 		}
@@ -56,10 +57,6 @@ public class NetworkDomainFilter implements Filter {
 			TenantContextHolder.setCurrentTenantId(tenantId);
 //			tenantProvider.setTenantId(tenantId);
 		}
-
-//		response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
-//		response.setHeader("Pragma", "no-cache");
-//		response.setDateHeader("Expires", 0);
 
 		chain.doFilter(req, res);
 		TenantContextHolder.setCurrentTenantId(null);
