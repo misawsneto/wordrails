@@ -19,6 +19,10 @@ public class ImmutablePage<T> implements Collection<T> {
 		this(null, 0, 0);
 	}
 
+	public ImmutablePage(Integer index) {
+		this(null, index, 0);
+	}
+
 	public ImmutablePage(List<T> items, Integer index, Integer totalSize) {
 		this.items = ImmutableList.copyOf(items == null ? new ArrayList<>() : items);
 
