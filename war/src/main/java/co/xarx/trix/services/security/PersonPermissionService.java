@@ -91,7 +91,14 @@ public class PersonPermissionService {
 		return result;
 	}
 
-	public Iterable<Person> getPersonFromStation(Integer stationId) {
+	public List<Person> getPersonFromStation(Integer stationId) {
+		Station station = stationRepository.findOne(stationId);
+
+		if (station == null){
+			return new ArrayList<>();
+		}
+
+		//TO WHOM IT MAY CONCERN: ACL IS NOT MULTITENANT(!)
 		MutableAcl acl = aclService.findAcl(stationId);
 		List<Person> persons = new ArrayList<>();
 		for (AccessControlEntry entry : acl.getEntries()) {
@@ -106,7 +113,8 @@ public class PersonPermissionService {
 			}
 
 			PrincipalSid sid = (PrincipalSid) entry.getSid();
-			persons.add(personRepository.findByUsername(sid.getPrincipal()));
+			Person person = personRepository.findByUsername(sid.getPrincipal());
+			if (person != null) persons.add(person);
 		}
 		return persons;
 	}
