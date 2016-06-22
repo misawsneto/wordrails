@@ -9,8 +9,10 @@ import co.xarx.trix.domain.Station;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,12 +27,14 @@ public class PersonPermissionService {
 	private AccessControlListService aclService;
 	private StationRepository stationRepository;
 	private PersonRepository personRepository;
+	private PermissionEvaluator permissionEvaluator;
 
 	@Autowired
-	public PersonPermissionService(AccessControlListService aclService, StationRepository stationRepository, PersonRepository personRepository) {
+	public PersonPermissionService(AccessControlListService aclService, StationRepository stationRepository, PersonRepository personRepository, PermissionEvaluator permissionEvaluator) {
 		this.aclService = aclService;
 		this.stationRepository = stationRepository;
 		this.personRepository = personRepository;
+		this.permissionEvaluator = permissionEvaluator;
 	}
 
 	public UserPermissionData getPermissions(Sid sid) {
@@ -41,23 +45,26 @@ public class PersonPermissionService {
 		for (ObjectIdentity oi : acls.keySet()) {
 			Acl acl = acls.get(oi);
 			int stationId = Math.toIntExact((long) oi.getIdentifier());
-			AccessControlEntry ace = aclService.findAce(acl.getEntries(), sid);
+			List<AccessControlEntry> aces = aclService.findAce(acl.getEntries(), sid);
 
-			if (ace != null) {
-				PermissionData permissionData = aclService.getPermissionData(ace.getPermission());
-				result.getStationPermissions().add(result.new Permission(stationId, permissionData));
+			if (aces != null) {
+				for (AccessControlEntry ace : aces) {
+					PermissionData permissionData = aclService.getPermissionData(ace.getPermission());
+					result.getStationPermissions().add(result.new Permission(stationId, permissionData));
+				}
 			}
 		}
 
 		return result;
 	}
 
-	public List<Station> getStationsWithPermission(Sid sid, Permission p) {
+	public List<Station> getStationsWithPermission(Permission p) {
 		List<Station> result = new ArrayList<>();
 		List<Station> stations = stationRepository.findAll();
 
 		for (Station station : stations) {
-			boolean hasPermission = aclService.hasPermission(Station.class, station.getId(), sid, p);
+			boolean hasPermission = permissionEvaluator.hasPermission(SecurityContextHolder.getContext()
+					.getAuthentication(), station.getId(), Station.class.getName(), p);
 			boolean isPermissionOfCreate = Permissions.containsPermission(p, CREATE);
 			if(isPermissionOfCreate)
 				hasPermission = hasPermission || station.isWritable();
@@ -73,11 +80,13 @@ public class PersonPermissionService {
 		UserPermissionData result = new UserPermissionData();
 
 		MutableAcl acl = aclService.findAcl(stationId);
-		AccessControlEntry ace = aclService.findAce(acl.getEntries(), sid);
+		List<AccessControlEntry> aces = aclService.findAce(acl.getEntries(), sid);
 
-		PermissionData permissionData = aclService.getPermissionData(ace.getPermission());
-		UserPermissionData.Permission permission = result.new Permission(stationId, permissionData);
-		result.getStationPermissions().add(permission);
+		for (AccessControlEntry ace : aces) {
+			PermissionData permissionData = aclService.getPermissionData(ace.getPermission());
+			UserPermissionData.Permission permission = result.new Permission(stationId, permissionData);
+			result.getStationPermissions().add(permission);
+		}
 
 		return result;
 	}

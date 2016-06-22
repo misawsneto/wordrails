@@ -1,10 +1,6 @@
 app.controller('BookmarksCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDialog', '$state', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$interval', '$mdSidenav', '$translate', '$filter', '$localStorage', '$sce',
 	function($scope , $rootScope,  $log ,  $timeout ,  $mdDialog ,  $state ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $interval, $mdSidenav, $translate, $filter, $localStorage, $sce){
 
-		$scope.reloadMasonry = function(){
-      $rootScope.$broadcast('masonry.reload');
-    }
-
 		if($scope.app.person.bookmarkPosts && $scope.app.person.bookmarkPosts.length){
 			trix.findPostsByIds($scope.app.person.bookmarkPosts).success(function(posts){
 				$scope.postViews = []
@@ -15,14 +11,14 @@ app.controller('BookmarksCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$m
 					})
 				})
 				if($scope.postViews && $scope.postViews.length > 0)
-					$rootScope.$broadcast('masonry.reload');
+					$scope.reloadMasonry();
 			})
 		}else
 			$scope.noBookmarks = true;
 
 		$scope.postLoaded = null;
 
-		$scope.showRemoveBookmarkDialog = function(post){
+		$scope.showRemoveBookmarkDialog = function(event, post){
 			$scope.postLoaded = post;
 			$mdDialog.show({
 				scope: $scope,        // use parent scope in template
@@ -49,6 +45,13 @@ app.controller('BookmarksCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$m
 						person.bookmarkPosts.splice(i, 1);
 					}
 				}
+
+				for (var i = $scope.app.person.bookmarkPosts.length - 1; i >= 0; i--) {
+					if($scope.app.person.bookmarkPosts[i] == post.id){
+						$scope.app.person.bookmarkPosts.splice(i, 1);
+					}
+				}
+
 				trix.putPerson(person).success(function(){
 					for (var i = $scope.postViews.length - 1; i >= 0; i--) {
 						if($scope.postViews[i].id == post.id){
@@ -70,4 +73,12 @@ app.controller('BookmarksCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$m
 			})
 		}
 
+	  $timeout(function(){
+		$scope.app.removeTermTabs();
+	  })
+
+	bookmarksCtrl = $scope;
+
 }]);
+
+var bookmarksCtrl = null;

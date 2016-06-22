@@ -45,6 +45,7 @@
 		"EDIT": "Edit",
 		"EDIT_PROFILE": "Edit profile",
 		"REMOVE": "Remove",
+		"REMOVE_ALL": "Remove all",
 		"MOVE_TO": "Move to...",
 		"FILTER_BY": "Filter by",
 		"FILTER_BY_STATION": "Filter by station",
@@ -55,6 +56,7 @@
 		"SAVE_DRAFT": "Save draft",
 		"SAVE_AS_DRAFT": "Save as draft",
 		"SAVE": "Save",
+		"APPLY": "Apply",
 		"TITLE": "Title",
 		"SUBTITLE": "Subtitle",
 		"HEADING": "Heading",
@@ -74,12 +76,18 @@
 		"SEND": "Send",
 		"SEND_INVITE": "Send invite",
 		"VIDEO": "Video",
+		"VIDEOS": "Videos",
 		"AUDIO": "Audio",
+		"AUDIOS": "Audios",
+		"DOCUMENT": "Document",
+		"DOCUMENTS": "Documents",
 		"SOCIAL_NETWORK_PROFILES": "Social network profiles",
-		"SOCIAL_NETWORK_IDS": "Social network App IDs",
+		"SOCIAL_NETWORK_IDS": "Social networks",
 		"BOOKMARKS": "Bookmarks",
+		"NOTIFICATION": "Notification",
 		"NOTIFICATIONS": "Notifications",
 		"IMAGE": "Image",
+		"IMAGES": "Images",
 		"CATEGORY_COLOR": "Category color",
 		"SHARE": "Share",
 		"DESCRIPTION": "Description",
@@ -88,6 +96,7 @@
 		"LATEST_POSTS": "Latest posts",
 		"OPTIONAL": "optional",
 		"NO_BOOKMARKS": "You do not have bookmarks",
+		"NO_NOTIFICATIONS": "You do not have notifications",
 		"ADD_PERSON": "Create a new user",
 		"TOTAL": "Total",
 		"SHOWING": "Showing",
@@ -95,9 +104,15 @@
 		"SELECT_ALL": "Select all",
 		"DESELECT_ALL": "Deselect all",
 		"AT": "at",
+		"SHOW": "Show",
 		"SHOW_ALL": "Show all",
 		"SKIP": "Skip",
-		"CLOSE": "Close"
+		"CLOSE": "Close",
+		"RELATED": "Related publications",
+		"ADD": "Add",
+		"LOAD_MORE": "Load more",
+		"ACTIVATE": "Activate",
+		"FEATURED_POSTS": "Featured publications"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -136,11 +151,32 @@
 	    "NEW_POST" : "New publication"
 	  }
 	},
+	"search": {
+		"VIEW_PROFILE": "View perfil",
+		"VIEW_STATION": "Visit station",
+		"VIEW_CATEGORY": "View category"
+	},
 	"settings":{
 		"dashboard":{
 			"NO_SCHEDULED": "No publications scheduled yet",
 			"NO_DRAFTS": "No publication drafts yet",
-			"NO_PUBLICATIONS": "No publications yet"
+			"NO_PUBLICATIONS": "No publications yet",
+			"REGISTERD_USERS": "Registered Users",
+			"IOS_INSTALLS": "iOS installations",
+			"ANDROID_INSTALLS": "Android installations",
+			"CREATE_PUBLICATION_HEADER": "Create new publications",
+			"CREATE_PUBLICATION_DESC": "",
+			"NETWORK_MANAGEMENT_HEADER": "Allow new signups and other settings",
+			"NETWORK_MANAGEMENT_DESC": "",
+			"STATION_MANAGEMENT_HEADER": "Crie novas estações, adicione categorias e outras configurações",
+			"STATION_MANAGEMENT_DESC": "",
+			"CREATE_PAGES_HEADER": "Crie e configure páginas",
+			"CREATE_PAGES_DESC": "",
+			"USER_MANAGEMENT_HEADER": "Faça a gestão dos usuários",
+			"USER_MANAGEMENT_DESC": "",
+			"POST_MANAGEMENT_HEADER": "Gerencie todas publicação",
+			"POST_MANAGEMENT_DESC": "",
+			"COMMENTS_MANAGEMENT_HEADER": "View and manage all comments"
 		},
 		"aside":{
 			"DASHBOARD": "Dashboard",
@@ -157,6 +193,7 @@
 				"LOGOS": "Logos",
 				"FOOTER": "Footer",
 				"CUSTOMIZATION": "Customization",
+				"INTEGRATIONS": "Integrations",
 				"THEMING": "Appearance"
 			},
 			"settings":{
@@ -188,6 +225,7 @@
 			"ALERT": "Alert message!"
 		},
 		"pages":{
+			"MAIN_STATION": "Main station",
 			"HOME_PAGE": "Home page",
 			"CATEGORY_PAGES": "Category pages",
 			"ADD_SECTION": "Add section",
@@ -198,7 +236,12 @@
 			"SUBSECTION": "Subsection",
 			"SIDENAV": "Side menu",
 			"FOOTER": "Footer",
-			"HEADER": "Header"
+			"HEADER": "Header",
+			"header": {
+				"TABS": "Tabs",
+				"MENU_ITEM": "Menu item",
+				"MENU_NAME": "Menu name"
+			}
 		},
 		"users": {
 			"ENABLE_ALL_SELECTED": "Enable all selected",
@@ -217,7 +260,12 @@
 			"EMAIL_IN_USE": "Email is already in use. Please use another email and try again.",
 			"REQUIRED_FIELDS": "Name, username and email are required.",
 			"OPTIONAL_PASSWORD": "Password is optional and if not provided a random password will be generated and sent via email.",
-			"INVITATIONS_SENT": "Invitations were sent"
+			"INVITATIONS_SENT": "Invitations were sent",
+			"PERMISSIONS_UPDATES": "Permissions updates"
+		},
+		"comment":{
+			"REMOVE_COMMENT_MSG": "Are you sure you want to permanatly delete this comment?",
+			"REMOVE_SELECTED_COMMENTS_MSG": "Are you sure you want to permanatly delete all selected comments?"
 		},
 		"post": {
 			"menu":{
@@ -231,12 +279,12 @@
 				"ATTACH_POST": "Attach other publications to this one",
 				"NOTIFY_STATION_USERS": "Notify users",
 				"PUBLICATION_MSG": "The content will be published when you click Publish.",
-				"AUTO_SAVE_MSG": "Drafts will be saved automatically every minute once the title, content, station and categories are set. All publication versions can be accessed through the \"Publication options\" menu."
+				"AUTO_SAVE_MSG": "Drafts will be saved automatically uppon every change once the title, content, station and categories are set. All publication versions can be accessed through the \"Publication options\" menu."
 			},
 			"ACTIVATE_DEACTIVATE_HEADING": "Activate/Deactivate heading",
 			"ACTIVATE_DEACTIVATE_SUBTITLE": "Activate/Deactivate subtitle",
 			"DETAILS": "Details",
-			"REVISIONS": "Revisions",
+			"REVISIONS": "History",
 			"OPTIONS": "Publication options",
 			"CUSTOMIZE_LINK_DESC": "Customized URL address for the web",
 			"SCHEDULED_DATE_DESC": "Schedule date for auto publishing",
@@ -252,13 +300,18 @@
 			"NEW_POST": "New publication",
 			"NOTIFY_STATION_USERS_DESC": "Notify station users on their devices.",
 			"NOTIFY_USERS": "Notify users",
+			"PUBLISHED_AS_DRAFT": "Draft saved",
+			"SCHEDULED_MSG": "Scheduled date and time:",
+			"RESCHEDULE": "Reschedule",
 			"messages":{
 				"PAGE_CHANGE_ALERT": "You have edited your publication and there's unsaved content.",
 				"CLEAR_CONTENT_MSG": "Clear all publication content.",
 				"CONTENT_LOST_ALERT": "Attention! All non-saved content will be list.",
 				"NEW_POST_MSG": "Start an entire new publication?",
 				"CHANGE_STATE_FROM_PUBLISHED_MSG": "This publication won't be visible unless it's state is set to PUBLISHED. Are you sure you want to change the state of this publication?",
-				"NEW_PUBLICATION_INFO": "You have started a new publication"
+				"NEW_PUBLICATION_INFO": "You have started a new publication",
+				"INVALID_TERMS_OR_STATIONS": "You need to set a station and category before creating/updating a publication",
+				"INVALID_TITLE_OR_BODY": "You need to set a title and body before creating/updating a publication"
 			},
 			"states": {
 				"PUBLISHED": "Published",
@@ -279,7 +332,7 @@
 			"CROP_IMAGE_DESC": "Click and drag to create a selection to crop the given image.",
 			"FOCUS_IMAGE_DESC": "Drag the marker to set the focuspoint.",
 			"TOGGLE_LANDSCAPE": "On/off landscape (image)",
-			"SHOW_VERSION": "Show version",
+			"SHOW_VERSION": "Restore version",
 			"CONTRAST": "Contrast",
 			"SELECT_STATION": "Select a station and categories for indexing your publication",
 			"ADD_TAGS": "Adicioanr tags",
@@ -288,7 +341,9 @@
 			"TRASH_ALL": "Move to trash",
 			"UPDATE_SUCCESS": "Atualizado",
 			"PUBLISH_SUCCESS": "Published",
-			"PUBLISH_ERROR": "Publication error"
+			"PUBLISH_ERROR": "Publication error",
+			"EDITING": "Editing",
+			"AUTOMATIC_SAVE": "Automatic save"
 		},
 		"station": {
 			"STATION_SETTINGS": "Station settings",
@@ -308,7 +363,14 @@
 			"AUTHENTICATED": "All authenticated users on this station",
 			"STATION_LOGO": "Station logo",
 			"STATION_CREATION_SUCCESS": "Station was successfully created",
-			"STATION_REMOVED_SUCCESS": "Station was removed"
+			"STATION_REMOVED_SUCCESS": "Station was removed",
+			"perspective": {
+				"FIX_POST": "Fix publication",
+				"FIX_POST_MSG": "Fix a publication at position number ",
+				"ACTIVATE_PERSPECTIVE_MSG": "Are you sure you wish to activate this perspective? This action will affect how the content is displayed on all devices.",
+				"REMOVE_PERSPECTIVE_MSG": "Are you sure you wish to remove this perspective? This operation cannot be undone.",
+				"PERSPECTIVE_ORDER_MSG": "Drag and Sort"
+			}
 		},
 		"category": {
 			"STATION_CATEGORY": "Categories of ",
@@ -342,6 +404,7 @@
 		"SUCCESS_MSG": "Changes successfully applied",
 		"network":{
 			"NO_LANGUAGE": "Language is not available"
-		}
+		},
+		"INVALID_CREDENTIALS": "Invalid credentials. Please try again."
 	}
 }

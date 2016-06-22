@@ -3,18 +3,19 @@ package co.xarx.trix.web.rest.resource.v2;
 import co.xarx.trix.api.v2.CommentData;
 import co.xarx.trix.domain.page.query.statement.CommentStatement;
 import co.xarx.trix.services.comment.CommentSearchService;
-import co.xarx.trix.util.RestUtil;
+import co.xarx.trix.services.comment.CommentService;
+import co.xarx.trix.util.ImmutablePage;
+import co.xarx.trix.util.SpringDataUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2CommentsApi;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.DELETE;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -22,10 +23,12 @@ import java.util.Set;
 public class V2CommentsResource extends AbstractResource implements V2CommentsApi {
 
 	private CommentSearchService commentSearchService;
+	private CommentService commentService;
 
 	@Autowired
-	public V2CommentsResource(CommentSearchService commentSearchService) {
+	public V2CommentsResource(CommentSearchService commentSearchService, CommentService commentService) {
 		this.commentSearchService = commentSearchService;
+		this.commentService = commentService;
 	}
 
 	@Override
@@ -42,17 +45,18 @@ public class V2CommentsResource extends AbstractResource implements V2CommentsAp
 
 		CommentStatement params = new CommentStatement(query, authors, posts, stations, from, until, orders);
 
-		Sort sort = RestUtil.getSort(params.getOrders());
+		ImmutablePage<CommentData> pageOfData = commentSearchService.search(params, page, size);
 
-		List<CommentData> data = commentSearchService.search(params, page, size, sort);
 
 		Set<String> allEmbeds = Sets.newHashSet("author");
+		super.removeNotEmbeddedData(embeds, pageOfData.items(), CommentData.class, allEmbeds);
 
-		super.removeNotEmbeddedData(embeds, data, CommentData.class, allEmbeds);
+		return Response.ok().entity(SpringDataUtil.getPageData(pageOfData, orders)).build();
+	}
 
-		Pageable pageable = RestUtil.getPageable(page, size, orders);
-		Page p = new PageImpl(data, pageable, data.size());
-
-		return Response.ok().entity(p).build();
+	@DELETE
+	@Path("")
+	public void deleteComment(List<CommentData> comments) throws IOException{
+		commentService.deleteAllComments(comments);
 	}
 }

@@ -17,12 +17,15 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor
 @Entity
 @Table(name = "person",
 		uniqueConstraints = {
 				@UniqueConstraint(columnNames = {"user_id", "username"}),
-				@UniqueConstraint(columnNames = {"username", "tenantId"})
+				@UniqueConstraint(columnNames = {"username", "tenantId"}),
+				@UniqueConstraint(columnNames = {"email", "tenantId"})
 		})
 @JsonIgnoreProperties(value = {
 		"imageHash", "imageLargeHash", "imageMediumHash", "imageSmallHash",
@@ -47,7 +50,7 @@ public class Person extends BaseEntity implements Serializable {
 
 	@OrderColumn(name = "list_order")
 	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "person_bookmark",joinColumns = @JoinColumn(name = "person_id"))
+	@CollectionTable(name = "person_bookmark", joinColumns = @JoinColumn(name = "person_id"))
 	@Column(name = "post_id")
 	public List<Integer> bookmarkPosts;
 
@@ -63,9 +66,8 @@ public class Person extends BaseEntity implements Serializable {
 	public boolean networkAdmin = false;
 
 	@JsonIgnore
-//	@RestResource(exported = false)
 	@NotNull
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToOne(fetch = FetchType.EAGER)
 	public User user;
 
 	@Size(max = 2048)
@@ -73,26 +75,14 @@ public class Person extends BaseEntity implements Serializable {
 
 	@Column
 	@Email
+	@NotNull
 	public String email;
 
-//	@RestResource(exported = false)
 	@ManyToOne
 	public Image image;
 
-//	@RestResource(exported = false)
 	@ManyToOne
 	public Image cover;
-
-	@Transient
-	@SdkInclude
-	public String imageOriginalHash;
-	@Transient
-	@SdkInclude
-	public String coverOriginalHash;
-
-	@Transient
-	@SdkInclude
-	public Boolean enabled;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -115,6 +105,14 @@ public class Person extends BaseEntity implements Serializable {
 		if (image != null) return image.getOriginalHash();
 
 		return null;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public boolean getEnabled() {
+		if (user != null) return user.isEnabled();
+
+		return false;
 	}
 
 	@Deprecated
@@ -164,18 +162,24 @@ public class Person extends BaseEntity implements Serializable {
 		return null;
 	}
 
-	@PostLoad
-	public void postLoad(){
-		if(image != null)
-			imageOriginalHash = image.getOriginalHash();
-		if(cover != null)
-			coverOriginalHash = cover.getOriginalHash();
-		this.enabled = user.enabled;
+	@Deprecated
+	@SdkInclude
+	public String getImageSocialUrl() {
+		if (user != null && user.getUserConnections() != null && !user.getUserConnections().isEmpty()) {
+			return user.getUserConnections()
+					.stream()
+					.filter(uc -> uc.getImageUrl() != null)
+					.findFirst()
+					.map(UserConnection::getImageUrl)
+					.orElse(null);
+		}
+
+		return null;
 	}
 
 	@PrePersist
-	public void prePersist(){
-		if(seenWelcome == null){
+	public void prePersist() {
+		if (seenWelcome == null) {
 			seenWelcome = false;
 		}
 	}

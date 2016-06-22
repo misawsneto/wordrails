@@ -4,20 +4,15 @@ import co.xarx.trix.TestArtifactsFactory;
 import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
-import co.xarx.trix.elasticsearch.mapper.PostViewMap;
-import co.xarx.trix.elasticsearch.mapper.StationViewMap;
 import co.xarx.trix.services.post.PostSearchService;
-import co.xarx.trix.config.modelmapper.*;
+import co.xarx.trix.util.ImmutablePage;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -25,7 +20,6 @@ import static org.junit.Assert.assertFalse;
 public class ESPostExecutorTest {
 
 	ESPostExecutor postExecutor;
-	private ModelMapper dataMapper;
 
 	class PostSearchServiceStub implements PostSearchService {
 
@@ -40,18 +34,23 @@ public class ESPostExecutorTest {
 		}
 
 		@Override
-		public List<Post> search(PostStatement params, Integer page, Integer size) {
+		public ImmutablePage<Post> search(PostStatement params, Integer page, Integer size) {
 			Post post1 = TestArtifactsFactory.createPost();
 			post1.setTitle("post1");
 			Post post2 = TestArtifactsFactory.createPost();
 			post2.setTitle("post2");
 
-			return Lists.newArrayList(post1, post2);
+			return new ImmutablePage<>(Lists.newArrayList(post1, post2), 0, 2);
 		}
 
 		@Override
-		public List<PostData> searchData(PostStatement params, Integer page, Integer size) {
-			return null;
+		public ImmutablePage<PostData> searchData(PostStatement params, Integer page, Integer size) {
+			PostData post1 = new PostData();
+			post1.setTitle("post1");
+			PostData post2 = new PostData();
+			post2.setTitle("post2");
+
+			return new ImmutablePage<>(Lists.newArrayList(post1, post2), 0, 2);
 		}
 	}
 
@@ -68,31 +67,19 @@ public class ESPostExecutorTest {
 		}
 
 		@Override
-		public List<Post> search(PostStatement params, Integer page, Integer size) {
+		public ImmutablePage<Post> search(PostStatement params, Integer page, Integer size) {
 			return null;
 		}
 
 		@Override
-		public List<PostData> searchData(PostStatement params, Integer page, Integer size) {
+		public ImmutablePage<PostData> searchData(PostStatement params, Integer page, Integer size) {
 			return null;
 		}
 	}
 
 	@Before
 	public void setUp() throws Exception {
-		dataMapper = new ModelMapper();
-		dataMapper.addMappings(new CategoryDataMap());
-		dataMapper.addMappings(new PictureDataMap());
-		dataMapper.addMappings(new ImageDataMap());
-		dataMapper.addMappings(new PostImageDataMap());
-		dataMapper.addMappings(new PersonDataMap());
-		dataMapper.addMappings(new PostDataMap());
-		dataMapper.addMappings(new PageDataMap());
-		dataMapper.addMappings(new VideoDataMap());
-		dataMapper.addMappings(new StationViewMap());
-		dataMapper.addMappings(new PostViewMap());
-
-		postExecutor = new ESPostExecutor(dataMapper, new PostSearchServiceStub());
+		postExecutor = new ESPostExecutor(new PostSearchServiceStub());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -102,21 +89,21 @@ public class ESPostExecutorTest {
 
 	@Test
 	public void testReturnPostData() throws Exception {
-		Page<PostData> postDatas = postExecutor.execute(new PostStatement(), 10, 0);
+		ImmutablePage<PostData> postDatas = postExecutor.execute(new PostStatement(), 10, 0);
 		Iterator<PostData> iterator = postDatas.iterator();
 
-		assertEquals(postDatas.getTotalElements(), 2);
-		assertEquals(postDatas.getTotalPages(), 1);
+		assertEquals(postDatas.totalSize(), Integer.valueOf(2));
+		assertEquals(postDatas.totalPages(), Integer.valueOf(1));
 		assertEquals(iterator.next().getTitle(), "post1");
 		assertEquals(iterator.next().getTitle(), "post2");
 	}
 
 	@Test
 	public void testNullDataReturn() throws Exception {
-		ESPostExecutor postExecutor = new ESPostExecutor(dataMapper, new PostSearchServiceNullStub());
-		Page<PostData> postDatas = postExecutor.execute(new PostStatement(), 10, 0);
+		ESPostExecutor postExecutor = new ESPostExecutor(new PostSearchServiceNullStub());
+		ImmutablePage<PostData> postDatas = postExecutor.execute(new PostStatement(), 10, 0);
 
-		assertEquals(postDatas.getTotalElements(), 0);
+		assertEquals(postDatas.totalSize(), Integer.valueOf(0));
 		assertFalse(postDatas.iterator().hasNext());
 	}
 }

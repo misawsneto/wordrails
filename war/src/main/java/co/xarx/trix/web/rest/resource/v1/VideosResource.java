@@ -23,6 +23,11 @@ public class VideosResource extends AbstractResource implements VideosApi {
 	}
 
 	@Override
+	public void findVideosOrderByDate() throws ServletException, IOException {
+		forward();
+	}
+
+	@Override
 	public void postVideo() throws ServletException, IOException {
 		forward();
 	}

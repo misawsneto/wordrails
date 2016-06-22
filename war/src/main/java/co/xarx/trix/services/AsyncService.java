@@ -1,15 +1,12 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.Person;
 import co.xarx.trix.persistence.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
@@ -39,16 +36,17 @@ public class AsyncService {
 		return new AsyncResult<>(runnable.call());
 	}
 
-	@Async
-	@Transactional
-	public void updatePersonLastLoginDate(String tenantId, String username) {
-		TenantContextHolder.setCurrentTenantId(tenantId);
-		Person person = personRepository.findByUsernameAndTenantId(username, tenantId);
-		if (person != null) {
-			person.lastLogin = new Date();
-			personRepository.save(person);
-		}
-	}
+//	@Async
+//	@Transactional
+//	public void updatePersonLastLoginDate(String tenantId, String username) {
+//		Logger.info(TenantContextHolder.getCurrentTenantId());
+//		TenantContextHolder.setCurrentTenantId(tenantId);
+//		Person person = personRepository.findByUsernameAndTenantId(username, tenantId);
+//		if (person != null) {
+//			person.lastLogin = new Date();
+//			personRepository.save(person);
+//		}
+//	}
 
 //	@Async
 //	public void asyncBulkSaveIndex(List<IndexQuery> queries) {

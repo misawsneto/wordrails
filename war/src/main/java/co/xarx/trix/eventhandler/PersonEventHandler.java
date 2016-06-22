@@ -18,8 +18,6 @@ public class PersonEventHandler {
 	@Autowired
 	private NotificationRepository notificationRepository;
 	@Autowired
-	private PostReadRepository postReadRepository;
-	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
 	private QueryPersistence queryPersistence;
@@ -51,7 +49,7 @@ public class PersonEventHandler {
 			imageRepository.delete(person.cover);
 		}
 
-		postReadRepository.deleteByPersonId(person.id);
+//		postReadRepository.deleteByPersonId(person.id);
 
 		List<Post> posts = postRepository.findAllFromPerson(person.id);
 		for (Post post: posts){

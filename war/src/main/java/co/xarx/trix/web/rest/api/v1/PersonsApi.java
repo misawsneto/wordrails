@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -22,6 +23,7 @@ public interface PersonsApi {
 	class PersonInvitationDto {
 		public String emailTemplate;
 		public List<String> emails;
+		public List<Integer> stationIds;
 	}
 
 	class PersonCreateDto {
@@ -29,7 +31,6 @@ public interface PersonsApi {
 		public String username;
 		public String email;
 		public String password;
-		public boolean emailNotification;
 	}
 
 	class PersonAuthDto {
@@ -48,16 +49,18 @@ public interface PersonsApi {
 	@GET
 	@Path("/{id}")
 	@Transactional
-	Response findPerson(@PathParam("id") Integer id) throws IOException;
+	@PreAuthorize("isAuthenticated()")
+	void findPerson(@PathParam("id") Integer id) throws IOException;
 
 	@GET
 	@Path("/search/findByUsername")
 	@Transactional
-	Response findPersonByUsername() throws IOException;
+	void findPersonByUsername() throws IOException;
 
 	@PUT
 	@Path("/update")
 	@Transactional
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response update(Person person);
 
 	@PUT
@@ -120,13 +123,26 @@ public interface PersonsApi {
 	void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword);
 
 	@POST
+	@Path("/add")
+	@PreAuthorize("isAuthenticated()")
+	Response addPerson(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException;
+
+	@POST
 	@Path("/create")
 	Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException;
 
 	@POST
-	@Path("/invitePerson")
-	Response invitePerson(PersonInvitationDto dto) throws ConflictException, BadRequestException, IOException;
+	@Path("/create/{inviteHash}")
+	Response signUpFromInvite(PersonCreateDto dto, @PathParam("inviteHash") String inviteHash) throws ConflictException, BadRequestException, IOException;
 
+	@GET
+	@Path("/validate/{hash}")
+	Response validatePersonEmail(@PathParam("hash") String hash);
+
+	@POST
+	@Path("/invitePerson")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	Response invitePerson(PersonInvitationDto dto) throws ConflictException, BadRequestException, IOException;
 
 	@GET
 	@Path("/stats/count")
@@ -184,5 +200,12 @@ public interface PersonsApi {
 	 */
 	void findPersons() throws IOException;
 
+	@PUT
+	@Path("/me/location")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@PreAuthorize("permitAll()")
+	Response updateLocation2(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String
+			device,
+						 @FormParam("lat") Double lat, @FormParam("lng") Double lng) throws IOException;
 
 }

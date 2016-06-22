@@ -2,7 +2,6 @@ package co.xarx.trix.domain.page;
 
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.BaseEntity;
-import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -10,7 +9,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -53,7 +51,6 @@ public abstract class AbstractSection extends BaseEntity implements Section, Ser
 	public Style style;
 
 	@NotNull
-	@Range(min = 0)
 	public Integer orderPosition;
 
 	@NotNull

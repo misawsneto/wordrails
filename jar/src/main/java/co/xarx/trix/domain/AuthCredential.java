@@ -1,14 +1,19 @@
 package co.xarx.trix.domain;
 
-import co.xarx.trix.annotation.SdkExclude;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rometools.utils.Strings;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
 @Entity
-@SdkExclude
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId"}))
+@Table(uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"tenantId"}),
+		@UniqueConstraint(columnNames = {"network_id"})
+})
 public class AuthCredential extends BaseEntity {
 
 	@Id
@@ -20,99 +25,21 @@ public class AuthCredential extends BaseEntity {
 		return id;
 	}
 
-	@JsonIgnore
 	public String facebookAppSecret;
 	public String facebookAppID;
 
-	@JsonIgnore
-	public String googleWebAppSecret;
-	public String googleWebAppID;
+	public String googleAppSecret;
+	public String googleAppID;
 
-	@JsonIgnore
-	public String googleAndroidAppSecret;
-	public String googleAndroidAppID;
-
-	@JsonIgnore
-	public String googleAppleAppSecret;
-	public String googleAppleAppID;
-
-	public String getFacebookAppID() {
-		return facebookAppID;
-	}
-
-	public void setFacebookAppID(String facebookAppID) {
-		this.facebookAppID = facebookAppID;
-	}
-
-	public String getFacebookAppSecret() {
-		return facebookAppSecret;
-	}
-
-	public void setFacebookAppSecret(String facebookAppSecret) {
-		this.facebookAppSecret = facebookAppSecret;
-	}
-
-	public String getGoogleWebAppID() {
-		return googleWebAppID;
-	}
-
-	public void setGoogleWebAppID(String googleWebAppID) {
-		this.googleWebAppID = googleWebAppID;
-	}
-
-	public String getGoogleWebAppSecret() {
-		return googleWebAppSecret;
-	}
-
-	public void setGoogleWebAppSecret(String googleWebAppSecret) {
-		this.googleWebAppSecret = googleWebAppSecret;
-	}
-
-	public String getGoogleAndroidAppID() {
-		return googleAndroidAppID;
-	}
-
-	public void setGoogleAndroidAppID(String googleAndroidAppID) {
-		this.googleAndroidAppID = googleAndroidAppID;
-	}
-
-	public String getGoogleAndroidAppSecret() {
-		return googleAndroidAppSecret;
-	}
-
-	public void setGoogleAndroidAppSecret(String googleAndroidAppSecret) {
-		this.googleAndroidAppSecret = googleAndroidAppSecret;
-	}
-
-	public String getGoogleAppleAppID() {
-		return googleAppleAppID;
-	}
-
-	public void setGoogleAppleAppID(String googleAppleAppID) {
-		this.googleAppleAppID = googleAppleAppID;
-	}
-
-	public String getGoogleAppleAppSecret() {
-		return googleAppleAppSecret;
-	}
-
-	public void setGoogleAppleAppSecret(String googleAppleAppSecret) {
-		this.googleAppleAppSecret = googleAppleAppSecret;
-	}
+	@OneToOne
+	@NotNull
+	public Network network;
 
 	public boolean isFacebookLoginAllowed() {
 		return Strings.isNotEmpty(facebookAppID) && Strings.isNotEmpty(facebookAppSecret);
 	}
 
-	public boolean isGoogleWebLoginAllowed() {
-		return Strings.isNotEmpty(googleWebAppID) && Strings.isNotEmpty(googleWebAppSecret);
-	}
-
-	public boolean isGoogleAndroidLoginAllowed() {
-		return Strings.isNotEmpty(googleAndroidAppID) && Strings.isNotEmpty(googleAndroidAppSecret);
-	}
-
-	public boolean isGoogleAppleLoginAllowed() {
-		return Strings.isNotEmpty(googleAppleAppID) && Strings.isNotEmpty(googleAppleAppSecret);
+	public boolean isGoogleLoginAllowed() {
+		return Strings.isNotEmpty(googleAppID) && Strings.isNotEmpty(googleAppSecret);
 	}
 }

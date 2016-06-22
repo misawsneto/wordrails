@@ -1,5 +1,6 @@
 package co.xarx.trix.web.rest.resource.v1;
 
+import co.xarx.trix.api.v2.response.FileUpload;
 import co.xarx.trix.domain.Audio;
 import co.xarx.trix.domain.Document;
 import co.xarx.trix.domain.Video;
@@ -9,8 +10,8 @@ import co.xarx.trix.services.FileService;
 import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.FilesApi;
-import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NoArgsConstructor;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -44,14 +44,6 @@ public class FilesResource extends AbstractResource implements FilesApi {
 		this.fileRepository = fileRepository;
 		this.amazonCloudService = amazonCloudService;
 		this.fileService = fileService;
-	}
-
-	private static class FileUpload implements Serializable{
-		private static final long serialVersionUID = 1474032587285767669L;
-		public String hash;
-		public Integer id;
-		public String link;
-		public String filelink;
 	}
 
 	@Deprecated
@@ -79,7 +71,7 @@ public class FilesResource extends AbstractResource implements FilesApi {
 
 	@Override
 	public Response uploadVideo() throws Exception {
-		FileItem item = FileUtil.getFileFromRequest(request);
+		FileItem item = getFileFromRequest();
 
 		if (item == null) {
 			return Response.noContent().build();
@@ -107,7 +99,7 @@ public class FilesResource extends AbstractResource implements FilesApi {
 
 	@Override
 	public Response uploadAudio() throws Exception {
-		FileItem item = FileUtil.getFileFromRequest(request);
+		FileItem item = getFileFromRequest();
 
 		if (item == null) {
 			return Response.noContent().build();
@@ -135,7 +127,7 @@ public class FilesResource extends AbstractResource implements FilesApi {
 
 	@Override
 	public Response uploadDoc() throws Exception {
-		FileItem item = FileUtil.getFileFromRequest(request);
+		FileItem item = getFileFromRequest();
 
 		if (item == null) {
 			return Response.noContent().build();

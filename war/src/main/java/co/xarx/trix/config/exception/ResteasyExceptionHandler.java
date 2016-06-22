@@ -41,11 +41,6 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 	public Response toResponse(Throwable throwable) {
 		Status status;
 
-		log.error("LOG FATAL ERROR\n" +
-				"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
-				"MESSAGE: " + throwable.getMessage() + "\n" +
-				"URL: " + request.getRequestURL(),
-				throwable);
 
 		if (throwable instanceof EntityNotFoundException) {
 			status = Status.NOT_FOUND;
@@ -65,6 +60,17 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 			status = Status.fromStatusCode(((ClientErrorException) throwable).getResponse().getStatus());
 		} else {
 			status = Status.INTERNAL_SERVER_ERROR;
+		}
+
+		if (status.equals(Status.FORBIDDEN)) {
+			log.info("Access denied for url " + request.getRequestURL() + " - Session ID: " + request
+					.getRequestedSessionId());
+		} else {
+			log.error("LOG FATAL ERROR\n" +
+							"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
+							"MESSAGE: " + throwable.getMessage() + "\n" +
+							"URL: " + request.getRequestURL(),
+					throwable);
 		}
 
 //		String stackTrace = ExceptionUtils.getStackTrace(throwable);

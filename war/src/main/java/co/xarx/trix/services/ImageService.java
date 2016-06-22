@@ -53,7 +53,7 @@ public class ImageService {
 			throw new EntityNotFoundException("Image does not exist");
 		}
 
-		return images.get(0).getHashs();
+		return images.get(0).getHashes();
 	}
 
 	@Transactional

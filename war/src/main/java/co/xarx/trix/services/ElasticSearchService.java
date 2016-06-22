@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.elasticsearch.client.Requests.createIndexRequest;
 
@@ -48,12 +49,7 @@ public class ElasticSearchService {
 			}
 		}
 
-		if (itens.size() > 0) {
-			if (errorCount > 0) log.info("mapping of " + errorCount + "/" + itens.size() +
-					" entities of type " + itens.get(0).getClass().getSimpleName() + " threw mapping error");
-			if (entities.size() > 0)
-				log.info("indexing " + entities.size() + " elements of type " + itens.get(0).getClass().getSimpleName());
-		}
+		printErrorMessages(itens, errorCount, entities);
 		return entities;
 	}
 
@@ -93,7 +89,10 @@ public class ElasticSearchService {
 	}
 
 	public List<List<ElasticSearchEntity>> splitList(List<ElasticSearchEntity> entities) {
-		return Lists.partition(entities, (entities.size() + SPLIT_FACTOR - 1) / SPLIT_FACTOR);
+		if(entities.size() > 0)
+			return Lists.partition(entities, (entities.size() + SPLIT_FACTOR - 1) / SPLIT_FACTOR);
+		else
+			return new ArrayList<List<ElasticSearchEntity>>();
 	}
 
 	public void bulkSaveIndex(List<IndexQuery> queries) {
@@ -101,11 +100,10 @@ public class ElasticSearchService {
 	}
 
 	public List<IndexQuery> createIndexQueries(List<ElasticSearchEntity> entities) {
-		List<IndexQuery> iq = new ArrayList<>();
-		for (ElasticSearchEntity et : entities) {
-			iq.add(createIndexQuery(et));
-		}
-		return iq;
+		return entities
+				.stream()
+				.map(this::createIndexQuery)
+				.collect(Collectors.toList());
 	}
 
 	public IndexQuery createIndexQuery(ElasticSearchEntity entity) {
@@ -164,10 +162,6 @@ public class ElasticSearchService {
 
 	public void deleteEntity(String id, Class clazz) {
 		elasticsearchTemplate.delete(clazz, id);
-	}
-
-	public <ES extends ElasticSearchEntity, T> void mapThenSave(T item, Class<ES> mapTo) {
-		mapThenSave(Collections.singletonList(item), mapTo);
 	}
 
 	public void saveEntity(ElasticSearchEntity entity) {

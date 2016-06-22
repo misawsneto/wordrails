@@ -2,6 +2,7 @@ app.controller('CategoryCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$md
 	function($scope , $rootScope,  $log ,  $timeout ,  $mdDialog ,  $state ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $interval, $mdSidenav, $translate, $filter, $localStorage, $sce, category){
 
 	$scope.category = category;
+	$scope.app.activeCategory = category;
 	$scope.postsPage = 0
 	var allLoaded = false;
 	var loading = false;
@@ -35,10 +36,6 @@ app.controller('CategoryCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$md
 		}
     }
 
-    $scope.reloadMasonry = function(){
-		$rootScope.$broadcast('masonry.reload');
-	}
-
 	// --------- scroll to top
   
   var intervalPromise;
@@ -50,9 +47,12 @@ app.controller('CategoryCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$md
   }, 500);
 
   $scope.scrollToTop = function(){
-    console.log($('#scroll-box').scrollTop);
     $('#scroll-box').animate({scrollTop: 0}, 700, 'easeOutQuint');
   }
+
+  $timeout(function(){
+    $('#scroll-box').animate({scrollTop: 0}, 0);
+  })
 
   $scope.$on('$destroy',function(){
       if(intervalPromise)

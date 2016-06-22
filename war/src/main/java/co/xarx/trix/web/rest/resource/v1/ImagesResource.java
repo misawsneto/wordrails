@@ -64,7 +64,7 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 
 	@Override
 	public Response uploadImage(@QueryParam("imageType") String type) throws Exception {
-		FileItem item = FileUtil.getFileFromRequest(request);
+		FileItem item = getFileFromRequest();
 
 		if (item == null) {
 			return Response.noContent().build();
@@ -93,7 +93,7 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 		iur.hash = hash;
 		iur.imageId = newImage.getId();
 		iur.id = newImage.getId();
-		iur.imageHash = newImage.getHashs().get(Image.SIZE_ORIGINAL);
+		iur.imageHash = newImage.getHashes().get(Image.SIZE_ORIGINAL);
 		iur.link = amazonCloudService.getPublicImageURL(hash);
 		iur.filelink = amazonCloudService.getPublicImageURL(hash);
 
@@ -129,6 +129,11 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 	}
 
 	@Override
+	public void findImagesOrderByDate() throws IOException {
+		forward();
+	}
+
+	@Override
 	public Response getPersonImage(Integer id, String size, String type) throws IOException {
 
 		Person person = personRepository.findOne(id);
@@ -137,10 +142,10 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 
 		if(person != null && type != null && type.toUpperCase().equals(Image.Type.PROFILE_PICTURE.toString()) && person
 				.getImage() != null)
-			hash = person.getImage().getHashs().get(size);
+			hash = person.getImage().getHashes().get(size);
 		else if(person != null && type != null && type.toUpperCase().equals(Image.Type.COVER.toString()) &&
 				person.getCover() != null)
-			hash = person.getCover().getHashs().get(size);
+			hash = person.getCover().getHashes().get(size);
 		else
 			return Response.status(404).build();
 
@@ -167,7 +172,7 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 		String hash = null;
 
 		if(post != null &&  post.getFeaturedImage() != null)
-			hash = post.getFeaturedImage().getHashs().get(size);
+			hash = post.getFeaturedImage().getHashes().get(size);
 		else
 			return Response.status(404).build();
 

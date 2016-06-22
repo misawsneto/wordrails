@@ -1,23 +1,18 @@
 package co.xarx.trix.web.rest.resource.v1;
 
 import co.xarx.trix.api.*;
-import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.converter.PostConverter;
-import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.QPost;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.services.ResponseService;
 import co.xarx.trix.services.post.PostSearchService;
-import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.PostApi;
 import com.google.common.collect.Lists;
 import lombok.NoArgsConstructor;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,14 +23,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.FlashMap;
-import retrofit.http.Body;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.ws.rs.core.Response;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Component
 @NoArgsConstructor
@@ -53,11 +47,6 @@ public class PostsResource extends AbstractResource implements PostApi {
 	private AuthService authProvider;
 	@Autowired
 	private PostSearchService postSearchService;
-	@Autowired
-	private PostService postService;
-
-	@Autowired
-	private ResponseService responseService;
 
 	@Deprecated
 	public ContentResponse<SearchView> searchPosts(
@@ -180,45 +169,6 @@ public class PostsResource extends AbstractResource implements PostApi {
 		response.content = new SearchView();
 		response.content.hits = postsViews.getLeft();
 		response.content.posts = postsViews.getRight();
-		return response;
-	}
-
-	public ContentResponse<List<PostView>> getPostRead(Integer stationId,
-													   Integer page,
-													   Integer size) throws BadRequestException{
-
-		if (stationId == null || page == null || size == null) {
-			throw new BadRequestException("Invalid null parameter(s).");
-		}
-
-		Person person = authProvider.getLoggedPerson();
-		Pageable pageable = new PageRequest(page, size);
-		List<Post> posts = postRepository.findPostReadByStationAndPerson(stationId, person.id, pageable);
-
-		ContentResponse<List<PostView>> response = new ContentResponse<>();
-		response.content = postConverter.convertToViews(posts);
-		return response;
-	}
-
-	public ContentResponse<List<PostView>> getAllPostRead(Integer stationId) {
-
-		Person person = authProvider.getLoggedPerson();
-		List<Post> posts = postRepository.findPostReadByStationAndPerson(stationId, person.id);
-
-		ContentResponse<List<PostView>> response = new ContentResponse<>();
-		response.content = postConverter.convertToViews(posts);
-		return response;
-	}
-
-	public ContentResponse<List<PostView>> getPopular(Integer stationId,
-													  Integer page,
-													  Integer size) {
-
-		Pageable pageable = new PageRequest(page, size);
-		List<Post> posts = postRepository.findPopularPosts(stationId, pageable);
-
-		ContentResponse<List<PostView>> response = new ContentResponse<>();
-		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
 

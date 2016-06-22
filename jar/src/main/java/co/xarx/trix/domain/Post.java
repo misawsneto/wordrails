@@ -20,14 +20,14 @@ import java.util.Set;
 @Entity
 @JsonIgnoreProperties(value = {
 		"imageHash", "imageLargeHash", "imageMediumHash", "imageSmallHash"
-}, allowGetters = true)
-public class Post extends BaseEntity implements Serializable, ElasticSearchEntity{
+}, allowGetters = true, ignoreUnknown = true)
+public class Post extends BaseEntity implements Serializable, ElasticSearchEntity {
 
 	public static final String STATE_DRAFT = "DRAFT";
 	public static final String STATE_NO_AUTHOR = "NOAUTHOR";
 	public static final String STATE_TRASH = "TRASH";
 	public static final String STATE_PUBLISHED = "PUBLISHED";
-	public static final String STATE_SCHEDULED = "SCHEDULED";
+	public static final String STATE_UNPUBLISHED = "UNPUBLISHED";
 
 	private static final long serialVersionUID = 7468718930497246401L;
 
@@ -116,16 +116,13 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public Integer stationId;
 
 	@Column(updatable = false)
-	public int readsCount = 0;
+	public Integer bookmarksCount = 0;
 
 	@Column(updatable = false)
-	public int bookmarksCount = 0;
+	public Integer recommendsCount = 0;
 
 	@Column(updatable = false)
-	public int recommendsCount = 0;
-
-	@Column(updatable = false)
-	public int commentsCount = 0;
+	public Integer commentsCount = 0;
 
 	@ManyToMany
 	@JoinTable(name = "post_term", joinColumns = @JoinColumn(name = "posts_id"))
@@ -138,14 +135,8 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Column(columnDefinition = "boolean default true", nullable = false)
 	public boolean imageLandscape = true;
 
-	@Column(length = 1024)
-	public String externalFeaturedImgUrl;
-
-	@Column(length = 1024)
-	public String externalVideoUrl;
-
 	@Column(columnDefinition = "int(11) DEFAULT 0")
-	public int readTime;
+	public Integer readTime;
 
 	@Column(columnDefinition = "boolean DEFAULT false")
 	public boolean notify = false;
@@ -166,18 +157,19 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public String imageTitleText;
 
 	@Getter(AccessLevel.NONE)
-	public String featuredVideoHash;
-
-	@Getter(AccessLevel.NONE)
 	public String featuredAudioHash;
 
-	public String getFeaturedVideoHash(){
-		if(featuredVideoHash != null)
-			return featuredVideoHash;
-
+	@SdkInclude
+	public String getFeaturedVideoHash() {
 		return featuredVideo != null ? (featuredVideo.file != null ? featuredVideo.file.hash : null) : null;
 	}
 
+	@SdkInclude
+	public String getExternalVideoUrl() {
+		return featuredVideo != null ? featuredVideo.getExternalVideoUrl() : null;
+	}
+
+	@SdkInclude
 	public String getFeaturedAudioHash(){
 		if(featuredAudioHash != null)
 			return featuredAudioHash;

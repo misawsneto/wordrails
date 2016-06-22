@@ -5,7 +5,7 @@ import co.xarx.trix.api.v2.UserPermissionData;
 import co.xarx.trix.domain.page.query.statement.PersonStatement;
 import co.xarx.trix.services.person.PersonSearchService;
 import co.xarx.trix.services.security.PersonPermissionService;
-import co.xarx.trix.util.RestUtil;
+import co.xarx.trix.util.SpringDataUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2PersonsApi;
 import com.google.common.collect.Sets;
@@ -49,7 +49,7 @@ public class V2PersonsResource extends AbstractResource implements V2PersonsApi 
 
 		super.removeNotEmbeddedData(embeds, data, PersonData.class, postEmbeds);
 
-		Pageable pageable = RestUtil.getPageable(page, size, orders);
+		Pageable pageable = SpringDataUtil.getPageable(page, size, orders);
 		Page p = new PageImpl(data, pageable, data.size());
 
 		return Response.ok().entity(p).build();

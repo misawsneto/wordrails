@@ -116,43 +116,43 @@
   <!-- /background -->
 <!-- </md-sidenav> -->
   
-  <!-- <md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg"
+  <!-- <md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg"
     ui-sref="app.post">
     <i class="mdi-editor-mode-edit i-24"></i>
   </md-button> -->
 
 	<md-fab-speed-dial md-direction="up" class="md-scale pos-fix right-0 bottom-0 m-r-lg m-b-md">
 	  <md-fab-trigger>
-	    <md-button aria-label="Add..." class="md-fab md-accent">
+	    <md-button aria-label="nothing" aria-label="Add..." class="md-fab md-accent">
 	    	<i class="mdi mdi2-menu i-24"></i>
 	    </md-button>
 	  </md-fab-trigger>
 	  <md-fab-actions>
-	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showAddUserDialog($event)">
+	    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showAddUserDialog($event)">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.ADD_USERS' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi i-20 mdi2-plus text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'enablePersons')">
+	    <md-button aria-label="nothing" aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'enablePersons')">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.ENABLE_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-account-check i-20 text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'disablePersons')">
+	    <md-button aria-label="nothing" aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'disablePersons')">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.DISABLE_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-account-off i-20 text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" >
+	    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showBulkChangePermissions($event)">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.PERMISSIONS_OF_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-key-variant i-20 text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showInviteUserDialog($event);">
+	    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showInviteUserDialog($event);">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.INVITE_USERS' | translate}}
 	  		</md-tooltip>
@@ -171,7 +171,7 @@
 
         <div class="text-center p p-t-lg w-full m-t-lg">
           <!-- <i class="mdi mdi2-account text-4x"></i> -->
-          <div class="md-whiteframe-z1 user-avatar rounded w-96 bg-white inline pos-rlt md-primary-default background text-center bg-cover" ng-style="app.getBackgroundImage(editingPerson, 'medium')" bstyle="{'background-image': 'url(  {{editingPerson | userImage: 'medium'}} )'}">
+          <div class="md-whiteframe-z1 user-avatar rounded w-96 bg-white inline pos-rlt md-primary-default background text-center bg-cover" preload-bg-image="{{app.getImageLink(editingPerson, 'medium')}}" bstyle="{'background-image': 'url(  {{editingPerson | userImage: 'medium'}} )'}">
             <i ng-if="!editingPerson.imageHash" class="mdi2-account i-60" style="top: 16%;position: relative;"></i>
             <!-- image profile upload -->
             <div class="profile-image-button rounded o-f-h w-96 text-center pos-abt top-0" style="background-color: rgba(0,0,0,0.7)">
@@ -183,10 +183,10 @@
         </div>
 
         <div class="pos-abt bottom-0 text-center w-full p-t p-b">
-          <md-button ng-click="cancel()" class="m-0">
+          <md-button aria-label="nothing" ng-click="cancel()" class="m-0">
             {{'titles.CANCEL' | translate}}
           </md-button>
-          <md-button ng-click="saveProfile(editingPerson)" ng-disabled="disabled" class="m-0">
+          <md-button aria-label="nothing" ng-click="saveProfile(editingPerson)" ng-disabled="disabled" class="m-0">
             {{'titles.SAVE' | translate}}
           </md-button>
         </div>
@@ -203,37 +203,37 @@
 	            </div>
 	          </div>
 	        </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.NAME' | translate}}</label>
             <input type="text" ng-model="editingPerson.name" md-autofocus>
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.USERNAME' | translate}}</label>
             <input type="text" ng-model="editingPerson.username" >
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.EMAIL' | translate}}</label>
             <input type="text" ng-model="editingPerson.email" >
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <!-- <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.PASSWORD' | translate}} ({{'titles.OPTIONAL' | translate}})</label>
             <input type="password" ng-model="editingPerson.password" >
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0" ng-class="{'animated fadeIn': editingPerson.password, 'hide': !editingPerson.password}">
             <label for="testInput">{{'settings.profile.CONFIRM_PASSWORD' | translate}}</label>
             <input type="password" ng-model="editingPerson.passwordConfirm" >
           </md-input-container> -->
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.BIOGRAPHY' | translate}}</label>
             <textarea type="text" columns="1" ng-model="editingPerson.bio" ></textarea>
@@ -257,10 +257,10 @@
         </div>
 
         <div class="pos-abt bottom-0 text-center w-full p-t p-b">
-          <md-button ng-click="cancel()" class="m-0">
+          <md-button aria-label="nothing" ng-click="cancel()" class="m-0">
             {{'titles.CANCEL' | translate}}
           </md-button>
-          <md-button ng-click="createPerson(addingPerson)" ng-disabled="disabled" class="m-0">
+          <md-button aria-label="nothing" ng-click="createPerson(addingPerson)" ng-disabled="disabled" class="m-0">
             {{'titles.SAVE' | translate}}
           </md-button>
         </div>
@@ -268,38 +268,38 @@
     </md-toolbar>
     <div class="p w-x col-400 scrollable md-background-hue-1 background">
         <div class="pos-rlt p">
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.NAME' | translate}}</label>
             <input type="text" id="testInput" ng-model="addingPerson.name" md-autofocus>
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.USERNAME' | translate}}</label>
             <input type="text" id="testInput" ng-model="addingPerson.username" >
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.EMAIL' | translate}}</label>
             <input type="text" id="testInput" ng-model="addingPerson.email" >
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.PASSWORD' | translate}}</label>
             <input type="password" id="testInput" ng-model="addingPerson.password" >
             <small class="text-xs">{{'settings.users.OPTIONAL_PASSWORD' | translate}}</small>
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.CONFIRM_PASSWORD' | translate}}</label>
             <input type="password" id="testInput" ng-model="addingPerson.passwordConfirm" >
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.BIOGRAPHY' | translate}}</label>
             <textarea type="text" id="testInput" columns="1" ng-model="addingPerson.bio"></textarea>
@@ -324,13 +324,13 @@
         </div>
 
         <div class="text-center">
-          <md-button ng-if="enableOrDisableOption === 'enablePersons'" ng-click="enablePersons(); disabled = true;" ng-disabled="disabled">
+          <md-button aria-label="nothing" ng-if="enableOrDisableOption === 'enablePersons'" ng-click="enablePersons(); disabled = true;" ng-disabled="disabled">
             {{'titles.YES' | translate}}
           </md-button>
-          <md-button ng-if="enableOrDisableOption === 'disablePersons'" ng-click="disablePersons(); disabled = true;" ng-disabled="disabled">
+          <md-button aria-label="nothing" ng-if="enableOrDisableOption === 'disablePersons'" ng-click="disablePersons(); disabled = true;" ng-disabled="disabled">
             {{'titles.YES' | translate}}
           </md-button>
-          <md-button ng-click="cancel()">
+          <md-button aria-label="nothing" ng-click="cancel()">
             {{'titles.NO' | translate}}
           </md-button>
         <div>
@@ -363,10 +363,10 @@
         </div>
 
         <div class="text-center">
-          <md-button ng-click="changePassword();" ng-disabled="disabled">
+          <md-button aria-label="nothing" ng-click="changePassword();" ng-disabled="disabled">
             {{'titles.CONFIRM' | translate}}
           </md-button>
-          <md-button ng-click="cancel()">
+          <md-button aria-label="nothing" ng-click="cancel()">
             {{'titles.CANCEL' | translate}}
           </md-button>
         <div>
@@ -385,7 +385,7 @@
         </div>
 
         <div class="text-center">
-          <md-button ng-click="cancel()">
+          <md-button aria-label="nothing" ng-click="cancel()">
             {{'titles.CANCEL' | translate}}
           </md-button>
         <div>
@@ -397,7 +397,7 @@
 <script type="text/ng-template" id="invitation-dialog.html">
   <md-dialog aria-label="change action">
     <md-content role="document" class="md-background-hue-1 background">
-      <div class="" id="email-template">
+      <div  id="email-template">
 
         <div class="m-b-sm m-t-xs p-h w-800 pos-rlt">
           <md-chips ng-model="invitations" placeholder="Emails" secondary-placeholder="+Email" mg-separator-keys="separatorKeys" readonly="false"></md-chips>
@@ -408,14 +408,69 @@
 
         <div class="text-right p-b-xs">
           <md-divider class="p-b-xs"></md-divider>
-          <md-button class="md-raised md-primary p-h" ng-click="invitatePeople()">
+          <md-button aria-label="nothing" class="md-raised md-primary p-h" ng-click="invitatePeople()">
             <i class="icon mdi2-send i-14 m-r-sm"></i>{{'titles.SEND_INVITE' | translate}}
           </md-button>
-          <md-button ng-click="cancel()">
+          <md-button aria-label="nothing" ng-click="cancel()">
             {{'titles.CANCEL' | translate}}
           </md-button>
         <div>
         
+      </div>
+    </md-content>
+  </md-dialog>
+</script>
+
+<script type="text/ng-template" id="change-permissions-dialog.html">
+  <md-dialog aria-label="Editar permissão" id="user-permissions-dialog">
+    <md-content class="md-background-hue-1 background">
+      <div class="p">
+        <div class="p-xs text-md">
+          Estações:
+        </div>
+        <div class="p-sm stations-permissions-dialog-list m-t-sm" >
+          <ul class="no-style">
+            <li ng-repeat="station in adminStations" class="clearfix p-xs font-thin">
+              <span class="pull-right">
+                <label class="md-check">
+                  <input type="checkbox" ng-model="station.selected" ng-change="station.selected = true;">
+                  <i class="md-accent-default background"></i>
+                </label>
+              </span>
+              <span class="clear m-r-xxl">
+                <span>{{station.name}}</span>
+                <small class="text-muted text-xs clear text-ellipsis">
+                  Visibilidade: {{(station.visibility == 'UNRESTRICTED') ? 'Pública' : 'Privada'}} | Todos podem escrever: {{(station.writable) ? 'Sim' : 'Não'}}
+                </small>
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div class="p-xs text-base m-t-sm">
+          <span class="text-md">Permissões:</span>
+
+          <md-radio-group ng-model="stationRole">
+            <ul class="station-permissions m-t">
+              <li class="m-r">
+                <md-radio-button value="READER">Leitor</md-radio-button>
+              </li>
+              <li class="m-r">
+                <md-radio-button value="WRITER">Escritor</md-radio-button>
+              </li>
+              <li class="m-r">
+                <md-radio-button value="EDITOR">Edtor</md-radio-button>
+              </li>
+              <li class="m-r">
+                <md-radio-button value="ADMIN">Administrador</md-radio-button>
+              </li>
+            </ul>
+          </md-radio-group>
+          
+        </div>
+        <div class="text-right">
+          <md-button aria-label="nothing" ng-click="applyPermissions(adminStations, stationRole)" class="no-margin m-r">Confirmar</md-button>
+          <md-button aria-label="nothing" ng-click="cancel()" class="no-margin">Fechar</md-button>
+        <div>
       </div>
     </md-content>
   </md-dialog>

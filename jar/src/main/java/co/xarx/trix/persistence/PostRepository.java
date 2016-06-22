@@ -5,12 +5,12 @@ import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.custom.PostRepositoryCustom;
-import org.javers.spring.annotation.JaversAuditable;
 import org.javers.spring.data.JaversSpringDataAuditable;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -49,6 +49,10 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@PostFilter("hasPermission(filterObject, 'read')")
 	List<Post> findAll();
 
+	@SdkExclude
+	@Query("select p from Post p where p.id in (:ids)")
+	List<Post> findByIds(@Param("ids") Iterable<Integer> ids, Sort sort);
+
 	@Override
 	@SdkExclude
 	@RestResource(exported = true)
@@ -66,22 +70,17 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 //	@CacheEvict(value = "postsIds")
 //	<S extends Post> List<S> save(Iterable<S> entities);
 
-	@Query("select post from Post post join post.terms t where " +
-			"post.station.id = :stationId and t.id in (:termsIds) and post.state = 'PUBLISHED' group by post order by post.date desc")
+	@Query("select post from Post post join post.terms t where post.station.id = :stationId and t.id in (:termsIds) and (post.state = 'PUBLISHED' AND (post.scheduledDate is null OR post.scheduledDate < current_timestamp)) group by post order by post.date desc")
 	List<Post> findPostsPublished(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, Pageable pageable);
 
-	@Deprecated
-	@Query("select pr.post.id from PostRead pr where pr.person.id=:personId")
-	List<Integer> findPostReadByPerson(@Param("personId") Integer personId, Pageable pageable);
-
-	@Query("SELECT post FROM Post post where post.station.id = :stationId and post.state = 'PUBLISHED' ORDER BY post.date DESC")
+	@Query("SELECT post FROM Post post where post.station.id = :stationId and (post.state = 'PUBLISHED' AND (post.scheduledDate is null OR post.scheduledDate < current_timestamp)) ORDER BY post.date DESC")
 	List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
 
 	// ---------------------------------- NOT EXPOSED ----------------------------------
 
 	@RestResource(exported = false)
 	@Query("select post from Post post " +
-			"where post.id in " +
+			"where (post.state = 'PUBLISHED' AND (post.scheduledDate is null OR post.scheduledDate < current_timestamp)) AND post.id in " +
 			"(select p.id from Post p join p.terms t where p.station.id = :stationId and t.id in (:termsIds) and p.id not in (:idsToExclude)) " +
 			"order by post.date desc")
 	List<Post> findPostsNotPositioned(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, @Param("idsToExclude") List<Integer> idsToExclude, Pageable pageable);
@@ -91,35 +90,12 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@Cacheable(value = "postsIds", key = "#p0")
 	List<Integer> findIds(@Param("tenantId") String tenantId);
 
-	@Modifying
-	@RestResource(exported = false)
-	@Query("UPDATE Post p set p.readsCount = p.readsCount + 1 where p.id = :postId")
-	void incrementReadCount(@Param("postId") int postId);
-
 	@RestResource(exported = false)
 	List<Post> findByStation(Station station);
 
 	@RestResource(exported = false)
-	@Query("select post from Post post join post.station station " +
-			"where station.id = :stationId and post.id not in" +
-			"(select pr.id from PostRead pr join pr.person person where person.id=:personId)")
-	List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId, Pageable pageable);
-
-	@RestResource(exported = false)
-	@Query("select post from Post post join post.station station where " +
-			"station.id = :stationId and post.id not in " +
-			"(select pr.id from PostRead pr join pr.person person where person.id=:personId)")
-	List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
-
-	@RestResource(exported = false)
-	@Query("SELECT post FROM Post post where post.station.id = :stationId and post.state = 'PUBLISHED' ORDER BY post.readsCount " +
-			"DESC," +
-			" post.id DESC")
-	List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
-
-	@RestResource(exported = false)
 	@Query("SELECT post FROM Post post where " +
-			"post.author.id = :personId AND post.state = 'PUBLISHED' AND post.station.id in (:stationIds) order by post.id DESC")
+			"post.author.id = :personId AND (post.state = 'PUBLISHED' AND (post.scheduledDate is null OR post.scheduledDate < current_timestamp())) AND post.station.id in (:stationIds) order by post.id DESC")
 	List<Post> findPostByPersonIdAndStations(@Param("personId") Integer personId, @Param("stationIds") List<Integer> stationIds, Pageable pageable);
 
 	@RestResource(exported = false)
@@ -127,13 +103,6 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 			"post.author.id = :personId AND post.state = :state AND post.station.id in (:stationIds) order by post.id DESC")
 	List<Post> findPostByPersonIdAndStationsAndState(@Param("personId") Integer personId, @Param("state") String state,
 													 @Param("stationIds") List<Integer> stationIds, Pageable pageable);
-
-	@RestResource(exported = false)
-	@Query("select " +
-			"(select count(*) from PostRead pr where pr.post.id = p.id), " +
-				"(select count(*) from Comment comment where comment.post.id = p.id) " +
-			"from Post p where p.id = :postId")
-	List<Object[]> findPostStats(@Param("postId") Integer postId);
 
 	@RestResource(exported = false)
 	@Query("select post.body from Post post where post.id=:postId")
@@ -172,4 +141,13 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@RestResource(exported = false)
 	@Query(value = "SELECT term FROM Term term where :postId in posts")
 	List<Term> findTermByPostId(@Param("postId") Integer postId);
+
+	@RestResource(exported = false)
+	Long countByState(String state);
+
+	String findStateById(@Param("id") Integer id);
+
+	@Modifying
+	@Query("UPDATE Post p set p.state = :state where p.id = :postId")
+	void updateState(@Param("postId") int postId, @Param("state") String state);
 }

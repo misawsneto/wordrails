@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -26,7 +27,9 @@ import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
+import co.xarx.trix.api.ImageUploadResponse;
 import co.xarx.trix.api.v2.PostData;
+import co.xarx.trix.api.v2.response.FileUpload;
 import co.xarx.trix.api.TermPerspectiveView;
 import co.xarx.trix.api.RowView;
 
@@ -83,6 +86,8 @@ public class $facade$ {
 		Converter _converter = new GsonConverter(_gson);
 
 		OkHttpClient _okHttpClient = new OkHttpClient();
+	    _okHttpClient.setConnectTimeout(10, TimeUnit.MINUTES);
+	    _okHttpClient.setReadTimeout(10, TimeUnit.MINUTES);
 
 		if(_cacheMaxSize > 0){
 			Cache _cache = new Cache(_cacheDirectory, _cacheMaxSize);
@@ -113,6 +118,10 @@ public class $facade$ {
 
 	public Batch createBatch() {
 		return new Batch(_facade);
+	}
+
+	public void setUsername(String username) {
+		_interceptor.setUsername(username);
 	}
 
 	public void login(){
@@ -547,19 +556,19 @@ public class $facade$ {
 	}
 
 	public BooleanResponse toggleBookmark(Integer postId){
-		return _facade.toggleBookmark(postId);
+		return _facade.toggleBookmark(postId, "");
 	}
 	
 	public void toggleBookmark(Integer postId, Callback<BooleanResponse> _callback){
-		_facade.toggleBookmark(postId, _callback);
+		_facade.toggleBookmark(postId, "", _callback);
 	}
 	
 	public BooleanResponse toggleRecommend(Integer postId){
-		return _facade.toggleRecommend(postId);
+		return _facade.toggleRecommend(postId, "");
 	}
 	
 	public void toggleRecommend(Integer postId, Callback<BooleanResponse> _callback){
-		_facade.toggleRecommend(postId, _callback);
+		_facade.toggleRecommend(postId, "", _callback);
 	}
 	
 	public Response putRegId(String regId, Integer networkId, Double lat, Double lng){
@@ -608,12 +617,36 @@ public class $facade$ {
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-	public Response postImageUpload(String imageType, TypedInput contents){
+	public ImageUploadResponse postImageUpload(String imageType, TypedInput contents){
 		return _facade.postImageUpload(imageType, contents);
 	}
 	
-	public void postImageUpload(String imageType, TypedInput contents, Callback<Response> _callback){
+	public void postImageUpload(String imageType, TypedInput contents, Callback<ImageUploadResponse> _callback){
 		_facade.postImageUpload(imageType, contents, _callback);
+	}
+
+	public FileUpload postUploadVideo(TypedInput contents){
+		return _facade.postUploadVideo(contents);
+	}
+	
+	public void postUploadVideo(TypedInput contents, Callback<FileUpload> _callback){
+		_facade.postUploadVideo(contents, _callback);
+	}
+
+	public FileUpload postUploadAudio(TypedInput contents){
+		return _facade.postUploadAudio(contents);
+	}
+	
+	public void postUploadAudio(TypedInput contents, Callback<FileUpload> _callback){
+		_facade.postUploadAudio(contents, _callback);
+	}
+
+	public FileUpload postUploadDoc(TypedInput contents){
+		return _facade.postUploadDoc(contents);
+	}
+	
+	public void postUploadDoc(TypedInput contents, Callback<FileUpload> _callback){
+		_facade.postUploadDoc(contents, _callback);
 	}
 /*---------------------------------------------------------------------------*/
 

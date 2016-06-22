@@ -71,7 +71,8 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
   
   $scope.publicationsCtrl = {
     'page': 0,
-    'allLoaded': false
+    'allLoaded': false,
+    'window': 20
   }
 
   $scope.resetPage = function(){
@@ -84,20 +85,19 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
     if(!$scope.loading && !$scope.publicationsCtrl.allLoaded){
       $scope.loading = true;
 
-      var page = getPage();
-      trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response){
+      trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, $scope.publicationsCtrl.page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response,a,b,c){
         handleSuccess(response);
+        $scope.totalPublicationsCount = c.totalElements;
         $scope.loading = false;
       }).error(function(){
         $scope.loading = false;
+        $scope.publicationsCtrl.allLoaded = true;
       })
     }
   }
 
-  var handleSuccess = function(posts){
+  var handleSuccess = function(posts, a,b){
     if(posts && posts.length > 0){
-      posts.reverse();
-
         if(!$scope.publications)
           $scope.publications = []
 
@@ -106,15 +106,12 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
           $scope.publications.push(post);
         })
         $scope.publicationsCtrl.page++;
-        $scope.publicationsCtrl.allLoaded;
+        // if(posts.length < $scope.publicationsCtrl.window)
+        //   $scope.publicationsCtrl.allLoaded = true;
     }else
       $scope.publicationsCtrl.allLoaded = true;
   }
 
-
-  var getPage = function(){
-      return $scope.publicationsCtrl.page;
-  }
 
   $scope.doSearch = function(){
     $scope.resetPage();
@@ -127,11 +124,6 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
     if(postObj.body)
       postObj.snippet = postObj.body.simpleSnippet();
   }
-
-	$scope.page = 0;
-	$scope.loadingComments = false
-	$scope.allLoaded = false;
-	$scope.window = 20
 
 	$scope.postFeaturedImage = null
 	var setPostFeaturedImage = function(hash){
@@ -232,6 +224,69 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 	    });
 	    return ret;
 	}
+
+	  // --------- move to state
+  
+    $scope.toState = null;
+    var intToState = function(state){
+      // if(!$scope.app.editingPost)
+      //  return null;
+      if(state == 1){
+        return "PUBLISHED";
+      }else if(state == 2){
+        return "DRAFT";
+      }else if(state == 3){
+        return "SCHEDULED";
+      }else if(state == 4){
+        return "TRASH";
+      }else{
+        return 5;
+      }
+    }
+
+
+  $scope.toMovePublication = null;
+  $scope.showMoveToDialog = function(event, publication){
+    $scope.toState = null;
+    $scope.toMovePublication = publication;
+    $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'move-to-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+  }
+
+  $scope.movePublicationToState = function(state){
+    if(!state || state == 5){
+      $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+      $mdDialog.cancel();
+      return;
+    }
+
+    trix.getPost($scope.toMovePublication.id).success(function(response){
+      response.state = intToState(state);
+      trix.putPost(response).success(function(){
+        if($scope.publications)
+        for (var i = $scope.publications.length - 1; i >= 0; i--) {
+          if($scope.publications[i].id == $scope.toMovePublication.id)
+            $scope.publications.splice(i,1);
+        }
+        $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+        $mdDialog.cancel();
+      })
+    })
+  }
+  // --------- /move to state
 
 }]);
 

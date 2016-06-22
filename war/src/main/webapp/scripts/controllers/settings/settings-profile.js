@@ -45,7 +45,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
   $scope.saveProfile = function(){
   	trix.updatePerson($scope.editingPerson).error(function(data, status, header){
-  		var error = data.error;
+  		var error = data.message;
 
   		if(error.indexOf('Password no equal') > -1)
   			$scope.app.showErrorToast('Confirme que as senhas sejam iguais e tente novamente')
@@ -173,8 +173,6 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
   var handleSuccess = function(posts){
     if(posts && posts.length > 0){
-      posts.reverse();
-
         if(!$scope.publications)
           $scope.publications = []
 
@@ -324,6 +322,11 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
   }
 
   $scope.movePublicationToState = function(state){
+    if(!state || state == 5){
+      $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+      $mdDialog.cancel();
+      return;
+    }
     trix.getPost($scope.toMovePublication.id).success(function(response){
       response.state = intToState(state);
       trix.putPost(response).success(function(){
@@ -349,7 +352,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
       }
     }
 
-  $scope.app.toggleComments = buildToggler('content-post-comments');
+  $scope.app.toggleComments = buildToggler('post-comments');
 
 	settingsProfileCtrl = $scope;
 }]);

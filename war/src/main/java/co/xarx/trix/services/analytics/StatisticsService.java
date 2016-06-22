@@ -4,16 +4,14 @@ import co.xarx.trix.api.v2.ReadsCommentsRecommendsCountData;
 import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.api.v2.StoreStatsData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.ESAppStats;
 import co.xarx.trix.domain.MobileDevice;
 import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PublishedApp;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.scheduler.jobs.AppStatsJob;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
@@ -29,73 +27,48 @@ import org.joda.time.Days;
 import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
-import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
 
 @Service
-@lombok.Getter
-@lombok.Setter
 public class StatisticsService {
 
 	private Client client;
-	private ObjectMapper mapper;
 	private String analyticsIndex;
 	private String nginxAccessIndex;
 	private FileRepository fileRepository;
 	private DateTimeFormatter dateTimeFormatter;
 	private PublishedAppRepository appRepository;
-	private ESAppStatsRepository appStatsRepository;
-	private PersonRepository personRepository;
 	private MobileDeviceRepository mobileDeviceRepository;
 	private PersonPermissionService personPermissionService;
-
-	private boolean checkStores;
-
-	private Scheduler scheduler;
+	private PostRepository postRepository;
+	private CommentRepository commentRepository;
+	private String trixIndex;
 
 	private static int MONTH_INTERVAL = 30;
 	private static int WEEK_INTERVAL = 7;
 	private static String ACCESS_TYPE = "nginx_access";
-	private static String STATS_JOB = "app_stats_jobs";
-	private static String STATS_TRIGGER = "apps_stats_trigger";
 
 	@Autowired
-	public StatisticsService(Client client,
-							 MobileDeviceRepository mobileDeviceRepository,
-							 @Qualifier("objectMapper") ObjectMapper mapper,
-							 @Value("${elasticsearch.analyticsIndex}") String analyticsIndex,
-							 @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex,
-							 @Value("${analytics.checkStores}") boolean checkStores,
-							 PublishedAppRepository appRepository, FileRepository fileRepository,
-							 PersonPermissionService personPermissionService,
-							 ESAppStatsRepository appStatsRepository,
-							 Scheduler scheduler,
-							 PersonRepository personRepository){
-		this.mapper = mapper;
+	public StatisticsService(Client client, MobileDeviceRepository mobileDeviceRepository, @Value("${elasticsearch.analyticsIndex}") String analyticsIndex, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, @Value("${spring.data.elasticsearch.index}") String trixIndex,
+							 PublishedAppRepository appRepository, FileRepository fileRepository, PersonPermissionService personPermissionService, PostRepository postRepository, CommentRepository commentRepository){
 		this.client = client;
-		this.scheduler = scheduler;
-		this.checkStores = checkStores;
+		this.trixIndex = trixIndex;
 		this.appRepository = appRepository;
 		this.fileRepository = fileRepository;
 		this.analyticsIndex = analyticsIndex;
+		this.postRepository = postRepository;
+		this.commentRepository = commentRepository;
 		this.dateTimeFormatter = getFormatter();
-		this.personRepository = personRepository;
 		this.nginxAccessIndex = nginxAccessIndex;
-		this.appStatsRepository = appStatsRepository;
 		this.mobileDeviceRepository = mobileDeviceRepository;
 		this.personPermissionService = personPermissionService;
 	}
@@ -108,6 +81,8 @@ public class StatisticsService {
 		ClusterState cs = client.admin().cluster().prepareState().setIndices(nginxAccessIndex).execute().actionGet().getState();
 
 		IndexMetaData indexMetaData = cs.getMetaData().index(nginxAccessIndex);
+		Assert.notNull(indexMetaData, "The data cannot be retrived: No index metadata");
+
 		MappingMetaData mappingMetaData = indexMetaData.mapping(ACCESS_TYPE);
 		Map<String, Object> map = null;
 
@@ -117,10 +92,10 @@ public class StatisticsService {
 			e.printStackTrace();
 		}
 
-		return getList("", map);
+		return getIndexFields("", map);
 	}
 
-	private static List<String> getList(String fieldName, Map<String, Object> mapProperties) {
+	private  List<String> getIndexFields(String fieldName, Map<String, Object> mapProperties) {
 		List<String> fieldList = new ArrayList<String>();
 		Map<String, Object> map = (Map<String, Object>) mapProperties.get("properties");
 		Set<String> keys = map.keySet();
@@ -128,7 +103,7 @@ public class StatisticsService {
 			if (((Map<String, Object>) map.get(key)).containsKey("type")) {
 				fieldList.add(fieldName + "" + key);
 			} else {
-				List<String> tempList = getList(fieldName + "" + key + ".", (Map<String, Object>) map.get(key));
+				List<String> tempList = getIndexFields(fieldName + "" + key + ".", (Map<String, Object>) map.get(key));
 				fieldList.addAll(tempList);
 			}
 		}
@@ -192,8 +167,8 @@ public class StatisticsService {
 		postReadCounts = countPostReadByPost(postId);
 		commentsCounts = countCommentByPost(postId);
 		generalStatus.add(countTotals(postId, "nginx_access.postId", nginxAccessIndex));
-		generalStatus.add(countTotals(postId, "comment.postId", "analytics"));
-		generalStatus.add(countTotals(postId, "recomment.postId", "analytics"));
+		generalStatus.add(countTotals(postId, "comment.postId", analyticsIndex));
+		generalStatus.add(countTotals(postId, "recommend.postId", analyticsIndex));
 
 		TreeMap<Long, ReadsCommentsRecommendsCountData> stats = makeHistogram(postReadCounts, commentsCounts, interval);
 
@@ -218,8 +193,8 @@ public class StatisticsService {
 		postReadCounts = countPostreadByAuthor(personId);
 		commentsCounts = countCommentByAuthor(personId);
 		generalStatus.add(countTotals(personId, "nginx_access.authorId", nginxAccessIndex));
-		generalStatus.add(countTotals(personId, "comment.postAuthorId", "analytics"));
-		generalStatus.add(countTotals(personId, "recommend.postAuthorId", "analytics"));
+		generalStatus.add(countTotals(personId, "comment.postAuthorId", analyticsIndex));
+		generalStatus.add(countTotals(personId, "recommend.postAuthorId", analyticsIndex));
 
 		StatsData response = new StatsData();
 		response.dateStatsJson = makeHistogram(postReadCounts, commentsCounts, interval);
@@ -245,16 +220,16 @@ public class StatisticsService {
 		generalStatus.add((int) (long) mobileDeviceRepository.countAndroidDevices(tenantId));
 		generalStatus.add((int) (long) mobileDeviceRepository.countAppleDevices(tenantId));
 
-		StatsData StatsData = new StatsData();
-		StatsData.generalStatsJson = generalStatus;
-		StatsData.dateStatsJson = makeHistogram(postreadCounts, commentsCounts, interval);
+		StatsData statsData = new StatsData();
+		statsData.generalStatsJson = generalStatus;
+		statsData.dateStatsJson = makeHistogram(postreadCounts, commentsCounts, interval);
 
-		StatsData.androidStore = getAndroidStats(interval);
-		StatsData.iosStore = getIosStats(interval);
+		statsData.androidStore = getAndroidStats(interval);
+		statsData.iosStore = getIosStats(interval);
 
-		StatsData.fileSpace = getFileStats();
+		statsData.fileSpace = getFileStats();
 
-		return StatsData;
+		return statsData;
 	}
 
 	public Map countPostReads(List<Integer> postIds){
@@ -277,24 +252,21 @@ public class StatisticsService {
 		String tenant = TenantContextHolder.getCurrentTenantId();
 		PublishedApp ios = appRepository.findByTenantIdAndType(tenant, Constants.MobilePlatform.APPLE);
 
-		return getAppStats(ios, interval);
+		if(ios != null)
+			return getAppStats(ios, interval);
+		else
+			return null;
 
 	}
 
 	public StoreStatsData getAndroidStats(Interval interval) {
 		String tenant = TenantContextHolder.getCurrentTenantId();
 		PublishedApp android = appRepository.findByTenantIdAndType(tenant, Constants.MobilePlatform.ANDROID);
-
-		return getAppStats(android, interval);
+		if(android != null)
+			return getAppStats(android, interval);
+		else
+			return  null;
 	}
-
-//	public Map getPersonTimeline(Integer personId){
-//		Map bookmarks = new TreeMap<Date, Integer>();
-//		Map recommends = new TreeMap<Date, Integer>();
-//
-//		Person p = personRepository.findOne(personId);
-//
-//	}
 
 	public Map getStationReaders(Integer stationId){
 		List<Person> persons = (List<Person>) personPermissionService.getPersonFromStation(stationId);
@@ -326,17 +298,9 @@ public class StatisticsService {
 	}
 
 	public StoreStatsData getAppStats(PublishedApp app, Interval interval){
-		ESAppStats stats;
-		if (app.getType().equals(Constants.MobilePlatform.ANDROID)) {
-			stats = appStatsRepository.findByPackageName(app.getPackageName()).get(0);
-		} else {
-			stats = appStatsRepository.findBySku(app.getSku()).get(0);
-		}
+		Assert.notNull(app, "App cannot be null");
 
 		StoreStatsData appStats = new StoreStatsData();
-		appStats.averageRaiting = stats.averageRaiting;
-		appStats.downloads = stats.downloads;
-		appStats.currentInstallations = stats.currentInstallations;
 
 		Interval week = getInterval(interval.getEnd(), WEEK_INTERVAL);
 		Interval month = getInterval(interval.getEnd(), MONTH_INTERVAL);
@@ -345,25 +309,6 @@ public class StatisticsService {
 		appStats.monthlyActiveUsers = getActiveUserByInterval(month, app.getType());
 
 		return appStats;
-	}
-
-	@PostConstruct
-	public void createAppStatsJob(){
-		JobDetail job = newJob(AppStatsJob.class).withIdentity(STATS_JOB).build();
-		CronTrigger trigger = newTrigger()
-				.withIdentity(STATS_TRIGGER, "stats_group")
-				.withSchedule(cronSchedule("0 0/1 * * * ?")).build();
-
-		try {
-			if (checkStores && !scheduler.checkExists(trigger.getKey())) {
-				this.scheduler.scheduleJob(job, trigger);
-			} else if (!checkStores && scheduler.checkExists(trigger.getKey())) {
-				scheduler.unscheduleJob(trigger.getKey());
-				scheduler.deleteJob(job.getKey());
-			}
-		} catch (SchedulerException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public Integer getActiveUserByInterval(Interval interval, Constants.MobilePlatform type){
@@ -494,10 +439,21 @@ public class StatisticsService {
 	}
 
 	public Integer countTotals(Integer id, String entity, String index) {
-		return (int) client.prepareSearch(index).setQuery(termQuery(entity, id)).execute().actionGet().getHits().getTotalHits();
+		return (int) client.prepareSearch(index).setQuery(boolQuery().must(termQuery(entity, id)).must(termQuery("verb", "get"))).execute().actionGet().getHits().getTotalHits();
 	}
 
 	public Integer countTotals(String id, String entity, String index) {
-		return (int) client.prepareSearch(index).setQuery(termQuery(entity, id)).execute().actionGet().getHits().getTotalHits();
+		return (int) client.prepareSearch(index).setQuery(boolQuery().must(termQuery(entity, id)).must(termQuery("verb", "get"))).execute().actionGet().getHits().getTotalHits();
+	}
+
+	public Map<String,Integer> dashboardStats() {
+		Map<String, Integer> ret = new LinkedHashMap<>();
+		Long posts = postRepository.countByState(Post.STATE_PUBLISHED);
+		Long comments = commentRepository.count();
+
+		ret.put("post", posts != null ? posts.intValue() : 0);
+		ret.put("comment", comments.intValue());
+
+		return ret;
 	}
 }

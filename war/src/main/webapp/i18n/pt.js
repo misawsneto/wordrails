@@ -45,6 +45,7 @@
 		"EDIT": "Editar",
 		"EDIT_PROFILE": "Editar perfil",
 		"REMOVE": "Remover",
+		"REMOVE_ALL": "Remover todos",
 		"MOVE_TO": "Mover para...",
 		"FILTER_BY": "Filtar por",
 		"FILTER_BY_STATION": "Filtrar por estação",
@@ -55,6 +56,7 @@
 		"SAVE_DRAFT": "Salvar rascunho",
 		"SAVE_AS_DRAFT": "Salvar como rascunho",
 		"SAVE": "Salvar",
+		"APPLY": "Aplicar",
 		"TITLE": "Título",
 		"SUBTITLE": "Subtítulo",
 		"HEADING": "Chapéu",
@@ -74,12 +76,18 @@
 		"SEND": "Enviar",
 		"SEND_INVITE": "Enviar convite",
 		"VIDEO": "Vídeo",
+		"VIDEOS": "Vídeos",
 		"AUDIO": "Áudio",
+		"AUDIOS": "Áudios",
+		"DOCUMENT": "Documento",
+		"DOCUMENTS": "Documentos",
 		"SOCIAL_NETWORK_PROFILES": "Perfis de redes sociais",
-		"SOCIAL_NETWORK_IDS": "IDs de aplicativos sociais",
+		"SOCIAL_NETWORK_IDS": "redes sociais",
 		"BOOKMARKS": "Minhas leituras",
+		"NOTIFICATION": "Notification",
 		"NOTIFICATIONS": "Notificações",
 		"IMAGE": "Imagem",
+		"IMAGES": "Imagens",
 		"CATEGORY_COLOR": "Cor da categoria",
 		"SHARE": "Compartilhar",
 		"DESCRIPTION": "Descrição",
@@ -88,6 +96,7 @@
 		"LATEST_POSTS": "Últimas publicações",
 		"OPTIONAL": "opcional",
 		"NO_BOOKMARKS": "Você não possui leituras",
+		"NO_NOTIFICATIONS": "Não há notificações neste momento",
 		"ADD_PERSON": "Crie um novo usuário",
 		"TOTAL": "Total",
 		"SHOWING": "Exibidos",
@@ -95,9 +104,15 @@
 		"SELECT_ALL": "Selecionar todos",
 		"DESELECT_ALL": "Desselecionar todos",
 		"AT": "em",
+		"SHOW": "Exibir",
 		"SHOW_ALL": "Mais",
 		"SKIP": "Pular",
-		"CLOSE": "Fechar"
+		"CLOSE": "Fechar",
+		"RELATED": "Publicações relacionadas",
+		"ADD": "Adicionar",
+		"LOAD_MORE": "Carregar mais",
+		"ACTIVATE": "Ativar",
+		"FEATURED_POSTS": "Destaques"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -136,11 +151,32 @@
 	    "NEW_POST" : "Nova publicação"
 	  }
 	},
+	"search": {
+		"VIEW_PROFILE": "Visitar perfil",
+		"VIEW_STATION": "Visualizar estação",
+		"VIEW_CATEGORY": "Visualizar categoria"
+	},
 	"settings":{
 		"dashboard":{
 			"NO_SCHEDULED": "Não há publicações agendadas",
 			"NO_DRAFTS": "Não há rascunhos",
-			"NO_PUBLICATIONS": "Não há publicações"
+			"NO_PUBLICATIONS": "Não há publicações",
+			"REGISTERD_USERS": "Usuários cadastrados",
+			"IOS_INSTALLS": "Instações iOS",
+			"ANDROID_INSTALLS": "Instalações Android",
+			"CREATE_PUBLICATION_HEADER": "Crie uma nova publicação",
+			"CREATE_PUBLICATION_DESC": "",
+			"NETWORK_MANAGEMENT_HEADER": "Permitir cadastros de usuários e outras configurações",
+			"NETWORK_MANAGEMENT_DESC": "",
+			"STATION_MANAGEMENT_HEADER": "Crie novas estações, adicione categorias e outras configurações",
+			"STATION_MANAGEMENT_DESC": "",
+			"CREATE_PAGES_HEADER": "Crie e configure páginas",
+			"CREATE_PAGES_DESC": "",
+			"USER_MANAGEMENT_HEADER": "Faça a gestão dos usuários",
+			"USER_MANAGEMENT_DESC": "",
+			"POST_MANAGEMENT_HEADER": "Gerencie todas as publicações",
+			"POST_MANAGEMENT_DESC": "",
+			"COMMENTS_MANAGEMENT_HEADER": "Gerencie comentários"
 		},
 		"aside":{
 			"DASHBOARD": "Painel",
@@ -157,6 +193,7 @@
 				"LOGOS": "Logotipos",
 				"FOOTER": "Rodapé",
 				"CUSTOMIZATION": "Personalização",
+				"INTEGRATIONS": "Integrações",
 				"THEMING": "Aparência"
 			},
 			"settings":{
@@ -188,6 +225,7 @@
 			"ALERT": "Mensagem de alerta!"
 		},
 		"pages":{
+			"MAIN_STATION": "Estação principal",
 			"HOME_PAGE": "Página principal",
 			"CATEGORY_PAGES": "Páginas de categorias",
 			"ADD_SECTION": "Adicionar seção",
@@ -198,7 +236,12 @@
 			"SUBSECTION": "Subseção",
 			"SIDENAV": "Menu lateral",
 			"FOOTER": "Rodapé",
-			"HEADER": "Menu superior"
+			"HEADER": "Menu superior",
+			"header": {
+				"TABS": "Abas",
+				"MENU_ITEM": "Item",
+				"MENU_NAME": "Nome"
+			}
 		},
 		"users": {
 			"ENABLE_ALL_SELECTED": "Ativar usuários selecionados",
@@ -217,7 +260,12 @@
 			"EMAIL_IN_USE": "Email já está sendo usado. Por favor use outro email e tente novamente.",
 			"REQUIRED_FIELDS": "Nome, usuário e email são campos obrigatórios.",
 			"OPTIONAL_PASSWORD": "A senha é opcional e caso não fornecida será gerado automáticamente e enviada por email.",
-			"INVITATIONS_SENT": "Convites enviados com sucesso"
+			"INVITATIONS_SENT": "Convites enviados com sucesso",
+			"PERMISSIONS_UPDATES": "Permissões atualizadas"
+		},
+		"comment":{
+			"REMOVE_COMMENT_MSG": "Tem certeza que deseja remover este comentário?",
+			"REMOVE_SELECTED_COMMENTS_MSG": "Tem certeza que deseja remover os comentários selecionados?"
 		},
 		"post": {
 			"menu":{
@@ -231,12 +279,12 @@
 				"ATTACH_POST": "Anexar outras publicações",
 				"NOTIFY_STATION_USERS": "Notificar usuários",
 				"PUBLICATION_MSG": "O conteúdo será publicado ao clicar em Publicar.",
-				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada minuto uma vez que o título, conteúdo, estações e categorias sejam inseridos. As versões da publicação pode ser visualizado no menu \"Opções de publicação\"."
+				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada alteração uma vez que o título, conteúdo, estações e categorias sejam inseridos. Para desabilitar esta função, verifique a opção \"Salvar automaticamente\" em \"Opções de publicação\". As versões da publicação pode ser visualizado no menu \"Opções de publicação\"."
 			},
 			"ACTIVATE_DEACTIVATE_HEADING": "Ativar/Desativar chapéu",
 			"ACTIVATE_DEACTIVATE_SUBTITLE": "Ativar/Desativar subtítulo",
 			"DETAILS": "Detalhes",
-			"REVISIONS": "Revisões",
+			"REVISIONS": "Histórico",
 			"OPTIONS": "Opções de publicação",
 			"CUSTOMIZE_LINK_DESC": "Endereço web personalizado para acesso através da web",
 			"SCHEDULED_DATE_DESC": "Agendamento de publicação automática",
@@ -252,13 +300,18 @@
 			"NEW_POST": "Nova publicação",
 			"NOTIFY_STATION_USERS_DESC": "Notificar usuários da estação em seus dispositivos.",
 			"NOTIFY_USERS": "Notificar usuários",
+			"PUBLISHED_AS_DRAFT": "Rascunho salvo",
+			"SCHEDULED_MSG": "Agendado para:",
+			"RESCHEDULE": "Reagendar",
 			"messages":{
 				"PAGE_CHANGE_ALERT": "Você possui conteúdo que ainda não foi salvo.",
 				"CLEAR_CONTENT_MSG": "Limpar todo o conteúdo desta publicação?",
 				"CONTENT_LOST_ALERT": "Atenção! Todo o conteúdo que não foi salvo será perdido.",
 				"NEW_POST_MSG": "Iniciar uma nova publicação por inteiro?",
 				"CHANGE_STATE_FROM_PUBLISHED_MSG": "Esta publicação não será visível se seu estado não estiver configurado para PUBLICADO. Tem certeza que deseja mudar o estado desta publicação?",
-				"NEW_PUBLICATION_INFO": "Você iniciou uma nova publicação"
+				"NEW_PUBLICATION_INFO": "Você iniciou uma nova publicação",
+				"INVALID_TERMS_OR_STATIONS": "Você precisa definir uma estação e uma categoria antes de criar/atualizar uma publicação",
+				"INVALID_TITLE_OR_BODY": "Você precisa definir um título e corpo antes de criar/atualizar uma publicação"
 			},
 			"states": {
 				"PUBLISHED": "Publicado",
@@ -279,7 +332,7 @@
 			"CROP_IMAGE_DESC": "Clique e arraste para criar uma seleção e cortar a imagem.",
 			"FOCUS_IMAGE_DESC": "Arraste o marcador para configurar o ponto focal.",
 			"TOGGLE_LANDSCAPE": "Ligar/desligar modo paisagem (imagem)",
-			"SHOW_VERSION": "Exibir versão",
+			"SHOW_VERSION": "Restaurar versão",
 			"CONTRAST": "Contraste",
 			"SELECT_STATION": "Selecione uma estação e categorias para indexar sua publicação",
 			"ADD_TAGS": "Adicionar tags",
@@ -288,7 +341,9 @@
 			"TRASH_ALL": "Mover para a lixeira",
 			"UPDATE_SUCCESS": "Atualizado",
 			"PUBLISH_SUCCESS": "Publicado",
-			"PUBLISH_ERROR": "Erro ao publicar"
+			"PUBLISH_ERROR": "Erro ao publicar",
+			"EDITING": "Edição",
+			"AUTOMATIC_SAVE": "Salvar automaticamente"
 		},
 		"station": {
 			"STATION_SETTINGS": "Configurações de estação",
@@ -308,7 +363,14 @@
 			"AUTHENTICATED": "Todos os usuários autenticados nesta estação",
 			"STATION_LOGO": "Logotipo",
 			"STATION_CREATION_SUCCESS": "Estação foi criada com sucesso",
-			"STATION_REMOVED_SUCCESS": "Estação removida com sucesso"
+			"STATION_REMOVED_SUCCESS": "Estação removida com sucesso",
+			"perspective": {
+				"FIX_POST": "Fixar publicação",
+				"FIX_POST_MSG": "Fixar uma publicação na posição ",
+				"ACTIVATE_PERSPECTIVE_MSG": "Tem certeza que deseja ativar esta perspectiva? Esta ação  modificará a forma de apresentação do conteúdo em todos os dispositivos.",
+				"REMOVE_PERSPECTIVE_MSG": "Tem certeza que deseja remover esta perspectiva? Esta operação não poderá ser desfeita.",
+				"PERSPECTIVE_ORDER_MSG": "Arraste para ordernar"
+			}
 		},
 		"category": {
 			"STATION_CATEGORY": "Categorias da estação ",
@@ -342,6 +404,7 @@
 		"SUCCESS_MSG": "Alterações realizadas com sucesso",
 		"network":{
 			"NO_LANGUAGE": "Idioma não disponível"
-		}
+		},
+		"INVALID_CREDENTIALS": "Credenciais inválidas. Por favor tente novamente."
 	}
 }

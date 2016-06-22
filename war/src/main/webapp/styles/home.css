@@ -541,7 +541,8 @@ footer.page-footer .footer-copyright{
 /********************* 4.1 News Slider ********************/
 
 .ps-caption > h2{ font-size: 29px; line-height: 35px; margin: 10px 0;}
-.pgwSlider  .ps-list a{ font-size: 16px; padding: 10px;}
+.pgwSlider  .ps-list a{ font-size: 16px; font-weight: 300; /*padding: 10px;*/}
+.pgwSlider .ps-caption a{ font-size: 20px; font-weight: 300;}
 .pgwSlider .ps-caption p{ color: #fff;}
 .pgwSlider .ps-caption {
   background: rgba(0, 0, 0, 0) linear-gradient(transparent, rgba(0, 0, 0, 0.85)) repeat scroll 0 0;
@@ -606,7 +607,7 @@ ul.pgwSlider > li span, .pgwSlider > .ps-list > li span
   font-size: 12px;
 }
 .news-time .fa.fa-clock-o { font-size: 15px; margin-right: 5px; }
-.news-title > a {
+.news-title > a, .news-title > p {
   /* color: #444; */
   display: block;
   font-size: 18px;
@@ -884,7 +885,7 @@ ul.pgwSlider > li span, .pgwSlider > .ps-list > li span
 
 .comment{ background-color: #fff; overflow: hidden; padding: 50px; margin-top:40px; }
 .comment  ul{ margin: 35px 0 0 0; }
-.comment-box { border-top: 2px solid #f63e7c; padding: 25px 0; overflow: hidden;  }
+.comment-box { /*border-top: 2px solid #f63e7c;*/ padding: 25px 0; overflow: hidden;  }
 .comment-box.child {margin-left: 40px; padding-left: 40px;}
 .comment-title {
   color: #3e52b3;
@@ -1032,6 +1033,7 @@ ul.pgwSlider > li span, .pgwSlider > .ps-list > li span
 
 /***************** 10.2 Slider ******************/
 
+.ps-current {box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26)!important;}
 .shop-slider .pgwSlider .ps-current{ width: 75%;}
 .shop-slider .ps-list {width: 25%;}
 .shop-slider .ps-caption{

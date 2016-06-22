@@ -54,6 +54,18 @@ public class TermsResource extends AbstractResource implements TermsApi {
 		forward();
 	}
 
+	//GAMBIARRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	@Override //portodigital
+	public void getTermsPosts() throws IOException {
+		String pathInfo = request.getPathInfo(); // /{value}/test
+		String[] pathParts = pathInfo.split("/");
+		String part1 = pathParts[2]; // {value}
+		Map<String, String> params = new HashMap<>();
+		params.put("termId", part1);
+		params.put("projection", "postProjection");
+		forward("/terms/search/findPostsByTerm", params);
+	}
+
 	@Override
 	public void postTerm() throws IOException {
 		forward();

@@ -3,7 +3,8 @@ package co.xarx.trix.services;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AbstractSearchService {
+public abstract class AbstractSearchService {
+
 	protected List<Integer> getPaginatedIds(List<Integer> ids, Integer page, Integer size) {
 		int from = size * page;
 		if(ids.size() < size)

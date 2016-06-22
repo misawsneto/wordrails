@@ -18,11 +18,11 @@ public interface TaxonomyRepository extends DatabaseRepository<Taxonomy, Integer
 	@Query("select taxonomy from Taxonomy taxonomy where taxonomy.type = 'S' and taxonomy.owningStation.id = :stationId")
 	List<Taxonomy> findStationTaxonomy(@Param("stationId") Integer stationId);
 
-	@Query("select taxonomy from Taxonomy taxonomy where taxonomy.type = 'T' and taxonomy.owningStation.id = :stationId")
-	List<Taxonomy> findStationTags(@Param("stationId") Integer stationId);
+//	@Query("select taxonomy from Taxonomy taxonomy where taxonomy.type = 'T' and taxonomy.owningStation.id = :stationId")
+//	List<Taxonomy> findStationTags(@Param("stationId") Integer stationId);
 
-	@Query("select taxonomy from Taxonomy taxonomy where taxonomy.type = 'N' and taxonomy.owningNetwork.id = :networkId")
-	List<Taxonomy> findNetworkCategories(@Param("networkId") Integer networkId);
+//	@Query("select taxonomy from Taxonomy taxonomy where taxonomy.type = 'N' and taxonomy.owningNetwork.id = :networkId")
+//	List<Taxonomy> findNetworkCategories(@Param("networkId") Integer networkId);
 
 //	@Query("select t from Taxonomy t where t.id IN " +
 //			"(select taxonomy.id from Taxonomy taxonomy join taxonomy.owningStation station where " +

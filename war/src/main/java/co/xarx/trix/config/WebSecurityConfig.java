@@ -1,5 +1,6 @@
 package co.xarx.trix.config;
 
+import co.xarx.trix.web.filter.AnonymousLogoutHandler;
 import co.xarx.trix.web.filter.UserPassAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,12 +60,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http//.formLogin().and() // .formLogin()// .defaultSuccessUrl("/resource").and()
-				//.logout().and()
+		http
 				.authorizeRequests()
-				//.antMatchers("/", "/app/**", "/index.html", "/home", "/login", "/data", "/data/**", "/access", "/logout", "/util/**").permitAll()
-				//.antMatchers("/admin/api/**").hasAnyAuthority("ADMIN", "SUPERUSER")
-				.antMatchers("/**").permitAll().anyRequest().authenticated()
+				.antMatchers("/**").permitAll()
+				.anyRequest().authenticated()
 				.and()
 				.csrf().disable().exceptionHandling()
 				.and()
@@ -72,9 +71,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.usernameParameter("username").passwordParameter("password")
 				.failureHandler(authFailureHandler())
 				.and()
-				.logout().logoutUrl("/j_spring_security_logout")
+				.logout()
+				.logoutUrl("/j_spring_security_logout")
+				.logoutSuccessHandler(new AnonymousLogoutHandler())
 				.and()
-				.sessionManagement().maximumSessions(-1).sessionRegistry(sessionRegistry());
+				.sessionManagement().maximumSessions(-1)
+				.sessionRegistry(sessionRegistry());
 
 
 		http.addFilterBefore(new AnonymousAuthenticationFilter("anonymousUser"), AnonymousAuthenticationFilter.class);

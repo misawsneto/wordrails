@@ -21,6 +21,10 @@ public interface TermsApi {
 	@Path("/")
 	void getTerms() throws IOException;
 
+	@GET
+	@Path("/{id}/posts")
+	void getTermsPosts() throws IOException;
+
 	@POST
 	@Path("/")
 	void postTerm() throws IOException;

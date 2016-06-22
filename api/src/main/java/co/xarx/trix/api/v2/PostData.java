@@ -38,6 +38,7 @@ public class PostData implements Serializable, Identifiable {
 
 	private Integer authorId;
 	private String authorName;
+	private String authorUsername;
 	private PersonData author;
 
 	private String authorImageHash;
@@ -61,17 +62,16 @@ public class PostData implements Serializable, Identifiable {
 	private Double lat;
 	private Double lng;
 
-	private int readsCount = 0;
-	private int bookmarksCount = 0;
-	private int recommendsCount = 0;
-	private int commentsCount = 0;
+	private Integer bookmarksCount = 0;
+	private Integer recommendsCount = 0;
+	private Integer commentsCount = 0;
 
-	private int readTime;
+	private Integer readTime;
 
 	private String externalVideoUrl;
 
 	private Date scheduledDate;
-	private boolean notified;
+	private Boolean notified = false;
 
 	public void setBody(String body) {
 		this.body = body;

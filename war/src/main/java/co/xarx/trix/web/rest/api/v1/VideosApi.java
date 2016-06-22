@@ -18,6 +18,10 @@ public interface VideosApi {
 	@Path("/{id:\\d+}")
 	void getVideo(@PathParam("id") int videoId) throws ServletException, IOException;
 
+	@GET
+	@Path("/search/findVideosOrderByDate")
+	void findVideosOrderByDate() throws ServletException, IOException;
+
 	@POST
 	@Path("/")
 	void postVideo() throws ServletException, IOException;

@@ -17,11 +17,13 @@ import java.util.List;
 public class StationPermissionData {
 
 	@Getter
+	@Setter
 	@AllArgsConstructor
 	public class Permission {
 		private String username;
 		@JsonUnwrapped
 		private PermissionData permissionData;
+		private PersonData person;
 	}
 
 	private Integer stationId;

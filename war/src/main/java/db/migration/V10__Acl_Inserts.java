@@ -2,6 +2,7 @@ package db.migration;
 
 import co.xarx.trix.config.flyway.SpringContextMigration;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.config.security.MultitenantPrincipalSid;
 import co.xarx.trix.config.security.Permissions;
 import co.xarx.trix.domain.*;
 import lombok.Getter;
@@ -15,7 +16,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.acls.domain.CumulativePermission;
 import org.springframework.security.acls.domain.GrantedAuthoritySid;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
-import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.MutableAcl;
 import org.springframework.security.acls.model.MutableAclService;
 import org.springframework.security.acls.model.Permission;
@@ -44,10 +44,12 @@ public class V10__Acl_Inserts extends SpringContextMigration {
 	@Override
 	@SuppressWarnings("Duplicates")
 	public void migrate() throws Exception {
+		TransactionSynchronizationManager.initSynchronization();
 		Map<Integer, MutableAcl> stationAcls = migrateStations();
 		Map<Integer, MutableAcl> postsAcl = migratePosts(stationAcls);
 
 		migrateComments(postsAcl);
+		TransactionSynchronizationManager.clearSynchronization();
 	}
 
 	public void migrateComments(Map<Integer, MutableAcl> postsAcl) {
@@ -59,7 +61,7 @@ public class V10__Acl_Inserts extends SpringContextMigration {
 
 			for (Comment comment : comments) {
 				TenantContextHolder.setCurrentTenantId(comment.getTenantId());
-				Sid sid = new PrincipalSid(comment.getAuthor().getUsername());
+				Sid sid = new MultitenantPrincipalSid(comment.getAuthor().getUsername(), comment.getTenantId());
 
 				SecurityContextHolder.getContext().setAuthentication(
 						new UsernamePasswordAuthenticationToken(comment.getAuthor().getUsername(), "", new ArrayList() {
@@ -85,7 +87,7 @@ public class V10__Acl_Inserts extends SpringContextMigration {
 
 			for (Post post : posts) {
 				TenantContextHolder.setCurrentTenantId(post.getTenantId());
-				Sid sid = new PrincipalSid(post.getAuthor().getUsername());
+				Sid sid = new MultitenantPrincipalSid(post.getAuthor().getUsername(), post.getTenantId());
 
 				SecurityContextHolder.getContext().setAuthentication(
 						new UsernamePasswordAuthenticationToken(post.getAuthor().getUsername(), "", new ArrayList() {
@@ -109,7 +111,6 @@ public class V10__Acl_Inserts extends SpringContextMigration {
 				"INNER JOIN person p ON person_station_role.person_id = p.id " +
 				"INNER JOIN station s ON person_station_role.station_id = s.id", new StationRoleExtractor());
 
-		TransactionSynchronizationManager.initSynchronization();
 		for (Integer stationId : stationRolesMap.keySet()) {
 			Pair<List<StationRole>, String> stationRoles = stationRolesMap.get(stationId);
 			TenantContextHolder.setCurrentTenantId(stationRoles.getLeft().get(0).getTenantId());
@@ -121,7 +122,7 @@ public class V10__Acl_Inserts extends SpringContextMigration {
 			MutableAcl acl = aclService.createAcl(oi);
 			stationAcls.put(stationId, acl);
 			for (StationRole stationRole : stationRoles.getLeft()) {
-				Sid sid = new PrincipalSid(stationRole.person.username);
+				Sid sid = new MultitenantPrincipalSid(stationRole.person.username, stationRole.getTenantId());
 
 				CumulativePermission permission = new CumulativePermission();
 				permission.set(Permissions.READ);
@@ -132,24 +133,40 @@ public class V10__Acl_Inserts extends SpringContextMigration {
 					permission.set(Permissions.WRITE);
 					permission.set(Permissions.DELETE);
 				}
-				if (stationRole.writer || stationRole.station.writable) {
+				if (stationRole.writer) {
+					permission.set(Permissions.WRITE);
 					permission.set(Permissions.CREATE);
 				}
 				if (stationRole.admin) {
-					permission.set(Permissions.ADMINISTRATION);
+					permission = getAdmPermission();
 				}
 
-				if (stationRole.station.getVisibility().equals(Station.UNRESTRICTED)) {
-					acl.insertAce(acl.getEntries().size(), Permissions.READ, new GrantedAuthoritySid("ROLE_ANONYMOUS"), true);
-				}
-
+				boolean anonymousCanRead = stationRole.station.getVisibility().equals(Station.UNRESTRICTED);
+				acl.insertAce(acl.getEntries().size(), Permissions.READ,
+						new GrantedAuthoritySid("ROLE_USER"), anonymousCanRead);
+				acl.insertAce(acl.getEntries().size(), Permissions.READ,
+						new GrantedAuthoritySid("ROLE_ANONYMOUS"), anonymousCanRead);
 				acl.insertAce(acl.getEntries().size(), permission, sid, true);
-				acl.insertAce(acl.getEntries().size(), Permissions.ADMINISTRATION, new GrantedAuthoritySid("ROLE_ADMIN"), true);
+				acl.insertAce(acl.getEntries().size(), getAdmPermission(),
+						new GrantedAuthoritySid("ROLE_ADMIN"), true);
 			}
 			aclService.updateAcl(acl);
 		}
 
 		return stationAcls;
+	}
+
+	@SuppressWarnings("Duplicates")
+	private CumulativePermission getAdmPermission() {
+		CumulativePermission permission = new CumulativePermission();
+		permission.set(Permissions.READ);
+		permission.set(Permissions.MODERATION);
+		permission.set(Permissions.CREATE);
+		permission.set(Permissions.WRITE);
+		permission.set(Permissions.DELETE);
+		permission.set(Permissions.ADMINISTRATION);
+
+		return permission;
 	}
 
 	@SuppressWarnings("Duplicates")

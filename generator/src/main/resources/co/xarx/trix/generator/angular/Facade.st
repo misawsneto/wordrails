@@ -5,6 +5,8 @@ var TRIX_BACKEND = null;
 var trix = angular.module('trix', [])
 .provider('trix', function trixProvider(\$httpProvider) {
 
+	var username = null;
+
 	var _config = {}
 	_config.url = null;
 	var provider = {};
@@ -46,6 +48,8 @@ var trix = angular.module('trix', [])
 			}else if (_config.url && response.config.method === "GET" &&
 				response.config.url.indexOf(_config.url + "/api") > -1 &&
 				response.data && response.data.content){
+					if(response.data.totalElements)
+                       response.config.totalElements = response.data.totalElements
 					response.data = response.data.content;
 					return response
 			}else if(response.config.method === "PUT"){
@@ -61,6 +65,8 @@ var trix = angular.module('trix', [])
 				return response;
 		},
 		request: function(config) {
+			if(username)
+                config.headers['x-username'] = username;
 		  return config;
 		}
 		};
@@ -70,6 +76,14 @@ var trix = angular.module('trix', [])
 	delete \$httpProvider.defaults.headers.common['X-Requested-With'];
 
   var Trix = function(\$http){
+
+    this.setUsername = function(uname){
+        username = uname;
+    }
+
+    this.resetUsername = function(){
+        username = null;
+    }
 
 	this.login = function(username, password) {
 	  var config = {};
@@ -192,9 +206,14 @@ var trix = angular.module('trix', [])
 	}
 
 	this.updateStationRoles = function(stationRoleUpdates){
-		var config = {"headers": {"Content-Type": "application/json"}}
-		return \$http.put(_config.url + "/api/persons/updateStationRoles", stationRoleUpdates, config)
-	}
+        var config = {"headers": {"Content-Type": "application/json"}}
+        return \$http.put(_config.url + "/api/permission/stations/update", stationRoleUpdates, config)
+    }
+
+    this.clearStationRoles = function(stationRoleUpdates){
+        var config = {"headers": {"Content-Type": "application/json"}}
+        return \$http.put(_config.url + "/api/permission/stations/clean", stationRoleUpdates, config)
+    }
 
 	this.putTermView = function (termView) {
 		var config = {"headers": {"Content-Type": "application/json"}}
@@ -312,20 +331,29 @@ var trix = angular.module('trix', [])
 	  return \$http.get(_config.url + "/api/persons/"+personId+"/recommends", config)
 	}
 
-	this.searchPosts = function(query, _page, _size, params) {
-		var config = {
-			"params": {
-				"query": query,
-				"page": _page,
-				"size": _size,
-			}
-		}
+	this.searchComments = function(query,authors,posts,stations,from,until,page,size,order,embed){
+        var config = {
+            "params": {
+                "q": query,
+                "authorId": authors,
+                "postId": posts,
+                "stationId": stations,
+                "from": from,
+                "until": until,
+                "page": page,
+                "size": size,
+                "order": order,
+                "embed": embed,
+            }
+        }
+        return \$http.get(_config.url + "/api/v2/comments/search", config)
+    }
 
-		if(params && angular)
-			config.params = angular.extend(config.params, params);
-
-	  return \$http.get(_config.url + "/api/posts/search/networkPosts", config)
-	}
+    this.deleteComments = function(comments) {
+        var config = {};
+        config.headers = {"Content-Type": "application/json"}
+        return \$http.put("/api/v2/comments", comments, config);
+    }
 
 	this.searchPosts = function(query,authors,stations,state,from,until,categories,tags,page,size,order,
     	embed, snippet){
@@ -349,6 +377,19 @@ var trix = angular.module('trix', [])
         return \$http.get(_config.url + "/api/v2/posts/search", config)
 	}
 
+	this.getPostVersions = function(postId){
+		var config = {
+            "params": {
+                "postId": postId
+            }
+        }
+		return \$http.get(_config.url + "/api/v2/posts/getPostVersions", config);
+	}
+
+	this.getStationPermission = function(stationId){
+	    return \$http.get(_config.url + "/api/v2/stations/"+stationId+"/permissions");
+	}
+
 	this.searchBookmarks = function(query, _page, _size) {
 		var config = {
 		"params": {
@@ -359,6 +400,10 @@ var trix = angular.module('trix', [])
 		}
 	  return \$http.get(_config.url + "/api/bookmarks/searchBookmarks", config)
 	}
+
+	this.authCredentials = function() {
+        return \$http.get(_config.url + "/api/v2/auth/social/credentials")
+    }
 
 	this.searchNotifications = function(query, _page, _size) {
 		var config = {
@@ -548,6 +593,122 @@ var trix = angular.module('trix', [])
 
     this.getImagesPost = function(id) {
         return _config.url + "/api/images/posts/" + id + "?size=" + size;
+    }
+
+    this.updateAuthCredential = function (authCredential) {
+        var config = {"headers": {"Content-Type": "application/json"}}
+        return \$http.put(_config.url + "/api/authCredentials",
+        authCredential, config)
+    }
+
+    this.getAuthCredential = function () {
+        var config = {"headers": {"Content-Type": "application/json"}}
+        return \$http.get(_config.url + "/api/authCredentials",config);
+    }
+
+    //@Path("/getMostPopular")
+    this.getMostCommonTerm = function(startTime,endTime,field,page,size){
+        var config = {};
+        config.params = {
+            startTime: startTime,
+            endTime: endTime,
+            field: field,
+            page: page,
+            size: size
+        }
+        config.headers = {"Content-Type": "application/json"}
+        return \$http.get(_config.url + "/api/v2/statistics/getMostPopular", config)
+    }
+
+    //@Path("/popularNetworks")
+    this.getPopularNetworks = function(page,size){
+        var config = {};
+        config.params = {
+            page: page,
+            size: size
+        }
+        config.headers = {"Content-Type": "application/json"}
+        return \$http.get(_config.url + "/api/v2/statistics/popularNetworks", config)
+    }
+
+    	//@Path("/post")
+    this.postStats = function(end, start, postId){
+         var config = {};
+         config.params = {
+             end: end,
+             start: start,
+             postId: postId
+         }
+         config.headers = {"Content-Type": "application/json"}
+         return \$http.get(_config.url + "/api/v2/statistics/post", config)
+    }
+
+    //@Path("/author")
+    this.authorStats = function(end, start, authorId){
+         var config = {};
+         config.params = {
+             end: end,
+             start: start,
+             authorId: authorId
+         }
+         config.headers = {"Content-Type": "application/json"}
+         return \$http.get(_config.url + "/api/v2/statistics/author", config)
+    }
+
+    //@Path("/network")
+    this.networkStats = function(end, start){
+		 var config = {};
+         config.params = {
+             end: end,
+             start: start
+         }
+         config.headers = {"Content-Type": "application/json"}
+         return \$http.get(_config.url + "/api/v2/statistics/network", config)
+    }
+
+    	//@Path("/station")
+    this.stationStats = function(end, start, stationId){
+	     var config = {};
+         config.params = {
+             end: end,
+             start: start,
+             stationId: stationId
+         }
+         config.headers = {"Content-Type": "application/json"}
+         return \$http.get(_config.url + "/api/v2/statistics/station", config)
+    }
+
+    	//@Path("/storage")
+    this.getNetworkUsedSpace = function(){
+	     var config = {};
+         config.headers = {"Content-Type": "application/json"}
+         return \$http.get(_config.url + "/api/v2/statistics/storage", config)
+    }
+
+    //	@Path("/countPostReads")
+    this.countReadsByPostIds = function(postIds){
+         var config = {};
+         config.params = {
+             postIds: postIds
+         }
+         config.headers = {"Content-Type": "application/json"}
+         return \$http.get(_config.url + "/api/v2/statistics/countPostReads", config)
+    }
+
+    	//@Path("/countReadersByStation")
+    this.countReadersByStation = function(stationId){
+     var config = {};
+     config.params = {
+         stationId: stationId
+     }
+     config.headers = {"Content-Type": "application/json"}
+     return \$http.get(_config.url + "/api/v2/statistics/countReadersByStation", config)
+    }
+
+    this.dashboardStats = function(){
+        var config = {};
+        config.headers = {"Content-Type": "application/json"}
+        return \$http.get(_config.url + "/api/v2/statistics/dashboardStats", config)
     }
 
 	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$

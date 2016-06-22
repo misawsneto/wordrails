@@ -6,8 +6,6 @@ import co.xarx.trix.services.NetworkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +32,8 @@ public class NetworkDomainFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) res;
 		String host = request.getHeader("Host");
 
-		if(host == null) {
+
+		if (host == null) {
 			throw new BadRequestException("Host is null");
 		}
 
@@ -42,6 +41,10 @@ public class NetworkDomainFilter implements Filter {
 			response.sendRedirect("/home");
 		} else {
 			String tenantId = networkService.getTenantFromHost(host);
+			String currentTenantId = TenantContextHolder.getCurrentTenantId();
+			if (currentTenantId != null && !currentTenantId.equals(tenantId)) {
+				System.out.println("RED FLAG!!!! REQUEST IS FOR TENANT " + tenantId + " BUT IN SESSION WAS SET " + currentTenantId);
+			}
 
 			if (tenantId == null) {
 				response.sendRedirect("/404.html");
@@ -52,12 +55,10 @@ public class NetworkDomainFilter implements Filter {
 			session.setAttribute("userAgent", request.getHeader("User-Agent"));
 			session.setAttribute("tenantId", tenantId);
 			TenantContextHolder.setCurrentTenantId(tenantId);
+//			tenantProvider.setTenantId(tenantId);
 		}
 
-		response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
-		response.setHeader("Pragma", "no-cache");
-		response.setDateHeader("Expires", 0);
-
 		chain.doFilter(req, res);
+		TenantContextHolder.setCurrentTenantId(null);
 	}
 }

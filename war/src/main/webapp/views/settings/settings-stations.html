@@ -13,21 +13,21 @@
             {{station.name}}
           </div>
 
-          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.settings.perspectives({'stationId': station.id})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.perspectives({'stationSlug': station.stationSlug})">
             <div class="md-list-item-content">
-              <i class="mdi mdi-hardware-phone-android p-r fa-fw text-muted"></i> 
+              <i class="mdi mdi2-view-quilt p-r fa-fw text-muted"></i> 
               {{'titles.PERSPECTIVE' | translate}}s
             </div>
           </a>
 
-          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.categories({'slug': station.stationSlug})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.categories({'stationSlug': station.stationSlug})">
             <div class="md-list-item-content">
               <i class="mdi mdi2-format-list-bulleted p-r fa-fw text-muted"></i> 
               {{'titles.CATEGORIES' | translate}}
             </div>
           </a>
 
-          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.settings.stationusers({'stationId': station.id})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.permissions({'stationSlug': station.stationSlug})">
             <div class="md-list-item-content">
               <i class="mdi mdi-communication-vpn-key p-r fa-fw text-muted"></i> 
               {{'titles.PERMISSIONS' | translate}}
@@ -41,12 +41,12 @@
             </div>
           </a>
 
-          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.analysis">
+          <!--<a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.analysis">
             <div class="md-list-item-content">
               <i class="mdi mdi2-chart-areaspline p-r fa-fw text-muted"></i> 
               {{'titles.STATS' | translate}}
             </div>
-          </a>
+          </a>-->
 
           <div class="md-list-item list-group-item b-n p-sm">
             <div class="md-list-item-content">
@@ -67,7 +67,7 @@
   </div>
 </div>
 
-<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg" ng-click="createNewStation($event)">
+<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg" ng-click="createNewStation($event)">
     <i class="mdi-content-add i-24"></i>
 </md-button>
 
@@ -105,13 +105,13 @@
         </div>
 
         <div class="pos-abt bottom-0 text-center w-full p-t p-b">
-          <md-button ng-click="app.cancelDialog();" class="m-0">
+          <md-button aria-label="nothing" ng-click="app.cancelDialog();" class="m-0">
             {{'titles.CANCEL' | translate}}
           </md-button>
-          <md-button ng-click="app.updateStation(app.stationObj); disabled = true;" ng-disabled="disabled" class="m-0" ng-if="app.editingStation">
+          <md-button aria-label="nothing" ng-click="app.updateStation(app.stationObj); disabled = true;" ng-disabled="disabled" class="m-0" ng-if="app.editingStation">
             {{'titles.SAVE' | translate}}
           </md-button>
-          <md-button ng-click="app.createStation(app.stationObj); disabled = true;" ng-disabled="disabled" class="m-0" ng-if="app.newStation">
+          <md-button aria-label="nothing" ng-click="app.createStation(app.stationObj); disabled = true;" ng-disabled="disabled" class="m-0" ng-if="app.newStation">
             {{'actions.CREATE' | translate}}
           </md-button>
         </div>
@@ -197,10 +197,10 @@
         </div>
 
         <div class="text-center">
-          <md-button ng-click="app.removeStation(app.stationObj.id); disabled = true;" ng-disabled="disabled">
+          <md-button aria-label="nothing" ng-click="app.removeStation(app.stationObj.id); disabled = true;" ng-disabled="disabled">
             {{'titles.YES' | translate}}
           </md-button>
-          <md-button ng-click="cancel()">
+          <md-button aria-label="nothing" ng-click="cancel()">
             {{'titles.NO' | translate}}
           </md-button>
         <div>

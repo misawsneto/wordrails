@@ -42,17 +42,18 @@ public interface PostProjection {
 
 	Integer getBookmarksCount();
 
-	Integer getReadsCount();
-
 	Integer getRecommendsCount();
 
 	Integer getCommentsCount();
 
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	Date getCreatedAt();
+
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	Date getUpdatedAt();
 
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	Date getScheduledDate();
-
-	String getExternalFeaturedImgUrl();
 
 	String getExternalVideoUrl();
 

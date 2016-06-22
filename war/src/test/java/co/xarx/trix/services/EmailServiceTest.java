@@ -31,11 +31,11 @@ public class EmailServiceTest {
 
 	@Test
 	public void testSendNetworkInvitation() throws Exception {
-		Invitation invitation = new Invitation(network.getRealDomain(), false);
+		Invitation invitation = new Invitation(network.getRealDomain());
 		invitation.person = new Person();
 		invitation.person.email = "jonas.agx@gmail.com";
 		invitation.person.name = "Jonas";
 		//Now it does nothing
-//		emailService.notifyPersonCreation(network, invitation, person);
+//		emailService.validatePersonCreation(network, invitation, person);
 	}
 }

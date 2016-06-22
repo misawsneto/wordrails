@@ -40,6 +40,35 @@
     </ul>
     <div class="pull-right" ui-view="navbar@"></div>
     <!-- / -->
+    <ul class="nav nav-sm navbar-tool pull-right m-r-lg">
+      <li ng-if="app.person.id > 0" class="animated fadeIn dropdown ">
+        <a md-ink-ripple class="dropdown-toggle clear" data-toggle="dropdown">
+          <i class="mdi2-bell-outline i-24 p-h-sm"></i>
+        </a>
+        <ul ng-if="app.isLogged()" class="dropdown-menu dropdown-menu-scale o-f-h w-xxl pull-right">
+          <li md-ink-ripple ng-repeat="notification in app.notifications" class="p-sm">
+            <!-- <a >
+              <span ></span>
+            </a> -->
+            <span class="pull-left thumb-sm m-r">
+              <div ng-style="app.getUserImage(notification.person, 'small', 'PROFILE_PICTURE', true)" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(notification.person)}">
+                <i ng-if="!app.hasProfilePicture(notification.person)" style="line-height: 36px;" class="mdi2-account i-24"></i>
+              </div>
+            </span>
+            <span class="clear">
+              <span class="text-md font-bold">{{notification.person.name}}</span>
+              <div class="text-muted clear text-ellipsis">{{notification.message}}</div>
+            </span>
+          </li>
+          <li ng-if="!app.notifications || app.notifications.length == 0">
+            <div class="text-center text-md p-md opacity-07">
+              <div class="m-b">{{'titles.NO_NOTIFICATIONS' | translate}}</div>
+              <i class="i-40 mdi2-bell-outline"></i>
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
     <!-- Search form -->
     <div id="search" class="navbar-header h-full md-primary-default background pull-right w-400 animated" ng-class="{'fadeIn':!$state.includes('app.search'), 'fadeOut':$state.includes('app.search')}">
       <div class="box">
@@ -51,7 +80,7 @@
             </div>
             <input class="form-control input-lg no-bg no-border md-autofocus p-l-xxl p-r-xxl" placeholder="{{'titles.SEARCH' | translate }}" ng-model="app.search.content">
             <div class="pos-abt right-0 top-0 m-t-xs">
-              <!-- <a class="" ng-click="app.search.show=false; app.search.content=''"><i class="mdi2-close i-24"></i>
+              <!-- <a  ng-click="app.search.show=false; app.search.content=''"><i class="mdi2-close i-24"></i>
                         </a> -->
               <!-- <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-icon-button pull-right" ng-click="app.search.show=false; app.search.content=''"><i class="mdi2-close i-20"></i></md-button> -->
             </div>
@@ -69,7 +98,7 @@
   </div>
   <!-- Content -->
   <div class="box-row">
-    <div id="scroll-box" class="box-cell">
+    <div id="scroll-box" class="box-cell o-f-x-h">
       <div class="box-inner padding" ui-view id="view">
       </div>
     </div>
@@ -103,37 +132,45 @@
         {{'titles.SHARE' | translate}}
       </div>
       <div class="inline w">
-        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
+        <a socialshare socialshare-provider="facebook" socialshare-text="{{app.publicationToShare.title}}" socialshare-url="{{app.getPublicationLink()}}">
+          <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
             <md-button class="md-fab md-mini md-primary inline" style="background: #3B5999" aria-label="Use Android">
               <i class="mdi2-facebook i-24"></i>
             </md-button>
             <div class="font-500 text-md inline m-r">Facebook</div>
-        </div>
-        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
-            <md-button class="md-fab md-mini md-primary" style="background: #5EA9DD" aria-label="Use Android">
-              <i class="mdi2-twitter i-24"></i>
-            </md-button>
-            <div class="font-500 text-md inline m-r">Twitter</div>
-        </div>
+          </div>
+        </a>
+        <a socialshare socialshare-provider="twitter" socialshare-text="{{app.publicationToShare.title}}" socialshare-url="{{app.getPublicationLink()}}">
+          <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
+              <md-button class="md-fab md-mini md-primary" style="background: #5EA9DD" aria-label="Use Android">
+                <i class="mdi2-twitter i-24"></i>
+              </md-button>
+              <div class="font-500 text-md inline m-r">Twitter</div>
+          </div>
+        </a>
       </div>
       <div class="inline w">
-        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
+        <a socialshare socialshare-provider="google" socialshare-text="{{app.publicationToShare.title}}" socialshare-url="{{app.getPublicationLink()}}">
+          <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
             <md-button class="md-fab md-mini md-primary" style="background: #DC4A38" aria-label="Use Android">
               <i class="mdi2-google-plus i-24"></i>
             </md-button>
             <div class="font-500 text-md inline m-r">Google+</div>
-        </div>
-        <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
+          </div>
+        </a>
+        <a socialshare socialshare-provider="linkedin" socialshare-text="{{app.publicationToShare.title}}" socialshare-url="{{app.getPublicationLink()}}">
+          <div class="p-sm r-2x pointer o-f-h" md-ink-ripple>
             <md-button class="md-fab md-mini md-primary" style="background: #0177B5" aria-label="Use Android">
               <i class="mdi2-linkedin i-24"></i>
             </md-button>
             <div class="font-500 text-md inline m-r">LinkedIn</div>
-        </div>
+          </div>
+        </a>
       </div>
     </md-dialog-content>        
 </script>
 
-<md-sidenav class="md-background-hue-1 background md-sidenav-right md-whiteframe-z2" md-component-id="post-summary" style="max-width: 600px!important; width: 600px!important;">
+<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="post-summary" style="max-width: 600px!important; width: 600px!important;">
   <md-content class="pos-abt bottom-0 right-0 left-0 md-background-default background" style="top:0">
     <div id="post-summary-sidebar" class="vbox">
       <div class="row-row">
@@ -141,7 +178,7 @@
           <div class="cell-inner">
 
             <div class="text-left p-h-sm w-full z-index-2" ng-class="{'pos-abt': app.postLoaded.postFeaturedImage}">
-              <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(app.postLoaded.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x badge-lg md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in app.postLoaded.terms">
+              <a ui-sref="app.station.categoryPage({'stationSlug': app.getStationById(app.postLoaded.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x badge-lg md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in app.postLoaded.terms">
                 {{category.name}}
               </a>
             </div>
@@ -236,7 +273,7 @@
   </md-content>
 </md-sidenav>
 
-<md-sidenav class="md-background-hue-1 background md-sidenav-right md-whiteframe-z2 w-400" md-component-id="post-comments">
+  <md-sidenav class="md-sidenav-right md-whiteframe-z2 w-400" md-component-id="post-comments">
     <md-toolbar class="md-theme-light">
       <h1 class="md-toolbar-tools" translate="titles.COMMENTS"></h1>
     </md-toolbar>
@@ -244,7 +281,7 @@
         <div id="post-comments-sidebar" class="vbox">
           <div class="row-row">
             <div id="comment-list" class="cell">
-              <div class="cell-inner">
+              <div class="cell-inner" ng-if="app.comments && app.comments.length">
                 <ul infinite-scroll="app.paginateComments()" infinite-scroll-container="'#comment-list'">
                   <li ng-repeat="comment in app.comments">
                     <div class="p-sm pos-rlt">
@@ -285,3 +322,62 @@
 
       </md-content>
   </md-sidenav>
+
+  <script type="text/ng-template" id="person-dialog.html">
+  <md-dialog-content>
+    <div class="w-xxl scrollable md-background-hue-1 background">
+        <div class="pos-rlt p">
+          <div ng-style="{'background-image': 'url(  {{loadedPerson | coverImage: 'medium'}} )'}" style="margin: -16px -16px 0 -16px" class="hidden-folded bg-cover m-b-md md-whiteframe-z1">
+            <div class="p w-full">
+          <!-- <i class="mdi mdi2-account text-4x"></i> -->
+            <div class="md-whiteframe-z1 user-avatar rounded w-64 bg-white inline pos-rlt md-primary-default background text-center bg-cover" preload-bg-image="{{app.getImageLink(loadedPerson, 'medium')}}" bstyle="{'background-image': 'url(  {{loadedPerson | userImage: 'medium'}} )'}">
+              <i ng-if="!loadedPerson.imageHash" class="mdi2-account i-40" style="top: 16%;position: relative;"></i>
+            </div>
+            </div>
+            <div class="p-v-sm p-h black-grad  text-white">
+              <div class="block" style="opacity:0.92">
+                <span class="block font-bold">{{loadedPerson.name}}</span>
+                <span class="text-sm">{{loadedPerson.email}}</span>
+              </div>
+            </div>
+          </div>
+          <div >
+            {{loadedPerson.bio}}
+          </div>
+        </div>
+        <div class="text-right">
+          <md-button ui-sref="app.userprofile({'username': loadedPerson.username})">{{'search.VIEW_PROFILE' | translate}}</md-button>
+        </div>
+      </div>
+  </md-dialog-content>
+</script>
+
+
+<script  type="text/ng-template" id="move-to-dialog.html">
+  <md-dialog aria-label="change action">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+        <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{'settings.profile.MOVE_TO_STATE_MSG' | translate}}
+        </div>
+
+        <div class="p-h-lg p-v text-u-c font-500">
+          <md-radio-group ng-model="toState">
+            <md-radio-button value="1" ng-if="toMovePublication.state !== 'PUBLISHED'">{{'titles.PUBLISHED' | translate}}</md-radio-button>
+            <md-radio-button value="2" ng-if="toMovePublication.state !== 'DRAFT'">{{'titles.DRAFTS' | translate}}</md-radio-button>
+            <md-radio-button value="4" ng-if="toMovePublication.state !== 'TRASH'">{{'titles.TRASH' | translate}}</md-radio-button>
+          </md-radio-group>
+        </div>
+
+        <div class="text-center">
+          <md-button ng-click="movePublicationToState(toState)" ng-disabled="disabled">
+            {{'titles.CONFIRM' | translate}}
+          </md-button>
+          <md-button ng-click="cancel()">
+            {{'titles.CANCEL' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>

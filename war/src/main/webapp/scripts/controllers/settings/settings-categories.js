@@ -1,21 +1,18 @@
-app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$filter',
-                                          function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $filter){
+app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$filter', 'station',
+                                          function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $filter, station){
 
   $scope.editing = true;
   $scope.parentCategory = null;
   $scope.termTree = [];
 
-  $scope.thisStation = {}
-  $scope.app.stations.forEach(function(station, index){
-    if($state.params.slug == station.stationSlug){
-      $scope.stationName = station.name;
-      $scope.stationId = station.id;
-      $scope.thisStation = station;
-    }
-  });
+  $scope.thisStation = station
+  $scope.stationName = station.name;
+  $scope.stationId = station.id;
 
   $scope.showAddCategoryDialog = function(parent, ev){
     $scope.parentCategory = parent;
+    $scope.disabled = false;
+    $scope.newCategoryName = null;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
           closeTo: {
@@ -37,6 +34,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
   $scope.showDeleteCategoryDialog = function(category, ev){
     $scope.app.toDeleteCategory = category;
     $scope.parentCategory = parent;
+    $scope.disabled = false;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
           closeTo: {
@@ -58,6 +56,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
   $scope.toUpdateCategory = null;
   $scope.showCategoryDescriptionDialog = function(category, ev){
     $scope.toUpdateCategory = category;
+    $scope.disabled = false;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
           closeTo: {

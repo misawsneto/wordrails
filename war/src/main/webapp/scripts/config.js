@@ -30,7 +30,7 @@ angular.module('app')
     // Those urls are [prefix][langKey][suffix].
     $translateProvider.useStaticFilesLoader({
       prefix: '/i18n/',
-      suffix: '.js'
+      suffix: '.js?' + GLOBAL_URL_HASH
     });
     // Tell the module what language to use by default
     $translateProvider.preferredLanguage('pt');
@@ -44,30 +44,30 @@ angular.module('app')
 
     $mdThemingProvider.setNonce('default')
 
-    $mdThemingProvider.definePalette('clear', { "500": "#FFFFFF", "50": "#FFFFFF", "100": "#FFFFFF", "200": "#FFFFFF", "300": "#FFFFFF", "400": "#FFFFFF", "600": "#cbcaca", "700": "#aeadad", "800": "#919090", "900": "#747474", "A100": "#f8f8f8", "A200": "#f4f3f3", "A400": "#ecebeb", "A700": "#aeadad" } );
-    $mdThemingProvider.theme('default').primaryPalette('red').accentPalette('clear');
-    $mdThemingProvider.theme('dark').primaryPalette('red').accentPalette( 'clear' ).dark();
+    // $mdThemingProvider.definePalette('clear', { "500": "#FFFFFF", "50": "#FFFFFF", "100": "#FFFFFF", "200": "#FFFFFF", "300": "#FFFFFF", "400": "#FFFFFF", "600": "#cbcaca", "700": "#aeadad", "800": "#919090", "900": "#747474", "A100": "#f8f8f8", "A200": "#f4f3f3", "A400": "#ecebeb", "A700": "#aeadad" } );
+    // $mdThemingProvider.theme('default').primaryPalette('red').accentPalette('clear');
+    // $mdThemingProvider.theme('dark').primaryPalette('red').accentPalette( 'clear' ).dark();
 
-    // Set default palettes as themes for use in UI.
-    $mdThemingProvider.theme('red').primaryPalette('red').accentPalette('clear');
-    $mdThemingProvider.theme('pink').primaryPalette('pink').accentPalette('clear');
-    $mdThemingProvider.theme('purple').primaryPalette('purple').accentPalette('clear');
-    $mdThemingProvider.theme('deep-purple').primaryPalette('deep-purple').accentPalette('clear');
-    $mdThemingProvider.theme('indigo').primaryPalette('indigo').accentPalette('clear');
-    $mdThemingProvider.theme('blue').primaryPalette('blue').accentPalette('clear');
-    $mdThemingProvider.theme('light-blue').primaryPalette('light-blue').accentPalette('clear');
-    $mdThemingProvider.theme('cyan').primaryPalette('cyan').accentPalette('clear');
-    $mdThemingProvider.theme('teal').primaryPalette('teal').accentPalette('clear');
-    $mdThemingProvider.theme('green').primaryPalette('green').accentPalette('clear');
-    $mdThemingProvider.theme('light-green').primaryPalette('light-green').accentPalette('clear');
-    $mdThemingProvider.theme('lime').primaryPalette('lime').accentPalette('clear');
-    $mdThemingProvider.theme('yellow').primaryPalette('yellow').accentPalette('clear');
-    $mdThemingProvider.theme('amber').primaryPalette('amber').accentPalette('clear');
-    $mdThemingProvider.theme('orange').primaryPalette('orange').accentPalette('clear');
-    $mdThemingProvider.theme('deep-orange').primaryPalette('deep-orange').accentPalette('clear');
-    $mdThemingProvider.theme('brown').primaryPalette('brown').accentPalette('clear');
-    $mdThemingProvider.theme('grey').primaryPalette('grey').accentPalette('clear');
-    $mdThemingProvider.theme('blue-grey').primaryPalette('blue-grey').accentPalette('clear');
+    // // Set default palettes as themes for use in UI.
+    // $mdThemingProvider.theme('red').primaryPalette('red').accentPalette('clear');
+    // $mdThemingProvider.theme('pink').primaryPalette('pink').accentPalette('clear');
+    // $mdThemingProvider.theme('purple').primaryPalette('purple').accentPalette('clear');
+    // $mdThemingProvider.theme('deep-purple').primaryPalette('deep-purple').accentPalette('clear');
+    // $mdThemingProvider.theme('indigo').primaryPalette('indigo').accentPalette('clear');
+    // $mdThemingProvider.theme('blue').primaryPalette('blue').accentPalette('clear');
+    // $mdThemingProvider.theme('light-blue').primaryPalette('light-blue').accentPalette('clear');
+    // $mdThemingProvider.theme('cyan').primaryPalette('cyan').accentPalette('clear');
+    // $mdThemingProvider.theme('teal').primaryPalette('teal').accentPalette('clear');
+    // $mdThemingProvider.theme('green').primaryPalette('green').accentPalette('clear');
+    // $mdThemingProvider.theme('light-green').primaryPalette('light-green').accentPalette('clear');
+    // $mdThemingProvider.theme('lime').primaryPalette('lime').accentPalette('clear');
+    // $mdThemingProvider.theme('yellow').primaryPalette('yellow').accentPalette('clear');
+    // $mdThemingProvider.theme('amber').primaryPalette('amber').accentPalette('clear');
+    // $mdThemingProvider.theme('orange').primaryPalette('orange').accentPalette('clear');
+    // $mdThemingProvider.theme('deep-orange').primaryPalette('deep-orange').accentPalette('clear');
+    // $mdThemingProvider.theme('brown').primaryPalette('brown').accentPalette('clear');
+    // $mdThemingProvider.theme('grey').primaryPalette('grey').accentPalette('clear');
+    // $mdThemingProvider.theme('blue-grey').primaryPalette('blue-grey').accentPalette('clear');
 
     $mdThemingProvider.definePalette('myPrimary',{
         '500': '#333333', '50': '#b8b8b8', '100': '#919191', '200': '#757575', '300': '#525252', '400': '#424242', '600': '#242424', '700': '#141414', '800': '#050505', '900': '#000000', 'A100': '#b8b8b8', 'A200': '#919191', 'A400': '#424242', 'A700': '#141414', 'contrastDefaultColor': 'light', 'contrastDarkColors': '50 100 A100 A200'
@@ -276,15 +276,17 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
       stylesheet.insertRule(".md-" + cssname + "-" + name + ".background { background-color: " + color + "; " + contrast + " }", index ); index++;
 
       if(cssname === 'primary' && name === 'default'){
-        stylesheet.insertRule(".fr-toolbar { border-color: " + color + "}", index); index++;
+        stylesheet.insertRule(".fr-toolbar { border-color: " + color + "!important}", index); index++;
         stylesheet.insertRule(".nav-lines > li.active:after{border-bottom-color: " + color + "}", index); index++;
         stylesheet.insertRule(".md-primary-default .nav-lines > li.active:after{border-bottom-color: " + contrastColor + "}", index); index++;
-        stylesheet.insertRule(".sl-item {border-color: "+ color +"}"); index++;
+        stylesheet.insertRule(".sl-item {border-color: "+ color +"}", index); index++;
+        stylesheet.insertRule(".md-primary-default2.background {background-color: "+ color +"}", index); index++;
       }
 
       if(cssname === 'primary' && name === 'hue-1'){
         stylesheet.insertRule(".md-primary-hue-1 .nav-lines > li.active:after{border-bottom-color: " + contrastColor + "}", index); index++;
         stylesheet.insertRule(".b-l-primary {border-left-color: " + color + "}", index); index++;
+        stylesheet.insertRule("#comment-box:focus{border: 1px solid " + color + "}", index); index++;
       }
 
       if(cssname === 'warn' && name === 'default'){
@@ -307,7 +309,11 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
         stylesheet.insertRule(".slider .indicators .indicator-item.active {background-color: " + color + "}", index); index++;
         stylesheet.insertRule(".not-trans.md-button:not([disabled]).md-icon-button:hover{ background-color: " + color + "}", index); index++
         stylesheet.insertRule(".not-trans.md-button:not([disabled]).md-icon-button:focus{ background-color: " + color + "}", index); index++
-        stylesheet.insertRule(".streamline {border-color: " + color + "}"); index++;
+        stylesheet.insertRule(".streamline {border-color: " + color + "}", index); index++;
+        stylesheet.insertRule("#send-comment:not([disabled]){background-color: " + color + "}", index); index++;
+      }
+      if(cssname === 'accent' && name === 'hue-1'){
+        stylesheet.insertRule(".df-tab-menu.nav-lines > li.active::after{border-bottom-color: " + color + "}", index); index++; 
       }
       if(cssname === 'background' && name === 'default'){
         stylesheet.insertRule(".mdp-datepicker .md-content,"+

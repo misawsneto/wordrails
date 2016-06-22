@@ -2,14 +2,13 @@ package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.annotation.SdkInclude;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 @lombok.Getter
 @lombok.Setter
@@ -20,14 +19,27 @@ public class Video extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 6417000117605453415L;
 
+	public static class VideoExternalProvider {
+		public static Map<String, String> providers;
+		static {
+			providers = new HashMap<>();
+			providers.put("dailymotion", "http://www.dailymotion.com/video/");
+			providers.put("youtube", "http://www.youtube.com/watch?v=");
+			providers.put("vimeo", "http://vimeo.com/");
+		}
+	}
+
+	public static final String INTERNAL_VIDEO = "internal";
+	public static final String EXTERNAL_VIDEO = "external";
+
 	public Video(File file) {
 		file.original = true;
 		this.file = file;
 	}
 
 	public Video(String identifier, String provider) {
-		this.identifier= identifier;
-		this.provider= provider;
+		this.identifier = identifier;
+		this.provider = provider;
 	}
 
 	public String identifier;
@@ -40,7 +52,8 @@ public class Video extends BaseEntity implements Serializable {
 
 	public String title;
 
-	@NotNull
+	public Integer duration;
+
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@SdkExclude
 	public File file;
@@ -55,5 +68,21 @@ public class Video extends BaseEntity implements Serializable {
 
 		return null;
 	}
-	public String url;
+
+	@SdkInclude
+	public String getType(){
+		if(file == null){
+			return EXTERNAL_VIDEO;
+		}
+		return INTERNAL_VIDEO;
+	}
+
+	@SdkInclude
+	public String getExternalVideoUrl(){
+		if(getType().equals(EXTERNAL_VIDEO) && provider != null && identifier != null){
+			return VideoExternalProvider.providers.get(provider) +  identifier;
+		}
+
+		return null;
+	}
 }

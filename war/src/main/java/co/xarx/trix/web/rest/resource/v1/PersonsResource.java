@@ -6,10 +6,7 @@ import co.xarx.trix.api.PersonData;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.converter.PostConverter;
-import co.xarx.trix.domain.Network;
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.User;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.PersonEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
@@ -20,8 +17,13 @@ import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.NetworkService;
 import co.xarx.trix.services.PersonService;
 import co.xarx.trix.services.analytics.StatisticsService;
+import co.xarx.trix.services.person.PersonAlreadyExistsException;
+import co.xarx.trix.services.person.PersonFactory;
 import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.services.security.Authenticator;
 import co.xarx.trix.services.security.StationPermissionService;
+import co.xarx.trix.services.user.UserAlreadyExistsException;
+import co.xarx.trix.services.user.UserFactory;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.StringUtil;
@@ -29,6 +31,7 @@ import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysema.commons.lang.Assert;
 import lombok.NoArgsConstructor;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +45,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -53,6 +58,14 @@ import java.util.List;
 public class PersonsResource extends AbstractResource implements PersonsApi {
 
 	@Autowired
+	@Qualifier("objectMapper")
+	public ObjectMapper mapper;
+	@Autowired
+	@Qualifier("simpleMapper")
+	public ObjectMapper simpleMapper;
+	@Value("${trix.amazon.cloudfront}")
+	String cloudfrontUrl;
+	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
 	private MobileService mobileService;
@@ -60,6 +73,10 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	private NetworkRepository networkRepository;
 	@Autowired
 	private NetworkService networkService;
+	@Autowired
+	private PersonFactory personFactory;
+	@Autowired
+	private UserFactory userFactory;
 	@Autowired
 	private PersonService personService;
 	@Autowired
@@ -76,20 +93,12 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	private StationPermissionService stationPermissionService;
 	@Autowired
 	private StatisticsService statisticsService;
-
-	@Autowired
-	@Qualifier("objectMapper")
-	public ObjectMapper mapper;
-	@Autowired
-	@Qualifier("simpleMapper")
-	public ObjectMapper simpleMapper;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private AuthService authProvider;
-
-	@Value("${trix.amazon.cloudfront}")
-	String cloudfrontUrl;
+	@Autowired
+	private Authenticator authenticator;
 
 	@Override
 	public void getPersons() throws IOException {
@@ -98,45 +107,38 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 
 	@Override
 	@Transactional
-	public Response findPerson(Integer id) throws IOException {
-		Person person = authProvider.getLoggedPerson();
-
-		if(person.id.equals(id) || person.networkAdmin) {
-			forward();
-			return Response.status(Status.OK).build();
-		}else
-			return Response.status(Status.UNAUTHORIZED).build();
+	public void findPerson(Integer id) throws IOException {
+		forward();
 	}
 
 	@Override
-	public Response findPersonByUsername() throws IOException {
+	public void findPersonByUsername() throws IOException {
 		forward();
-		return null;
 	}
 
 	@Override
 	@Transactional
-	public Response update(Person person){
+	public Response update(Person person) {
 		Person loggedPerson = authProvider.getLoggedPerson();
 
 		Person loadedPerson = personRepository.findOne(person.id);
 
-		if(person.id == null || !person.id.equals(loggedPerson.id))
+		if (person.id == null || !person.id.equals(loggedPerson.id))
 			throw new UnauthorizedException();
 
-		if(person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
+		if (person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
 			throw new BadRequestException("Password no equal");
 
-		if((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
+		if ((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
 			throw new BadRequestException("Invalid Password");
 
-		if(!StringUtil.isEmailAddr(person.email))
+		if (!StringUtil.isEmailAddr(person.email))
 			throw new BadRequestException("Not email");
 
-		if(person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN(person.username))
+		if (person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN(person.username))
 			throw new BadRequestException("Invalid username");
 
-		if(person.bio != null && !person.bio.isEmpty())
+		if (person.bio != null && !person.bio.isEmpty())
 			loadedPerson.bio = person.bio;
 		else
 			loadedPerson.bio = null;
@@ -144,8 +146,8 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 		loadedPerson.email = person.email;
 		loadedPerson.name = person.name;
 
-		User user = null;
-		if(!person.username.equals(loggedPerson.username)){
+		User user;
+		if (!person.username.equals(loggedPerson.username)) {
 			loadedPerson.user.username = person.username;
 			loadedPerson.username = person.username;
 			user = userRepository.findOne(loadedPerson.user.id);
@@ -154,7 +156,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			personRepository.save(loadedPerson);
 		}
 
-		if((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)){
+		if ((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)) {
 			loadedPerson.user.password = person.password;
 			user = userRepository.findOne(loadedPerson.user.id);
 			user.password = person.password;
@@ -171,28 +173,28 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 
 	@Override
 	@Transactional
-	public Response updateAuthData(PersonAuthDto person){
+	public Response updateAuthData(PersonAuthDto person) {
 
 		Person loadedPerson = personRepository.findOne(person.id);
 
-		if(person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
+		if (person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
 			throw new BadRequestException("Password no equal");
 
-		if((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
+		if ((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
 			throw new BadRequestException("Invalid Password");
 
-		if(!StringUtil.isEmailAddr(person.email))
+		if (!StringUtil.isEmailAddr(person.email))
 			throw new BadRequestException("Not email");
 
-		if(person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN
+		if (person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN
 				(person.username + ".com"))
 			throw new BadRequestException("Invalid username");
 
 
 		loadedPerson.email = person.email;
 
-		User user = null;
-		if(!person.username.equals(loadedPerson.username)){
+		User user;
+		if (!person.username.equals(loadedPerson.username)) {
 			loadedPerson.user.username = person.username;
 			loadedPerson.username = person.username;
 			user = userRepository.findOne(loadedPerson.user.id);
@@ -201,7 +203,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			personRepository.save(loadedPerson);
 		}
 
-		if((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)){
+		if ((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)) {
 			loadedPerson.user.password = person.password;
 			user = userRepository.findOne(loadedPerson.user.id);
 			user.password = person.password;
@@ -219,7 +221,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	public void updatePerson(Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
-		if(person.id.equals(id) || person.networkAdmin)
+		if (person.id.equals(id) || person.networkAdmin)
 			forward();
 		else
 			throw new BadRequestException();
@@ -240,26 +242,26 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	private Response updateMobile(String token, Double lat, Double lng, Constants.MobilePlatform type) {
 		Person person = authProvider.getLoggedPerson();
 		Logger.info("Updating " + type.toString() + " device " + token + " for person " + person.id);
-		mobileService.updateDevice(person, token, lat, lng, type);
+		mobileService.updateDevice(person.getId(), token, lat, lng, type);
 		return Response.status(Response.Status.OK).build();
 	}
 
 	@Override
 	public Response tokenSignin(String token) {
-		try{
+		try {
 			Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
-			if(network.networkCreationToken == null || !network.networkCreationToken.equals(token))
+			if (network.networkCreationToken == null || !network.networkCreationToken.equals(token))
 				throw new BadRequestException("Invalid Token");
 
 			Person person = authProvider.getLoggedPerson();
 			User user = person.user;
-			authProvider.passwordAuthentication(user, user.password);
+			authenticator.passwordAuthentication(user, user.password);
 
 			network.networkCreationToken = null;
 			networkRepository.save(network);
 
 			return Response.status(Status.OK).build();
-		}catch(BadCredentialsException | UsernameNotFoundException e){
+		} catch (BadCredentialsException | UsernameNotFoundException e) {
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
 	}
@@ -288,9 +290,9 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 		Pageable pageable = new PageRequest(page, size);
 
 		Person person;
-		if(personId == null){
+		if (personId == null) {
 			person = authProvider.getLoggedPerson();
-		}else{
+		} else {
 			person = personRepository.findOne(personId);
 		}
 
@@ -316,7 +318,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 		Asserts.notEmpty(oldPassword, "Old password it empty or null");
 		Asserts.notEmpty(newPassword, "New password it empty or null");
 
-		if(newPassword.length() < 5)throw new BadRequestException("Password too short");
+		if (newPassword.length() < 5) throw new BadRequestException("Password too short");
 
 		Person loggedPerson = authProvider.getLoggedPerson();
 		if (!oldPassword.equals(loggedPerson.user.password)) throw new UnauthorizedException("Wrong password");
@@ -326,42 +328,85 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
-	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
-		Person person = personService.create(dto.name, dto.username, dto.password, dto.email);
-
-		if (person != null) {
+	public Response addPerson(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
+		try {
+			Person person = personService.addPerson(dto);
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
-		} else {
-			throw new BadRequestException();
+		} catch (PersonAlreadyExistsException e) {
+			e.printStackTrace();
+			return Response.status(Status.CONFLICT).entity("Email already used by another user").build();
+		} catch (UserAlreadyExistsException e) {
+			e.printStackTrace();
+			return Response.status(Status.CONFLICT).entity("Username already used by another user").build();
 		}
 	}
 
 	@Override
-	public Response invitePerson(PersonsApi.PersonInvitationDto dto) throws ConflictException, BadRequestException,
-			IOException {
-		personService.invite(dto);
+	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
+		try {
+			Person person = personService.createPerson(dto);
+			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
+		} catch (PersonAlreadyExistsException e) {
+			e.printStackTrace();
+			return Response.status(Status.CONFLICT).entity("Email already used by another user").build();
+		} catch (UserAlreadyExistsException e) {
+			e.printStackTrace();
+			return Response.status(Status.CONFLICT).entity("Username already used by another user").build();
+		}
+	}
+
+	@Override
+	public Response signUpFromInvite(PersonCreateDto dto, String inviteHash) throws ConflictException, BadRequestException, IOException {
+		try {
+			Person person = personService.createFromInvite(dto, inviteHash);
+			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
+		} catch (PersonAlreadyExistsException e) {
+			e.printStackTrace();
+			return Response.status(Status.CONFLICT).build();
+		} catch (UserAlreadyExistsException e) {
+			e.printStackTrace();
+			return Response.status(Status.CONFLICT).entity("Username already used by another user").build();
+		}
+	}
+
+	@Override
+	public Response validatePersonEmail(String hash){
+		Assert.hasText(hash, "A valid hash mush be sent");
+		if(personService.validateEmail(hash) == null){
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		return Response.status(Status.OK).build();
+	}
+
+	@Override
+	public Response invitePerson(PersonsApi.PersonInvitationDto dto) throws ConflictException, IOException {
+		try{
+			personService.invite(dto);
+		} catch (BadRequestException e){
+			e.printStackTrace();
+			return Response.status(Status.BAD_REQUEST).build();
+		}
 		return Response.status(Status.CREATED).build();
 	}
 
-
 	@Override
-	public ContentResponse<Integer> countPersonsByNetwork(@QueryParam("q") String q){
+	public ContentResponse<Integer> countPersonsByNetwork(@QueryParam("q") String q) {
 		ContentResponse<Integer> resp = new ContentResponse<>();
 		resp.content = 0;
-		if(q != null && !q.isEmpty()) {
+		if (q != null && !q.isEmpty()) {
 			resp.content = personRepository.countPersonsByString(q).intValue();
-		}else {
+		} else {
 			resp.content = personRepository.countPersons().intValue();
 		}
 		return resp;
 	}
 
 	@Override
-	public Response deleteMany(List<Integer> personIds){
+	public Response deleteMany(List<Integer> personIds) {
 		Person person = authProvider.getLoggedPerson();
 		List<Person> persons = personRepository.findPersonsByIds(personIds);
 
-		if(persons != null && persons.size() > 0) {
+		if (persons != null && persons.size() > 0) {
 //			for (Person person : persons) {
 //				if (!person.user.getTenantId().equals(network.getTenantId())) return Response.status(Status.UNAUTHORIZED).build();
 //			}
@@ -381,39 +426,41 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
-	public Response disablePerson(Integer personId){
+	public Response disablePerson(Integer personId) {
 		Person self = authProvider.getLoggedPerson();
 		Person person = personRepository.findOne(personId);
-		if(!self.id.equals(person.id)) {
+		if (person != null && !self.id.equals(person.id)) {
 			person.user.enabled = false;
 			personRepository.save(person);
+			return Response.status(Status.CREATED).build();
 		}
-		return Response.status(Status.CREATED).build();
+		return Response.status(Status.NOT_FOUND).build();
 	}
 
 	@Override
-	public Response enablePerson(Integer personId){
+	public Response enablePerson(Integer personId) {
 		Person self = authProvider.getLoggedPerson();
 		Person person = personRepository.findOne(personId);
-		if(!self.id.equals(person.id)) {
+		if (person != null && !self.id.equals(person.id)) {
 			person.user.enabled = true;
 			personRepository.save(person);
+			return Response.status(Status.CREATED).build();
 		}
-		return Response.status(Status.CREATED).build();
+		return Response.status(Status.NOT_FOUND).build();
 	}
 
 	@Override
-	public Response enablePerson(IdsList idsList){
+	public Response enablePerson(IdsList idsList) {
 		Person self = authProvider.getLoggedPerson();
-		if(idsList != null && idsList.ids != null){
+		if (idsList != null && idsList.ids != null) {
 			List<Person> persons = personRepository.findAll(idsList.ids);
-			for (Person person: persons) {
-				if(self.id.equals(person.id))
+			for (Person person : persons) {
+				if (self.id.equals(person.id))
 					continue;
 				person.user.enabled = true;
 			}
 
-			for (Person person: persons) {
+			for (Person person : persons) {
 				personRepository.save(person);
 			}
 
@@ -422,12 +469,12 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
-	public Response disablePerson(IdsList idsList){
+	public Response disablePerson(IdsList idsList) {
 		Person self = authProvider.getLoggedPerson();
-		if(idsList != null && idsList.ids != null){
+		if (idsList != null && idsList.ids != null) {
 			List<Person> persons = personRepository.findAll(idsList.ids);
-			for (Person person: persons) {
-				if(self.id.equals(person.id))
+			for (Person person : persons) {
+				if (self.id.equals(person.id))
 					continue;
 				person.user.enabled = false;
 			}
@@ -453,31 +500,31 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
-	public PersonData getInitialData() throws IOException{
+	public PersonData getInitialData() throws IOException {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
 		return initService.getInitialData(baseUrl, network);
 	}
 
 	@Override
-	public Response publicationsCount(Integer personId)throws IOException {
+	public Response publicationsCount(Integer personId) throws IOException {
 		Person person = null;
-		if(personId != null){
+		if (personId != null) {
 			person = personRepository.findOne(personId);
-		}else{
+		} else {
 			person = authProvider.getLoggedPerson();
 		}
 
-		List<Object[]> counts =  queryPersistence.getPersonPublicationsCount(person.id);
+		List<Object[]> counts = queryPersistence.getPersonPublicationsCount(person.id);
 		return Response.status(Status.OK).entity("{\"publicationsCounts\": " + (counts.size() > 0 ? mapper.writeValueAsString(counts.get(0)) : null) + "}").build();
 	}
 
 	@Override
 	public StatsData personStats(String date, Integer postId) throws JsonProcessingException {
-		if(postId == null){
+		if (postId == null) {
 			Person person = authProvider.getLoggedPerson();
 			return statisticsService.personStats(date, person.getId(), null);
-		} else{
+		} else {
 			return statisticsService.postStats(date, postId, null);
 		}
 	}
@@ -488,6 +535,12 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	 */
 	public void findPersons() throws IOException {
 		forward();
+	}
+
+	public Response updateLocation2(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String
+			device, @FormParam("lat") Double lat, @FormParam("lng") Double lng) throws IOException {
+		return updateMobile(token, lat, lng, "apple".equals(device) ? Constants.MobilePlatform.APPLE : Constants
+				.MobilePlatform.ANDROID);
 	}
 
 }

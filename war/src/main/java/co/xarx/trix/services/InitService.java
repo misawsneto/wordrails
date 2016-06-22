@@ -81,7 +81,7 @@ public class InitService {
 
 
 		List<StationView> stationViews = new ArrayList<>();
-		List<Station> stations = personPermissionService.getStationsWithPermission(authProvider.getCurrentSid(), READ);
+		List<Station> stations = personPermissionService.getStationsWithPermission(READ);
 		for (Station station : stations) {
 			StationView stationView = modelMapper.map(station, StationView.class);
 			List<Term> terms = termRepository.findByTaxonomyId(station.categoriesTaxonomyId);
@@ -145,10 +145,8 @@ public class InitService {
 
 		Pageable pageable2 = new PageRequest(0, 100, new Sort(Sort.Direction.DESC, "id"));
 		if (initData.person != null && !initData.person.username.equals("wordrails")) {
-			List<Integer> postsRead = postRepository.findPostReadByPerson(initData.person.id, pageable2);
 			List<Integer> bookmarks = new ArrayList(person.getBookmarkPosts());
 			List<Integer> recommends = new ArrayList(person.getRecommendPosts());
-			initData.postsRead = postsRead;
 			initData.bookmarks = bookmarks;
 			initData.recommends = recommends;
 		}

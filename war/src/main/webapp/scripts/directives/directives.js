@@ -143,7 +143,81 @@ angular.module('app')
       }
     };
   })
-  ;
+  
+  .directive('pgwSlider', function($timeout) {
+    return {
+      // Restrict it to be an attribute in this case
+      restrict: 'A',
+      // responsible for registering DOM listeners as well as updating the DOM
+      link: function(scope, element, attrs) {
+        $timeout(function () {
+          $(element).pgwSlider(scope.$eval(attrs.pgwSlider));
+        });
+      }
+    };
+  });
+
+(function(angular) {
+    'use strict';
+    angular.module('app').factory('preLoader', function () {
+        return function (url, successCallback, errorCallback) {
+            //Thank you Adriaan for this little snippet: http://www.bennadel.com/members/11887-adriaan.htm
+            angular.element(new Image()).bind('load', function () {
+                successCallback();
+            }).bind('error', function () {
+                errorCallback();
+            }).attr('src', url);
+        }
+    }).directive('preloadImage', ['preLoader', function (preLoader) {
+        return {
+            restrict: 'A',
+            terminal: true,
+            priority: 100,
+            link: function (scope, element, attrs) {
+                scope.default = attrs.defaultImage || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+                attrs.$observe('ngSrc', function () {
+                    var url = attrs.ngSrc;
+                    attrs.$set('src', scope.default);
+                    preLoader(url, function () {
+                        attrs.$set('src', url);
+                    }, function () {
+                        if (attrs.fallbackImage != undefined) {
+                            attrs.$set('src', attrs.fallbackImage);
+                        }
+                    });
+                })
+    
+            }
+        };
+    }]).directive('preloadBgImage', ['preLoader', function (preLoader) {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                if (attrs.preloadBgImage != undefined) {
+                    //Define default image
+                    scope.default = attrs.defaultImage || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+    
+                    attrs.$observe('preloadBgImage', function () {
+                        element.css({
+                            'background-image': 'url("' + scope.default + '")'
+                        });
+                        preLoader(attrs.preloadBgImage, function () {
+                            element.css({
+                                'background-image': 'url("' + attrs.preloadBgImage + '")'
+                            });
+                        }, function () {
+                            if (attrs.fallbackImage != undefined) {
+                                element.css({
+                                    'background-image': 'url("' + attrs.fallbackImage + '")'
+                                });
+                            }
+                        });
+                    });
+                }
+            }
+        };
+    }]);
+})(angular);
 
 (function() {
 
@@ -402,3 +476,87 @@ angular.module('app')
     });
   }
 })();
+
+(function (angular) {
+  
+  // service
+  var CounterService = (function () {
+    
+    function CounterService() {
+    };
+    CounterService.prototype.count = function (object, property, from, to, duration, effect, step, finish) {
+      var target = {};
+      
+      // stop previous animation
+      $(object).stop(true, true);
+      object[property] = parseFloat(from || 0);
+      target[property] = parseFloat(to || 0);
+      
+      if (object[property] == target[property]) return;
+      
+      $(object).animate(target, {
+        duration: duration,
+        easing: effect,
+        step: step
+      }).promise().done(function () {
+        if (angular.isFunction(finish)) finish();
+      });
+    };
+    
+    return CounterService;
+  })();
+  
+  // directive
+  var CounterDirective = (function () {
+    
+    function CounterDirective(counter, timeout) {
+      this.restrict = 'EAC';
+      this.scope = {
+        to:       '=',
+        value:    '=',
+        effect:   '=?',
+        duration: '=?',
+        finish:   '&?'
+      };
+      $counter = counter;
+      $timeout = timeout;
+    };
+    CounterDirective.prototype.$inject = ['$counter', '$timeout'];
+    CounterDirective.prototype.link = function ($scope, $element, $attrs, $controller) {
+      var defaults = {
+          effect:   'linear',
+          duration: 1000
+        };
+      
+      if (!angular.isDefined($scope.to))
+        throw new 'Angular Counter: attribute `to` is undefined';
+      
+      angular.forEach(defaults, function (value, key) {
+        if (!angular.isDefined($scope[key])) $scope[key] = defaults[key];
+      });
+      
+      $scope.step = function (value) {
+        $timeout(function () {
+          $scope.$apply(function () {
+            $scope.value = value;
+          });
+        });
+      };
+      
+      $scope.$watch('to', function () {
+        $counter.count($scope, 'value', $scope.value, $scope.to, $scope.duration, $scope.effect, $scope.step, $scope.finish);
+      });
+    };
+    
+    return CounterDirective;
+  })();
+  
+    angular.module('app')
+    .service('$counter', function () {
+      return new CounterService();
+    })
+    .directive('counter', ['$counter', '$timeout', function ($counter, $timeout) {
+      return new CounterDirective($counter, $timeout);
+    }]);
+  
+})(window.angular);

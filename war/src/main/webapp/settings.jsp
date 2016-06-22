@@ -70,6 +70,7 @@
   <script src="/libs/angular/angular-translate-storage-local/angular-translate-storage-local.js"></script>
   <!-- loading-bar -->
   <script src="/libs/angular/angular-loading-bar/build/loading-bar.js"></script>
+  <script src="/libs/angular/satellizer/satellizer.min.js"></script>
 
 <!-- App -->
   <script src="/js/BaseTrix.js"></script>

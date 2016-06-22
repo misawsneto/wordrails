@@ -11,10 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 
 @Component
 @NoArgsConstructor
@@ -31,19 +28,23 @@ public class MobileResource extends AbstractResource implements MobileApi {
 
 	@Override
 	public Response updateLocation(String token, String device, Double lat, Double lng) {
-		return updateMobile(token, lat, lng, device.equals("apple") ? Constants.MobilePlatform.APPLE : Constants.MobilePlatform.ANDROID);
-	}
+		String userAgent = request.getHeader("User-Agent");
 
-	@Override
-	public void updateLocation2(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String
-			device, @FormParam("lat") Double lat, @FormParam("lng") Double lng) throws IOException {
-		forward("/mobile/location");
+		Constants.MobilePlatform platform;
+		if (device.equals("apple") || device.equals("ios") || userAgent.contains("WordRailsIOSClient"))
+			platform = Constants.MobilePlatform.APPLE;
+		else if(device.equals("android") || userAgent.contains("OkHttp"))
+			platform = Constants.MobilePlatform.ANDROID;
+		else
+			return Response.status(Response.Status.BAD_REQUEST).entity("Invalid device").build();
+
+		return updateMobile(token, lat, lng, platform);
 	}
 
 	private Response updateMobile(String token, Double lat, Double lng, Constants.MobilePlatform type) {
 		Person person = authService.getLoggedPerson();
 		Logger.info("Updating " + type.toString() + " device " + token + " for person " + person.id);
-		mobileService.updateDevice(person, token, lat, lng, type);
+		mobileService.updateDevice(person.getId(), token, lat, lng, type);
 		return Response.status(Response.Status.OK).build();
 	}
 }

@@ -1,7 +1,7 @@
 app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$translate', '$mdSidenav',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix , FileUploader, TRIX, cfpLoadingBar, $mdToast, $translate, $mdSidenav){
 
-		$scope.toggleRight = buildToggler('palette-selector');
+		$scope.toggleOptions = buildToggler('palette-selector');
 
 		$scope.settings = {'tab': 'settings'}
 
@@ -226,7 +226,8 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
 		}).error(function(){
 			$scope.disabled = false;
-		})
+		});
+		$scope.saveAuthCredentials();
 	}
 
 	$scope.setLanguage = function(languageRef){
@@ -243,6 +244,25 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 				$scope.app.showErrorToast($filter('translate')('messages.settings.network.NO_LANGUAGE'))
 				break;
 		}
+	}
+
+	$scope.authCredentials = {
+		facebookAppID: $scope.network.facebookAppID,
+		facebookAppSecret: $scope.network.facebookAppSecret,
+		googleAppID: $scope.network.googleAppID,
+		googleAppSecret: $scope.network.facebookAppSecret
+	};
+	trix.authCredentials().success(function(response){
+		$scope.authCredentials = response;
+		if(!$scope.authCredentials)
+			$scope.authCredentials = {};
+	})
+	$scope.saveAuthCredentials = function(){
+		trix.updateAuthCredential($scope.authCredentials).success(function(response){
+			console.log(response);
+		}).error(function(){
+
+		})
 	}
 
 	settingsNetworkCtrl	= $scope;

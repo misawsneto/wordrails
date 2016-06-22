@@ -1,13 +1,13 @@
 package co.xarx.trix.comparator;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.domain.Cell;
+import co.xarx.trix.domain.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import co.xarx.trix.domain.Cell;
-import co.xarx.trix.domain.Row;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class RowsComparator {
@@ -29,6 +29,7 @@ public class RowsComparator {
 
 					for(int i = 0; i < newRows.size(); i++){
 						newRow = newRows.get(i);
+						newRow.tenantId = TenantContextHolder.getCurrentTenantId();
 						if(newRow.id != null && newRow.id.equals(oldRow.id)){
 							contains = true;
 							RowDifference rowDifference = rowComparator.getDifference(newRow.cells, oldRow.cells);
@@ -52,6 +53,7 @@ public class RowsComparator {
 
 				for(int i = 0; i < newRows.size(); i++){
 					Row newRow = newRows.get(i);
+					newRow.tenantId = TenantContextHolder.getCurrentTenantId();
 					if(newRow.id == null){
 						difference.rowsToAdd.add(newRow);
 					}

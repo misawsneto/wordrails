@@ -45,7 +45,7 @@
 
     <!-- dropdown filter -->
     <div class="pos-abt top-0 right-0 m-t pull-right" uib-dropdown auto-close="disabled" is-open="advancedMenuOpen">
-      <md-button uib-dropdown-toggle class="md-icon-button" aria-label="More" popover-trigger="click">
+      <md-button aria-label="nothing" uib-dropdown-toggle class="md-icon-button" aria-label="More" popover-trigger="click">
         <i class="icon mdi-content-filter-list i-24" md-style="{'color': 'default'}" ></i>
       </md-button>
       <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="dropdown-menu-scale pull-right advanced-search-menu m-h-auto p w-400 default-bg">
@@ -61,7 +61,7 @@
           <div class="m-b">
             <md-menu>
               <!-- Trigger element is a md-button with an icon -->
-             <md-button ng-click="$mdOpenMenu($event)" class="md-button text-u-c" aria-label="Open sample menu">
+             <md-button aria-label="nothing" ng-click="$mdOpenMenu($event)" class="md-button text-u-c" aria-label="Open sample menu">
                <!-- <md-icon md-font-set="material-icons" class="ng-scope ng-isolate-scope material-icons"> phone </md-icon> -->
                <i class="mdi mdi2-radio-tower"></i>
                 {{'titles.STATIONS' | translate}}
@@ -70,7 +70,7 @@
               <div class="p">
                <ul class="list-unstyled">
                  <li ng-repeat="perm in stationsPermissions">
-                  <md-checkbox ng-model="perm.filter" aria-label="{{perm.stationName}}">
+                  <md-checkbox aria-label="nothing" ng-model="perm.filter" aria-label="{{perm.stationName}}">
                    {{ perm.stationName }}
                    </md-checkbox>
                  </li>
@@ -89,7 +89,7 @@
             </div>
             <div class="pos-rlt no-margin m-b-sm inline" style="width: 140px">
               <mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'titles.END_DATE' | translate}}" ng-model="filter.finalDate">
-              </mdp-time-picker>
+              </mdp-date-picker>
             </div>
           </div>
         <!-- -->
@@ -130,16 +130,16 @@
     <div class="m-b-lg">
       <ul class="bg-t collapsible popout" data-collapsible="expandable" infinite-scroll="paginate()" infinite-scroll-container='"#content .box-cell"' infinite-scroll-distance="1">
         <li class="md-background-hue-1 background fade-in-hover-container" ng-repeat="publication in publications">
-          <div class="collapsible-header p" style="line-height: inherit;" ng-click="showPost(publication); publication.selected = !publication.selected">
+          <div class="collapsible-header p animated fadeIn" style="line-height: inherit;" ng-click="showPost(publication); publication.selected = !publication.selected">
             <div class="pos-rlt">
               <div class="animated animated1x md-background-hue-1 background" ng-class="{'fadeOut pos-abt': publication.selected, 'fadeIn': !publication.selected}">
                 <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
-                  <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
+                  <div preload-bg-image="{{app.getImageLink(publication, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
                   </div>
                 </a>
                 <div class="clear font-thin">
                   <div class="m-r-xxl">
-                    <a href class="font-bold block text-md">{{publication.title}}</a>
+                    <a ng-click="$event.stopPropagation()" ng-href="{{app.getPublicationUrl(publication.stationId, publication)}}" target="_blank" class="text-u-l-hover font-bold block text-md">{{publication.title}}</a>
                     <div  class="text-sm font-normal p-v-sm">
                       {{app.getLocalTime(publication.date)}}
                     </div>
@@ -184,7 +184,7 @@
                   </div>
                 </div>
               </div>
-              <div class="" ng-class="{'animated fadeIn show': publication.selected, 'hide': !publication.selected}">
+              <div  ng-class="{'animated fadeIn show': publication.selected, 'hide': !publication.selected}">
                 <div class="list-group-item b-n p-sm p-t-sm no-padding-h">
                   <a href class="pull-left m-r-sm">
                     <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1 text-center md-primary-hue-1 background">
@@ -206,7 +206,7 @@
             <div class="pos-rlt">
               <div class="animated" ng-if="publication" ng-class="{'fadeIn': publication && publication.selected, 'fadeOut': !publication.selected}">
                 <div class="text-left p-h-sm w-full z-index-2" ng-class="{'pos-abt': publication.postFeaturedImage}">
-                  <a ui-sref="app.categoryPage({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x badge-lg md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in publication.terms">
+                  <a ui-sref="app.station.categoryPage({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'name': category.name})" class="badge m-t-sm p-sm r-5x badge-lg md-whiteframe-z1 m-r-xs" ng-style="app.getCategoryBG(category)" ng-repeat="category in publication.terms">
                     {{category.name}}
                   </a>
                 </div>
@@ -217,7 +217,7 @@
 
                 <div ng-if="publication.useVideo" class="block-800 h-400 animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2">
                   <embed-video width=800 height=400 iframe-id="video1" api="1" player_id="video1" ng-href="{{app.videoUrl}}"></embed-video>
-                  <md-button ng-click="removeVideo();" class="md-fab md-accent md-raised md-mini pos-abt right-0 bottom-0 m-r m-b-xxl ">
+                  <md-button aria-label="nothing" ng-click="removeVideo();" class="md-fab md-accent md-raised md-mini pos-abt right-0 bottom-0 m-r m-b-xxl ">
                     <md-tooltip md-direction="top">
                       {{'titles.REMOVE' | translate}} {{'titles.VIDEO' | translate}}
                     </md-tooltip>
@@ -246,7 +246,7 @@
                     </vg-controls>
                     <vg-overlay-play></vg-overlay-play>
                   </videogular>
-                  <md-button ng-click="removeUploadedVideo();" class="md-fab md-raised md-mini pos-abt right-0 top-0 md-accent m-r m-t">
+                  <md-button aria-label="nothing" ng-click="removeUploadedVideo();" class="md-fab md-raised md-mini pos-abt right-0 top-0 md-accent m-r m-t">
                     <md-tooltip md-direction="left">
                       {{'titles.REMOVE' | translate}} {{'titles.VIDEO' | translate}}
                     </md-tooltip>
@@ -280,37 +280,38 @@
                       </vg-controls>
                     </videogular>
                   <!-- /audio player -->
-                  <md-button ng-click="removeUploadedAudio();" class="md-fab md-raised md-mini pos-abt right-0 top-0 md-accent m-r m-t">
+                  <md-button aria-label="nothing" ng-click="removeUploadedAudio();" class="md-fab md-raised md-mini pos-abt right-0 top-0 md-accent m-r m-t">
                     <md-tooltip md-direction="left">
                       {{'titles.REMOVE' | translate}} {{'titles.AUDIO' | translate}}
                     </md-tooltip>
                     <i class="mdi mdi2-delete i-20"></i>
                   </md-button>
                 </div>
-                <div class="p text-lg l-h-1x">{{publication.title}}</div>
+                <a ng-click="$event.stopPropagation()" ng-href="{{app.getPublicationUrl(publication.stationId, publication)}}" target="_blank">
+                  <div class="p text-u-l-hover text-lg l-h-1x">{{publication.title}}</div>
+                </a>
                 <div class="p-h p-t-xs">{{app.getLocalTime(publication.date)}}</div>
                 <div class="p-h p-v-xs m-t-sm clear pull-left" ng-if="publication.tags">
                   <span class="label r m-t-xs m-r-xs md-accent-default background" ng-repeat="tag in publication.tags">{{tag}}</span>
                 </div>
-                <div class="text-right m-r font-normal">
-                    <div class="inline v-m p-sm m-l opacity-07" ng-click="app.showComments(publication)">
-                      {{publication.commentsCount}}
-                      <i class="mdi2-comment-multiple-outline i-20"></i>
-                    </div>
-                    <div class="inline v-m p-sm opacity-07">
-                      {{publication.recommendsCount}}
-                      <i class="mdi2-heart i-20"></i>
-                    </div>
-                    <div class="inline v-m p-sm opacity-07">
-                      {{publication.bookmarksCount}}
-                      <i class="mdi2-bookmark i-20"></i>
-                    </div>
-                    <div class="inline v-m p-sm opacity-07 m-r-lg">
-                      {{publication.readsCount}}
-                      <i class="mdi2-eye i-20"></i>
-                    </div>
-                  </div>
+
                 <div class="p pos-rlt post-summary" ng-bind-html="publication.body">
+                </div>
+                <div class="news-comment-shares z-index-2 p-h">
+                  <md-divider class="m-b-sm m-t"></md-divider>
+                  <div class="p-t-xs m-b">
+                      <md-button aria-label="nothing" ng-click="app.toggleRecommend(publication)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(publication) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(publication)}"><i class="mdi2-heart i-16"></i></md-button>
+
+                      <span class="v-m p-v-sm m-r-sm">{{publication.recommendsCount}}</span>
+
+                      <md-button aria-label="nothing" ng-click="app.toggleBookmark(publication)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(publication) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(publication)}"><i class="mdi2-bookmark i-16"></i></md-button>
+                      
+                      <md-button aria-label="nothing" ng-click="app.showSharesPostDialog($event, publication)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+
+                      <span class="pull-right v-m p-v-sm m-r-sm">{{publication.commentsCount}}</span>
+                      
+                      <md-button aria-label="nothing" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="app.showComments(publication)"><i class="mdi2-comment i-16"></i></md-button>
+                  </div>
                 </div> 
               </div>
             </div>
@@ -322,7 +323,7 @@
   </div>
 </div>
 
-<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg"
+<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg"
   ui-sref="app.post">
   <i class="mdi-editor-mode-edit i-24"></i>
 </md-button>
@@ -343,10 +344,10 @@
         </div>
 
         <div class="pos-abt bottom-0 text-center w-full p-t p-b">
-          <md-button ng-click="cancel()" class="m-0">
+          <md-button aria-label="nothing" ng-click="cancel()" class="m-0">
             {{'titles.CANCEL' | translate}}
           </md-button>
-          <md-button ng-click="saveProfile(editingPerson)" ng-disabled="disabled" class="m-0">
+          <md-button aria-label="nothing" ng-click="saveProfile(editingPerson)" ng-disabled="disabled" class="m-0">
             {{'titles.SAVE' | translate}}
           </md-button>
         </div>
@@ -354,37 +355,37 @@
     </md-toolbar>
     <div class="p w-x col-400 scrollable md-background-hue-1 background">
         <div class="pos-rlt p">
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.NAME' | translate}}</label>
             <input type="text" id="testInput" ng-model="editingPerson.name" md-autofocus>
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.USERNAME' | translate}}</label>
             <input type="text" id="testInput" ng-model="editingPerson.username">
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.EMAIL' | translate}}</label>
             <input type="text" id="testInput" ng-model="editingPerson.email">
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.PASSWORD' | translate}}</label>
             <input type="password" id="testInput" ng-model="editingPerson.password">
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0" ng-class="{'animated fadeIn': editingPerson.password, 'hide': !editingPerson.password}">
             <label for="testInput">{{'settings.profile.CONFIRM_PASSWORD' | translate}}</label>
             <input type="password" id="testInput" ng-model="editingPerson.passwordConfirm">
           </md-input-container>
           </div>
-          <div class="">
+          <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.BIOGRAPHY' | translate}}</label>
             <textarea type="text" id="testInput" columns="1" ng-model="editingPerson.bio"></textarea>
@@ -394,33 +395,4 @@
       </div>
     </div>
   </md-dialog-content>
-</script>
-
-<script  type="text/ng-template" id="move-to-dialog.html">
-  <md-dialog aria-label="change action">
-    <md-content role="document" class="md-background-hue-1 background">
-      <div class="p-xs">
-        <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
-          {{'settings.profile.MOVE_TO_STATE_MSG' | translate}}
-        </div>
-
-        <div class="p-h-lg p-v text-u-c font-500">
-          <md-radio-group ng-model="toState">
-            <md-radio-button value="1" ng-if="toMovePublication.state !== 'PUBLISHED'">{{'titles.PUBLISHED' | translate}}</md-radio-button>
-            <md-radio-button value="2" ng-if="toMovePublication.state !== 'DRAFT'">{{'titles.DRAFTS' | translate}}</md-radio-button>
-            <md-radio-button value="4" ng-if="toMovePublication.state !== 'TRASH'">{{'titles.TRASH' | translate}}</md-radio-button>
-          </md-radio-group>
-        </div>
-
-        <div class="text-center">
-          <md-button ng-click="movePublicationToState(toState)" ng-disabled="disabled">
-            {{'titles.CONFIRM' | translate}}
-          </md-button>
-          <md-button ng-click="cancel()">
-            {{'titles.CANCEL' | translate}}
-          </md-button>
-        <div>
-      </div>
-    </md-content>
-  </md-dialog>
 </script>

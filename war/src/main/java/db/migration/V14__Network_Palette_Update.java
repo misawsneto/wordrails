@@ -20,7 +20,9 @@ import java.util.Map;
 public class V14__Network_Palette_Update extends SpringContextMigration {
 	@Override
 	public void migrate() throws Exception {
+		TransactionSynchronizationManager.initSynchronization();
 		migrateNetwork();
+		TransactionSynchronizationManager.clearSynchronization();
 	}
 
 	public void migrateNetwork() {
@@ -29,7 +31,6 @@ public class V14__Network_Palette_Update extends SpringContextMigration {
 	}
 
 	public void createAndInsertPallets(List<Network> networks){
-		TransactionSynchronizationManager.initSynchronization();
 		for(Network network: networks){
 			Map<String, String> primaryColors = Tinycolor.getPalette(network.navbarColor != null ? network.navbarColor :
 					"#333333");

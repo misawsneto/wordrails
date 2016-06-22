@@ -1,10 +1,7 @@
 package co.xarx.trix.web.rest.resource.v1;
 
 import co.xarx.trix.annotation.IgnoreMultitenancy;
-import co.xarx.trix.api.PersonPermissions;
-import co.xarx.trix.api.StationPermission;
-import co.xarx.trix.api.StringResponse;
-import co.xarx.trix.api.ThemeView;
+import co.xarx.trix.api.*;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.PostEventHandler;
@@ -23,9 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.PermissionEvaluator;
-import org.springframework.security.acls.domain.PrincipalSid;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 
@@ -46,7 +40,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
-	private PermissionEvaluator permissionEvaluator;
+	private AuthCredentialRepository authCredentialRepository;
 	@Autowired
 	private AuthService authProvider;
 	@Autowired
@@ -77,6 +71,11 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	private PersonPermissionService personPermissionService;
 
 	@Override
+	public void getNetworks() throws IOException {
+		forward();
+	}
+
+	@Override
 	public void putNetwork(Integer id) throws IOException {
 		forward();
 	}
@@ -88,7 +87,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 
 
 		//Stations Permissions
-		List<Station> stations = personPermissionService.getStationsWithPermission(authProvider.getCurrentSid(), READ);
+		List<Station> stations = personPermissionService.getStationsWithPermission(READ);
 		List<StationPermission> stationPermissionDtos = stationPermissionService.getStationPermissions(stations);
 
 		personPermissions.stationPermissions = stationPermissionDtos;
@@ -107,6 +106,11 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 			themeView.alertColors == null || themeView.primaryColors.size() < 14 ||
 			themeView.backgroundColors == null || themeView.primaryColors.size() < 14)
 				throw new BadRequestException("Invalid Theme");
+
+		network.navbarColor = themeView.primaryColors != null ? themeView.primaryColors.get("500") : "#30307E";
+		network.mainColor = themeView.secondaryColors != null ? themeView.secondaryColors.get("300") : " #BC26C5 ";
+		network.backgroundColor = themeView.backgroundColors != null ? themeView.backgroundColors.get("500") :
+				"#EFEFEF";
 
 		network.primaryColors = themeView.primaryColors;
 		network.secondaryColors = themeView.secondaryColors;
@@ -161,11 +165,13 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 				throw e;
 			}
 
+			authCredentialRepository.save(new AuthCredential());
+
 			// Create Person ------------------------------
 
 			Person person = networkCreate.person;
 			person.setTenantId(network.getTenantId());
-			User user = null;
+			User user;
 
 			try {
 				user = new User();
@@ -175,7 +181,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 				user.password = person.password;
 
 				UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_USER");
-				UserGrantedAuthority nauthority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN");
+				UserGrantedAuthority nauthority = new UserGrantedAuthority(user, "ROLE_ADMIN");
 
 				authority.setTenantId(network.getTenantId());
 				nauthority.setTenantId(network.getTenantId());
@@ -237,12 +243,12 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 			nTaxonomy.terms.add(nterm2);
 			termRepository.save(nterm1);
 			termRepository.save(nterm2);
-			Set<Taxonomy> nTaxonomies = new HashSet<Taxonomy>();
-			nTaxonomies.add(nTaxonomy);
-			taxonomyRepository.save(nTaxonomy);
-			network.ownedTaxonomies = nTaxonomies;
-			network.categoriesTaxonomyId = nTaxonomy.id;
-			networkRepository.save(network);
+//			Set<Taxonomy> nTaxonomies = new HashSet<Taxonomy>();
+//			nTaxonomies.add(nTaxonomy);
+//			taxonomyRepository.save(nTaxonomy);
+//			network.ownedTaxonomies = nTaxonomies;
+//			network.categoriesTaxonomyId = nTaxonomy.id;
+//			networkRepository.save(network);
 
 			Station station = new Station();
 			station.setTenantId(network.getTenantId());
@@ -392,10 +398,40 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	 * Get the default invitation html template taking in to account the invitationMessage set by the admin at
 	 * configuration screen.
 	 */
-	public StringResponse getNetworkInvitationTemplate() throws IOException {
-		String template = networkService.getNetworkInvitationTemplate();
-		StringResponse stringResponse = new StringResponse();
-		stringResponse.response = template;
-		return stringResponse;
+	public Response getNetworkInvitationTemplate(){
+		String template;
+		try {
+			template = networkService.getNetworkInvitationTemplate();
+			StringResponse stringResponse = new StringResponse();
+			stringResponse.response = template;
+			return Response.status(Status.OK).entity(objectMapper.writeValueAsString(stringResponse)).build();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return Response.status(Status.NOT_IMPLEMENTED).build();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return Response.status(Status.SERVICE_UNAVAILABLE).build();
+		}
+	}
+
+	@Override
+	/**
+	 * Get the default validation html template taking in to account the validationMessage set by the admin at
+	 * configuration screen.
+	 */
+	public Response getNetworkValidationTemplate(){
+		String template;
+		try {
+			template = networkService.getNetworkValidationTemplate();
+			StringResponse stringResponse = new StringResponse();
+			stringResponse.response = template;
+			return Response.status(Status.OK).entity(objectMapper.writeValueAsString(stringResponse)).build();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return Response.status(Status.NOT_IMPLEMENTED).build();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return Response.status(Status.SERVICE_UNAVAILABLE).build();
+		}
 	}
 }

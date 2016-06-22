@@ -1,9 +1,9 @@
-<div id="" class="pos-abt w-full top-0 bottom-0 left-0"> <!-- abs -->
+<div  class="pos-abt w-full top-0 bottom-0 left-0"> <!-- abs -->
   <div class="hbox">
     <div class="col"> <!-- col -->
       <div class="vbox"> <!-- vbox -->
         <div class="row-row"> <!-- row-row -->
-          <div class="cell scrollable" style="background: #EFEFEF; color: rgba(0,0,0,0.87)!important;"> <!-- cell -->
+          <div class="cell o-f-x-h scrollable" style="background: #EFEFEF; color: rgba(0,0,0,0.87)!important;"> <!-- cell -->
             <div class="cell-inner" ng-class="{'p': !$state.includes('app.pagebuilder.editor'), 'p-v': $state.includes('app.pagebuilder.editor')}"><!-- cell -->	
 
               <div ui-view class="m-b"></div>
@@ -37,6 +37,15 @@
                     {{'titles.OPTIONS' | translate}}
                   </md-tooltip>
                   <i class="icon mdi-image-tune i-20"></i>
+                  <div style="height: 50px;"></div>
+                </a>
+              </li>
+              <li ng-if="$state.includes('app.pagebuilder.header')">
+                <a md-ink-ripple style="line-height: 50px;" data-toggle="modal" data-target="#pagebuilder-tabs">
+                  <md-tooltip md-direction="left">
+                    {{'settings.pages.header.TABS' | translate}}
+                  </md-tooltip>
+                  <i class="icon mdi2-tab i-20"></i>
                   <div style="height: 50px;"></div>
                 </a>
               </li>

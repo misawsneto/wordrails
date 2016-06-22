@@ -6,12 +6,9 @@ import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.util.StringUtil;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -23,17 +20,23 @@ public class NetworkService {
 	private Map<String, Integer> domains; //key=domain, value=networkId
 
 	private NetworkRepository networkRepository;
+	private EmailService emailService;
 
 	@Autowired
-	public NetworkService(NetworkRepository networkRepository) {
+	public NetworkService(NetworkRepository networkRepository, EmailService emailService) {
 		this.networkRepository = networkRepository;
+		this.emailService = emailService;
 		tenantIds = Maps.newConcurrentMap();
 		domains = Maps.newConcurrentMap();
 
-		List<Network> networks = networkRepository.findAll();
-		for (Network n : networks) {
-			tenantIds.put(n.tenantId, n.id);
-			if (n.domain != null) domains.put(n.domain, n.id);
+		List<Object[]> networks = networkRepository.findIdsAndDomain();
+		for (Object[] n : networks) {
+			Integer id = (Integer) n[0];
+			String domain = (String) n[1];
+			String tenantId = (String) n[2];
+			tenantIds.put(tenantId, id);
+			if (domain != null)
+				domains.put(domain, id);
 		}
 	}
 
@@ -52,6 +55,9 @@ public class NetworkService {
 
 	public String getTenantFromHost(String host) {
 		String tenantId = StringUtil.getSubdomainFromHost(host);
+		if("settings".equals(tenantId))
+			return "settings";
+
 		if (domains.keySet().contains(host)) {
 			for (String s : tenantIds.keySet()) {
 				if (Objects.equals(tenantIds.get(s), domains.get(host))) {
@@ -77,21 +83,25 @@ public class NetworkService {
 		return tenantId;
 	}
 
-	public String getNetworkInvitationTemplate() {
+	public String getNetworkValidationTemplate() throws IOException {
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		Network network = networkRepository.findByTenantId(tenantId);
 
-		try {
-			String templateFile;
-			templateFile = "complete-subscription-email.html";
-			String filePath = new ClassPathResource(templateFile).getFile().getAbsolutePath();
-			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-			String template = new String(bytes, Charset.forName("UTF-8"));
-			template = 	template.replaceAll("\\{\\{invitationTemplate}}", network.invitationMessage);
-			return template;
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		return null;
+		String template = getEmailTemplate();
+		return template.replaceAll("\\{\\{invitationTemplate}}", network.invitationMessage);
+	}
+
+	public String getNetworkInvitationTemplate() throws IOException {
+		String tenantId = TenantContextHolder.getCurrentTenantId();
+		Network network = networkRepository.findByTenantId(tenantId);
+
+		String template = getEmailTemplate();
+		return template.replaceAll("\\{\\{invitationTemplate}}", network.invitationMessage);
+	}
+
+	public String getEmailTemplate() throws IOException {
+		String templateFile;
+		templateFile = "complete-subscription-email.html";
+		return emailService.loadTemplateHTML(templateFile);
 	}
 }

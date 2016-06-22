@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS person_station_role;

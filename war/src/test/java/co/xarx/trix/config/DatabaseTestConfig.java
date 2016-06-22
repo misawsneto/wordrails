@@ -1,7 +1,8 @@
 package co.xarx.trix.config;
 
-import co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -16,42 +17,42 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
+@ComponentScan("co.xarx.trix.persistence")
 @EnableTransactionManagement
 @EnableJpaRepositories(
-		basePackages = {"co.xarx.trix.persistence", "co.xarx.trix.api.data"}
-//		,repositoryFactoryBeanClass = RepositoryFactoryBean.class
+		basePackages = {"co.xarx.trix.persistence"}
 )
 public class DatabaseTestConfig {
 
-
 	@Bean
-	public DataSource dataSource() throws Exception {
-//		String jdbcUrl = String.format(H2_JDBC_URL_TEMPLATE, System.getProperty("user.dir"));
-//		JdbcDataSource ds = new JdbcDataSource();
-//		ds.setURL(jdbcUrl);
+	public DataSource dataSource() {
+//		JDBCPool ds = new JDBCPool();
+//		ds.setDatabase("TRIX");
+//		ds.setUrl("jdbc:hsqldb:mem:ex");
 //		ds.setUser("sa");
 //		ds.setPassword("");
 //
 //		return ds;
 
 		return new EmbeddedDatabaseBuilder()
-				.setType(EmbeddedDatabaseType.H2)
-//				.addScript("classpath:create-schema.sql")
-//				.addScript("classpath:create-data-test.sql")
+				.setType(EmbeddedDatabaseType.HSQL)
+				.addScript("classpath:acl_hsqldb.sql")
 				.build();
 	}
 
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws Exception {
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+		vendorAdapter.setDatabasePlatform("org.hibernate.dialect.HSQLDialect");
 		vendorAdapter.setGenerateDdl(true);
+		vendorAdapter.setShowSql(true);
 
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setDataSource(dataSource());
-		factory.setPersistenceUnitName("wordrails");
-		factory.setPersistenceProviderClass(MultiTenantHibernatePersistence.class);
-		factory.setJpaVendorAdapter(vendorAdapter);
 		factory.setPackagesToScan("co.xarx.trix.domain");
+		factory.setJpaVendorAdapter(vendorAdapter);
+//		factory.setJpaProperties(jpaProperties());
+		factory.setPersistenceProvider(new HibernatePersistenceProvider());
 		factory.afterPropertiesSet();
 
 		return factory;
@@ -60,42 +61,37 @@ public class DatabaseTestConfig {
 	public Properties jpaProperties() {
 		Properties props = new Properties();
 		props.put("hibernate.query.substitutions", "true 'Y', false 'N'");
-		props.put("hibernate.hbm2ddl.auto", "create-drop");
+		props.put("hibernate.hbm2ddl.auto", "update");
 		props.put("hibernate.show_sql", "false");
 		props.put("hibernate.format_sql", "true");
+		props.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
 
 		return props;
 	}
-
 
 	@Bean
 	public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) throws Exception {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
 		transactionManager.setEntityManagerFactory(entityManagerFactory);
+		transactionManager.setDataSource(dataSource());
 		return transactionManager;
 	}
 
 //	@Bean
-//	@Autowired
-//	public DataSourceInitializer dataSourceInitializer(final DataSource dataSource) {
-//		final DataSourceInitializer initializer = new DataSourceInitializer();
-//		initializer.setDataSource(dataSource);
-//		initializer.setDatabasePopulator(databasePopulator());
-//		initializer.setDatabaseCleaner(databaseCleaner());
-//		return initializer;
+//	public DataSourceConnectionProvider dataSourceConnectionProvider() {
+//		return new DataSourceConnectionProvider(dataSource());
 //	}
 //
-//
-//	private DatabasePopulator databasePopulator() {
-//		final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-//		populator.addScript(H2_SCHEMA_SCRIPT);
-//		populator.addScript(H2_DATA_SCRIPT);
-//		return populator;
+//	@Bean
+//	public DefaultConfiguration defaultConfiguration() {
+//		DefaultConfiguration defaultConfiguration = new DefaultConfiguration();
+//		defaultConfiguration.setConnectionProvider(dataSourceConnectionProvider());
+//		defaultConfiguration.setSQLDialect(SQLDialect.HSQLDB);
+//		return defaultConfiguration;
 //	}
 //
-//	private DatabasePopulator databaseCleaner() {
-//		final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-//		populator.addScript(H2_CLEANER_SCRIPT);
-//		return populator;
+//	@Bean
+//	public DSLContext dslContext() {
+//		return new DefaultDSLContext(defaultConfiguration());
 //	}
 }

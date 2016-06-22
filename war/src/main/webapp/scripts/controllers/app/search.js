@@ -1,11 +1,12 @@
 app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$interval', '$mdSidenav', '$translate', '$filter', '$localStorage',
 					function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $interval, $mdSidenav, $translate, $filter, $localStorage){
-	$scope.query = $state.params.q;
+	$scope.searchQuery = angular.copy($state.params.q);
 	$scope.app.search.show=false;
 
-	$scope.settings = {'tab': 'publications'}
+	$scope.search = {'tab': 'publications'}
 
 	$scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
+  $scope.stations = angular.copy($scope.app.stations);
 
 	$scope.publicationsCtrl = {
     'page': 0,
@@ -23,7 +24,9 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
       $scope.loading = true;
 
       var page = getPage();
-      trix.searchPosts($scope.query, null, null, 'published', null, null, null, null, page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response){
+      $scope.topTagsObj = null;
+    	$scope.topTags = null;
+      trix.searchPosts($scope.searchQuery, null, null, 'published', null, null, null, null, page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response){
         handleSuccess(response);
         $scope.loading = false;
       }).error(function(){
@@ -34,7 +37,6 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
 
   var handleSuccess = function(posts){
     if(posts && posts.length > 0){
-      posts.reverse();
 
         if(!$scope.publications)
           $scope.publications = []
@@ -55,7 +57,8 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
       return $scope.publicationsCtrl.page;
   }
 
-  $scope.doSearch = function(){
+  $scope.doSearch = function(query){
+    $scope.searchQuery = query;
     $scope.resetPage();
     $scope.paginate();
   }
@@ -78,7 +81,6 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
   }, 500);
 
   $scope.scrollToTop = function(){
-    console.log($('#search-container').scrollTop);
     $('#search-container').animate({scrollTop: 0}, 700, 'easeOutQuint');
   }
 
@@ -91,13 +93,59 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state
 
 
 	$scope.calculateTopTags = function(){
-  	$scope.topTags = {};
+  	$scope.topTagsObj = {};
 		$scope.publications && $scope.publications.forEach(function(pub){
 			pub && pub.tags.forEach(function(i) {
-				$scope.topTags[i] = ($scope.topTags[i]||0)+1;
+				$scope.topTagsObj[i] = ($scope.topTagsObj[i]||0)+1;
 			})
 		});
+
+		$scope.topTags = $.map($scope.topTagsObj, function(value, index) {
+	    return {'tag': index, 'count': value};
+		});
+
+		$scope.topTags.sort(function(objA, objB){
+			if(objA.count > objB.count)
+				return -1;
+			if(objA.count < objB.count)
+				return 1;
+			else
+				return 0;
+		})
 	}
+
+	trix.getPersons(null, null, 'id,desc').success(function(response){
+		$scope.persons = response.persons;
+		$scope.loadingPerson = false
+	}).error(function(){
+		$scope.loadingPerson = false;
+	});
+
+	$scope.showPerson = function(event,person){
+  	// show term alert
+      $scope.loadedPerson = angular.copy(person);
+      $scope.uploadedUserImage = null;
+      $scope.uploadedCoverImage = null;
+      $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'person-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+  }
+
+  $timeout(function(){
+    $scope.app.removeTermTabs();
+  })
 
 	searchCtrl = $scope;
 }]);

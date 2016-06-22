@@ -39,7 +39,6 @@ public class PostView implements Serializable, Identifiable {
 	public String body;
 	public String topper;
 	public String state;
-	public int readsCount;
 	public int bookmarksCount;
 	public int recommendsCount;
 	public int commentsCount;

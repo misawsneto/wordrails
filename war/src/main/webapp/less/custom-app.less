@@ -175,6 +175,26 @@
 	min-height: 500px;
 }
 
+.max-h-100{
+	max-height: 100px;
+}
+
+.max-h-200{
+	max-height: 200px;
+}
+
+.max-h-300{
+	max-height: 300px;
+}
+
+.max-h-400{
+	max-height: 400px;
+}
+
+.max-h-500{
+	max-height: 500px;
+}
+
 .fr-toolbar .fr-command.fr-btn, .fr-popup .fr-command.fr-btn:focus{
 	color: #222;
 }
@@ -330,7 +350,8 @@
 
 .bg-cover{
   background-size: cover;
-  background-position: 50% 50%
+  background-position: 50% 50%;
+  transition-duration: 0.5s;
 }
 
 /* focus point */
@@ -537,6 +558,10 @@
 	opacity: 0;
 }
 
+.opacity-02{
+	opacity: 0.2;
+}
+
 .opacity-03{
 	opacity: 0.3;
 }
@@ -563,6 +588,10 @@
 
 .opacity-09{
 	opacity: 0.9;
+}
+
+.opacity-095{
+	opacity: 0.95;
 }
 
 .b-l-s{
@@ -787,6 +816,172 @@ footer.page-footer .footer-crt{
 	border: 0;
 }
 
-.app-content{
+.app-content, .o-f-x-h{
 	overflow-x: hidden!important;
+}
+
+.text-u-l-hover:hover {
+  text-decoration: underline;
+}
+
+#user-permissions-dialog md-content > div{
+ overflow: auto; 
+ width: 400px;
+ min-height: 400px;
+ max-height: 500px;
+}
+
+#user-permissions-dialog .station-permissions li{
+  display: inline-block;
+}
+
+.stations-permissions-dialog-list{
+  max-height: 230px;
+  overflow: auto;
+  box-shadow: inset 0px 0px 25px -10px rgba(0,0,0,0.5);
+}
+
+#comment-box{
+	border: 1px solid rgba(110, 115, 120, 0.15);
+	transition-property: border;
+	-webkit-transition: all 0.2s ease-in-out;
+  	-moz-transition: all 0.2s ease-in-out;
+  	-o-transition: all 0.2s ease-in-out;
+ 	transition: all 0.2s ease-in-out;	
+}
+
+#comment-box:focus{
+	transition-property: border;
+	-webkit-transition: all 0.2s ease-in-out;
+  	-moz-transition: all 0.2s ease-in-out;
+  	-o-transition: all 0.2s ease-in-out;
+ 	transition: all 0.2s ease-in-out;	
+}
+
+.read-style{
+	line-height: 1.5;
+	-webkit-font-smoothing:antialiased;
+	font-smooth:antialiased;
+}
+
+.pgwSlider .ps-current{
+	font-size: 1.5rem!important;
+}
+
+ul.pgwSlider>li, .pgwSlider>.ps-list>li{
+	font-size: 1.1rem!important;	
+}
+
+.df-tab-menu.nav-lines > li:after{
+	margin-bottom: 1px;
+}
+
+.nav.nav-md > li.active > a{
+	opacity: 1!important;
+}
+
+.df-tab-menu a{
+	color: inherit!important;
+}
+
+.simpleDemo ul[dnd-list],
+.simpleDemo ul[dnd-list] > li {
+  position: relative;
+}
+
+/**
+ * For the correct positioning of the placeholder element, the dnd-list and
+ * it's children must have position: relative
+ */
+
+.simpleDemo ul[dnd-list],
+.simpleDemo ul[dnd-list] > li {
+  position: relative;
+}
+
+/**
+ * The dnd-list should always have a min-height,
+ * otherwise you can't drop to it once it's empty
+ */
+
+.simpleDemo ul[dnd-list] {
+  min-height: 42px;
+  padding-left: 0;
+}
+
+/**
+ * The dndDraggingSource class will be applied to
+ * the source element of a drag operation. It makes
+ * sense to hide it to give the user the feeling
+ * that he's actually moving it.
+ */
+
+.simpleDemo ul[dnd-list] .dndDraggingSource {
+  display: none;
+}
+
+/**
+ * An element with .dndPlaceholder class will be
+ * added to the dnd-list while the user is dragging
+ * over it.
+ */
+
+.simpleDemo ul[dnd-list] .dndPlaceholder {
+  display: block;
+  min-height: 54px;
+  margin-left: 16px;
+  margin-right: 16px;
+  background-color: #ddd;
+}
+
+.simpleDemo ul[dnd-list] li:nth-child(2), .simpleDemo ul[dnd-list] li:nth-child(1) {
+  margin-top: 16px;
+}
+
+/**
+ * The dnd-lists's child elements currently MUST have
+ * position: relative. Otherwise we can not determine
+ * whether the mouse pointer is in the upper or lower
+ * half of the element we are dragging over. In other
+ * browsers we can use event.offsetY for this.
+ */
+
+.simpleDemo ul[dnd-list] li {
+  display: block;
+  margin-bottom: -1px;
+  background-color: #fff;
+}
+
+/**
+ * Show selected elements in green
+ */
+
+.simpleDemo ul[dnd-list] li.selected {
+  color: #3c763d;
+  background-color: #dff0d8;
+}
+
+.simpleDemo .drag:hover {
+  cursor: move;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+.simpleDemo .drag:active {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+
+.df-tab-menu > li{
+  float: none!important;
+}
+
+.fr-view video.trix-video {  
+   width:100%; 
+   max-width:500px; 
+   height:auto; 
+}
+
+.m-t-n-80{
+  margin-top: -80px;
 }

@@ -5807,6 +5807,11 @@ bg-none {
   margin: 32px;
 }
 
+.m-v-0 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .m-v-xs {
   margin-top: 4px;
   margin-bottom: 4px;
@@ -5830,6 +5835,11 @@ bg-none {
 .m-v-lg {
   margin-top: 32px;
   margin-bottom: 32px;
+}
+
+.m-h-0 {
+  margin-right: 0;
+  margin-left: 0;
 }
 
 .m-h-xs {
@@ -6558,6 +6568,10 @@ bg-none {
   font-size: 24px;
 }
 
+.text-md-l {
+  font-size: 18px;
+}
+
 .text-md {
   font-size: 16px;
 }
@@ -6681,6 +6695,11 @@ bg-none {
   height: 48px;
 }
 
+.w-50 {
+  width: 50px;
+  height: 50px;
+}
+
 .w-56 {
   width: 56px;
   height: 56px;
@@ -6762,6 +6781,10 @@ bg-none {
   width: 1200px;
 }
 
+.w-900 {
+  width: 900px;
+}
+
 .w-800 {
   width: 800px;
 }
@@ -6782,6 +6805,10 @@ bg-none {
   width: 400px;
 }
 
+.w-300 {
+  width: 300px;
+}
+
 .w-full {
   width: 100%;
 }
@@ -6800,6 +6827,10 @@ bg-none {
 
 .h-100 {
   height: 100px;
+}
+
+.h-150 {
+  height: 150px;
 }
 
 .h-200 {
@@ -7006,18 +7037,20 @@ bg-none {
           transition: all 0.2s ease-in-out;
 }
 
-.mockup-browser .md-fab {
+/*
+.mockup-browser .md-fab{
   position: absolute!important;
-}
+}*/
 
 .mockup-browser {
   max-width: 900px;
 }
 
+/*
 .mockup-browser .md-fab i {
-  margin-left: 1px;
   line-height: 40px;
-}
+  margin-left: 1px;
+}*/
 
 .mobile.mockup-browser {
   max-width: 300px;
@@ -7029,13 +7062,76 @@ bg-none {
 }
 
 #setting-perspective-editor .mockup-browser.mobile {
-  height: 600px;
-  max-width: 340px;
+  height: 700px;
+  max-width: 400px;
+}
+
+#setting-perspective-editor .mockup-browser.desktop {
+  height: 700px;
 }
 
 #setting-perspective-editor .mockup-section {
   height: 476px;
   overflow: auto;
+}
+
+.mockup-browser {
+  position: relative;
+  margin: 0 auto;
+  color: #7B7B7F;
+  border-top: 30px solid #ACADAE;
+  border-right: 4px solid #ACADAE;
+  border-bottom: 20px solid #ACADAE;
+  border-left: 4px solid #ACADAE;
+  border-radius: 10px;
+  -webkit-user-select: none;
+   -khtml-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.mockup-browser::before {
+  position: absolute;
+  top: -20px;
+  left: 15px;
+  width: 10px;
+  height: 10px;
+  background: #fdb0ad;
+  border-radius: 50%;
+  content: '';
+  box-shadow: 20px 0 0 #fdeaa2, 40px 0 0 #d7edb4;
+}
+
+.browser-buttons::before {
+  position: absolute;
+  top: 9px;
+  z-index: 10;
+  width: 10px;
+  height: 10px;
+  background: #fdb0ad;
+  border-radius: 50%;
+  content: '';
+  box-shadow: 20px 0 0 #fdeaa2, 40px 0 0 #d7edb4;
+}
+
+.browser-buttons {
+  -webkit-transition: all 0.2s ease-in-out;
+     -moz-transition: all 0.2s ease-in-out;
+       -o-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+}
+
+.browser-buttons {
+  position: relative;
+  max-width: 900px;
+  padding-left: 20px;
+  margin: 0 auto;
+}
+
+.browser-buttons.mobile {
+  max-width: 400px;
 }
 
 .colorpicker-visible {
@@ -7170,35 +7266,6 @@ bg-none {
 }
 
 /* Mockup */
-
-.mockup-browser {
-  position: relative;
-  margin: 0 auto;
-  color: #7B7B7F;
-  border-top: 30px solid #ACADAE;
-  border-right: 4px solid #ACADAE;
-  border-bottom: 20px solid #ACADAE;
-  border-left: 4px solid #ACADAE;
-  border-radius: 10px;
-  -webkit-user-select: none;
-   -khtml-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  -webkit-touch-callout: none;
-}
-
-.mockup-browser::before {
-  position: absolute;
-  top: -20px;
-  left: 15px;
-  width: 10px;
-  height: 10px;
-  background: #fdb0ad;
-  border-radius: 50%;
-  content: '';
-  box-shadow: 20px 0 0 #fdeaa2, 40px 0 0 #d7edb4;
-}
 
 .mockup-header {
   padding: 2em 0;
@@ -8082,6 +8149,26 @@ md-switch[disabled] .md-bar {
   min-height: 500px;
 }
 
+.max-h-100 {
+  max-height: 100px;
+}
+
+.max-h-200 {
+  max-height: 200px;
+}
+
+.max-h-300 {
+  max-height: 300px;
+}
+
+.max-h-400 {
+  max-height: 400px;
+}
+
+.max-h-500 {
+  max-height: 500px;
+}
+
 .fr-toolbar .fr-command.fr-btn,
 .fr-popup .fr-command.fr-btn:focus {
   color: #222;
@@ -8275,6 +8362,7 @@ md-switch[disabled] .md-bar {
 .bg-cover {
   background-position: 50% 50%;
   background-size: cover;
+  transition-duration: 0.5s;
 }
 
 /* focus point */
@@ -8522,6 +8610,10 @@ md-switch[disabled] .md-bar {
   opacity: 0;
 }
 
+.opacity-02 {
+  opacity: 0.2;
+}
+
 .opacity-03 {
   opacity: 0.3;
 }
@@ -8548,6 +8640,10 @@ md-switch[disabled] .md-bar {
 
 .opacity-09 {
   opacity: 0.9;
+}
+
+.opacity-095 {
+  opacity: 0.95;
 }
 
 .b-l-s {
@@ -8847,6 +8943,175 @@ button,
   border: 0;
 }
 
-.app-content {
+.app-content,
+.o-f-x-h {
   overflow-x: hidden!important;
+}
+
+.text-u-l-hover:hover {
+  text-decoration: underline;
+}
+
+#user-permissions-dialog md-content > div {
+  width: 400px;
+  max-height: 500px;
+  min-height: 400px;
+  overflow: auto;
+}
+
+#user-permissions-dialog .station-permissions li {
+  display: inline-block;
+}
+
+.stations-permissions-dialog-list {
+  max-height: 230px;
+  overflow: auto;
+  box-shadow: inset 0 0px 25px -10px rgba(0, 0, 0, 0.5);
+}
+
+#comment-box {
+  border: 1px solid rgba(110, 115, 120, 0.15);
+  -webkit-transition: all 0.2s ease-in-out;
+     -moz-transition: all 0.2s ease-in-out;
+       -o-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+  transition-property: border;
+}
+
+#comment-box:focus {
+  -webkit-transition: all 0.2s ease-in-out;
+     -moz-transition: all 0.2s ease-in-out;
+       -o-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+  transition-property: border;
+}
+
+.read-style {
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  font-smooth: antialiased;
+}
+
+.pgwSlider .ps-current {
+  font-size: 1.5rem!important;
+}
+
+ul.pgwSlider > li,
+.pgwSlider > .ps-list > li {
+  font-size: 1.1rem!important;
+}
+
+.df-tab-menu.nav-lines > li:after {
+  margin-bottom: 1px;
+}
+
+.nav.nav-md > li.active > a {
+  opacity: 1!important;
+}
+
+.df-tab-menu a {
+  color: inherit!important;
+}
+
+.simpleDemo ul[dnd-list],
+.simpleDemo ul[dnd-list] > li {
+  position: relative;
+}
+
+/**
+ * For the correct positioning of the placeholder element, the dnd-list and
+ * it's children must have position: relative
+ */
+
+.simpleDemo ul[dnd-list],
+.simpleDemo ul[dnd-list] > li {
+  position: relative;
+}
+
+/**
+ * The dnd-list should always have a min-height,
+ * otherwise you can't drop to it once it's empty
+ */
+
+.simpleDemo ul[dnd-list] {
+  min-height: 42px;
+  padding-left: 0;
+}
+
+/**
+ * The dndDraggingSource class will be applied to
+ * the source element of a drag operation. It makes
+ * sense to hide it to give the user the feeling
+ * that he's actually moving it.
+ */
+
+.simpleDemo ul[dnd-list] .dndDraggingSource {
+  display: none;
+}
+
+/**
+ * An element with .dndPlaceholder class will be
+ * added to the dnd-list while the user is dragging
+ * over it.
+ */
+
+.simpleDemo ul[dnd-list] .dndPlaceholder {
+  display: block;
+  min-height: 54px;
+  margin-right: 16px;
+  margin-left: 16px;
+  background-color: #ddd;
+}
+
+.simpleDemo ul[dnd-list] li:nth-child(2),
+.simpleDemo ul[dnd-list] li:nth-child(1) {
+  margin-top: 16px;
+}
+
+/**
+ * The dnd-lists's child elements currently MUST have
+ * position: relative. Otherwise we can not determine
+ * whether the mouse pointer is in the upper or lower
+ * half of the element we are dragging over. In other
+ * browsers we can use event.offsetY for this.
+ */
+
+.simpleDemo ul[dnd-list] li {
+  display: block;
+  margin-bottom: -1px;
+  background-color: #fff;
+}
+
+/**
+ * Show selected elements in green
+ */
+
+.simpleDemo ul[dnd-list] li.selected {
+  color: #3c763d;
+  background-color: #dff0d8;
+}
+
+.simpleDemo .drag:hover {
+  cursor: move;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+.simpleDemo .drag:active {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+
+.df-tab-menu > li {
+  float: none!important;
+}
+
+.fr-view video.trix-video {
+  width: 100%;
+  height: auto;
+  max-width: 500px;
+}
+
+.m-t-n-80 {
+  margin-top: -80px;
 }

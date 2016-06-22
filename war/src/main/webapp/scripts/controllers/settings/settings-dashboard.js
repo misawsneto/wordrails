@@ -5,21 +5,20 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
       $scope.app.person.seenWelcome = $localStorage.seenWelcome;
     }
 
-	if(!$scope.app.person.seenWelcome){
-		$mdDialog.show({
-        scope: $scope,        // use parent scope in template
-        closeTo: {
-          bottom: 1500
-        },
-        preserveScope: true, // do not forget this if use parent scope
-        controller: $scope.app.defaultDialog,
-        templateUrl: 'welcolme-dialog.html',
-        parent: angular.element(document.body),
-        targetEvent: event,
-        clickOutsideToClose:false,
-        escapeToClose: false
-      })
-	}
+	// if(!$scope.app.person.seenWelcome){
+	// 	$mdDialog.show({
+ //        scope: $scope,        // use parent scope in template
+ //        closeTo: {
+ //          bottom: 1500
+ //        },
+ //        preserveScope: true, // do not forget this if use parent scope
+ //        controller: $scope.app.defaultDialog,
+ //        templateUrl: 'welcolme-dialog.html',
+ //        parent: angular.element(document.body),
+ //        clickOutsideToClose:false,
+ //        escapeToClose: false
+ //      })
+	// }
 
 	$scope.setSeen = function(){
       $localStorage.seenWelcome = true;
@@ -37,9 +36,7 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	$scope.loadingPublished = true;
 	trix.searchPosts(null, null, null, 'PUBLISHED', null, null, null, null, 0, 11, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(posts){
 	    if(posts && posts.length > 0){
-	      posts.reverse();
 	      $scope.publications = posts;
-
 	    }
 
 	    $scope.loadingPublished = false;
@@ -50,7 +47,6 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	  $scope.loadingScheduled = true;
 	trix.searchPosts(null, null, null, 'SCHEDULED', null, null, null, null, 0, 5, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(posts){
 	    if(posts && posts.length > 0){
-	      posts.reverse();
 	      $scope.scheduled = posts;
 	    }
 
@@ -62,7 +58,6 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	  $scope.loadingDrafts = true;
 	trix.searchPosts(null, null, null, 'DRAFT', null, null, null, null, 0, 5, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(posts){
 	    if(posts && posts.length > 0){
-	      posts.reverse();
 	      $scope.drafts = posts;
 	    }
 
@@ -71,7 +66,7 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	    $scope.loadingDrafts = false;
 	  })
 
-	  $scope.showPerson = function(person){
+	  $scope.showPerson = function(event,person){
 	  	// show term alert
 	      $scope.loadedPerson = angular.copy(person);
 	      $scope.uploadedUserImage = null;
@@ -90,7 +85,97 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	        // onComplete: function(){
 
 	        // }
-	      })
-	  }
+	    })
+	}
 
+	var start = null;
+	var startTime = start;
+	var end = moment().format('YYYY-MM-DD');
+	var endTime = new Date().getTime();
+	var field = 'authorId';
+	var page = 0;
+	var size = 100;
+	var authorId = 51;
+	var postIds = [6017];
+	var postId = 6017;
+	var stationId = 11;
+
+	$scope.networkStats = {};
+
+	trix.getMostCommonTerm(startTime,endTime,field,page,size).success(function(response){
+
+    })
+
+    //@Path("/popularNetworks")
+    trix.getPopularNetworks(page,size).success(function(response){
+        
+    })
+
+        //@Path("/post")
+    trix.postStats(end, start, postId).success(function(response){
+        
+    })
+
+    //@Path("/author")
+    trix.authorStats(end, start, authorId).success(function(response){
+        
+    })
+
+    //@Path("/network")
+    $scope.loadingNetworkStats = true;
+    $scope.networkStats = null;
+    $scope.androidCount = 0;
+    $scope.iosCount = 0;
+    trix.networkStats(end, start).success(function(response){
+        $scope.networkStats = response;
+        $scope.loadingNetworkStats = false;
+        $scope.androidCount = $scope.networkStats.generalStatsJson[3];
+        $scope.iosCount = $scope.networkStats.generalStatsJson[4];
+    }).error(function(){
+    	$scope.loadingNetworkStats = false;
+    })
+
+        //@Path("/station")
+    trix.stationStats(end, start, stationId).success(function(response){
+        
+    })
+
+        //@Path("/storage")
+    trix.getNetworkUsedSpace().success(function(response){
+        
+    })
+
+    //  @Path("/countPostReads")
+    trix.countReadsByPostIds(postIds).success(function(response){
+        
+    })
+
+        //@Path("/countReadersByStation")
+    trix.countReadersByStation(stationId).success(function(response){
+        
+    })
+
+    //@Path("/dashboardStats")
+    $scope.loadingDashStats = true
+    $scope.publicationsCount = 0;
+    $scope.commentsCount = 0;
+    trix.dashboardStats().success(function(response){
+    	$scope.publicationsCount = response.post;
+        $scope.commentsCount = response.comment;
+        $scope.loadingDashStats = false;
+    }).error(function(){
+    	$scope.loadingDashStats = false;
+    })
+
+    $scope.registeredUsers = 0;
+    $scope.loadingRegisteredUsers = true;
+    trix.countPersonsByNetwork().success(function(response){
+    	$scope.registeredUsers = response;
+    	$scope.loadingRegisteredUsers = false;
+    }).error(function(){
+    	$scope.loadingRegisteredUsers = false;
+    })
+
+ 	// iosStore;
+	// androidStore;
 }]);

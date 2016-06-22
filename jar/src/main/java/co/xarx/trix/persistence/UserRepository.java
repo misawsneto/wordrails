@@ -34,4 +34,9 @@ public interface UserRepository extends DatabaseRepository<User, Integer> {
 	@SdkExclude
 	@CacheEvict(value = "user", key = "#p0.username")
 	void delete(User user);
+
+	@Query("select uc.user from UserConnection uc " +
+			"where uc.providerId=:providerId and uc.providerUserId=:providerUserId")
+	User findSocialUser(@Param("providerId") String providerId, @Param("providerUserId") String
+			providerUserId);
 }

@@ -1,2 +1,2 @@
-ALTER TABLE trix_dev.station
+ALTER TABLE station
 	ADD stationSlug VARCHAR(255) NOT NULL;

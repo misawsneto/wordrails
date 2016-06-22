@@ -7,6 +7,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.tags = [];
 
 	$scope.landscape = true;
+	$scope.automaticSave = true;
 
 	$timeout(function(){
 		$scope.openImageOptions = false;
@@ -31,6 +32,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	      language: (lang == 'en' ? 'en_gb' : lang == 'pt' ? 'pt_br' : null),
 		// Set the image upload parameter.
         imageUploadParam: 'contents',
+
+        imageCaption: true,
 
         // Set the image upload URL.
         imageUploadURL: '/api/images/upload?imageType=POST',
@@ -103,21 +106,26 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	// --- post date
 	$scope.postDateUpdateble = true;
+	$scope.postDate = new Date();
 	$scope.resetPostDate = function(){
 		if(!$scope.postDateUpdateble)
 			return;
 		$scope.postDate = new Date();
 		$scope.postDate.setSeconds(null);
 		$scope.postDate.setMilliseconds(null);
+		$scope.postDateUpdateble = false;
 	}
 
+	$scope.postDateMenuOpen = false;
 	$scope.changePostDate = function(date){
-		$scope.postDateUpdateble = false;
+		$scope.postDate = date;
+		$scope.postDateMenuOpen = false;
 	}
 	// --- /post date
 	
 	// --- post schedule
 	$scope.postScheduleUpdateble = true;
+	$scope.postScheduleDate = new Date();
 	$scope.resetScheduleDate = function(){
 		if(!$scope.postScheduleUpdateble)
 			return;
@@ -125,8 +133,39 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.postScheduleDate = addMinutes($scope.postScheduleDate, 15);
 		$scope.postScheduleDate.setSeconds(null);
 		$scope.postScheduleDate.setMilliseconds(null);
+		$scope.postScheduleUpdateble = false;
+	}
+
+	$scope.postScheduleMenuOpen = false;
+	$scope.changeScheduledDate = function(scheduledDate){
+		if(!$scope.app.editingPost)
+			$scope.app.editingPost = {};
+
+		$scope.app.editingPost.scheduledDate = $scope.postScheduleDate = scheduledDate;
+		$scope.postScheduleMenuOpen = false;
+		$scope.app.editingPost.state = "PUBLISHED";
+	}
+
+	$scope.removeScheduledDate = function(){
+		if(!$scope.app.editingPost)
+			$scope.app.editingPost = {};
+
+		$scope.app.editingPost.scheduledDate = $scope.postScheduleDate = null;
+		$scope.app.editingPost.state = "DRAFT";	
 		$scope.postScheduleUpdateble = true;
 	}
+
+	$scope.checkIfScheduled = function(){
+		if($scope.app.editingPost){
+			var post = $scope.app.editingPost;
+			if(post.state === 'PUBLISHED' && post.scheduledDate && (post.scheduledDate > new Date().getTime())){
+				return true;
+			}else{
+				return false;
+			}
+		}
+	}
+
 	// --- /post schedule
 
 	// --- post delete
@@ -147,7 +186,15 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	
 	// --- slug
 	$scope.customizedLink = {
-		slug: ""
+		slug: "",
+		invalid: false
+	}
+
+	$scope.applyCustomizedLink = function(slug){
+		if(!$scope.app.editingPost)
+			$scope.app.editingPost = {};
+		$scope.app.editingPost.slug = slug;
+		$scope.postPermalinkMenuOpen = false;
 	}
 
 	// --- slug
@@ -225,14 +272,18 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		// 	return null;
 
 		state = state ? state : $scope.app.editingPost ? $scope.app.editingPost.state : null;
+
+		if($scope.app.editingPost && $scope.app.editingPost.scheduledDate)
+			return 3;
+
 		if(!state)
 			return 2;
 		if(state == "PUBLISHED"){
 			return 1;
 		}else if(state == "DRAFT"){
 			return 2;
-		}else if(state == "SCHEDULED"){
-			return 3;
+		// }else if(state == "SCHEDULED"){
+		// 	return 3;
 		}else if(state == "TRASH"){
 			return 4;
 		}else{
@@ -243,6 +294,10 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.app.getStateText = function(state){
 		// if(!$scope.app.editingPost)
 		// 	return null;
+
+		if($scope.checkIfScheduled()){
+			return $filter('translate')('settings.post.states.SCHEDULED');
+		}
 
 		state = state ? state : $scope.app.editingPost ? $scope.app.editingPost.state : null;
 		if(!state)
@@ -544,19 +599,28 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	// ------------------- update term tree ---------------
 
-	$scope.selectedStation = null;
-	$scope.$watch('selectedStation', function(newVal){
-		updateTermTree()
+	$scope.stations.forEach(function(station){
+		trix.getTermTree(null, station.categoriesTaxonomyId).success(function(response){
+			station.termTree = response;
+			if($scope.app.editingPost)
+				$scope.app.selectTerms(station.termTree, $scope.app.editingPost.terms)
+		});
 	})
 
-	function updateTermTree(){
-		if($scope.selectedStation)
-			trix.getTermTree(null, $scope.selectedStation.categoriesTaxonomyId).success(function(response){
-				$scope.termTree = response;
-				if($scope.app.editingPost)
-					$scope.app.selectTerms($scope.termTree, $scope.app.editingPost.terms)
-			});
-	}
+	$scope.selectedStation = null;
+	$scope.$watch('selectedStation', function(station){
+		if(station && station.termTree)
+			$scope.app.selectTerms(station.termTree, $scope.app.editingPost.terms)
+	})
+
+	// function updateTermTree(){
+	// 	if($scope.selectedStation)
+	// 		trix.getTermTree(null, $scope.selectedStation.categoriesTaxonomyId).success(function(response){
+	// 			$scope.termTree = response;
+	// 			if($scope.app.editingPost)
+	// 				$scope.app.selectTerms($scope.termTree, $scope.app.editingPost.terms)
+	// 		});
+	// }
 
 	$scope.showVideoDialog = function(){
 		$mdDialog.show({
@@ -651,11 +715,18 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.useVideo = false;
 	$scope.app.videoUrl = null;
 
+	// validVideo
 	$scope.videoSelected = function(videoId, provider){
 		if (videoId) 
 			$scope.validVideoUrl = true;
 		else
 			$scope.validVideoUrl = false;
+
+		if(videoId && provider)
+			$scope.featuredVideo = {
+				identifier: videoId,
+				provider: provider
+			}
 	}
 
 	$scope.insertVideo = function(){
@@ -811,18 +882,75 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	// -------- load post
 	
 	if($state.params.id){
+		$scope.postId = $state.params.id
 			$scope.app.showLoadingProgress();
 	 	trix.getPost($state.params.id, "postProjection").success(function(response){
 			$scope.app.editingPost = response;
 			$scope.loadPostData();
 			$mdDialog.cancel();
+			loadVersions($state.params.id);
 		}).error(function(){
 			$scope.app.showErrorToast("error loading post")
 			$mdDialog.cancel();
 		})
 	}
 
+	var loadVersions = function(postId){
+		trix.getPostVersions(postId).success(function(versions){
+			$scope.revisions = formatVersions(versions)
+		}).error(function(){
+
+		})
+	}
+
 	// -------- /load post
+
+	// -------- autoSave
+	var AUTO_SAVE = null;
+	$scope.$watch('app.editingPost', function(newVal, oldVal) {
+	    if(oldVal && (('title' in oldVal) || ('body' in oldVal))){
+	      // post has been edited
+
+	      var newBody = newVal && newVal.body ? newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+	      var oldBody = oldVal && oldVal.body ? oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+
+	      if(newVal && (newVal.title !== oldVal.title || newBody !== oldBody)){
+	        
+	        autoSaveDraft();
+	      }
+	    }
+	  }, true);
+
+	$scope.$watch('selectedStation', function(newVal, oldVal) {
+		autoSaveDraft();
+	});
+
+	var autoSaveDraft = function(){
+		if($scope.selectedStation && $scope.app.getTermList($scope.selectedStation.termTree)){ // save automatic
+	    	// window.console && console.log($scope..selectedStation, $scope.app.getTermList($scope.selectedStation.termTree))
+	    	if(AUTO_SAVE){
+	    		$timeout.cancel(AUTO_SAVE);
+	    	} 
+	    	if($scope.app.checkState() == 2 && $scope.automaticSave){
+	    		AUTO_SAVE = $timeout(function(){
+	    			if($scope.app.checkState() == 2 && $scope.automaticSave && ($scope.selectedStation && $scope.app.getTermList($scope.selectedStation.termTree)))
+	    				$scope.saveAsDraft(null, true)
+	    		},10000)
+	    	}
+	    }
+	}
+
+	$scope.restoreRevision = function(post){
+		$scope.app.showLoadingProgress();
+		$scope.app.editingPost = post;
+		$scope.loadPostData(true);
+		$timeout(function(){
+			$mdDialog.cancel();
+		},2000)
+	}
+
+
+	// -------- /autoSave
 
 	$scope.getStationFromPost = function(){
 		if($scope.app.editingPost.station){
@@ -835,8 +963,10 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}
 	};
 
-	$scope.loadPostData = function(){
+	$scope.loadPostData = function(lockContent){
 		$scope.getStationFromPost();
+		if($scope.app.editingPost.categories && $scope.app.editingPost.categories.length)
+			$scope.app.editingPost.terms = $scope.app.editingPost.categories;
 		if($scope.app.editingPost.terms)
 			$scope.app.editingPost.terms.forEach(function(term){
 				term.checked = true;
@@ -851,6 +981,10 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.useHeading = $scope.app.editingPost.topper ? true:false
 		$scope.useSubheading = $scope.app.editingPost.subheading ? true:false
 		$scope.tags = angular.copy($scope.app.editingPost.tags);
+		if(!lockContent)
+			$timeout(function(){
+				$scope.app.postObjectChanged = false;
+			}, 1000)
 	}
 
 	// --- mock and test
@@ -872,7 +1006,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	var preparePost = function(originalPost){
 		var post = angular.copy(originalPost)
 		post.id = post.id ? post.id : post.postId;
-		post.terms = $scope.app.getTermList($scope.termTree);
+		post.terms = $scope.app.getTermList($scope.selectedStation.termTree);
 		post.terms = $scope.app.getTermUris(post.terms);
 		post.station = $scope.selectedStation;
 		post.tags = $scope.tags;
@@ -884,13 +1018,35 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		else if(post.author.id || post.author.authorId)
 			post.author = ImageDto.getSelf(post.author);
 
+		// --- image ---
 		if($scope.featuredImage)
 			post.featuredImage = ImageDto.getSelf($scope.featuredImage);
 		else
 			post.featuredImage = null;
 
+		// --- video ---
+		if($scope.featuredVideo)
+			post.featuredVideo = VideoDto.getSelf($scope.featuredVideo);
+		else
+			post.featuredVideo = null;
+
+		// --- audio ---
+		if($scope.featuredAudio)
+			post.featuredAudio = AudioDto.getSelf($scope.featuredAudio);
+		else
+			post.featuredAudio = null;
+
 		if(post.station)
 			post.station = StationDto.getSelf(post.station);
+
+		// if(!$scope.postScheduleUpdateble)
+		// 	post.scheduledDate = $scope.postScheduleDate;
+
+		// if($scope.app.checkState() > 1){
+		// 	$scope.postScheduleUpdateble = true;
+		// 	post.scheduledDate = null;
+		// 	$scope.postScheduleDate = null;
+		// }
 
 		return post;
 		// return {"author":"http://demo.xarx.rocks/api/persons/51","body":"...","bookmarksCount":0,"commentsCount":0,"date":1462880877015,"imageLandscape":false,"lat":-8.04325205,"lng":-34.94544256,"notify":false,"readTime":0,"readsCount":0,"recommendsCount":0,"state":"PUBLISHED","station":"http://demo.xarx.rocks/api/stations/11","subheading":"","title":"Abcd55","topper":""}
@@ -910,6 +1066,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.publishPost = function(){
+		$scope.removeScheduledDate();
 		var post = angular.copy($scope.app.editingPost)
 		post.state = 'PUBLISHED';
 		if(post.id){
@@ -937,7 +1094,20 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.putPost = function(originalPost){
+		originalPost = checkPost(originalPost);
+		if(!originalPost)
+			return
 		var post = preparePost(originalPost);
+
+		if($scope.featuredVideo && !$scope.featuredVideo.id && $scope.featuredVideo.identifier && $scope.featuredVideo.provider){
+			trix.postVideo($scope.featuredVideo).success(function(video){
+				console.log(video)
+				$scope.featuredVideo.id = video.id;
+				$scope.putPost(originalPost)
+			});
+			return;
+		}
+		
 		trix.putPost(post).success(function(response){
 			$scope.app.showSuccessToast($filter('translate')('settings.post.UPDATE_SUCCESS'));
 			$scope.app.editingPost.id = response;
@@ -946,6 +1116,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			$scope.app.postObjectChanged = false;
 			// $state.transitionTo('app.post', {'id': $scope.app.editingPost.id}, {reload: false, inherit: false, notify: false});
 			$mdDialog.cancel();
+			loadVersions($scope.app.editingPost.id);
 		}).error(function(){
 			$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
 			$mdDialog.cancel();
@@ -953,18 +1124,56 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.postPost = function(originalPost){
+		originalPost = checkPost(originalPost);
+		if(!originalPost)
+			return
 		var post = preparePost(originalPost);
+
+		if($scope.featuredVideo && !$scope.featuredVideo.id && $scope.featuredVideo.identifier && $scope.featuredVideo.provider){
+			trix.postVideo($scope.featuredVideo).success(function(video){
+				console.log(video)
+				$scope.featuredVideo.id = video.id;
+				$scope.postPost(originalPost)
+			});
+			return;
+		}
+
 		trix.postPost(post).success(function(response){
-			$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
+
 			$scope.app.editingPost = response;
 			$scope.loadPostData();
 			$scope.app.postObjectChanged = false;
 			$state.transitionTo('app.post', {'id': $scope.app.editingPost.id}, {reload: false, inherit: false, notify: false});
 			$mdDialog.cancel();
+			if($scope.app.checkState() == 2 && $scope.app.editingPost.state)
+				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISHED_AS_DRAFT'));
+			else
+				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
 		}).error(function(){
 			$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
 			$mdDialog.cancel();
 		})
+	}
+
+	var checkPost = function(originalPost){
+		if(!$scope.selectedStation || (!$scope.app.getTermList($scope.selectedStation.termTree) || $scope.app.getTermList($scope.selectedStation.termTree).length == 0)){
+			showInvalidTermsOrStationsDialog();
+			return null;
+		}
+		if(!originalPost.title || !originalPost.body){
+			showInvalidTitleOrBodyDialog();
+			return null;
+		}
+
+		return originalPost;
+	}
+
+	var showInvalidTermsOrStationsDialog = function(){
+		$scope.app.showErrorToast($filter('translate')('settings.post.messages.INVALID_TERMS_OR_STATIONS'))
+	}
+
+	var showInvalidTitleOrBodyDialog = function(){
+		$scope.app.showErrorToast($filter('translate')('settings.post.messages.INVALID_TITLE_OR_BODY'))
 	}
 
 	var test = function(){
@@ -988,6 +1197,33 @@ var settingsPostCtrl = null;
  */
 function createPostStub(){
 	return {"id":6017,"state":"PUBLISHED","date":1452788863000,"scheduledDate":null,"slug":"foi-o-amor-pela-rainha-do-sul-que-tramou-el-chapo-guzman","station":{"updatedAt":1460902482000,"createdAt":null,"name":"O MUNDO","id":11,"stationSlug":"o-mundo","writable":false,"main":true,"visibility":"UNRESTRICTED","allowComments":true,"allowSocialShare":true,"allowWritersToNotify":true,"allowWritersToAddSponsors":false,"backgroundColor":"#ffffff","navbarColor":"#ffffff","primaryColor":"#5C78B0","personsStationRoles":[{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1053,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1045,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1043,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1046,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1050,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1052,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1044,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1047,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1055,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":null,"createdAt":null,"id":76,"editor":false,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1040,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1049,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047906000,"createdAt":1458047906000,"id":1057,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1054,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1048,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1056,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1042,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1041,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":1458047876000,"id":1051,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047906000,"createdAt":1458047906000,"id":1058,"editor":true,"writer":true,"admin":true,"stationId":11},{"updatedAt":1458047876000,"createdAt":null,"id":83,"editor":true,"writer":true,"admin":true,"stationId":11}],"categoriesTaxonomyId":140,"tagsTaxonomyId":183,"postsTitleSize":0,"topper":true,"subheading":true,"sponsored":false,"showAuthorSocialData":true,"showAuthorData":false,"defaultPerspectiveId":209,"primaryColors":{},"secondaryColors":{},"alertColors":{},"backgroundColors":{},"logoHash":"bf7e3ea2dda11869158953320356f1e7"},"lat":null,"lng":null,"originalSlug":null,"topper":"DROGAS","subheading":"Mensagens trocadas entre o perigoso narcotraficante, chefe do cartel Sinaloa, e a actriz mexicana Kate del Castillo, revelam um homem apaixonado.","featuredImage":{"id":5104,"originalHash":"a1eb4d302ad9413be802d5d0bf119028"},"readsCount":18,"commentsCount":0,"readTime":8,"terms":[{"updatedAt":null,"createdAt":1452788468000,"id":1297,"name":"PODER","name_parent":null,"taxonomyId":140,"taxonomyName":"Station: DEMO"}],"body":"<p>Quem vê telenovelas mexicanas sabe que o amor tanto pode ser a salvação como uma perdição. E no caso do mais famoso barão do narcotráfico Joaquin<em>El Chapo</em> Guzmán, um dos homens mais procurados da América do Norte, a paixão pela actriz Kate del Castillo acabou por revelar-se fatídica: foi a sua obsessão por ela, que o levou a organizar um encontro clandestino em plena selva para que pudessem conhecer-se melhor, que conduziu a polícia até ao seu esconderijo.\n</p><p>A vistosa actriz de 43 anos, uma das mais famosas estrelas de cinema e televisão do México , chamou a atenção do chefe do cartel de Sinaloa por causa de uma polémica mensagem que publicou no Twitter, no início de 2012, quando a guerra do Exército mexicano ao narcotráfico estava ao rubro. Era uma declaração política, mas que <em>El Chapo</em> terá interpretado como uma manifestação de afecto: dizia Kate que confiava mais nele do que no Governo, e como “seria maravilhoso se começasse a traficar com amor”.\n</p><p>Perante o impacto político das suas palavras, Castillo publicou uma série de justificações, incluindo que não estava a falar a sério, ou que a sua ironia e sarcasmo estavam a ser mal entendidas. Mas tomadas no seu todo, as suas declarações no Twitter constituem uma espécie de declaração – que se os perfis psicológicos de Joaquin Guzmán forem minimamente fidedignos, terá sido música para os ouvidos deste homem “sedutor, esplêndido e protector”, que apesar de ignorante e pouco interessado é “astuto e inteligente”, além de “compulsivo e tenaz”, que nunca desiste até conseguir o que quer.\n</p><p>As biografias de Kate também salientam a sua inteligência, a par da sua beleza e capacidade de trabalho. Filha de Éric del Castillo, uma das lendas da chamada época de ouro do cinema mexicano e estrela de telenovelas, Kate entrou para o negócio de família logo aos oito anos de idade. Nunca mais parou desde então, representando no teatro, cinema e também séries televisivas de enorme popularidade e audiência, tanto no México como nos Estados Unidos. Por várias vezes, interpretou o papel de mulheres ambiciosas, poderosas e temidas: na novela <em>A Rainha do Sul</em>, baseada no livro de Arturo Pérez-Reverte; na série <em>Erva</em> e na produção internacional <em>Donos do Paraíso</em> – todas estas protagonistas eram narcotraficantes.\n</p><p><em>El Chapo</em> estava detido na prisão de alta segurança de Altiplano quando iniciou contacto com a actriz. À sua mensagem inicial no Twitter respondeu com flores; depois iniciaram uma correspondência, ora manuscrita, ora por mensagens em código utilizando o telefone móvel do seu advogado, Andrés Granado, que se tornou mediador do diálogo entre os dois. Em Agosto de 2014 surgiu a hipótese de trabalharem juntos na produção de um <em>biopic</em>, alegadamente porque Guzmán lhe confessou o seu desejo de ver a sua história passada ao cinema.\n</p><p>A comunicação intensificou-se após a espectacular fuga da cadeia de El Chapo, em Julho de 2015, sempre usando o mesmo método, até que decidiu prescindir do intermediário: segundo revelam transcrições das mensagens, divulgadas pelo jornal <em>Milénio</em>, o narcotraficante fez chegar a Kate del Castillo o último modelo de telefone lançado pela Blackberry, para poderem falar directamente.\n</p><p>A conversa entre os dois nas mensagens entretanto publicadas é idêntica à de muitos casais apaixonados, sem referência a filmes ou negócios. No último capítulo do seu namoro electrónico, <em>El Chapo</em> já não esconde os seus sentimentos: convida-a para um encontro nas montanhas onde está escondido, e empenha-se para que tudo esteja a gosto da actriz – a proposta é para que passem três dias juntos. “Se trouxeres vinho, também bebo”, promete, informando-a que habitualmente não bebe, mas quando o faz prefere tequila e whisky.\n</p><p>A resposta de Kate é calorosa. Pode ser que nessa altura, como escreve o jornal <em>El País</em>, já tivesse cruzado definitivamente a linha que separa realidade e ficção, transmutando-se na sua personagem da <em>Rainha do Sul</em>, Teresa Mendoza, uma jovem inocente de Sinaloa que depois do assassinato do noivo se torna na líder implacável de um cartel da droga. “Fico muito comovida quando me dizes que vais cuidar de mim, nunca ninguém o fez por isso obrigada”, diz. “Não fazes ideia de como estou entusiasmada. E ansiosa por olhar-te nos olhos, em pessoa”, acrescenta.\n</p>","updatedAt":null,"notify":false,"author":{"updatedAt":1460825593000,"createdAt":1421497862000,"id":51,"name":"Demo","username":"demo","bookmarkPosts":[6316,5858,5936,4248,6912,6911],"recommendPosts":[3202,3938,3940,6181,3783,6123,6124,238,239,6191,5936,4248,6040,124,3804],"networkAdmin":true,"bio":"Biografia do Demo","email":"contato@xarx.co","lastLogin":null,"twitterHandle":null,"coverHash":"8799c1b71d31137ea4151ab4123d301a","imageHash":"f00aa53ab94a22d35a56b888a1d6357f","imageMediumHash":"5e3ec2674b6a072369ebc74857497744","coverLargeHash":"f820d321b93ea4f81716999c2a5d843a","imageSmallHash":"798fc4eac7b7a230ad1e688f55d293a4","coverMediumHash":"417dabed0fd2f342beb99f2d06527411","imageLargeHash":null},"title":"Foi o amor pela Rainha do Sul que tramou El Chapo Guzmán","imageMediumHash":"44c8067b27a4a6a8d12ffdef6b34f5d8","bookmarksCount":0,"featuredAudioHash":null,"recommendsCount":0,"imageCaptionText":"Vários DVD's da A Rainha do Sul foram encontrados no esconderijo de Guzmán DR","imageSmallHash":"44c8067b27a4a6a8d12ffdef6b34f5d8","imageCreditsText":null,"featuredVideoHash":null,"externalFeaturedImgUrl":null,"externalVideoUrl":null,"imageLargeHash":"a1eb4d302ad9413be802d5d0bf119028","imageTitleText":null,"tags":["sinaloa","el chapo","kate del castillo"],"imageLandscape":true,"_links":{"self":{"href":"http://demo.xarxlocal.com/data/posts/6017{?projection}","templated":true},"terms":{"href":"http://demo.xarxlocal.com/data/posts/6017/terms","templated":false},"featuredImage":{"href":"http://demo.xarxlocal.com/data/posts/6017/featuredImage","templated":false},"featuredAudio":{"href":"http://demo.xarxlocal.com/data/posts/6017/featuredAudio","templated":false},"station":{"href":"http://demo.xarxlocal.com/data/posts/6017/station","templated":false},"featuredVideo":{"href":"http://demo.xarxlocal.com/data/posts/6017/featuredVideo","templated":false},"author":{"href":"http://demo.xarxlocal.com/data/posts/6017/author","templated":false},"comments":{"href":"http://demo.xarxlocal.com/data/posts/6017/comments","templated":false}},"_embedded":{"author":{"name":"Demo","id":51,"username":"demo","email":"contato@xarx.co","imageMediumHash":"5e3ec2674b6a072369ebc74857497744","coverLargeHash":"f820d321b93ea4f81716999c2a5d843a","imageSmallHash":"798fc4eac7b7a230ad1e688f55d293a4","coverMediumHash":"417dabed0fd2f342beb99f2d06527411","_links":{"self":{"href":"http://demo.xarxlocal.com/data/persons/51{?projection}","templated":true}}}}}
+}
+
+function formatVersions(versions){
+	var ret =[];
+	if(versions){
+		for (var k in versions) {
+	        if (versions.hasOwnProperty(k)) {
+	           ret.push({
+	           		'date': parseInt(k),
+	           		'payload': versions[k]
+	           })
+	        }
+	    }
+	}
+
+	return setIndexes(ret);
+}
+
+function setIndexes(versions){
+	if(versions && versions.length){
+		var index = versions.length
+		versions.forEach(function(v){
+			v.index = index
+			index --;
+		})
+	}
+	return versions
 }
 
 function createVersions(){

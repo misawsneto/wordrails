@@ -1,7 +1,6 @@
 package co.xarx.trix.web.rest.api.v1;
 
 import co.xarx.trix.api.*;
-import co.xarx.trix.api.v2.PostData;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.security.access.method.P;
@@ -11,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import javax.servlet.ServletException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
 
@@ -113,22 +111,6 @@ public interface PostApi {
 											@QueryParam("size") Integer size);
 
 	@GET
-	@Path("/{stationId}/postRead")
-	ContentResponse<List<PostView>> getPostRead(@PathParam("stationId") Integer stationId,
-												@QueryParam("page") Integer page,
-												@QueryParam("size") Integer size) throws BadRequestException;
-
-	@GET
-	@Path("/{stationId}/allPostRead")
-	ContentResponse<List<PostView>> getAllPostRead(@PathParam("stationId") Integer stationId);
-
-	@GET
-	@Path("/{stationId}/popular")
-	ContentResponse<List<PostView>> getPopular(@PathParam("stationId") Integer stationId,
-											   @QueryParam("page") Integer page,
-											   @QueryParam("size") Integer size);
-
-	@GET
 	@Path("/{stationId}/recent")
 	ContentResponse<List<PostView>> getRecent(@PathParam("stationId") Integer stationId,
 											  @QueryParam("page") Integer page,
@@ -155,5 +137,5 @@ public interface PostApi {
 	@PUT
 	@Consumes("text/uri-list")
 	@Path("/{id}/terms")
-	public void putPostTerms(@QueryParam("id") Integer id) throws IOException;
+	void putPostTerms(@QueryParam("id") Integer id) throws IOException;
 }

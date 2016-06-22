@@ -1,11 +1,14 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.aspect.annotations.AccessGroup;
+import co.xarx.trix.annotation.AccessGroup;
+import co.xarx.trix.annotation.IntegrationTestBean;
+import co.xarx.trix.config.multitenancy.TenantProvider;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+@IntegrationTestBean
 @Service
 public class AccessService {
 
@@ -21,7 +24,7 @@ public class AccessService {
 	public boolean hasPermissionOnAccessGroup(AccessGroup accessGroup) throws Throwable {
 		boolean isGrant = accessGroup.inclusion();
 
-		boolean hasPermissionOnTenant = hasPermissionOnProfile(isGrant, accessGroup.tenants());
+		boolean hasPermissionOnTenant = hasPermissionOnTenant(isGrant, accessGroup.tenants());
 		boolean hasPermissionOnProfile = hasPermissionOnProfile(isGrant, accessGroup.profiles());
 
 		return hasPermissionOnProfile || hasPermissionOnTenant;

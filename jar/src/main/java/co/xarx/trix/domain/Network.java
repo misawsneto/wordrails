@@ -15,7 +15,6 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 
 @Getter
@@ -50,11 +49,11 @@ public class Network extends BaseEntity implements Serializable {
 //	@OneToMany(mappedBy="network", cascade=CascadeType.REMOVE)
 //	public Set<Station> stations;
 
-	@ManyToMany
-	public Set<Taxonomy> taxonomies;
-
-	@OneToMany(mappedBy="owningNetwork")
-	public Set<Taxonomy> ownedTaxonomies;
+//	@ManyToMany
+//	public Set<Taxonomy> taxonomies;
+//
+//	@OneToMany(mappedBy="owningNetwork")
+//	public Set<Taxonomy> ownedTaxonomies;
 
 	public boolean allowSignup;
 
@@ -67,22 +66,11 @@ public class Network extends BaseEntity implements Serializable {
 	@OneToOne(fetch = FetchType.EAGER)
 	public ContainerSection footer;
 
-	@OneToOne
+	@OneToOne(mappedBy = "network")
 	@SdkExclude
 	public AuthCredential authCredential;
 
 	public boolean allowSocialLogin;
-
-	@Deprecated
-	public String facebookAppID;
-	@Deprecated
-	@JsonIgnore
-	public String facebookAppSecret;
-	@Deprecated
-	public String googleAppID;
-	@Deprecated
-	@JsonIgnore
-	public String googleAppSecret;
 
 	public String facebookLink;
 	public String youtubeLink;
@@ -123,6 +111,9 @@ public class Network extends BaseEntity implements Serializable {
 	public Double newsFontSize = 1.0;
 
 	public boolean configured;
+
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean emailSignUpValidationEnabled;
 
 	@OneToOne
 	public Image favicon;
@@ -173,6 +164,9 @@ public class Network extends BaseEntity implements Serializable {
 
 	@Lob
 	public String invitationMessage;
+
+	@Lob
+	public String validationMessage;
 
 	@Override
 	public String toString() {
@@ -238,15 +232,25 @@ public class Network extends BaseEntity implements Serializable {
 	}
 
 	@SdkInclude
+	public String getFacebookAppID() {
+		if (authCredential != null) return authCredential.getFacebookAppID();
+		return null;
+	}
+
+	@SdkInclude
+	public String getGoogleAppID() {
+		if (authCredential != null) return authCredential.getGoogleAppID();
+		return null;
+	}
+
+	@SdkInclude
 	public boolean isFacebookLoginAllowed() {
-		return this.facebookAppID != null && !this.facebookAppID.isEmpty() &&
-						this.facebookAppSecret != null && !this.facebookAppSecret.isEmpty();
+		return allowSocialLogin && authCredential != null && authCredential.isFacebookLoginAllowed();
 	}
 
 	@SdkInclude
 	public boolean isGoogleLoginAllowed() {
-		return this.googleAppID != null && !this.googleAppID.isEmpty() &&
-						this.googleAppSecret != null && !this.googleAppSecret.isEmpty();
+		return allowSocialLogin && authCredential != null && authCredential.isGoogleLoginAllowed();
 	}
 
 	@SdkInclude

@@ -1,12 +1,17 @@
 package co.xarx.trix.services.security;
 
 import co.xarx.trix.api.StationPermission;
+import co.xarx.trix.api.StationRolesUpdate;
 import co.xarx.trix.api.v2.PermissionData;
+import co.xarx.trix.api.v2.PersonData;
 import co.xarx.trix.api.v2.StationPermissionData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.config.security.Permissions;
+import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Station;
+import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.StationRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.acls.domain.CumulativePermission;
@@ -31,14 +36,27 @@ public class StationPermissionService {
 	private AccessControlListService aclService;
 	private StationRepository stationRepository;
 	private PermissionEvaluator permissionEvaluator;
+	private PersonRepository personRepository;
+	private ModelMapper mapper;
 
 	@Autowired
 	public StationPermissionService(AccessControlListService aclService,
 									StationRepository stationRepository,
-									PermissionEvaluator permissionEvaluator) {
+									PermissionEvaluator permissionEvaluator,
+									PersonRepository personRepository,
+									ModelMapper mapper) {
 		this.aclService = aclService;
 		this.stationRepository = stationRepository;
 		this.permissionEvaluator = permissionEvaluator;
+		this.personRepository = personRepository;
+		this.mapper = mapper;
+	}
+
+	public void updateStationsPermissions(StationRolesUpdate dto, String loggedUsername){
+		dto.usernames.remove(loggedUsername);
+
+		List<Sid> sids = dto.usernames.stream().map(PrincipalSid::new).collect(Collectors.toList());
+		updateStationsPermissions(sids, dto.stationsIds, dto.writer, dto.editor, dto.admin);
 	}
 
 	public List<Integer> findStationsWithReadPermission() {
@@ -57,37 +75,35 @@ public class StationPermissionService {
 				.collect(Collectors.toList());
 	}
 
-	public void updateStationsPermissions(List<Sid> sids, List<Integer> stationIds, boolean publisher, boolean
+	public void updateStationsPermissions(List<Sid> sids, List<Integer> stationIds, boolean writer, boolean
 			editor, boolean admin) {
 		Assert.notEmpty(sids, "Sids must have elements");
 		Assert.notEmpty(stationIds, "Station ids must have elements");
 
 
-		CumulativePermission permission = new CumulativePermission();
-		permission.set(Permissions.READ);
+		CumulativePermission permission = Permissions.getReader();
 
 		if (editor) {
-			permission.set(MODERATION);
-			permission.set(Permissions.CREATE);
-			permission.set(Permissions.WRITE);
-			permission.set(Permissions.DELETE);
+			permission = Permissions.getEditor();
 		}
-		if (publisher) {
-			permission.set(Permissions.CREATE);
+		if (writer) {
+			permission = Permissions.getWriter();
 		}
 		if (admin) {
-			permission.set(Permissions.ADMINISTRATION);
+			permission = Permissions.getAdmin();
 		}
 
 		Map<ObjectIdentity, MutableAcl> acls = aclService.findAcls(stationIds);
 		for (MutableAcl acl : acls.values()) {
 			List<AccessControlEntry> entries = acl.getEntries();
 			for (Sid sid : sids) {
-				AccessControlEntry ace = aclService.findAce(entries, sid);
-				if(ace == null) {
+				List<AccessControlEntry> aces = aclService.findAce(entries, sid);
+				if(aces == null) {
 					acl.insertAce(acl.getEntries().size(), permission, sid, true);
 				} else {
-					acl.updateAce(entries.indexOf(ace), permission);
+					for (AccessControlEntry ace : aces) {
+						acl.updateAce(entries.indexOf(ace), permission);
+					}
 				}
 
 				aclService.updateAcl(acl);
@@ -110,7 +126,7 @@ public class StationPermissionService {
 			Permission p = ace.getPermission();
 			PermissionData permissionData = aclService.getPermissionData(p);
 
-			StationPermissionData.Permission entry = result.new Permission(username, permissionData);
+			StationPermissionData.Permission entry = result.new Permission(username, permissionData, null);
 
 			result.getUserPermissions().add(entry);
 		}
@@ -161,5 +177,20 @@ public class StationPermissionService {
 		}
 
 		return stationPermissionDtos;
+	}
+
+	public void getPersons(StationPermissionData data) {
+		List<StationPermissionData.Permission> permissions = data.getUserPermissions();
+		if(permissions != null && permissions.size() > 0){
+			List<String> usernames = permissions.stream().map(StationPermissionData.Permission::getUsername).collect(Collectors.toList());
+			List<Person> persons = personRepository.findByUsernameIn(usernames);
+			for (StationPermissionData.Permission p : permissions) {
+				for (Person person: persons) {
+					if(p.getUsername().equals(person.username)){
+						p.setPerson(mapper.map(person, PersonData.class));
+					}
+				}
+			}
+		}
 	}
 }
