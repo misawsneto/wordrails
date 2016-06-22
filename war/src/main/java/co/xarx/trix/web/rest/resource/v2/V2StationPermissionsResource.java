@@ -15,12 +15,13 @@ import java.io.IOException;
 @NoArgsConstructor
 public class V2StationPermissionsResource implements V2StationPermissionsApi {
 
+	@Autowired
 	private StationPermissionService stationPermissionService;
 
-	@Autowired
-	public V2StationPermissionsResource(StationPermissionService stationPermissionService) {
-		this.stationPermissionService = stationPermissionService;
-	}
+//	@Autowired
+//	public V2StationPermissionsResource(StationPermissionService stationPermissionService) {
+//		this.stationPermissionService = stationPermissionService;
+//	}
 
 	@Override
 	public Response getPermissions(@P("sid") Integer stationId) throws IOException {

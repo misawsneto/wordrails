@@ -29,19 +29,14 @@ import static co.xarx.trix.domain.page.QPage.page;
 @NoArgsConstructor
 public class V2PagesResource extends AbstractResource implements V2PagesApi {
 
-	private PageRepository pageRepository;
-	private StationRepository stationRepository;
-	private SectionPopulatorService queryableSectionService;
-	private ModelMapper mapper;
-
 	@Autowired
-	public V2PagesResource(PageRepository pageRepository, StationRepository stationRepository,
-						   SectionPopulatorService queryableSectionService, ModelMapper mapper) {
-		this.pageRepository = pageRepository;
-		this.stationRepository = stationRepository;
-		this.queryableSectionService = queryableSectionService;
-		this.mapper = mapper;
-	}
+	private PageRepository pageRepository;
+	@Autowired
+	private StationRepository stationRepository;
+	@Autowired
+	private SectionPopulatorService queryableSectionService;
+	@Autowired
+	private ModelMapper mapper;
 
 	@AllArgsConstructor
 	class IdReturn {

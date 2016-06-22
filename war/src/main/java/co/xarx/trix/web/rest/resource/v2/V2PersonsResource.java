@@ -23,14 +23,10 @@ import java.util.Set;
 @Component
 public class V2PersonsResource extends AbstractResource implements V2PersonsApi {
 
-	private PersonSearchService personSearchService;
-	private PersonPermissionService personPermissionService;
-
 	@Autowired
-	public V2PersonsResource(PersonSearchService personSearchService, PersonPermissionService personPermissionService) {
-		this.personSearchService = personSearchService;
-		this.personPermissionService = personPermissionService;
-	}
+	private PersonSearchService personSearchService;
+	@Autowired
+	private PersonPermissionService personPermissionService;
 
 	@Override
 	public Response searchPersons(String query,

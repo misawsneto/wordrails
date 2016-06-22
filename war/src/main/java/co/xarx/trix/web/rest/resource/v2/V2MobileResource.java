@@ -20,12 +20,8 @@ import java.sql.SQLException;
 @Component
 public class V2MobileResource extends AbstractResource implements V2MobileApi {
 
-	private MobileService mobileService;
-
 	@Autowired
-	public V2MobileResource(MobileService mobileService) {
-		this.mobileService = mobileService;
-	}
+	private MobileService mobileService;
 
 	@Override
 	public Response updateAppleCertificate() throws ServletException, IOException {

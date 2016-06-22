@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.eclipse.persistence.jpa.jpql.Assert;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.Fuzziness;
@@ -35,6 +34,7 @@ import org.springframework.data.elasticsearch.core.ResultsExtractor;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -66,8 +66,8 @@ public class ESPostService extends AbstractElasticSearchService {
 
 
 	Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
-		Assert.isNotNull(boolQuery, "boolQuery must not be null");
-		Assert.isNotNull(pageable, "pageable must not be null");
+		Assert.notNull(boolQuery, "boolQuery must not be null");
+		Assert.notNull(pageable, "pageable must not be null");
 
 		BoolFilterBuilder f = boolFilter();
 

@@ -8,6 +8,7 @@ import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,22 @@ public class NetworkService {
 	public NetworkService(NetworkRepository networkRepository, EmailService emailService) {
 		this.networkRepository = networkRepository;
 		this.emailService = emailService;
+		tenantIds = Maps.newConcurrentMap();
+		domains = Maps.newConcurrentMap();
+
+		List<Object[]> networks = networkRepository.findIdsAndDomain();
+		for (Object[] n : networks) {
+			Integer id = (Integer) n[0];
+			String domain = (String) n[1];
+			String tenantId = (String) n[2];
+			tenantIds.put(tenantId, id);
+			if (domain != null)
+				domains.put(domain, id);
+		}
+	}
+
+	@PostConstruct
+	public void init() {
 		tenantIds = Maps.newConcurrentMap();
 		domains = Maps.newConcurrentMap();
 

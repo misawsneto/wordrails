@@ -11,12 +11,13 @@ import java.io.IOException;
 @Component
 public class V2StationsResource implements V2StationsApi {
 
+	@Autowired
 	private StationService stationService;
 
-	@Autowired
-	public V2StationsResource(StationService stationService) {
-		this.stationService = stationService;
-	}
+//	@Autowired
+//	public V2StationsResource(StationService stationService) {
+//		this.stationService = stationService;
+//	}
 
 	@Override
 	public Response getStations() throws IOException {

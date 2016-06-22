@@ -8,9 +8,9 @@ import co.xarx.trix.persistence.AppleCertificateRepository;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsNotification;
 import com.notnoop.apns.ApnsService;
-import org.eclipse.persistence.jpa.jpql.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,7 +68,7 @@ public class APNSClient implements NotificationServerClient {
 	private void initService() throws IOException {
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		AppleCertificate certificate = appleCertificateRepository.findByTenantId(tenantId);
-		Assert.isNotNull(certificate, "Apple certificate not found");
+		Assert.notNull(certificate, "Apple certificate not found");
 
 		InputStream is;
 		String password;
@@ -80,8 +80,8 @@ public class APNSClient implements NotificationServerClient {
 			throw new IOException(e);
 		}
 
-		Assert.isNotNull(password, "Password must not be null");
-		Assert.isNotNull(is, "Certificate must not be null");
+		Assert.notNull(password, "Password must not be null");
+		Assert.notNull(is, "Certificate must not be null");
 
 		service = APNS
 				.newService()

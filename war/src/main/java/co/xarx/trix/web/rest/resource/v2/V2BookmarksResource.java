@@ -14,6 +14,7 @@ import java.util.List;
 @Component
 @NoArgsConstructor
 public class V2BookmarksResource implements V2BookmarksApi {
+
 	@Autowired
 	private PostService postService;
 

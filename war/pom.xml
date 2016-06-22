@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -11,65 +11,21 @@
 		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 
+	<properties>
+		<spring-boot.version>1.3.5.RELEASE</spring-boot.version>
+	</properties>
+
 	<artifactId>trix-war</artifactId>
 
 	<packaging>war</packaging>
 
 	<build>
 		<plugins>
-			<!--<plugin>-->
-				<!--<groupId>org.jooq</groupId>-->
-				<!--<artifactId>jooq-codegen-maven</artifactId>-->
-				<!--<version>3.8.0</version>-->
 
-				<!--&lt;!&ndash; The plugin should hook into the generate goal &ndash;&gt;-->
-				<!--<executions>-->
-					<!--<execution>-->
-						<!--<phase>generate-sources</phase>-->
-						<!--<goals>-->
-							<!--<goal>generate</goal>-->
-						<!--</goals>-->
-					<!--</execution>-->
-				<!--</executions>-->
-
-				<!--<dependencies>-->
-					<!--<dependency>-->
-						<!--<groupId>mysql</groupId>-->
-						<!--<artifactId>mysql-connector-java</artifactId>-->
-						<!--<version>5.1.31</version>-->
-					<!--</dependency>-->
-				<!--</dependencies>-->
-
-				<!--&lt;!&ndash; Specify the plugin configuration.-->
-					 <!--The configuration format is the same as for the standalone code generator &ndash;&gt;-->
-				<!--<configuration>-->
-
-					<!--&lt;!&ndash; JDBC connection parameters &ndash;&gt;-->
-					<!--<jdbc>-->
-						<!--<driver>com.mysql.jdbc.Driver</driver>-->
-						<!--<url>jdbc:mysql://localhost:3306/trix_dev</url>-->
-						<!--<user>wordrails</user>-->
-						<!--<password>wordrails</password>-->
-					<!--</jdbc>-->
-
-					<!--&lt;!&ndash; Generator parameters &ndash;&gt;-->
-					<!--<generator>-->
-						<!--<database>-->
-							<!--<name>org.jooq.util.mysql.MySQLDatabase</name>-->
-							<!--<includes>.*</includes>-->
-
-							<!--<excludes>-->
-								<!--schema_version | qrtz_.* | jv_.* | acl_.*-->
-							<!--</excludes>-->
-							<!--<inputSchema>trix_dev</inputSchema>-->
-						<!--</database>-->
-						<!--<target>-->
-							<!--<packageName>co.xarx.trix.jooq</packageName>-->
-							<!--<directory>target/generated-sources</directory>-->
-						<!--</target>-->
-					<!--</generator>-->
-				<!--</configuration>-->
-			<!--</plugin>-->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -183,7 +139,85 @@
 		</pluginManagement>
 	</build>
 
+	<repositories>
+		<repository>
+			<id>spring-snapshots</id>
+			<url>http://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<url>http://repo.spring.io/milestone</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-snapshots</id>
+			<url>http://repo.spring.io/snapshot</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<url>http://repo.spring.io/milestone</url>
+		</pluginRepository>
+	</pluginRepositories>
+
 	<dependencies>
+		<dependency>
+			<!-- Import dependency management from Spring Boot -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-dependencies</artifactId>
+			<version>${spring-boot.version}</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
+			<version>${spring-boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<version>${spring-boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+			<version>${spring-boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<version>${spring-boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+			<version>${spring-boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+			<version>${spring-boot.version}</version>
+		</dependency>
+
+		<!--<dependency>-->
+			<!--<groupId>com.paypal.springboot</groupId>-->
+			<!--<artifactId>resteasy-spring-boot-starter</artifactId>-->
+			<!--<version>2.0.1-RELEASE</version>-->
+			<!--<scope>runtime</scope>-->
+		<!--</dependency>-->
+
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -210,11 +244,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.jolbox</groupId>
-			<artifactId>bonecp-spring</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
 		</dependency>
@@ -232,6 +261,11 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
 		</dependency>
 
 		<dependency>
@@ -279,21 +313,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
-
-		<!--&lt;!&ndash;<dependency>-->
-			<!--<groupId>org.springframework.integration</groupId>-->
-			<!--<artifactId>spring-integration-core</artifactId>-->
-		<!--</dependency>-->
-
-		<!--<dependency>-->
-			<!--<groupId>org.springframework.integration</groupId>-->
-			<!--<artifactId>spring-integration-jdbc</artifactId>-->
-		<!--</dependency>&ndash;&gt;-->
-
-		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
 		</dependency>
@@ -312,31 +331,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-core</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-logging-log4j</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-jasper</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz-jobs</artifactId>
 		</dependency>
 
 		<dependency>
@@ -420,7 +414,7 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-elasticsearch</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
@@ -561,28 +555,10 @@
 			<artifactId>appstoresstats-ios</artifactId>
 		</dependency>
 
-		<!--<dependency>-->
-			<!--<groupId>org.jooq</groupId>-->
-			<!--<artifactId>jooq</artifactId>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.jooq</groupId>-->
-			<!--<artifactId>jooq-meta</artifactId>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.jooq</groupId>-->
-			<!--<artifactId>jooq-codegen</artifactId>-->
-		<!--</dependency>-->
-
 		<dependency>
 			<groupId>commons-validator</groupId>
 			<artifactId>commons-validator</artifactId>
 		</dependency>
-
-		<!--<dependency>-->
-			<!--<groupId>com.typesafe.akka</groupId>-->
-			<!--<artifactId>akka-actor_2.11</artifactId>-->
-		<!--</dependency>-->
 
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -592,6 +568,35 @@
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.android.gcm</groupId>
+			<artifactId>gcm-server</artifactId>
+		</dependency><dependency>
+		<groupId>com.mysema.commons</groupId>
+		<artifactId>mysema-commons-lang</artifactId>
+		<version>0.2.4</version>
+	</dependency>
+		<dependency>
+			<groupId>com.github.slugify</groupId>
+			<artifactId>slugify</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-data</artifactId>
 		</dependency>
 
 	</dependencies>

@@ -14,12 +14,13 @@ import java.util.List;
 @Component
 @NoArgsConstructor
 public class V2RecommendsResource implements V2RecommendApi {
-	private PostService postService;
 
 	@Autowired
-	public V2RecommendsResource(PostService postService) {
-		this.postService = postService;
-	}
+	private PostService postService;
+
+//	public V2RecommendsResource(PostService postService) {
+//		this.postService = postService;
+//	}
 
 	@Override
 	public ContentResponse<List<PostView>> searchRecommends(String q, Integer page, Integer size) {

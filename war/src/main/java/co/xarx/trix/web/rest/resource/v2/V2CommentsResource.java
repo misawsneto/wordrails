@@ -22,14 +22,10 @@ import java.util.Set;
 @Component
 public class V2CommentsResource extends AbstractResource implements V2CommentsApi {
 
-	private CommentSearchService commentSearchService;
-	private CommentService commentService;
-
 	@Autowired
-	public V2CommentsResource(CommentSearchService commentSearchService, CommentService commentService) {
-		this.commentSearchService = commentSearchService;
-		this.commentService = commentService;
-	}
+	private CommentSearchService commentSearchService;
+	@Autowired
+	private CommentService commentService;
 
 	@Override
 	public Response searchComments(String query,

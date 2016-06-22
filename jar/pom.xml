@@ -120,20 +120,10 @@
 			<artifactId>spring-security-data</artifactId>
 		</dependency>
 
-		<!--<dependency>-->
-			<!--<groupId>org.hibernate</groupId>-->
-			<!--<artifactId>hibernate-search</artifactId>-->
-		<!--</dependency>-->
-
 		<dependency>
 			<groupId>org.apache.tika</groupId>
 			<artifactId>tika-core</artifactId>
 		</dependency>
-
-		<!--<dependency>-->
-			<!--<groupId>org.hibernate</groupId>-->
-			<!--<artifactId>hibernate-search-infinispan</artifactId>-->
-		<!--</dependency>-->
 
 		<dependency>
 			<groupId>org.jsoup</groupId>
@@ -168,16 +158,6 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz-jobs</artifactId>
 		</dependency>
 
 		<dependency>

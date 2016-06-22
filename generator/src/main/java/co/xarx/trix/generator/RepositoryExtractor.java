@@ -5,7 +5,8 @@ import co.xarx.trix.generator.scope.FieldDescription;
 import co.xarx.trix.generator.scope.QueryDescription;
 import co.xarx.trix.persistence.DatabaseRepository;
 import com.google.common.collect.Lists;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -21,7 +22,7 @@ import java.util.*;
 
 public class RepositoryExtractor {
 
-	Logger log = Logger.getLogger(this.getClass().getName());
+	Logger log = LoggerFactory.getLogger(getClass().getName());
 
 	private static final String JAVA_LANG = "java.lang.";
 

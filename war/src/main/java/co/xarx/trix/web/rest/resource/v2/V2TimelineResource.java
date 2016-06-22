@@ -11,12 +11,14 @@ import java.util.Map;
 
 @Component
 public class V2TimelineResource implements V2TimelineApi {
-	private PersonService personService;
 
 	@Autowired
-	public V2TimelineResource(PersonService personService){
-		this.personService = personService;
-	}
+	private PersonService personService;
+
+//	@Autowired
+//	public V2TimelineResource(PersonService personService){
+//		this.personService = personService;
+//	}
 
 	@Override
 	public Response getPersonTimeline(String username) {

@@ -13,12 +13,13 @@ import com.google.android.gcm.server.Sender;
 import org.modelmapper.ModelMapper;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -28,13 +29,13 @@ import java.util.concurrent.Executor;
 
 @Configuration
 @EnableAsync
+@EnableAutoConfiguration
 @PropertySource(name = "props",
 		value = {
 				"classpath:application-${spring.profiles.active:dev}.properties"
 		}
 )
 @ComponentScan(basePackages = {"co.xarx.trix", "org.javers.spring.jpa"})
-@EnableHypermediaSupport(type = {EnableHypermediaSupport.HypermediaType.HAL})
 public class ApplicationConfig implements AsyncConfigurer{
 
 	@Value("${trix.amazon.key}")
@@ -47,6 +48,10 @@ public class ApplicationConfig implements AsyncConfigurer{
 	private String bucketName;
 	@Value("${trix.gcm.key}")
 	private String gcmKey;
+
+	public static void main(String[] args) throws Exception {
+		SpringApplication.run(ApplicationConfig.class, args);
+	}
 
 	@Bean
 	public ObjectMapper simpleMapper() {

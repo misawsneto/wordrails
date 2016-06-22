@@ -27,19 +27,22 @@ import java.util.List;
 @NoArgsConstructor
 public class V2SectionsResource extends AbstractResource implements V2SectionsApi {
 
+	@Autowired
 	private PageService pageService;
+	@Autowired
 	private SectionService sectionService;
+	@Autowired
 	private SectionRepository sectionRepository;
+	@Autowired
 	private ModelMapper mapper;
 
-	@Autowired
-	public V2SectionsResource(PageService pageService, SectionService sectionService,
-							  SectionRepository sectionRepository, ModelMapper mapper) {
-		this.pageService = pageService;
-		this.sectionService = sectionService;
-		this.sectionRepository = sectionRepository;
-		this.mapper = mapper;
-	}
+//	public V2SectionsResource(PageService pageService, SectionService sectionService,
+//							  SectionRepository sectionRepository, ModelMapper mapper) {
+//		this.pageService = pageService;
+//		this.sectionService = sectionService;
+//		this.sectionRepository = sectionRepository;
+//		this.mapper = mapper;
+//	}
 
 	@Override
 	public Response getSections(Integer stationId, Integer pageId, Integer size, Integer page) throws IOException {
