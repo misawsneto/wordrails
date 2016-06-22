@@ -246,6 +246,13 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       reloadCarousel();
     }
 
+    $scope.applyCategories = function(){
+      $mdDialog.cancel();
+      $scope.perspectiveChanged = true;
+      // $scope.currentPerspective.termPerspectiveView.featuredRow = $scope.editingFeaturedRow;
+      // reloadCarousel(); 
+    }
+
     var reloadCarousel = function(){
       $scope.reloadingCarousel = true;
       $timeout(function(){
@@ -286,6 +293,17 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       var perspective = angular.copy($scope.currentPerspective.termPerspectiveView);
 
       if(perspective.featuredRow && perspective.featuredRow.cells){
+
+        if(!perspective.featuredRow.termPerspectiveId){
+          perspective.featuredRow = {
+            termId: null,
+            termName: null,
+            termPerspectiveId: $scope.currentPerspective.termPerspectiveView.id,
+            type: 'F',
+            cells: perspective.featuredRow.cells
+          }
+        }
+
         row = perspective.featuredRow
         for (var i = 0; i < row.cells.length; i++) {
           row.cells[i].postView.postId = row.cells[i].postView.id;

@@ -176,7 +176,13 @@ public class PerspectiveService {
 			}
 			newRow.cells = difference.cellsToSave;
 			Collections.sort(newRow.cells);
-			Row oldRow = rowRepository.findOne(newRow.id);
+			Row oldRow = newRow.id == null ? newRow : rowRepository.findOne(newRow.id);
+			if(oldRow.id == null){
+				if(oldRow.featuringPerspective != null){
+					rowRepository.deleteFeaturedRow(oldRow.featuringPerspective.id);
+				}
+				rowRepository.save(oldRow);
+			}
 			oldRow.cells = newRow.cells;
 			if (oldRow.cells != null) {
 				for (Cell cell : oldRow.cells) {
@@ -211,7 +217,11 @@ public class PerspectiveService {
 		}
 
 		if (rowsDifference.rowsToUpdate != null && rowsDifference.rowsToUpdate.size() > 0) {
-			rowRepository.save(rowsDifference.rowsToUpdate);
+			for (Row row: rowsDifference.rowsToUpdate) {
+				Row oldRow = rowRepository.findOne(row.id);
+				oldRow.index = row.index;
+				rowRepository.save(oldRow);
+			}
 		}
 
 		if (rowsDifference.cellsToDelete != null && rowsDifference.cellsToDelete.size() > 0) {

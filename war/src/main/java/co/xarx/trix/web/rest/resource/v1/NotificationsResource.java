@@ -9,7 +9,6 @@ import co.xarx.trix.persistence.NotificationRepository;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.NotificationsApi;
-import com.google.common.collect.Lists;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -40,7 +39,8 @@ public class NotificationsResource extends AbstractResource implements Notificat
 		Person person = authProvider.getLoggedPerson();
 		ContentResponse<List<NotificationView>> response = new ContentResponse<>();
 
-		List<Notification> notifications = Lists.newArrayList(notificationRepository.findNotificationsByPersonIdOrderByDate(person.id, new PageRequest(page, size)) );
+		PageRequest pageable = new PageRequest(page, size);
+		List<Notification> notifications = notificationRepository.findNotificationsByPersonIdOrderByDate(person.id, pageable);
 
 		response.content = notifications.stream().map(notification ->
 				notificationConverter.convertTo(notification)).collect(Collectors.toList());
