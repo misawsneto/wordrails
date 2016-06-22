@@ -67,10 +67,6 @@ public class PerspectiveService {
 
 				List<Row> rows = rowRepository.findByPerspective(termPerspective);
 				Collections.sort(rows);
-				for (Row row: rows) {
-					if(row.cells != null && row.cells.size() > 0)
-						Collections.sort(row.cells);
-				}
 				termView = convertRowsToTermView(termPerspective, rows, page, size, lowerLimit, upperLimit);
 				termView.stationPerspectiveId = termPerspective.perspective.id;
 				termView.stationId = termPerspective.stationId;
@@ -90,6 +86,10 @@ public class PerspectiveService {
 				termView.stationId = stationPerspective.stationId;
 			}
 		}
+
+		if (termView.featuredRow.cells != null && termView.featuredRow.cells.size() > 0)
+			Collections.sort(termView.featuredRow.cells);
+
 		return termView;
 	}
 
