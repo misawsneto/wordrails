@@ -16,5 +16,7 @@ public interface NotificationsApi {
 	@Path("/searchNotifications")
 	@Produces(MediaType.APPLICATION_JSON)
 	@PreAuthorize("isAuthenticated()")
-	ContentResponse<List<NotificationView>> searchNotifications(@QueryParam("query") String query, @QueryParam("page") Integer page, @QueryParam("size") Integer size);
+	ContentResponse<List<NotificationView>> searchNotifications(@QueryParam("query") String query,
+																@QueryParam("page") @DefaultValue("0") Integer page,
+																@QueryParam("size") @DefaultValue("20") Integer size);
 }

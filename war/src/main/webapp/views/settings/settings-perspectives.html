@@ -17,16 +17,12 @@
          </md-tooltip>
          <i class="mdi mdi2-view-quilt i-20 m-r-sm"></i> {{'titles.PERSPECTIVES' | translate}}
       </md-button>
-      <!--<md-button aria-label="nothing" class="pull-left" style="margin: 5px 10px 0 10px;" ng-click="togglePerspectives()">
-         <md-tooltip md-direction="top">
-          		{{'titles.SAVE' | translate}}
-         	</md-tooltip>
-         <i class="mdi mdi2-content-save i-20 m-r-sm"></i> {{'titles.SAVE' | translate}}
-         </md-button>-->
+
       <md-button aria-label="nothing" ng-click="isMobile = !isMobile; reloadMasonry();" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
          <i class="i-20" ng-class="{'mdi-hardware-desktop-windows': isMobile, 'mdi-hardware-phone-android': !isMobile }"></i>
       </md-button>
    </div>
+
    <div id="setting-perspective-editor">
       <div class="p-md">
          <div class="color-selector-container">
@@ -59,7 +55,7 @@
                                           <div class="clear pos-rlt p animated fadeIn" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells.length > 0 && !isMobile && !reloadingCarousel"
                                              ng-mouseenter="currentPerspective.termPerspectiveView.featuredRow.showOptions=true" ng-mouseleave="currentPerspective.termPerspectiveView.featuredRow.showOptions=false">
                                              <ul class="pgwSlider" pgw-slider="{verticalCentering:true, maxHeight: 400, selectionMode: 'click', intervalDuration: 7000 }">
-                                                <li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells | orderBy: 'index'">
+                                                <li ng-repeat="cell in currentPerspective.termPerspectiveView.featuredRow.cells">
                                                    <img ng-src="{{app.getImageLink(cell.postView, 'large')}}" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="bg-cover opacity-0" alt="{{cell.postView.title}}" data-description="{{cell.postView.snippet | characters:200}}">
                                                    <div ng-if="app.hasImage(cell.postView)" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z1 pos-abt top-0 bottom-0 right-0 left-0 bg-cover">
                                                    </div>
@@ -354,7 +350,7 @@
    <md-dialog aria-label="Adicionar notícia" id="perspective-editor-dialog">
     	<md-content>
     		<div class="p">
-    			<div class="text-lg text-center">Selectione as categorias desejadas</div>
+    			<div class="text-lg text-center">Selecione as categorias desejadas</div>
    			<div class="p-xxs perspective-editor-category-selector m-t-sm tree well">
    				<ul class="normal-wrap perspective-editor-category-selector-list">
    					<li ng-repeat="term in pe.terms">
@@ -496,7 +492,7 @@
 </script>
 <script type="text/ng-template" id="featured-post-dialog.html">
    <md-dialog aria-label="change action">
-     <md-content style="background: white">
+     <md-content class="md-background-hue-1 background">
        <div class="w-900">
    
        	<div class="p text-u-c font-bold text-md-l">
@@ -584,23 +580,58 @@
 </script>
 
 <script type="text/ng-template" id="categories-config-dialog.html">
-	<md-dialog aria-label="change action">
-     <md-content style="background: white">
-       <div class="w-900 h-300 p-sm">
-  			<div class="text-lg text-center">Selectione as categorias desejadas</div>
-				<div class="wrapper-xxs perspective-editor-category-selector m-t-sm tree well">
-					<ul class="">
-						<li ng-repeat="category in currentPerspective.termPerspectiveView.allCategories">
-					 		<md-checkbox md-no-ink ng-model="category.checked" ng-change="checkCategory(category);">
-					 			{{category.name}}
-					 		</md-checkbox>
-					 	</li>
-				 	</ul>
-				</div>
-				<div class="clear">
-					<md-button class="pull-right" ng-click="cancel()" >Fechar</md-button>
-				</div>
-			</div>
-	  </md-content>
-	</md-dialog>
+   <md-dialog aria-label="change action">
+   
+     <md-content class="md-background-hue-1 background">
+         <div class="w-900">
+           <div class="p text-u-c font-bold text-md-l">
+              <i class="mdi2-menu p-r-sm i-24 icon v-m"></i>{{'titles.CATEGORIES' | translate}}
+           </div>
+              
+            <div class="b-t">
+               <div class="md-background-hue-1 background pos-rlt w-500 inline simpleDemo" style="height:300px; max-height:300px; overflow: auto;">
+                 <div class="text-center text-u-c p-sm font-500" ng-if="currentPerspective.termPerspectiveView.allCategories.length > 0">
+                   {{'settings.station.perspective.PERSPECTIVE_ORDER_MSG' | translate}}
+                 </div>
+                 <ul class="m-b p-b" dnd-list="currentPerspective.termPerspectiveView.ordinaryRows" ng-if="currentPerspective.termPerspectiveView.ordinaryRows != null && currentPerspective.termPerspectiveView.ordinaryRows.length > 0">
+                    <li ng-repeat="row in currentPerspective.termPerspectiveView.ordinaryRows"
+                       dnd-draggable="row"
+                         dnd-moved="currentPerspective.termPerspectiveView.ordinaryRows.splice($index, 1)"
+                         dnd-effect-allowed="move"
+                         dnd-selected="models.selected = row" class="pos-rlt">
+
+                       <div class="md-whiteframe-z1 p m pos-rlt drag fade-in-hover-container">
+                       <div class="pos-abt top-0 right-0 font-bold p-sm">
+                         #{{$index + 1}}
+                       </div>
+                          <span class="text-ellipsis font-bold block text-md">{{row.termName}}</span>
+                          <div class="pos-abt top-0 left-0 font-bold fade-in-hover-el">
+                       </div>
+                       </div>
+                    </li>
+                 </ul>
+               </div>
+                 
+               <div class="w-400 inline p pull-left" style="height:300px; max-height:300px; overflow: auto;">
+                  <ul class="">
+                     <li ng-repeat="category in currentPerspective.termPerspectiveView.allCategories">
+                        <md-checkbox md-no-ink ng-model="category.checked" ng-change="checkCategory(category);">
+                           {{category.name}}
+                        </md-checkbox>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+
+            <md-divider></md-divider>
+            <div class="clear">
+               <md-button class="pull-right font-500 md-accent" translate="titles.APPLY" ng-click="applyCategories();">
+               </md-button>
+               <md-button class="pull-right font-500" ng-click="cancel();" translate="titles.CANCEL">
+               </md-button>
+            </div>
+         </div>
+      </md-content>
+   
+   </md-dialog>
 </script>
