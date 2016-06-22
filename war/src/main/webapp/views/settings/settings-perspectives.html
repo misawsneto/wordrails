@@ -107,7 +107,8 @@
                                              <div class="row no-margin" reload-on-show masonry="{transitionDuration: 0}">
                                                 <div class="p masonry-brick" ng-class="{'col-xs-6': !isMobile, 'col-xs-12 p-0 p-b': isMobile}" ng-repeat="cell in currentPerspective.termPerspectiveView.homeRow.cells"
                                                    ng-mouseenter="cell.showOptions=true" ng-mouseleave="cell.showOptions=false">
-                                                   <md-button ng-if="cell.id || cell.fixed" class="opacity-09 text-white pos-abt top-0 left-0 md-icon-button m-r-t z-index-5" ng-style="{'margin': !isMobile ? '16px' : '0' }">
+                                                   <md-button ng-if="cell.id || cell.fixed" class="opacity-09 text-white pos-abt top-0 left-0 md-icon-button m-r-t z-index-5" ng-style="{'margin': !isMobile ? '16px' : '0' }"
+                                                   ng-click="showRemovePinDialog($index)">
                                                       <i class="i-24 mdi2-pin icon-text-shadow"></i>
                                                    </md-button>
                                                    <div class="w-full no-margin" ng-class="{'md-whiteframe-z1 card': !isMobile}">
@@ -634,4 +635,25 @@
       </md-content>
    
    </md-dialog>
+</script>
+
+<script type="text/ng-template" id="remove-pin-dialog.html">
+   <md-dialog aria-label="Remove Categories Dialog" id="remove-categories-dialog">
+      <md-content role="document" class="md-background-hue-1 background">
+        <div class="p-xs">
+          <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
+            {{'settings.station.perspective.REMOVE_PIN_MSG' | translate}}
+          </div>
+   
+          <div class="text-center">
+            <md-button aria-label="nothing" ng-click="removePinnedPublication(); disabled = true;" ng-disabled="disabled">
+              {{'titles.YES' | translate}}
+            </md-button>
+            <md-button aria-label="nothing" ng-click="cancel()">
+              {{'titles.NO' | translate}}
+            </md-button>
+          <div>
+        </div>
+      </md-content>
+    </md-dialog>
 </script>

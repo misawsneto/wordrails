@@ -369,7 +369,8 @@
 				"FIX_POST_MSG": "Fix a publication at position number ",
 				"ACTIVATE_PERSPECTIVE_MSG": "Are you sure you wish to activate this perspective? This action will affect how the content is displayed on all devices.",
 				"REMOVE_PERSPECTIVE_MSG": "Are you sure you wish to remove this perspective? This operation cannot be undone.",
-				"PERSPECTIVE_ORDER_MSG": "Drag and Sort"
+				"PERSPECTIVE_ORDER_MSG": "Drag and Sort",
+				"REMOVE_PIN_MSG": "Remove pinned publication"
 			}
 		},
 		"category": {
