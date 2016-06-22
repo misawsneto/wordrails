@@ -25,7 +25,7 @@
           <a ui-sref="app.userprofile({username: publication.authorUsername})">
             <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover" 
             ng-style="app.getImagesPerson(publication, publication.authorId, 'small', 'PROFILE_PICTURE', true) " ng-class="{'md-primary-hue-1 background': !app.hasAuthorImage(publication)}">
-              <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
+              <i ng-if="::(!app.hasAuthorImage(publication))" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
             </div>
             <div class="inline p-t v-t font-500">
             {{publication.authorName}}
@@ -35,7 +35,7 @@
           </div>
           <!-- News Image -->
           <div class="news-image o-f-h">
-              <a ui-sref="app.station.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" ng-if="app.hasImage(publication);">
+              <a ui-sref="app.station.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" ng-if="::(app.hasImage(publication))">
               <div  preload-bg-image="{{app.getImageLink(publication, 'medium')}}" class="zoom-hover h-full bg-cover" style="min-height: 230px;">
               </div>
               </a>
@@ -77,7 +77,7 @@
                       <div class="p-sm pos-rlt">
                         <div class="display-t-c inline p-h-xs">
                           <div ng-style="app.getUserImage(comment.author, 'small', 'PROFILE_PICTURE', true)" style="height: 34px;" class="bg-cover img-responsive img-circle thumb-xs md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(comment.author)}">
-                            <i ng-if="!app.hasProfilePicture(comment.author)" style="line-height: 36px;" class="mdi2-account i-20"></i>
+                            <i ng-if="::(!app.hasProfilePicture(comment.author))" style="line-height: 36px;" class="mdi2-account i-20"></i>
                           </div>
                         </div>
                         <div class="p-l-sm display-t-c v-m inline text-sm w-full">
