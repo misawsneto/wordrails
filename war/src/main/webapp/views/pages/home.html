@@ -1,7 +1,7 @@
 <div class="m-b">
    <div class="container">
       <div class="pos-rlt">
-         <div class="clear pos-rlt m-b-lg p-sm animated fadeIn" ng-if="::(app.termPerspectiveView.featuredRow.cells.length > 0 && $mdMedia('gt-sm'))">
+         <div class="clear pos-rlt m-b-lg p-sm animated fadeIn" ng-if="app.termPerspectiveView.featuredRow.cells.length > 0 && $mdMedia('gt-sm')">
             <ul class="pgwSlider" pgw-slider="{verticalCentering:true, maxHeight: 500, selectionMode: 'click', intervalDuration: 7000 }">
                <li ng-repeat="cell in app.termPerspectiveView.featuredRow.cells" class="md-whiteframe-z1">
                   <a ng-href="{{::('/' + app.getStationById(cell.postView.stationId).stationSlug + '/' + cell.postView.slug)}}">
@@ -13,7 +13,7 @@
                </li>
             </ul>
          </div>
-         <div ng-if="::(app.termPerspectiveView.featuredRow.cells && !$mdMedia('gt-sm'))" class="pos-rlt" style="margin:-32px -15px 30px -15px">
+         <div ng-if="app.termPerspectiveView.featuredRow.cells && !$mdMedia('gt-sm')" class="pos-rlt" style="margin:-32px -15px 30px -15px">
             <ul rn-carousel="" rn-carousel-index="carouselIndex" rn-carousel-auto-slide="" rn-carousel-pause-on-hover="" rn-carousel-buffered="" class="ng-scope h-300 image no-margin">
                <li  ng-repeat="cell in app.termPerspectiveView.featuredRow.cells">
                   <div ng-if="::(app.hasImage(cell.postView))" preload-bg-image="{{app.getImageLink(cell.postView, 'large')}}" class="md-whiteframe-z1 h-300 pos-abt top-0 bottom-0 right-0 left-0 bg-cover layer animated fadeIn">
@@ -24,7 +24,7 @@
                </li>
             </ul>
             <div class="text-center opacity-08 pos-rlt m-t-n-lg text-md z-i-2 perspective-editor-options-button " style="margin-top: -34px">
-               <div class="text-shadow-sm text-lg" rn-carousel-indicators="" ng-if="::(app.termPerspectiveView.featuredRow.cells.length > 1)" slides="app.termPerspectiveView.featuredRow.cells" rn-carousel-index="carouselIndex">
+               <div class="text-shadow-sm text-lg" rn-carousel-indicators="" ng-if="app.termPerspectiveView.featuredRow.cells.length > 1" slides="app.termPerspectiveView.featuredRow.cells" rn-carousel-index="carouselIndex">
                </div>
             </div>
          </div>
