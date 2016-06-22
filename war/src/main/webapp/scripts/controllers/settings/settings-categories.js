@@ -11,6 +11,8 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
 
   $scope.showAddCategoryDialog = function(parent, ev){
     $scope.parentCategory = parent;
+    $scope.disabled = false;
+    $scope.newCategoryName = null;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
           closeTo: {
@@ -32,6 +34,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
   $scope.showDeleteCategoryDialog = function(category, ev){
     $scope.app.toDeleteCategory = category;
     $scope.parentCategory = parent;
+    $scope.disabled = false;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
           closeTo: {
@@ -53,6 +56,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
   $scope.toUpdateCategory = null;
   $scope.showCategoryDescriptionDialog = function(category, ev){
     $scope.toUpdateCategory = category;
+    $scope.disabled = false;
     $mdDialog.show({
         scope: $scope,        // use parent scope in template
           closeTo: {

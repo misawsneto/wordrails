@@ -1066,6 +1066,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.publishPost = function(){
+		$scope.removeScheduledDate();
 		var post = angular.copy($scope.app.editingPost)
 		post.state = 'PUBLISHED';
 		if(post.id){
@@ -1138,16 +1139,16 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}
 
 		trix.postPost(post).success(function(response){
-			if($scope.app.checkState() == 2 && $scope.app.editingPost.state)
-				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISHED_AS_DRAFT'));
-			else
-				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
 
 			$scope.app.editingPost = response;
 			$scope.loadPostData();
 			$scope.app.postObjectChanged = false;
 			$state.transitionTo('app.post', {'id': $scope.app.editingPost.id}, {reload: false, inherit: false, notify: false});
 			$mdDialog.cancel();
+			if($scope.app.checkState() == 2 && $scope.app.editingPost.state)
+				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISHED_AS_DRAFT'));
+			else
+				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
 		}).error(function(){
 			$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
 			$mdDialog.cancel();

@@ -260,7 +260,8 @@
 			"EMAIL_IN_USE": "Email is already in use. Please use another email and try again.",
 			"REQUIRED_FIELDS": "Name, username and email are required.",
 			"OPTIONAL_PASSWORD": "Password is optional and if not provided a random password will be generated and sent via email.",
-			"INVITATIONS_SENT": "Invitations were sent"
+			"INVITATIONS_SENT": "Invitations were sent",
+			"PERMISSIONS_UPDATES": "Permissions updates"
 		},
 		"comment":{
 			"REMOVE_COMMENT_MSG": "Are you sure you want to permanatly delete this comment?",

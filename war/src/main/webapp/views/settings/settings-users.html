@@ -430,10 +430,10 @@
         </div>
         <div class="p-sm stations-permissions-dialog-list m-t-sm" >
           <ul class="no-style">
-            <li ng-repeat="station in app.stations" class="clearfix p-xs font-thin">
+            <li ng-repeat="station in adminStations" class="clearfix p-xs font-thin">
               <span class="pull-right">
                 <label class="md-check">
-                  <input type="checkbox" ng-model="station.selected">
+                  <input type="checkbox" ng-model="station.selected" ng-change="station.selected = true;">
                   <i class="md-accent-default background"></i>
                 </label>
               </span>
@@ -468,7 +468,7 @@
           
         </div>
         <div class="text-right">
-          <md-button aria-label="nothing" ng-click="pe.applyPermissions(pe.adminStations, pe.stationRole)" class="no-margin m-r">Confirmar</md-button>
+          <md-button aria-label="nothing" ng-click="applyPermissions(adminStations, stationRole)" class="no-margin m-r">Confirmar</md-button>
           <md-button aria-label="nothing" ng-click="cancel()" class="no-margin">Fechar</md-button>
         <div>
       </div>

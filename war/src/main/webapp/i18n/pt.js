@@ -260,7 +260,8 @@
 			"EMAIL_IN_USE": "Email já está sendo usado. Por favor use outro email e tente novamente.",
 			"REQUIRED_FIELDS": "Nome, usuário e email são campos obrigatórios.",
 			"OPTIONAL_PASSWORD": "A senha é opcional e caso não fornecida será gerado automáticamente e enviada por email.",
-			"INVITATIONS_SENT": "Convites enviados com sucesso"
+			"INVITATIONS_SENT": "Convites enviados com sucesso",
+			"PERMISSIONS_UPDATES": "Permissões atualizadas"
 		},
 		"comment":{
 			"REMOVE_COMMENT_MSG": "Tem certeza que deseja remover este comentário?",

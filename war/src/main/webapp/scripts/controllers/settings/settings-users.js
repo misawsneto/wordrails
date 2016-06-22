@@ -5,6 +5,8 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     return true; // true|false
   };
 
+  $scope.adminStations = angular.copy($scope.app.stations);
+
   $scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
 
   // ------------- person file upload
@@ -194,6 +196,15 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     return ret;
   }
 
+  function getSelectedPersonUsernames(){
+    var ret = []
+    $scope.persons.forEach(function(person, index){
+      if(person.selected)
+        ret.push(person.username);
+    });
+    return ret;
+  }
+
   $scope.getSelectedPersonIds = getSelectedPersonIds;
 
   var showNoPersonSelectedDialog = function(event){
@@ -232,44 +243,6 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       }, function() {
       //$scope.alert = 'You cancelled the dialog.';
       });
-    }
-
-    $scope.applyPermissions = function(stations, permissions){
-      var stationRoleUpdates = {stationsIds: [], personsIds: []};
-      stationRoleUpdates.personsIds = getSelectedPersonIds();
-
-      if(stations){
-        stations.forEach(function(station){
-          if(station.selected)
-            stationRoleUpdates.stationsIds.push(station.stationId)
-        })
-      }
-
-      if(permissions == 'ADMIN'){
-        stationRoleUpdates.admin = true;
-        stationRoleUpdates.writer = true;
-        stationRoleUpdates.editor = true;
-      }else if(permissions == 'EDITOR'){
-        stationRoleUpdates.admin = false;
-        stationRoleUpdates.writer = true;
-        stationRoleUpdates.editor = true;
-      }else if(permissions == 'WRITER'){
-        stationRoleUpdates.admin = false;
-        stationRoleUpdates.editor = false;
-        stationRoleUpdates.writer = true;
-      }else{
-        stationRoleUpdates.admin = false;
-        stationRoleUpdates.editor = false;
-        stationRoleUpdates.writer = false;
-      }
-
-      trix.updateStationRoles(stationRoleUpdates).success(function(){
-        $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
-        $mdDialog.cancel();
-      }).error(function(){
-        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
-        $mdDialog.cancel();
-      })
     }
 
     // ---------- add user funcs ----------
@@ -515,7 +488,13 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       })
     }
 
+    // change permissions ---------------
+ 
     $scope.showBulkChangePermissions = function(){
+      $scope.adminStations.forEach(function(station){
+        station.selected = false;
+      });
+      $scope.stationRole = null;
       $mdDialog.show({
         scope: $scope,        // use parent scope in template
         closeTo: {
@@ -532,6 +511,46 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         // }
       })
     }
+
+    $scope.applyPermissions = function(stations, permissions){
+      var stationRoleUpdates = {stationsIds: [], usernames: []};
+      stationRoleUpdates.usernames = getSelectedPersonUsernames();
+
+      if(stations){
+        stations.forEach(function(station){
+          if(station.selected)
+            stationRoleUpdates.stationsIds.push(station.id)
+        })
+      }
+
+      if(permissions == 'ADMIN'){
+        stationRoleUpdates.admin = true;
+        stationRoleUpdates.writer = true;
+        stationRoleUpdates.editor = true;
+      }else if(permissions == 'EDITOR'){
+        stationRoleUpdates.admin = false;
+        stationRoleUpdates.writer = true;
+        stationRoleUpdates.editor = true;
+      }else if(permissions == 'WRITER'){
+        stationRoleUpdates.admin = false;
+        stationRoleUpdates.editor = false;
+        stationRoleUpdates.writer = true;
+      }else{
+        stationRoleUpdates.admin = false;
+        stationRoleUpdates.editor = false;
+        stationRoleUpdates.writer = false;
+      }
+
+      trix.updateStationRoles(stationRoleUpdates).success(function(){
+        $scope.app.showSuccessToast($filter('translate')('settings.users.PERMISSIONS_UPDATES'));
+        $mdDialog.cancel();
+      }).error(function(){
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'));
+        $mdDialog.cancel();
+      })
+    }
+
+    // /change permissions ---------------
 
     $scope.disabled = false;
     $scope.changePassword = function(){

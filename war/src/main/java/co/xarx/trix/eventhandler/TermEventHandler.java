@@ -33,6 +33,7 @@ public class TermEventHandler {
 	public void handleAfterCreate(Term term) {
 		List<StationPerspective> perspectives = stationPerspectiveRepository.findByTaxonomy(term.taxonomy);
 		if (perspectives != null && perspectives.size() > 0) {
+
 			List<Row> rows = new ArrayList<Row>(perspectives.size());
 			for (StationPerspective stationPerspective : perspectives) {
 				TermPerspective perspective = null;
@@ -59,7 +60,7 @@ public class TermEventHandler {
 				}
 			}
 
-			for (Row row :rows) {
+			for (Row row : rows) {
 				rowRepository.save(row);
 			}
 		} else{
