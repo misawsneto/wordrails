@@ -87,7 +87,8 @@ public class PerspectiveService {
 			}
 		}
 
-		if (termView.featuredRow.cells != null && termView.featuredRow.cells.size() > 0)
+		if (termView.featuredRow  != null && termView.featuredRow.cells != null && termView.featuredRow.cells.size()
+				> 0)
 			Collections.sort(termView.featuredRow.cells);
 
 		return termView;
