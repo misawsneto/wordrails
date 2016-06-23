@@ -42,7 +42,7 @@
 	    	<md-button aria-label="nothing" ng-if="app.checkState() > 1 && app.checkState() !== 3" class="pull-right font-bold no-margin" ng-click="publishPost()">
 	    	{{'titles.PUBLISH' | translate}}
 			</md-button>
-			<md-button aria-label="nothing" ng-if="!app.editingPost.id && app.checkState() === 3" class="pull-right font-bold no-margin" ng-click="postPost()">
+			<md-button aria-label="nothing" ng-if="!app.editingPost.id && app.checkState() === 3" class="pull-right font-bold no-margin" ng-click="postPost(app.editingPost)">
 	    	{{'actions.SCHEDULE' | translate}}
 			</md-button>
 			<md-button aria-label="nothing" ng-if="app.editingPost.id && (!app.checkState() || app.checkState() > 0)" class="pull-right font-bold no-margin" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
