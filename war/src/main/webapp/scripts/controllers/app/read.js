@@ -7,6 +7,8 @@ app.controller('ReadCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 
     $scope.app.loadComments($scope.post)
 
+    $scope.hasVideo = $scope.post.externalVideoUrl ? true : false;
+
   var findRelated = function(size, categories){
     trix.searchPosts(null, null, null, 'published', null, null, categories, null, 0, size, '-date', ['snippet', 'tags', 'categories', 'imageHash', 'state'], false).success(function(posts,a,b,c){
         if(posts && posts.length > 0){

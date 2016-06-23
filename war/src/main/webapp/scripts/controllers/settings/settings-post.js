@@ -981,6 +981,15 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.useHeading = $scope.app.editingPost.topper ? true:false
 		$scope.useSubheading = $scope.app.editingPost.subheading ? true:false
 		$scope.tags = angular.copy($scope.app.editingPost.tags);
+		$scope.useVideo = $scope.app.editingPost.externalVideoUrl;
+
+		if($scope.useVideo){
+			$scope.app.videoUrl = '';
+			$timeout(function(){
+				$scope.app.videoUrl = $scope.app.editingPost.externalVideoUrl
+			}, 100)
+		}
+
 		if(!lockContent)
 			$timeout(function(){
 				$scope.app.postObjectChanged = false;

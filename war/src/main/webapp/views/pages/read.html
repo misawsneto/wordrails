@@ -4,14 +4,15 @@
 <div class="container">
   <div class="row no-margin">
       <div class="col l12 pos-rlt" ng-class="{'m-t-n-80': app.hasImage(post) && post.imageLandscape}">
-          <md-button ng-if="::((post.author.id == app.person.id && !app.hasImage(post)) || (app.hasImage(post) && post.imageLandscape))" ng-href="{{'/settings/post?id=' + post.id}}" target="_blank" aria-label="menu" class="md-fab md-accent pos-abt right-0 top-0 m-r-md m-t"
+          <md-button ng-if="::(!hasVideo && ((post.author.id == app.person.id && !app.hasImage(post)) || (app.hasImage(post) && post.imageLandscape)))" ng-href="{{'/settings/post?id=' + post.id}}" target="_blank" aria-label="menu" class="md-fab md-accent pos-abt right-0 top-0 m-r-md m-t"
           ng-style="{'margin-top': app.hasImage(post) && post.imageLandscape ? '-30px' : '16px'}">
             <i class="mdi2-pencil i-24"></i>
           </md-button>
           <div class="news-single z-depth-1 card">
               <!-- News Single Image -->
-              <div alt="news Image" ng-if="::(app.hasImage(post) && !post.imageLandscape)" preload-bg-image="{{app.getImageLink(post, 'large')}}" class="responsive-img h-400 bg-cover pos-rlt">
-                <md-button ng-if="post.author.id == app.person.id" ng-href="{{'/settings/post?id=' + post.id}}" target="_blank" aria-label="menu" class="md-fab md-accent pos-abt right-0 bottom-0 m-r" style="margin-bottom: -26px;">
+              <div alt="news Image" ng-if="::((app.hasImage(post) && !post.imageLandscape) || hasVideo)" preload-bg-image="{{app.getImageLink(post, 'large')}}" class="responsive-img h-400 bg-cover pos-rlt">
+                <embed-video width=800 height=400 iframe-id="video1" api="1" player_id="video1" ng-href="{{post.externalVideoUrl}}"></embed-video>
+                <md-button ng-if="::(post.author.id == app.person.id)" ng-href="{{'/settings/post?id=' + post.id}}" target="_blank" aria-label="menu" class="md-fab md-accent pos-abt right-0 bottom-0 m-r" style="margin-bottom: -26px;">
                   <i class="mdi2-pencil i-24"></i>
                 </md-button>
               </div>
