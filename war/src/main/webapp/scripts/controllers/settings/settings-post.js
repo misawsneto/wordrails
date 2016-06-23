@@ -1155,7 +1155,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			showInvalidTermsOrStationsDialog();
 			return null;
 		}
-		if(!originalPost.title || !originalPost.body){
+		if(originalPost && (!originalPost.title || !originalPost.body)){
 			showInvalidTitleOrBodyDialog();
 			return null;
 		}
