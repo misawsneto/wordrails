@@ -86,6 +86,11 @@ public class PerspectiveService {
 				termView.stationId = stationPerspective.stationId;
 			}
 		}
+
+		if (termView.featuredRow  != null && termView.featuredRow.cells != null && termView.featuredRow.cells.size()
+				> 0)
+			Collections.sort(termView.featuredRow.cells);
+
 		return termView;
 	}
 

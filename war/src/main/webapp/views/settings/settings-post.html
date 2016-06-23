@@ -39,8 +39,11 @@
 	      	{{'settings.post.menu.AUTO_SAVE_MSG' | translate}}
 	      </div>
 	      <md-divider class="m-b-sm"></md-divider>
-	    	<md-button aria-label="nothing" ng-if="!app.checkState() || app.checkState() > 1" class="pull-right font-bold no-margin" ng-click="publishPost()">
+	    	<md-button aria-label="nothing" ng-if="app.checkState() > 1 && app.checkState() !== 3" class="pull-right font-bold no-margin" ng-click="publishPost()">
 	    	{{'titles.PUBLISH' | translate}}
+			</md-button>
+			<md-button aria-label="nothing" ng-if="!app.editingPost.id && app.checkState() === 3" class="pull-right font-bold no-margin" ng-click="postPost(app.editingPost)">
+	    	{{'actions.SCHEDULE' | translate}}
 			</md-button>
 			<md-button aria-label="nothing" ng-if="app.editingPost.id && (!app.checkState() || app.checkState() > 0)" class="pull-right font-bold no-margin" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
 			</md-button>
@@ -618,10 +621,12 @@
         </div>
         <div class="pointer text-center p text-u-c font-bold pos-rlt" ng-click="showMoreOptions($event)">
         	<md-divider class="pos-abt top-0 left-0 right-0"></md-divider>
-          <md-button aria-label="nothing" ng-if="app.checkState() > 1 && app.checkState() !== 3" class="md-raised md-primary p-h md-whiteframe-z2" ng-click="postPost(app.editingPost)">
+          <md-button aria-label="nothing" ng-if="app.checkState() > 1 && app.checkState() !==3" class="md-raised md-primary p-h md-whiteframe-z2" ng-click="postPost(app.editingPost)">
           	<i class="icon mdi2-send i-14 m-r-sm"></i>{{'titles.PUBLISH' | translate}}
           </md-button>
-			<md-button aria-label="nothing" ng-if="app.editingPost.id && (app.checkState() === 1 || app.checkState() === 3)" class="md-raised md-primary p-h md-whiteframe-z2" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
+          	<md-button aria-label="nothing" ng-if="!app.editingPost.id && app.checkState() === 3" class="md-raised md-primary p-h md-whiteframe-z2" translate="actions.SCHEDULE" ng-click="postPost(app.editingPost)">
+			</md-button>
+			<md-button aria-label="nothing" ng-if="app.editingPost.id && (app.checkState())" class="md-raised md-primary p-h md-whiteframe-z2" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
 			</md-button>
           <md-button aria-label="nothing"  ng-click="toggleOptions();">{{'titles.CLOSE' | translate}}</md-button>
         </div>

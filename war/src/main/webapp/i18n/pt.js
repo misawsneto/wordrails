@@ -133,6 +133,7 @@
 		"SAVE_CHANGES": "Salvar alterações",
 		"UPDATE": "Atualizar",
 		"REMOVE": "Remover",
+		"SCHEDULE": "Agendar",
 		"EXCLUDE": "Remover",
 		"LIST": "Listar",
 		"INSERT": "Inserir",
@@ -279,7 +280,7 @@
 				"ATTACH_POST": "Anexar outras publicações",
 				"NOTIFY_STATION_USERS": "Notificar usuários",
 				"PUBLICATION_MSG": "O conteúdo será publicado ao clicar em Publicar.",
-				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada alteração uma vez que o título, conteúdo, estações e categorias sejam inseridos. Para desabilitar esta função, verifique a opção \"Salvar automaticamente\" em \"Opções de publicação\". As versões da publicação pode ser visualizado no menu \"Opções de publicação\"."
+				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada alteração uma vez que o título, conteúdo, estações e categorias sejam inseridos. Para desabilitar esta função, verifique a opção \"Salvar automaticamente\" em \"Opções de publicação\". As versões da publicação podem ser visualizadas no menu \"Opções de publicação\"."
 			},
 			"ACTIVATE_DEACTIVATE_HEADING": "Ativar/Desativar chapéu",
 			"ACTIVATE_DEACTIVATE_SUBTITLE": "Ativar/Desativar subtítulo",
@@ -341,6 +342,7 @@
 			"TRASH_ALL": "Mover para a lixeira",
 			"UPDATE_SUCCESS": "Atualizado",
 			"PUBLISH_SUCCESS": "Publicado",
+			"PUBLISH_SCHEDULED": "Publicação agendada",
 			"PUBLISH_ERROR": "Erro ao publicar",
 			"EDITING": "Edição",
 			"AUTOMATIC_SAVE": "Salvar automaticamente"
@@ -369,7 +371,8 @@
 				"FIX_POST_MSG": "Fixar uma publicação na posição ",
 				"ACTIVATE_PERSPECTIVE_MSG": "Tem certeza que deseja ativar esta perspectiva? Esta ação  modificará a forma de apresentação do conteúdo em todos os dispositivos.",
 				"REMOVE_PERSPECTIVE_MSG": "Tem certeza que deseja remover esta perspectiva? Esta operação não poderá ser desfeita.",
-				"PERSPECTIVE_ORDER_MSG": "Arraste para ordernar"
+				"PERSPECTIVE_ORDER_MSG": "Arraste para ordernar",
+				"REMOVE_PIN_MSG": "Remover publicação"
 			}
 		},
 		"category": {
