@@ -273,7 +273,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		state = state ? state : $scope.app.editingPost ? $scope.app.editingPost.state : null;
 
-		if($scope.app.editingPost && $scope.app.editingPost.scheduledDate)
+		if($scope.app.editingPost && $scope.app.editingPost.scheduledDate && $scope.checkIfScheduled())
 			return 3;
 
 		if(!state)
