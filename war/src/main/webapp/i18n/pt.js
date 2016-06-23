@@ -280,7 +280,7 @@
 				"ATTACH_POST": "Anexar outras publicações",
 				"NOTIFY_STATION_USERS": "Notificar usuários",
 				"PUBLICATION_MSG": "O conteúdo será publicado ao clicar em Publicar.",
-				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada alteração uma vez que o título, conteúdo, estações e categorias sejam inseridos. Para desabilitar esta função, verifique a opção \"Salvar automaticamente\" em \"Opções de publicação\". As versões da publicação pode ser visualizado no menu \"Opções de publicação\"."
+				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada alteração uma vez que o título, conteúdo, estações e categorias sejam inseridos. Para desabilitar esta função, verifique a opção \"Salvar automaticamente\" em \"Opções de publicação\". As versões da publicação podem ser visualizadas no menu \"Opções de publicação\"."
 			},
 			"ACTIVATE_DEACTIVATE_HEADING": "Ativar/Desativar chapéu",
 			"ACTIVATE_DEACTIVATE_SUBTITLE": "Ativar/Desativar subtítulo",
@@ -302,7 +302,6 @@
 			"NOTIFY_STATION_USERS_DESC": "Notificar usuários da estação em seus dispositivos.",
 			"NOTIFY_USERS": "Notificar usuários",
 			"PUBLISHED_AS_DRAFT": "Rascunho salvo",
-			"PUBLISHED_SCHEDULED": "Publicação agendada",
 			"SCHEDULED_MSG": "Agendado para:",
 			"RESCHEDULE": "Reagendar",
 			"messages":{
@@ -343,6 +342,7 @@
 			"TRASH_ALL": "Mover para a lixeira",
 			"UPDATE_SUCCESS": "Atualizado",
 			"PUBLISH_SUCCESS": "Publicado",
+			"PUBLISH_SCHEDULED": "Publicação agendada",
 			"PUBLISH_ERROR": "Erro ao publicar",
 			"EDITING": "Edição",
 			"AUTOMATIC_SAVE": "Salvar automaticamente"

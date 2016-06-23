@@ -302,7 +302,6 @@
 			"NOTIFY_STATION_USERS_DESC": "Notify station users on their devices.",
 			"NOTIFY_USERS": "Notify users",
 			"PUBLISHED_AS_DRAFT": "Draft saved",
-			"PUBLISHED_SCHEDULED": "Scheduled publication",
 			"SCHEDULED_MSG": "Scheduled date and time:",
 			"RESCHEDULE": "Reschedule",
 			"messages":{
@@ -343,6 +342,7 @@
 			"TRASH_ALL": "Move to trash",
 			"UPDATE_SUCCESS": "Atualizado",
 			"PUBLISH_SUCCESS": "Published",
+			"PUBLISH_SCHEDULED": "Scheduled publication",
 			"PUBLISH_ERROR": "Publication error",
 			"EDITING": "Editing",
 			"AUTOMATIC_SAVE": "Automatic save"
