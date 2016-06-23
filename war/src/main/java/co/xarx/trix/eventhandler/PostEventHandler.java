@@ -82,7 +82,7 @@ public class PostEventHandler {
 	@HandleAfterCreate
 	public void handleAfterCreate(Post post) {
 		if (post.state.equals(Post.STATE_PUBLISHED) && post.scheduledDate == null ||
-				(post.scheduledDate != null && post.scheduledDate.after(new Date()) ) ) {
+				(post.scheduledDate != null && post.scheduledDate.before(new Date()) ) ) {
 			if (post.notify) postService.sendNewPostNotification(post);
 		}
 		elasticSearchService.mapThenSave(post, ESPost.class);
