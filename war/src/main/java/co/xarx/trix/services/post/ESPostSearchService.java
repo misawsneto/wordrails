@@ -6,6 +6,7 @@ import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.services.AbstractSearchService;
 import co.xarx.trix.services.security.PermissionFilterService;
 import co.xarx.trix.services.security.StationPermissionService;
@@ -37,16 +38,16 @@ public class ESPostSearchService extends AbstractSearchService implements PostSe
 	private PostRepository postRepository;
 	private StationPermissionService stationPermissionService;
 	private PermissionFilterService permissionFilterService;
+	private StationRepository stationRepository;
 
 	@Autowired
-	public ESPostSearchService(ModelMapper mapper, ESPostService esPostService, PostRepository postRepository,
-							   StationPermissionService stationPermissionService,
-							   PermissionFilterService permissionFilterService) {
+	public ESPostSearchService(ModelMapper mapper, ESPostService esPostService, PostRepository postRepository, StationPermissionService stationPermissionService, PermissionFilterService permissionFilterService, StationRepository stationRepository) {
 		this.mapper = mapper;
 		this.esPostService = esPostService;
 		this.postRepository = postRepository;
 		this.stationPermissionService = stationPermissionService;
 		this.permissionFilterService = permissionFilterService;
+		this.stationRepository = stationRepository;
 	}
 
 	@Override
@@ -90,6 +91,10 @@ public class ESPostSearchService extends AbstractSearchService implements PostSe
 	@TimeIt
 	@Override
 	public ImmutablePage<Post> search(PostStatement params, Integer page, Integer size) {
+		if (params.getStations() == null || params.getStations().isEmpty()) {
+			params.setStations(stationPermissionService.findStationsWithReadPermission());
+		}
+
 		Map<Integer, PostSearchResult> searchResults = searchIds(params);
 		if (searchResults.isEmpty()) {
 			return new ImmutablePage(page);
@@ -124,38 +129,8 @@ public class ESPostSearchService extends AbstractSearchService implements PostSe
 				.collect(Collectors.toList());
 	}
 
-//	@Override
-//	public List<PostData> searchData(PostStatement params, Integer page, Integer size) {
-//		Map<Integer, PostSearchResult> searchResults = searchIds(params);
-//		ArrayList<PostData> emptyResult = new ArrayList<>();
-//		if (searchResults.isEmpty())
-//			return emptyResult;
-//
-//		List<Integer> idsToGetFromDB = getPaginatedIds(new ArrayList<>(searchResults.keySet()), page, size);
-//		List<PostData> datas = sqlPostRepository.findByIds(idsToGetFromDB);
-//
-//		for (PostData data : datas) {
-//			PostSearchResult psr = searchResults.get(data.getId());
-//			data.setSnippet(psr.getSnippet());
-//		}
-//
-//		return datas;
-//	}
-
 	private Map<Integer, PostSearchResult> searchIds(PostStatement params) {
 		List<PostSearchResult> results = esPostService.findIds(params);
-		return filterResultsByReadPermission(results);
-	}
-
-	private Map<Integer, PostSearchResult> filterResultsByReadPermission(List<PostSearchResult> results) {
-		List<Integer> ids = results.stream()
-				.map(PostSearchResult::getId)
-				.collect(Collectors.toList());
-		final List<Integer> filteredIds = permissionFilterService.filterIds(ids, Post.class, "read");
-
-		return results.stream()
-				.filter(r -> filteredIds.contains(r.getId()))
-				.collect(Collectors.toMap(PostSearchResult::getId, Function.identity(),(v1, v2)->v1,
-						LinkedHashMap::new));
+		return results.stream().collect(Collectors.toMap(PostSearchResult::getId, Function.identity(), (v1, v2) -> v1, LinkedHashMap::new));
 	}
 }
