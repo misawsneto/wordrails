@@ -309,7 +309,7 @@
 							</div>
 							
 							<div ng-if="useVideo" class="block-800 h-400 animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md">
-								<embed-video width=800 height=400 iframe-id="video1" api="1" player_id="video1" ng-href="{{app.videoUrl}}"></embed-video>
+								<embed-video on-change="videoSelected(videoId, provider)" width=800 height=400 iframe-id="video1" api="1" player_id="video1" ng-href="{{app.videoUrl}}"></embed-video>
 								<md-button aria-label="nothing" ng-click="removeVideo();" class="md-fab md-accent md-raised md-mini pos-abt right-0 bottom-0 m-r m-b-xxl ">
 									<md-tooltip md-direction="top">
 						      	{{'titles.REMOVE' | translate}} {{'titles.VIDEO' | translate}}
