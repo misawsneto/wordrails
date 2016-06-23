@@ -38,6 +38,7 @@ public class AuditService {
 		attributesToAvoid.add("image");
 		attributesToAvoid.add("audio");
 		attributesToAvoid.add("image");
+		attributesToAvoid.add("video");
 	}
 
 	public boolean avoidIt(String attrName){
