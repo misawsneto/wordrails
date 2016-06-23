@@ -1147,6 +1147,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			$mdDialog.cancel();
 			if($scope.app.checkState() == 2 && $scope.app.editingPost.state)
 				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISHED_AS_DRAFT'));
+			else if($scope.app.checkState() == 3 && $scope.app.editingPost.state)
+				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SCHEDULED'));
 			else
 				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
 		}).error(function(){

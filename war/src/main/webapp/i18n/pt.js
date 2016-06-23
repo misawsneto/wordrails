@@ -133,6 +133,7 @@
 		"SAVE_CHANGES": "Salvar alterações",
 		"UPDATE": "Atualizar",
 		"REMOVE": "Remover",
+		"SCHEDULE": "Agendar",
 		"EXCLUDE": "Remover",
 		"LIST": "Listar",
 		"INSERT": "Inserir",
@@ -301,6 +302,7 @@
 			"NOTIFY_STATION_USERS_DESC": "Notificar usuários da estação em seus dispositivos.",
 			"NOTIFY_USERS": "Notificar usuários",
 			"PUBLISHED_AS_DRAFT": "Rascunho salvo",
+			"PUBLISHED_SCHEDULED": "Publicação agendada",
 			"SCHEDULED_MSG": "Agendado para:",
 			"RESCHEDULE": "Reagendar",
 			"messages":{

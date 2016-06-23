@@ -133,6 +133,7 @@
 		"SAVE_CHANGES": "Save changes",
 		"UPDATE": "Update",
 		"REMOVE": "Remove",
+		"SCHEDULE": "Schedule",
 		"EXCLUDE": "Exclude",
 		"LIST": "List",
 		"INSERT": "Inserir",
@@ -301,6 +302,7 @@
 			"NOTIFY_STATION_USERS_DESC": "Notify station users on their devices.",
 			"NOTIFY_USERS": "Notify users",
 			"PUBLISHED_AS_DRAFT": "Draft saved",
+			"PUBLISHED_SCHEDULED": "Scheduled publication",
 			"SCHEDULED_MSG": "Scheduled date and time:",
 			"RESCHEDULE": "Reschedule",
 			"messages":{
