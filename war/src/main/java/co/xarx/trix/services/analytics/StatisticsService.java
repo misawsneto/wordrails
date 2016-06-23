@@ -45,26 +45,37 @@ import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 public class StatisticsService {
 
 	private Client client;
+	private String profile;
+	private String trixIndex;
 	private String analyticsIndex;
 	private String nginxAccessIndex;
 	private FileRepository fileRepository;
+	private PostRepository postRepository;
 	private DateTimeFormatter dateTimeFormatter;
 	private PublishedAppRepository appRepository;
 	private MobileDeviceRepository mobileDeviceRepository;
 	private PersonPermissionService personPermissionService;
-	private PostRepository postRepository;
 	private CommentRepository commentRepository;
-	private String trixIndex;
 
 	private static int MONTH_INTERVAL = 30;
 	private static int WEEK_INTERVAL = 7;
 	private static String ACCESS_TYPE = "nginx_access";
 
 	@Autowired
-	public StatisticsService(Client client, MobileDeviceRepository mobileDeviceRepository, @Value("${elasticsearch.analyticsIndex}") String analyticsIndex, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, @Value("${spring.data.elasticsearch.index}") String trixIndex,
-							 PublishedAppRepository appRepository, FileRepository fileRepository, PersonPermissionService personPermissionService, PostRepository postRepository, CommentRepository commentRepository){
+	public StatisticsService(Client client,
+							 MobileDeviceRepository mobileDeviceRepository,
+							 @Value("${elasticsearch.analyticsIndex}") String analyticsIndex,
+							 @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex,
+							 @Value("${spring.data.elasticsearch.index}") String trixIndex,
+							 @Value("${spring.profiles.active:dev}") String profile,
+							 PublishedAppRepository appRepository,
+							 FileRepository fileRepository,
+							 PersonPermissionService personPermissionService,
+							 PostRepository postRepository,
+							 CommentRepository commentRepository){
 		this.client = client;
 		this.trixIndex = trixIndex;
+		this.profile = profile;
 		this.appRepository = appRepository;
 		this.fileRepository = fileRepository;
 		this.analyticsIndex = analyticsIndex;
@@ -78,11 +89,14 @@ public class StatisticsService {
 
 	@PostConstruct
 	public void init() throws ExecutionException, InterruptedException {
-		boolean isThereNginxIndex = client.admin().indices().exists(new IndicesExistsRequest(nginxAccessIndex)).get().isExists();
-		boolean isThereAnalyticsIndex = client.admin().indices().exists(new IndicesExistsRequest(analyticsIndex)).get().isExists();
 
-		Assert.isTrue(isThereNginxIndex, "Big problem! Index is not there: " + nginxAccessIndex);
-		Assert.isTrue(isThereAnalyticsIndex, "Big problem! Index is not there: " + analyticsIndex);
+		if(profile.equalsIgnoreCase("prod")) {
+			boolean isThereNginxIndex = client.admin().indices().exists(new IndicesExistsRequest(nginxAccessIndex)).get().isExists();
+			boolean isThereAnalyticsIndex = client.admin().indices().exists(new IndicesExistsRequest(analyticsIndex)).get().isExists();
+
+			Assert.isTrue(isThereNginxIndex, "Big problem! Index is not there: " + nginxAccessIndex);
+			Assert.isTrue(isThereAnalyticsIndex, "Big problem! Index is not there: " + analyticsIndex);
+		}
 	}
 
 	public Map getPorpularNetworks() throws Exception {
