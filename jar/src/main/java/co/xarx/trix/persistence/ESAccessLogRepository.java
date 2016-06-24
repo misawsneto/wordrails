@@ -1,8 +1,6 @@
 package co.xarx.trix.persistence;
 
-import co.xarx.trix.domain.ElasticSearchEntity;
-import co.xarx.trix.domain.AccessLog;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-
-public interface ESAccessLogRepository<T extends ElasticSearchEntity> extends ElasticsearchRepository<AccessLog, String> {
+//@RepositoryRestResource(exported = false)
+//public interface ESAccessLogRepository<T extends ElasticSearchEntity> extends ElasticsearchRepository<AccessLog, String> {
+public interface ESAccessLogRepository {
 }
