@@ -952,6 +952,61 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	// -------- /autoSave
 
+	// ------ image credits --------
+	
+	$scope.showImageCreditsUpdateDialog = function(){
+
+	}
+
+	$scope.oldCredits = null;
+	$scope.$watch('featuredImage.credits', function(newVal, oldVal){
+		console.log("New credits", newVal);
+		if(!$scope.oldCredits){
+			$scope.oldCredits = oldVal;
+		}
+	})
+
+	$scope.creditsChanged = function(){
+		$scope.showCreditsChangeDialog();
+	}
+
+	$scope.showCreditsChangeDialog = function(){
+		$scope.disabled = false;
+		$mdDialog.show({
+			scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
+          	preserveScope: true, // do not forget this if use parent scope
+			controller: $scope.app.defaultDialog,
+			templateUrl: 'credits-dialog.html',
+			parent: angular.element(document.body),
+			targetEvent: event,
+			clickOutsideToClose:true
+			// onComplete: function(){
+
+			// }
+		});
+	}
+
+	$scope.applyImageCredits = function(){
+		if($scope.featuredImage){
+			trix.updateImageCredits($scope.featuredImage).success(function(image){
+				$mdDialog.cancel();
+			}).error(function(){
+				$mdDialog.cancel();
+			})
+		}
+	}
+
+	$scope.restorePreviewsCredits = function(){
+		if($scope.featuredImage && $scope.oldCredits){
+			$scope.featuredImage.credits = $scope.oldCredits;
+		}
+	}
+
+	// ------ /image creidts -------
+
 	$scope.getStationFromPost = function(){
 		if($scope.app.editingPost.station){
 			$scope.stations.forEach(function(station){
@@ -975,6 +1030,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		var hash = $scope.app.editingPost.featuredImageHash ? $scope.app.editingPost.featuredImageHash : $scope.app.editingPost.imageHash ? $scope.app.editingPost.imageHash : $scope.app.editingPost.featuredImage ? $scope.app.editingPost.featuredImage.originalHash : null;
 		setPostFeaturedImage(hash)
 		$scope.featuredImage = $scope.app.editingPost.featuredImage
+		if($scope.featuredImage)
+			$scope.featuredImage.credits = $scope.app.editingPost.imageCredits
 		$scope.landscape = $scope.app.editingPost.imageLandscape;
 		$scope.customizedLink.slug = $scope.app.editingPost.slug;
 
@@ -982,6 +1039,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.useSubheading = $scope.app.editingPost.subheading ? true:false
 		$scope.tags = angular.copy($scope.app.editingPost.tags);
 		$scope.useVideo = $scope.app.editingPost.externalVideoUrl;
+
+		if($scope.app.editingPost.date){
+			$scope.postDate = new Date($scope.app.editingPost.date);
+			$scope.postDateUpdateble = false;
+		}
 
 		if($scope.useVideo){
 			$scope.app.videoUrl = '';
@@ -1050,6 +1112,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		if($scope.app.checkState() === 3)
 			post.state = 'PUBLISHED';
+
+		if($scope.postDate)
+			post.date = $scope.postDate.getTime();			
 
 		return post;
 	}

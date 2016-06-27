@@ -328,6 +328,7 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
                               "   background-color: " + color + "!important; " + contrast + " }", index); index++;
         stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn, .fr-popup .fr-command.fr-btn{" + contrast + "}", index); index++;
         stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn.fr-dropdown::after, .fr-popup .fr-command.fr-btn.fr-dropdown::after{" + contrast + "}", index); index++;
+        stylesheet.insertRule(".border-bg-color{border: 1px solid; border-color:" + contrastColor + "}", index); index++;
       }
       if(cssname === 'background' && name === 'hue-1'){
         stylesheet.insertRule(".fr-toolbar, .card, .panel, .panel-card { background-color: " + color + "!important; " + contrast + " }", index); index++;

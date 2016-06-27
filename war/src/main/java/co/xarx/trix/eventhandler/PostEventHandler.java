@@ -68,6 +68,9 @@ public class PostEventHandler {
 				post.date = new Date();
 			else
 				post.date = new Date(post.scheduledDate.getTime());
+		}else{
+			if (post.scheduledDate != null && post.date.after(post.scheduledDate))
+				post.date = new Date(post.scheduledDate.getTime());
 		}
 
 		if (post.slug == null || post.slug.isEmpty()) {

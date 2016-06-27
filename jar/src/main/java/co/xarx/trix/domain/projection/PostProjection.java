@@ -59,11 +59,7 @@ public interface PostProjection {
 
 	Integer getReadTime();
 
-	String getImageCaptionText();
-
-	String getImageCreditsText();
-
-	String getImageTitleText();
+	String getImageCredits();
 
 	Boolean getNotify();
 

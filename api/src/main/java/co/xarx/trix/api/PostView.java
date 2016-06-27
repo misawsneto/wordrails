@@ -70,9 +70,7 @@ public class PostView implements Serializable, Identifiable {
 	public String externalFeaturedImgUrl;
 	public String externalVideoUrl;
 
-	public String imageCaptionText;
-	public String imageCreditsText;
-	public String imageTitleText;
+	public String imageCredits;
 
 	public String featuredVideoHash;
 	public String featuredAudioHash;

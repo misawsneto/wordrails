@@ -57,6 +57,7 @@
 		"SAVE_AS_DRAFT": "Save as draft",
 		"SAVE": "Save",
 		"APPLY": "Apply",
+		"RESTORE_PREVIEWS": "Restore previews",
 		"TITLE": "Title",
 		"SUBTITLE": "Subtitle",
 		"HEADING": "Heading",
@@ -112,7 +113,8 @@
 		"ADD": "Add",
 		"LOAD_MORE": "Load more",
 		"ACTIVATE": "Activate",
-		"FEATURED_POSTS": "Featured publications"
+		"FEATURED_POSTS": "Featured publications",
+		"CREDITS": "Image credits"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -304,6 +306,7 @@
 			"PUBLISHED_AS_DRAFT": "Draft saved",
 			"SCHEDULED_MSG": "Scheduled date and time:",
 			"RESCHEDULE": "Reschedule",
+			"UPDATE_CREDITS_MSG": "These credits belong to the image. Updating credits will inpact the image network wide. Apply changes?"
 			"messages":{
 				"PAGE_CHANGE_ALERT": "You have edited your publication and there's unsaved content.",
 				"CLEAR_CONTENT_MSG": "Clear all publication content.",

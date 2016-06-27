@@ -20,6 +20,9 @@
               <div class="col l8 offset-l2">
                   <!-- News Time -->
                   <!--<div class="news-time">The Village Guide  <i class="fa fa-clock-o"></i> 9 min ago </div>-->
+                  <div ng-if="::(app.hasImage(post))" class="text-md p-t-sm opacity-09">
+                    <i>{{::post.imageCredits}}</i>
+                  </div>
                   <div class="m-v-md">
               			<a ui-sref="app.userprofile({username: post.author.username})">
 			                <div class="inline m-r-sm user-avatar rounded w-56 bg-white inline pos-rlt text-center bg-cover" 
@@ -35,7 +38,13 @@
 			              </a>
                   </div>
                   <!-- News Title -->
+                  <div ng-if="post.topper" class="font-500 text m-v-sm p-xs border-bg-color inline">
+                    {{post.topper}}
+                  </div>
                   <div class="news-title" ng-bind-html="post.title"></div>
+                  <div ng-if="post.subheading" class="font-thin text-md-l m-v-sm">
+                    {{post.subheading}}
+                  </div>
                   <div class="fr-view text-md-l read-style" ng-bind-html="post.body"></div>
                   <div class="news-comment-shares p-t-lg p-b-sm" ng-if="::(!$state.includes('app.preview'))">
                     <md-divider class="m-b m-t"></md-divider>

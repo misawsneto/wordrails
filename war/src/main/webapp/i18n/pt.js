@@ -57,6 +57,7 @@
 		"SAVE_AS_DRAFT": "Salvar como rascunho",
 		"SAVE": "Salvar",
 		"APPLY": "Aplicar",
+		"RESTORE_PREVIEWS": "Restaurar anterior",
 		"TITLE": "Título",
 		"SUBTITLE": "Subtítulo",
 		"HEADING": "Chapéu",
@@ -112,7 +113,8 @@
 		"ADD": "Adicionar",
 		"LOAD_MORE": "Carregar mais",
 		"ACTIVATE": "Ativar",
-		"FEATURED_POSTS": "Destaques"
+		"FEATURED_POSTS": "Destaques",
+		"CREDITS": "Creditos da imagem"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -304,6 +306,7 @@
 			"PUBLISHED_AS_DRAFT": "Rascunho salvo",
 			"SCHEDULED_MSG": "Agendado para:",
 			"RESCHEDULE": "Reagendar",
+			"UPDATE_CREDITS_MSG": "Estes créditos pertecem a imagem. Atualizar os créditos impactaram o uso dessa imagem em toda a rede. Deseja aplicar alterações?",
 			"messages":{
 				"PAGE_CHANGE_ALERT": "Você possui conteúdo que ainda não foi salvo.",
 				"CLEAR_CONTENT_MSG": "Limpar todo o conteúdo desta publicação?",

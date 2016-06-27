@@ -164,6 +164,17 @@ public class ElasticSearchService {
 		elasticsearchTemplate.delete(clazz, id);
 	}
 
+	public boolean deleteBulkEntity(List<String> ids, Class clazz){
+		if(ids !=null){
+			for (String id: ids)
+				deleteEntity(id, clazz);
+			return  true;
+		}else{
+			log.warn("Empty id list");
+		}
+		return false;
+	}
+
 	public void saveEntity(ElasticSearchEntity entity) {
 		IndexQuery indexQuery = new IndexQuery();
 		indexQuery.setId(String.valueOf((entity).getId()));

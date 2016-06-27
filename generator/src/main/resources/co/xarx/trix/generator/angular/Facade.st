@@ -522,6 +522,11 @@ var trix = angular.module('trix', [])
 		return \$http.put(_config.url + "/api/persons/me/password", \$.param({"oldPassword": oldPassword, "newPassword": newPassword}), config)
 	};
 
+	this.updateImageCredits = function(image){
+		var config = {"headers": {"Content-Type": "application/json"}}
+        return \$http.put(_config.url + "/api/images/updateCredits", image, config)
+	}
+
 	this.convertPost = function(postId, state){
 		var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
 		return \$http.put(_config.url + "/api/posts/"+postId+"/convert", \$.param({"state": state}), config)

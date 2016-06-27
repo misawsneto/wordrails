@@ -411,8 +411,19 @@
 															    </div>
 								</div>
 								<!-- /media buttons -->
-								<textarea rows="1" ng-if="useHeading" msd-elastic ng-model="app.editingPost.topper" placeholder="{{'titles.HEADING' | translate }}" class="w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
-				      	</textarea>
+								
+							<div class="w-full pos-rlt" ng-if="featuredImage" style="margin-top: -30px">
+								<i>
+									<textarea rows="1" msd-elastic ng-model="featuredImage.credits"  placeholder="{{'titles.CREDITS' | translate }}" class=" w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
+					      	</textarea>
+								</i>
+								<md-button class="md-icon-button pos-abt right-0 top-0" ng-click="creditsChanged()">
+									<i class="mdi-content-save i-20"></i>
+								</md-button>
+							</div>		
+
+							<textarea rows="1" ng-if="useHeading" msd-elastic ng-model="app.editingPost.topper" placeholder="{{'titles.HEADING' | translate }}" class="w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
+	    				</textarea>
 
 								<!-- ng-mouseenter="openPlusOptions=true" ng-mouseleave="openPlusOptions=false" -->
 				      	<md-fab-speed-dial md-open="openPlusOptions"  md-direction="down" class="md-scale md-hover-full m-b-sm pull-right pos-abt z-index-1" style="margin-left: -80px;">
@@ -917,3 +928,26 @@
 	</md-dialog-content>
 </script>
 
+<script type="text/ng-template" id="credits-dialog.html">
+   <md-dialog aria-label="change action">
+     <md-content role="document" class="md-background-hue-1 background">
+       <div class="p-xs">
+         <div class="md-dialog-content-body text-md text-center w-400 p m-b">
+           {{'settings.post.UPDATE_CREDITS_MSG' | translate}}
+         </div>
+   
+         <div class="text-center">
+           <md-button ng-click="applyImageCredits(); disabled = true;" ng-disabled="disabled">
+             {{'titles.APPLY' | translate}}
+           </md-button>
+           <md-button ng-click="cancel()">
+             {{'titles.CANCEL' | translate}}
+           </md-button>
+           <md-button ng-click="restorePreviewsCredits(); cancel();" ng-disabled="!oldCredits">
+             {{'titles.RESTORE_PREVIEWS' | translate}}
+           </md-button>
+         <div>
+       </div>
+     </md-content>
+   </md-dialog>
+</script>

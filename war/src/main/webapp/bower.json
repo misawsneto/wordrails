@@ -111,16 +111,5 @@
     "froala-image-caption": "^1.0.2",
     "angular-slick": "^0.2.1",
     "angular-drag-and-drop-lists": "^1.4.0"
-  },
-  "resolutions": {
-    "jquery": ">=1.7.0",
-    "angular-touch": ">=1.2.10",
-    "angular-material": "^1.0.9",
-    "angular-ui-utils": "^3.0.0",
-    "angular": ">= 1.3.6",
-    "moment": "^2.13.0",
-    "froala-wysiwyg-editor": "2.3.3",
-    "perfect-scrollbar": "^0.6.11",
-    "angular-socialshare": "^2.2.1"
   }
 }
