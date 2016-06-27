@@ -141,8 +141,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if(!$scope.app.editingPost)
 			$scope.app.editingPost = {};
 
-		$scope.app.editingPost.date = $scope.app.editingPost.scheduledDate = $scope.postScheduleDate = scheduledDate;
-		$scope.postScheduleMenuOpen = false;
+		$scope.postDate = $scope.app.editingPost.date = $scope.app.editingPost.scheduledDate = $scope.postScheduleDate = scheduledDate;
+		$scope.postDateUpdateble = $scope.postScheduleMenuOpen = false;
 		$scope.app.editingPost.state = "PUBLISHED";
 	}
 
