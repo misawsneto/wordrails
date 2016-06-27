@@ -44,7 +44,7 @@ public class DatabaseConfig {
 		ds.setUsername(username);
 		ds.setPassword(password);
 		ds.addDataSourceProperty("cachePrepStmts", "true");
-		ds.addDataSourceProperty("prepStmtCacheSize", "250");
+		ds.addDataSourceProperty("prepStmtCacheSize", "300");
 		ds.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 
 		return ds;

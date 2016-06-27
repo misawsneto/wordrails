@@ -2,7 +2,7 @@
   <ul class="nav">
     <li ui-sref-active="active" ng-repeat="station in app.stations">
       <a md-ink-ripple ui-sref="app.station.stationHome({'stationSlug': station.stationSlug})">
-        <span class="font-normal text-md">{{station.name}}</span>
+        <span class="font-normal text-md">{{::station.name}}</span>
       </a>
     </li>
   </ul>
