@@ -59,10 +59,6 @@ public class PostEventHandler {
 			}
 		}
 
-		if(post.featuredVideo != null){
-			postService.setVideoFeaturedImage(post);
-		}
-
 		savePost(post);
 	}
 
@@ -81,6 +77,13 @@ public class PostEventHandler {
 			post.slug = StringUtil.toSlug(post.title);
 		}
 
+		if(post.featuredVideo != null){
+			post.imageLandscape = false;
+			if (post.featuredImage == null) {
+				postService.setVideoFeaturedImage(post);
+			}
+		}
+
 		if (postRepository.findBySlug(post.slug) != null) {
 			post.slug = post.slug + "-" + StringUtil.generateRandomString(6, "aA#");
 		}
@@ -97,6 +100,12 @@ public class PostEventHandler {
 
 	@HandleAfterSave
 	public void handleAfterSave(Post post) {
+		if (post.featuredVideo != null) {
+			post.imageLandscape = false;
+			if (post.featuredImage == null) {
+				postService.setVideoFeaturedImage(post);
+			}
+		}
 		elasticSearchService.mapThenSave(post, ESPost.class);
 		auditService.saveChange(post);
 	}
