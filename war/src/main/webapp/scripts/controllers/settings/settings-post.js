@@ -234,7 +234,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			$scope.app.editingPost.body = '';
 		}
 		$scope.tags = [];
-		$scope.featuredImage = $scope.featuredAudio = $scope.featuredVideo = $scope.postFeaturedImage = $scope.postFeaturedAudio = $scope.postFeaturedVideo = null;
+		removeAllMedia();
 		$mdDialog.cancel();
 	}
 
@@ -741,6 +741,12 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.removeVideo = function(){
 		$scope.useVideo = false;
+		if($scope.app.editingPost)
+			removeAllMedia();
+	}
+
+	function removeAllMedia(){
+		$scope.featuredImage = $scope.featuredAudio = $scope.featuredVideo = $scope.postFeaturedImage = $scope.postFeaturedAudio = $scope.postFeaturedVideo = null;
 	}
 
 	$scope.removeUploadedVideo = function(){

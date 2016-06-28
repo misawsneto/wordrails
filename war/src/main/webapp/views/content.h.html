@@ -178,7 +178,7 @@
             <li class="material-top-menu-item animated fadeIn" 
              ng-class="{'active': app.activeCategory.id === category.id}" md-ink-ripple data-ng-repeat="category in app.perspectiveTerms" 
              data-menu-item="{{category.item}}">
-              <a ng-href="{{::'/' + app.getStationById(app.termPerspectiveView.stationId).stationSlug + '/cat?name=' + category.name}}" >
+              <a ng-href="{{::('/' + app.getStationById(app.termPerspectiveView.stationId).stationSlug + '/cat?name=' + app.getEscapedCategory(category.name))}}" >
                 <span>{{::category.name}}</span>
               </a>
             </li>

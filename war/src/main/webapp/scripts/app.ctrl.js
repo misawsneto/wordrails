@@ -396,7 +396,7 @@ angular.module('app')
 
         $scope.app.getCategoryLink = function(stationSlug, categoryName){
           var base = $scope.app.isSettings() ? TRIX.baseUrl : '';
-          return base +  '/'+stationSlug+'/cat?name='+categoryName;
+          return base +  '/'+stationSlug+'/cat?name='+$scope.app.getEscapedCategory(categoryName);
         }
 
         $scope.app.stopPropagation = function(e){
@@ -408,6 +408,10 @@ angular.module('app')
           $('#search form input').focus();
 
 
+        }
+
+        $scope.app.getEscapedCategory = function(category){
+          return window.encodeURIComponent(category)
         }
 
         // ---------- /util -------------
