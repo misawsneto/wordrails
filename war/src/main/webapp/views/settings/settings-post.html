@@ -264,8 +264,8 @@
           <div class="cell"> <!-- cell -->
             <div class="cell-inner"><!-- cell -->
 							<!-- stub image to get height -->
-							<img id="img-stub" ng-src="{{postFeaturedImage}}" ng-if="postFeaturedImage" class="z-index-n-1 pos-fix" style="opacity: 0">
-							<div id="post-image-container" data-img="{{postFeaturedImage}}" class="animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md h-400" ng-if="postFeaturedImage"  ng-class="{'w-full ': landscape, 'block-800': !landscape}"
+							<img id="img-stub" ng-src="{{postFeaturedImage}}" ng-if="postFeaturedImage && (!useVideo && !useUploadedVideo && !useUploadedAudio)" class="z-index-n-1 pos-fix" style="opacity: 0">
+							<div id="post-image-container" ng-if="postFeaturedImage && (!useVideo && !useUploadedVideo && !useUploadedAudio)" class="animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md h-400" ng-if="postFeaturedImage"  ng-class="{'w-full ': landscape, 'block-800': !landscape}"
 							ng-style="{'background-image': 'url(' + postFeaturedImage + ')', 'background-position': app.imgToolsProps.x + '% ' + app.imgToolsProps.y + '%'}">
 								<md-fab-speed-dial md-open="openImageOptions" md-direction="up" class="md-scale pull-right p-t p-r p-b pos-abt bottom-0 right-0">
 								  <md-fab-trigger>
@@ -412,7 +412,7 @@
 								</div>
 								<!-- /media buttons -->
 								
-							<div class="w-full pos-rlt" ng-if="featuredImage" style="margin-top: -30px">
+							<div class="w-full pos-rlt" ng-if="postFeaturedImage && (!useVideo && !useUploadedVideo && !useUploadedAudio)" style="margin-top: -30px">
 								<i>
 									<textarea rows="1" msd-elastic ng-model="featuredImage.credits"  placeholder="{{'titles.CREDITS' | translate }}" class=" w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
 					      	</textarea>

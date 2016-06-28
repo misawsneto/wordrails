@@ -59,6 +59,10 @@ public class PostEventHandler {
 			}
 		}
 
+		if(post.featuredVideo != null){
+			postService.setVideoFeaturedImage(post);
+		}
+
 		savePost(post);
 	}
 

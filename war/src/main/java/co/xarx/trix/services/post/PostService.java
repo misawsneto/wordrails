@@ -7,11 +7,13 @@ import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.*;
+import co.xarx.trix.services.ImageService;
 import co.xarx.trix.services.MobileNotificationService;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
+import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,6 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,6 +60,9 @@ public class PostService {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PostSearchService postSearchService;
+
+	@Autowired
+	private ImageService imageService;
 
 	public void sendNewPostNotification(Post post) throws NotificationException {
 		List<MobileDevice> mobileDevices;
@@ -190,5 +198,42 @@ public class PostService {
 		queryPersistence.updateRecommendsCount(postId);
 
 		return response;
+	}
+
+	public void setVideoFeaturedImage(Post post) {
+		try{
+			if(post.featuredVideo != null && post.featuredVideo.identifier != null && "youtube".equals(post
+					.featuredVideo.provider)){
+				post.featuredImage = getYoutubeThumbFeaturedImage(post.featuredVideo.provider, post.featuredVideo
+						.identifier);
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private Image getYoutubeThumbFeaturedImage(String provider, String identifier) {
+		if("youtube".equals(provider)) {
+			try {
+				URL url = new URL("http://img.youtube.com/vi/" + identifier + "/0.jpg");
+				InputStream in = new BufferedInputStream(url.openStream());
+				Image newImage = new Image(Image.Type.POST.toString());
+				String name = "youtube_" + identifier;
+				newImage.setTitle(name);
+				java.io.File originalFile = FileUtil.createNewTempFile(in);
+
+				newImage = imageService.createAndSaveNewImage(Image.Type.POST.toString(), name, originalFile,
+						"image/jpg");
+				in.close();
+				return newImage;
+			}catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return  null;
 	}
 }

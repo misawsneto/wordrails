@@ -654,18 +654,22 @@ angular.module('app')
       // ---------- imageHelper -----------
       
       $scope.getBackgroundImage = function(object, size){
-        var img = $filter('bgImageLink')(object, size);
-        if(object.externalVideoUrl){
-          img = $filter('videoThumb')(object.externalVideoUrl);
-        }
+        var img = null;
+        // if(object.externalVideoUrl){
+        //   img = {"background-image": "url(" + object.externalVideoUrl +")", "background-position": "50% 20%"}; //$filter('videoThumb')(object.externalVideoUrl);
+        // }else{
+          img = $filter('bgImageLink')(object, size);
+        // }
         return img;
       }
 
       $scope.app.getImageLink = $scope.getImageLink = function(object, size){
-        var img = $filter('imageLink')(object, size);
-        if(object.externalVideoUrl){
-          img = $filter('videoThumb')(object.externalVideoUrl);
-        }
+        var img = null; 
+        // if(object.externalVideoUrl){
+        //   img = object.externalVideoUrl; // $filter('videoThumb')(object.externalVideoUrl);
+        // }else{
+          img = $filter('imageLink')(object, size);
+        // }
         return img;
       }
 
