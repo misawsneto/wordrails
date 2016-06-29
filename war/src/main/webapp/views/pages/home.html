@@ -158,7 +158,7 @@
                           <div class="news-title o-f-h" ng-if="::(app.hasImage(cell.postView))" style="height: 66px">
                             <p clamp="2">{{::cell.postView.title}}</p>
                           </div>
-                          <div class="news-content o-f-h" ng-style="{'height': app.hasImage(cell.postView) ? '95px' : '161px'}" ng-if="::(!app.largeCardCheck($index, cell.postView))"><p clamp="{{app.hasImage(cell.postView) ? 4 : 7}}">{{::cell.postView.snippet}}</p>
+                          <div class="news-content o-f-h" ng-style="{'height': app.hasImage(cell.postView) ? '95px' : '161px'}" ng-if="::(!app.largeCardCheck($index, cell.postView))"><p clamp="{{::(app.hasImage(cell.postView) ? 4 : 7)}}">{{::cell.postView.snippet}}</p>
                           </div>
                         </a>
                         <div class="news-comment-shares z-index-2">

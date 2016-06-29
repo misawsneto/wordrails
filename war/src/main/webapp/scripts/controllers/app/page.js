@@ -40,6 +40,9 @@ app.controller('PageCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
     		if($scope.app.perspectiveTerms == null)
     			$scope.app.loadPerspectiveTerms()
     	}
+    	$scope.app.name = $scope.app.network.name;
+    }else if($state.includes('app.station.stationHome')){
+    	$scope.app.name = $scope.thisStation.name;
     }
 
     if($scope.app.termPerspectiveView && $scope.app.termPerspectiveView.homeRow && $scope.app.termPerspectiveView.homeRow.cells){
@@ -51,6 +54,7 @@ app.controller('PageCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 	  $timeout(function(){
 	    $('#scroll-box').animate({scrollTop: 0}, 0, 'easeOutQuint');
 	  })
+
 
 	pageCtrl = $scope;
 }]);
