@@ -511,6 +511,12 @@ angular.module('app')
         $scope.app.applyNetworkTheme();
       } // end of startApp
 
+      if(!appData.network){
+        window.console && console.info('no network')
+        $scope.app.name = '';
+        return
+      }
+
       startApp();
 
       $scope.app.isLogged = function(){

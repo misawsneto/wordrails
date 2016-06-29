@@ -114,7 +114,13 @@
 		"LOAD_MORE": "Load more",
 		"ACTIVATE": "Activate",
 		"FEATURED_POSTS": "Featured publications",
-		"CREDITS": "Image credits"
+		"CREDITS": "Image credits",
+		"LAST_LOGIN": "last login",
+		"READ": "Read",
+		"COLABORATE": "Colaborate",
+		"WRITE": "Write",
+		"EDIT": "Edit",
+		"ADMIN": "Admin"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -264,7 +270,8 @@
 			"REQUIRED_FIELDS": "Name, username and email are required.",
 			"OPTIONAL_PASSWORD": "Password is optional and if not provided a random password will be generated and sent via email.",
 			"INVITATIONS_SENT": "Invitations were sent",
-			"PERMISSIONS_UPDATES": "Permissions updates"
+			"PERMISSIONS_UPDATES": "Permissions updates",
+			"REMOVE_PERMISSIONS": "Remove permissions"
 		},
 		"comment":{
 			"REMOVE_COMMENT_MSG": "Are you sure you want to permanatly delete this comment?",

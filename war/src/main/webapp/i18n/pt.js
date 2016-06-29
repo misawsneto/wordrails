@@ -114,7 +114,13 @@
 		"LOAD_MORE": "Carregar mais",
 		"ACTIVATE": "Ativar",
 		"FEATURED_POSTS": "Destaques",
-		"CREDITS": "Creditos da imagem"
+		"CREDITS": "Creditos da imagem",
+		"LAST_LOGIN": "último login",
+		"READ": "Leitura",
+		"COLABORATE": "Colaborar",
+		"WRITE": "Escrita",
+		"EDIT": "Editar",
+		"ADMIN": "Administrar"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -264,7 +270,8 @@
 			"REQUIRED_FIELDS": "Nome, usuário e email são campos obrigatórios.",
 			"OPTIONAL_PASSWORD": "A senha é opcional e caso não fornecida será gerado automáticamente e enviada por email.",
 			"INVITATIONS_SENT": "Convites enviados com sucesso",
-			"PERMISSIONS_UPDATES": "Permissões atualizadas"
+			"PERMISSIONS_UPDATES": "Atualização de permissões",
+			"REMOVE_PERMISSIONS": "Remover permissões"
 		},
 		"comment":{
 			"REMOVE_COMMENT_MSG": "Tem certeza que deseja remover este comentário?",

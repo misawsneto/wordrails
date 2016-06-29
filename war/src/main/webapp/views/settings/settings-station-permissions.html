@@ -29,13 +29,14 @@
 														<md-checkbox aria-label="nothing" class="no-margin" ng-model="toggleSelectValue" ng-change="toggleAll(toggleSelectValue)">
 														</md-checkbox>
 													</th>
-													<th>usuários</th>
-													<th style="min-width:170px;" class="text-center display-t-c v-m no-padding">último login</th>
+													<th class="text-l-c">{{'titles.USERS' | translate}}</th>
+                          <th class="text-l-c">{{'titles.PERMISSIONS' | translate}}</th>
+													<th style="min-width:170px;" class="text-center display-t-c v-m no-padding">{{'titles.LAST_LOGIN' | translate}}</th>
 													<th style="width:30px;"></th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr ng-repeat="permission in permissions" class="b-l-3x b-l-s b-c-t" 	ng-style="person.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" ng-class="{'b-l-primary': isActivePerson(person)}">
+												<tr ng-repeat="permission in permissions" class="b-l-3x b-l-s b-c-t" 	ng-style="permission.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" >
 													<td class="display-t-c v-m">
 														<md-checkbox aria-label="nothing" class="no-margin" ng-if="permission.person.id != app.person.id"
 														 ng-model="permission.selected" ng-true-value="true" ng-false-value="false" ng-click="app.stopPropagation($event)">
@@ -52,21 +53,14 @@
 								                <div class="text-muted clear text-ellipsis">{{permission.person.username}} | {{permission.person.email}}</div>
 								              </span>
 													</td>
+                          <td class="display-t-c v-m text-center"> {{getPermissionText(permission)}} </td>
 													<td class="display-t-c v-m text-center" ng-if="!permission.person.lastLogin"> - </td>
 													<td class="display-t-c v-m text-center" ng-if="permission.person.lastLogin">{{app.getLocalTime(permission.person.lastLogin)}}</td>
 													<td class="display-t-c v-m">
                             <div ng-if="person.id != app.person.id" class="dropdown hidden-sm">
-                              <ul class="list-inline no-margin">
-                                <li class="dropdown">
-                                  <a data-toggle="dropdown">
-                                    <i class="mdi-navigation-more-vert i-24"></i>
-                                  </a>
-                                  <ul class="dropdown-menu dropdown-menu-scale pull-right pull-up top text-color">
-                                    <li><a ng-click="changePasswordDialog($event, person)">{{'settings.users.REDIFINE_PASSWORD' | translate}}</a></li>
-                                    <li><a ng-click="showEditProfile($event, person);">{{'settings.users.EDIT_PROFILE' | translate}}</a></li>
-                                  </ul>
-                                </li>
-                              </ul>
+                              <md-button class="md-icon-button" data-toggle="dropdown">
+                                <i class="mdi2-delete i-20"></i>
+                              </md-button>
                             </div>
 													</td>
 												</tr>
@@ -117,29 +111,11 @@
 	  		</md-tooltip>
 	    	<i class="mdi i-20 mdi2-plus text-dark"></i>
 	    </md-button>
-	    <md-button aria-label="nothing" aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'enablePersons')">
-	    	<md-tooltip md-direction="left">
-	      	{{'settings.users.ENABLE_ALL_SELECTED' | translate}}
-	  		</md-tooltip>
-	    	<i class="mdi mdi2-account-check i-20 text-dark"></i>
-	    </md-button>
-	    <md-button aria-label="nothing" aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'disablePersons')">
-	    	<md-tooltip md-direction="left">
-	      	{{'settings.users.DISABLE_ALL_SELECTED' | translate}}
-	  		</md-tooltip>
-	    	<i class="mdi mdi2-account-off i-20 text-dark"></i>
-	    </md-button>
 	    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showBulkChangePermissions($event)">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.PERMISSIONS_OF_ALL_SELECTED' | translate}}
 	  		</md-tooltip>
 	    	<i class="mdi mdi2-key-variant i-20 text-dark"></i>
-	    </md-button>
-	    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showInviteUserDialog($event);">
-	    	<md-tooltip md-direction="left">
-	      	{{'settings.users.INVITE_USERS' | translate}}
-	  		</md-tooltip>
-	    	<i class="mdi mdi2-email i-20 text-dark"></i>
 	    </md-button>
 	  </md-fab-actions>
 	</md-fab-speed-dial>
@@ -405,29 +381,12 @@
 </script>
 
 <script type="text/ng-template" id="change-permissions-dialog.html">
-  <md-dialog aria-label="Editar permissão" id="user-permissions-dialog">
-    <md-content class="md-background-hue-1 background">
+    <md-dialog-content  class="md-background-hue-1 background">
       <div class="p">
-        <div class="p-xs text-md">
-          Estações:
-        </div>
         <div class="p-sm stations-permissions-dialog-list m-t-sm" >
-          <ul class="no-style">
-            <li ng-repeat="station in app.stations" class="clearfix p-xs font-thin">
-              <span class="pull-right">
-                <label class="md-check">
-                  <input type="checkbox" ng-model="station.selected">
-                  <i class="md-accent-default background"></i>
-                </label>
-              </span>
-              <span class="clear m-r-xxl">
-                <span>{{station.name}}</span>
-                <small class="text-muted text-xs clear text-ellipsis">
-                  Visibilidade: {{(station.visibility == 'UNRESTRICTED') ? 'Pública' : 'Privada'}} | Todos podem escrever: {{(station.writable) ? 'Sim' : 'Não'}}
-                </small>
-              </span>
-            </li>
-          </ul>
+          <div class="p-xs text-md-l">
+            {{station.name}}
+          </div>
         </div>
         <div class="p-xs text-base m-t-sm">
           <span class="text-md">Permissões:</span>
@@ -435,26 +394,25 @@
           <md-radio-group ng-model="stationRole">
             <ul class="station-permissions m-t">
               <li class="m-r">
-                <md-radio-button value="READER">Leitor</md-radio-button>
+                <md-radio-button value="READER">{{'settings.users.permissions.READER' | translate}}</md-radio-button>
               </li>
               <li class="m-r">
-                <md-radio-button value="WRITER">Escritor</md-radio-button>
+                <md-radio-button value="WRITER">{{'settings.users.permissions.WRITER' | translate}}</md-radio-button>
               </li>
               <li class="m-r">
-                <md-radio-button value="EDITOR">Edtor</md-radio-button>
+                <md-radio-button value="EDITOR">{{'settings.users.permissions.EDITOR' | translate}}</md-radio-button>
               </li>
               <li class="m-r">
-                <md-radio-button value="ADMIN">Administrador</md-radio-button>
+                <md-radio-button value="ADMIN">{{'settings.users.permissions.ADMIN' | translate}}</md-radio-button>
               </li>
             </ul>
           </md-radio-group>
           
         </div>
         <div class="text-right">
-          <md-button aria-label="nothing" ng-click="pe.applyPermissions(pe.adminStations, pe.stationRole)" class="no-margin m-r">Confirmar</md-button>
+          <md-button aria-label="nothing" ng-click="applyPermissions(adminStations, stationRole)" class="no-margin m-r">Confirmar</md-button>
           <md-button aria-label="nothing" ng-click="cancel()" class="no-margin">Fechar</md-button>
         <div>
       </div>
-    </md-content>
-  </md-dialog>
+    </md-dialog-content>
 </script>
