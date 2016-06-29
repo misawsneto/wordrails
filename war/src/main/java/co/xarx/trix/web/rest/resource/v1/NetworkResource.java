@@ -13,6 +13,7 @@ import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.services.security.StationPermissionService;
+import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.NetworkApi;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
 
 import javax.validation.ConstraintViolation;
@@ -126,6 +128,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 
 	@Override
 	@IgnoreMultitenancy
+	@Transactional
 	public Response createNetwork (NetworkCreateDto networkCreate)  throws ConflictException, BadRequestException, IOException {
 		try {
 			Network network = new Network();
@@ -289,6 +292,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 			station.ownedTaxonomies = taxonomies;
 			stationPerspective.taxonomy = sTaxonomy;
 
+			station.stationSlug = StringUtil.toSlug(station.name);
 			stationRepository.save(station);
 
 			taxonomies = station.ownedTaxonomies;
