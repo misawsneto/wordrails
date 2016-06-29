@@ -103262,6 +103262,9 @@ angular
 
 var app =  
 angular.module('app')
+  .config(['$compileProvider', function ($compileProvider) {
+    $compileProvider.debugInfoEnabled(false);
+  }])
   .config(
     [        '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', 'cfpLoadingBarProvider',
     function ($controllerProvider,   $compileProvider,   $filterProvider,   $provide ,  cfpLoadingBarProvider) {
@@ -103351,7 +103354,7 @@ angular.module('app')
     .warnPalette('myWarn')
     .backgroundPalette('myBackground', {'default':'500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A100'});
 
-    $mdThemingProvider.alwaysWatchTheme(true);
+    //$mdThemingProvider.alwaysWatchTheme(true);
 
     $provide.value('themeProvider', $mdThemingProvider);
     $provide.value('colorsProvider', $mdColorsProvider);
