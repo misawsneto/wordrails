@@ -1,7 +1,10 @@
 package co.xarx.trix.web.rest.resource.v1;
 
 import co.xarx.trix.annotation.IgnoreMultitenancy;
-import co.xarx.trix.api.*;
+import co.xarx.trix.api.PersonPermissions;
+import co.xarx.trix.api.StationPermission;
+import co.xarx.trix.api.StringResponse;
+import co.xarx.trix.api.ThemeView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.PostEventHandler;
@@ -138,12 +141,6 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 			TenantContextHolder.setCurrentTenantId(networkCreate.newSubdomain);
 
 			//Station Default Taxonomy
-			Taxonomy nTaxonomy = new Taxonomy();
-			nTaxonomy.setTenantId(network.getTenantId());
-
-			nTaxonomy.name = "Categoria da Rede " + network.name;
-			nTaxonomy.type = Taxonomy.NETWORK_TAXONOMY;
-			taxonomyRepository.save(nTaxonomy);
 
 			try {
 				network.networkCreationToken = UUID.randomUUID().toString();
@@ -162,10 +159,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 					errors.add(error);
 				}
 
-				taxonomyRepository.delete(nTaxonomy);
 				return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + objectMapper.writeValueAsString(errors) +"}").build();
 			} catch (org.springframework.dao.DataIntegrityViolationException e){
-				taxonomyRepository.delete(nTaxonomy);
 
 				if (e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
 					org.hibernate.exception.ConstraintViolationException ex = (ConstraintViolationException) e.getCause();
@@ -212,12 +207,10 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 					errors.add(error);
 				}
 
-				taxonomyRepository.delete(nTaxonomy);
 				networkRepository.delete(network);
 
 				return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + objectMapper.writeValueAsString(errors) +"}").build();
 			} catch (org.springframework.dao.DataIntegrityViolationException e){
-				taxonomyRepository.delete(nTaxonomy);
 				networkRepository.delete(network);
 
 				if (e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
@@ -228,32 +221,12 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 
 				throw e;
 			}catch (Exception e){
-				taxonomyRepository.delete(nTaxonomy);
 				networkRepository.delete(network);
 				e.printStackTrace();
 			}
 
 			// End Create Person ------------------------------
 
-			nTaxonomy.owningNetwork = network;
-			taxonomyRepository.save(nTaxonomy);
-
-			Term nterm1 = new Term();
-			nterm1.setTenantId(network.getTenantId());
-			nterm1.name = "Categoria 1";
-
-			Term nterm2 = new Term();
-			nterm2.setTenantId(network.getTenantId());
-			nterm2.name = "Categoria 2";
-
-			nterm1.taxonomy = nTaxonomy;
-			nterm2.taxonomy = nTaxonomy;
-
-			nTaxonomy.terms = new HashSet<Term>();
-			nTaxonomy.terms.add(nterm1);
-			nTaxonomy.terms.add(nterm2);
-			termRepository.save(nterm1);
-			termRepository.save(nterm2);
 //			Set<Taxonomy> nTaxonomies = new HashSet<Taxonomy>();
 //			nTaxonomies.add(nTaxonomy);
 //			taxonomyRepository.save(nTaxonomy);
