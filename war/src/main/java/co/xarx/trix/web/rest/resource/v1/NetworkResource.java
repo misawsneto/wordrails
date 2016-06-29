@@ -14,6 +14,7 @@ import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.NetworkService;
 import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.services.security.Authenticator;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.services.security.StationPermissionService;
 import co.xarx.trix.util.StringUtil;
@@ -46,6 +47,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	private StationRepository stationRepository;
 	@Autowired
 	private AuthService authProvider;
+	@Autowired
+	private Authenticator authenticatorService;
 	@Autowired
 	private NetworkRepository networkRepository;
 	@Autowired
@@ -199,6 +202,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 				person.networkAdmin = true;
 
 				personRepository.save(person);
+				authenticatorService.passwordAuthentication(user, user.password);
 			} catch (javax.validation.ConstraintViolationException e) {
 
 				List<FieldError> errors = new ArrayList<FieldError>();
