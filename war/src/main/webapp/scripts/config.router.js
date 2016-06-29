@@ -1278,6 +1278,12 @@ angular.module('app')
             resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
             controller: 'AppNetworkCtrl'
           })
+          .state('access.networkcreated', {
+            url: '/networkcreated?token',
+            template: '<div></div>',
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
+            controller: 'AppNetworkCreatedCtrl'
+          })
           .state('access.lockme', {
             url: '/lockme',
             templateUrl: '/views/pages/lockme.html?' + GLOBAL_URL_HASH

@@ -40,8 +40,6 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
-	private AuthCredentialRepository authCredentialRepository;
-	@Autowired
 	private AuthService authProvider;
 	@Autowired
 	private NetworkRepository networkRepository;
@@ -49,6 +47,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	private TaxonomyRepository taxonomyRepository;
 	@Autowired
 	private PersonRepository personRepository;
+	@Autowired
+	private UserRepository userRepository;
 	@Autowired
 	private TermRepository termRepository;
 	@Autowired
@@ -69,6 +69,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	private StationPermissionService stationPermissionService;
 	@Autowired
 	private PersonPermissionService personPermissionService;
+	@Autowired
+	private AuthCredentialRepository authCredentialRepository;
 
 	@Override
 	public void getNetworks() throws IOException {
@@ -142,7 +144,13 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 
 			try {
 				network.networkCreationToken = UUID.randomUUID().toString();
+
 				networkRepository.save(network);
+
+				AuthCredential authCredential = new AuthCredential();
+				authCredential.network = network;
+				authCredentialRepository.save(authCredential);
+
 			} catch (javax.validation.ConstraintViolationException e) {
 
 				List<FieldError> errors = new ArrayList<>();
@@ -165,8 +173,6 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 				throw e;
 			}
 
-			authCredentialRepository.save(new AuthCredential());
-
 			// Create Person ------------------------------
 
 			Person person = networkCreate.person;
@@ -188,6 +194,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 
 				user.addAuthority(authority);
 				user.addAuthority(nauthority);
+
+				userRepository.save(user);
 
 				person.user = user;
 				person.networkAdmin = true;

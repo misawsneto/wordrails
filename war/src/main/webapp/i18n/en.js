@@ -120,7 +120,9 @@
 		"COLABORATE": "Colaborate",
 		"WRITE": "Write",
 		"EDIT": "Edit",
-		"ADMIN": "Admin"
+		"ADMIN": "Admin",
+		"CREATE_NETWORK": "Create network",
+		"NETWORK_NAME": "Network name"
 	},
 	"signin_signup": {
 		"OR": "or",

@@ -1,9 +1,6 @@
 package co.xarx.trix.persistence;
 
-import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Network;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -18,7 +15,6 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>,
 		QueryDslPredicateExecutor<Network> {
 
 	@RestResource(exported = true)
-	@Cacheable(value = "network", key = "#p0")
 	Network findByTenantId(@Param("tenantId") String tenantId);
 
 	@RestResource(exported = false)
@@ -27,10 +23,4 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>,
 	@RestResource(exported = false)
 	@Query("select n.id, n.domain, n.tenantId from Network n")
 	List<Object[]> findIdsAndDomain();
-
-	@Override
-	@SdkExclude
-	@RestResource(exported = true)
-	@CacheEvict(value = "network")
-	<S extends Network> S save(S entity);
 }
