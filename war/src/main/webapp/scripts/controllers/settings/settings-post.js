@@ -464,6 +464,13 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
     $scope.app.imgToolsProps.x = Math.round(((e.pageX - offset.left) / e.target.clientWidth) * 100);
     $scope.app.imgToolsProps.y = Math.round(((e.pageY - offset.top) / e.target.clientHeight) * 100);
   };
+
+  $scope.resetFocus = function(){
+  	if($scope.app.editingPost){
+  		$scope.app.imgToolsProps.x = $scope.app.editingPost.focusX ? $scope.app.editingPost.focusX : 50
+  		$scope.app.imgToolsProps.y = $scope.app.editingPost.focusY ? $scope.app.editingPost.focusY : 50
+  	}
+  }
   
   $scope.offset = function (elm) {
     try { return elm.offset(); } catch (e) { }
@@ -1036,8 +1043,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		var hash = $scope.app.editingPost.featuredImageHash ? $scope.app.editingPost.featuredImageHash : $scope.app.editingPost.imageHash ? $scope.app.editingPost.imageHash : $scope.app.editingPost.featuredImage ? $scope.app.editingPost.featuredImage.originalHash : null;
 		setPostFeaturedImage(hash)
 		$scope.featuredImage = $scope.app.editingPost.featuredImage
-		if($scope.featuredImage)
+		if($scope.featuredImage){
 			$scope.featuredImage.credits = $scope.app.editingPost.imageCredits
+			$scope.app.imgToolsProps.x =  $scope.app.editingPost.focusX;
+			$scope.app.imgToolsProps.y = $scope.app.editingPost.focusY;
+		}
 		$scope.landscape = $scope.app.editingPost.imageLandscape;
 		$scope.customizedLink.slug = $scope.app.editingPost.slug;
 
@@ -1096,8 +1106,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			post.author = ImageDto.getSelf(post.author);
 
 		// --- image ---
-		if($scope.featuredImage)
+		if($scope.featuredImage){
 			post.featuredImage = ImageDto.getSelf($scope.featuredImage);
+			post.focusX = $scope.app.imgToolsProps.x
+			post.focusY = $scope.app.imgToolsProps.y
+		}
 		else
 			post.featuredImage = null;
 
@@ -1120,7 +1133,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			post.state = 'PUBLISHED';
 
 		if($scope.postDate)
-			post.date = $scope.postDate.getTime();			
+			post.date = $scope.postDate.getTime();
 
 		return post;
 	}
@@ -1456,10 +1469,10 @@ function createVersions(){
 	    '</div>'+
     '</div>'+
 		'<div class="text-center p-t">'+
-			'<md-button ng-click="app.cancelDialog();" class="m-0">'+
+			'<md-button ng-click="app.cancelDialog(); resetFocus();" class="m-0">'+
 				'{{\'titles.CANCEL\' | translate}}'+
 			'</md-button>'+
-			'<md-button ng-click="" class="m-0">'+
+			'<md-button ng-click="app.cancelDialog();" class="m-0">'+
 				'{{\'titles.SAVE\' | translate}}'+
 			'</md-button>'+
 		'</div>'+

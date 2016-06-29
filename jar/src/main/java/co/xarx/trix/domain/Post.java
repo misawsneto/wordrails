@@ -145,6 +145,12 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	public Double lng;
 
+	@Column(columnDefinition = "int DEFAULT 50")
+	public Integer focusX;
+
+	@Column(columnDefinition = "int DEFAULT 50")
+	public Integer focusY;
+
 	@Getter(AccessLevel.NONE)
 	public String featuredAudioHash;
 

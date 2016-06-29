@@ -1,4 +1,4 @@
-<div ng-if="::(!hasVideo && app.hasImage(post) && post.imageLandscape)" preload-bg-image="{{app.getImageLink(post, 'large')}}" class="pos-rlt display-table animated5x fadeIn w-full bg-cover md-whiteframe-z2 h-500 text-center" ng-class="{'h-500': $mdMedia('gt-sm'),'h-400': !$mdMedia('gt-sm')}" style="margin-top: -16px; background-position: 50% 50%;">
+<div ng-if="::(!hasVideo && app.hasImage(post) && post.imageLandscape)" preload-bg-image="{{::(app.getImageLink(post, 'large'))}}" class="pos-rlt display-table animated5x fadeIn w-full bg-cover md-whiteframe-z2 h-500 text-center animated fadeIn" ng-class="{'h-500': $mdMedia('gt-sm'),'h-400': !$mdMedia('gt-sm')}" style="margin-top: -16px;" style="background-position: {{:post.focusX + '% '}} {{::post.focusY + '%'}}" ng-style="{'background-position': post.focusX + '% ' + post.focusY + '%'}">
 </div>
 
 <div class="container">
@@ -10,7 +10,7 @@
           </md-button>
           <div class="news-single z-depth-1 card">
               <!-- News Single Image -->
-              <div alt="news Image" ng-if="::((app.hasImage(post) && !post.imageLandscape) || hasVideo)" preload-bg-image="{{app.getImageLink(post, 'large')}}" class="responsive-img h-400 bg-cover pos-rlt">
+              <div alt="news Image" ng-if="::((app.hasImage(post) && !post.imageLandscape) || hasVideo)" preload-bg-image="{{app.getImageLink(post, 'large')}}" class="responsive-img h-400 bg-cover pos-rlt" ng-style="{'background-position': post.focusX + '% ' + post.focusY + '%'}">
                 <embed-video width=800 height=400 iframe-id="video1" api="1" player_id="video1" ng-href="{{post.externalVideoUrl}}"></embed-video>
                 <md-button ng-if="::(post.author.id == app.person.id)" ng-href="{{'/settings/post?id=' + post.id}}" target="_blank" aria-label="menu" class="md-fab md-accent pos-abt right-0 bottom-0 m-r" style="margin-bottom: -26px;">
                   <i class="mdi2-pencil i-24"></i>

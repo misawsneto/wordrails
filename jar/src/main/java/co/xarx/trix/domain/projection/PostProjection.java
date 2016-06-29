@@ -67,6 +67,10 @@ public interface PostProjection {
 
 	Double getLng();
 
+	Integer getFocusX();
+
+	Integer getFocusY();
+
     Set<String> getTags();
 
 	// multimedia: images, video, audio ------------------

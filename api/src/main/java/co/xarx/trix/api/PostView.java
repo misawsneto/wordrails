@@ -80,6 +80,9 @@ public class PostView implements Serializable, Identifiable {
 	public Double lat;
 	public Double lng;
 
+	public Integer focusX;
+	public Integer focusY;
+
 	public String subheading;
 	public Date scheduledDate;
 	public boolean notify;

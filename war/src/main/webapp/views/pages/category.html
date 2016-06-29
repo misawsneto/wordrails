@@ -14,7 +14,8 @@
 
       <a ng-href="{{::'/' + app.getStationById(postView.stationId).stationSlug + '/' + postView.slug}}">
          <div class="h-500 pos-rlt o-f-h md-whiteframe-z2 m-b-md" ng-if="::(app.fullCardCheck($index, postView))">
-            <div preload-bg-image="{{app.getImageLink(postView, 'large')}}" class="h-full bg-cover md-primary-default background">
+            <div preload-bg-image="{{::(app.getImageLink(postView, 'large'))}}" class="h-full bg-cover md-primary-default background"
+            ng-style="{'background-position': postView.focusX + '% ' + postView.focusY + '%'}">
                <div class="color-1 p black-grad-inverse">
                   <md-button aria-label="nothing" ng-click="app.stopPropagation($event);app.toggleRecommend(postView)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(postView) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(postView)}"><i class="mdi2-heart i-16"></i></md-button>
                   <span class="v-m p-v-sm m-r-sm text-white ">{{postView.recommendsCount}}</span>
@@ -63,7 +64,8 @@
          <div class="news-image o-f-h">
             <a ng-href="{{::'/' + app.getStationById(postView.stationId).stationSlug + '/' + postView.slug}}">
                <div class="pos-rlt">
-                  <div  preload-bg-image="{{::app.getImageLink(postView, 'medium')}}" class="zoom-hover h-full bg-cover h-full bg-cover m-h-325 md-primary-default2 background">
+                  <div  preload-bg-image="{{::(app.getImageLink(postView, 'medium'))}}" class="zoom-hover h-full bg-cover h-full bg-cover m-h-325 md-primary-default2 background"
+                  ng-style="{'background-position': postView.focusX + '% ' + postView.focusY + '%'}">
                      <!-- <img class="responsive-img materialboxed" ng-src="{{postView | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
                   </div>
                   <div class="black-grad w-full text-lg pos-abt bottom-0 text-white text-shadow p">{{::postView.title}}</div>
@@ -117,7 +119,8 @@
          <div class="news-image o-f-h">
             <a ng-href="{{::'/' + app.getStationById(postView.stationId).stationSlug + '/' + postView.slug}}">
                <div class="pos-rlt">
-                  <div  preload-bg-image="{{::app.getImageLink(postView, 'medium')}}" class="zoom-hover h-full bg-cover h-full bg-cover m-h-230 md-primary-default2 background">
+                  <div  preload-bg-image="{{::(app.getImageLink(postView, 'medium'))}}" class="zoom-hover h-full bg-cover h-full bg-cover m-h-230 md-primary-default2 background"
+                  ng-style="{'background-position': postView.focusX + '% ' + postView.focusY + '%'}">
                      <!-- <img class="responsive-img materialboxed" ng-src="{{postView | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
                   </div>
                   <div ng-if="::(!app.hasImage(postView))" class="black-grad w-full text-lg pos-abt bottom-0 text-white text-shadow p">{{::postView.title}}</div>

@@ -106,6 +106,10 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.scheduledDate = post.scheduledDate;
 		postView.lat = post.lat;
 		postView.lng = post.lng;
+
+		postView.focusX = post.focusX;
+		postView.focusY = post.focusY;
+
 		postView.stationName = post.station.name;
 		postView.stationId = post.station.id;
 		postView.notify = post.notify;
