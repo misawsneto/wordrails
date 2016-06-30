@@ -1,7 +1,10 @@
 package co.xarx.trix.web.rest.resource.v1;
 
 import co.xarx.trix.annotation.IgnoreMultitenancy;
-import co.xarx.trix.api.*;
+import co.xarx.trix.api.PersonPermissions;
+import co.xarx.trix.api.StationPermission;
+import co.xarx.trix.api.StringResponse;
+import co.xarx.trix.api.ThemeView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.PostEventHandler;
@@ -11,8 +14,10 @@ import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.NetworkService;
 import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.services.security.Authenticator;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.services.security.StationPermissionService;
+import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.NetworkApi;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,6 +26,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
 
 import javax.validation.ConstraintViolation;
@@ -40,15 +46,17 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
-	private AuthCredentialRepository authCredentialRepository;
-	@Autowired
 	private AuthService authProvider;
+	@Autowired
+	private Authenticator authenticatorService;
 	@Autowired
 	private NetworkRepository networkRepository;
 	@Autowired
 	private TaxonomyRepository taxonomyRepository;
 	@Autowired
 	private PersonRepository personRepository;
+	@Autowired
+	private UserRepository userRepository;
 	@Autowired
 	private TermRepository termRepository;
 	@Autowired
@@ -69,6 +77,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	private StationPermissionService stationPermissionService;
 	@Autowired
 	private PersonPermissionService personPermissionService;
+	@Autowired
+	private AuthCredentialRepository authCredentialRepository;
 
 	@Override
 	public void getNetworks() throws IOException {
@@ -124,6 +134,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 
 	@Override
 	@IgnoreMultitenancy
+	@Transactional
 	public Response createNetwork (NetworkCreateDto networkCreate)  throws ConflictException, BadRequestException, IOException {
 		try {
 			Network network = new Network();
@@ -133,16 +144,16 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 			TenantContextHolder.setCurrentTenantId(networkCreate.newSubdomain);
 
 			//Station Default Taxonomy
-			Taxonomy nTaxonomy = new Taxonomy();
-			nTaxonomy.setTenantId(network.getTenantId());
-
-			nTaxonomy.name = "Categoria da Rede " + network.name;
-			nTaxonomy.type = Taxonomy.NETWORK_TAXONOMY;
-			taxonomyRepository.save(nTaxonomy);
 
 			try {
 				network.networkCreationToken = UUID.randomUUID().toString();
+
 				networkRepository.save(network);
+
+				AuthCredential authCredential = new AuthCredential();
+				authCredential.network = network;
+				authCredentialRepository.save(authCredential);
+
 			} catch (javax.validation.ConstraintViolationException e) {
 
 				List<FieldError> errors = new ArrayList<>();
@@ -151,10 +162,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 					errors.add(error);
 				}
 
-				taxonomyRepository.delete(nTaxonomy);
 				return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + objectMapper.writeValueAsString(errors) +"}").build();
 			} catch (org.springframework.dao.DataIntegrityViolationException e){
-				taxonomyRepository.delete(nTaxonomy);
 
 				if (e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
 					org.hibernate.exception.ConstraintViolationException ex = (ConstraintViolationException) e.getCause();
@@ -164,8 +173,6 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 
 				throw e;
 			}
-
-			authCredentialRepository.save(new AuthCredential());
 
 			// Create Person ------------------------------
 
@@ -189,10 +196,13 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 				user.addAuthority(authority);
 				user.addAuthority(nauthority);
 
+				userRepository.save(user);
+
 				person.user = user;
 				person.networkAdmin = true;
 
 				personRepository.save(person);
+				authenticatorService.passwordAuthentication(user, user.password);
 			} catch (javax.validation.ConstraintViolationException e) {
 
 				List<FieldError> errors = new ArrayList<FieldError>();
@@ -201,12 +211,10 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 					errors.add(error);
 				}
 
-				taxonomyRepository.delete(nTaxonomy);
 				networkRepository.delete(network);
 
 				return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + objectMapper.writeValueAsString(errors) +"}").build();
 			} catch (org.springframework.dao.DataIntegrityViolationException e){
-				taxonomyRepository.delete(nTaxonomy);
 				networkRepository.delete(network);
 
 				if (e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
@@ -217,32 +225,12 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 
 				throw e;
 			}catch (Exception e){
-				taxonomyRepository.delete(nTaxonomy);
 				networkRepository.delete(network);
 				e.printStackTrace();
 			}
 
 			// End Create Person ------------------------------
 
-			nTaxonomy.owningNetwork = network;
-			taxonomyRepository.save(nTaxonomy);
-
-			Term nterm1 = new Term();
-			nterm1.setTenantId(network.getTenantId());
-			nterm1.name = "Categoria 1";
-
-			Term nterm2 = new Term();
-			nterm2.setTenantId(network.getTenantId());
-			nterm2.name = "Categoria 2";
-
-			nterm1.taxonomy = nTaxonomy;
-			nterm2.taxonomy = nTaxonomy;
-
-			nTaxonomy.terms = new HashSet<Term>();
-			nTaxonomy.terms.add(nterm1);
-			nTaxonomy.terms.add(nterm2);
-			termRepository.save(nterm1);
-			termRepository.save(nterm2);
 //			Set<Taxonomy> nTaxonomies = new HashSet<Taxonomy>();
 //			nTaxonomies.add(nTaxonomy);
 //			taxonomyRepository.save(nTaxonomy);
@@ -281,6 +269,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 			station.ownedTaxonomies = taxonomies;
 			stationPerspective.taxonomy = sTaxonomy;
 
+			station.stationSlug = StringUtil.toSlug(station.name);
 			stationRepository.save(station);
 
 			taxonomies = station.ownedTaxonomies;

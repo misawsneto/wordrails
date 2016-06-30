@@ -66,10 +66,20 @@ public class PostEventHandler {
 				post.date = new Date();
 			else
 				post.date = new Date(post.scheduledDate.getTime());
+		}else{
+			if (post.scheduledDate != null && post.date.after(post.scheduledDate))
+				post.date = new Date(post.scheduledDate.getTime());
 		}
 
 		if (post.slug == null || post.slug.isEmpty()) {
 			post.slug = StringUtil.toSlug(post.title);
+		}
+
+		if(post.featuredVideo != null){
+			post.imageLandscape = false;
+			if (post.featuredImage == null) {
+				postService.setVideoFeaturedImage(post);
+			}
 		}
 
 		if (postRepository.findBySlug(post.slug) != null) {
@@ -79,7 +89,8 @@ public class PostEventHandler {
 
 	@HandleAfterCreate
 	public void handleAfterCreate(Post post) {
-		if (post.state.equals(Post.STATE_PUBLISHED)) {
+		if (post.state.equals(Post.STATE_PUBLISHED) && post.scheduledDate == null ||
+				(post.scheduledDate != null && post.scheduledDate.before(new Date()) ) ) {
 			if (post.notify) postService.sendNewPostNotification(post);
 		}
 		elasticSearchService.mapThenSave(post, ESPost.class);
@@ -87,6 +98,12 @@ public class PostEventHandler {
 
 	@HandleAfterSave
 	public void handleAfterSave(Post post) {
+		if (post.featuredVideo != null) {
+			post.imageLandscape = false;
+			if (post.featuredImage == null) {
+				postService.setVideoFeaturedImage(post);
+			}
+		}
 		elasticSearchService.mapThenSave(post, ESPost.class);
 		auditService.saveChange(post);
 	}

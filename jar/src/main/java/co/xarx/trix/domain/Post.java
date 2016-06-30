@@ -141,20 +141,15 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Column(columnDefinition = "boolean DEFAULT false")
 	public boolean notify = false;
 
-	@Lob
-	public String imageCaptionText;
-
-	@Lob
-	@Deprecated
-	public String imageCreditsText;
-
 	public Double lat;
 
 	public Double lng;
 
-	@Lob
-	@Deprecated
-	public String imageTitleText;
+	@Column(columnDefinition = "int DEFAULT 50")
+	public Integer focusX;
+
+	@Column(columnDefinition = "int DEFAULT 50")
+	public Integer focusY;
 
 	@Getter(AccessLevel.NONE)
 	public String featuredAudioHash;
@@ -223,6 +218,13 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@SdkInclude
 	public String getImageHash() {
 		if (featuredImage != null) return featuredImage.getOriginalHash();
+
+		return null;
+	}
+
+	@SdkInclude
+	public String getImageCredits(){
+		if(featuredImage != null) return featuredImage.getCredits();
 
 		return null;
 	}

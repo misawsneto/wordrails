@@ -57,6 +57,7 @@
 		"SAVE_AS_DRAFT": "Save as draft",
 		"SAVE": "Save",
 		"APPLY": "Apply",
+		"RESTORE_PREVIEWS": "Restore previews",
 		"TITLE": "Title",
 		"SUBTITLE": "Subtitle",
 		"HEADING": "Heading",
@@ -112,7 +113,16 @@
 		"ADD": "Add",
 		"LOAD_MORE": "Load more",
 		"ACTIVATE": "Activate",
-		"FEATURED_POSTS": "Featured publications"
+		"FEATURED_POSTS": "Featured publications",
+		"CREDITS": "Image credits",
+		"LAST_LOGIN": "last login",
+		"READ": "Read",
+		"COLABORATE": "Colaborate",
+		"WRITE": "Write",
+		"EDIT": "Edit",
+		"ADMIN": "Admin",
+		"CREATE_NETWORK": "Create network",
+		"NETWORK_NAME": "Network name"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -133,6 +143,7 @@
 		"SAVE_CHANGES": "Save changes",
 		"UPDATE": "Update",
 		"REMOVE": "Remove",
+		"SCHEDULE": "Schedule",
 		"EXCLUDE": "Exclude",
 		"LIST": "List",
 		"INSERT": "Inserir",
@@ -261,7 +272,9 @@
 			"REQUIRED_FIELDS": "Name, username and email are required.",
 			"OPTIONAL_PASSWORD": "Password is optional and if not provided a random password will be generated and sent via email.",
 			"INVITATIONS_SENT": "Invitations were sent",
-			"PERMISSIONS_UPDATES": "Permissions updates"
+			"PERMISSIONS_UPDATES": "Permissions updates",
+			"REMOVE_PERMISSIONS": "Remove permissions",
+			"REMOVE_PERMISSIONS_MSG": "Are you sure you wish to remove all permission for this user on this station?"
 		},
 		"comment":{
 			"REMOVE_COMMENT_MSG": "Are you sure you want to permanatly delete this comment?",
@@ -303,6 +316,7 @@
 			"PUBLISHED_AS_DRAFT": "Draft saved",
 			"SCHEDULED_MSG": "Scheduled date and time:",
 			"RESCHEDULE": "Reschedule",
+			"UPDATE_CREDITS_MSG": "These credits belong to the image. Updating credits will inpact the image network wide. Apply changes?"
 			"messages":{
 				"PAGE_CHANGE_ALERT": "You have edited your publication and there's unsaved content.",
 				"CLEAR_CONTENT_MSG": "Clear all publication content.",
@@ -341,6 +355,7 @@
 			"TRASH_ALL": "Move to trash",
 			"UPDATE_SUCCESS": "Atualizado",
 			"PUBLISH_SUCCESS": "Published",
+			"PUBLISH_SCHEDULED": "Scheduled publication",
 			"PUBLISH_ERROR": "Publication error",
 			"EDITING": "Editing",
 			"AUTOMATIC_SAVE": "Automatic save"
@@ -369,7 +384,8 @@
 				"FIX_POST_MSG": "Fix a publication at position number ",
 				"ACTIVATE_PERSPECTIVE_MSG": "Are you sure you wish to activate this perspective? This action will affect how the content is displayed on all devices.",
 				"REMOVE_PERSPECTIVE_MSG": "Are you sure you wish to remove this perspective? This operation cannot be undone.",
-				"PERSPECTIVE_ORDER_MSG": "Drag and Sort"
+				"PERSPECTIVE_ORDER_MSG": "Drag and Sort",
+				"REMOVE_PIN_MSG": "Remove pinned publication"
 			}
 		},
 		"category": {

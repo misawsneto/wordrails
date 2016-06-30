@@ -63,7 +63,7 @@
     "waves": "~0.7.2",
     "mcg": "https://github.com/mbitson/mcg.git",
     "mdPickers": "^0.7.5",
-    "angular-froala": "^2.3.2",
+    "angular-froala": "^2.3.3",
     "angular-elastic": "^2.5.1",
     "ui-select": "angular-ui-select#^0.16.1",
     "angular-slider": "^0.3.2",

@@ -198,9 +198,38 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
         // }
     })
   }
+
+  $scope.showRemovePinDialog = function(homeIndex){
+    $scope.toRemoveIndex = homeIndex;
+    $scope.disabled = false;
+    $mdDialog.show({
+      scope: $scope,        // use parent scope in template
+      closeTo: {
+        bottom: 1500
+      },
+      preserveScope: true, // do not forget this if use parent scope
+      controller: $scope.app.defaultDialog,
+      templateUrl: 'remove-pin-dialog.html',
+      parent: angular.element(document.body),
+      targetEvent: event,
+      clickOutsideToClose:true
+      // onComplete: function(){
+        // }
+    })
+  }
   // -------- /dialogs
 
   // ------ perspective operations
+
+  $scope.removePinnedPublication = function(){
+    var cells = $scope.currentPerspective.termPerspectiveView.homeRow.cells
+    for (var i = 0; i < cells.length ; i++) {
+      if(i == $scope.toRemoveIndex)
+        $scope.currentPerspective.termPerspectiveView.homeRow.cells.splice(i,1);
+    }
+    $scope.toRemoveIndex = null;
+    $mdDialog.cancel();
+  }
 
   $scope.addPerspective = function(perspectiveName){
     var stationPerspective = {};
@@ -246,6 +275,13 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       reloadCarousel();
     }
 
+    $scope.applyCategories = function(){
+      $mdDialog.cancel();
+      $scope.perspectiveChanged = true;
+      // $scope.currentPerspective.termPerspectiveView.featuredRow = $scope.editingFeaturedRow;
+      // reloadCarousel(); 
+    }
+
     var reloadCarousel = function(){
       $scope.reloadingCarousel = true;
       $timeout(function(){
@@ -286,6 +322,17 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       var perspective = angular.copy($scope.currentPerspective.termPerspectiveView);
 
       if(perspective.featuredRow && perspective.featuredRow.cells){
+
+        if(!perspective.featuredRow.termPerspectiveId){
+          perspective.featuredRow = {
+            termId: null,
+            termName: null,
+            termPerspectiveId: $scope.currentPerspective.termPerspectiveView.id,
+            type: 'F',
+            cells: perspective.featuredRow.cells
+          }
+        }
+
         row = perspective.featuredRow
         for (var i = 0; i < row.cells.length; i++) {
           row.cells[i].postView.postId = row.cells[i].postView.id;

@@ -39,8 +39,11 @@
 	      	{{'settings.post.menu.AUTO_SAVE_MSG' | translate}}
 	      </div>
 	      <md-divider class="m-b-sm"></md-divider>
-	    	<md-button aria-label="nothing" ng-if="!app.checkState() || app.checkState() > 1" class="pull-right font-bold no-margin" ng-click="publishPost()">
+	    	<md-button aria-label="nothing" ng-if="app.checkState() > 1 && app.checkState() !== 3" class="pull-right font-bold no-margin" ng-click="publishPost()">
 	    	{{'titles.PUBLISH' | translate}}
+			</md-button>
+			<md-button aria-label="nothing" ng-if="!app.editingPost.id && app.checkState() === 3" class="pull-right font-bold no-margin" ng-click="postPost(app.editingPost)">
+	    	{{'actions.SCHEDULE' | translate}}
 			</md-button>
 			<md-button aria-label="nothing" ng-if="app.editingPost.id && (!app.checkState() || app.checkState() > 0)" class="pull-right font-bold no-margin" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
 			</md-button>
@@ -261,8 +264,8 @@
           <div class="cell"> <!-- cell -->
             <div class="cell-inner"><!-- cell -->
 							<!-- stub image to get height -->
-							<img id="img-stub" ng-src="{{postFeaturedImage}}" ng-if="postFeaturedImage" class="z-index-n-1 pos-fix" style="opacity: 0">
-							<div id="post-image-container" data-img="{{postFeaturedImage}}" class="animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md h-400" ng-if="postFeaturedImage"  ng-class="{'w-full ': landscape, 'block-800': !landscape}"
+							<img id="img-stub" ng-src="{{postFeaturedImage}}" ng-if="postFeaturedImage && (!useVideo && !useUploadedVideo && !useUploadedAudio)" class="z-index-n-1 pos-fix" style="opacity: 0">
+							<div id="post-image-container" ng-if="postFeaturedImage && (!useVideo && !useUploadedVideo && !useUploadedAudio)" class="animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md h-400" ng-if="postFeaturedImage"  ng-class="{'w-full ': landscape, 'block-800': !landscape}"
 							ng-style="{'background-image': 'url(' + postFeaturedImage + ')', 'background-position': app.imgToolsProps.x + '% ' + app.imgToolsProps.y + '%'}">
 								<md-fab-speed-dial md-open="openImageOptions" md-direction="up" class="md-scale pull-right p-t p-r p-b pos-abt bottom-0 right-0">
 								  <md-fab-trigger>
@@ -306,7 +309,7 @@
 							</div>
 							
 							<div ng-if="useVideo" class="block-800 h-400 animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md">
-								<embed-video width=800 height=400 iframe-id="video1" api="1" player_id="video1" ng-href="{{app.videoUrl}}"></embed-video>
+								<embed-video on-change="videoSelected(videoId, provider)" width=800 height=400 iframe-id="video1" api="1" player_id="video1" ng-href="{{app.videoUrl}}"></embed-video>
 								<md-button aria-label="nothing" ng-click="removeVideo();" class="md-fab md-accent md-raised md-mini pos-abt right-0 bottom-0 m-r m-b-xxl ">
 									<md-tooltip md-direction="top">
 						      	{{'titles.REMOVE' | translate}} {{'titles.VIDEO' | translate}}
@@ -408,8 +411,19 @@
 															    </div>
 								</div>
 								<!-- /media buttons -->
-								<textarea rows="1" ng-if="useHeading" msd-elastic ng-model="app.editingPost.topper" placeholder="{{'titles.HEADING' | translate }}" class="w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
-				      	</textarea>
+								
+							<div class="w-full pos-rlt" ng-if="postFeaturedImage && (!useVideo && !useUploadedVideo && !useUploadedAudio)" style="margin-top: -30px">
+								<i>
+									<textarea rows="1" msd-elastic ng-model="featuredImage.credits"  placeholder="{{'titles.CREDITS' | translate }}" class=" w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
+					      	</textarea>
+								</i>
+								<md-button class="md-icon-button pos-abt right-0 top-0" ng-click="creditsChanged()">
+									<i class="mdi-content-save i-20"></i>
+								</md-button>
+							</div>		
+
+							<textarea rows="1" ng-if="useHeading" msd-elastic ng-model="app.editingPost.topper" placeholder="{{'titles.HEADING' | translate }}" class="w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
+	    				</textarea>
 
 								<!-- ng-mouseenter="openPlusOptions=true" ng-mouseleave="openPlusOptions=false" -->
 				      	<md-fab-speed-dial md-open="openPlusOptions"  md-direction="down" class="md-scale md-hover-full m-b-sm pull-right pos-abt z-index-1" style="margin-left: -80px;">
@@ -618,10 +632,12 @@
         </div>
         <div class="pointer text-center p text-u-c font-bold pos-rlt" ng-click="showMoreOptions($event)">
         	<md-divider class="pos-abt top-0 left-0 right-0"></md-divider>
-          <md-button aria-label="nothing" ng-if="app.checkState() > 1 && app.checkState() !== 3" class="md-raised md-primary p-h md-whiteframe-z2" ng-click="postPost(app.editingPost)">
+          <md-button aria-label="nothing" ng-if="app.checkState() > 1 && app.checkState() !==3" class="md-raised md-primary p-h md-whiteframe-z2" ng-click="postPost(app.editingPost)">
           	<i class="icon mdi2-send i-14 m-r-sm"></i>{{'titles.PUBLISH' | translate}}
           </md-button>
-			<md-button aria-label="nothing" ng-if="app.editingPost.id && (app.checkState() === 1 || app.checkState() === 3)" class="md-raised md-primary p-h md-whiteframe-z2" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
+          	<md-button aria-label="nothing" ng-if="!app.editingPost.id && app.checkState() === 3" class="md-raised md-primary p-h md-whiteframe-z2" translate="actions.SCHEDULE" ng-click="postPost(app.editingPost)">
+			</md-button>
+			<md-button aria-label="nothing" ng-if="app.editingPost.id && (app.checkState())" class="md-raised md-primary p-h md-whiteframe-z2" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
 			</md-button>
           <md-button aria-label="nothing"  ng-click="toggleOptions();">{{'titles.CLOSE' | translate}}</md-button>
         </div>
@@ -912,3 +928,26 @@
 	</md-dialog-content>
 </script>
 
+<script type="text/ng-template" id="credits-dialog.html">
+   <md-dialog aria-label="change action">
+     <md-content role="document" class="md-background-hue-1 background">
+       <div class="p-xs">
+         <div class="md-dialog-content-body text-md text-center w-400 p m-b">
+           {{'settings.post.UPDATE_CREDITS_MSG' | translate}}
+         </div>
+   
+         <div class="text-center">
+           <md-button ng-click="applyImageCredits(); disabled = true;" ng-disabled="disabled">
+             {{'titles.APPLY' | translate}}
+           </md-button>
+           <md-button ng-click="cancel()">
+             {{'titles.CANCEL' | translate}}
+           </md-button>
+           <md-button ng-click="restorePreviewsCredits(); cancel();" ng-disabled="!oldCredits">
+             {{'titles.RESTORE_PREVIEWS' | translate}}
+           </md-button>
+         <div>
+       </div>
+     </md-content>
+   </md-dialog>
+</script>

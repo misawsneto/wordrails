@@ -63,8 +63,6 @@ public class ESPostService extends AbstractElasticSearchService {
 		this.elasticsearchTemplate = elasticsearchTemplate;
 	}
 
-
-
 	Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
 		Assert.isNotNull(boolQuery, "boolQuery must not be null");
 		Assert.isNotNull(pageable, "pageable must not be null");

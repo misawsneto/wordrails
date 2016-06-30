@@ -57,6 +57,7 @@
 		"SAVE_AS_DRAFT": "Salvar como rascunho",
 		"SAVE": "Salvar",
 		"APPLY": "Aplicar",
+		"RESTORE_PREVIEWS": "Restaurar anterior",
 		"TITLE": "Título",
 		"SUBTITLE": "Subtítulo",
 		"HEADING": "Chapéu",
@@ -112,7 +113,16 @@
 		"ADD": "Adicionar",
 		"LOAD_MORE": "Carregar mais",
 		"ACTIVATE": "Ativar",
-		"FEATURED_POSTS": "Destaques"
+		"FEATURED_POSTS": "Destaques",
+		"CREDITS": "Creditos da imagem",
+		"LAST_LOGIN": "último login",
+		"READ": "Leitura",
+		"COLABORATE": "Colaborar",
+		"WRITE": "Escrita",
+		"EDIT": "Editar",
+		"ADMIN": "Administrar",
+		"CREATE_NETWORK": "Criar rede",
+		"NETWORK_NAME": "Nome da rede"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -133,6 +143,7 @@
 		"SAVE_CHANGES": "Salvar alterações",
 		"UPDATE": "Atualizar",
 		"REMOVE": "Remover",
+		"SCHEDULE": "Agendar",
 		"EXCLUDE": "Remover",
 		"LIST": "Listar",
 		"INSERT": "Inserir",
@@ -261,7 +272,9 @@
 			"REQUIRED_FIELDS": "Nome, usuário e email são campos obrigatórios.",
 			"OPTIONAL_PASSWORD": "A senha é opcional e caso não fornecida será gerado automáticamente e enviada por email.",
 			"INVITATIONS_SENT": "Convites enviados com sucesso",
-			"PERMISSIONS_UPDATES": "Permissões atualizadas"
+			"PERMISSIONS_UPDATES": "Atualização de permissões",
+			"REMOVE_PERMISSIONS": "Remover permissões",
+			"REMOVE_PERMISSIONS_MSG": "Tem certeza que deseja remover todas as permissões desse usuário nesta estação?"
 		},
 		"comment":{
 			"REMOVE_COMMENT_MSG": "Tem certeza que deseja remover este comentário?",
@@ -279,7 +292,7 @@
 				"ATTACH_POST": "Anexar outras publicações",
 				"NOTIFY_STATION_USERS": "Notificar usuários",
 				"PUBLICATION_MSG": "O conteúdo será publicado ao clicar em Publicar.",
-				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada alteração uma vez que o título, conteúdo, estações e categorias sejam inseridos. Para desabilitar esta função, verifique a opção \"Salvar automaticamente\" em \"Opções de publicação\". As versões da publicação pode ser visualizado no menu \"Opções de publicação\"."
+				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada alteração uma vez que o título, conteúdo, estações e categorias sejam inseridos. Para desabilitar esta função, verifique a opção \"Salvar automaticamente\" em \"Opções de publicação\". As versões da publicação podem ser visualizadas no menu \"Opções de publicação\"."
 			},
 			"ACTIVATE_DEACTIVATE_HEADING": "Ativar/Desativar chapéu",
 			"ACTIVATE_DEACTIVATE_SUBTITLE": "Ativar/Desativar subtítulo",
@@ -303,6 +316,7 @@
 			"PUBLISHED_AS_DRAFT": "Rascunho salvo",
 			"SCHEDULED_MSG": "Agendado para:",
 			"RESCHEDULE": "Reagendar",
+			"UPDATE_CREDITS_MSG": "Estes créditos pertecem a imagem. Atualizar os créditos impactaram o uso dessa imagem em toda a rede. Deseja aplicar alterações?",
 			"messages":{
 				"PAGE_CHANGE_ALERT": "Você possui conteúdo que ainda não foi salvo.",
 				"CLEAR_CONTENT_MSG": "Limpar todo o conteúdo desta publicação?",
@@ -341,6 +355,7 @@
 			"TRASH_ALL": "Mover para a lixeira",
 			"UPDATE_SUCCESS": "Atualizado",
 			"PUBLISH_SUCCESS": "Publicado",
+			"PUBLISH_SCHEDULED": "Publicação agendada",
 			"PUBLISH_ERROR": "Erro ao publicar",
 			"EDITING": "Edição",
 			"AUTOMATIC_SAVE": "Salvar automaticamente"
@@ -369,7 +384,8 @@
 				"FIX_POST_MSG": "Fixar uma publicação na posição ",
 				"ACTIVATE_PERSPECTIVE_MSG": "Tem certeza que deseja ativar esta perspectiva? Esta ação  modificará a forma de apresentação do conteúdo em todos os dispositivos.",
 				"REMOVE_PERSPECTIVE_MSG": "Tem certeza que deseja remover esta perspectiva? Esta operação não poderá ser desfeita.",
-				"PERSPECTIVE_ORDER_MSG": "Arraste para ordernar"
+				"PERSPECTIVE_ORDER_MSG": "Arraste para ordernar",
+				"REMOVE_PIN_MSG": "Remover publicação"
 			}
 		},
 		"category": {

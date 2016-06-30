@@ -13,6 +13,7 @@ import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
@@ -33,8 +34,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
@@ -43,26 +46,37 @@ import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 public class StatisticsService {
 
 	private Client client;
+	private String profile;
+	private String trixIndex;
 	private String analyticsIndex;
 	private String nginxAccessIndex;
 	private FileRepository fileRepository;
+	private PostRepository postRepository;
 	private DateTimeFormatter dateTimeFormatter;
 	private PublishedAppRepository appRepository;
 	private MobileDeviceRepository mobileDeviceRepository;
 	private PersonPermissionService personPermissionService;
-	private PostRepository postRepository;
 	private CommentRepository commentRepository;
-	private String trixIndex;
 
 	private static int MONTH_INTERVAL = 30;
 	private static int WEEK_INTERVAL = 7;
 	private static String ACCESS_TYPE = "nginx_access";
 
 	@Autowired
-	public StatisticsService(Client client, MobileDeviceRepository mobileDeviceRepository, @Value("${elasticsearch.analyticsIndex}") String analyticsIndex, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, @Value("${spring.data.elasticsearch.index}") String trixIndex,
-							 PublishedAppRepository appRepository, FileRepository fileRepository, PersonPermissionService personPermissionService, PostRepository postRepository, CommentRepository commentRepository){
+	public StatisticsService(Client client,
+							 MobileDeviceRepository mobileDeviceRepository,
+							 @Value("${elasticsearch.analyticsIndex}") String analyticsIndex,
+							 @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex,
+							 @Value("${spring.data.elasticsearch.index}") String trixIndex,
+							 @Value("${spring.profiles.active:dev}") String profile,
+							 PublishedAppRepository appRepository,
+							 FileRepository fileRepository,
+							 PersonPermissionService personPermissionService,
+							 PostRepository postRepository,
+							 CommentRepository commentRepository){
 		this.client = client;
 		this.trixIndex = trixIndex;
+		this.profile = profile;
 		this.appRepository = appRepository;
 		this.fileRepository = fileRepository;
 		this.analyticsIndex = analyticsIndex;
@@ -74,15 +88,29 @@ public class StatisticsService {
 		this.personPermissionService = personPermissionService;
 	}
 
-	public Map getPorpularNetworks(){
+	@PostConstruct
+	public void init() throws ExecutionException, InterruptedException {
+
+		if(profile.equalsIgnoreCase("prod")) {
+			boolean isThereNginxIndex = client.admin().indices().exists(new IndicesExistsRequest(nginxAccessIndex)).get().isExists();
+			boolean isThereAnalyticsIndex = client.admin().indices().exists(new IndicesExistsRequest(analyticsIndex)).get().isExists();
+
+			Assert.isTrue(isThereNginxIndex, "Big problem! Index is not there: " + nginxAccessIndex);
+			Assert.isTrue(isThereAnalyticsIndex, "Big problem! Index is not there: " + analyticsIndex);
+		}
+	}
+
+	public Map getPorpularNetworks() throws Exception {
 		return findMostPopular("tenantId", null, null, 10);
 	}
 
-	public List<String> getNginxFields(){
+	public List<String> getNginxFields() throws Exception {
 		ClusterState cs = client.admin().cluster().prepareState().setIndices(nginxAccessIndex).execute().actionGet().getState();
 
 		IndexMetaData indexMetaData = cs.getMetaData().index(nginxAccessIndex);
-		Assert.notNull(indexMetaData, "The data cannot be retrived: No index metadata");
+		if (indexMetaData == null) {
+			throw new Exception("The data cannot be retrived: No index metadata");
+		}
 
 		MappingMetaData mappingMetaData = indexMetaData.mapping(ACCESS_TYPE);
 		Map<String, Object> map = null;
@@ -111,7 +139,7 @@ public class StatisticsService {
 		return fieldList;
 	}
 
-	private boolean isValidField(String field){
+	private boolean isValidField(String field) throws Exception {
 		if(getNginxFields().contains(field)) {
 			return true;
 		} else return false;
@@ -121,9 +149,10 @@ public class StatisticsService {
 		return begin != null && end != null && begin < end;
 	}
 
-	public HashMap findMostPopular(String field, Long startTimestamp, Long endTimestamp, Integer size){
-		Assert.hasText(field, "Field is null");
-		Assert.isTrue(isValidField(field), "Invalid field");
+	public HashMap findMostPopular(String field, Long startTimestamp, Long endTimestamp, Integer size) throws Exception {
+		if(!isValidField(field)) {
+			throw new Exception("Invalid field in nginx: " + field);
+		}
 
 		String term = "by_" + field;
 
@@ -233,15 +262,15 @@ public class StatisticsService {
 		return statsData;
 	}
 
-	public Map countPostReads(List<Integer> postIds){
-		Map postReads = new HashMap<Integer, Integer>();
+	public Map<Integer, Integer> countPostReads(List<Integer> postIds){
+		Map postReads = new HashMap();
 		postIds.forEach( postId -> postReads.put(postId, countTotals(postId, "nginx_access.postId", nginxAccessIndex)));
 		return postReads;
 	}
 
-	public Map getFileStats(){
+	public Map<String, Integer> getFileStats(){
 		List<Object[]> mimeSums = fileRepository.sumFilesSizeByMime(TenantContextHolder.getCurrentTenantId());
-		Map map = new HashMap<>();
+		Map<String, Integer> map = new HashMap<>();
 
 		mimeSums.stream().filter(tuple -> tuple[0] != null && tuple[1] != null)
 				.forEach(tuple -> map.put((String) tuple[0], (int) (long) tuple[1]));
@@ -272,12 +301,10 @@ public class StatisticsService {
 	public Map getStationReaders(Integer stationId){
 		List<Person> persons = (List<Person>) personPermissionService.getPersonFromStation(stationId, Permissions.READ);
 
-		if(persons.size() == 0) return new HashMap<>();
+		if (persons == null || persons.size() == 0) return null;
 
 		List<Integer> ids = new ArrayList<>();
-		persons.forEach(person -> {
-			ids.add(person.id);
-		});
+		persons.forEach(person -> ids.add(person.id));
 
 		List<MobileDevice> mobileDevices = mobileDeviceRepository.findByPersonIds(ids);
 		Map<String, Integer> stationReaders = new HashMap<>();
@@ -339,7 +366,6 @@ public class StatisticsService {
 	}
 
 	public Interval getInterval(String end, String start){
-		Assert.notNull(end, "Invalid date. Expected yyyy-MM-dd");
 		DateTime endDate = dateTimeFormatter.parseDateTime(end);
 
 		if(start != null && !start.isEmpty()){
@@ -393,7 +419,6 @@ public class StatisticsService {
 
 		search.setQuery(query);
 		search.addAggregation(AggregationBuilders.dateHistogram(queryName).field(orderField).interval(DateHistogram.Interval.DAY));
-//		search.addSort(SortBuilders.fieldSort("@timestamp").order(SortOrder.DESC));
 
 		SearchResponse response = search.execute().actionGet();
 		DateHistogram histogram = response.getAggregations().get(queryName);
@@ -440,7 +465,9 @@ public class StatisticsService {
 	}
 
 	public Integer countTotals(Integer id, String entity, String index) {
-		return (int) client.prepareSearch(index).setQuery(boolQuery().must(termQuery(entity, id)).must(termQuery("verb", "get"))).execute().actionGet().getHits().getTotalHits();
+		return (int) client.prepareSearch(index).setQuery(boolQuery()
+						.must(termQuery(entity, id))
+						.must(termQuery("verb", "get"))).execute().actionGet().getHits().getTotalHits();
 	}
 
 	public Integer countTotals(String id, String entity, String index) {

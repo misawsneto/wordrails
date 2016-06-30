@@ -93,6 +93,13 @@ public class PersonPermissionService {
 	}
 
 	public List<Person> getPersonFromStation(Integer stationId, Permission permission) {
+		Station station = stationRepository.findOne(stationId);
+
+		if (station == null) {
+			return new ArrayList<>();
+		}
+
+		//TO WHOM IT MAY CONCERN: ACL IS NOT MULTITENANT(!)
 		MutableAcl acl = aclService.findAcl(stationId);
 		List<String> usernames = new ArrayList<>();
 		List<String> roles = new ArrayList<>();

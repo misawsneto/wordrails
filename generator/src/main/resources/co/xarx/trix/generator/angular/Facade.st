@@ -212,7 +212,7 @@ var trix = angular.module('trix', [])
 
     this.clearStationRoles = function(stationRoleUpdates){
         var config = {"headers": {"Content-Type": "application/json"}}
-        return \$http.put(_config.url + "/api/permission/stations/clean", stationRoleUpdates, config)
+        return \$http.post(_config.url + "/api/permission/stations/clean", stationRoleUpdates, config)
     }
 
 	this.putTermView = function (termView) {
@@ -521,6 +521,11 @@ var trix = angular.module('trix', [])
 		var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
 		return \$http.put(_config.url + "/api/persons/me/password", \$.param({"oldPassword": oldPassword, "newPassword": newPassword}), config)
 	};
+
+	this.updateImageCredits = function(image){
+		var config = {"headers": {"Content-Type": "application/json"}}
+        return \$http.put(_config.url + "/api/images/updateCredits", image, config)
+	}
 
 	this.convertPost = function(postId, state){
 		var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}

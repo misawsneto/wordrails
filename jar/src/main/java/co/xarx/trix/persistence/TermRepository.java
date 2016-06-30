@@ -27,7 +27,6 @@ public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPr
 	@Override
 	@SdkExclude
 	@RestResource(exported = true)
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Term save(Term term);
 
 	@RestResource(path="findRootsPage")

@@ -2,7 +2,7 @@
   <!-- Content Navbar -->
   <div class="navbar no-radius md-primary-default background" style="max-height:64px">
     <!-- Open side - Naviation on mobile -->
-    <a ng-if="app.personPermissions.stationPermissions.length > 1" md-ink-ripple ng-click="openAside()" ng-hide="$state.current.data.child" class="navbar-item pull-left"><i class="mdi-navigation-menu i-24"></i></a>
+    <a ng-if="app.personPermissions.stationPermissions.length > 1" md-ink-ripple ng-click="openAside()" class="navbar-item pull-left"><i class="mdi-navigation-menu i-24"></i></a>
     <!-- / -->
     <div class="navbar-header pull-left">
       <a class="navbar-brand" ng-href="/">
@@ -26,7 +26,7 @@
             <div class="pos-abt p-sm m-l-xs m-t-xs">
               <i class="mdi2-magnify i-24"></i>
             </div>
-            <input class="form-control input-lg no-bg no-border md-autofocus p-l-xxl p-r-xxl" placeholder="{{'titles.SEARCH' | translate }}" ng-model="app.search.content">
+            <input class="form-control input-lg no-bg no-border md-autofocus p-l-xxl p-r-xxl" placeholder="{{::('titles.SEARCH' | translate) }}" ng-model="app.search.content">
             <!--<div class="pos-abt right-0 top-0 m-t-xs">
               <md-button style="width: 36px; height: 36px; padding: 6px;" class="md-icon-button pull-right" ng-click="app.search.show=false; app.search.content=''"><i class="mdi2-close i-20"></i></md-button>
             </div>-->
@@ -42,10 +42,9 @@
     </div>
 
     <!-- GoBack - Back to parent if $state has the param 'child' -->
-    <a md-ink-ripple class="navbar-item pull-left" ng-click="goBack()" ng-show="$state.current.data.child" ><i class="mdi-navigation-arrow-back i-24"></i></a>
     <!-- / -->
     <!-- Common tools -->
-    <ul class="nav nav-sm navbar-tool pull-right" ng-hide="$state.current.data.child">
+    <ul class="nav nav-sm navbar-tool pull-right">
       <!--<li class="animated" ng-class="{'fadeIn': !app.search.show, 'fadeOut': app.search.show, 'hide': !$mdMedia('gt-sm')}">
         <a md-ink-ripple ng-click="app.search.show = true; app.focusOnSearch()">
           <i class="mdi-action-search i-24 p-h-sm"></i>
@@ -77,7 +76,7 @@
           </li>
           <li ng-if="!app.notifications || app.notifications.length == 0">
             <div class="text-center text-md p-md opacity-07">
-              <div class="m-b">{{'titles.NO_NOTIFICATIONS' | translate}}</div>
+              <div class="m-b">{{::('titles.NO_NOTIFICATIONS' | translate)}}</div>
               <i class="i-40 mdi2-bell-outline"></i>
             </div>
           </li>
@@ -98,7 +97,7 @@
             <i ng-if="!app.userImageSmall" class="mdi2-account i-24" style="position: relative;top: -10px;"></i>
           </div>
           <md-button ng-if="!app.isLogged()" class="md-primary-hue-1 background">
-            {{'signin_signup.SIGNIN' | translate}}
+            {{::('signin_signup.SIGNIN' | translate)}}
           </md-button>
           <span class="hidden-sm hidden-md" ng-if="app.isLogged()">{{::app.person.name}}</span>
           <b class="caret m-r" ng-if="app.isLogged()"></b>
@@ -138,26 +137,26 @@
           <li md-ink-ripple>
             <a ng-href="/settings/profile" target="_self">
               <i class="icon m-r i-16 mdi2-account-circle opacity-08"></i>
-              {{'settings.aside.MY_PROFILE' | translate}}
+              {{::('settings.aside.MY_PROFILE' | translate)}}
             </a>
           </li>
           <li md-ink-ripple>
             <a ng-href="/settings" target="_self">
               <i class="icon m-r i-16 mdi2-settings opacity-08"></i>
-              {{'titles.SETTINGS' | translate}}
+              {{::('titles.SETTINGS' | translate)}}
             </a>
           </li>
           <li md-ink-ripple>
             <a ui-sref="app.docs">
               <i class="icon m-r i-16 mdi2-help-circle mdi opacity-08"></i>
-              {{'titles.HELP' | translate}}
+              {{::('titles.HELP' | translate)}}
             </a>
           </li>
           <md-divider></md-divider>
           <li md-ink-ripple>
             <a ng-click="app.signOut();">
               <i class="icon m-r i-16 mdi2-logout opacity-08"></i>
-              {{'header.navbar.LOGOUT' | translate}}
+              {{::('header.navbar.LOGOUT' | translate)}}
             </a>
           </li>
         </ul>
@@ -179,7 +178,7 @@
             <li class="material-top-menu-item animated fadeIn" 
              ng-class="{'active': app.activeCategory.id === category.id}" md-ink-ripple data-ng-repeat="category in app.perspectiveTerms" 
              data-menu-item="{{category.item}}">
-              <a ng-href="{{::'/' + app.getStationById(app.termPerspectiveView.stationId).stationSlug + '/cat?name=' + category.name}}" >
+              <a ng-href="{{::('/' + app.getStationById(app.termPerspectiveView.stationId).stationSlug + '/cat?name=' + app.getEscapedCategory(category.name))}}" >
                 <span>{{::category.name}}</span>
               </a>
             </li>
@@ -226,25 +225,25 @@
                 © {{ app.date | date:'yyyy'}} Copyright
               </div>
               <div class="inline p-h-lg text-center v-m">
-                <a ng-if="app.network.facebookLink" class="m-h-sm" ng-href="{{app.network.facebookLink}}" target="_blank">
+                <a ng-if="::app.network.facebookLink" class="m-h-sm" ng-href="{{::app.network.facebookLink}}" target="_blank">
                   <i class="i-24 mdi2-facebook-box"></i>
                 </a>
-                <a ng-if="app.network.twitterLink" class="m-h-sm" ng-href="{{app.network.twitterLink}}" target="_blank">
+                <a ng-if="::app.network.twitterLink" class="m-h-sm" ng-href="{{::app.network.twitterLink}}" target="_blank">
                   <i class="i-24 mdi2-twitter"></i>
                 </a>
-                <a ng-if="app.network.youtubeLink" class="m-h-sm" ng-href="{{app.network.youtubeLink}}" target="_blank">
+                <a ng-if="::app.network.youtubeLink" class="m-h-sm" ng-href="{{::app.network.youtubeLink}}" target="_blank">
                   <i class="i-24 fa fa-youtube"></i>
                 </a>
-                <a ng-if="app.network.googlePlusLink" class="m-h-sm" ng-href="{{app.network.googlePlusLink}}" target="_blank">
+                <a ng-if="::app.network.googlePlusLink" class="m-h-sm" ng-href="{{::app.network.googlePlusLink}}" target="_blank">
                   <i class="i-24 mdi2-google-plus"></i>
                 </a>
-                <a ng-if="app.network.instagramLink" class="m-h-sm" ng-href="{{app.network.instagramLink}}" target="_blank">
+                <a ng-if="::app.network.instagramLink" class="m-h-sm" ng-href="{{::app.network.instagramLink}}" target="_blank">
                   <i class="i-24 mdi2-instagram"></i>
                 </a>
-                <a ng-if="app.network.pinterestLink" class="m-h-sm" ng-href="{{app.network.pinterestLink}}" target="_blank">
+                <a ng-if="::app.network.pinterestLink" class="m-h-sm" ng-href="{{::app.network.pinterestLink}}" target="_blank">
                   <i class="i-24 mdi2-pinterest"></i>
                 </a>
-                <a ng-if="app.network.linkedInLink" class="m-h-sm" ng-href="{{app.network.linkedInLink}}" target="_blank">
+                <a ng-if="::app.network.linkedInLink" class="m-h-sm" ng-href="{{::app.network.linkedInLink}}" target="_blank">
                   <i class="i-24 mdi2-linkedin-box"></i>
                 </a>
               </div>
@@ -263,12 +262,12 @@
 <script type="text/ng-template" id="signin-signup-dialog.html">
   <md-dialog-content class="md-background-hue-1 background">
     <div ng-if="app.invalidCredentials" class="animated5x fadeIn md-warn-hue-1 background m-b-sm m-t-xs p-sm">
-      {{'messages.INVALID_CREDENTIALS' | translate}}
+      {{::('messages.INVALID_CREDENTIALS' | translate)}}
     </div>
     <md-progress-linear class="pos-abt top-0 left-0" ng-if="app.loading" md-mode="indeterminate"></md-progress-linear>
     <!-- signin -->
     <div class="text-color m text-center" ng-if="app.signState !== 'signup' && app.signState !== 'forgot'">
-      <div class="m-b m-t text-md text-u-c font-500">{{'signin_signup.SIGNIN' | translate}}</div>
+      <div class="m-b m-t text-md text-u-c font-500">{{::('signin_signup.SIGNIN' | translate)}}</div>
       <div class="text-center">
         <md-button class="text-white text-md-l" style="background: #3B5999" aria-label="Use Android" ng-click="app.socialSignIn('facebook')">
           <i class="mdi2-facebook i-24 text-white v-m"></i>  <span class="m-r m-l-sm">Facebook</span>
@@ -287,11 +286,11 @@
       <form name="form" ng-submit="app.signIn(person)" class="text-md w-xl">
         <div class="p" style="padding-bottom: 0">
           <md-input-container class="w-full m-b-0">
-            <label for="testInput">{{'titles.USERNAME' | translate}}</label>
+            <label for="testInput">{{::('titles.USERNAME' | translate)}}</label>
             <input class="p-xs" md-autofocus type="text" id="testInput" ng-model="person.username" md-autofocus>
           </md-input-container>
           <md-input-container class="w-full m-b-0 m-t-sm">
-            <label for="testInput">{{'titles.PASSWORD' | translate}}</label>
+            <label for="testInput">{{::('titles.PASSWORD' | translate)}}</label>
             <input class="p-xs" type="password" id="testInput" ng-model="person.password">
           </md-input-container>
         </div>
@@ -300,9 +299,9 @@
       </form>
       <div class="text-center">
         <div >
-          <button ng-click="app.signState = 'forgot';" class="md-btn">{{'signin_signup.FORGOT' | translate}}?</button>
+          <button ng-click="app.signState = 'forgot';" class="md-btn">{{::('signin_signup.FORGOT' | translate)}}?</button>
         </div>
-        <div>{{'signin_signup.NOT_HAVE_AN_ACCOUNT' | translate}}?
+        <div>{{::('signin_signup.NOT_HAVE_AN_ACCOUNT' | translate)}}?
         <button class="md-btn" ng-click="app.signState = 'signup';" translate="signin_signup.CREATE_ACCOUNT">Create an account</button>
         </div>
       </div>
@@ -312,21 +311,21 @@
     <div class="text-color m text-center" ng-if="app.signState === 'signup'">
       <form name="form" class="text-md w-xxl">
         <div class="p" style="padding-bottom: 0">
-          <div class="m-b-md m-t-xs text-md text-u-c font-500">{{'signin_signup.SIGNUP' | translate}}</div>
+          <div class="m-b-md m-t-xs text-md text-u-c font-500">{{::('signin_signup.SIGNUP' | translate)}}</div>
           <md-input-container class="w-full m-b-0 m-t-sm">
-            <label for="testInput">{{'titles.NAME' | translate}}</label>
+            <label for="testInput">{{::('titles.NAME' | translate)}}</label>
             <input type="text" id="testInput" ng-model="person.username" md-autofocus>
           </md-input-container>
           <md-input-container class="w-full m-b-0 m-t-sm">
-            <label for="testInput">{{'titles.USERNAME' | translate}}</label>
+            <label for="testInput">{{::('titles.USERNAME' | translate)}}</label>
             <input type="text" id="testInput" ng-model="person.username">
           </md-input-container>
           <md-input-container class="w-full m-b-0 m-t-sm">
-            <label for="testInput">{{'titles.EMAIL' | translate}}</label>
+            <label for="testInput">{{::('titles.EMAIL' | translate)}}</label>
             <input type="email" id="testInput" ng-model="person.email">
           </md-input-container>
           <md-input-container class="w-full m-b-0 m-t-sm">
-            <label for="testInput">{{'titles.PASSWORD' | translate}}</label>
+            <label for="testInput">{{::('titles.PASSWORD' | translate)}}</label>
             <input type="text" id="testInput" ng-model="person.username">
           </md-input-container>
         </div>
@@ -334,7 +333,7 @@
         <md-button class="md-accent m-b" ng-click="cancel()" translate="titles.CANCEL">Cancel</md-button>
       </form>
       <div class="text-center">
-        <div>{{'signin_signup.HAVE_AN_ACCOUNT' | translate}}?
+        <div>{{::('signin_signup.HAVE_AN_ACCOUNT' | translate)}}?
         <button class="md-btn" ng-click="app.signState = 'signin';" translate="signin_signup.SIGNIN">Entrar</button>
         </div>
       </div>
@@ -343,13 +342,13 @@
     <!-- forgot -->
     <div class="text-color m" ng-if="app.signState === 'forgot'">
       <div class="m-b p-t p-h w-xxl">
-        <span class="text-md font-500">{{'signin_signup.FORGOT' | translate}}</span>
-        <p class="m-t" >{{'signin_signup.FORGOT_MSG' | translate}}.</p>
+        <span class="text-md font-500">{{::('signin_signup.FORGOT' | translate)}}</span>
+        <p class="m-t" >{{::('signin_signup.FORGOT_MSG' | translate)}}.</p>
       </div>
       <form name="reset" class="text-md w-xxl">
         <div class="p" style="padding-bottom: 0">
           <md-input-container class="w-full m-b-0">
-            <label for="testInput">{{'titles.EMAIL' | translate}}</label>
+            <label for="testInput">{{::('titles.EMAIL' | translate)}}</label>
             <input type="text" id="testInput" ng-model="person.email" md-autofocus>
           </md-input-container>
         </div>
@@ -359,7 +358,7 @@
         </div>
       </form>
       <div class="text-center">
-        <div>{{'signin_signup.HAVE_AN_ACCOUNT' | translate}}?
+        <div>{{::('signin_signup.HAVE_AN_ACCOUNT' | translate)}}?
         <button class="md-btn" ng-click="app.signState = 'signin';" translate="signin_signup.SIGNIN">Entrar</button>
         </div>
       </div>
@@ -410,7 +409,7 @@
               <i class="mdi2-send i-16"></i>
             </md-button>
             <div class="m-l-xxl m-r-xxl"> 
-              <textarea style="max-height: 200px;" msd-elastic class="no-border p-t-sm" ng-model="app.newComment" style="resize: none;" placeholder="{{'titles.COMMENT' | translate }}"></textarea>
+              <textarea style="max-height: 200px;" msd-elastic class="no-border p-t-sm" ng-model="app.newComment" style="resize: none;" placeholder="{{::('titles.COMMENT' | translate) }}"></textarea>
             </div>
           </div>
         </div>
@@ -421,7 +420,7 @@
   <script type="text/ng-template" id="social-share-dialog.html">
     <md-dialog-content class="md-background-hue-1 background p-md">
       <div class="m-b-md text-md font-500 text-center text-u-c">
-        {{'titles.SHARE' | translate}}
+        {{::('titles.SHARE' | translate)}}
       </div>
       <div class="inline w">
         <a socialshare socialshare-provider="facebook" socialshare-text="{{app.publicationToShare.title}}" socialshare-url="{{app.getPublicationLink()}}">
@@ -485,7 +484,7 @@
           </div>
         </div>
         <div class="text-right">
-          <md-button ui-sref="app.userprofile({'username': loadedPerson.username})">{{'search.VIEW_PROFILE' | translate}}</md-button>
+          <md-button ui-sref="app.userprofile({'username': loadedPerson.username})">{{::('search.VIEW_PROFILE' | translate)}}</md-button>
         </div>
       </div>
   </md-dialog-content>

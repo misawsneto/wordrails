@@ -141,8 +141,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if(!$scope.app.editingPost)
 			$scope.app.editingPost = {};
 
-		$scope.app.editingPost.scheduledDate = $scope.postScheduleDate = scheduledDate;
-		$scope.postScheduleMenuOpen = false;
+		$scope.postDate = $scope.app.editingPost.date = $scope.app.editingPost.scheduledDate = $scope.postScheduleDate = scheduledDate;
+		$scope.postDateUpdateble = $scope.postScheduleMenuOpen = false;
 		$scope.app.editingPost.state = "PUBLISHED";
 	}
 
@@ -234,7 +234,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			$scope.app.editingPost.body = '';
 		}
 		$scope.tags = [];
-		$scope.featuredImage = $scope.featuredAudio = $scope.featuredVideo = $scope.postFeaturedImage = $scope.postFeaturedAudio = $scope.postFeaturedVideo = null;
+		removeAllMedia();
 		$mdDialog.cancel();
 	}
 
@@ -273,7 +273,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		state = state ? state : $scope.app.editingPost ? $scope.app.editingPost.state : null;
 
-		if($scope.app.editingPost && $scope.app.editingPost.scheduledDate)
+		if($scope.checkIfScheduled())
 			return 3;
 
 		if(!state)
@@ -464,6 +464,13 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
     $scope.app.imgToolsProps.x = Math.round(((e.pageX - offset.left) / e.target.clientWidth) * 100);
     $scope.app.imgToolsProps.y = Math.round(((e.pageY - offset.top) / e.target.clientHeight) * 100);
   };
+
+  $scope.resetFocus = function(){
+  	if($scope.app.editingPost){
+  		$scope.app.imgToolsProps.x = $scope.app.editingPost.focusX ? $scope.app.editingPost.focusX : 50
+  		$scope.app.imgToolsProps.y = $scope.app.editingPost.focusY ? $scope.app.editingPost.focusY : 50
+  	}
+  }
   
   $scope.offset = function (elm) {
     try { return elm.offset(); } catch (e) { }
@@ -741,6 +748,12 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.removeVideo = function(){
 		$scope.useVideo = false;
+		if($scope.app.editingPost)
+			removeAllMedia();
+	}
+
+	function removeAllMedia(){
+		$scope.featuredImage = $scope.featuredAudio = $scope.featuredVideo = $scope.postFeaturedImage = $scope.postFeaturedAudio = $scope.postFeaturedVideo = null;
 	}
 
 	$scope.removeUploadedVideo = function(){
@@ -952,6 +965,61 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	// -------- /autoSave
 
+	// ------ image credits --------
+	
+	$scope.showImageCreditsUpdateDialog = function(){
+
+	}
+
+	$scope.oldCredits = null;
+	$scope.$watch('featuredImage.credits', function(newVal, oldVal){
+		console.log("New credits", newVal);
+		if(!$scope.oldCredits){
+			$scope.oldCredits = oldVal;
+		}
+	})
+
+	$scope.creditsChanged = function(){
+		$scope.showCreditsChangeDialog();
+	}
+
+	$scope.showCreditsChangeDialog = function(){
+		$scope.disabled = false;
+		$mdDialog.show({
+			scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
+          	preserveScope: true, // do not forget this if use parent scope
+			controller: $scope.app.defaultDialog,
+			templateUrl: 'credits-dialog.html',
+			parent: angular.element(document.body),
+			targetEvent: event,
+			clickOutsideToClose:true
+			// onComplete: function(){
+
+			// }
+		});
+	}
+
+	$scope.applyImageCredits = function(){
+		if($scope.featuredImage){
+			trix.updateImageCredits($scope.featuredImage).success(function(image){
+				$mdDialog.cancel();
+			}).error(function(){
+				$mdDialog.cancel();
+			})
+		}
+	}
+
+	$scope.restorePreviewsCredits = function(){
+		if($scope.featuredImage && $scope.oldCredits){
+			$scope.featuredImage.credits = $scope.oldCredits;
+		}
+	}
+
+	// ------ /image creidts -------
+
 	$scope.getStationFromPost = function(){
 		if($scope.app.editingPost.station){
 			$scope.stations.forEach(function(station){
@@ -975,12 +1043,31 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		var hash = $scope.app.editingPost.featuredImageHash ? $scope.app.editingPost.featuredImageHash : $scope.app.editingPost.imageHash ? $scope.app.editingPost.imageHash : $scope.app.editingPost.featuredImage ? $scope.app.editingPost.featuredImage.originalHash : null;
 		setPostFeaturedImage(hash)
 		$scope.featuredImage = $scope.app.editingPost.featuredImage
+		if($scope.featuredImage){
+			$scope.featuredImage.credits = $scope.app.editingPost.imageCredits
+			$scope.app.imgToolsProps.x =  $scope.app.editingPost.focusX;
+			$scope.app.imgToolsProps.y = $scope.app.editingPost.focusY;
+		}
 		$scope.landscape = $scope.app.editingPost.imageLandscape;
 		$scope.customizedLink.slug = $scope.app.editingPost.slug;
 
 		$scope.useHeading = $scope.app.editingPost.topper ? true:false
 		$scope.useSubheading = $scope.app.editingPost.subheading ? true:false
 		$scope.tags = angular.copy($scope.app.editingPost.tags);
+		$scope.useVideo = $scope.app.editingPost.externalVideoUrl;
+
+		if($scope.app.editingPost.date){
+			$scope.postDate = new Date($scope.app.editingPost.date);
+			$scope.postDateUpdateble = false;
+		}
+
+		if($scope.useVideo){
+			$scope.app.videoUrl = '';
+			$timeout(function(){
+				$scope.app.videoUrl = $scope.app.editingPost.externalVideoUrl
+			}, 100)
+		}
+
 		if(!lockContent)
 			$timeout(function(){
 				$scope.app.postObjectChanged = false;
@@ -1019,8 +1106,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			post.author = ImageDto.getSelf(post.author);
 
 		// --- image ---
-		if($scope.featuredImage)
+		if($scope.featuredImage){
 			post.featuredImage = ImageDto.getSelf($scope.featuredImage);
+			post.focusX = $scope.app.imgToolsProps.x
+			post.focusY = $scope.app.imgToolsProps.y
+		}
 		else
 			post.featuredImage = null;
 
@@ -1039,17 +1129,13 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if(post.station)
 			post.station = StationDto.getSelf(post.station);
 
-		// if(!$scope.postScheduleUpdateble)
-		// 	post.scheduledDate = $scope.postScheduleDate;
+		if($scope.app.checkState() === 3)
+			post.state = 'PUBLISHED';
 
-		// if($scope.app.checkState() > 1){
-		// 	$scope.postScheduleUpdateble = true;
-		// 	post.scheduledDate = null;
-		// 	$scope.postScheduleDate = null;
-		// }
+		if($scope.postDate)
+			post.date = $scope.postDate.getTime();
 
 		return post;
-		// return {"author":"http://demo.xarx.rocks/api/persons/51","body":"...","bookmarksCount":0,"commentsCount":0,"date":1462880877015,"imageLandscape":false,"lat":-8.04325205,"lng":-34.94544256,"notify":false,"readTime":0,"readsCount":0,"recommendsCount":0,"state":"PUBLISHED","station":"http://demo.xarx.rocks/api/stations/11","subheading":"","title":"Abcd55","topper":""}
 	}
 
 	$scope.saveAsDraft = function(event, confirm){
@@ -1147,6 +1233,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			$mdDialog.cancel();
 			if($scope.app.checkState() == 2 && $scope.app.editingPost.state)
 				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISHED_AS_DRAFT'));
+			else if($scope.app.checkState() == 3 && $scope.app.editingPost.state)
+				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SCHEDULED'));
 			else
 				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
 		}).error(function(){
@@ -1160,7 +1248,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			showInvalidTermsOrStationsDialog();
 			return null;
 		}
-		if(!originalPost.title || !originalPost.body){
+		if(originalPost && (!originalPost.title || !originalPost.body)){
 			showInvalidTitleOrBodyDialog();
 			return null;
 		}
@@ -1381,10 +1469,10 @@ function createVersions(){
 	    '</div>'+
     '</div>'+
 		'<div class="text-center p-t">'+
-			'<md-button ng-click="app.cancelDialog();" class="m-0">'+
+			'<md-button ng-click="app.cancelDialog(); resetFocus();" class="m-0">'+
 				'{{\'titles.CANCEL\' | translate}}'+
 			'</md-button>'+
-			'<md-button ng-click="" class="m-0">'+
+			'<md-button ng-click="app.cancelDialog();" class="m-0">'+
 				'{{\'titles.SAVE\' | translate}}'+
 			'</md-button>'+
 		'</div>'+

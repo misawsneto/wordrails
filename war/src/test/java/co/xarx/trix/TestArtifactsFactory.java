@@ -51,9 +51,6 @@ public class TestArtifactsFactory {
 		post.subheading = "Dummy subheading";
 		post.scheduledDate = new Date();
 		post.notify = true;
-		post.setImageCaptionText("Dummy caption");
-		post.setImageCreditsText("Dummy credits");
-		post.setImageTitleText("Dummy title");
 		return post;
 	}
 

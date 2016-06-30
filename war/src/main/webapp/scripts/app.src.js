@@ -50840,11 +50840,14 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 })(window, window.angular);
 
 /**
- * @license AngularJS v1.2.29
- * (c) 2010-2014 Google, Inc. http://angularjs.org
+ * @license AngularJS v1.5.7
+ * (c) 2010-2016 Google, Inc. http://angularjs.org
  * License: MIT
  */
-(function(window, angular, undefined) {'use strict';
+(function(window, angular) {'use strict';
+
+/* global ngTouchClickDirectiveFactory: false,
+ */
 
 /**
  * @ngdoc module
@@ -50868,6 +50871,108 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 /* global -ngTouch */
 var ngTouch = angular.module('ngTouch', []);
 
+ngTouch.provider('$touch', $TouchProvider);
+
+function nodeName_(element) {
+  return angular.lowercase(element.nodeName || (element[0] && element[0].nodeName));
+}
+
+/**
+ * @ngdoc provider
+ * @name $touchProvider
+ *
+ * @description
+ * The `$touchProvider` allows enabling / disabling {@link ngTouch.ngClick ngTouch's ngClick directive}.
+ */
+$TouchProvider.$inject = ['$provide', '$compileProvider'];
+function $TouchProvider($provide, $compileProvider) {
+
+  /**
+   * @ngdoc method
+   * @name  $touchProvider#ngClickOverrideEnabled
+   *
+   * @param {boolean=} enabled update the ngClickOverrideEnabled state if provided, otherwise just return the
+   * current ngClickOverrideEnabled state
+   * @returns {*} current value if used as getter or itself (chaining) if used as setter
+   *
+   * @kind function
+   *
+   * @description
+   * Call this method to enable/disable {@link ngTouch.ngClick ngTouch's ngClick directive}. If enabled,
+   * the default ngClick directive will be replaced by a version that eliminates the 300ms delay for
+   * click events on browser for touch-devices.
+   *
+   * The default is `false`.
+   *
+   */
+  var ngClickOverrideEnabled = false;
+  var ngClickDirectiveAdded = false;
+  this.ngClickOverrideEnabled = function(enabled) {
+    if (angular.isDefined(enabled)) {
+
+      if (enabled && !ngClickDirectiveAdded) {
+        ngClickDirectiveAdded = true;
+
+        // Use this to identify the correct directive in the delegate
+        ngTouchClickDirectiveFactory.$$moduleName = 'ngTouch';
+        $compileProvider.directive('ngClick', ngTouchClickDirectiveFactory);
+
+        $provide.decorator('ngClickDirective', ['$delegate', function($delegate) {
+          if (ngClickOverrideEnabled) {
+            // drop the default ngClick directive
+            $delegate.shift();
+          } else {
+            // drop the ngTouch ngClick directive if the override has been re-disabled (because
+            // we cannot de-register added directives)
+            var i = $delegate.length - 1;
+            while (i >= 0) {
+              if ($delegate[i].$$moduleName === 'ngTouch') {
+                $delegate.splice(i, 1);
+                break;
+              }
+              i--;
+            }
+          }
+
+          return $delegate;
+        }]);
+      }
+
+      ngClickOverrideEnabled = enabled;
+      return this;
+    }
+
+    return ngClickOverrideEnabled;
+  };
+
+  /**
+  * @ngdoc service
+  * @name $touch
+  * @kind object
+  *
+  * @description
+  * Provides the {@link ngTouch.$touch#ngClickOverrideEnabled `ngClickOverrideEnabled`} method.
+  *
+  */
+  this.$get = function() {
+    return {
+      /**
+       * @ngdoc method
+       * @name  $touch#ngClickOverrideEnabled
+       *
+       * @returns {*} current value of `ngClickOverrideEnabled` set in the {@link ngTouch.$touchProvider $touchProvider},
+       * i.e. if {@link ngTouch.ngClick ngTouch's ngClick} directive is enabled.
+       *
+       * @kind function
+       */
+      ngClickOverrideEnabled: function() {
+        return ngClickOverrideEnabled;
+      }
+    };
+  };
+
+}
+
 /* global ngTouch: false */
 
     /**
@@ -50880,8 +50985,7 @@ var ngTouch = angular.module('ngTouch', []);
      *
      * Requires the {@link ngTouch `ngTouch`} module to be installed.
      *
-     * `$swipe` is used by the `ngSwipeLeft` and `ngSwipeRight` directives in `ngTouch`, and by
-     * `ngCarousel` in a separate component.
+     * `$swipe` is used by the `ngSwipeLeft` and `ngSwipeRight` directives in `ngTouch`.
      *
      * # Usage
      * The `$swipe` service is an object with a single method: `bind`. `bind` takes an element
@@ -50893,17 +50997,40 @@ ngTouch.factory('$swipe', [function() {
   // The total distance in any direction before we make the call on swipe vs. scroll.
   var MOVE_BUFFER_RADIUS = 10;
 
+  var POINTER_EVENTS = {
+    'mouse': {
+      start: 'mousedown',
+      move: 'mousemove',
+      end: 'mouseup'
+    },
+    'touch': {
+      start: 'touchstart',
+      move: 'touchmove',
+      end: 'touchend',
+      cancel: 'touchcancel'
+    }
+  };
+
   function getCoordinates(event) {
-    var touches = event.touches && event.touches.length ? event.touches : [event];
-    var e = (event.changedTouches && event.changedTouches[0]) ||
-        (event.originalEvent && event.originalEvent.changedTouches &&
-            event.originalEvent.changedTouches[0]) ||
-        touches[0].originalEvent || touches[0];
+    var originalEvent = event.originalEvent || event;
+    var touches = originalEvent.touches && originalEvent.touches.length ? originalEvent.touches : [originalEvent];
+    var e = (originalEvent.changedTouches && originalEvent.changedTouches[0]) || touches[0];
 
     return {
       x: e.clientX,
       y: e.clientY
     };
+  }
+
+  function getEvents(pointerTypes, eventType) {
+    var res = [];
+    angular.forEach(pointerTypes, function(pointerType) {
+      var eventName = POINTER_EVENTS[pointerType][eventType];
+      if (eventName) {
+        res.push(eventName);
+      }
+    });
+    return res.join(' ');
   }
 
   return {
@@ -50914,9 +51041,13 @@ ngTouch.factory('$swipe', [function() {
      * @description
      * The main method of `$swipe`. It takes an element to be watched for swipe motions, and an
      * object containing event handlers.
+     * The pointer types that should be used can be specified via the optional
+     * third argument, which is an array of strings `'mouse'` and `'touch'`. By default,
+     * `$swipe` will listen for `mouse` and `touch` events.
      *
      * The four events are `start`, `move`, `end`, and `cancel`. `start`, `move`, and `end`
-     * receive as a parameter a coordinates object of the form `{ x: 150, y: 310 }`.
+     * receive as a parameter a coordinates object of the form `{ x: 150, y: 310 }` and the raw
+     * `event`. `cancel` receives the raw `event` as its single parameter.
      *
      * `start` is called on either `mousedown` or `touchstart`. After this event, `$swipe` is
      * watching for `touchmove` or `mousemove` events. These events are ignored until the total
@@ -50936,7 +51067,7 @@ ngTouch.factory('$swipe', [function() {
      * as described above.
      *
      */
-    bind: function(element, eventHandlers) {
+    bind: function(element, eventHandlers, pointerTypes) {
       // Absolute total movement, used to control swipe vs. scroll.
       var totalX, totalY;
       // Coordinates of the start position.
@@ -50946,7 +51077,8 @@ ngTouch.factory('$swipe', [function() {
       // Whether a swipe is active.
       var active = false;
 
-      element.on('touchstart mousedown', function(event) {
+      pointerTypes = pointerTypes || ['mouse', 'touch'];
+      element.on(getEvents(pointerTypes, 'start'), function(event) {
         startCoords = getCoordinates(event);
         active = true;
         totalX = 0;
@@ -50954,13 +51086,15 @@ ngTouch.factory('$swipe', [function() {
         lastPos = startCoords;
         eventHandlers['start'] && eventHandlers['start'](startCoords, event);
       });
+      var events = getEvents(pointerTypes, 'cancel');
+      if (events) {
+        element.on(events, function(event) {
+          active = false;
+          eventHandlers['cancel'] && eventHandlers['cancel'](event);
+        });
+      }
 
-      element.on('touchcancel', function(event) {
-        active = false;
-        eventHandlers['cancel'] && eventHandlers['cancel'](event);
-      });
-
-      element.on('touchmove mousemove', function(event) {
+      element.on(getEvents(pointerTypes, 'move'), function(event) {
         if (!active) return;
 
         // Android will send a touchcancel if it thinks we're starting to scroll.
@@ -50994,7 +51128,7 @@ ngTouch.factory('$swipe', [function() {
         }
       });
 
-      element.on('touchend mouseup', function(event) {
+      element.on(getEvents(pointerTypes, 'end'), function(event) {
         if (!active) return;
         active = false;
         eventHandlers['end'] && eventHandlers['end'](getCoordinates(event), event);
@@ -51003,13 +51137,24 @@ ngTouch.factory('$swipe', [function() {
   };
 }]);
 
-/* global ngTouch: false */
+/* global ngTouch: false,
+  nodeName_: false
+*/
 
 /**
  * @ngdoc directive
  * @name ngClick
+ * @deprecated
  *
  * @description
+ * <div class="alert alert-danger">
+ * **DEPRECATION NOTICE**: Beginning with Angular 1.5, this directive is deprecated and by default **disabled**.
+ * The directive will receive no further support and might be removed from future releases.
+ * If you need the directive, you can enable it with the {@link ngTouch.$touchProvider $touchProvider#ngClickOverrideEnabled}
+ * function. We also recommend that you migrate to [FastClick](https://github.com/ftlabs/fastclick).
+ * To learn more about the 300ms delay, this [Telerik article](http://developer.telerik.com/featured/300-ms-click-delay-ios-8/)
+ * gives a good overview.
+ * </div>
  * A more powerful replacement for the default ngClick designed to be used on touchscreen
  * devices. Most mobile browsers wait about 300ms after a tap-and-release before sending
  * the click event. This version handles them immediately, and then prevents the
@@ -51041,15 +51186,7 @@ ngTouch.factory('$swipe', [function() {
     </example>
  */
 
-ngTouch.config(['$provide', function($provide) {
-  $provide.decorator('ngClickDirective', ['$delegate', function($delegate) {
-    // drop the default ngClick directive
-    $delegate.shift();
-    return $delegate;
-  }]);
-}]);
-
-ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
+var ngTouchClickDirectiveFactory = ['$parse', '$timeout', '$rootElement',
     function($parse, $timeout, $rootElement) {
   var TAP_DURATION = 750; // Shorter than 750ms is a tap, longer is a taphold or drag.
   var MOVE_TOLERANCE = 12; // 12px seems to work in most mobile browsers.
@@ -51069,7 +51206,7 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
   // double-tapping, and then fire a click event.
   //
   // This delay sucks and makes mobile apps feel unresponsive.
-  // So we detect touchstart, touchmove, touchcancel and touchend ourselves and determine when
+  // So we detect touchstart, touchcancel and touchend ourselves and determine when
   // the user has tapped on something.
   //
   // What happens when the browser then generates a click event?
@@ -51081,7 +51218,7 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
   // So the sequence for a tap is:
   // - global touchstart: Sets an "allowable region" at the point touched.
   // - element's touchstart: Starts a touch
-  // (- touchmove or touchcancel ends the touch, no click follows)
+  // (- touchcancel ends the touch, no click follows)
   // - element's touchend: Determines if the tap is valid (didn't move too far away, didn't hold
   //   too long) and fires the user's tap handler. The touchend also calls preventGhostClick().
   // - preventGhostClick() removes the allowable region the global touchstart created.
@@ -51111,7 +51248,7 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
   // Splices out the allowable region from the list after it has been used.
   function checkAllowableRegions(touchCoordinates, x, y) {
     for (var i = 0; i < touchCoordinates.length; i += 2) {
-      if (hit(touchCoordinates[i], touchCoordinates[i+1], x, y)) {
+      if (hit(touchCoordinates[i], touchCoordinates[i + 1], x, y)) {
         touchCoordinates.splice(i, i + 2);
         return true; // allowable region
       }
@@ -51145,7 +51282,7 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
       lastLabelClickCoordinates = null;
     }
     // remember label click coordinates to prevent click busting of trigger click event on input
-    if (event.target.tagName.toLowerCase() === 'label') {
+    if (nodeName_(event.target) === 'label') {
       lastLabelClickCoordinates = [x, y];
     }
 
@@ -51161,7 +51298,7 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
     event.preventDefault();
 
     // Blur focused form elements
-    event.target && event.target.blur();
+    event.target && event.target.blur && event.target.blur();
   }
 
 
@@ -51176,7 +51313,7 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
     $timeout(function() {
       // Remove the allowable region.
       for (var i = 0; i < touchCoordinates.length; i += 2) {
-        if (touchCoordinates[i] == x && touchCoordinates[i+1] == y) {
+        if (touchCoordinates[i] == x && touchCoordinates[i + 1] == y) {
           touchCoordinates.splice(i, i + 2);
           return;
         }
@@ -51216,7 +51353,7 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
       tapping = true;
       tapElement = event.target ? event.target : event.srcElement; // IE uses srcElement.
       // Hack for Safari, which can target text nodes instead of containers.
-      if(tapElement.nodeType == 3) {
+      if (tapElement.nodeType == 3) {
         tapElement = tapElement.parentNode;
       }
 
@@ -51224,14 +51361,12 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
 
       startTime = Date.now();
 
-      var touches = event.touches && event.touches.length ? event.touches : [event];
-      var e = touches[0].originalEvent || touches[0];
+      // Use jQuery originalEvent
+      var originalEvent = event.originalEvent || event;
+      var touches = originalEvent.touches && originalEvent.touches.length ? originalEvent.touches : [originalEvent];
+      var e = touches[0];
       touchStartX = e.clientX;
       touchStartY = e.clientY;
-    });
-
-    element.on('touchmove', function(event) {
-      resetState();
     });
 
     element.on('touchcancel', function(event) {
@@ -51241,12 +51376,15 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
     element.on('touchend', function(event) {
       var diff = Date.now() - startTime;
 
-      var touches = (event.changedTouches && event.changedTouches.length) ? event.changedTouches :
-          ((event.touches && event.touches.length) ? event.touches : [event]);
-      var e = touches[0].originalEvent || touches[0];
+      // Use jQuery originalEvent
+      var originalEvent = event.originalEvent || event;
+      var touches = (originalEvent.changedTouches && originalEvent.changedTouches.length) ?
+          originalEvent.changedTouches :
+          ((originalEvent.touches && originalEvent.touches.length) ? originalEvent.touches : [originalEvent]);
+      var e = touches[0];
       var x = e.clientX;
       var y = e.clientY;
-      var dist = Math.sqrt( Math.pow(x - touchStartX, 2) + Math.pow(y - touchStartY, 2) );
+      var dist = Math.sqrt(Math.pow(x - touchStartX, 2) + Math.pow(y - touchStartY, 2));
 
       if (tapping && diff < TAP_DURATION && dist < MOVE_TOLERANCE) {
         // Call preventGhostClick so the clickbuster will catch the corresponding click.
@@ -51292,7 +51430,7 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
     });
 
   };
-}]);
+}];
 
 /* global ngTouch: false */
 
@@ -51305,6 +51443,9 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
  * A leftward swipe is a quick, right-to-left slide of the finger.
  * Though ngSwipeLeft is designed for touch-based devices, it will work with a mouse click and drag
  * too.
+ *
+ * To disable the mouse click and drag functionality, add `ng-swipe-disable-mouse` to
+ * the `ng-swipe-left` or `ng-swipe-right` DOM Element.
  *
  * Requires the {@link ngTouch `ngTouch`} module to be installed.
  *
@@ -51395,6 +51536,10 @@ function makeSwipeDirective(directiveName, direction, eventName) {
             deltaY / deltaX < MAX_VERTICAL_RATIO;
       }
 
+      var pointerTypes = ['touch'];
+      if (!angular.isDefined(attr['ngSwipeDisableMouse'])) {
+        pointerTypes.push('mouse');
+      }
       $swipe.bind(element, {
         'start': function(coords, event) {
           startCoords = coords;
@@ -51411,7 +51556,7 @@ function makeSwipeDirective(directiveName, direction, eventName) {
             });
           }
         }
-      });
+      }, pointerTypes);
     };
   }]);
 }
@@ -99044,7 +99189,7 @@ PersonDto.getSelf = function(object){
 	return TRIX_BACKEND + "/api/persons/" + id;
 }
 
-function PostDto(id, author, body, bookmarksCount, commentsCount, date, externalVideoUrl, featuredAudio, featuredAudioHash, featuredImage, featuredVideo, featuredVideoHash, imageCaptionText, imageCreditsText, imageHash, imageId, imageLandscape, imageLargeHash, imageMediumHash, imageSmallHash, imageTitleText, lastModificationDate, lat, lng, notify, originalPostId, originalSlug, readTime, recommendsCount, scheduledDate, slug, state, station, stationId, subheading, tags, title, topper) {
+function PostDto(id, author, body, bookmarksCount, commentsCount, date, externalVideoUrl, featuredAudio, featuredAudioHash, featuredImage, featuredVideo, featuredVideoHash, imageCredits, imageHash, imageId, imageLandscape, imageLargeHash, imageMediumHash, imageSmallHash, lastModificationDate, lat, lng, notify, originalPostId, originalSlug, readTime, recommendsCount, scheduledDate, slug, state, station, stationId, subheading, tags, title, topper) {
 	return {
 		id: id,
 		author: author,
@@ -99058,15 +99203,13 @@ function PostDto(id, author, body, bookmarksCount, commentsCount, date, external
 		featuredImage: featuredImage,
 		featuredVideo: featuredVideo,
 		featuredVideoHash: featuredVideoHash,
-		imageCaptionText: imageCaptionText,
-		imageCreditsText: imageCreditsText,
+		imageCredits: imageCredits,
 		imageHash: imageHash,
 		imageId: imageId,
 		imageLandscape: imageLandscape,
 		imageLargeHash: imageLargeHash,
 		imageMediumHash: imageMediumHash,
 		imageSmallHash: imageSmallHash,
-		imageTitleText: imageTitleText,
 		lastModificationDate: lastModificationDate,
 		lat: lat,
 		lng: lng,
@@ -99433,14 +99576,14 @@ var trix = angular.module('trix', [])
 	}
 
 	this.updateStationRoles = function(stationRoleUpdates){
-		var config = {"headers": {"Content-Type": "application/json"}}
-		return $http.put(_config.url + "/api/permission/stations/update", stationRoleUpdates, config)
-	}
+        var config = {"headers": {"Content-Type": "application/json"}}
+        return $http.put(_config.url + "/api/permission/stations/update", stationRoleUpdates, config)
+    }
 
-	this.clearStationRoles = function(stationRoleUpdates){
-		var config = {"headers": {"Content-Type": "application/json"}}
-		return $http.put(_config.url + "/api/permission/stations/clean", stationRoleUpdates, config)
-	}
+    this.clearStationRoles = function(stationRoleUpdates){
+        var config = {"headers": {"Content-Type": "application/json"}}
+        return $http.put(_config.url + "/api/permission/stations/clean", stationRoleUpdates, config)
+    }
 
 	this.putTermView = function (termView) {
 		var config = {"headers": {"Content-Type": "application/json"}}
@@ -99748,6 +99891,11 @@ var trix = angular.module('trix', [])
 		var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
 		return $http.put(_config.url + "/api/persons/me/password", $.param({"oldPassword": oldPassword, "newPassword": newPassword}), config)
 	};
+
+	this.updateImageCredits = function(image){
+		var config = {"headers": {"Content-Type": "application/json"}}
+        return $http.put(_config.url + "/api/images/updateCredits", image, config)
+	}
 
 	this.convertPost = function(postId, state){
 		var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
@@ -101166,6 +101314,20 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findByUsernameAndTenantId) {
+			window.console && console.log("findByUsernameAndTenantId");
+		}
+		this.findByUsernameAndTenantId = function(tenantId, projection) {
+			var config = {};
+			config.params = {
+				tenantId: tenantId,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/persons/search/findByUsernameAndTenantId",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
 		if (this.findPersons) {
 			window.console && console.log("findPersons");
 		}
@@ -101180,20 +101342,6 @@ var trix = angular.module('trix', [])
 			}
 			config.params["projection"] = projection;
 			return $http.get(_config.url + "/api/persons/search/findPersons",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findByUsernameAndTenantId) {
-			window.console && console.log("findByUsernameAndTenantId");
-		}
-		this.findByUsernameAndTenantId = function(tenantId, projection) {
-			var config = {};
-			config.params = {
-				tenantId: tenantId,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/persons/search/findByUsernameAndTenantId",  config)
 		};
 
 		/*-------------------------- Relationship -----------------------------------------------*/
@@ -101416,21 +101564,6 @@ var trix = angular.module('trix', [])
 		}
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.updateState) {
-			window.console && console.log("updateState");
-		}
-		this.updateState = function(state, postId, projection) {
-			var config = {};
-			config.params = {
-				state: state,
-				postId: postId,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/posts/search/updateState",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
 		if (this.findBySlug) {
 			window.console && console.log("findBySlug");
 		}
@@ -101445,34 +101578,21 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findStateById) {
-			window.console && console.log("findStateById");
+		if (this.findPostsPublished) {
+			window.console && console.log("findPostsPublished");
 		}
-		this.findStateById = function(id, projection) {
+		this.findPostsPublished = function(termsIds, stationId, page, size, sort, projection) {
 			var config = {};
 			config.params = {
-				id: id,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/posts/search/findStateById",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findByAuthorUsernameAndStateOrderByDateDesc) {
-			window.console && console.log("findByAuthorUsernameAndStateOrderByDateDesc");
-		}
-		this.findByAuthorUsernameAndStateOrderByDateDesc = function(state, page, size, sort, projection) {
-			var config = {};
-			config.params = {
-				state: state,
+				termsIds: termsIds,
+				stationId: stationId,
 				page: page,
 				size: size,
 				sort: sort,
 
 			}
 			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/posts/search/findByAuthorUsernameAndStateOrderByDateDesc",  config)
+			return $http.get(_config.url + "/api/posts/search/findPostsPublished",  config)
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
@@ -101493,21 +101613,49 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findPostsPublished) {
-			window.console && console.log("findPostsPublished");
+		if (this.findByAuthorUsernameAndStateOrderByDateDesc) {
+			window.console && console.log("findByAuthorUsernameAndStateOrderByDateDesc");
 		}
-		this.findPostsPublished = function(termsIds, stationId, page, size, sort, projection) {
+		this.findByAuthorUsernameAndStateOrderByDateDesc = function(state, page, size, sort, projection) {
 			var config = {};
 			config.params = {
-				termsIds: termsIds,
-				stationId: stationId,
+				state: state,
 				page: page,
 				size: size,
 				sort: sort,
 
 			}
 			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/posts/search/findPostsPublished",  config)
+			return $http.get(_config.url + "/api/posts/search/findByAuthorUsernameAndStateOrderByDateDesc",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findStateById) {
+			window.console && console.log("findStateById");
+		}
+		this.findStateById = function(id, projection) {
+			var config = {};
+			config.params = {
+				id: id,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/posts/search/findStateById",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.updateState) {
+			window.console && console.log("updateState");
+		}
+		this.updateState = function(postId, state, projection) {
+			var config = {};
+			config.params = {
+				postId: postId,
+				state: state,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/posts/search/updateState",  config)
 		};
 
 		/*-------------------------- Relationship -----------------------------------------------*/
@@ -102434,31 +102582,20 @@ var trix = angular.module('trix', [])
 		}
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.countTerms) {
-			window.console && console.log("countTerms");
+		if (this.findRootsPage) {
+			window.console && console.log("findRootsPage");
 		}
-		this.countTerms = function(termsIds, projection) {
-			var config = {};
-			config.params = {
-				termsIds: termsIds,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/countTerms",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findByTaxonomyId) {
-			window.console && console.log("findByTaxonomyId");
-		}
-		this.findByTaxonomyId = function(taxonomyId, projection) {
+		this.findRootsPage = function(taxonomyId, page, size, sort, projection) {
 			var config = {};
 			config.params = {
 				taxonomyId: taxonomyId,
+				page: page,
+				size: size,
+				sort: sort,
 
 			}
 			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/findByTaxonomyId",  config)
+			return $http.get(_config.url + "/api/terms/search/findRootsPage",  config)
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
@@ -102476,20 +102613,17 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findRootsPage) {
-			window.console && console.log("findRootsPage");
+		if (this.countTerms) {
+			window.console && console.log("countTerms");
 		}
-		this.findRootsPage = function(taxonomyId, page, size, sort, projection) {
+		this.countTerms = function(termsIds, projection) {
 			var config = {};
 			config.params = {
-				taxonomyId: taxonomyId,
-				page: page,
-				size: size,
-				sort: sort,
+				termsIds: termsIds,
 
 			}
 			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/findRootsPage",  config)
+			return $http.get(_config.url + "/api/terms/search/countTerms",  config)
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
@@ -102524,6 +102658,20 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findTermsByPostSlug) {
+			window.console && console.log("findTermsByPostSlug");
+		}
+		this.findTermsByPostSlug = function(slug, projection) {
+			var config = {};
+			config.params = {
+				slug: slug,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/terms/search/findTermsByPostSlug",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
 		if (this.findByPerspectiveId) {
 			window.console && console.log("findByPerspectiveId");
 		}
@@ -102538,17 +102686,34 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findTermsByPostSlug) {
-			window.console && console.log("findTermsByPostSlug");
+		if (this.findByTaxonomyId) {
+			window.console && console.log("findByTaxonomyId");
 		}
-		this.findTermsByPostSlug = function(slug, projection) {
+		this.findByTaxonomyId = function(taxonomyId, projection) {
 			var config = {};
 			config.params = {
-				slug: slug,
+				taxonomyId: taxonomyId,
 
 			}
 			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/findTermsByPostSlug",  config)
+			return $http.get(_config.url + "/api/terms/search/findByTaxonomyId",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findPostsByTerm) {
+			window.console && console.log("findPostsByTerm");
+		}
+		this.findPostsByTerm = function(termId, page, size, sort, projection) {
+			var config = {};
+			config.params = {
+				termId: termId,
+				page: page,
+				size: size,
+				sort: sort,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/terms/search/findPostsByTerm",  config)
 		};
 
 		/*-------------------------- Relationship -----------------------------------------------*/
@@ -103097,6 +103262,9 @@ angular
 
 var app =  
 angular.module('app')
+  .config(['$compileProvider', function ($compileProvider) {
+    $compileProvider.debugInfoEnabled(false);
+  }])
   .config(
     [        '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', 'cfpLoadingBarProvider',
     function ($controllerProvider,   $compileProvider,   $filterProvider,   $provide ,  cfpLoadingBarProvider) {
@@ -103186,7 +103354,7 @@ angular.module('app')
     .warnPalette('myWarn')
     .backgroundPalette('myBackground', {'default':'500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A100'});
 
-    $mdThemingProvider.alwaysWatchTheme(true);
+    //$mdThemingProvider.alwaysWatchTheme(true);
 
     $provide.value('themeProvider', $mdThemingProvider);
     $provide.value('colorsProvider', $mdColorsProvider);
@@ -103423,6 +103591,7 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
                               "   background-color: " + color + "!important; " + contrast + " }", index); index++;
         stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn, .fr-popup .fr-command.fr-btn{" + contrast + "}", index); index++;
         stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn.fr-dropdown::after, .fr-popup .fr-command.fr-btn.fr-dropdown::after{" + contrast + "}", index); index++;
+        stylesheet.insertRule(".border-bg-color{border: 1px solid; border-color:" + contrastColor + "}", index); index++;
       }
       if(cssname === 'background' && name === 'hue-1'){
         stylesheet.insertRule(".fr-toolbar, .card, .panel, .panel-card { background-color: " + color + "!important; " + contrast + " }", index); index++;
@@ -104156,7 +104325,7 @@ angular.module('app')
                     deferred.resolve(null);
                     return deferred.promise;
                   },
-                  deps:load(['/scripts/controllers/app/read.js?' + GLOBAL_URL_HASH , '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css?' + GLOBAL_URL_HASH]).deps
+                  deps:load(['/scripts/controllers/app/read.js?' + GLOBAL_URL_HASH , '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css?' + GLOBAL_URL_HASH, 'videosharing-embed']).deps
                 },
                 controller: 'ReadCtrl'
               })
@@ -105302,6 +105471,12 @@ angular.module('app')
             resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
             controller: 'AppNetworkCtrl'
           })
+          .state('access.networkcreated', {
+            url: '/networkcreated?token',
+            template: '<div></div>',
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
+            controller: 'AppNetworkCreatedCtrl'
+          })
           .state('access.lockme', {
             url: '/lockme',
             templateUrl: '/views/pages/lockme.html?' + GLOBAL_URL_HASH
@@ -105335,7 +105510,7 @@ angular.module('app')
                 resolve: {
                   post: postDep,
                   station: stationDep,
-                  deps:load(['wu.masonry', '/scripts/controllers/app/read.js?' + GLOBAL_URL_HASH , '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css?' + GLOBAL_URL_HASH]).deps
+                  deps:load(['wu.masonry', '/scripts/controllers/app/read.js?' + GLOBAL_URL_HASH , '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css?' + GLOBAL_URL_HASH, 'videosharing-embed']).deps
                 }
               })
           }
@@ -105781,7 +105956,7 @@ angular.module('app')
 
         $scope.app.getCategoryLink = function(stationSlug, categoryName){
           var base = $scope.app.isSettings() ? TRIX.baseUrl : '';
-          return base +  '/'+stationSlug+'/cat?name='+categoryName;
+          return base +  '/'+stationSlug+'/cat?name='+$scope.app.getEscapedCategory(categoryName);
         }
 
         $scope.app.stopPropagation = function(e){
@@ -105793,6 +105968,10 @@ angular.module('app')
           $('#search form input').focus();
 
 
+        }
+
+        $scope.app.getEscapedCategory = function(category){
+          return window.encodeURIComponent(category)
         }
 
         // ---------- /util -------------
@@ -105891,6 +106070,12 @@ angular.module('app')
 
         $scope.app.applyNetworkTheme();
       } // end of startApp
+
+      if(!appData.network){
+        window.console && console.info('no network')
+        $scope.app.name = '';
+        return
+      }
 
       startApp();
 
@@ -106039,18 +106224,22 @@ angular.module('app')
       // ---------- imageHelper -----------
       
       $scope.getBackgroundImage = function(object, size){
-        var img = $filter('bgImageLink')(object, size);
-        if(object.externalVideoUrl){
-          img = $filter('videoThumb')(object.externalVideoUrl);
-        }
+        var img = null;
+        // if(object.externalVideoUrl){
+        //   img = {"background-image": "url(" + object.externalVideoUrl +")", "background-position": "50% 20%"}; //$filter('videoThumb')(object.externalVideoUrl);
+        // }else{
+          img = $filter('bgImageLink')(object, size);
+        // }
         return img;
       }
 
       $scope.app.getImageLink = $scope.getImageLink = function(object, size){
-        var img = $filter('imageLink')(object, size);
-        if(object.externalVideoUrl){
-          img = $filter('videoThumb')(object.externalVideoUrl);
-        }
+        var img = null; 
+        // if(object.externalVideoUrl){
+        //   img = object.externalVideoUrl; // $filter('videoThumb')(object.externalVideoUrl);
+        // }else{
+          img = $filter('imageLink')(object, size);
+        // }
         return img;
       }
 

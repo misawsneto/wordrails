@@ -1,9 +1,9 @@
 package co.xarx.trix.exception;
 
+import org.springframework.validation.FieldError;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.validation.FieldError;
 
 public class BadRequestException extends RuntimeException{
 	

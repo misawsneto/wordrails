@@ -4,6 +4,7 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.PasswordReset;
 import co.xarx.trix.domain.User;
+import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.PasswordResetRepository;
 import co.xarx.trix.persistence.UserRepository;
@@ -31,26 +32,35 @@ public class PasswordService {
 		this.networkRepository = networkRepository;
 	}
 
-	public void resetPassword(String email){
+	public User resetPassword(String email){
 		Assert.hasText(email, "Null email");
 		User user = userRepository.findUserByEmail(email);
+
+		if(user == null){
+			return null;
+		}
 
 		PasswordReset passwordReset = new PasswordReset();
 		passwordReset.setUser(user);
 		passwordReset.setHash(UUID.randomUUID().toString());
 
 		passwordResetRepository.save(passwordReset);
-
 		emailService.sendSimpleMail(email, "Recuperação de senha", createEmailBody(user.getUsername(), passwordReset.hash));
+
+		return user;
 	}
 
 	@Transactional
-	public void updatePassword(String hash, String password){
-		Assert.hasText(password, "Null password");
+	public void updatePassword(String hash, String password) throws BadRequestException {
+		if(password == null || password.isEmpty()) {
+			throw new BadRequestException("Null password");
+		}
 
 		PasswordReset passwordReset = passwordResetRepository.findByHash(hash);
 
-		Assert.notNull(passwordReset, "No hash to recover password");
+		if (passwordReset == null) {
+			throw new BadRequestException("No hash to recover password");
+		}
 
 		passwordReset.user.password = password;
 		userRepository.save(passwordReset.user);
