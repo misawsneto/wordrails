@@ -2,6 +2,7 @@ package co.xarx.trix.persistence;
 
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.UserGrantedAuthority;
 import co.xarx.trix.domain.projection.PersonProjection;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,9 +16,17 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @RepositoryRestResource(exported = true, excerptProjection = PersonProjection.class)
 public interface PersonRepository extends DatabaseRepository<Person, Integer> {
+
+	@Query(value = "SELECT * " +
+			"FROM person p " +
+			"JOIN authorities a on a.user_id = p.user_id " +
+			"WHERE p.username IN (:usernames) OR a.authority IN (:roles) AND p.tenantId=:tenantId", nativeQuery = true)
+	List<Person> findByUsernamesAndRoles(@Param("usernames") List<String> usernames, @Param("roles") List<String>
+			roles, @Param("tenantId") String tenantId);
 
 	@Cacheable(value = "person", key = "#p0")
 	Person findByUsername(@Param("username") String username);

@@ -30,8 +30,6 @@ public class PostEventHandler {
 	@Autowired
 	private CommentRepository commentRepository;
 	@Autowired
-	private NotificationRepository notificationRepository;
-	@Autowired
 	private ElasticSearchService elasticSearchService;
 	@Autowired
 	private ESPostRepository esPostRepository;
@@ -98,7 +96,6 @@ public class PostEventHandler {
 	public void handleBeforeDelete(Post post) throws UnauthorizedException {
 		cellRepository.delete(cellRepository.findByPost(post));
 		commentRepository.delete(post.comments);
-		notificationRepository.deleteByPost(post);
 		if (post.state.equals(Post.STATE_PUBLISHED)) {
 			esPostRepository.delete(post.id); // evitando bug de remoção de post que tiveram post alterado.
 		}

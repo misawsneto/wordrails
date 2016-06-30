@@ -1,18 +1,18 @@
 package co.xarx.trix.services.notification;
 
-import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.MobileNotification;
 
 public class NotificationResult {
 
-	private Notification.Status status;
+	private MobileNotification.Status status;
 	private String errorMessage;
 	private boolean deviceDeactivated;
 
-	public Notification.Status getStatus() {
+	public MobileNotification.Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(Notification.Status status) {
+	public void setStatus(MobileNotification.Status status) {
 		this.status = status;
 	}
 

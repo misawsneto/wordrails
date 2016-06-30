@@ -1,102 +1,81 @@
 package co.xarx.trix.services.notification;
 
 import co.xarx.trix.api.NotificationView;
-import co.xarx.trix.domain.Notification;
+import co.xarx.trix.api.PostView;
+import co.xarx.trix.config.security.Permissions;
+import co.xarx.trix.domain.NotificationRequest;
+import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.util.ListUtil;
-import co.xarx.trix.util.Logger;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import co.xarx.trix.persistence.MobileDeviceRepository;
+import co.xarx.trix.persistence.NotificationRequestRepository;
+import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.services.security.PersonPermissionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 public class NotificationService {
 
-	public List<Notification> sendNotifications(NotificationSender sender, NotificationView notification,
-												Post post, Collection<String> devices, Notification.DeviceType deviceType) {
-		Assert.notEmpty(devices, "Devices must not be null and not empty");
-		Assert.notNull(notification, "Notification must not be null");
+	private PostRepository postRepository;
+	private PersonPermissionService personPermissionService;
+	private PersonalNotificationService personalNotificationService;
+	private MobileNotificationService mobileNotificationService;
+	private MobileDeviceRepository mobileDeviceRepository;
+	private NotificationRequestRepository notificationRequestRepository;
 
-		Map<String, NotificationResult> results;
-		List<Notification> notifications = new ArrayList<>();
-
-		List<List<String>> parts = ListUtil.partition(new ArrayList<>(devices), sender.getBatchSize());
-		for (int i = 0; i < parts.size(); i++) {
-			List<String> part = parts.get(i);
-			try {
-				Logger.info(deviceType.toString() + ": Sending notification to " +
-						devices.size() + " devices. Notification hash: " + notification.hash);
-				results = sender.sendMessageToDevices(notification, part);
-
-				notifications.addAll(this.getSuccessNotifications(results, notification, post, deviceType));
-			} catch (IOException e) {
-				log.error("Error sending notification to devices", e);
-				notifications.addAll(this.getErrorNotifications(new HashSet<>(part), notification, post, e, deviceType));
-			}
-
-			boolean isNotLast = i + 1 < parts.size();
-			if (isNotLast) {
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-
-		return notifications;
+	@Autowired
+	public NotificationService(PostRepository postRepository,
+							   PersonPermissionService personPermissionService,
+							   PersonalNotificationService personalNotificationService,
+							   MobileNotificationService mobileNotificationService,
+							   MobileDeviceRepository mobileDeviceRepository,
+							   NotificationRequestRepository notificationRequestRepository) {
+		this.postRepository = postRepository;
+		this.personPermissionService = personPermissionService;
+		this.personalNotificationService = personalNotificationService;
+		this.mobileNotificationService = mobileNotificationService;
+		this.mobileDeviceRepository = mobileDeviceRepository;
+		this.notificationRequestRepository = notificationRequestRepository;
 	}
 
-	public List<Notification> getErrorNotifications(Collection<String> devices,
-													NotificationView notification,
-													Post post, Exception e,
-													Notification.DeviceType deviceType) {
-		List<Notification> notis = new ArrayList<>();
-		if(devices == null || devices.isEmpty())
-			return notis;
+	@Transactional
+	public void createPostNotification(String title, String message, Integer postId) {
+		NotificationRequest request = newNotification(title, message);
+		request.setPostId(postId);
 
-		Assert.notNull(notification, "Notification must not be null");
+		notificationRequestRepository.save(request);
 
+		Post post = postRepository.findOne(postId);
+		List<Person> persons = personPermissionService.getPersonFromStation(post.getStationId(), Permissions.READ);
 
-		for (String device : devices) {
-			Notification noti = new Notification(device, notification.hash, Notification.Status.SEND_ERROR, notification.message, notification.type);
-			noti.post = post;
-			noti.errorCodeName = "Failed to send notification to server";
-			noti.setDeviceType(deviceType);
-			noti.deviceDeactivated = false;
-			noti.setStackTrace(ExceptionUtils.getStackTrace(e));
-			noti.test = notification.test;
-			notis.add(noti);
+		personalNotificationService.sendNotifications(persons, request);
+
+		List<Integer> personsIds = persons.stream().map(Person::getId).collect(Collectors.toList());
+		List<String> androids = mobileDeviceRepository.findAndroids(personsIds);
+		List<String> apples = mobileDeviceRepository.findApples(personsIds);
+
+		PostView postView = new PostView(postId);
+		if (post.getFeaturedImage() != null) {
+			postView.setFeaturedImageHash(post.getFeaturedImage().getOriginalHash());
 		}
+		postView.setTitle(post.getTitle());
+		postView.setDate(post.getDate());
+		postView.setAuthorName(post.getAuthor().getName());
+		postView.setAuthorProfilePicture(post.getAuthor().getImageHash());
 
-		return notis;
+		mobileNotificationService.sendNotifications(NotificationView.of(postView), androids, apples);
 	}
 
-
-	private List<Notification> getSuccessNotifications(Map<String, NotificationResult> results,
-													   NotificationView notification, Post post,
-													   Notification.DeviceType deviceType) {
-		List<Notification> notis = new ArrayList<>();
-		if (results == null || results.isEmpty())
-			return notis;
-
-		Assert.notNull(notification, "Notification must not be null");
-
-		for (String device : results.keySet()) {
-			NotificationResult r = results.get(device);
-			Notification noti = new Notification(device, notification.hash, r.getStatus(), notification.message, notification.type);
-			noti.post = post;
-			noti.errorCodeName = r.getErrorMessage();
-			noti.setDeviceType(deviceType);
-			noti.deviceDeactivated = r.isDeviceDeactivated();
-			noti.test = notification.test;
-			notis.add(noti);
-		}
-
-		return notis;
+	private NotificationRequest newNotification(String title, String message) {
+		NotificationRequest notification = new NotificationRequest();
+		notification.setHash(UUID.randomUUID().toString());
+		notification.setTitle(title);
+		notification.setMessage(message);
+		return notification;
 	}
 }

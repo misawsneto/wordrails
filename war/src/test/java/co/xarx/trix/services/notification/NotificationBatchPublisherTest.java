@@ -1,6 +1,6 @@
 package co.xarx.trix.services.notification;
 
-import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.MobileNotification;
 import co.xarx.trix.services.notification.stubs.NotificationServerClientError;
 import co.xarx.trix.services.notification.stubs.NotificationServerClientInactives;
 import co.xarx.trix.services.notification.stubs.NotificationServerClientSuccess;
@@ -16,22 +16,22 @@ import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 
-public class NotificationServiceTest {
+public class NotificationBatchPublisherTest {
 
-	private NotificationService notificationService = new NotificationService();
+	private NotificationBatchPublisher notificationBatchPublisher = new NotificationBatchPublisher();
 
 	@Before
 	public void setUp() throws Exception {
-		notificationService = new NotificationService();
+		notificationBatchPublisher = new NotificationBatchPublisher();
 	}
 
 	public void testSend(NotificationSender sender, DummyNotificationData dummy, String[] types) {
-		List<Notification> notifications = notificationService.sendNotifications(sender, dummy.notification,
-				dummy.post, dummy.devices, Notification.DeviceType.ANDROID);
-		Set<String> devices = notifications.stream().map(Notification::getRegId).collect(Collectors.toSet());
-		List<String> statuses = notifications.stream().map(Notification::getStatus).collect(Collectors.toList());
+		List<MobileNotification> mobileNotifications = notificationBatchPublisher.sendNotifications(sender, dummy.notification,
+				dummy.devices, MobileNotification.DeviceType.ANDROID);
+		Set<String> devices = mobileNotifications.stream().map(MobileNotification::getRegId).collect(Collectors.toSet());
+		List<String> statuses = mobileNotifications.stream().map(MobileNotification::getStatus).collect(Collectors.toList());
 
-		assertEquals(notifications.size(), dummy.devices.size());
+		assertEquals(mobileNotifications.size(), dummy.devices.size());
 		assertThat(devices, contains(dummy.devices.toArray()));
 		assertThat(statuses, contains(types));
 	}
@@ -44,8 +44,8 @@ public class NotificationServiceTest {
 		DummyNotificationData dummy = new DummyNotificationData(2);
 
 		String[] types = {
-				Notification.Status.SUCCESS.toString(),
-				Notification.Status.SUCCESS.toString()
+				MobileNotification.Status.SUCCESS.toString(),
+				MobileNotification.Status.SUCCESS.toString()
 		};
 
 		testSend(sender, dummy, types);
@@ -59,9 +59,9 @@ public class NotificationServiceTest {
 		DummyNotificationData dummy = new DummyNotificationData(3);
 
 		String[] types = {
-				Notification.Status.SUCCESS.toString(),
-				Notification.Status.SERVER_ERROR.toString(),
-				Notification.Status.SERVER_ERROR.toString()
+				MobileNotification.Status.SUCCESS.toString(),
+				MobileNotification.Status.SERVER_ERROR.toString(),
+				MobileNotification.Status.SERVER_ERROR.toString()
 		};
 
 		testSend(sender, dummy, types);
@@ -75,8 +75,8 @@ public class NotificationServiceTest {
 		DummyNotificationData dummy = new DummyNotificationData(2);
 
 		String[] types = {
-				Notification.Status.SEND_ERROR.toString(),
-				Notification.Status.SEND_ERROR.toString()
+				MobileNotification.Status.SEND_ERROR.toString(),
+				MobileNotification.Status.SEND_ERROR.toString()
 		};
 
 		testSend(sender, dummy, types);

@@ -22,11 +22,6 @@ public class QueryPersistence {
 	public void deletePostReadsInPosts(List<Integer> ids) {
 		manager.createQuery("delete from PostRead postRead where postRead.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
 	}
-	
-	@Transactional
-	public void deleteNotificationsInPosts(List<Integer> ids) {
-		manager.createQuery("delete from Notification notification where notification.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
-	}
 
 	@Transactional
 	public void deleteCellsInPosts(List<Integer> ids) {

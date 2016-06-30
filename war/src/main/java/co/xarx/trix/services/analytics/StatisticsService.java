@@ -4,6 +4,7 @@ import co.xarx.trix.api.v2.ReadsCommentsRecommendsCountData;
 import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.api.v2.StoreStatsData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.config.security.Permissions;
 import co.xarx.trix.domain.MobileDevice;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
@@ -269,7 +270,7 @@ public class StatisticsService {
 	}
 
 	public Map getStationReaders(Integer stationId){
-		List<Person> persons = (List<Person>) personPermissionService.getPersonFromStation(stationId);
+		List<Person> persons = (List<Person>) personPermissionService.getPersonFromStation(stationId, Permissions.READ);
 
 		if(persons.size() == 0) return new HashMap<>();
 
