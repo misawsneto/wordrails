@@ -68,8 +68,8 @@ public class AuthResource extends AbstractResource implements AuthApi {
 
 		boolean authorized;
 
-		if(userId == null){
-			if("facebook".equals("providerId")){
+		if(userId == null || "".equals(userId)){
+			if("facebook".equals(providerId)){
 				RestTemplate rq = new RestTemplate();
 				OAuthResponse authResponse = rq.getForObject("https://graph.facebook.com/me?access_token=" + accessToken,
 						OAuthResponse.class);
