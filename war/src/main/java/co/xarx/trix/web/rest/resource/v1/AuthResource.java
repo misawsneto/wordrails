@@ -8,10 +8,12 @@ import co.xarx.trix.services.PasswordService;
 import co.xarx.trix.services.security.Authenticator;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.AuthApi;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.core.Response;
@@ -30,6 +32,12 @@ public class AuthResource extends AbstractResource implements AuthApi {
 		this.authCredentialRepository = authCredentialRepository;
 		this.authenticator = authenticator;
 		this.passwordService = passwordService;
+	}
+
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class OAuthResponse{
+		public String id;
+		public String name;
 	}
 
 	@Override
@@ -59,6 +67,16 @@ public class AuthResource extends AbstractResource implements AuthApi {
 		}
 
 		boolean authorized;
+
+		if(userId == null){
+			if("facebook".equals("providerId")){
+				RestTemplate rq = new RestTemplate();
+				OAuthResponse authResponse = rq.getForObject("https://graph.facebook.com/me?access_token=" + accessToken,
+						OAuthResponse.class);
+				userId = authResponse.id;
+			}
+		}
+
 		try {
 			authorized = authenticator.socialAuthentication(providerId, userId, appId, appSecret, accessToken);
 		} catch (BadCredentialsException e) {
