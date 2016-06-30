@@ -74,6 +74,7 @@ public class NotificationService {
 		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(NotificationView.of(postView), androids, apples);
 
 		for (MobileNotification mobileNotification : mobileNotifications) {
+			mobileNotification.setPostId(postId);
 			mobileNotificationRepository.save(mobileNotification);
 		}
 	}

@@ -26,6 +26,7 @@ public class PersonalNotificationData implements Serializable {
 		data.setTitle(notification.getTitle());
 		data.setType(notification.getType().toString());
 		data.setPersonId(notification.getPerson().getId());
+		data.setPostId(notification.getPostId());
 
 		return data;
 	}
@@ -36,4 +37,5 @@ public class PersonalNotificationData implements Serializable {
 	public String title;
 	public String type;
 	public Integer personId;
+	public Integer postId;
 }

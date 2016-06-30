@@ -24,7 +24,8 @@ public interface PersonRepository extends DatabaseRepository<Person, Integer> {
 	@Query(value = "SELECT * " +
 			"FROM person p " +
 			"JOIN authorities a on a.user_id = p.user_id " +
-			"WHERE p.username IN (:usernames) OR a.authority IN (:roles) AND p.tenantId=:tenantId", nativeQuery = true)
+			"WHERE p.username IN (:usernames) OR a.authority IN (:roles) AND p.tenantId=:tenantId " +
+			"GROUP BY p.id", nativeQuery = true)
 	List<Person> findByUsernamesAndRoles(@Param("usernames") List<String> usernames, @Param("roles") List<String>
 			roles, @Param("tenantId") String tenantId);
 
