@@ -212,7 +212,7 @@ var trix = angular.module('trix', [])
 
     this.clearStationRoles = function(stationRoleUpdates){
         var config = {"headers": {"Content-Type": "application/json"}}
-        return \$http.put(_config.url + "/api/permission/stations/clean", stationRoleUpdates, config)
+        return \$http.post(_config.url + "/api/permission/stations/clean", stationRoleUpdates, config)
     }
 
 	this.putTermView = function (termView) {

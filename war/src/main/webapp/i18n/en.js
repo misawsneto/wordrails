@@ -273,7 +273,8 @@
 			"OPTIONAL_PASSWORD": "Password is optional and if not provided a random password will be generated and sent via email.",
 			"INVITATIONS_SENT": "Invitations were sent",
 			"PERMISSIONS_UPDATES": "Permissions updates",
-			"REMOVE_PERMISSIONS": "Remove permissions"
+			"REMOVE_PERMISSIONS": "Remove permissions",
+			"REMOVE_PERMISSIONS_MSG": "Are you sure you wish to remove all permission for this user on this station?"
 		},
 		"comment":{
 			"REMOVE_COMMENT_MSG": "Are you sure you want to permanatly delete this comment?",

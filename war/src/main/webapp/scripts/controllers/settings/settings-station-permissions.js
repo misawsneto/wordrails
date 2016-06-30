@@ -41,6 +41,46 @@ trix.getStationPermission(station.id).success(function(permissions){
       })
     }
 
+    $scope.personToDelete = null;
+    $scope.showDeletePersonPermission = function(event,person){
+    	$scope.disabled = false;
+    	$scope.personToDelete = person;
+      $scope.stationRole = null;
+      $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'delete-permissions-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+    }
+
+    $scope.deleteStationPermission = function(){
+    	var person = $scope.personToDelete;
+    	var stationRoleUpdates = {stationsIds: [station.id], usernames: [$scope.personToDelete.username]};
+    	if(person){
+    		trix.clearStationRoles(stationRoleUpdates).success(function(){
+    			$scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+    			for (var i = $scope.permissions.length - 1; i >= 0; i--) {
+    				if($scope.permissions[i].person.id === person.id)
+    					$scope.permissions.splice(i, 1)
+    			}
+    			$mdDialog.cancel();
+    		}).error(function(){
+    			$scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+    			$mdDialog.cancel();
+    		})
+    	}
+    }
+
   $scope.getPermissionText = function(permission){
   	if(permission.administration){
   		return $filter('translate')('titles.ADMIN')

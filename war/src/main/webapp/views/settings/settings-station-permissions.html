@@ -57,8 +57,8 @@
 													<td class="display-t-c v-m text-center" ng-if="!permission.person.lastLogin"> - </td>
 													<td class="display-t-c v-m text-center" ng-if="permission.person.lastLogin">{{app.getLocalTime(permission.person.lastLogin)}}</td>
 													<td class="display-t-c v-m">
-                            <div ng-if="person.id != app.person.id" class="dropdown hidden-sm">
-                              <md-button class="md-icon-button" data-toggle="dropdown">
+                            <div ng-if="permission.person.id != app.person.id" class="dropdown hidden-sm">
+                              <md-button class="md-icon-button" data-toggle="dropdown" ng-click="showDeletePersonPermission($event, permission.person)">
                                 <i class="mdi2-delete i-20"></i>
                               </md-button>
                             </div>
@@ -415,4 +415,25 @@
         <div>
       </div>
     </md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="delete-permissions-dialog.html">
+   <md-dialog aria-label="change action">
+     <md-content role="document" class="md-background-hue-1 background">
+       <div class="p-xs">
+         <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
+           {{'settings.users.REMOVE_PERMISSIONS_MSG' | translate}}
+         </div>
+   
+         <div class="text-center">
+           <md-button ng-click="deleteStationPermission(); disabled = true;" ng-disabled="disabled">
+             {{'titles.YES' | translate}}
+           </md-button>
+           <md-button ng-click="cancel()">
+             {{'titles.NO' | translate}}
+           </md-button>
+         <div>
+       </div>
+     </md-content>
+   </md-dialog>
 </script>
