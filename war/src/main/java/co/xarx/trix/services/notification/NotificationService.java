@@ -3,10 +3,9 @@ package co.xarx.trix.services.notification;
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.config.security.Permissions;
-import co.xarx.trix.domain.NotificationRequest;
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.MobileDeviceRepository;
+import co.xarx.trix.persistence.MobileNotificationRepository;
 import co.xarx.trix.persistence.NotificationRequestRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.security.PersonPermissionService;
@@ -26,6 +25,7 @@ public class NotificationService {
 	private PersonalNotificationService personalNotificationService;
 	private MobileNotificationService mobileNotificationService;
 	private MobileDeviceRepository mobileDeviceRepository;
+	private MobileNotificationRepository mobileNotificationRepository;
 	private NotificationRequestRepository notificationRequestRepository;
 
 	@Autowired
@@ -34,18 +34,21 @@ public class NotificationService {
 							   PersonalNotificationService personalNotificationService,
 							   MobileNotificationService mobileNotificationService,
 							   MobileDeviceRepository mobileDeviceRepository,
+							   MobileNotificationRepository mobileNotificationRepository,
 							   NotificationRequestRepository notificationRequestRepository) {
 		this.postRepository = postRepository;
 		this.personPermissionService = personPermissionService;
 		this.personalNotificationService = personalNotificationService;
 		this.mobileNotificationService = mobileNotificationService;
 		this.mobileDeviceRepository = mobileDeviceRepository;
+		this.mobileNotificationRepository = mobileNotificationRepository;
 		this.notificationRequestRepository = notificationRequestRepository;
 	}
 
 	@Transactional
 	public void createPostNotification(String title, String message, Integer postId) {
 		NotificationRequest request = newNotification(title, message);
+		request.setType(NotificationType.POST);
 		request.setPostId(postId);
 
 		notificationRequestRepository.save(request);
@@ -68,7 +71,11 @@ public class NotificationService {
 		postView.setAuthorName(post.getAuthor().getName());
 		postView.setAuthorProfilePicture(post.getAuthor().getImageHash());
 
-		mobileNotificationService.sendNotifications(NotificationView.of(postView), androids, apples);
+		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(NotificationView.of(postView), androids, apples);
+
+		for (MobileNotification mobileNotification : mobileNotifications) {
+			mobileNotificationRepository.save(mobileNotification);
+		}
 	}
 
 	private NotificationRequest newNotification(String title, String message) {

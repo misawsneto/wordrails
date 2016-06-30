@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Getter
@@ -26,6 +25,10 @@ public class NotificationRequest extends BaseEntity {
 
 	@NotNull
 	private String hash;
+
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	private NotificationType type;
 
 	@NotEmpty
 	@Size(min=1,max=500)

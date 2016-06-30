@@ -1,23 +1,29 @@
 package co.xarx.trix.web.rest.resource.v2;
 
+import co.xarx.trix.api.v2.PersonalNotificationData;
 import co.xarx.trix.services.notification.NotificationService;
+import co.xarx.trix.services.notification.PersonalNotificationService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2NotificationsApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
-import java.util.Map;
+import java.util.List;
 
 @Component
 public class V2NotificationsResource extends AbstractResource implements V2NotificationsApi {
 
 	@Autowired
 	private NotificationService notificationService;
+	@Autowired
+	private PersonalNotificationService personalNotificationService;
 
 	@Override
-	public Response getUserNotifications() {
-		return null;
+	public Response getUserNotifications(Integer personId) {
+		List<PersonalNotificationData> notifications = personalNotificationService.getNotifications(personId);
+
+		return Response.ok().entity(notifications).build();
 	}
 
 	@Override
@@ -26,8 +32,8 @@ public class V2NotificationsResource extends AbstractResource implements V2Notif
 		return Response.ok().build();
 	}
 
-	@Override
-	public Response notifyLater(Map<String, String> params) {
+//	@Override
+//	public Response notifyLater(Map<String, String> params) {
 //		CreateNotificationForm form;
 //		try {
 //			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
@@ -39,6 +45,6 @@ public class V2NotificationsResource extends AbstractResource implements V2Notif
 //		NotificationData data = notificationService.createScheduled(form.getTitle(), form.getMessage(),
 //				form.getScheduledDate(), form.getProperties());
 
-		return Response.ok().build();
-	}
+//		return Response.ok().build();
+//	}
 }

@@ -7,8 +7,8 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.Map;
 
 @Entity
 @Getter
@@ -20,6 +20,10 @@ public class PersonalNotification extends BaseEntity {
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
+
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	private NotificationType type;
 
 	@ManyToOne
 	private NotificationRequest request;
@@ -35,9 +39,5 @@ public class PersonalNotification extends BaseEntity {
 
 	private Date sentAt;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@JoinTable(name = "personalnotification_properties", joinColumns = @JoinColumn(name = "notification_id"))
-	@MapKeyColumn(name = "name", nullable = false, length = 100)
-	@Column(name = "value", nullable = false)
-	private Map<String, String> properties;
+	private Integer postId;
 }
