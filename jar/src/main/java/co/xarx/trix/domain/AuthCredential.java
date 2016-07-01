@@ -44,4 +44,9 @@ public class AuthCredential extends BaseEntity {
 	public boolean isGoogleLoginAllowed() {
 		return Strings.isNotEmpty(googleAppID) && Strings.isNotEmpty(googleAppSecret);
 	}
+
+	@PreUpdate
+	public void preUpdate(){
+		System.out.println("FUCK ME IN THE ASS!!");
+	}
 }

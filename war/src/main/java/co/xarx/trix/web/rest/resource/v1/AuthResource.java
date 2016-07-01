@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.ws.rs.NotAllowedException;
@@ -35,6 +36,7 @@ public class AuthResource extends AbstractResource implements AuthApi {
 	}
 
 	@Override
+	@Transactional
 	public Response signin(String providerId, String userId, String accessToken) throws IOException {
 		if (userId == null || "".equals(userId)) {
 			if ("facebook".equals(providerId)) {
@@ -51,7 +53,7 @@ public class AuthResource extends AbstractResource implements AuthApi {
 		}
 
 		AuthCredential credential = authCredentialRepository.findAuthCredentialByTenantId(TenantContextHolder.getCurrentTenantId());
-		credential.network = null;
+//		credential.network = null;
 
 		if(credential == null) {
 			throw new NotAllowedException("This network does not support social login");
