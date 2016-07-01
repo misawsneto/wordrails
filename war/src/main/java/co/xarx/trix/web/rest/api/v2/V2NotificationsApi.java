@@ -13,8 +13,15 @@ public interface V2NotificationsApi {
 	Response getUserNotifications(@PathParam("personId") Integer personId);
 
 	@POST
-	@Path("/now/post/{postId}")
+	@Path("/send/post/{postId}")
 	Response sendPostNotification(@FormParam("title") String title,
+								  @FormParam("message") String message,
+								  @PathParam("postId") Integer postId);
+
+	@POST
+	@Path("/schedule/post/{postId}")
+	Response schedulePostNotification(@FormParam("title") String title,
+								  @FormParam("scheduledAt") String date,
 								  @FormParam("message") String message,
 								  @PathParam("postId") Integer postId);
 }

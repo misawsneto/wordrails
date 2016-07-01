@@ -10,6 +10,8 @@ import co.xarx.trix.services.notification.GCMClient;
 import co.xarx.trix.services.notification.MobileNotificationSender;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.Sender;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.modelmapper.ModelMapper;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +25,6 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.lang.reflect.Method;
 import java.util.concurrent.Executor;
 
 @Configuration
@@ -103,6 +104,11 @@ public class ApplicationConfig implements AsyncConfigurer{
 		return new AmazonCloudService(accessKey, accessSecretKey, cloudfrontUrl, bucketName);
 	}
 
+	@Bean
+	public DateTimeFormatter dateTimeFormatter() {
+		return DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+	}
+
 	@Override
 	public Executor getAsyncExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -116,12 +122,9 @@ public class ApplicationConfig implements AsyncConfigurer{
 
 	@Override
 	public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-		return new AsyncUncaughtExceptionHandler() {
-			@Override
-			public void handleUncaughtException(Throwable throwable, Method method, Object... objects) {
-				throwable.printStackTrace();
-				TenantContextHolder.setCurrentTenantId(null);
-			}
+		return (throwable, method, objects) -> {
+			throwable.printStackTrace();
+			TenantContextHolder.setCurrentTenantId(null);
 		};
 	}
 

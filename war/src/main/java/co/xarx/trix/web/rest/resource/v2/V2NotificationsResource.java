@@ -5,6 +5,9 @@ import co.xarx.trix.services.notification.NotificationService;
 import co.xarx.trix.services.notification.PersonalNotificationService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2NotificationsApi;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +17,8 @@ import java.util.List;
 @Component
 public class V2NotificationsResource extends AbstractResource implements V2NotificationsApi {
 
+	@Autowired
+	private DateTimeFormatter dateTimeFormatter;
 	@Autowired
 	private NotificationService notificationService;
 	@Autowired
@@ -29,6 +34,20 @@ public class V2NotificationsResource extends AbstractResource implements V2Notif
 	@Override
 	public Response sendPostNotification(String title, String message, Integer postId) {
 		notificationService.createPostNotification(title, message, postId);
+		return Response.ok().build();
+	}
+
+	@Override
+	public Response schedulePostNotification(String title, String date, String message, Integer postId) {
+		DateTime dateTime = dateTimeFormatter.parseDateTime(date);
+
+		try {
+			notificationService.schedulePostNotification(dateTime.toDate(), title, message, postId);
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+			return Response.serverError().entity("Error scheduling post").build();
+		}
+
 		return Response.ok().build();
 	}
 

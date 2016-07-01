@@ -2,25 +2,29 @@ package co.xarx.trix.services.notification;
 
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.api.PostView;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.config.security.Permissions;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.MobileDeviceRepository;
 import co.xarx.trix.persistence.MobileNotificationRepository;
 import co.xarx.trix.persistence.NotificationRequestRepository;
 import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.services.SchedulerService;
+import co.xarx.trix.services.notification.job.SendNotificationJob;
 import co.xarx.trix.services.security.PersonPermissionService;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class NotificationService {
 
 	private PostRepository postRepository;
+	private SchedulerService schedulerService;
 	private PersonPermissionService personPermissionService;
 	private PersonalNotificationService personalNotificationService;
 	private MobileNotificationService mobileNotificationService;
@@ -30,6 +34,7 @@ public class NotificationService {
 
 	@Autowired
 	public NotificationService(PostRepository postRepository,
+							   SchedulerService schedulerService,
 							   PersonPermissionService personPermissionService,
 							   PersonalNotificationService personalNotificationService,
 							   MobileNotificationService mobileNotificationService,
@@ -37,6 +42,7 @@ public class NotificationService {
 							   MobileNotificationRepository mobileNotificationRepository,
 							   NotificationRequestRepository notificationRequestRepository) {
 		this.postRepository = postRepository;
+		this.schedulerService = schedulerService;
 		this.personPermissionService = personPermissionService;
 		this.personalNotificationService = personalNotificationService;
 		this.mobileNotificationService = mobileNotificationService;
@@ -47,11 +53,7 @@ public class NotificationService {
 
 	@Transactional
 	public void createPostNotification(String title, String message, Integer postId) {
-		NotificationRequest request = newNotification(title, message);
-		request.setType(NotificationType.POST);
-		request.setPostId(postId);
-
-		notificationRequestRepository.save(request);
+		NotificationRequest request = saveRequest(title, message, postId);
 
 		Post post = postRepository.findOne(postId);
 		List<Person> persons = personPermissionService.getPersonFromStation(post.getStationId(), Permissions.READ);
@@ -62,6 +64,20 @@ public class NotificationService {
 		List<String> androids = mobileDeviceRepository.findAndroids(personsIds);
 		List<String> apples = mobileDeviceRepository.findApples(personsIds);
 
+		saveMobileNotifications(postId, post, androids, apples);
+	}
+
+	public void schedulePostNotification(Date date, String title, String message, Integer postId) throws SchedulerException {
+		Map<String, String> properties = new HashMap<>();
+		properties.put("title", title);
+		properties.put("message", message);
+		properties.put("postId", postId + "");
+		properties.put("tenantId", TenantContextHolder.getCurrentTenantId());
+
+		schedulerService.schedule(postId + "", SendNotificationJob.class, date, properties);
+	}
+
+	private void saveMobileNotifications(Integer postId, Post post, List<String> androids, List<String> apples) {
 		PostView postView = new PostView(postId);
 		if (post.getFeaturedImage() != null) {
 			postView.setFeaturedImageHash(post.getFeaturedImage().getOriginalHash());
@@ -77,6 +93,15 @@ public class NotificationService {
 			mobileNotification.setPostId(postId);
 			mobileNotificationRepository.save(mobileNotification);
 		}
+	}
+
+	private NotificationRequest saveRequest(String title, String message, Integer postId) {
+		NotificationRequest request = newNotification(title, message);
+		request.setType(NotificationType.POST);
+		request.setPostId(postId);
+
+		notificationRequestRepository.save(request);
+		return request;
 	}
 
 	private NotificationRequest newNotification(String title, String message) {
