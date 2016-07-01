@@ -59,10 +59,11 @@ public class PostEventHandler {
 			}
 		}
 
-		savePost(post);
+		handleBeforeSave(post);
 	}
 
-	public void savePost(Post post) {
+	@HandleBeforeSave
+	public void handleBeforeSave(Post post) {
 		if (post.date == null) {
 			if(post.scheduledDate == null)
 				post.date = new Date();
@@ -100,12 +101,6 @@ public class PostEventHandler {
 
 	@HandleAfterSave
 	public void handleAfterSave(Post post) {
-		if (post.featuredVideo != null) {
-			post.imageLandscape = false;
-			if (post.featuredImage == null) {
-				postService.setVideoFeaturedImage(post);
-			}
-		}
 		elasticSearchService.mapThenSave(post, ESPost.class);
 		auditService.saveChange(post);
 	}
