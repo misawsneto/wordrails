@@ -41,6 +41,13 @@ public final class Permissions extends BasePermission {
 		return permission;
 	}
 
+	public static CumulativePermission getColaborator() {
+		CumulativePermission permission = getReader();
+		permission.set(CREATE);
+
+		return permission;
+	}
+
 	public static CumulativePermission getEditor() {
 		CumulativePermission permission = getWriter();
 		permission.set(MODERATION);
