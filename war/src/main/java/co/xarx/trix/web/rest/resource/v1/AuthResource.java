@@ -46,6 +46,7 @@ public class AuthResource extends AbstractResource implements AuthApi {
 				RestTemplate rq = new RestTemplate();
 				OAuthResponseData authResponse = rq.getForObject("https://www.googleapis.com/plus/v1/people/me?access_token=" + accessToken,
 						OAuthResponseData.class);
+				userId = authResponse.id;
 			}
 		}
 
