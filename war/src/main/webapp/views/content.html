@@ -69,19 +69,12 @@
         </ul>
       </li>
       <li class="dropdown m-r-lg" ng-if="$mdMedia('gt-sm')">
-        <a href class="dropdown-toggle clear" data-toggle="dropdown" ng-click="app.signInButton()">
-          <!-- <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
-            <img src="/images/a0.jpg" alt="...">
-            <i class="on md b-white bottom"></i>
-          </span> -->
-          <div ng-if="app.isLogged()" class="o-f-h pull-right md-whiteframe-z1 m-t-sm m-b-sm user-avatar rounded thumb-sm bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover text-center" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%', 'width': '46px', 'height': '46px'}">
+        <a href class="dropdown-toggle clear" data-toggle="dropdown" ng-click="app.signInButton(); app.closeSidebars();">
+          <div class="o-f-h pull-right md-whiteframe-z1 m-t-sm m-b-sm user-avatar rounded thumb-sm bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover text-center" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%', 'width': '46px', 'height': '46px'}">
             <i ng-if="!app.userImageSmall" class="mdi2-account i-24" style="position: relative;top: -10px;"></i>
           </div>
-          <md-button ng-if="!app.isLogged()" class="md-primary-hue-1 background">
-            {{::('signin_signup.SIGNIN' | translate)}}
-          </md-button>
-          <span class="hidden-sm hidden-md" ng-if="app.isLogged()">{{::app.person.name}}</span>
-          <b class="caret m-r" ng-if="app.isLogged()"></b>
+          <span class="hidden-sm hidden-md">{{::app.person.name}}</span>
+          <b class="caret m-r"></b>
         </a>
         <!-- dropdown -->
         <ul ng-if="app.isLogged()" class="dropdown-menu dropdown-menu-scale o-f-h w-lg pull-right">
@@ -119,12 +112,6 @@
             <a ng-href="/settings/profile" target="_self">
               <i class="icon m-r i-16 mdi2-account-circle opacity-08"></i>
               {{::('settings.aside.MY_PROFILE' | translate)}}
-            </a>
-          </li>
-          <li md-ink-ripple>
-            <a ng-href="/settings" target="_self">
-              <i class="icon m-r i-16 mdi2-settings opacity-08"></i>
-              {{::('titles.SETTINGS' | translate)}}
             </a>
           </li>
           <li md-ink-ripple>

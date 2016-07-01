@@ -80,6 +80,10 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	// sidenav toggle
 	$scope.toggleOptions = buildToggler('more-options');
+	$scope.app.closeSidebars = function() {
+        $mdSidenav('more-options')
+          .close()
+      };
 
 	function buildToggler(navID) {
       return function() {
