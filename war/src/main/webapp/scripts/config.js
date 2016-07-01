@@ -94,7 +94,8 @@ angular.module('app')
     .warnPalette('myWarn')
     .backgroundPalette('myBackground', {'default':'500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A100'});
 
-    //$mdThemingProvider.alwaysWatchTheme(true);
+    if(location.pathname.slice(0, '/settings'.length) == '/settings')
+      $mdThemingProvider.alwaysWatchTheme(true);
 
     $provide.value('themeProvider', $mdThemingProvider);
     $provide.value('colorsProvider', $mdColorsProvider);

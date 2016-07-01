@@ -154,8 +154,8 @@ angular.module('app')
         $state.go(state);
       }
 
-      trix.socialLogin(null, 'ya29.Ci8SA_uTXJEc1R2c3ZaKWV2PXZLzP6BXA3YRDYtdKWXTLU5Vvysnt3ofVgDwNclBGQ'
-        , 'google');
+      // trix.socialLogin(null, 'ya29.Ci8SA_uTXJEc1R2c3ZaKWV2PXZLzP6BXA3YRDYtdKWXTLU5Vvysnt3ofVgDwNclBGQ'
+      //   , 'google');
 
       function startApp(){
 
