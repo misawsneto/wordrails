@@ -103,7 +103,7 @@ public class GoogleAuthenticator implements OAuthAuthenticator {
 	private String getName(JsonNode rootNode) throws IOException {
 		String name;
 		try {
-			JsonNode node = rootNode.get("node");
+			JsonNode node = rootNode.get("name");
 			name = node.get("givenName").asText() + " " + node.get("familyName").asText();
 		} catch (Exception e) {
 			throw new IOException("Request is incorrect, name is not present in the response");
