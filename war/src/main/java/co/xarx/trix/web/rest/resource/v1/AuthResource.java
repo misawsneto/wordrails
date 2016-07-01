@@ -42,12 +42,21 @@ public class AuthResource extends AbstractResource implements AuthApi {
 
 	@Override
 	public Response signin(String providerId, String userId, String accessToken) throws IOException {
+		if (userId == null || "".equals(userId)) {
+			if ("facebook".equals(providerId)) {
+				RestTemplate rq = new RestTemplate();
+				OAuthResponse authResponse = rq.getForObject("https://graph.facebook.com/me?access_token=" + accessToken,
+						OAuthResponse.class);
+				userId = authResponse.id;
+			}
+		}
+
 		AuthCredential credential = authCredentialRepository.findAuthCredentialByTenantId(TenantContextHolder.getCurrentTenantId());
+		credential.network = null;
 
 		if(credential == null) {
 			throw new NotAllowedException("This network does not support social login");
 		}
-
 
 		boolean allowSocialLogin = true;
 		String appId = null;
@@ -67,15 +76,6 @@ public class AuthResource extends AbstractResource implements AuthApi {
 		}
 
 		boolean authorized;
-
-		if(userId == null || "".equals(userId)){
-			if("facebook".equals(providerId)){
-				RestTemplate rq = new RestTemplate();
-				OAuthResponse authResponse = rq.getForObject("https://graph.facebook.com/me?access_token=" + accessToken,
-						OAuthResponse.class);
-				userId = authResponse.id;
-			}
-		}
 
 		try {
 			authorized = authenticator.socialAuthentication(providerId, userId, appId, appSecret, accessToken);

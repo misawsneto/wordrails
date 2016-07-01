@@ -154,6 +154,8 @@ angular.module('app')
         $state.go(state);
       }
 
+      trix.socialLogin(null, "EAAPZCNVtWvxMBAIxWQHAek9Ayh38wZCeVbhUCdtvTkwp2FuLXYZBPflkbfpINsTwzpKNtmEYBpiGTEZCp22Xj6RU83CZAOGIwOtt7pd173NTNbvpAGDaIeOv7RZBaHfakIrYWRn9sdisj1yqPaiI3lWsK2yybay9cZD","facebook")
+
       function startApp(){
 
         // ---------- util -------------

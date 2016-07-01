@@ -5,6 +5,7 @@ import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.page.ContainerSection;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,8 +23,9 @@ import java.util.Objects;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId"}))
 @JsonIgnoreProperties(value = {
-		"faviconHash", "splashImageHash", "loginImageHash", "loginImageSmallHash", "subdomain"
-}, allowGetters = true)
+		"faviconHash", "splashImageHash", "loginImageHash", "loginImageSmallHash", "subdomain",
+		"facebookLoginAllowed", "googleLoginAllowed"
+}, allowGetters = true, ignoreUnknown = true)
 public class Network extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 7723825842358687233L;
@@ -68,6 +70,7 @@ public class Network extends BaseEntity implements Serializable {
 
 	@OneToOne(mappedBy = "network")
 	@SdkExclude
+	@JsonManagedReference
 	public AuthCredential authCredential;
 
 	public boolean allowSocialLogin;
