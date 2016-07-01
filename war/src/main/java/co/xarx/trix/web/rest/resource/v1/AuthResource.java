@@ -1,5 +1,6 @@
 package co.xarx.trix.web.rest.resource.v1;
 
+import co.xarx.trix.api.v2.OAuthResponseData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.AuthCredential;
 import co.xarx.trix.exception.BadRequestException;
@@ -8,7 +9,6 @@ import co.xarx.trix.services.PasswordService;
 import co.xarx.trix.services.security.Authenticator;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.AuthApi;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -34,24 +34,18 @@ public class AuthResource extends AbstractResource implements AuthApi {
 		this.passwordService = passwordService;
 	}
 
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class OAuthResponse{
-		public String id;
-		public String name;
-	}
-
 	@Override
 	public Response signin(String providerId, String userId, String accessToken) throws IOException {
 		if (userId == null || "".equals(userId)) {
 			if ("facebook".equals(providerId)) {
 				RestTemplate rq = new RestTemplate();
-				OAuthResponse authResponse = rq.getForObject("https://graph.facebook.com/me?access_token=" + accessToken,
-						OAuthResponse.class);
+				OAuthResponseData authResponse = rq.getForObject("https://graph.facebook.com/me?access_token=" + accessToken,
+						OAuthResponseData.class);
 				userId = authResponse.id;
 			}else if("google".equals(providerId)){
 				RestTemplate rq = new RestTemplate();
-				OAuthResponse authResponse = rq.getForObject("https://www.googleapis.com/plus/v1/people/me?access_token=" + accessToken,
-						OAuthResponse.class);
+				OAuthResponseData authResponse = rq.getForObject("https://www.googleapis.com/plus/v1/people/me?access_token=" + accessToken,
+						OAuthResponseData.class);
 			}
 		}
 
