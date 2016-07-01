@@ -82,7 +82,8 @@ public class UserFactory {
 	public String generateUsernameFromName(String name) {
 		int i = 1;
 		String originalUsername = name.toLowerCase().replace(" ", "");
-		String username = Normalizer.normalize(originalUsername, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+		originalUsername = Normalizer.normalize(originalUsername, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+		String username = originalUsername;
 		while (userRepository.existsByUsername(username)) {
 			username = originalUsername + i++;
 		}
