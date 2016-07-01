@@ -42,6 +42,10 @@ public class FacebookAuthenticator implements OAuthAuthenticator {
 		fbUser.setProviderId("facebook");
 		fbUser.setProfileUrl("http://facebook.com/" + fbUser.getId());
 		fbUser.setProfileImageUrl("https://graph.facebook.com/" + fbUser.getId() + "/picture?type=large");
+
+		if(fbUser.getEmail() == null)
+			throw new BadCredentialsException("Request did not return email");
+
 		return fbUser;
 	}
 
