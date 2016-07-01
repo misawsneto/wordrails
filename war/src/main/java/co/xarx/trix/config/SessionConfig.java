@@ -3,6 +3,7 @@ package co.xarx.trix.config;
 import co.xarx.trix.api.v2.StationData;
 import co.xarx.trix.config.cache.MultitenantCacheManager;
 import co.xarx.trix.config.web.CookieAndHeaderHttpSessionStrategy;
+import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.User;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -54,6 +55,9 @@ public class SessionConfig extends CachingConfigurerSupport {
 	public CacheManager cacheManager() {
 		Map<String, Map<RedisTemplate, Integer>> templates = new HashMap<>();
 
+		RedisTemplate networkRedisTemplate = redisTemplate();
+		networkRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(Network.class));
+
 		RedisTemplate personRedisTemplate = redisTemplate();
 		personRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(Person.class));
 
@@ -71,6 +75,10 @@ public class SessionConfig extends CachingConfigurerSupport {
 
 		RedisTemplate postsIdsRedisTemplate = redisTemplate();
 		postsIdsRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(List.class));
+
+		templates.put("network", new HashMap<RedisTemplate, Integer>() {{
+			put(networkRedisTemplate, 60);
+		}});
 
 		templates.put("person", new HashMap<RedisTemplate, Integer>(){{put(personRedisTemplate, 60);}});
 		templates.put("user", new HashMap<RedisTemplate, Integer>(){{put(userRedisTemplate, 60);}});

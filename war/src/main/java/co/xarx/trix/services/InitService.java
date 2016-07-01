@@ -1,6 +1,7 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.api.*;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.TermConverter;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.UnauthorizedException;
@@ -122,7 +123,7 @@ public class InitService {
 		initData.network.loginImageId = network.getLoginImageId();
 		initData.network.splashImageId = network.getSplashImageId();
 		initData.network.faviconId = network.getFaviconId();
-
+		initData.network.subdomain = TenantContextHolder.getCurrentTenantId();
 
 		initData.stations = stationViews;
 		initData.personPermissions = personPermissions;

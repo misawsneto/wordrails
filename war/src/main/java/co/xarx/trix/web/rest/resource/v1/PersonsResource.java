@@ -5,6 +5,7 @@ import co.xarx.trix.api.IdsList;
 import co.xarx.trix.api.PersonData;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.v2.StatsData;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
@@ -487,6 +488,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	public PersonData getAllInitData() throws IOException {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
+		network.tenantId = TenantContextHolder.getCurrentTenantId();
 		Integer stationId = initService.getStationIdFromCookie(request);
 		PersonData personData = initService.getInitialData(baseUrl, network);
 
@@ -500,6 +502,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	public PersonData getInitialData() throws IOException {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
+		network.tenantId = TenantContextHolder.getCurrentTenantId();
 		return initService.getInitialData(baseUrl, network);
 	}
 

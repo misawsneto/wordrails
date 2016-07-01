@@ -17,25 +17,6 @@
   <div class="box-row">
     <div id="aside-scroller" class="scroller box-cell">
       <div class="box-inner">
-        <!-- profile -->
-        <div ng-if="app.userImageUploader" class="hidden-folded bg-cover" ng-style="{'background-image': 'url(' + app.coverImageMedium + ')'}">
-          <div class="md-whiteframe-z1 m-t m-l user-avatar rounded w-64 bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}">
-            <i ng-if="!app.userImageSmall" class="mdi2-account i-40" style="top: 16%;position: relative;"></i>
-            <!-- image profile upload -->
-            <div class="profile-image-button rounded o-f-h w-64 text-center pos-abt top-0" style="background-color: rgba(0,0,0,0.7)">
-              <i class="mdi2-pencil i-32 text-white image-edit" style="opacity: 0.92; position: relative; top: 24%"></i>
-              <input class="image-upload" style="height: 64px;" type="file" nv-file-select="" uploader="app.userImageUploader" name="contents" accept="image/*">
-            </div>
-            <!-- /image profile upload -->
-          </div>
-          <div class="p-v-sm p-h black-grad m-t text-white">
-            <div class="block" style="opacity:0.92">
-              <span class="block font-bold">{{app.person.name}}</span>
-              <span class="text-sm">{{app.person.email}}</span>
-            </div>
-          </div>
-        </div>
-        <!-- /profile -->
         <div id="nav" ng-include="'views/partials/aside.nav.uikit.html'"></div>
       </div>
     </div>
