@@ -258,7 +258,7 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 			$scope.authCredentials = {};
 	})
 	$scope.saveAuthCredentials = function(){
-		trix.updateAuthCredential($scope.authCredentials).success(function(response){
+		trix.saveAuthCredentials($scope.authCredentials).success(function(response){
 			console.log(response);
 		}).error(function(){
 

@@ -405,6 +405,11 @@ var trix = angular.module('trix', [])
         return \$http.get(_config.url + "/api/v2/auth/social/credentials")
     }
 
+    this.saveAuthCredentials = function (authCredentials) {
+        var config = {"headers": {"Content-Type": "application/json"}}
+        return $http.put(_config.url + "/api/v2/auth/social/credentials", authCredentials, config)
+    }
+
 	this.searchNotifications = function(query, _page, _size) {
 		var config = {
 		"params": {

@@ -41,6 +41,7 @@ public class NetworkDomainFilter implements Filter {
 			response.sendRedirect("/home");
 		} else {
 			String tenantId = networkService.getTenantFromHost(host);
+			TenantContextHolder.setCurrentTenantId(tenantId);
 
 			String currentTenantId = TenantContextHolder.getCurrentTenantId();
 			if (currentTenantId != null && !currentTenantId.equals(tenantId)) {
@@ -55,7 +56,7 @@ public class NetworkDomainFilter implements Filter {
 			HttpSession session = request.getSession();
 			session.setAttribute("userAgent", request.getHeader("User-Agent"));
 			session.setAttribute("tenantId", tenantId);
-			TenantContextHolder.setCurrentTenantId(tenantId);
+
 //			tenantProvider.setTenantId(tenantId);
 			request.setAttribute("personData", "{}");
 		}

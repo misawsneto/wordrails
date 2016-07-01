@@ -40,6 +40,10 @@ public class NetworkService {
 		}
 	}
 
+	public void addTenant(String tenant, Integer id){
+		tenantIds.put(tenant, id);
+	}
+
 	public Network getNetworkFromHost(String host) {
 		String tenantId = getTenantFromHost(host);
 

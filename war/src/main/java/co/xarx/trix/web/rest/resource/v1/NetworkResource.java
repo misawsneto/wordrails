@@ -359,6 +359,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 			post.station = station;
 			postEventHandler.handleBeforeSave(post);
 
+			networkService.addTenant(network.getTenantId()	, network.id);
+
 			return Response.status(Status.CREATED).entity("{\"token\": \"" + network.networkCreationToken + "\"}").build();
 		}catch (Exception e){
 			e.printStackTrace();

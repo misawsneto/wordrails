@@ -71,6 +71,7 @@ public class Network extends BaseEntity implements Serializable {
 	@OneToOne(mappedBy = "network")
 	@SdkExclude
 	@JsonManagedReference
+	@JsonIgnore
 	public AuthCredential authCredential;
 
 	public boolean allowSocialLogin;
