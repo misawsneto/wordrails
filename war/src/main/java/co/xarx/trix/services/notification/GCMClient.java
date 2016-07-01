@@ -1,7 +1,7 @@
 package co.xarx.trix.services.notification;
 
 import co.xarx.trix.api.NotificationView;
-import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.MobileNotification;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.*;
@@ -51,7 +51,7 @@ public class GCMClient implements NotificationServerClient {
 			Result r = results.get(i);
 			if(r.getMessageId() == null) {
 				NotificationResult notificationResult = new NotificationResult();
-				notificationResult.setStatus(Notification.Status.SERVER_ERROR);
+				notificationResult.setStatus(MobileNotification.Status.SERVER_ERROR);
 				notificationResult.setErrorMessage(r.getErrorCodeName());
 				if (Constants.ERROR_NOT_REGISTERED.equals(notificationResult.getErrorMessage())) {
 					notificationResult.setDeviceDeactivated(true);

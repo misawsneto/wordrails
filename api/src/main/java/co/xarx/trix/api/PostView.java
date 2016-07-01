@@ -18,6 +18,10 @@ public class PostView implements Serializable, Identifiable {
 
 	private static final long serialVersionUID = -1474032487285763669L;
 
+	public PostView(Integer id) {
+		this.postId = id;
+	}
+
 	public String title;
 
 	@Id

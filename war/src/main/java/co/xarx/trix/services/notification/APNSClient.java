@@ -3,7 +3,7 @@ package co.xarx.trix.services.notification;
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.AppleCertificate;
-import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.MobileNotification;
 import co.xarx.trix.persistence.AppleCertificateRepository;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsNotification;
@@ -57,7 +57,7 @@ public class APNSClient implements NotificationServerClient {
 		Map<String, Date> inactiveDevices = service.getInactiveDevices();
 		for (String s : inactiveDevices.keySet()) {
 			NotificationResult r = new NotificationResult();
-			r.setStatus(Notification.Status.SERVER_ERROR);
+			r.setStatus(MobileNotification.Status.SERVER_ERROR);
 			r.setErrorMessage("Device deactivated");
 			r.setDeviceDeactivated(true);
 			errorDevices.put(s, r);

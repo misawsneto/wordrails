@@ -142,8 +142,9 @@ public class StationPermissionService {
 		for (MutableAcl acl : acls.values()) {
 			for (int i = 0; i < acl.getEntries().size(); i++) {
 				AccessControlEntry ace = acl.getEntries().get(i);
-				if (usernames.contains(ace.getSid().toString())) {
-					acl.deleteAce(i);
+				if (ace.getSid() instanceof PrincipalSid) {
+					if(usernames.contains(((PrincipalSid) ace.getSid()).getPrincipal()))
+						acl.deleteAce(i);
 				}
 			}
 		}

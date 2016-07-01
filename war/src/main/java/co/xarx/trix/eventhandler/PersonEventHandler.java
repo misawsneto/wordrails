@@ -16,7 +16,7 @@ public class PersonEventHandler {
 	@Autowired
 	private ImageRepository imageRepository;
 	@Autowired
-	private NotificationRepository notificationRepository;
+	private MobileNotificationRepository mobileNotificationRepository;
 	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
@@ -58,8 +58,6 @@ public class PersonEventHandler {
 
 		queryPersistence.setNoAuthor(person.id);
 
-		Iterable<Notification> notifications = notificationRepository.findAll(QNotification.notification.post.author.id.eq(person.id));
-		notificationRepository.delete(notifications);
 		mobileDeviceRepository.deleteByPersonId(person.id);
 		userRepository.delete(person.user.id);
 		esPersonRepository.delete(person.getId());

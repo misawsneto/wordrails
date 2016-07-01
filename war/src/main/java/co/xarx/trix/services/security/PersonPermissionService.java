@@ -10,6 +10,7 @@ import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.acls.domain.GrantedAuthoritySid;
 import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.*;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -91,31 +92,29 @@ public class PersonPermissionService {
 		return result;
 	}
 
-	public List<Person> getPersonFromStation(Integer stationId) {
+	public List<Person> getPersonFromStation(Integer stationId, Permission permission) {
 		Station station = stationRepository.findOne(stationId);
 
-		if (station == null){
+		if (station == null) {
 			return new ArrayList<>();
 		}
 
 		//TO WHOM IT MAY CONCERN: ACL IS NOT MULTITENANT(!)
 		MutableAcl acl = aclService.findAcl(stationId);
-		List<Person> persons = new ArrayList<>();
+		List<String> usernames = new ArrayList<>();
+		List<String> roles = new ArrayList<>();
 		for (AccessControlEntry entry : acl.getEntries()) {
-			boolean isNotUserPermission = !(entry.getSid() instanceof PrincipalSid);
-
-			if (isNotUserPermission) {
+			if (!entry.isGranting() && Permissions.containsPermission(entry.getPermission(), permission)) {
 				continue;
 			}
 
-			if (!entry.isGranting() && Permissions.containsPermission(entry.getPermission(), Permissions.READ)) {
-				continue;
+			if(entry.getSid() instanceof PrincipalSid) {
+				usernames.add(((PrincipalSid) entry.getSid()).getPrincipal());
+			} else if(entry.getSid() instanceof GrantedAuthoritySid) {
+				roles.add(((GrantedAuthoritySid) entry.getSid()).getGrantedAuthority());
 			}
-
-			PrincipalSid sid = (PrincipalSid) entry.getSid();
-			Person person = personRepository.findByUsername(sid.getPrincipal());
-			if (person != null) persons.add(person);
 		}
-		return persons;
+
+		return personRepository.findByUsernamesAndRoles(usernames, roles, TenantContextHolder.getCurrentTenantId());
 	}
 }

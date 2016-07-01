@@ -36,7 +36,7 @@ public class StationEventHandler {
 	@Autowired
 	TaxonomyRepository taxonomyRepository;
 	@Autowired
-	NotificationRepository notificationRepository;
+	MobileNotificationRepository mobileNotificationRepository;
 	@Autowired
 	QueryPersistence queryPersistence;
 	@Autowired
@@ -207,7 +207,6 @@ public class StationEventHandler {
 			queryPersistence.deleteAuthoritiesByStation(station.id);
 			queryPersistence.deleteCellsInPosts(ids);
 			queryPersistence.deleteCommentsInPosts(ids);
-			queryPersistence.deleteNotificationsInPosts(ids);
 			queryPersistence.deletePostReadsInPosts(ids);
 
 			postRepository.forceDeleteAll(posts.stream().map(post -> post.id).collect(Collectors.toList()));

@@ -1,7 +1,7 @@
 package co.xarx.trix.services.notification.stubs;
 
 import co.xarx.trix.api.NotificationView;
-import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.MobileNotification;
 import co.xarx.trix.services.notification.NotificationResult;
 import co.xarx.trix.services.notification.NotificationServerClient;
 
@@ -17,8 +17,8 @@ public class NotificationServerClientInactives implements NotificationServerClie
 		Map<String, NotificationResult> deactivated = new HashMap<>();
 		NotificationResult value = new NotificationResult();
 		NotificationResult value2 = new NotificationResult();
-		value.setStatus(Notification.Status.SERVER_ERROR);
-		value2.setStatus(Notification.Status.SERVER_ERROR);
+		value.setStatus(MobileNotification.Status.SERVER_ERROR);
+		value2.setStatus(MobileNotification.Status.SERVER_ERROR);
 		value2.setDeviceDeactivated(true);
 		deactivated.put("device1", value);
 		deactivated.put("device2", value2);
