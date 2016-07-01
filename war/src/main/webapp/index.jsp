@@ -9,9 +9,9 @@
     <link rel="shortcut icon" href="${faviconLink}" type="image/x-icon" />
   <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
 
   <link rel="stylesheet" href="/libs/assets/animate.css/animate.css?${buildNumber}" type="text/css" />
   <link rel="stylesheet" href="/libs/assets/font-awesome/css/font-awesome.css?${buildNumber}" type="text/css" />

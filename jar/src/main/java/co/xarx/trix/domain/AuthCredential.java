@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -35,7 +34,6 @@ public class AuthCredential extends BaseEntity {
 	public String googleAppID;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@NotNull
 	@JsonBackReference
 	public Network network;
 

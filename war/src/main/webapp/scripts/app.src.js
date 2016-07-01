@@ -104325,7 +104325,7 @@ angular.module('app')
                     deferred.resolve(null);
                     return deferred.promise;
                   },
-                  deps:load(['/scripts/controllers/app/read.js?' + GLOBAL_URL_HASH , '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css?' + GLOBAL_URL_HASH, 'videosharing-embed']).deps
+                  deps:load(['wu.masonry', '/scripts/controllers/app/read.js?' + GLOBAL_URL_HASH , '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css?' + GLOBAL_URL_HASH, 'videosharing-embed']).deps
                 },
                 controller: 'ReadCtrl'
               })

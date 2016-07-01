@@ -48,6 +48,10 @@ public class AuthResource extends AbstractResource implements AuthApi {
 				OAuthResponse authResponse = rq.getForObject("https://graph.facebook.com/me?access_token=" + accessToken,
 						OAuthResponse.class);
 				userId = authResponse.id;
+			}else if("google".equals(providerId)){
+				RestTemplate rq = new RestTemplate();
+				OAuthResponse authResponse = rq.getForObject("https://www.googleapis.com/plus/v1/people/me?access_token=" + accessToken,
+						OAuthResponse.class);
 			}
 		}
 

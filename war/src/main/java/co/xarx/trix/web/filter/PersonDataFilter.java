@@ -1,7 +1,6 @@
 package co.xarx.trix.web.filter;
 
 import co.xarx.trix.api.PersonData;
-import co.xarx.trix.api.TermPerspectiveView;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.InitService;
@@ -49,14 +48,7 @@ public class PersonDataFilter implements Filter{
 			PersonData personData = initService.getInitialData(baseUrl, network);
 
 			PersonData data = initService.getData(personData, stationId);
-			if (data.defaultStation != null) {
-				TermPerspectiveView termPerspectiveView = perspectiveService.termPerspectiveView(null, null,
-						data.defaultStation.defaultPerspectiveId, 0, 10);
-				request.setAttribute("termPerspectiveView", simpleMapper.writeValueAsString(termPerspectiveView));
-			}
 
-			request.setAttribute("personData", simpleMapper.writeValueAsString(data) + "");
-			request.setAttribute("networkName", data.network.name);
 			request.setAttribute("networkId", data.network.id);
 			if (data.network.faviconHash != null)
 				request.setAttribute("faviconLink", amazonCloudService.getPublicImageURL(data.network.faviconHash));
