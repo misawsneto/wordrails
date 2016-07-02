@@ -274,7 +274,14 @@
 			"INVITATIONS_SENT": "Invitations were sent",
 			"PERMISSIONS_UPDATES": "Permissions updates",
 			"REMOVE_PERMISSIONS": "Remove permissions",
-			"REMOVE_PERMISSIONS_MSG": "Are you sure you wish to remove all permission for this user on this station?"
+			"REMOVE_PERMISSIONS_MSG": "Are you sure you wish to remove all permission for this user on this station?",
+			"permissions":{
+				"READER": "Reader",
+				"COLABORATOR": "Colaborator",
+				"WRITER": "Writer",
+				"EDITOR": "Editor",
+				"ADMIN": "Administrator"
+			}
 		},
 		"comment":{
 			"REMOVE_COMMENT_MSG": "Are you sure you want to permanatly delete this comment?",

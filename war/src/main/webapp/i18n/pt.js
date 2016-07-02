@@ -274,7 +274,14 @@
 			"INVITATIONS_SENT": "Convites enviados com sucesso",
 			"PERMISSIONS_UPDATES": "Atualização de permissões",
 			"REMOVE_PERMISSIONS": "Remover permissões",
-			"REMOVE_PERMISSIONS_MSG": "Tem certeza que deseja remover todas as permissões desse usuário nesta estação?"
+			"REMOVE_PERMISSIONS_MSG": "Tem certeza que deseja remover todas as permissões desse usuário nesta estação?",
+			"permissions": {
+				"READER": "Leitor",
+				"COLABORATOR": "Colaborador",
+				"WRITER": "Escritor",
+				"EDITOR": "Editor",
+				"ADMIN": "Administrador"
+			}
 		},
 		"comment":{
 			"REMOVE_COMMENT_MSG": "Tem certeza que deseja remover este comentário?",

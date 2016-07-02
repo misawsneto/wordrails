@@ -30,7 +30,7 @@
 														</md-checkbox>
 													</th>
 													<th class="text-l-c">{{'titles.USERS' | translate}}</th>
-                          <th class="text-l-c">{{'titles.PERMISSIONS' | translate}}</th>
+                          <th class="text-l-c text-center">{{'titles.PERMISSIONS' | translate}}</th>
 													<th style="min-width:170px;" class="text-center display-t-c v-m no-padding">{{'titles.LAST_LOGIN' | translate}}</th>
 													<th style="width:30px;"></th>
 												</tr>
@@ -53,7 +53,7 @@
 								                <div class="text-muted clear text-ellipsis">{{permission.person.username}} | {{permission.person.email}}</div>
 								              </span>
 													</td>
-                          <td class="display-t-c v-m text-center"> {{getPermissionText(permission)}} </td>
+                          <td class="display-t-c v-m text-center"><md-button> {{getPermissionText(permission)}} </md-button></td>
 													<td class="display-t-c v-m text-center" ng-if="!permission.person.lastLogin"> - </td>
 													<td class="display-t-c v-m text-center" ng-if="permission.person.lastLogin">{{app.getLocalTime(permission.person.lastLogin)}}</td>
 													<td class="display-t-c v-m">
@@ -395,6 +395,9 @@
             <ul class="station-permissions m-t">
               <li class="m-r">
                 <md-radio-button value="READER">{{'settings.users.permissions.READER' | translate}}</md-radio-button>
+              </li>
+              <li class="m-r">
+                <md-radio-button value="COLABORATOR">{{'settings.users.permissions.COLABORATOR' | translate}}</md-radio-button>
               </li>
               <li class="m-r">
                 <md-radio-button value="WRITER">{{'settings.users.permissions.WRITER' | translate}}</md-radio-button>

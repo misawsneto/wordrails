@@ -83,15 +83,15 @@ trix.getStationPermission(station.id).success(function(permissions){
 
   $scope.getPermissionText = function(permission){
   	if(permission.administration){
-  		return $filter('translate')('titles.ADMIN')
+  		return $filter('translate')('settings.users.permissions.ADMIN')
   	}else if(permission.write && permission.moderate){
-  		return $filter('translate')('titles.EDIT')
+  		return $filter('translate')('settings.users.permissions.EDITOR')
   	}else if(permission.write){
-  		return $filter('translate')('titles.WRITE')
+  		return $filter('translate')('settings.users.permissions.WRITER')
   	}else if(permission.create){
-  		return $filter('translate')('titles.COLABORATE')
+  		return $filter('translate')('settings.users.permissions.COLABORATOR')
   	}else if(permission.read){
-  		return $filter('translate')('titles.READ')
+  		return $filter('translate')('settings.users.permissions.READER')
   	}
   }
 

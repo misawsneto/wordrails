@@ -147,6 +147,7 @@ public class StationPermissionService {
 						acl.deleteAce(i);
 				}
 			}
+			aclService.updateAcl(acl);
 		}
 	}
 

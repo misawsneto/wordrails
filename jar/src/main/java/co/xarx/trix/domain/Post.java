@@ -45,7 +45,8 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 		return "post";
 	}
 
-	public Integer originalPostId;
+	@OneToOne
+	public Post linkedPost;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@NotNull
