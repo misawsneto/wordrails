@@ -56,7 +56,7 @@ public class StationPermissionService {
 		dto.usernames.remove(loggedUsername);
 
 		List<Sid> sids = dto.usernames.stream().map(PrincipalSid::new).collect(Collectors.toList());
-		updateStationsPermissions(sids, dto.stationsIds, dto.colaborate, dto.writer, dto.editor, dto.admin);
+		updateStationsPermissions(sids, dto.stationsIds, dto.colaborator, dto.writer, dto.editor, dto.admin);
 	}
 
 	public List<Integer> findStationsWithReadPermission() {
@@ -75,7 +75,7 @@ public class StationPermissionService {
 				.collect(Collectors.toList());
 	}
 
-	public void updateStationsPermissions(List<Sid> sids, List<Integer> stationIds, boolean colaborate, boolean writer, boolean
+	public void updateStationsPermissions(List<Sid> sids, List<Integer> stationIds, boolean colaborator, boolean writer, boolean
 			editor, boolean admin) {
 		Assert.notEmpty(sids, "Sids must have elements");
 		Assert.notEmpty(stationIds, "Station ids must have elements");
@@ -83,17 +83,17 @@ public class StationPermissionService {
 
 		CumulativePermission permission = Permissions.getReader();
 
-		if(colaborate){
-			permission = Permissions.getColaborator();
-		}
-		if (editor) {
-			permission = Permissions.getEditor();
-		}
-		if (writer) {
-			permission = Permissions.getWriter();
-		}
 		if (admin) {
 			permission = Permissions.getAdmin();
+		}else
+		if (editor) {
+			permission = Permissions.getEditor();
+		}else
+		if (writer) {
+			permission = Permissions.getWriter();
+		}else
+		if (colaborator) {
+			permission = Permissions.getColaborator();
 		}
 
 		Map<ObjectIdentity, MutableAcl> acls = aclService.findAcls(stationIds);

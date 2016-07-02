@@ -53,7 +53,9 @@
 								                <div class="text-muted clear text-ellipsis">{{permission.person.username}} | {{permission.person.email}}</div>
 								              </span>
 													</td>
-                          <td class="display-t-c v-m text-center"><md-button> {{getPermissionText(permission)}} </md-button></td>
+                          <td class="display-t-c v-m text-center">
+                            <md-button ng-disabled="permission.person.id == app.person.id" ng-click="showChangePermissions(permission)"> {{getPermissionText(permission)}} </md-button>
+                          </td>
 													<td class="display-t-c v-m text-center" ng-if="!permission.person.lastLogin"> - </td>
 													<td class="display-t-c v-m text-center" ng-if="permission.person.lastLogin">{{app.getLocalTime(permission.person.lastLogin)}}</td>
 													<td class="display-t-c v-m">
@@ -380,6 +382,46 @@
   </md-dialog>
 </script>
 
+<script type="text/ng-template" id="bulk-change-permissions-dialog.html">
+    <md-dialog-content  class="md-background-hue-1 background">
+      <div class="p">
+        <div class="p-sm stations-permissions-dialog-list m-t-sm" >
+          <div class="p-xs text-md-l">
+            {{station.name}}
+          </div>
+        </div>
+        <div class="p-xs text-base m-t-sm">
+          <span class="text-md">Permissões:</span>
+
+          <md-radio-group ng-model="stationRole">
+            <ul class="station-permissions m-t">
+              <li class="m-r">
+                <md-radio-button value="READER">{{'settings.users.permissions.READER' | translate}}</md-radio-button>
+              </li>
+              <li class="m-r">
+                <md-radio-button value="COLABORATOR">{{'settings.users.permissions.COLABORATOR' | translate}}</md-radio-button>
+              </li>
+              <li class="m-r">
+                <md-radio-button value="WRITER">{{'settings.users.permissions.WRITER' | translate}}</md-radio-button>
+              </li>
+              <li class="m-r">
+                <md-radio-button value="EDITOR">{{'settings.users.permissions.EDITOR' | translate}}</md-radio-button>
+              </li>
+              <li class="m-r">
+                <md-radio-button value="ADMIN">{{'settings.users.permissions.ADMIN' | translate}}</md-radio-button>
+              </li>
+            </ul>
+          </md-radio-group>
+          
+        </div>
+        <div class="text-right">
+          <md-button aria-label="nothing" ng-click="applyBulkUserPermissions(stationRole)" class="no-margin m-r">Confirmar</md-button>
+          <md-button aria-label="nothing" ng-click="cancel()" class="no-margin">Fechar</md-button>
+        <div>
+      </div>
+    </md-dialog-content>
+</script>
+
 <script type="text/ng-template" id="change-permissions-dialog.html">
     <md-dialog-content  class="md-background-hue-1 background">
       <div class="p">
@@ -413,12 +455,13 @@
           
         </div>
         <div class="text-right">
-          <md-button aria-label="nothing" ng-click="applyPermissions(adminStations, stationRole)" class="no-margin m-r">Confirmar</md-button>
+          <md-button aria-label="nothing" ng-click="applyUserPermissions(stationRole)" class="no-margin m-r">Confirmar</md-button>
           <md-button aria-label="nothing" ng-click="cancel()" class="no-margin">Fechar</md-button>
         <div>
       </div>
     </md-dialog-content>
 </script>
+
 
 <script type="text/ng-template" id="delete-permissions-dialog.html">
    <md-dialog aria-label="change action">

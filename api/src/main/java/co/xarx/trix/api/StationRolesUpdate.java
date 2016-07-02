@@ -3,7 +3,7 @@ package co.xarx.trix.api;
 import java.util.List;
 
 public class StationRolesUpdate {
-	public boolean colaborate = false;
+	public boolean colaborator = false;
 	public boolean writer = false;
 	public boolean editor = false;
 	public boolean admin = false;
