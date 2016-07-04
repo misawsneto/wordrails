@@ -27,6 +27,24 @@ angular.module('app')
   }
 })
 
+.filter('permissions', function() {
+  return function(permissions, search) {
+    if(!search || search == '')
+      return permissions;
+
+    return permissions.filter(function(permission, index, array) {
+      if(permission && permission.person){
+        if(permission.person.username.toLowerCase().indexOf(search.toLowerCase()) > -1 || permission.person.email.toLowerCase().indexOf(search.toLowerCase()) > -1 ||
+          permission.person.name.toLowerCase().indexOf(search.toLowerCase()) > -1)
+          return true;
+        return false;
+      }else{
+        return false;
+      }
+    });
+    
+  }
+})
 
 /**
  * Filters for modifying colors

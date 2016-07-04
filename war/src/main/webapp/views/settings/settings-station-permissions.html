@@ -36,7 +36,7 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr ng-repeat="permission in permissions | filter: {'person.username': search, 'person.email': search}" class="b-l-3x b-l-s b-c-t" 	ng-style="permission.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" >
+												<tr ng-repeat="permission in permissions | permissions: search" class="b-l-3x b-l-s b-c-t" 	ng-style="permission.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" >
 													<td class="display-t-c v-m">
 														<md-checkbox aria-label="nothing" class="no-margin" ng-if="permission.person.id != app.person.id"
 														 ng-model="permission.selected" ng-true-value="true" ng-false-value="false" ng-click="app.stopPropagation($event)">
