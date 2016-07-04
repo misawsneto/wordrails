@@ -146,6 +146,7 @@
 		"UPDATE": "Atualizar",
 		"REMOVE": "Remover",
 		"SCHEDULE": "Agendar",
+		"SEND_FOR_REVIEW": "Enviar para revisão",
 		"EXCLUDE": "Remover",
 		"LIST": "Listar",
 		"INSERT": "Inserir",
@@ -301,6 +302,7 @@
 				"ATTACH_POST": "Anexar outras publicações",
 				"NOTIFY_STATION_USERS": "Notificar usuários",
 				"PUBLICATION_MSG": "O conteúdo será publicado ao clicar em Publicar.",
+				"COLABORATE_MSG": "O conteúdo entrará disponível para revisão de editores ao clicar em \"Enviar para revisão\".",
 				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada alteração uma vez que o título, conteúdo, estações e categorias sejam inseridos. Para desabilitar esta função, verifique a opção \"Salvar automaticamente\" em \"Opções de publicação\". As versões da publicação podem ser visualizadas no menu \"Opções de publicação\"."
 			},
 			"ACTIVATE_DEACTIVATE_HEADING": "Ativar/Desativar chapéu",

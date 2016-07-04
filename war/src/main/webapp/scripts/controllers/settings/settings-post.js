@@ -21,7 +21,15 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	  boxHeight: 400
 	};
 
-	$scope.stations = angular.copy($scope.app.stations);
+	$scope.stations = []
+	$scope.app.stations && $scope.app.permissions.stationPermissions && $scope.app.permissions.stationPermissions.length > 0
+	&& $scope.app.stations.forEach(function(station){
+		$scope.app.permissions.stationPermissions.forEach(function(perm){
+			if(perm.stationId == station.id){
+				$scope.stations.push(angular.copy(station))
+			}
+		})
+	})
 
 	// Must be [x, y, x2, y2, w, h]
    $scope.app.cropSelection = [100, 100, 200, 200];
@@ -180,23 +188,31 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 					$scope.selectedStation = station
 			})
 		}
+		for (var i = $scope.stations.length - 1; i >= 0; i--) { // remove station with read only permissions
+			if($scope.stations[i].id == perm.stationId && !perm.write && !perm.create){
+					$scope.stations.splice(i, 1);
+			}
+		}
 	})
-	// /check if is colaborator only
 
+	if(!$scope.selectedStation)
+		$scope.selectedStation = $scope.stations[0];
+
+	// /check if is colaborator only
 	$scope.isWriter = function(){
 		if($scope.app.permissions.stationPermissions && $scope.app.permissions.stationPermissions.length > 0){
 			for (var i = $scope.app.permissions.stationPermissions.length - 1; i >= 0; i--) {
-				if($scope.app.permissions.stationPermissions[i].stationId == $scope.selectedStation.id && $scope.app.permissions.stationPermissions[i].write)
+				if($scope.app.permissions.stationPermissions[i].write && $scope.selectedStation && $scope.app.permissions.stationPermissions[i].stationId == $scope.selectedStation.id)
 					return true;
 			}
 		}
 	}
 
-	$scope.isColaboratorInStation = function(){
+	$scope.isColaborator = function(){
 		if($scope.app.permissions.stationPermissions && $scope.app.permissions.stationPermissions.length > 0){
 			for (var i = $scope.app.permissions.stationPermissions.length - 1; i >= 0; i--) {
-				if($scope.app.permissions.stationPermissions[i].stationId == $scope.selectedStation.id && 
-					!$scope.app.permissions.stationPermissions[i].write && $scope.app.permissions.stationPermissions[i].create)
+				if(!$scope.app.permissions.stationPermissions[i].write && $scope.app.permissions.stationPermissions[i].create &&
+						$scope.selectedStation && $scope.app.permissions.stationPermissions[i].stationId == $scope.selectedStation.id)
 					return true;
 			}
 		}
@@ -1170,7 +1186,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if(confirm || !$scope.app.editingPost.id){
 			var post = angular.copy($scope.app.editingPost)
 			post.state = 'DRAFT';
-			if($scope.isColaboratorInStation)
+			if($scope.isColaborator())
 				post.state = 'UNPUBLISHED';
 			if(post.id)
 				$scope.putPost(post);

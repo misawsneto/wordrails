@@ -146,6 +146,7 @@
 		"UPDATE": "Update",
 		"REMOVE": "Remove",
 		"SCHEDULE": "Schedule",
+		"SEND_FOR_REVIEW": "Send for review",
 		"EXCLUDE": "Exclude",
 		"LIST": "List",
 		"INSERT": "Inserir",
@@ -301,6 +302,7 @@
 				"ATTACH_POST": "Attach other publications to this one",
 				"NOTIFY_STATION_USERS": "Notify users",
 				"PUBLICATION_MSG": "The content will be published when you click Publish.",
+				"COLABORATE_MSG": "The content will be available for review when you click \"Send for Review\".",
 				"AUTO_SAVE_MSG": "Drafts will be saved automatically uppon every change once the title, content, station and categories are set. All publication versions can be accessed through the \"Publication options\" menu."
 			},
 			"ACTIVATE_DEACTIVATE_HEADING": "Activate/Deactivate heading",
