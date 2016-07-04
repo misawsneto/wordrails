@@ -597,15 +597,15 @@
                     <div class="text-md text-center font-500 m-v">
                   		{{'titles.NOTIFICATION' | translate}}
                   	</div>-->
-                    <div class="m-t">
+                    <div class="m-t" ng-if="isWriter()">
                       <md-checkbox aria-label="nothing" ng-model="app.editingPost.notify">
                         {{'settings.post.NOTIFY_USERS' | translate}}
                       </md-checkbox>
                     </div>
-                    <div class="text-center m-b-sm">
-						<md-button aria-label="nothing" class="md-raised md-primary p-h md-whiteframe-z2" ng-click="showGeoNotificationDialog($event)">
-						<i class="mdi mdi2-google-maps i-20 m-r-sm v-m"></i>{{'titles.GEO_NOTIFICATION' | translate}}
-						</md-button>
+                    <div class="text-center m-b-sm" ng-if="isWriter()">
+											<md-button aria-label="nothing" class="md-raised md-primary p-h md-whiteframe-z2" ng-click="showGeoNotificationDialog($event)">
+											<i class="mdi mdi2-google-maps i-20 m-r-sm v-m"></i>{{'titles.GEO_NOTIFICATION' | translate}}
+											</md-button>
                     </div>
                     <!--<md-divider></md-divider>-->
                   </md-content>
