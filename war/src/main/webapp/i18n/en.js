@@ -340,7 +340,8 @@
 				"PUBLISHED": "Published",
 				"SCHEDULED": "Scheduled",
 				"DRAFT": "Draft",
-				"Trash": "On trash"
+				"TRASH": "On trash",
+				"UNPUBLISHED": "To be reviewed"
 			},
 			"GEO_NOTIFICATION_DESC": "To limit the geographical area of notification to user's devices, create circles or polygons using the tools on the left corner of the map.",
 			"PREFERENCES": "Preferences",

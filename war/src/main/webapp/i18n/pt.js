@@ -340,7 +340,8 @@
 				"PUBLISHED": "Publicado",
 				"SCHEDULED": "Agendado",
 				"DRAFT": "Rascunho",
-				"Trash": "Lixeira"
+				"TRASH": "Lixeira",
+				"UNPUBLISHED": "Em revisão"
 			},
 			"GEO_NOTIFICATION_DESC": "Para limitar a área geográfica de envio de notificações aos dispositivos dos usuários, crie círculos ou polígonos utlizando as ferramentas no canto esquerdo do mapa ao lado.",
 			"PREFERENCES": "Preferências",

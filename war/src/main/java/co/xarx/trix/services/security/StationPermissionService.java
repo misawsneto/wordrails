@@ -101,7 +101,7 @@ public class StationPermissionService {
 			List<AccessControlEntry> entries = acl.getEntries();
 			for (Sid sid : sids) {
 				List<AccessControlEntry> aces = aclService.findAce(entries, sid);
-				if(aces == null) {
+				if(aces == null || aces.size() == 0) {
 					acl.insertAce(acl.getEntries().size(), permission, sid, true);
 				} else {
 					for (AccessControlEntry ace : aces) {

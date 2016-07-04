@@ -69,6 +69,8 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
       return 'DRAFT';
     if($scope.settings.tab === 'trash')
       return 'TRASH';
+    if($scope.settings.tab === 'unpublished')
+      return 'UNPUBLISHED';
   }
   
   $scope.publicationsCtrl = {

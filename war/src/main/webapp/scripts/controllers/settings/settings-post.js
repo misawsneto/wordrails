@@ -185,10 +185,20 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.isWriter = function(){
 		if($scope.app.permissions.stationPermissions && $scope.app.permissions.stationPermissions.length > 0){
-			$scope.app.permissions.stationPermissions.forEach(function(perm){
-				if(perm.stationId == $scope.selectedStation.id && perm.write)
+			for (var i = $scope.app.permissions.stationPermissions.length - 1; i >= 0; i--) {
+				if($scope.app.permissions.stationPermissions[i].stationId == $scope.selectedStation.id && $scope.app.permissions.stationPermissions[i].write)
 					return true;
-			})
+			}
+		}
+	}
+
+	$scope.isColaboratorInStation = function(){
+		if($scope.app.permissions.stationPermissions && $scope.app.permissions.stationPermissions.length > 0){
+			for (var i = $scope.app.permissions.stationPermissions.length - 1; i >= 0; i--) {
+				if($scope.app.permissions.stationPermissions[i].stationId == $scope.selectedStation.id && 
+					!$scope.app.permissions.stationPermissions[i].write && $scope.app.permissions.stationPermissions[i].create)
+					return true;
+			}
 		}
 	}
 
@@ -326,17 +336,10 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		state = state ? state : $scope.app.editingPost ? $scope.app.editingPost.state : null;
 		if(!state)
 			return $filter('translate')('settings.post.states.DRAFT');
-		if(state == "PUBLISHED"){
-			return $filter('translate')('settings.post.states.PUBLISHED');
-		}else if(state == "DRAFT"){
-			return $filter('translate')('settings.post.states.DRAFT');
-		}else if(state == "SCHEDULED"){
-			return $filter('translate')('settings.post.states.SCHEDULED');
-		}else if(state == "TRASH"){
-			return $filter('translate')('settings.post.states.TRASH');
-		}else{
+		else if(state != "PUBLISHED" || state != "DRAFT" || state != "SCHEDULED" || state != "TRASH" || state != "UNPUBLISHED")
 			return " - ";
-		}
+		else
+			return $filter('translate')('settings.post.states.' + state);
 	}
 
 	$scope.app.countBodyCharacters = function(){
@@ -1167,6 +1170,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if(confirm || !$scope.app.editingPost.id){
 			var post = angular.copy($scope.app.editingPost)
 			post.state = 'DRAFT';
+			if($scope.isColaboratorInStation)
+				post.state = 'UNPUBLISHED';
 			if(post.id)
 				$scope.putPost(post);
 			else
@@ -1180,6 +1185,16 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.removeScheduledDate();
 		var post = angular.copy($scope.app.editingPost)
 		post.state = 'PUBLISHED';
+		if(post.id){
+			$scope.putPost(post);
+		}else
+			$scope.postPost(post);
+	}
+
+	$scope.colaboratePost = function(){
+		$scope.removeScheduledDate();
+		var post = angular.copy($scope.app.editingPost)
+		post.state = 'UNPUBLISHED';
 		if(post.id){
 			$scope.putPost(post);
 		}else
