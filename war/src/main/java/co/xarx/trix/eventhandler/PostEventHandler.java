@@ -90,15 +90,22 @@ public class PostEventHandler {
 
 	@HandleAfterCreate
 	public void handleAfterCreate(Post post) {
-		if (post.state.equals(Post.STATE_PUBLISHED) && post.scheduledDate == null ||
-				(post.scheduledDate != null && post.scheduledDate.before(new Date()) ) ) {
-			if (post.notify) postService.sendNewPostNotification(post);
-		}
+		notificationCheck(post);
 		elasticSearchService.mapThenSave(post, ESPost.class);
+	}
+
+	private void notificationCheck(Post post) {
+		if (post.state.equals(Post.STATE_PUBLISHED) && post.scheduledDate == null ||
+				(post.scheduledDate != null && post.scheduledDate.before(new Date()))
+				) {
+			if (post.notify && !post.notified)
+				postService.sendNewPostNotification(post);
+		}
 	}
 
 	@HandleAfterSave
 	public void handleAfterSave(Post post) {
+		notificationCheck(post);
 		elasticSearchService.mapThenSave(post, ESPost.class);
 		auditService.saveChange(post);
 	}

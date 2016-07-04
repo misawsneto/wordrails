@@ -1,7 +1,9 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.annotation.SdkInclude;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -44,9 +46,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public String getType() {
 		return "post";
 	}
-
-	@OneToOne
-	public Post linkedPost;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@NotNull
@@ -141,6 +140,11 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	@Column(columnDefinition = "boolean DEFAULT false")
 	public boolean notify = false;
+
+	@Column(columnDefinition = "boolean DEFAULT false")
+	@SdkExclude
+	@JsonIgnore
+	public boolean notified = false;
 
 	public Double lat;
 

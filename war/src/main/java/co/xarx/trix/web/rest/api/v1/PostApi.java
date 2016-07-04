@@ -39,12 +39,12 @@ public interface PostApi {
 
 	@PUT
 	@Path("/{id:\\d+}")
-	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'create') or hasRole('ADMIN')")
+//	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'create') or hasRole('ADMIN')")
 	void putPost(@PathParam("id") Integer id) throws ServletException, IOException;
 
 	@POST
 	@Path("/")
-	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'create') or hasRole('ADMIN')")
+//	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'create') or hasRole('ADMIN')")
 	void postPost() throws ServletException, IOException;
 
 	@DELETE
