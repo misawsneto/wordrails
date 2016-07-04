@@ -352,7 +352,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		state = state ? state : $scope.app.editingPost ? $scope.app.editingPost.state : null;
 		if(!state)
 			return $filter('translate')('settings.post.states.DRAFT');
-		else if(state != "PUBLISHED" || state != "DRAFT" || state != "SCHEDULED" || state != "TRASH" || state != "UNPUBLISHED")
+		else if(state != "PUBLISHED" && state != "DRAFT" && state != "SCHEDULED" && state != "TRASH" && state != "UNPUBLISHED")
 			return " - ";
 		else
 			return $filter('translate')('settings.post.states.' + state);
