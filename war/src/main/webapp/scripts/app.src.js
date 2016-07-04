@@ -108328,8 +108328,8 @@ angular.module('app')
 
     return permissions.filter(function(permission, index, array) {
       if(permission && permission.person){
-        if(permission.person.usename.toLowercase().indexOf(search) > -1 || permission.person.email.toLowercase().indexOf(search) > -1 ||
-          permission.person.name.toLowercase().indexOf(search) > -1)
+        if(permission.person.username.toLowerCase().indexOf(search.toLowerCase()) > -1 || permission.person.email.toLowerCase().indexOf(search.toLowerCase()) > -1 ||
+          permission.person.name.toLowerCase().indexOf(search.toLowerCase()) > -1)
           return true;
         return false;
       }else{
