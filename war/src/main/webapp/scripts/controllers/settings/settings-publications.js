@@ -11,6 +11,8 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
 		$scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
 
+    $scope.totalPublicationsCount = 0;
+
 		function buildToggler(navID) {
 	      return function() {
 	        $mdSidenav(navID)
@@ -87,7 +89,11 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
       trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, $scope.publicationsCtrl.page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response,a,b,c){
         handleSuccess(response);
-        $scope.totalPublicationsCount = c.totalElements;
+        if(response && response.length > 0){
+          $scope.totalPublicationsCount = c.totalElements;
+        }else{
+          $scope.totalPublicationsCount = 0;
+        }
         $scope.loading = false;
       }).error(function(){
         $scope.loading = false;
@@ -189,15 +195,7 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 	}
 
 	$scope.getShowingPublicationsLength = function(){
-		if($scope.settings.tab == "drafts"){
-		}
-		if($scope.settings.tab == "publications"){
-			return $scope.publications && $scope.publications.length ? $scope.publications.length : 0;
-		}
-		if($scope.settings.tab == "scheduled"){
-		}
-		if($scope.settings.tab == "trash"){
-		}
+		return $scope.publications && $scope.publications.length ? $scope.publications.length : 0;
 	}
 
 	$scope.getSelectedPublicationsIds = function(){

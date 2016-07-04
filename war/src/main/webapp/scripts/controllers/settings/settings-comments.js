@@ -1,9 +1,7 @@
 app.controller('SettingsCommentsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog', '$mdToast', '$filter', '$translate', '$mdConstant',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog, $mdToast, $filter, $translate, $mdConstant){
 
-  FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
-    return true; // true|false
-  };
+    $scope.totalCommentsCount = 0;
 
   $scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
 
@@ -39,7 +37,9 @@ app.controller('SettingsCommentsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 
         trix.searchComments($scope.searchQuery, null, null, null, null, null, $scope.commentsCtrl.page, 20, '-date', ['author', 'post']).success(function(response,a,b,c){
           handleSuccess(response);
-          $scope.totalCommentsCount = c.totalElements;
+          if(response && response.length > 0){
+            $scope.totalCommentsCount = c.totalElements;
+          }
           $scope.loading = false;
         }).error(function(){
           $scope.loading = false;

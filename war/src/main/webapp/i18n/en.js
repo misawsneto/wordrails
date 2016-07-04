@@ -35,6 +35,8 @@
 		"SCHEDULED": "Scheduled",
 		"DRAFTS": "Drafts",
 		"TRASH": "Trash",
+		"PENDING": "Pending",
+		"PENDINGS": "Pending",
 		"POST_STATE": "Publication state",
 		"FILTER": "Filter",
 		"FILTERS": "Filters",
