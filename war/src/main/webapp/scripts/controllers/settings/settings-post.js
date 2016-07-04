@@ -170,6 +170,28 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}
 	}
 
+	// check if is colaborator only
+	$scope.isColaboratorOnly = true;
+	$scope.app.permissions.stationPermissions.forEach(function(perm){
+		if(perm.write && $scope.isColaboratorOnly){
+			$scope.isColaboratorOnly = false;
+			$scope.stations.forEach(function(station){
+				if(station.id === perm.stationId)
+					$scope.selectedStation = station
+			})
+		}
+	})
+	// /check if is colaborator only
+
+	$scope.isWriter = function(){
+		if($scope.app.permissions.stationPermissions && $scope.app.permissions.stationPermissions.length > 0){
+			$scope.app.permissions.stationPermissions.forEach(function(perm){
+				if(perm.stationId == $scope.selectedStation.id && perm.write)
+					return true;
+			})
+		}
+	}
+
 	// --- /post schedule
 
 	// --- post delete
@@ -286,11 +308,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			return 1;
 		}else if(state == "DRAFT"){
 			return 2;
-		// }else if(state == "SCHEDULED"){
-		// 	return 3;
 		}else if(state == "TRASH"){
 			return 4;
-		}else{
+		}else if(state == "UNPUBLISHED"){
 			return 5;
 		}
 	}
@@ -618,7 +638,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		});
 	})
 
-	$scope.selectedStation = null;
+	// $scope.selectedStation = null;
 	$scope.$watch('selectedStation', function(station){
 		if(station && station.termTree)
 			$scope.app.selectTerms(station.termTree, $scope.app.editingPost.terms)
@@ -947,10 +967,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	    	// window.console && console.log($scope..selectedStation, $scope.app.getTermList($scope.selectedStation.termTree))
 	    	if(AUTO_SAVE){
 	    		$timeout.cancel(AUTO_SAVE);
-	    	} 
-	    	if($scope.app.checkState() == 2 && $scope.automaticSave){
+	    	}
+	    	if(($scope.app.checkState() == 2 || $scope.app.checkState() == 5) && $scope.automaticSave){
 	    		AUTO_SAVE = $timeout(function(){
-	    			if($scope.app.checkState() == 2 && $scope.automaticSave && ($scope.selectedStation && $scope.app.getTermList($scope.selectedStation.termTree)))
+	    			var body = $scope.app.editingPost.body && $scope.app.editingPost.body ? $scope.app.editingPost.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+	    			if(($scope.app.checkState() == 2 || $scope.app.checkState() == 5) && $scope.automaticSave && ($scope.selectedStation && $scope.app.getTermList($scope.selectedStation.termTree).length > 0) && body != "" && $scope.app.editingPost.title != null)
 	    				$scope.saveAsDraft(null, true)
 	    		},10000)
 	    	}

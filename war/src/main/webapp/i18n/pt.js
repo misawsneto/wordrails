@@ -418,7 +418,8 @@
 			"CONFIRM_PASSWORD": "Confirmar senha",
 			"BIOGRAPHY": "Biografia",
 			"PASSWORDS_DONT_MATCH": "A senha é inválida ou senha e confirmação não são correspondentes.",
-			"MOVE_TO_STATE_MSG": "Tem certeza que deseja mover esta publicação e modificar seu estado? Mover para:"
+			"MOVE_TO_STATE_MSG": "Tem certeza que deseja mover esta publicação e modificar seu estado? Mover para:",
+			"BULK_MOVE_TO_STATE_MSG": "Tem certeza que deseja mover esta publicação e modificar seu estado?"
 		},
 		"bookmark": {
 			"REMOVE_CONFIRMATION_MSG": "Tem certeza que deseja remover este item"

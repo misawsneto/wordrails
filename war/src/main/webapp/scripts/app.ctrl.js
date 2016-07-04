@@ -512,6 +512,11 @@ angular.module('app')
         }
 
         $scope.app.applyNetworkTheme();
+
+        trix.searchPosts('', null, null, 'unpublished', null, null, null, null, 0, 1).success(function(response,a,b,c){
+          $scope.app.totalPending = c.totalElements;
+        });
+
       } // end of startApp
 
       if(!appData.network){

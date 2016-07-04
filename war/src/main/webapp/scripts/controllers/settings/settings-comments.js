@@ -2,6 +2,7 @@ app.controller('SettingsCommentsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog, $mdToast, $filter, $translate, $mdConstant){
 
     $scope.totalCommentsCount = 0;
+    $scope.comments = [];
 
   $scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
 

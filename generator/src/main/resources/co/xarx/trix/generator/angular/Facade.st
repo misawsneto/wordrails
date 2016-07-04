@@ -355,6 +355,12 @@ var trix = angular.module('trix', [])
         return \$http.put("/api/v2/comments", comments, config);
     }
 
+     this.bulkUpdateState = function(updates){
+        var config = {};
+        config.headers = {"Content-Type": "application/json"}
+        return \$http.put(_config.url + "/api/v2/posts/bulkUpdateStates", updates, config);
+    }
+
 	this.searchPosts = function(query,authors,stations,state,from,until,categories,tags,page,size,order,
     	embed, snippet){
         var config = {
