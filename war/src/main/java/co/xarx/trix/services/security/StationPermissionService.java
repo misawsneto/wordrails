@@ -56,7 +56,7 @@ public class StationPermissionService {
 		dto.usernames.remove(loggedUsername);
 
 		List<Sid> sids = dto.usernames.stream().map(PrincipalSid::new).collect(Collectors.toList());
-		updateStationsPermissions(sids, dto.stationsIds, dto.writer, dto.editor, dto.admin);
+		updateStationsPermissions(sids, dto.stationsIds, dto.colaborator, dto.writer, dto.editor, dto.admin);
 	}
 
 	public List<Integer> findStationsWithReadPermission() {
@@ -75,7 +75,7 @@ public class StationPermissionService {
 				.collect(Collectors.toList());
 	}
 
-	public void updateStationsPermissions(List<Sid> sids, List<Integer> stationIds, boolean writer, boolean
+	public void updateStationsPermissions(List<Sid> sids, List<Integer> stationIds, boolean colaborator, boolean writer, boolean
 			editor, boolean admin) {
 		Assert.notEmpty(sids, "Sids must have elements");
 		Assert.notEmpty(stationIds, "Station ids must have elements");
@@ -83,14 +83,17 @@ public class StationPermissionService {
 
 		CumulativePermission permission = Permissions.getReader();
 
-		if (editor) {
-			permission = Permissions.getEditor();
-		}
-		if (writer) {
-			permission = Permissions.getWriter();
-		}
 		if (admin) {
 			permission = Permissions.getAdmin();
+		}else
+		if (editor) {
+			permission = Permissions.getEditor();
+		}else
+		if (writer) {
+			permission = Permissions.getWriter();
+		}else
+		if (colaborator) {
+			permission = Permissions.getColaborator();
 		}
 
 		Map<ObjectIdentity, MutableAcl> acls = aclService.findAcls(stationIds);
@@ -98,7 +101,7 @@ public class StationPermissionService {
 			List<AccessControlEntry> entries = acl.getEntries();
 			for (Sid sid : sids) {
 				List<AccessControlEntry> aces = aclService.findAce(entries, sid);
-				if(aces == null) {
+				if(aces == null || aces.size() == 0) {
 					acl.insertAce(acl.getEntries().size(), permission, sid, true);
 				} else {
 					for (AccessControlEntry ace : aces) {
@@ -139,10 +142,12 @@ public class StationPermissionService {
 		for (MutableAcl acl : acls.values()) {
 			for (int i = 0; i < acl.getEntries().size(); i++) {
 				AccessControlEntry ace = acl.getEntries().get(i);
-				if (usernames.contains(ace.getSid().toString())) {
-					acl.deleteAce(i);
+				if (ace.getSid() instanceof PrincipalSid) {
+					if(usernames.contains(((PrincipalSid) ace.getSid()).getPrincipal()))
+						acl.deleteAce(i);
 				}
 			}
+			aclService.updateAcl(acl);
 		}
 	}
 

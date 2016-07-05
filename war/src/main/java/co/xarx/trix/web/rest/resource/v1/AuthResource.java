@@ -1,5 +1,6 @@
 package co.xarx.trix.web.rest.resource.v1;
 
+import co.xarx.trix.api.v2.OAuthResponseData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.AuthCredential;
 import co.xarx.trix.exception.BadRequestException;
@@ -12,6 +13,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.core.Response;
@@ -33,13 +36,28 @@ public class AuthResource extends AbstractResource implements AuthApi {
 	}
 
 	@Override
+	@Transactional
 	public Response signin(String providerId, String userId, String accessToken) throws IOException {
+		if (userId == null || "".equals(userId)) {
+			if ("facebook".equals(providerId)) {
+				RestTemplate rq = new RestTemplate();
+				OAuthResponseData authResponse = rq.getForObject("https://graph.facebook.com/me?access_token=" + accessToken,
+						OAuthResponseData.class);
+				userId = authResponse.id;
+			}else if("google".equals(providerId)){
+				RestTemplate rq = new RestTemplate();
+				OAuthResponseData authResponse = rq.getForObject("https://www.googleapis.com/plus/v1/people/me?access_token=" + accessToken,
+						OAuthResponseData.class);
+				userId = authResponse.id;
+			}
+		}
+
 		AuthCredential credential = authCredentialRepository.findAuthCredentialByTenantId(TenantContextHolder.getCurrentTenantId());
+//		credential.network = null;
 
 		if(credential == null) {
 			throw new NotAllowedException("This network does not support social login");
 		}
-
 
 		boolean allowSocialLogin = true;
 		String appId = null;
@@ -59,6 +77,7 @@ public class AuthResource extends AbstractResource implements AuthApi {
 		}
 
 		boolean authorized;
+
 		try {
 			authorized = authenticator.socialAuthentication(providerId, userId, appId, appSecret, accessToken);
 		} catch (BadCredentialsException e) {

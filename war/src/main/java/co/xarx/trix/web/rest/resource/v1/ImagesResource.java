@@ -55,11 +55,13 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 		this.postRepository = postRepository;
 	}
 
-	private static class ImageUpload {
-		String hash;
-		Integer imageId;
-		String link;
-		String fileLink;
+	public static class ImageUpload {
+		public Integer id;
+		public String hash;
+		public Integer imageId;
+		public String link;
+		public String fileLink;
+		public String credits;
 	}
 
 	@Override
@@ -87,6 +89,7 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 		imageUpload.imageId = newImage.getId();
 		imageUpload.link = amazonCloudService.getPublicImageURL(imageUpload.hash);
 		imageUpload.fileLink = imageUpload.link;
+		imageUpload.credits = newImage.getCredits();
 
 		String hash = imageUpload.hash;
 		ImageUploadResponse iur = new ImageUploadResponse();
@@ -96,6 +99,7 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 		iur.imageHash = newImage.getHashes().get(Image.SIZE_ORIGINAL);
 		iur.link = amazonCloudService.getPublicImageURL(hash);
 		iur.filelink = amazonCloudService.getPublicImageURL(hash);
+		iur.credits = imageUpload.credits;
 
 		return Response.ok().entity(simpleMapper.writeValueAsString(iur)).build();
 	}
@@ -189,6 +193,14 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 		response.setHeader("Expires", o);
 
 		response.sendRedirect(amazonCloudService.getPublicImageURL(hash));
+		return Response.ok().build();
+	}
+
+
+	public Response updateImageCredits(ImageUpload imageUpload){
+		if(imageUpload != null && imageUpload.id != null && imageUpload.credits != null){
+			imageService.updateImageCredits(imageUpload);
+		}
 		return Response.ok().build();
 	}
 }

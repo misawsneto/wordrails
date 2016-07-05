@@ -46,4 +46,14 @@ public interface V2PostsApi {
 	@GET
 	@Path("/getPostVersions")
 	ContentResponse<List<PostData>> getPostVersions(@QueryParam("postId") Integer postId) throws NoSuchFieldException, IllegalAccessException;
+
+	public static class BulkUpdateState{
+		public List<Integer> ids;
+		public String state;
+	}
+
+	@PUT
+	@Path("/bulkUpdateStates")
+	Response bulkUpdateStates(BulkUpdateState bulkUpdateState) throws NoSuchFieldException,
+			IllegalAccessException;
 }

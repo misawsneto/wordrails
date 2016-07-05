@@ -9,8 +9,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
-public class Notification extends BaseEntity {
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor
+public class MobileNotification extends BaseEntity {
 
 	public enum Type {
 		ADDED_TO_STATION,
@@ -35,7 +37,7 @@ public class Notification extends BaseEntity {
 		SUCCESS
 	}
 
-	public Notification(String regId, String hash, Status status, String message, String type) {
+	public MobileNotification(String regId, String hash, Status status, String message, String type) {
 		this.regId = regId;
 		this.hash = hash;
 		this.status = status.toString();
@@ -52,9 +54,9 @@ public class Notification extends BaseEntity {
 
 	@NotNull
 	public String hash;
-	
-	@ManyToOne
-	public Post post;
+
+	@Column(name = "post_id")
+	public Integer postId;
 
 	public boolean test = false;
 

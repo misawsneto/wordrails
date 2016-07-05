@@ -35,6 +35,8 @@
 		"SCHEDULED": "Scheduled",
 		"DRAFTS": "Drafts",
 		"TRASH": "Trash",
+		"PENDING": "Pending",
+		"PENDINGS": "Pending",
 		"POST_STATE": "Publication state",
 		"FILTER": "Filter",
 		"FILTERS": "Filters",
@@ -57,6 +59,7 @@
 		"SAVE_AS_DRAFT": "Save as draft",
 		"SAVE": "Save",
 		"APPLY": "Apply",
+		"RESTORE_PREVIEWS": "Restore previews",
 		"TITLE": "Title",
 		"SUBTITLE": "Subtitle",
 		"HEADING": "Heading",
@@ -112,7 +115,16 @@
 		"ADD": "Add",
 		"LOAD_MORE": "Load more",
 		"ACTIVATE": "Activate",
-		"FEATURED_POSTS": "Featured publications"
+		"FEATURED_POSTS": "Featured publications",
+		"CREDITS": "Image credits",
+		"LAST_LOGIN": "last login",
+		"READ": "Read",
+		"COLABORATE": "Colaborate",
+		"WRITE": "Write",
+		"EDIT": "Edit",
+		"ADMIN": "Admin",
+		"CREATE_NETWORK": "Create network",
+		"NETWORK_NAME": "Network name"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -134,6 +146,7 @@
 		"UPDATE": "Update",
 		"REMOVE": "Remove",
 		"SCHEDULE": "Schedule",
+		"SEND_FOR_REVIEW": "Send for review",
 		"EXCLUDE": "Exclude",
 		"LIST": "List",
 		"INSERT": "Inserir",
@@ -262,7 +275,16 @@
 			"REQUIRED_FIELDS": "Name, username and email are required.",
 			"OPTIONAL_PASSWORD": "Password is optional and if not provided a random password will be generated and sent via email.",
 			"INVITATIONS_SENT": "Invitations were sent",
-			"PERMISSIONS_UPDATES": "Permissions updates"
+			"PERMISSIONS_UPDATES": "Permissions updates",
+			"REMOVE_PERMISSIONS": "Remove permissions",
+			"REMOVE_PERMISSIONS_MSG": "Are you sure you wish to remove all permission for this user on this station?",
+			"permissions":{
+				"READER": "Reader",
+				"COLABORATOR": "Colaborator",
+				"WRITER": "Writer",
+				"EDITOR": "Editor",
+				"ADMIN": "Administrator"
+			}
 		},
 		"comment":{
 			"REMOVE_COMMENT_MSG": "Are you sure you want to permanatly delete this comment?",
@@ -280,6 +302,7 @@
 				"ATTACH_POST": "Attach other publications to this one",
 				"NOTIFY_STATION_USERS": "Notify users",
 				"PUBLICATION_MSG": "The content will be published when you click Publish.",
+				"COLABORATE_MSG": "The content will be available for review when you click \"Send for Review\".",
 				"AUTO_SAVE_MSG": "Drafts will be saved automatically uppon every change once the title, content, station and categories are set. All publication versions can be accessed through the \"Publication options\" menu."
 			},
 			"ACTIVATE_DEACTIVATE_HEADING": "Activate/Deactivate heading",
@@ -304,6 +327,7 @@
 			"PUBLISHED_AS_DRAFT": "Draft saved",
 			"SCHEDULED_MSG": "Scheduled date and time:",
 			"RESCHEDULE": "Reschedule",
+			"UPDATE_CREDITS_MSG": "These credits belong to the image. Updating credits will inpact the image network wide. Apply changes?"
 			"messages":{
 				"PAGE_CHANGE_ALERT": "You have edited your publication and there's unsaved content.",
 				"CLEAR_CONTENT_MSG": "Clear all publication content.",
@@ -318,7 +342,8 @@
 				"PUBLISHED": "Published",
 				"SCHEDULED": "Scheduled",
 				"DRAFT": "Draft",
-				"Trash": "On trash"
+				"TRASH": "On trash",
+				"UNPUBLISHED": "To be reviewed"
 			},
 			"GEO_NOTIFICATION_DESC": "To limit the geographical area of notification to user's devices, create circles or polygons using the tools on the left corner of the map.",
 			"PREFERENCES": "Preferences",
@@ -396,7 +421,8 @@
 			"CONFIRM_PASSWORD": "Confirm password",
 			"BIOGRAPHY": "Biography",
 			"PASSWORDS_DONT_MATCH": "The password is invalido or passowrd and confirmation don't match",
-			"MOVE_TO_STATE_MSG": "Are you sure you want to move this publication and change it's state? Move to:"
+			"MOVE_TO_STATE_MSG": "Are you sure you want to move this publication and change it's state? Move to:",
+			"BULK_MOVE_TO_STATE_MSG": "Are you sure you want to move this publication and change it's state?"
 		},
 		"bookmark": {
 			"REMOVE_CONFIRMATION_MSG": "Are you sure you want to remove this bookmark"

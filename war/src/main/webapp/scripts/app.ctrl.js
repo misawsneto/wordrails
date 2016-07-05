@@ -154,6 +154,9 @@ angular.module('app')
         $state.go(state);
       }
 
+      // trix.socialLogin(null, 'ya29.Ci8SAyz6uzLe7dGR79p5UuaUnTbjBul-aIUflX0LZ0I-nTTobetqeP5CnKfOkEngNg'
+      //   , 'google');
+
       function startApp(){
 
         // ---------- util -------------
@@ -396,7 +399,7 @@ angular.module('app')
 
         $scope.app.getCategoryLink = function(stationSlug, categoryName){
           var base = $scope.app.isSettings() ? TRIX.baseUrl : '';
-          return base +  '/'+stationSlug+'/cat?name='+categoryName;
+          return base +  '/'+stationSlug+'/cat?name='+$scope.app.getEscapedCategory(categoryName);
         }
 
         $scope.app.stopPropagation = function(e){
@@ -408,6 +411,10 @@ angular.module('app')
           $('#search form input').focus();
 
 
+        }
+
+        $scope.app.getEscapedCategory = function(category){
+          return window.encodeURIComponent(category)
         }
 
         // ---------- /util -------------
@@ -505,7 +512,18 @@ angular.module('app')
         }
 
         $scope.app.applyNetworkTheme();
+
+        trix.searchPosts('', null, null, 'unpublished', null, null, null, null, 0, 1).success(function(response,a,b,c){
+          $scope.app.totalPending = c.totalElements;
+        });
+
       } // end of startApp
+
+      if(!appData.network){
+        window.console && console.info('no network')
+        $scope.app.name = '';
+        return
+      }
 
       startApp();
 
@@ -654,18 +672,22 @@ angular.module('app')
       // ---------- imageHelper -----------
       
       $scope.getBackgroundImage = function(object, size){
-        var img = $filter('bgImageLink')(object, size);
-        if(object.externalVideoUrl){
-          img = $filter('videoThumb')(object.externalVideoUrl);
-        }
+        var img = null;
+        // if(object.externalVideoUrl){
+        //   img = {"background-image": "url(" + object.externalVideoUrl +")", "background-position": "50% 20%"}; //$filter('videoThumb')(object.externalVideoUrl);
+        // }else{
+          img = $filter('bgImageLink')(object, size);
+        // }
         return img;
       }
 
       $scope.app.getImageLink = $scope.getImageLink = function(object, size){
-        var img = $filter('imageLink')(object, size);
-        if(object.externalVideoUrl){
-          img = $filter('videoThumb')(object.externalVideoUrl);
-        }
+        var img = null; 
+        // if(object.externalVideoUrl){
+        //   img = object.externalVideoUrl; // $filter('videoThumb')(object.externalVideoUrl);
+        // }else{
+          img = $filter('imageLink')(object, size);
+        // }
         return img;
       }
 

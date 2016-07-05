@@ -1,6 +1,6 @@
 package co.xarx.trix.services.notification;
 
-import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.MobileNotification;
 import co.xarx.trix.services.notification.stubs.NotificationServerClientError;
 import co.xarx.trix.services.notification.stubs.NotificationServerClientInactives;
 import co.xarx.trix.services.notification.stubs.NotificationServerClientSuccess;
@@ -30,7 +30,7 @@ public class MobileNotificationSenderTest {
 
 		Map<String, NotificationResult> notifications = sender.sendMessageToDevices(dummy.notification, dummy.devices);
 
-		String[] successTypes = {Notification.Status.SUCCESS.toString(), Notification.Status.SUCCESS.toString()};
+		String[] successTypes = {MobileNotification.Status.SUCCESS.toString(), MobileNotification.Status.SUCCESS.toString()};
 		List<String> statuses = notifications.values().stream()
 				.map((notificationResult) -> notificationResult.getStatus().toString()).collect(Collectors.toList());
 
@@ -65,9 +65,9 @@ public class MobileNotificationSenderTest {
 
 		assertEquals(notifications.size(), dummy.devices.size());
 		assertTrue(CollectionUtils.isEqualCollection(notifications.keySet(), dummy.devices));
-		assertEquals(first.getStatus(), Notification.Status.SUCCESS);
-		assertEquals(second.getStatus(), Notification.Status.SERVER_ERROR);
-		assertEquals(third.getStatus(), Notification.Status.SERVER_ERROR);
+		assertEquals(first.getStatus(), MobileNotification.Status.SUCCESS);
+		assertEquals(second.getStatus(), MobileNotification.Status.SERVER_ERROR);
+		assertEquals(third.getStatus(), MobileNotification.Status.SERVER_ERROR);
 		assertTrue(third.isDeviceDeactivated());
 	}
 

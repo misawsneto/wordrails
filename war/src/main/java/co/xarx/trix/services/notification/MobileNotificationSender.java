@@ -1,7 +1,7 @@
 package co.xarx.trix.services.notification;
 
 import co.xarx.trix.api.NotificationView;
-import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.MobileNotification;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -31,7 +31,7 @@ public class MobileNotificationSender implements NotificationSender {
 
 			if (r == null) {
 				r = new NotificationResult();
-				r.setStatus(Notification.Status.SUCCESS);
+				r.setStatus(MobileNotification.Status.SUCCESS);
 			}
 
 			notificationResultMap.put(device, r);

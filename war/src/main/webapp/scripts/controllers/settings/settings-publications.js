@@ -11,6 +11,8 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
 		$scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
 
+    $scope.totalPublicationsCount = 0;
+
 		function buildToggler(navID) {
 	      return function() {
 	        $mdSidenav(navID)
@@ -67,6 +69,8 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
       return 'DRAFT';
     if($scope.settings.tab === 'trash')
       return 'TRASH';
+    if($scope.settings.tab === 'unpublished')
+      return 'UNPUBLISHED';
   }
   
   $scope.publicationsCtrl = {
@@ -87,7 +91,11 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
       trix.searchPosts($scope.searchQuery, null, null, tabToState().toLowerCase(), null, null, null, null, $scope.publicationsCtrl.page, 20, '-date', ['body', 'tags', 'categories', 'imageHash', 'state'], false).success(function(response,a,b,c){
         handleSuccess(response);
-        $scope.totalPublicationsCount = c.totalElements;
+        if(response && response.length > 0){
+          $scope.totalPublicationsCount = c.totalElements;
+        }else{
+          $scope.totalPublicationsCount = 0;
+        }
         $scope.loading = false;
       }).error(function(){
         $scope.loading = false;
@@ -189,34 +197,10 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 	}
 
 	$scope.getShowingPublicationsLength = function(){
-		if($scope.settings.tab == "drafts"){
-		}
-		if($scope.settings.tab == "publications"){
-			return $scope.publications && $scope.publications.length ? $scope.publications.length : 0;
-		}
-		if($scope.settings.tab == "scheduled"){
-		}
-		if($scope.settings.tab == "trash"){
-		}
+		return $scope.publications && $scope.publications.length ? $scope.publications.length : 0;
 	}
 
-	$scope.getSelectedPublicationsIds = function(){
-		if($scope.settings.tab == "drafts"){
-			return getSelectedPublicationIds('drafts');
-		}
-		if($scope.settings.tab == "publications"){
-			return getSelectedPublicationIds('publications');
-		}
-		if($scope.settings.tab == "scheduled"){
-			return getSelectedPublicationIds('scheduled');
-		}
-		if($scope.settings.tab == "trash"){
-			return getSelectedPublicationIds('trash');
-		}
-		return null;
-	}
-
-	var getSelectedPublicationIds = function(type){
+	var getSelectedPublicationsIds = function(){
 		var ret = []
 	    $scope.publications.forEach(function(pub, index){
 	      if(pub.selected)
@@ -224,6 +208,9 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 	    });
 	    return ret;
 	}
+
+  $scope.getSelectedPublicationsIds = getSelectedPublicationsIds;
+
 
 	  // --------- move to state
   
@@ -239,6 +226,8 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
         return "SCHEDULED";
       }else if(state == 4){
         return "TRASH";
+      }else if(state == 5){
+        return "UNPUBLISHED";
       }else{
         return 5;
       }
@@ -266,8 +255,29 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
       })
   }
 
+  $scope.moveToDestination = 0;
+  $scope.showBulkMoveToDialog = function(event, intState){
+    $scope.disabled = false;
+    $scope.moveToDestination = intState;
+    $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'bulk-move-to-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+  }
+
   $scope.movePublicationToState = function(state){
-    if(!state || state == 5){
+    if(!state || state == 6){
       $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
       $mdDialog.cancel();
       return;
@@ -284,6 +294,34 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
         $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
         $mdDialog.cancel();
       })
+    })
+  }
+
+  $scope.bulkMovePublicationToState = function(){
+    var state = $scope.moveToDestination;
+    if(!state || state == 6 || getSelectedPublicationsIds().length == 0){
+      $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
+      $mdDialog.cancel();
+      return;
+    }
+
+    var update = {ids:getSelectedPublicationsIds(), state: intToState(state)}
+    trix.bulkUpdateState(update).success(function(response){
+      $mdDialog.cancel();
+      if($scope.publications && $scope.publications.length > 0){
+        for (var i = $scope.publications.length - 1; i >= 0; i--) {
+          getSelectedPublicationsIds().forEach(function(pub){
+            if($scope.publications[i].id == pub){
+              $scope.publications.splice(i,1);
+              if($scope.totalPublicationsCount)
+                $scope.totalPublicationsCount--;
+            }
+          })
+        }
+      }
+      $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+    }).error(function(){
+      $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
     })
   }
   // --------- /move to state

@@ -2,6 +2,9 @@
 
 var app =  
 angular.module('app')
+  .config(['$compileProvider', function ($compileProvider) {
+    $compileProvider.debugInfoEnabled(false);
+  }])
   .config(
     [        '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', 'cfpLoadingBarProvider',
     function ($controllerProvider,   $compileProvider,   $filterProvider,   $provide ,  cfpLoadingBarProvider) {
@@ -91,7 +94,8 @@ angular.module('app')
     .warnPalette('myWarn')
     .backgroundPalette('myBackground', {'default':'500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A100'});
 
-    $mdThemingProvider.alwaysWatchTheme(true);
+    if(location.pathname.slice(0, '/settings'.length) == '/settings')
+      $mdThemingProvider.alwaysWatchTheme(true);
 
     $provide.value('themeProvider', $mdThemingProvider);
     $provide.value('colorsProvider', $mdColorsProvider);
@@ -328,6 +332,7 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
                               "   background-color: " + color + "!important; " + contrast + " }", index); index++;
         stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn, .fr-popup .fr-command.fr-btn{" + contrast + "}", index); index++;
         stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn.fr-dropdown::after, .fr-popup .fr-command.fr-btn.fr-dropdown::after{" + contrast + "}", index); index++;
+        stylesheet.insertRule(".border-bg-color{border: 1px solid; border-color:" + contrastColor + "}", index); index++;
       }
       if(cssname === 'background' && name === 'hue-1'){
         stylesheet.insertRule(".fr-toolbar, .card, .panel, .panel-card { background-color: " + color + "!important; " + contrast + " }", index); index++;

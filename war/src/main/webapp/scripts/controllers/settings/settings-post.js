@@ -21,7 +21,15 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	  boxHeight: 400
 	};
 
-	$scope.stations = angular.copy($scope.app.stations);
+	$scope.stations = []
+	$scope.app.stations && $scope.app.permissions.stationPermissions && $scope.app.permissions.stationPermissions.length > 0
+	&& $scope.app.stations.forEach(function(station){
+		$scope.app.permissions.stationPermissions.forEach(function(perm){
+			if(perm.stationId == station.id){
+				$scope.stations.push(angular.copy(station))
+			}
+		})
+	})
 
 	// Must be [x, y, x2, y2, w, h]
    $scope.app.cropSelection = [100, 100, 200, 200];
@@ -80,6 +88,10 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	// sidenav toggle
 	$scope.toggleOptions = buildToggler('more-options');
+	$scope.app.closeSidebars = function() {
+        $mdSidenav('more-options')
+          .close()
+      };
 
 	function buildToggler(navID) {
       return function() {
@@ -141,8 +153,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if(!$scope.app.editingPost)
 			$scope.app.editingPost = {};
 
-		$scope.app.editingPost.scheduledDate = $scope.postScheduleDate = scheduledDate;
-		$scope.postScheduleMenuOpen = false;
+		$scope.postDate = $scope.app.editingPost.date = $scope.app.editingPost.scheduledDate = $scope.postScheduleDate = scheduledDate;
+		$scope.postDateUpdateble = $scope.postScheduleMenuOpen = false;
 		$scope.app.editingPost.state = "PUBLISHED";
 	}
 
@@ -162,6 +174,46 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 				return true;
 			}else{
 				return false;
+			}
+		}
+	}
+
+	// check if is colaborator only
+	$scope.isColaboratorOnly = true;
+	$scope.app.permissions.stationPermissions.forEach(function(perm){
+		if(perm.write && $scope.isColaboratorOnly){
+			$scope.isColaboratorOnly = false;
+			$scope.stations.forEach(function(station){
+				if(station.id === perm.stationId)
+					$scope.selectedStation = station
+			})
+		}
+		for (var i = $scope.stations.length - 1; i >= 0; i--) { // remove station with read only permissions
+			if($scope.stations[i].id == perm.stationId && !perm.write && !perm.create){
+					$scope.stations.splice(i, 1);
+			}
+		}
+	})
+
+	if(!$scope.selectedStation)
+		$scope.selectedStation = $scope.stations[0];
+
+	// /check if is colaborator only
+	$scope.isWriter = function(){
+		if($scope.app.permissions.stationPermissions && $scope.app.permissions.stationPermissions.length > 0){
+			for (var i = $scope.app.permissions.stationPermissions.length - 1; i >= 0; i--) {
+				if($scope.app.permissions.stationPermissions[i].write && $scope.selectedStation && $scope.app.permissions.stationPermissions[i].stationId == $scope.selectedStation.id)
+					return true;
+			}
+		}
+	}
+
+	$scope.isColaborator = function(){
+		if($scope.app.permissions.stationPermissions && $scope.app.permissions.stationPermissions.length > 0){
+			for (var i = $scope.app.permissions.stationPermissions.length - 1; i >= 0; i--) {
+				if(!$scope.app.permissions.stationPermissions[i].write && $scope.app.permissions.stationPermissions[i].create &&
+						$scope.selectedStation && $scope.app.permissions.stationPermissions[i].stationId == $scope.selectedStation.id)
+					return true;
 			}
 		}
 	}
@@ -234,7 +286,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			$scope.app.editingPost.body = '';
 		}
 		$scope.tags = [];
-		$scope.featuredImage = $scope.featuredAudio = $scope.featuredVideo = $scope.postFeaturedImage = $scope.postFeaturedAudio = $scope.postFeaturedVideo = null;
+		removeAllMedia();
 		$mdDialog.cancel();
 	}
 
@@ -282,11 +334,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			return 1;
 		}else if(state == "DRAFT"){
 			return 2;
-		// }else if(state == "SCHEDULED"){
-		// 	return 3;
 		}else if(state == "TRASH"){
 			return 4;
-		}else{
+		}else if(state == "UNPUBLISHED"){
 			return 5;
 		}
 	}
@@ -302,17 +352,10 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		state = state ? state : $scope.app.editingPost ? $scope.app.editingPost.state : null;
 		if(!state)
 			return $filter('translate')('settings.post.states.DRAFT');
-		if(state == "PUBLISHED"){
-			return $filter('translate')('settings.post.states.PUBLISHED');
-		}else if(state == "DRAFT"){
-			return $filter('translate')('settings.post.states.DRAFT');
-		}else if(state == "SCHEDULED"){
-			return $filter('translate')('settings.post.states.SCHEDULED');
-		}else if(state == "TRASH"){
-			return $filter('translate')('settings.post.states.TRASH');
-		}else{
+		else if(state != "PUBLISHED" && state != "DRAFT" && state != "SCHEDULED" && state != "TRASH" && state != "UNPUBLISHED")
 			return " - ";
-		}
+		else
+			return $filter('translate')('settings.post.states.' + state);
 	}
 
 	$scope.app.countBodyCharacters = function(){
@@ -464,6 +507,13 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
     $scope.app.imgToolsProps.x = Math.round(((e.pageX - offset.left) / e.target.clientWidth) * 100);
     $scope.app.imgToolsProps.y = Math.round(((e.pageY - offset.top) / e.target.clientHeight) * 100);
   };
+
+  $scope.resetFocus = function(){
+  	if($scope.app.editingPost){
+  		$scope.app.imgToolsProps.x = $scope.app.editingPost.focusX ? $scope.app.editingPost.focusX : 50
+  		$scope.app.imgToolsProps.y = $scope.app.editingPost.focusY ? $scope.app.editingPost.focusY : 50
+  	}
+  }
   
   $scope.offset = function (elm) {
     try { return elm.offset(); } catch (e) { }
@@ -607,7 +657,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		});
 	})
 
-	$scope.selectedStation = null;
+	// $scope.selectedStation = null;
 	$scope.$watch('selectedStation', function(station){
 		if(station && station.termTree)
 			$scope.app.selectTerms(station.termTree, $scope.app.editingPost.terms)
@@ -741,6 +791,12 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.removeVideo = function(){
 		$scope.useVideo = false;
+		if($scope.app.editingPost)
+			removeAllMedia();
+	}
+
+	function removeAllMedia(){
+		$scope.featuredImage = $scope.featuredAudio = $scope.featuredVideo = $scope.postFeaturedImage = $scope.postFeaturedAudio = $scope.postFeaturedVideo = null;
 	}
 
 	$scope.removeUploadedVideo = function(){
@@ -930,10 +986,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	    	// window.console && console.log($scope..selectedStation, $scope.app.getTermList($scope.selectedStation.termTree))
 	    	if(AUTO_SAVE){
 	    		$timeout.cancel(AUTO_SAVE);
-	    	} 
-	    	if($scope.app.checkState() == 2 && $scope.automaticSave){
+	    	}
+	    	if(($scope.app.checkState() == 2 || $scope.app.checkState() == 5) && $scope.automaticSave){
 	    		AUTO_SAVE = $timeout(function(){
-	    			if($scope.app.checkState() == 2 && $scope.automaticSave && ($scope.selectedStation && $scope.app.getTermList($scope.selectedStation.termTree)))
+	    			var body = $scope.app.editingPost.body && $scope.app.editingPost.body ? $scope.app.editingPost.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+	    			if(($scope.app.checkState() == 2 || $scope.app.checkState() == 5) && $scope.automaticSave && ($scope.selectedStation && $scope.app.getTermList($scope.selectedStation.termTree).length > 0) && body != "" && $scope.app.editingPost.title != null)
 	    				$scope.saveAsDraft(null, true)
 	    		},10000)
 	    	}
@@ -951,6 +1008,61 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 
 	// -------- /autoSave
+
+	// ------ image credits --------
+	
+	$scope.showImageCreditsUpdateDialog = function(){
+
+	}
+
+	$scope.oldCredits = null;
+	$scope.$watch('featuredImage.credits', function(newVal, oldVal){
+		console.log("New credits", newVal);
+		if(!$scope.oldCredits){
+			$scope.oldCredits = oldVal;
+		}
+	})
+
+	$scope.creditsChanged = function(){
+		$scope.showCreditsChangeDialog();
+	}
+
+	$scope.showCreditsChangeDialog = function(){
+		$scope.disabled = false;
+		$mdDialog.show({
+			scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
+          	preserveScope: true, // do not forget this if use parent scope
+			controller: $scope.app.defaultDialog,
+			templateUrl: 'credits-dialog.html',
+			parent: angular.element(document.body),
+			targetEvent: event,
+			clickOutsideToClose:true
+			// onComplete: function(){
+
+			// }
+		});
+	}
+
+	$scope.applyImageCredits = function(){
+		if($scope.featuredImage){
+			trix.updateImageCredits($scope.featuredImage).success(function(image){
+				$mdDialog.cancel();
+			}).error(function(){
+				$mdDialog.cancel();
+			})
+		}
+	}
+
+	$scope.restorePreviewsCredits = function(){
+		if($scope.featuredImage && $scope.oldCredits){
+			$scope.featuredImage.credits = $scope.oldCredits;
+		}
+	}
+
+	// ------ /image creidts -------
 
 	$scope.getStationFromPost = function(){
 		if($scope.app.editingPost.station){
@@ -975,12 +1087,31 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		var hash = $scope.app.editingPost.featuredImageHash ? $scope.app.editingPost.featuredImageHash : $scope.app.editingPost.imageHash ? $scope.app.editingPost.imageHash : $scope.app.editingPost.featuredImage ? $scope.app.editingPost.featuredImage.originalHash : null;
 		setPostFeaturedImage(hash)
 		$scope.featuredImage = $scope.app.editingPost.featuredImage
+		if($scope.featuredImage){
+			$scope.featuredImage.credits = $scope.app.editingPost.imageCredits
+			$scope.app.imgToolsProps.x =  $scope.app.editingPost.focusX;
+			$scope.app.imgToolsProps.y = $scope.app.editingPost.focusY;
+		}
 		$scope.landscape = $scope.app.editingPost.imageLandscape;
 		$scope.customizedLink.slug = $scope.app.editingPost.slug;
 
 		$scope.useHeading = $scope.app.editingPost.topper ? true:false
 		$scope.useSubheading = $scope.app.editingPost.subheading ? true:false
 		$scope.tags = angular.copy($scope.app.editingPost.tags);
+		$scope.useVideo = $scope.app.editingPost.externalVideoUrl;
+
+		if($scope.app.editingPost.date){
+			$scope.postDate = new Date($scope.app.editingPost.date);
+			$scope.postDateUpdateble = false;
+		}
+
+		if($scope.useVideo){
+			$scope.app.videoUrl = '';
+			$timeout(function(){
+				$scope.app.videoUrl = $scope.app.editingPost.externalVideoUrl
+			}, 100)
+		}
+
 		if(!lockContent)
 			$timeout(function(){
 				$scope.app.postObjectChanged = false;
@@ -1019,8 +1150,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			post.author = ImageDto.getSelf(post.author);
 
 		// --- image ---
-		if($scope.featuredImage)
+		if($scope.featuredImage){
 			post.featuredImage = ImageDto.getSelf($scope.featuredImage);
+			post.focusX = $scope.app.imgToolsProps.x
+			post.focusY = $scope.app.imgToolsProps.y
+		}
 		else
 			post.featuredImage = null;
 
@@ -1042,6 +1176,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if($scope.app.checkState() === 3)
 			post.state = 'PUBLISHED';
 
+		if($scope.postDate)
+			post.date = $scope.postDate.getTime();
+
 		return post;
 	}
 
@@ -1049,6 +1186,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if(confirm || !$scope.app.editingPost.id){
 			var post = angular.copy($scope.app.editingPost)
 			post.state = 'DRAFT';
+			if($scope.isColaborator())
+				post.state = 'UNPUBLISHED';
 			if(post.id)
 				$scope.putPost(post);
 			else
@@ -1062,6 +1201,16 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.removeScheduledDate();
 		var post = angular.copy($scope.app.editingPost)
 		post.state = 'PUBLISHED';
+		if(post.id){
+			$scope.putPost(post);
+		}else
+			$scope.postPost(post);
+	}
+
+	$scope.colaboratePost = function(){
+		$scope.removeScheduledDate();
+		var post = angular.copy($scope.app.editingPost)
+		post.state = 'UNPUBLISHED';
 		if(post.id){
 			$scope.putPost(post);
 		}else
@@ -1376,10 +1525,10 @@ function createVersions(){
 	    '</div>'+
     '</div>'+
 		'<div class="text-center p-t">'+
-			'<md-button ng-click="app.cancelDialog();" class="m-0">'+
+			'<md-button ng-click="app.cancelDialog(); resetFocus();" class="m-0">'+
 				'{{\'titles.CANCEL\' | translate}}'+
 			'</md-button>'+
-			'<md-button ng-click="" class="m-0">'+
+			'<md-button ng-click="app.cancelDialog();" class="m-0">'+
 				'{{\'titles.SAVE\' | translate}}'+
 			'</md-button>'+
 		'</div>'+

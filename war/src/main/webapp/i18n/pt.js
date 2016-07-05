@@ -35,6 +35,8 @@
 		"SCHEDULED": "Agendados",
 		"DRAFTS": "Rascunhos",
 		"TRASH": "Lixeira",
+		"PENDING": "Pendente",
+		"PENDINGS": "Pendentes",
 		"POST_STATE": "Estado da publicação",
 		"FILTER": "Filtro",
 		"FILTERS": "Filtros",
@@ -57,6 +59,7 @@
 		"SAVE_AS_DRAFT": "Salvar como rascunho",
 		"SAVE": "Salvar",
 		"APPLY": "Aplicar",
+		"RESTORE_PREVIEWS": "Restaurar anterior",
 		"TITLE": "Título",
 		"SUBTITLE": "Subtítulo",
 		"HEADING": "Chapéu",
@@ -112,7 +115,16 @@
 		"ADD": "Adicionar",
 		"LOAD_MORE": "Carregar mais",
 		"ACTIVATE": "Ativar",
-		"FEATURED_POSTS": "Destaques"
+		"FEATURED_POSTS": "Destaques",
+		"CREDITS": "Creditos da imagem",
+		"LAST_LOGIN": "último login",
+		"READ": "Leitura",
+		"COLABORATE": "Colaborar",
+		"WRITE": "Escrita",
+		"EDIT": "Editar",
+		"ADMIN": "Administrar",
+		"CREATE_NETWORK": "Criar rede",
+		"NETWORK_NAME": "Nome da rede"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -134,6 +146,7 @@
 		"UPDATE": "Atualizar",
 		"REMOVE": "Remover",
 		"SCHEDULE": "Agendar",
+		"SEND_FOR_REVIEW": "Enviar para revisão",
 		"EXCLUDE": "Remover",
 		"LIST": "Listar",
 		"INSERT": "Inserir",
@@ -262,7 +275,16 @@
 			"REQUIRED_FIELDS": "Nome, usuário e email são campos obrigatórios.",
 			"OPTIONAL_PASSWORD": "A senha é opcional e caso não fornecida será gerado automáticamente e enviada por email.",
 			"INVITATIONS_SENT": "Convites enviados com sucesso",
-			"PERMISSIONS_UPDATES": "Permissões atualizadas"
+			"PERMISSIONS_UPDATES": "Atualização de permissões",
+			"REMOVE_PERMISSIONS": "Remover permissões",
+			"REMOVE_PERMISSIONS_MSG": "Tem certeza que deseja remover todas as permissões desse usuário nesta estação?",
+			"permissions": {
+				"READER": "Leitor",
+				"COLABORATOR": "Colaborador",
+				"WRITER": "Escritor",
+				"EDITOR": "Editor",
+				"ADMIN": "Administrador"
+			}
 		},
 		"comment":{
 			"REMOVE_COMMENT_MSG": "Tem certeza que deseja remover este comentário?",
@@ -280,6 +302,7 @@
 				"ATTACH_POST": "Anexar outras publicações",
 				"NOTIFY_STATION_USERS": "Notificar usuários",
 				"PUBLICATION_MSG": "O conteúdo será publicado ao clicar em Publicar.",
+				"COLABORATE_MSG": "O conteúdo entrará disponível para revisão de editores ao clicar em \"Enviar para revisão\".",
 				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada alteração uma vez que o título, conteúdo, estações e categorias sejam inseridos. Para desabilitar esta função, verifique a opção \"Salvar automaticamente\" em \"Opções de publicação\". As versões da publicação podem ser visualizadas no menu \"Opções de publicação\"."
 			},
 			"ACTIVATE_DEACTIVATE_HEADING": "Ativar/Desativar chapéu",
@@ -304,6 +327,7 @@
 			"PUBLISHED_AS_DRAFT": "Rascunho salvo",
 			"SCHEDULED_MSG": "Agendado para:",
 			"RESCHEDULE": "Reagendar",
+			"UPDATE_CREDITS_MSG": "Estes créditos pertecem a imagem. Atualizar os créditos impactaram o uso dessa imagem em toda a rede. Deseja aplicar alterações?",
 			"messages":{
 				"PAGE_CHANGE_ALERT": "Você possui conteúdo que ainda não foi salvo.",
 				"CLEAR_CONTENT_MSG": "Limpar todo o conteúdo desta publicação?",
@@ -318,7 +342,8 @@
 				"PUBLISHED": "Publicado",
 				"SCHEDULED": "Agendado",
 				"DRAFT": "Rascunho",
-				"Trash": "Lixeira"
+				"TRASH": "Lixeira",
+				"UNPUBLISHED": "Em revisão"
 			},
 			"GEO_NOTIFICATION_DESC": "Para limitar a área geográfica de envio de notificações aos dispositivos dos usuários, crie círculos ou polígonos utlizando as ferramentas no canto esquerdo do mapa ao lado.",
 			"PREFERENCES": "Preferências",
@@ -396,7 +421,8 @@
 			"CONFIRM_PASSWORD": "Confirmar senha",
 			"BIOGRAPHY": "Biografia",
 			"PASSWORDS_DONT_MATCH": "A senha é inválida ou senha e confirmação não são correspondentes.",
-			"MOVE_TO_STATE_MSG": "Tem certeza que deseja mover esta publicação e modificar seu estado? Mover para:"
+			"MOVE_TO_STATE_MSG": "Tem certeza que deseja mover esta publicação e modificar seu estado? Mover para:",
+			"BULK_MOVE_TO_STATE_MSG": "Tem certeza que deseja mover esta publicação e modificar seu estado?"
 		},
 		"bookmark": {
 			"REMOVE_CONFIRMATION_MSG": "Tem certeza que deseja remover este item"

@@ -33,12 +33,15 @@ public class EntityDto implements Serializable {
 	}
 	
 	public String getSelf() {
-		for (Link link : links) {
-			String rel = link.rel;
-			if ("self".equals(rel)) {
-				return link.href;
+		if(links != null)
+			for (Link link : links) {
+				String rel = link.rel;
+				if ("self".equals(rel)) {
+					return link.href;
+				}
 			}
-		}
+		else
+			return "";
 		throw new RuntimeException();
 	}
 }>>

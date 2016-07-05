@@ -2,23 +2,31 @@ package co.xarx.trix.services.post;
 
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.api.PostView;
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.config.security.Permissions;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.MobileNotificationService;
+import co.xarx.trix.services.ImageService;
 import co.xarx.trix.services.MobileService;
+import co.xarx.trix.services.notification.MobileNotificationService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
+import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.StringUtil;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,15 +48,13 @@ public class PostService {
 	@Autowired
 	private MobileDeviceRepository mobileDeviceRepository;
 	@Autowired
-	private NetworkRepository networkRepository;
-	@Autowired
 	private MobileService mobileService;
 	@Autowired
 	private MobileNotificationService mobileNotificationService;
 	@Autowired
 	private PersonPermissionService personPermissionService;
 	@Autowired
-	private NotificationRepository notificationRepository;
+	private MobileNotificationRepository mobileNotificationRepository;
 	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
@@ -56,12 +62,15 @@ public class PostService {
 	@Autowired
 	private PostSearchService postSearchService;
 
+	@Autowired
+	private ImageService imageService;
+
 	public void sendNewPostNotification(Post post) throws NotificationException {
 		List<MobileDevice> mobileDevices;
 		if (stationRepository.isUnrestricted(post.getStationId())) {
 			mobileDevices = mobileDeviceRepository.findAll();
 		} else {
-			List<Person> personFromStation = personPermissionService.getPersonFromStation(post.station.getId());
+			List<Person> personFromStation = Lists.newArrayList(personPermissionService.getPersonFromStation(post.station.getId(), Permissions.READ));
 			List<Integer> personIds = personFromStation.stream().map(Person::getId).collect(Collectors.toList());
 
 //			personIds.remove(authProvider.getLoggedPerson().getId());
@@ -69,24 +78,21 @@ public class PostService {
 			mobileDevices = mobileDeviceRepository.findByPersonIds(personIds);
 		}
 
-		String tenantId = TenantContextHolder.getCurrentTenantId();
-		Network network = networkRepository.findByTenantId(tenantId); //this should be removed in next android releases
-
 		Collection appleDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.APPLE);
 		Collection androidDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.ANDROID);
 
-		NotificationView notification = getCreatePostNotification(post, network.id);
-		List<Notification> notifications = mobileNotificationService.sendNotifications(post, notification, androidDevices, appleDevices);
-		for (Notification n : notifications) {
-			notificationRepository.save(n);
+		NotificationView notification = getCreatePostNotification(post);
+		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(notification, androidDevices, appleDevices);
+		for (MobileNotification n : mobileNotifications) {
+			n.setPostId(post.getId());
+			mobileNotificationRepository.save(n);
 		}
 	}
 
-	public NotificationView getCreatePostNotification(Post post, Integer networkId) {
+	public NotificationView getCreatePostNotification(Post post) {
 		String hash = StringUtil.generateRandomString(10, "Aa#");
 		NotificationView notification = new NotificationView(post.title, post.title, hash, false);
-		notification.type = Notification.Type.POST_ADDED.toString();
-		notification.networkId = networkId;
+		notification.type = MobileNotification.Type.POST_ADDED.toString();
 		notification.post = postConverter.convertTo(post);
 		notification.postId = post.id;
 		notification.postTitle = post.title;
@@ -190,5 +196,42 @@ public class PostService {
 		queryPersistence.updateRecommendsCount(postId);
 
 		return response;
+	}
+
+	public void setVideoFeaturedImage(Post post) {
+		try{
+			if(post.featuredVideo != null && post.featuredVideo.identifier != null && "youtube".equals(post
+					.featuredVideo.provider)){
+				post.featuredImage = getYoutubeThumbFeaturedImage(post.featuredVideo.provider, post.featuredVideo
+						.identifier);
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private Image getYoutubeThumbFeaturedImage(String provider, String identifier) {
+		if("youtube".equals(provider)) {
+			try {
+				URL url = new URL("http://img.youtube.com/vi/" + identifier + "/0.jpg");
+				InputStream in = new BufferedInputStream(url.openStream());
+				Image newImage = new Image(Image.Type.POST.toString());
+				String name = "youtube_" + identifier;
+				newImage.setTitle(name);
+				java.io.File originalFile = FileUtil.createNewTempFile(in);
+
+				newImage = imageService.createAndSaveNewImage(Image.Type.POST.toString(), name, originalFile,
+						"image/jpg");
+				in.close();
+				return newImage;
+			}catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return  null;
 	}
 }

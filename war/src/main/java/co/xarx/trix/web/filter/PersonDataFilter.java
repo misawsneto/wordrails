@@ -1,7 +1,6 @@
 package co.xarx.trix.web.filter;
 
 import co.xarx.trix.api.PersonData;
-import co.xarx.trix.api.TermPerspectiveView;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.InitService;
@@ -41,27 +40,23 @@ public class PersonDataFilter implements Filter{
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 
-				String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
-		Integer stationId = initService.getStationIdFromCookie(request);
-		PersonData personData = initService.getInitialData(baseUrl, network);
 
-		PersonData data = initService.getData(personData, stationId);
-		if (data.defaultStation != null) {
-			TermPerspectiveView termPerspectiveView = perspectiveService.termPerspectiveView(null, null,
-					data.defaultStation.defaultPerspectiveId, 0, 10);
-			request.setAttribute("termPerspectiveView", simpleMapper.writeValueAsString(termPerspectiveView));
+		if(network != null){
+			Integer stationId = initService.getStationIdFromCookie(request);
+			PersonData personData = initService.getInitialData(baseUrl, network);
+
+			PersonData data = initService.getData(personData, stationId);
+
+			request.setAttribute("networkId", data.network.id);
+			if (data.network.faviconHash != null)
+				request.setAttribute("faviconLink", amazonCloudService.getPublicImageURL(data.network.faviconHash));
+			request.setAttribute("networkDesciption", "");
+			request.setAttribute("networkKeywords", "");
+			request.setAttribute("personData", simpleMapper.writeValueAsString(data));
+			request.setAttribute("networkName", data.network.name);
 		}
-
-		request.setAttribute("personData", simpleMapper.writeValueAsString(data) + "");
-		request.setAttribute("networkName", data.network.name);
-		request.setAttribute("networkId", data.network.id);
-		if (data.network.faviconHash != null)
-			request.setAttribute("faviconLink", amazonCloudService.getPublicImageURL(data.network.faviconHash));
-		request.setAttribute("networkDesciption", "");
-		request.setAttribute("networkKeywords", "");
-		request.setAttribute("personData", simpleMapper.writeValueAsString(data));
-		request.setAttribute("networkName", data.network.name);
 
 		chain.doFilter(request, res);
 	}

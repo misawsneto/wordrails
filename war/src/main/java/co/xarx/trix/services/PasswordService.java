@@ -8,7 +8,7 @@ import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.PasswordResetRepository;
 import co.xarx.trix.persistence.UserRepository;
-import com.mysema.commons.lang.Assert;
+import org.springframework.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

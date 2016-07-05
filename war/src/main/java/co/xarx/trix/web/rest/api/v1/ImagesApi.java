@@ -1,5 +1,7 @@
 package co.xarx.trix.web.rest.api.v1;
 
+import co.xarx.trix.web.rest.resource.v1.ImagesResource;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -33,4 +35,8 @@ public interface ImagesApi {
 	@Path("/posts/{id}")
 	Response getPostImage(@PathParam("id") Integer id, @QueryParam("size") String size)
 			throws IOException;
+
+	@PUT
+	@Path("/updateCredits")
+	Response updateImageCredits(ImagesResource.ImageUpload image);
 }

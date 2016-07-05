@@ -4,10 +4,12 @@ import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.converter.PostConverter;
+import co.xarx.trix.domain.ESPost;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AuditService;
+import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.post.PostModerationService;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.services.security.PostPermissionService;
@@ -37,9 +39,13 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	private PostRepository postRepository;
 	private PostConverter postConverter;
 	private AuditService auditService;
+	private ElasticSearchService elasticSearchService;
 
 	@Autowired
-	public V2PostsResource(PostModerationService postModerationService, PostPermissionService postPermissionService, PostSearchService postSearchService, PostRepository postRepository, PostConverter postConverter, AuditService auditService){
+	public V2PostsResource(PostModerationService postModerationService, PostPermissionService postPermissionService,
+						   PostSearchService postSearchService, PostRepository postRepository, PostConverter
+									   postConverter, AuditService auditService, ElasticSearchService
+									   elasticSearchService){
 		this.postModerationService = postModerationService;
 		this.postPermissionService = postPermissionService;
 
@@ -47,6 +53,7 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 		this.postRepository = postRepository;
 		this.postConverter = postConverter;
 		this.auditService = auditService;
+		this.elasticSearchService = elasticSearchService;
 	}
 
 	@Override
@@ -122,5 +129,23 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 		ContentResponse response = new ContentResponse();
 		response.content = auditService.getPostVersions(postId);
 		return response;
+	}
+
+	@Override
+	public Response bulkUpdateStates(BulkUpdateState bulkUpdateState) throws NoSuchFieldException,
+			IllegalAccessException {
+		if(!(Post.STATE_DRAFT.equals(bulkUpdateState.state) || Post.STATE_PUBLISHED.equals(bulkUpdateState.state) ||
+				Post.STATE_TRASH.equals(bulkUpdateState.state) || Post.STATE_NO_AUTHOR.equals(bulkUpdateState.state) ||
+				Post.STATE_UNPUBLISHED.equals(bulkUpdateState.state))){
+			return  Response.status(400).build();
+		}
+		List<Post> posts = postRepository.findAll(bulkUpdateState.ids);
+		for (Post post : posts) {
+			post.state = bulkUpdateState.state;
+			postRepository.save(post);
+			elasticSearchService.mapThenSave(post, ESPost.class);
+		}
+
+		return Response.ok().build();
 	}
 }

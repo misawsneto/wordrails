@@ -2,7 +2,7 @@
   <!-- Content Navbar -->
   <div class="navbar no-radius md-primary-default background" style="max-height:64px">
     <!-- Open side - Naviation on mobile -->
-    <a ng-if="app.personPermissions.stationPermissions.length > 1" md-ink-ripple ng-click="openAside()" ng-hide="$state.current.data.child" class="navbar-item pull-left"><i class="mdi-navigation-menu i-24"></i></a>
+    <a ng-if="app.personPermissions.stationPermissions.length > 1" md-ink-ripple ng-click="openAside()" class="navbar-item pull-left"><i class="mdi-navigation-menu i-24"></i></a>
     <!-- / -->
     <div class="navbar-header pull-left">
       <a class="navbar-brand" ng-href="/">
@@ -42,10 +42,9 @@
     </div>
 
     <!-- GoBack - Back to parent if $state has the param 'child' -->
-    <a md-ink-ripple class="navbar-item pull-left" ng-click="goBack()" ng-show="$state.current.data.child" ><i class="mdi-navigation-arrow-back i-24"></i></a>
     <!-- / -->
     <!-- Common tools -->
-    <ul class="nav nav-sm navbar-tool pull-right" ng-hide="$state.current.data.child">
+    <ul class="nav nav-sm navbar-tool pull-right">
       <!--<li class="animated" ng-class="{'fadeIn': !app.search.show, 'fadeOut': app.search.show, 'hide': !$mdMedia('gt-sm')}">
         <a md-ink-ripple ng-click="app.search.show = true; app.focusOnSearch()">
           <i class="mdi-action-search i-24 p-h-sm"></i>
@@ -179,7 +178,7 @@
             <li class="material-top-menu-item animated fadeIn" 
              ng-class="{'active': app.activeCategory.id === category.id}" md-ink-ripple data-ng-repeat="category in app.perspectiveTerms" 
              data-menu-item="{{category.item}}">
-              <a ng-href="{{::'/' + app.getStationById(app.termPerspectiveView.stationId).stationSlug + '/cat?name=' + category.name}}" >
+              <a ng-href="{{::('/' + app.getStationById(app.termPerspectiveView.stationId).stationSlug + '/cat?name=' + app.getEscapedCategory(category.name))}}" >
                 <span>{{::category.name}}</span>
               </a>
             </li>

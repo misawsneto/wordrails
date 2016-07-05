@@ -18,6 +18,10 @@ public class PostView implements Serializable, Identifiable {
 
 	private static final long serialVersionUID = -1474032487285763669L;
 
+	public PostView(Integer id) {
+		this.postId = id;
+	}
+
 	public String title;
 
 	@Id
@@ -70,9 +74,7 @@ public class PostView implements Serializable, Identifiable {
 	public String externalFeaturedImgUrl;
 	public String externalVideoUrl;
 
-	public String imageCaptionText;
-	public String imageCreditsText;
-	public String imageTitleText;
+	public String imageCredits;
 
 	public String featuredVideoHash;
 	public String featuredAudioHash;
@@ -81,6 +83,9 @@ public class PostView implements Serializable, Identifiable {
 
 	public Double lat;
 	public Double lng;
+
+	public Integer focusX;
+	public Integer focusY;
 
 	public String subheading;
 	public Date scheduledDate;

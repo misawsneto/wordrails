@@ -1,14 +1,11 @@
-package co.xarx.trix.services;
+package co.xarx.trix.services.notification;
 
 import co.xarx.trix.annotation.AccessGroup;
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.Notification;
-import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.MobileNotification;
 import co.xarx.trix.exception.NotificationException;
-import co.xarx.trix.services.notification.MobileNotificationSender;
-import co.xarx.trix.services.notification.NotificationService;
-import com.mysema.commons.lang.Assert;
+import co.xarx.trix.services.AsyncService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,55 +21,53 @@ public class MobileNotificationService {
 	@Value("${spring.profiles.active:'dev'}")
 	private String profile;
 
-	private NotificationService notificationService;
+	private NotificationBatchPublisher notificationBatchPublisher;
 	private AsyncService asyncService;
 	private MobileNotificationSender appleNS;
 	private MobileNotificationSender androidNS;
 
 	@Autowired
-	public MobileNotificationService(NotificationService notificationService,
+	public MobileNotificationService(NotificationBatchPublisher notificationBatchPublisher,
 									 AsyncService asyncService,
 									 MobileNotificationSender appleNS, MobileNotificationSender androidNS) {
-		this.notificationService = notificationService;
+		this.notificationBatchPublisher = notificationBatchPublisher;
 		this.asyncService = asyncService;
 		this.appleNS = appleNS;
 		this.androidNS = androidNS;
 	}
 
 	@AccessGroup(tenants = {"demo"}, profiles = {"prod"}, inclusion = true)
-	public List<Notification> sendNotifications(Post post, NotificationView notification,
-												Collection<String> androidDevices, Collection<String> appleDevices) throws NotificationException {
-		Assert.notNull(post, "Post should not be null");
-
-		Future<List<Notification>> futureAndroidNotifications = null;
-		Future<List<Notification>> futureAppleNotifications;
+	public List<MobileNotification> sendNotifications(NotificationView notification,
+													  Collection<String> androidDevices, Collection<String> appleDevices) throws NotificationException {
+		Future<List<MobileNotification>> futureAndroidNotifications = null;
+		Future<List<MobileNotification>> futureAppleNotifications;
 		try {
 			futureAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-					() -> notificationService.sendNotifications(androidNS, notification, post, androidDevices, Notification.DeviceType.ANDROID));
+					() -> notificationBatchPublisher.sendNotifications(androidNS, notification, androidDevices, MobileNotification.DeviceType.ANDROID));
 			futureAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-					() -> notificationService.sendNotifications(appleNS, notification, post, appleDevices, Notification.DeviceType.APPLE));
+					() -> notificationBatchPublisher.sendNotifications(appleNS, notification, appleDevices, MobileNotification.DeviceType.APPLE));
 		} catch (Exception e) {
 			if (futureAndroidNotifications != null)
 				futureAndroidNotifications.cancel(true);
 			throw new NotificationException(e);
 		}
 
-		List<Notification> notifications;
+		List<MobileNotification> mobileNotifications;
 
 		try {
-			notifications = futureAndroidNotifications.get();
+			mobileNotifications = futureAndroidNotifications.get();
 		} catch (InterruptedException | ExecutionException e) {
-			notifications = notificationService.getErrorNotifications(androidDevices,
-					notification, post, e, Notification.DeviceType.ANDROID);
+			mobileNotifications = notificationBatchPublisher.getErrorNotifications(androidDevices,
+					notification, e, MobileNotification.DeviceType.ANDROID);
 		}
 
 		try {
-			notifications.addAll(futureAppleNotifications.get());
+			mobileNotifications.addAll(futureAppleNotifications.get());
 		} catch (InterruptedException | ExecutionException e) {
-			notifications.addAll(notificationService.getErrorNotifications(appleDevices,
-					notification, post, e, Notification.DeviceType.APPLE));
+			mobileNotifications.addAll(notificationBatchPublisher.getErrorNotifications(appleDevices,
+					notification, e, MobileNotification.DeviceType.APPLE));
 		}
 
-		return notifications;
+		return mobileNotifications;
 	}
 }

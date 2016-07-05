@@ -8,6 +8,7 @@ import co.xarx.trix.persistence.PictureRepository;
 import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.ImageFile;
 import co.xarx.trix.util.ImageUtil;
+import co.xarx.trix.web.rest.resource.v1.ImagesResource;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -186,5 +187,11 @@ public class ImageService {
 		pic.width = imageFile.width;
 
 		return pic;
+	}
+
+	public void updateImageCredits(ImagesResource.ImageUpload imageUpload) {
+		Image image = imageRepository.findOne(imageUpload.id);
+		image.setCredits(imageUpload.credits);
+		imageRepository.save(image);
 	}
 }

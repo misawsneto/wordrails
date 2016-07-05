@@ -29,6 +29,10 @@ public class UserGrantedAuthority extends BaseEntity implements GrantedAuthority
 		this(user, USER);
 	}
 
+	public UserGrantedAuthority(String authority) {
+		this(null, authority);
+	}
+
 	public UserGrantedAuthority(User user, String authority) {
 		this.user = user;
 		this.authority = authority;

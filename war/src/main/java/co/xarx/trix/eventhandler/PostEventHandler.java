@@ -30,8 +30,6 @@ public class PostEventHandler {
 	@Autowired
 	private CommentRepository commentRepository;
 	@Autowired
-	private NotificationRepository notificationRepository;
-	@Autowired
 	private ElasticSearchService elasticSearchService;
 	@Autowired
 	private ESPostRepository esPostRepository;
@@ -59,19 +57,30 @@ public class PostEventHandler {
 			}
 		}
 
-		savePost(post);
+		handleBeforeSave(post);
 	}
 
-	public void savePost(Post post) {
+	@HandleBeforeSave
+	public void handleBeforeSave(Post post) {
 		if (post.date == null) {
 			if(post.scheduledDate == null)
 				post.date = new Date();
 			else
 				post.date = new Date(post.scheduledDate.getTime());
+		}else{
+			if (post.scheduledDate != null && post.date.after(post.scheduledDate))
+				post.date = new Date(post.scheduledDate.getTime());
 		}
 
 		if (post.slug == null || post.slug.isEmpty()) {
 			post.slug = StringUtil.toSlug(post.title);
+		}
+
+		if(post.featuredVideo != null){
+			post.imageLandscape = false;
+			if (post.featuredImage == null) {
+				postService.setVideoFeaturedImage(post);
+			}
 		}
 
 		if (postRepository.findBySlug(post.slug) != null) {
@@ -81,14 +90,22 @@ public class PostEventHandler {
 
 	@HandleAfterCreate
 	public void handleAfterCreate(Post post) {
-		if (post.state.equals(Post.STATE_PUBLISHED)) {
-			if (post.notify) postService.sendNewPostNotification(post);
-		}
+		notificationCheck(post);
 		elasticSearchService.mapThenSave(post, ESPost.class);
+	}
+
+	private void notificationCheck(Post post) {
+		if (post.state.equals(Post.STATE_PUBLISHED) && post.scheduledDate == null ||
+				(post.scheduledDate != null && post.scheduledDate.before(new Date()))
+				) {
+			if (post.notify && !post.notified)
+				postService.sendNewPostNotification(post);
+		}
 	}
 
 	@HandleAfterSave
 	public void handleAfterSave(Post post) {
+		notificationCheck(post);
 		elasticSearchService.mapThenSave(post, ESPost.class);
 		auditService.saveChange(post);
 	}
@@ -98,7 +115,6 @@ public class PostEventHandler {
 	public void handleBeforeDelete(Post post) throws UnauthorizedException {
 		cellRepository.delete(cellRepository.findByPost(post));
 		commentRepository.delete(post.comments);
-		notificationRepository.deleteByPost(post);
 		if (post.state.equals(Post.STATE_PUBLISHED)) {
 			esPostRepository.delete(post.id); // evitando bug de remoção de post que tiveram post alterado.
 		}

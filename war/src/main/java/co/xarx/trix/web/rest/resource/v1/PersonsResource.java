@@ -5,8 +5,12 @@ import co.xarx.trix.api.IdsList;
 import co.xarx.trix.api.PersonData;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.v2.StatsData;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.User;
 import co.xarx.trix.eventhandler.PersonEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
@@ -18,12 +22,10 @@ import co.xarx.trix.services.NetworkService;
 import co.xarx.trix.services.PersonService;
 import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.services.person.PersonAlreadyExistsException;
-import co.xarx.trix.services.person.PersonFactory;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.Authenticator;
 import co.xarx.trix.services.security.StationPermissionService;
 import co.xarx.trix.services.user.UserAlreadyExistsException;
-import co.xarx.trix.services.user.UserFactory;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.StringUtil;
@@ -31,7 +33,6 @@ import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mysema.commons.lang.Assert;
 import lombok.NoArgsConstructor;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import javax.servlet.ServletException;
 import javax.validation.constraints.NotNull;
@@ -73,10 +75,6 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	private NetworkRepository networkRepository;
 	@Autowired
 	private NetworkService networkService;
-	@Autowired
-	private PersonFactory personFactory;
-	@Autowired
-	private UserFactory userFactory;
 	@Autowired
 	private PersonService personService;
 	@Autowired
@@ -490,6 +488,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	public PersonData getAllInitData() throws IOException {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
+		network.tenantId = TenantContextHolder.getCurrentTenantId();
 		Integer stationId = initService.getStationIdFromCookie(request);
 		PersonData personData = initService.getInitialData(baseUrl, network);
 
@@ -503,6 +502,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	public PersonData getInitialData() throws IOException {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
+		network.tenantId = TenantContextHolder.getCurrentTenantId();
 		return initService.getInitialData(baseUrl, network);
 	}
 

@@ -29,8 +29,8 @@
 														<md-checkbox aria-label="nothing" class="no-margin" ng-model="toggleSelectValue" ng-change="toggleAll(toggleSelectValue)">
 														</md-checkbox>
 													</th>
-													<th>usuários</th>
-													<th style="min-width:170px;" class="text-center display-t-c v-m no-padding">último login</th>
+													<th class="text-l-c">{{'titles.USERS' | translate}}</th>
+													<th style="min-width:170px;" class="text-center display-t-c v-m no-padding">{{'titles.LAST_LOGIN' | translate}}</th>
 													<th style="min-width:110px;" class="text-center display-t-c v-m no-padding">
 														ativar/desativar
 													</th>
@@ -452,16 +452,19 @@
           <md-radio-group ng-model="stationRole">
             <ul class="station-permissions m-t">
               <li class="m-r">
-                <md-radio-button value="READER">Leitor</md-radio-button>
+                <md-radio-button value="READER">{{'settings.users.permissions.READER' | translate}}</md-radio-button>
               </li>
               <li class="m-r">
-                <md-radio-button value="WRITER">Escritor</md-radio-button>
+                <md-radio-button value="COLABORATOR">{{'settings.users.permissions.COLABORATOR' | translate}}</md-radio-button>
               </li>
               <li class="m-r">
-                <md-radio-button value="EDITOR">Edtor</md-radio-button>
+                <md-radio-button value="WRITER">{{'settings.users.permissions.WRITER' | translate}}</md-radio-button>
               </li>
               <li class="m-r">
-                <md-radio-button value="ADMIN">Administrador</md-radio-button>
+                <md-radio-button value="EDITOR">{{'settings.users.permissions.EDITOR' | translate}}</md-radio-button>
+              </li>
+              <li class="m-r">
+                <md-radio-button value="ADMIN">{{'settings.users.permissions.ADMIN' | translate}}</md-radio-button>
               </li>
             </ul>
           </md-radio-group>

@@ -1,11 +1,12 @@
 package co.xarx.trix.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.rometools.utils.Strings;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotNull;
 		@UniqueConstraint(columnNames = {"tenantId"}),
 		@UniqueConstraint(columnNames = {"network_id"})
 })
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AuthCredential extends BaseEntity {
 
 	@Id
@@ -31,8 +33,8 @@ public class AuthCredential extends BaseEntity {
 	public String googleAppSecret;
 	public String googleAppID;
 
-	@OneToOne
-	@NotNull
+	@OneToOne(fetch = FetchType.LAZY)
+	@JsonBackReference
 	public Network network;
 
 	public boolean isFacebookLoginAllowed() {
@@ -41,5 +43,10 @@ public class AuthCredential extends BaseEntity {
 
 	public boolean isGoogleLoginAllowed() {
 		return Strings.isNotEmpty(googleAppID) && Strings.isNotEmpty(googleAppSecret);
+	}
+
+	@PreUpdate
+	public void preUpdate(){
+		System.out.println("FUCK ME IN THE ASS!!");
 	}
 }

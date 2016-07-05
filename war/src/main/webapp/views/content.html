@@ -40,12 +40,12 @@
     </ul>
     <div class="pull-right" ui-view="navbar@"></div>
     <!-- / -->
-    <ul class="nav nav-sm navbar-tool pull-right m-r-lg">
-      <li ng-if="app.person.id > 0" class="animated fadeIn dropdown ">
+    <ul class="nav nav-sm navbar-tool pull-right">
+      <li class="animated fadeIn dropdown ">
         <a md-ink-ripple class="dropdown-toggle clear" data-toggle="dropdown">
           <i class="mdi2-bell-outline i-24 p-h-sm"></i>
         </a>
-        <ul ng-if="app.isLogged()" class="dropdown-menu dropdown-menu-scale o-f-h w-xxl pull-right">
+        <ul class="dropdown-menu dropdown-menu-scale o-f-h w-xxl pull-right">
           <li md-ink-ripple ng-repeat="notification in app.notifications" class="p-sm">
             <!-- <a >
               <span ></span>
@@ -67,6 +67,68 @@
             </div>
           </li>
         </ul>
+      </li>
+      <li class="dropdown m-r-lg" ng-if="$mdMedia('gt-sm')">
+        <a href class="dropdown-toggle clear" data-toggle="dropdown" ng-click="app.signInButton(); app.closeSidebars();">
+          <div class="o-f-h pull-right md-whiteframe-z1 m-t-sm m-b-sm user-avatar rounded thumb-sm bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover text-center" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%', 'width': '46px', 'height': '46px'}">
+            <i ng-if="!app.userImageSmall" class="mdi2-account i-24" style="position: relative;top: -10px;"></i>
+          </div>
+          <span class="hidden-sm hidden-md">{{::app.person.name}}</span>
+          <b class="caret m-r"></b>
+        </a>
+        <!-- dropdown -->
+        <ul ng-if="app.isLogged()" class="dropdown-menu dropdown-menu-scale o-f-h w-lg pull-right">
+          <li>
+            <div style="margin-top: -5px;" ng-if="app.userImageUploader" class="hidden-folded bg-cover" ng-style="{'background-image': 'url(' + app.coverImageMedium + ')'}">
+              <div class="md-whiteframe-z1 m-t m-l user-avatar rounded w-64 bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}">
+                <i ng-if="!app.userImageSmall" class="mdi2-account i-40" style="top: 16%;position: relative;"></i>
+                <!-- image profile upload -->
+                <div class="profile-image-button rounded o-f-h w-64 text-center pos-abt top-0" style="background-color: rgba(0,0,0,0.7)">
+                  <i class="mdi2-pencil i-32 text-white image-edit" style="opacity: 0.92; position: relative; top: 24%"></i>
+                  <input class="image-upload" style="height: 64px;" type="file" nv-file-select="" uploader="app.userImageUploader" name="contents" accept="image/*">
+                </div>
+                <!-- /image profile upload -->
+              </div>
+              <div class="p-v-sm p-h black-grad m-t text-white">
+                <span class="block font-bold">{{app.person.name}}</span>
+                <span class="text-sm">{{app.person.email}}</span>
+              </div>
+            </div>
+          </li>
+          <li md-ink-ripple>
+            <a ng-href="/settings/post" target="_self">
+              <i class="icon mdi2-pencil icon m-r i-16 opacity-08"></i>
+              <span translate="titles.NEW_POST">Nova publicação</span>
+            </a>
+          </li>
+          <li md-ink-ripple>
+            <a ui-sref="app.bookmarks({'username': app.person.username})">
+              <i class="icon mdi-action-bookmark icon m-r i-16 opacity-08"></i>
+              <span translate="titles.BOOKMARKS">Bookmarks</span>
+            </a>
+          </li>
+          <md-divider></md-divider>
+          <li md-ink-ripple>
+            <a ng-href="/settings/profile" target="_self">
+              <i class="icon m-r i-16 mdi2-account-circle opacity-08"></i>
+              {{::('settings.aside.MY_PROFILE' | translate)}}
+            </a>
+          </li>
+          <li md-ink-ripple>
+            <a ui-sref="app.docs">
+              <i class="icon m-r i-16 mdi2-help-circle mdi opacity-08"></i>
+              {{::('titles.HELP' | translate)}}
+            </a>
+          </li>
+          <md-divider></md-divider>
+          <li md-ink-ripple>
+            <a ng-click="app.signOut();">
+              <i class="icon m-r i-16 mdi2-logout opacity-08"></i>
+              {{::('header.navbar.LOGOUT' | translate)}}
+            </a>
+          </li>
+        </ul>
+        <!-- / dropdown -->
       </li>
     </ul>
     <!-- Search form -->

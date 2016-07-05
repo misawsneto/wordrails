@@ -51,9 +51,6 @@ public class TestArtifactsFactory {
 		post.subheading = "Dummy subheading";
 		post.scheduledDate = new Date();
 		post.notify = true;
-		post.setImageCaptionText("Dummy caption");
-		post.setImageCreditsText("Dummy credits");
-		post.setImageTitleText("Dummy title");
 		return post;
 	}
 
@@ -183,8 +180,7 @@ public class TestArtifactsFactory {
 	public static NotificationView createNotification() {
 		Post post = createPost();
 		NotificationView notification = new NotificationView(post.title, post.title, "ab157cb227", false);
-		notification.type = Notification.Type.POST_ADDED.toString();
-		notification.networkId = 5;
+		notification.type = MobileNotification.Type.POST_ADDED.toString();
 		notification.post = new PostConverter(null, null).convertTo(post);
 		notification.postId = post.id;
 		notification.postTitle = post.title;

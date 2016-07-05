@@ -23,6 +23,9 @@
                 <li ng-class="{'active': settings.tab === 'trash'}">
                   <a ng-click="settings.tab = 'trash'" md-ink-ripple class="settings-items"><span translate='titles.TRASH'></span></a>
                 </li>
+                <li ng-class="{'active': settings.tab === 'unpublished'}">
+                  <a ng-click="settings.tab = 'unpublished'" md-ink-ripple class="settings-items"><span translate='titles.PENDING'></span></a>
+                </li>
               </ul>
             </div>
           </div>
@@ -236,19 +239,22 @@
         </md-tooltip>
         <i class="mdi mdi2-tag-multiple i-20 text-dark"></i>
       </md-button>
-      <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-disabled="settings.tab == 'trash'">
+      <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-disabled="settings.tab == 'trash'"
+      ng-click="showBulkMoveToDialog($event, 4);">
         <md-tooltip md-direction="left">
           {{'settings.post.TRASH_ALL' | translate}}
         </md-tooltip>
         <i class="mdi mdi2-delete-variant i-20 text-dark"></i>
       </md-button>
-      <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-disabled="settings.tab == 'drafts'">
+      <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-disabled="settings.tab == 'drafts'"
+      ng-click="showBulkMoveToDialog($event, 2);">
         <md-tooltip md-direction="left">
           {{'settings.post.DRAFT_ALL' | translate}}
         </md-tooltip>
         <i class="mdi mdi2-file-outline i-20 text-dark"></i>
       </md-button>
-      <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-disabled="settings.tab == 'publications'">
+      <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-disabled="settings.tab == 'publications'"
+      ng-click="showBulkMoveToDialog($event, 1);">
         <md-tooltip md-direction="left">
           {{'settings.post.PUBLISH_ALL' | translate}}
         </md-tooltip>
@@ -256,3 +262,24 @@
       </md-button>
     </md-fab-actions>
   </md-fab-speed-dial>
+
+
+<script  type="text/ng-template" id="bulk-move-to-dialog.html">
+  <md-dialog aria-label="change action">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+        <div class="md-dialog-content-body text-md text-center w-xxl p m-b">
+          {{'settings.profile.BULK_MOVE_TO_STATE_MSG' | translate}}
+        </div>
+
+        <div class="text-center">
+          <md-button ng-click="bulkMovePublicationToState(toState)" ng-disabled="disabled">
+            {{'titles.YES' | translate}}
+          </md-button>
+          <md-button ng-click="cancel()">
+            {{'titles.NO' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>

@@ -527,18 +527,27 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         stationRoleUpdates.admin = true;
         stationRoleUpdates.writer = true;
         stationRoleUpdates.editor = true;
+        stationRoleUpdates.colaborator = true;
       }else if(permissions == 'EDITOR'){
         stationRoleUpdates.admin = false;
         stationRoleUpdates.writer = true;
         stationRoleUpdates.editor = true;
+        stationRoleUpdates.colaborator = true;
       }else if(permissions == 'WRITER'){
         stationRoleUpdates.admin = false;
         stationRoleUpdates.editor = false;
         stationRoleUpdates.writer = true;
+        stationRoleUpdates.colaborator = true;
+      }else if(permissions == 'COLABORATOR'){
+        stationRoleUpdates.admin = false;
+        stationRoleUpdates.editor = false;
+        stationRoleUpdates.writer = false;
+        stationRoleUpdates.colaborator = true;
       }else{
         stationRoleUpdates.admin = false;
         stationRoleUpdates.editor = false;
         stationRoleUpdates.writer = false;
+        stationRoleUpdates.colaborator = false;
       }
 
       trix.updateStationRoles(stationRoleUpdates).success(function(){

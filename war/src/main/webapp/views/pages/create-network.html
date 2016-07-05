@@ -1,85 +1,39 @@
-<!--<div class="container w-xxl w-auto-xs animated fadeIn" >-->
-    <!--<div class="m-b-lg p-t-lg">
-      <div class="wrapper-sm text-center text-2x text-white text-shadow-grey font-bold">
-        Dados da rede
-      </div>
-      <form name="form" class="form-validation">
-        <div class="list-group list-group-sm">
-          <div class="list-group-item">
-            <input placeholder="Nome da rede" class="form-control p-n text-lg no-border" ng-model="createNetworkObject.name" required>
-          </div>
-          <div class="list-group-item">
-            <input placeholder="subdominio.trix.rocks" ng-focus="changeSubdomain()" class="form-control p-n text-lg no-border" ng-model="createNetworkObject.newSubdomain" required>
-          </div>
-        </div>
-        <div class="wrapper text-center text-xl text-white text-shadow-grey font-bold">
-          Dados do administrador
-        </div>
-        <div class="text-danger wrapper text-center" ng-show="errorCreating">
-          {{errorCreating}}
-        </div>
-        <div class="list-group list-group-sm">
-          <div class="list-group-item">
-            <input placeholder="Nome" class="form-control p-n text-lg no-border" ng-model="createNetworkObject.person.name" required>
-          </div>
-          <div class="list-group-item">
-            <input placeholder="Usuário" ng-focus="changePersonName()" class="form-control p-n text-lg no-border" ng-model="createNetworkObject.person.username" required>
-          </div>
-          <div class="list-group-item">
-            <input type="email" placeholder="Email" class="form-control p-n text-lg no-border" ng-model="createNetworkObject.person.email" required>
-          </div>
-          <div class="list-group-item">
-           <input type="password" placeholder="Senha" class="form-control p-n text-lg no-border" ng-model="createNetworkObject.person.password" required>
-         </div>
-       </div>
-       <div class="text-xl">
-        <button md-ink-ripple type="submit" class="md-btn md-raised btn-blue text-u-c btn-block " ng-click="app.createNetwork(createNetworkObject)">Criar</button>
-      </div>
-    </form>
-  </div>-->
-  
-  <div class="center-block w-xxl w-auto-xs p-v-md m-t-lg ">
+<div class="center-block w-xxl w-auto-xs p-v-md m-t ">
  <md-content class="md-background-hue-1 background md-whiteframe-z2">
     <md-progress-linear class="pos-abt top-0 left-0" ng-if="app.loading" md-mode="indeterminate"></md-progress-linear>
     <!-- signin -->
-    <div class="text-color m text-center">
-      <div class="m-b-md m-t-md text-md text-u-c font-500">{{'signin_signup.SIGNIN' | translate}}</div>
-      <div class="text-center">
-        <md-button class="md-fab md-mini text-white" style="background: #3B5999" aria-label="Use Android">
-          <i class="mdi2-facebook i-24 text-white"></i>
-        </md-button>
-        <md-button class="md-fab md-mini text-white" style="background: #5EA9DD" aria-label="Use Android">
-          <i class="mdi2-twitter i-24 text-white"></i>
-        </md-button>
-        <md-button class="md-fab md-mini text-white" style="background: #DC4A38" aria-label="Use Android">
-          <i class="mdi2-google-plus i-24 text-white"></i>
-        </md-button>
-        <md-button class="md-fab md-mini text-white" style="background: #0177B5" aria-label="Use Android">
-          <i class="mdi2-linkedin i-24 text-white"></i>
-        </md-button>
-      </div>
-        <div class="p-t text-md" translate="signin_signup.OR">ou</div>
-      <form name="form" ng-submit="signin(person)" class="text-md w-full">
+    <div class="text-color m-sm text-center">
+      <form name="form" ng-submit="app.createNetwork(createNetworkObject)" class="text-md w-full">
         <div class="p" style="padding-bottom: 0">
           <md-input-container class="w-full m-b-0">
+            <label for="testInput">{{'titles.NETWORK_NAME' | translate}}</label>
+            <input class="p-xs" md-autofocus type="text" ng-model="createNetworkObject.name" md-autofocus>
+          </md-input-container>
+          <md-input-container class="w-full m-b-0">
+            <label for="testInput">subdomain.trix.rocks</label>
+            <input class="p-xs" md-autofocus type="text" ng-focus="changeSubdomain()" ng-model="createNetworkObject.newSubdomain">
+          </md-input-container>
+        </div>
+        <div class="p" style="padding-bottom: 0">
+          <md-input-container class="w-full m-b-0">
+            <label for="testInput">{{'titles.NAME' | translate}}</label>
+            <input class="p-xs" md-autofocus type="text" ng-model="createNetworkObject.person.name">
+          </md-input-container>
+          <md-input-container class="w-full m-b-0 m-t-sm">
             <label for="testInput">{{'titles.USERNAME' | translate}}</label>
-            <input class="p-xs" md-autofocus type="text" id="testInput" ng-model="person.username" md-autofocus>
+            <input class="p-xs" ng-focus="changePersonName()" type="text" ng-model="createNetworkObject.person.username">
+          </md-input-container>
+          <md-input-container class="w-full m-b-0 m-t-sm">
+            <label for="testInput">{{'titles.EMAIL' | translate}}</label>
+            <input class="p-xs" type="email" ng-model="createNetworkObject.person.email">
           </md-input-container>
           <md-input-container class="w-full m-b-0 m-t-sm">
             <label for="testInput">{{'titles.PASSWORD' | translate}}</label>
-            <input class="p-xs" type="password" id="testInput" ng-model="person.password">
+            <input class="p-xs" type="password" ng-model="createNetworkObject.person.password">
           </md-input-container>
         </div>
-        <md-button type="submit" class="md-accent m-b" translate="signin_signup.SIGNIN">Sign in</md-button>
+        <md-button type="submit" class="md-accent m-b" translate="titles.CREATE_NETWORK">Create network</md-button>
       </form>
-      <div class="text-center">
-        <div >
-          <button ui-sref="access.forgot-password" class="md-btn">{{'signin_signup.FORGOT' | translate}}?</button>
-        </div>
-        <div>{{'signin_signup.NOT_HAVE_AN_ACCOUNT' | translate}}?
-        <button class="md-btn" ui-sref="access.signup" translate="signin_signup.CREATE_ACCOUNT">Create an account</button>
-        </div>
-      </div>
     </div>
   </md-content>
 </div>
