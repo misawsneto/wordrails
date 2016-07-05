@@ -77,11 +77,18 @@ angular.module('app')
               resolve: {
                 appData: function($stateParams, $q, trix){
                   var deferred = $q.defer();
-                   if(initData && initData.person.id == 0){
-                     document.location.href = '/access/signin?next=/settings';
-                   }else{
+                  var isColaboratorOnly = true
+                  initData.permissions.stationPermissions.forEach(function(perm){
+                    if(perm.write && isColaboratorOnly)
+                      isColaboratorOnly = false;
+                  })
+                  if(initData && initData.person.id == 0){
+                    document.location.href = '/access/signin?next=/settings';
+                  }else{
+                    if(isColaboratorOnly && path !== '/settings/profile')
+                      document.location.href = '/settings/profile';
                     deferred.resolve(initData);
-                   }
+                  }
                   return deferred.promise;
                 },
                 deps:load( ['/styles/home.css?' + GLOBAL_URL_HASH, '720kb.socialshare', 'infinite-scroll', 'angularFileUpload', '/scripts/services/trix.js?' + GLOBAL_URL_HASH , '/libs/theming/tinycolor/tinycolor.js?' + GLOBAL_URL_HASH , 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize', 'perfect_scrollbar', 'monospaced.elastic'] ).deps
