@@ -1,11 +1,14 @@
 package co.xarx.trix.web.rest.resource.v2;
 
 import co.xarx.trix.api.v2.StatsData;
+import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.web.rest.api.v2.V2StatisticsApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
@@ -42,7 +45,8 @@ public class V2StatisticsResource implements V2StatisticsApi {
 			return ok(popular);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("There is a problem with Stats Index").build();
+//			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("There is a problem with Stats Index").build();
+			throw new ServiceUnavailableException("There is a problem with Stats Index");
 		}
 	}
 
@@ -104,11 +108,13 @@ public class V2StatisticsResource implements V2StatisticsApi {
 	}
 
 	public Response badRequest(String fieldName){
-		return Response.status(Response.Status.BAD_REQUEST).entity(fieldName + " must be defined").build();
+//		return Response.status(Response.Status.BAD_REQUEST).entity(fieldName + " must be defined").build();
+		throw new BadRequestException(fieldName + " must be defined");
 	}
 
 	public Response notFound(String fieldName){
-		return Response.status(Response.Status.NOT_FOUND).entity(fieldName + " not found").build();
+//		return Response.status(Response.Status.NOT_FOUND).entity(fieldName + " not found").build();
+		throw new NotFoundException(fieldName + " must be defined");
 	}
 
 	public Response ok(Object object){

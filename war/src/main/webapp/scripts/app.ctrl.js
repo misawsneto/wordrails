@@ -517,6 +517,24 @@ angular.module('app')
           $scope.app.totalPending = c.totalElements;
         });
 
+        $scope.app.maxPerm = {
+          admin:false,
+          editor:false,
+          writer:false,
+          creator:false
+        };
+        $scope.app.permissions.stationPermissions.forEach(function(perm){
+          if(perm.administration && !$scope.app.maxPerm.admin){
+            $scope.app.maxPerm.admin = true;
+          } else if(perm.write && perm.moderate && !$scope.app.maxPerm.editor){
+            $scope.app.maxPerm.editor = true;
+          } else if(perm.wirte && !$scope.app.maxPerm.wirter){
+            $scope.app.maxPerm.writer = true;
+          } else if(perm.create && !$scope.app.maxPerm.create){
+            $scope.app.maxPerm.creator = true;
+          }
+        })
+
       } // end of startApp
 
       if(!appData.network){
