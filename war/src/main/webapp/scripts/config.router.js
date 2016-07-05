@@ -77,16 +77,9 @@ angular.module('app')
               resolve: {
                 appData: function($stateParams, $q, trix){
                   var deferred = $q.defer();
-                  var isColaboratorOnly = true
-                  initData.permissions.stationPermissions.forEach(function(perm){
-                    if(perm.write && isColaboratorOnly)
-                      isColaboratorOnly = false;
-                  })
                   if(initData && initData.person.id == 0){
                     document.location.href = '/access/signin?next=/settings';
                   }else{
-                    if(isColaboratorOnly && path !== '/settings/profile')
-                      document.location.href = '/settings/profile';
                     deferred.resolve(initData);
                   }
                   return deferred.promise;
@@ -272,7 +265,19 @@ angular.module('app')
                 url: '/dashboard',
                 templateUrl: '/views/pages/dashboard.html?' + GLOBAL_URL_HASH,
                 data : { title: 'Dashboard', folded: false },
-                resolve: load(['/scripts/controllers/settings/settings-dashboard.js?' + GLOBAL_URL_HASH ]),
+                resolve: {
+                  dashboard: function(){
+                    var isColaboratorOnly = true
+                    initData.permissions.stationPermissions.forEach(function(perm){
+                      if(perm.write && isColaboratorOnly)
+                        isColaboratorOnly = false;
+                    })
+                    if(isColaboratorOnly && path !== '/settings/profile')
+                      document.location.href = '/settings/profile';
+                    return true
+                  },
+                  deps: load(['/scripts/controllers/settings/settings-dashboard.js?' + GLOBAL_URL_HASH ]).deps
+                },
                 controller: 'DashboardCtrl'
               })
               .state('app.pagebuilder', {

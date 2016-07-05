@@ -75,7 +75,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
   // --- publications ----------
 
-    $scope.settings = {'tab': 'publications'}
+    $scope.settings = $scope.app.maxPerm.creator ? {'tab': 'unpublished'} : {'tab': 'publications'}
 
     $scope.dateValue = new Date();
 
@@ -144,6 +144,8 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
       return 'DRAFT';
     if($scope.settings.tab === 'trash')
       return 'TRASH';
+    if($scope.settings.tab === 'unpublished')
+      return 'UNPUBLISHED';
   }
   
   $scope.publicationsCtrl = {

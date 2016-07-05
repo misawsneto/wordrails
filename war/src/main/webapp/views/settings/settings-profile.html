@@ -99,7 +99,7 @@
     <!-- /dropdown -->
   </div>
   <div class="b-b b-light text-md font-500 text-u-c bg-white md-whiteframe-z0 m-b-md">
-    <ul class="nav nav-lines nav-md b-info">
+    <ul class="nav nav-lines nav-md b-info" ng-if="app.maxPerm.admin || app.maxPerm.editor || app.maxPerm.writer">
       <li ng-class="{'active': settings.tab == 'publications'}" md-ink-ripple ng-click="settings.tab = 'publications'">
         <a href translate='titles.PUBLISHED'></a></li>
       <li ng-class="{'active': settings.tab == 'scheduled'}" md-ink-ripple ng-click="settings.tab = 'scheduled'">
@@ -148,7 +148,7 @@
                   <div class="p-t-sm font-500">
                     <a ui-sref="app.post({'id': publication.id})" target="_blank" class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="$event.stopPropagation();" md-ink-ripple>{{'titles.EDIT' | translate}}
                     </a>
-                    <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" md-ink-ripple ng-click="app.stopPropagation($event); showMoveToDialog($event, publication)">{{'titles.MOVE_TO' | translate}}
+                    <div ng-if="app.maxPerm.admin || app.maxPerm.editor" class="font-500 text-xs text-u-c r p-xs inline o-f-h" md-ink-ripple ng-click="app.stopPropagation($event); showMoveToDialog($event, publication)">{{'titles.MOVE_TO' | translate}}
                     </div>
                   </div>
                   <div class="m-t-sm pull-right font-500 m-r-sm text-md">
