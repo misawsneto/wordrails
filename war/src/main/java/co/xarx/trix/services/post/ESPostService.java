@@ -175,13 +175,14 @@ public class ESPostService extends AbstractElasticSearchService {
 
 		if (Strings.hasText(q)) {
 			MultiMatchQueryBuilder queryText = multiMatchQuery(q)
-					.field("body", 2)
-					.field("title", 5)
+					.field("body", 4)
+					.field("title", 10)
 					.field("topper")
 					.field("subheading")
 					.field("authorName")
 					.field("authorUsername")
 					.field("terms.name")
+					.boost(2) // boost this main uery
 					.fuzziness(Fuzziness.AUTO)
 					.prefixLength(1);
 
