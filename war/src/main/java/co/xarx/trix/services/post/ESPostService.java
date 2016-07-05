@@ -205,7 +205,6 @@ public class ESPostService extends AbstractElasticSearchService {
 		applyShouldFilter(f, p.getTags(), "tags");
 		applyShouldFilter(f, p.getCategories(), "categories");
 
-
 		SearchQuery query = getSearchQuery(p, sorts, q, f);
 
 		ResultsExtractor<List<PostSearchResult>> extractor = getExtractor();
