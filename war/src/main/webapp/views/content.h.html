@@ -121,7 +121,7 @@
               </div>
             </div>
           </li>
-          <li md-ink-ripple>
+          <li md-ink-ripple ng-if="app.maxPerm.admin || app.maxPerm.editor || app.maxPerm.writer || app.maxPerm.creator">
             <a ng-href="/settings/post" target="_self">
               <i class="icon mdi2-pencil icon m-r i-16 opacity-08"></i>
               <span translate="titles.NEW_POST">Nova publicação</span>
@@ -140,7 +140,7 @@
               {{::('settings.aside.MY_PROFILE' | translate)}}
             </a>
           </li>
-          <li md-ink-ripple>
+          <li md-ink-ripple ng-if="app.maxPerm.admin || app.maxPerm.editor">
             <a ng-href="/settings" target="_self">
               <i class="icon m-r i-16 mdi2-settings opacity-08"></i>
               {{::('titles.SETTINGS' | translate)}}

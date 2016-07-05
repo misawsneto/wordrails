@@ -422,7 +422,7 @@
 			"BIOGRAPHY": "Biography",
 			"PASSWORDS_DONT_MATCH": "The password is invalido or passowrd and confirmation don't match",
 			"MOVE_TO_STATE_MSG": "Are you sure you want to move this publication and change it's state? Move to:",
-			"BULK_MOVE_TO_STATE_MSG": "Are you sure you want to move this publication and change it's state?"
+			"BULK_MOVE_TO_STATE_MSG": "Are you sure you want to move the selected publications and change there states?"
 		},
 		"bookmark": {
 			"REMOVE_CONFIRMATION_MSG": "Are you sure you want to remove this bookmark"
