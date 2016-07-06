@@ -3,6 +3,7 @@ package co.xarx.trix.services;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
+import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.StringUtil;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,10 @@ public class NetworkService {
 	private Map<String, Integer> domains; //key=domain, value=networkId
 
 	private NetworkRepository networkRepository;
-	private EmailService emailService;
 
 	@Autowired
-	public NetworkService(NetworkRepository networkRepository, EmailService emailService) {
+	public NetworkService(NetworkRepository networkRepository) {
 		this.networkRepository = networkRepository;
-		this.emailService = emailService;
 		tenantIds = Maps.newConcurrentMap();
 		domains = Maps.newConcurrentMap();
 
@@ -106,6 +105,6 @@ public class NetworkService {
 	public String getEmailTemplate() throws IOException {
 		String templateFile;
 		templateFile = "complete-subscription-email.html";
-		return emailService.loadTemplateHTML(templateFile);
+		return FileUtil.loadTemplateHTML(templateFile);
 	}
 }

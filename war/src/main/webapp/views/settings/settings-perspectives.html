@@ -47,7 +47,7 @@
                                     </md-tab-label>
                                     <md-tab-body>
                                        <md-content class="o-f-x-h">
-                                          <div class="p-sm text-center" ng-if="currentPerspective.termPerspectiveView.featuredRow.cells.length === 0">
+                                          <div class="p-sm text-center" ng-if="!currentPerspective.termPerspectiveView.featuredRow || currentPerspective.termPerspectiveView.featuredRow.cells.length === 0">
                                              <md-button class="md-accent md-fab md-mini" ng-click="showFeaturedPostsDialog($event)">
                                                 <i class="mdi2-view-carousel i-24 "></i>
                                              </md-button>

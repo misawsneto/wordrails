@@ -97,6 +97,9 @@ public class Image extends BaseEntity implements Serializable {
 		}
 	}
 
+	@Lob
+	public String externalImageUrl;
+
 	protected Image() {
 		this.sizes = new HashSet<>();
 		this.pictures = new HashSet<>();
