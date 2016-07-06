@@ -41,6 +41,7 @@
 
 </head>
 <body ng-app="app">
+  {$requestedEntityHiddenHtml}
   <div class="app" ui-view ng-controller="AppCtrl" ng-class="{'bg-cover o-f-h': $state.includes('access')}" ng-style="$state.includes('access') && app.network.splashImageHash ? app.getSplash() : null"></div>
 <!-- jQuery -->
   <script src="/libs/jquery/jquery/dist/jquery.js?${buildNumber}"></script>

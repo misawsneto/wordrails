@@ -64,7 +64,11 @@ public class PathEntityFilter implements Filter {
 			}else if(path.split("/").length == 3){
 				String parts [] = path.split("/");
 				if("home".equals(parts[2])){
-					stationHiddenHtmlBuilder(request);
+					String html = homeHiddenHtmlBuilder(request);
+					request.setAttribute("requestedEntityJson", "null");
+					request.setAttribute("requestedEntityMetas", "");
+					request.setAttribute("requestedEntityHiddenHtml", html);
+					request.setAttribute("entityType", "null");
 				}else{
 					Post post = postRepository.findBySlug(parts[2]);
 					if (post != null) {
@@ -75,6 +79,11 @@ public class PathEntityFilter implements Filter {
 					}
 
 				}
+			}else{
+				request.setAttribute("requestedEntityJson", "null");
+				request.setAttribute("requestedEntityMetas", "");
+				request.setAttribute("requestedEntityHiddenHtml", "");
+				request.setAttribute("entityType", "");
 			}
 		}
 
