@@ -185,7 +185,7 @@ public class ESPostService extends AbstractElasticSearchService {
 					.fuzziness(Fuzziness.AUTO)
 					.prefixLength(1);
 
-			mainQuery = mainQuery.must(queryText);
+			mainQuery.must(queryText);
 		}
 		return mainQuery;
 	}
