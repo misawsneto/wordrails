@@ -140,6 +140,4 @@ public class PathEntityFilter implements Filter {
 	@Override
 	public void destroy() {
 	}
-
-
 }
