@@ -24,7 +24,6 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHitField;
 import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.elasticsearch.search.highlight.HighlightField;
-import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,7 +181,7 @@ public class ESPostService extends AbstractElasticSearchService {
 					.field("authorName")
 					.field("authorUsername")
 					.field("terms.name")
-					.boost(2) // boost this main uery
+					.boost(2) // boost this main query
 					.fuzziness(Fuzziness.AUTO)
 					.prefixLength(1);
 
@@ -192,8 +191,6 @@ public class ESPostService extends AbstractElasticSearchService {
 	}
 
 	List<PostSearchResult> findIds(PostStatement p) {
-		List<FieldSortBuilder> sorts = getSorts(p.getOrders());
-
 		BoolQueryBuilder q = getBooleanQuery(p.getQuery());
 		BoolFilterBuilder f = boolFilter();
 
@@ -206,7 +203,7 @@ public class ESPostService extends AbstractElasticSearchService {
 		applyShouldFilter(f, p.getTags(), "tags");
 		applyShouldFilter(f, p.getCategories(), "categories");
 
-		SearchQuery query = getSearchQuery(p, sorts, q, f);
+		SearchQuery query = getSearchQuery(p, q, f);
 
 		ResultsExtractor<List<PostSearchResult>> extractor = getExtractor();
 
@@ -241,14 +238,12 @@ public class ESPostService extends AbstractElasticSearchService {
 			};
 	}
 
-	private SearchQuery getSearchQuery(PostStatement p, List<FieldSortBuilder> sorts, BoolQueryBuilder q, BoolFilterBuilder f) {
+	private SearchQuery getSearchQuery(PostStatement p, BoolQueryBuilder q, BoolFilterBuilder f) {
 		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
 
 		if (p.getQuery() != null && !p.getQuery().isEmpty()) {
 			nativeSearchQueryBuilder.withQuery(q);
 		}
-
-		sorts.forEach(nativeSearchQueryBuilder::withSort);
 
 		return nativeSearchQueryBuilder
 				.withFilter(f)
