@@ -234,26 +234,23 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 		return null;
 	}
 
-	@Deprecated
 	@SdkInclude
 	public String getImageLargeHash() {
-		if (featuredImage != null) return featuredImage.getLargeHash();
+		if (featuredImage != null) return featuredImage.getHashes().get("large");
 
 		return null;
 	}
 
-	@Deprecated
 	@SdkInclude
 	public String getImageMediumHash() {
-		if (featuredImage != null) return featuredImage.getMediumHash();
+		if (featuredImage != null) return featuredImage.getHashes().get("medium");
 
 		return null;
 	}
 
-	@Deprecated
 	@SdkInclude
 	public String getImageSmallHash() {
-		if (featuredImage != null) return featuredImage.getSmallHash();
+		if (featuredImage != null) return featuredImage.getHashes().get("small");
 
 		return null;
 	}

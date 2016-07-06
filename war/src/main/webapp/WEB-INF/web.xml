@@ -184,6 +184,24 @@
 	</filter>
 
 	<filter>
+		<filter-name>PathUrlFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>pathUrlFilter</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>PathEntityFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>pathEntityFilter</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
 		<filter-name>UrlRewriteFilter</filter-name>
 		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
 		<!--<init-param>
@@ -216,6 +234,13 @@
 	</filter-mapping>
 
 	<filter-mapping>
+		<filter-name>PathUrlFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
 		<filter-name>UrlRewriteFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
@@ -224,6 +249,13 @@
 		<filter-name>PersonDataFilter</filter-name>
 		<url-pattern>/index.jsp</url-pattern>
 		<url-pattern>/settings.jsp</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>PathEntityFilter</filter-name>
+		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>

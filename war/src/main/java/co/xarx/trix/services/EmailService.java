@@ -4,6 +4,7 @@ import co.xarx.trix.domain.Invitation;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.PersonValidation;
+import co.xarx.trix.util.FileUtil;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -12,7 +13,6 @@ import com.amazonaws.services.simpleemail.model.*;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +20,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -72,7 +69,7 @@ import java.util.Set;
 	}
 
 	public void validatePersonCreation(Network network, Person inviter, PersonValidation newcome) throws Exception {
-		String template = loadTemplateHTML(VALIDATION_TEMPLATE_FILENAME);
+		String template = FileUtil.loadTemplateHTML(VALIDATION_TEMPLATE_FILENAME);
 
 		String message = network.getValidationMessage();
 		Map messageScope = new HashMap<String, String>();
@@ -93,7 +90,7 @@ import java.util.Set;
 	public void sendInvitation(Network network, Invitation invitation, Person inviter, String emailTemplate){
 		String template;
 		try {
-			template = loadTemplateHTML(INVITATION_TEMPLATE_FILENAME);
+			template = FileUtil.loadTemplateHTML(INVITATION_TEMPLATE_FILENAME);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
@@ -121,7 +118,7 @@ import java.util.Set;
 	}
 
 	public void sendCredentials(Network network, Person inviter, Person invitee) throws Exception {
-		String template = loadTemplateHTML(CREDENTIALS_TEMPLATE_FILENAME);
+		String template = FileUtil.loadTemplateHTML(CREDENTIALS_TEMPLATE_FILENAME);
 
 		Map messageScope = new HashMap<String, String>();
 		messageScope.put("inviterName", inviter.getName());
@@ -140,17 +137,6 @@ import java.util.Set;
 		String subject = "Boas-vindas - " + network.name;
 
 		sendSimpleMail(invitee.email, subject, emailBody);
-	}
-
-	public String loadTemplateHTML(String filename) throws IOException {
-		try {
-			String filePath = new ClassPathResource(filename).getFile().getAbsolutePath();
-			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-			return new String(bytes, Charset.forName("UTF-8"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new IOException("Cannot load filename " + filename);
-		}
 	}
 
 	public String parseScope(Map scope, String template) throws Exception {

@@ -39,7 +39,7 @@ public class NetworkServiceTest {
 
 		when(networkRepository.findIdsAndDomain()).thenReturn(networkList);
 
-		networkService = new NetworkService(networkRepository, null);
+		networkService = new NetworkService(networkRepository);
 	}
 
 	@Test

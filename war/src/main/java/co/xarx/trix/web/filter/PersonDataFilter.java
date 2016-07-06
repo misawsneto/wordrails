@@ -54,6 +54,7 @@ public class PersonDataFilter implements Filter{
 				request.setAttribute("faviconLink", amazonCloudService.getPublicImageURL(data.network.faviconHash));
 			request.setAttribute("networkDesciption", "");
 			request.setAttribute("networkKeywords", "");
+			request.setAttribute("personDataObject", data);
 			request.setAttribute("personData", simpleMapper.writeValueAsString(data));
 			request.setAttribute("networkName", data.network.name);
 		}

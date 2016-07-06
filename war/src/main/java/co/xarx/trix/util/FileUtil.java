@@ -3,12 +3,16 @@ package co.xarx.trix.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class FileUtil {
@@ -51,6 +55,17 @@ public class FileUtil {
 		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 
 		return file;
+	}
+
+	public static String loadTemplateHTML(String filename) throws IOException {
+		try {
+			String filePath = new ClassPathResource(filename).getFile().getAbsolutePath();
+			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+			return new String(bytes, Charset.forName("UTF-8"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new IOException("Cannot load filename " + filename);
+		}
 	}
 
 	public static final String MIME_APPLICATION_ANDREW_INSET  = "application/andrew-inset";
