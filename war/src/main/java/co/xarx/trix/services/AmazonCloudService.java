@@ -47,7 +47,7 @@ public class AmazonCloudService {
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		if (tenantId == null || tenantId.isEmpty())
 			throw new OperationNotSupportedException("This request is invalid because no Tenant ID was set");
-		return "https://" + cloudfrontUrl + "/" + tenantId + "/images/" + fileName;
+		return "http://" + cloudfrontUrl + "/" + tenantId + "/images/" + fileName;
 	}
 
 	public String getPublicFileURL(String fileName, String diretory) throws IOException {
