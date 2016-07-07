@@ -89,6 +89,7 @@
 		"BOOKMARKS": "Minhas leituras",
 		"NOTIFICATION": "Notification",
 		"NOTIFICATIONS": "Notificações",
+		"PENDING_NOTIFICATIONS": "Publicações pendentes",
 		"IMAGE": "Imagem",
 		"IMAGES": "Imagens",
 		"CATEGORY_COLOR": "Cor da categoria",

@@ -104885,7 +104885,7 @@ angular.module('app')
                 controller: 'SettingsNetworkCtrl'
               })
               .state('app.publications', {
-                url: '/publications',
+                url: '/publications?tab',
                 reloadOnSearch: false,
                 templateUrl: '/views/settings/settings-publications.html?' + GLOBAL_URL_HASH,
                 data : { titleTranslate: 'titles.PUBLICATIONS', title: 'Publicações', folded: true },
@@ -106565,10 +106565,6 @@ angular.module('app')
 
         $scope.app.applyNetworkTheme();
 
-        trix.searchPosts('', null, null, 'unpublished', null, null, null, null, 0, 1).success(function(response,a,b,c){
-          $scope.app.totalPending = c.totalElements;
-        });
-
         $scope.app.maxPerm = {
           admin:false,
           editor:false,
@@ -106586,6 +106582,12 @@ angular.module('app')
             $scope.app.maxPerm.creator = true;
           }
         })
+
+        $scope.app.totalPending = 0;
+        if($scope.app.maxPerm.admin || $scope.app.maxPerm.editor)
+          trix.searchPosts('', null, null, 'unpublished', null, null, null, null, 0, 1).success(function(response,a,b,c){
+            $scope.app.totalPending = c.totalElements;
+          });
 
       } // end of startApp
 

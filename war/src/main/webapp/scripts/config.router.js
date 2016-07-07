@@ -212,7 +212,7 @@ angular.module('app')
                 controller: 'SettingsNetworkCtrl'
               })
               .state('app.publications', {
-                url: '/publications',
+                url: '/publications?tab',
                 reloadOnSearch: false,
                 templateUrl: '/views/settings/settings-publications.html?' + GLOBAL_URL_HASH,
                 data : { titleTranslate: 'titles.PUBLICATIONS', title: 'Publicações', folded: true },

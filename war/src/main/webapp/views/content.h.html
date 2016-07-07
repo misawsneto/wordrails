@@ -57,6 +57,7 @@
       </li>
       <li ng-if="app.person.id > 0 && $mdMedia('gt-sm')" class="animated fadeIn dropdown">
         <a md-ink-ripple class="dropdown-toggle clear" data-toggle="dropdown">
+          <b ng-if="app.totalPending > 0" class="md-primary-hue-1 background badge pos-abt right-0 m-r-sm m-t-sm">{{app.totalPending}}</b>
           <i class="mdi2-bell-outline i-24 p-h-sm"></i>
         </a>
         <ul ng-if="app.isLogged()" class="dropdown-menu dropdown-menu-scale o-f-h w-xxl pull-right">
@@ -79,6 +80,12 @@
               <div class="m-b">{{::('titles.NO_NOTIFICATIONS' | translate)}}</div>
               <i class="i-40 mdi2-bell-outline"></i>
             </div>
+          </li>
+          <li class="text-l-c text-center">
+            <md-divider></md-divider>
+            <a ng-href="/settings/publications?tab=unpublished" target="_self">
+              {{'titles.PENDING_NOTIFICATIONS' | translate}}: {{app.totalPending}}
+            </a>
           </li>
         </ul>
       </li>

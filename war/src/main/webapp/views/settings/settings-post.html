@@ -25,15 +25,26 @@
         <a ng-click="postPublishMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
       </div>
       <div class="w-xxl">
-	      <div class="p-xs m-b-sm m-t-sm l-h-1x text-base" ng-if="isWriter()">
-	      	{{'settings.post.menu.PUBLICATION_MSG' | translate}}
-	      </div>
-	      <div class="p-xs m-b-sm m-t-sm l-h-1x text-base" ng-if="isColaborator()">
-	      	{{'settings.post.menu.COLABORATE_MSG' | translate}}
-	      </div>
+      <div class="p-xs m-b-sm m-t-sm l-h-1x text-base" ng-if="isWriter()">
+      	{{'settings.post.menu.PUBLICATION_MSG' | translate}}
+      </div>
+      <div class="p-xs m-b-sm m-t-sm l-h-1x text-base" ng-if="isColaborator()">
+      	{{'settings.post.menu.COLABORATE_MSG' | translate}}
+      </div>
 	  		<md-button aria-label="nothing" ng-if="!app.editingPost.id || app.checkState() !== 2" class="font-bold no-margin m-b-sm" translate="titles.SAVE_AS_DRAFT" ng-click="saveAsDraft($event)">
 			</md-button>
 			<md-divider class="m-b-sm"></md-divider>
+
+			<div ng-if="!app.editingPost.id && !isColaborator()">
+				<div class="p-xs m-b-sm m-t-sm l-h-1x text-base">
+	      	{{'settings.post.menu.COLABORATE_MSG' | translate}}
+	      </div>
+				<md-button aria-label="nothing" class="font-bold no-margin m-b-sm" ng-click="colaboratePost(app.editingPost)">
+		    	{{'actions.SEND_FOR_REVIEW' | translate}}
+				</md-button>
+				<md-divider class="m-b-sm"></md-divider>
+			</div>
+			
 			<div class="block p-l-xs">
 				<span translate="titles.POST_STATE" class="inline"></span>: <span class="font-500 text-u-c">{{app.getStateText();}}</span>
 			</div>

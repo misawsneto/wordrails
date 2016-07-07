@@ -1,7 +1,7 @@
 app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$translate', '$mdSidenav', '$filter',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix , FileUploader, TRIX, cfpLoadingBar, $mdToast, $translate, $mdSidenav, $filter){
 
-		$scope.settings = {'tab': 'publications'}
+		$scope.settings = {'tab': $state.params.tab ?  $state.params.tab : 'publications'};
 
 		$scope.dateValue = new Date();
 
@@ -12,6 +12,11 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 		$scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
 
     $scope.totalPublicationsCount = 0;
+
+    if($scope.app.maxPerm.admin || $scope.app.maxPerm.editor)
+      trix.searchPosts('', null, null, 'unpublished', null, null, null, null, 0, 1).success(function(response,a,b,c){
+        $scope.app.totalPending = c.totalElements;
+      });
 
 		function buildToggler(navID) {
 	      return function() {
