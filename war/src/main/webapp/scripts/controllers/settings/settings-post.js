@@ -990,8 +990,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	    	if(($scope.app.checkState() == 2 || $scope.app.checkState() == 5) && $scope.automaticSave){
 	    		AUTO_SAVE = $timeout(function(){
 	    			var body = $scope.app.editingPost.body && $scope.app.editingPost.body ? $scope.app.editingPost.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
-	    			if(($scope.app.checkState() == 2 || $scope.app.checkState() == 5) && $scope.automaticSave && ($scope.selectedStation && $scope.app.getTermList($scope.selectedStation.termTree).length > 0) && body != "" && $scope.app.editingPost.title != null)
-	    				$scope.saveAsDraft(null, true)
+	    			if($scope.automaticSave && ($scope.selectedStation && $scope.app.getTermList($scope.selectedStation.termTree).length > 0) && body && $scope.app.editingPost.title != null)
+	    				if($scope.app.checkState() == 2)
+	    					$scope.saveAsDraft(null, true)
+	    				else if($scope.app.checkState() == 5)
+	    					$scope.colaboratePost();
 	    		},10000)
 	    	}
 	    }

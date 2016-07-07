@@ -5,7 +5,10 @@ import co.xarx.trix.domain.Post;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.persistence.*;
+import co.xarx.trix.persistence.CellRepository;
+import co.xarx.trix.persistence.CommentRepository;
+import co.xarx.trix.persistence.ESPostRepository;
+import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.post.PostService;
@@ -57,6 +60,14 @@ public class PostEventHandler {
 			}
 		}
 
+		if (post.slug == null || post.slug.isEmpty()) {
+			post.slug = StringUtil.toSlug(post.title);
+		}
+
+		if (postRepository.findBySlug(post.slug) != null) {
+			post.slug = post.slug + "-" + StringUtil.generateRandomString(6, "aA#");
+		}
+
 		handleBeforeSave(post);
 	}
 
@@ -72,10 +83,6 @@ public class PostEventHandler {
 				post.date = new Date(post.scheduledDate.getTime());
 		}
 
-		if (post.slug == null || post.slug.isEmpty()) {
-			post.slug = StringUtil.toSlug(post.title);
-		}
-
 		if(post.featuredVideo != null){
 			post.imageLandscape = false;
 			if (post.featuredImage == null) {
@@ -83,8 +90,11 @@ public class PostEventHandler {
 			}
 		}
 
-		if (postRepository.findBySlug(post.slug) != null) {
-			post.slug = post.slug + "-" + StringUtil.generateRandomString(6, "aA#");
+		if (post.slug == null || post.slug.isEmpty()) {
+			post.slug = StringUtil.toSlug(post.title);
+			if (postRepository.findBySlug(post.slug) != null) {
+				post.slug = post.slug + "-" + StringUtil.generateRandomString(6, "aA#");
+			}
 		}
 	}
 
@@ -109,8 +119,8 @@ public class PostEventHandler {
 	@HandleAfterSave
 	public void handleAfterSave(Post post) {
 		notificationCheck(post);
-		elasticSearchService.mapThenSave(post, ESPost.class);
 		auditService.saveChange(post);
+		elasticSearchService.mapThenSave(post, ESPost.class);
 	}
 
 	@HandleBeforeDelete

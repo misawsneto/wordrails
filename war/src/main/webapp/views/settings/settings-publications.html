@@ -24,7 +24,10 @@
                   <a ng-click="settings.tab = 'trash'" md-ink-ripple class="settings-items"><span translate='titles.TRASH'></span></a>
                 </li>
                 <li ng-class="{'active': settings.tab === 'unpublished'}">
-                  <a ng-click="settings.tab = 'unpublished'" md-ink-ripple class="settings-items"><span translate='titles.PENDING'></span></a>
+                  <a ng-click="settings.tab = 'unpublished'" md-ink-ripple class="settings-items">
+                    <span style="margin-top: -2px" ng-if="app.totalPending > 0" class="md-primary-hue-1 background pull-right badge badge-lg">{{app.totalPending}}</span>
+                    <span translate='titles.PENDINGS'></span>
+                  </a>
                 </li>
               </ul>
             </div>
