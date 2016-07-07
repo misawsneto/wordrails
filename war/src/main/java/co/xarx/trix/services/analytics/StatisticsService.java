@@ -9,6 +9,7 @@ import co.xarx.trix.domain.MobileDevice;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PublishedApp;
+import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
@@ -365,12 +366,14 @@ public class StatisticsService {
 		return StatsData;
 	}
 
-	public Interval getInterval(String end, String start){
+	public Interval getInterval(String end, String start) throws BadRequestException {
 		DateTime endDate = dateTimeFormatter.parseDateTime(end);
 
 		if(start != null && !start.isEmpty()){
 			DateTime startDate = dateTimeFormatter.parseDateTime(start);
-			Assert.isTrue(endDate.isAfter(startDate), "Wrong time range. 'beginnig' should be before 'date'");
+			if(!endDate.isAfter(startDate)) {
+				throw new BadRequestException("Wrong time range. 'end' must be a date after 'start'");
+			}
 			return new Interval(startDate, endDate);
 		}
 
