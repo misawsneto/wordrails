@@ -23,6 +23,7 @@ import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolFilterBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.functionscore.DecayFunctionBuilder;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -243,10 +244,13 @@ public class ESPostService extends AbstractElasticSearchService {
 		SearchRequestBuilder requestBuilder = client.prepareSearch("trix_dev").setTypes("post");
 
 		if (p.getQuery() != null && !p.getQuery().isEmpty()) {
-			FunctionScoreQueryBuilder scoreQueryBuilder = functionScoreQuery(q);
 			long now = Instant.now().getEpochSecond();
-			scoreQueryBuilder.add(ScoreFunctionBuilders.gaussDecayFunction("date", now, 8).setOffset(13).setDecay(0.3));
+  			DecayFunctionBuilder decay = ScoreFunctionBuilders
+					.gaussDecayFunction("date", now, 80)
+					.setOffset(130)
+					.setDecay(0.3);
 
+			FunctionScoreQueryBuilder scoreQueryBuilder = functionScoreQuery(q, decay);
 			requestBuilder.setQuery(scoreQueryBuilder);
 		}
 		requestBuilder.addFields("id", "body").setPostFilter(f);
