@@ -14,12 +14,17 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.persistence.jpa.jpql.Assert;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolFilterBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
+import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHitField;
 import org.elasticsearch.search.highlight.HighlightBuilder;
@@ -27,7 +32,6 @@ import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.ResultsExtractor;
@@ -51,15 +55,16 @@ public class ESPostService extends AbstractElasticSearchService {
 	private ObjectMapper objectMapper;
 	private ModelMapper modelMapper;
 	private ElasticsearchTemplate elasticsearchTemplate;
+	private Client client;
 
 	@Autowired
 	@SuppressWarnings("SpringJavaAutowiringInspection")
-	public ESPostService(ESPersonRepository esPersonRepository, ObjectMapper objectMapper,
-						 ModelMapper modelMapper, ElasticsearchTemplate elasticsearchTemplate) {
+	public ESPostService(ESPersonRepository esPersonRepository, ObjectMapper objectMapper, ModelMapper modelMapper, ElasticsearchTemplate elasticsearchTemplate, Client client) {
 		this.esPersonRepository = esPersonRepository;
 		this.objectMapper = objectMapper;
 		this.modelMapper = modelMapper;
 		this.elasticsearchTemplate = elasticsearchTemplate;
+		this.client = client;
 	}
 
 	Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
@@ -203,54 +208,49 @@ public class ESPostService extends AbstractElasticSearchService {
 		applyShouldFilter(f, p.getTags(), "tags");
 		applyShouldFilter(f, p.getCategories(), "categories");
 
-		SearchQuery query = getSearchQuery(p, q, f);
+		SearchRequestBuilder query = getSearchQuery(p, q, f);
+		SearchResponse response = query.execute().actionGet();
 
-		ResultsExtractor<List<PostSearchResult>> extractor = getExtractor();
-
-		return elasticsearchTemplate.query(query, extractor);
+		return extractResult(response);
 	}
 
-	private ResultsExtractor<List<PostSearchResult>> getExtractor() {
-		return response -> {
-				List<PostSearchResult> ids = new ArrayList<>();
-				SearchHit[] hits = response.getHits().getHits();
-				for (SearchHit hit : hits) {
-					Integer id = Integer.valueOf(hit.getId());
-					String snippet = null;
-					Map<String, HighlightField> highlights = hit.getHighlightFields();
-					if (highlights != null && highlights.get("body") != null) {
-						for (Text fragment : highlights.get("body").getFragments()) {
-							snippet = fragment.toString();
-						}
-					} else {
+	private List<PostSearchResult> extractResult(SearchResponse response) {
+		List<PostSearchResult> ids = new ArrayList<>();
 
-						Map<String, SearchHitField> fields = hit.getFields();
-						if(fields != null  && fields.size() > 0) {
-							String body = fields.get("body").getValue();
-
-							snippet = StringUtil.simpleSnippet(body);
-						}
-					}
-					ids.add(new PostSearchResult(id, snippet));
+		SearchHit[] hits = response.getHits().getHits();
+		for (SearchHit hit : hits) {
+			Integer id = Integer.valueOf(hit.getId());
+			String snippet = null;
+			Map<String, HighlightField> highlights = hit.getHighlightFields();
+			if (highlights == null || highlights.get("body") == null) {
+				Map<String, SearchHitField> fields = hit.getFields();
+				if (fields != null && fields.size() > 0) {
+					String body = fields.get("body").getValue();
+					snippet = StringUtil.simpleSnippet(body);
 				}
-
-				return ids;
-			};
-	}
-
-	private SearchQuery getSearchQuery(PostStatement p, BoolQueryBuilder q, BoolFilterBuilder f) {
-		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
-
-		if (p.getQuery() != null && !p.getQuery().isEmpty()) {
-			nativeSearchQueryBuilder.withQuery(q);
+			} else {
+				for (Text fragment : highlights.get("body").getFragments()) {
+					snippet = fragment.toString();
+				}
+			}
+			ids.add(new PostSearchResult(id, snippet));
 		}
 
-		return nativeSearchQueryBuilder
-				.withFilter(f)
-				.withFields("id")
-				.withFields("body")
-				.withPageable(new PageRequest(0, 99999999))
-				.build();
+		return ids;
+	}
+
+	private SearchRequestBuilder getSearchQuery(PostStatement p, BoolQueryBuilder q, BoolFilterBuilder f) {
+		SearchRequestBuilder requestBuilder = client.prepareSearch("trix_dev").setTypes("post");
+
+		if (p.getQuery() != null && !p.getQuery().isEmpty()) {
+			FunctionScoreQueryBuilder scoreQueryBuilder = functionScoreQuery(q);
+			long now = Instant.now().getEpochSecond();
+			scoreQueryBuilder.add(ScoreFunctionBuilders.gaussDecayFunction("date", now, 8).setOffset(13).setDecay(0.3));
+
+			requestBuilder.setQuery(scoreQueryBuilder);
+		}
+		requestBuilder.addFields("id", "body").setPostFilter(f);
+		return requestBuilder;
 	}
 
 	private void applyStateFilter(BoolFilterBuilder f, String state) {
