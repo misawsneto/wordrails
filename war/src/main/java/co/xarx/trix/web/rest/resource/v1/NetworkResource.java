@@ -111,6 +111,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	@Override
 	public Response updateTheme(ThemeView themeView){
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+		network = networkRepository.findOne(network.id);
+
 		if(themeView.primaryColors == null || themeView.primaryColors.size() < 14 ||
 			themeView.secondaryColors == null || themeView.primaryColors.size() < 14 ||
 			themeView.alertColors == null || themeView.primaryColors.size() < 14 ||

@@ -18,7 +18,7 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>,
 		QueryDslPredicateExecutor<Network> {
 
 	@RestResource(exported = true)
-	@Cacheable(value = "network")
+	@Cacheable(value = "network", key = "#p0")
 	Network findByTenantId(@Param("tenantId") String tenantId);
 
 	@RestResource(exported = false)
@@ -31,6 +31,6 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>,
 	@Override
 	@SdkExclude
 	@RestResource(exported = true)
-	@CacheEvict(value = "network")
-	<S extends Network> S save(S entity);
+	@CacheEvict(value = "network", key = "#p0.tenantId")
+	Network save(Network network);
 }
