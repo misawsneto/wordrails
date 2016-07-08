@@ -27,4 +27,5 @@ public class StationPermission implements Serializable {
 	public boolean admin;
 	public boolean editor;
 	public boolean writer;
+	public boolean creator;
 }
