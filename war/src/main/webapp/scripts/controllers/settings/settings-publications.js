@@ -294,9 +294,9 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
         if($scope.publications)
         for (var i = $scope.publications.length - 1; i >= 0; i--) {
           if($scope.publications[i].id == $scope.toMovePublication.id){
-            $scope.publications.splice(i,1);
             if($scope.publications[i].state.toLowerCase() == 'unpublished' && $scope.app.totalPending > 0)
               $scope.app.totalPending--;
+            $scope.publications.splice(i,1);
           }
         }
         $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))

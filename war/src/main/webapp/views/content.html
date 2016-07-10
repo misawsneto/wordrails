@@ -67,7 +67,7 @@
               <i class="i-40 mdi2-bell-outline"></i>
             </div>
           </li>
-          <li class="text-l-c text-center">
+          <li class="text-l-c text-center" ng-if="app.totalPending > 0">
             <md-divider></md-divider>
             <a ng-href="/settings/publications?tab=unpublished">
               {{'titles.PENDING_NOTIFICATIONS' | translate}}: {{app.totalPending}}
