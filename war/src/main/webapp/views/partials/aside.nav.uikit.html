@@ -12,7 +12,7 @@
         <span class="font-normal" translate="settings.aside.DASHBOARD">Painel de administração</span>
       </a>
     </li>
-    <li ui-sref-active="active" ng-if="app.maxPerm.creator">
+    <li ui-sref-active="active" ng-if="app.maxPerm.creator && !app.maxPerm.admin && !app.maxPerm.writer">
       <a md-ink-ripple ui-sref="app.post">
         <i class="icon mdi-editor-mode-edit i-20"></i>
         <span translate="titles.NEW_POST">Nova publicação</span>
