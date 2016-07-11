@@ -40,6 +40,7 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 	
 	@Override
 	public synchronized void intercept(RequestFacade request) {
+		request.addHeader("User-Agent", "OkHttp");
 		request.addHeader("x-username", username != null && !username.equals("wordrails") ? username : "*");
 		if (cookie != null) {
 			request.addHeader("Cookie", "JSESSIONID=" + cookie);
