@@ -254,6 +254,7 @@ public class ESPostService extends AbstractElasticSearchService {
 			requestBuilder.setQuery(scoreQueryBuilder);
 		}
 		requestBuilder.addFields("id", "body").setPostFilter(f);
+		requestBuilder.setSize(9999999);
 		return requestBuilder;
 	}
 
