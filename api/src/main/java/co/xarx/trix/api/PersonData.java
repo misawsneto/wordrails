@@ -9,7 +9,7 @@ import java.util.List;
 public class PersonData implements Serializable {
 	private static final long serialVersionUID = 2078630211043976635L;
 	public PersonDto person;
-	public NetworkData network;
+	public NetworkDto network;
 	public List<StationView> stations;
 	public StationView defaultStation;
 	public PersonPermissions personPermissions;
