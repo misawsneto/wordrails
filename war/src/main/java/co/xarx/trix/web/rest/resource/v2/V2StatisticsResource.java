@@ -27,13 +27,14 @@ public class V2StatisticsResource implements V2StatisticsApi {
 											 Long endTime,
 											 String field){
 		if(field == null || field.isEmpty()) return badRequest("field");
+		if(size == null || size == 0) size = 5;
 		Map map;
 		try {
 			map = statisticsService.findMostPopular(field, startTime, endTime, size);
 			return ok(map);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return badRequest("field");
+			return serviceUnavailable("There is a problem with the service of statistics");
 		}
 	}
 
@@ -45,8 +46,7 @@ public class V2StatisticsResource implements V2StatisticsApi {
 			return ok(popular);
 		} catch (Exception e) {
 			e.printStackTrace();
-//			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("There is a problem with Stats Index").build();
-			throw new ServiceUnavailableException("There is a problem with Stats Index");
+			return serviceUnavailable("There is a problem with the service of statistics");
 		}
 	}
 
@@ -107,14 +107,16 @@ public class V2StatisticsResource implements V2StatisticsApi {
 		return Response.status(Response.Status.OK).entity(dashboard).build();
 	}
 
+	public Response serviceUnavailable(String message){
+		throw new ServiceUnavailableException(message);
+	}
+
 	public Response badRequest(String fieldName){
-//		return Response.status(Response.Status.BAD_REQUEST).entity(fieldName + " must be defined").build();
 		throw new BadRequestException(fieldName + " must be defined");
 	}
 
 	public Response notFound(String fieldName){
-//		return Response.status(Response.Status.NOT_FOUND).entity(fieldName + " not found").build();
-		throw new NotFoundException(fieldName + " must be defined");
+		throw new NotFoundException(fieldName + " not found");
 	}
 
 	public Response ok(Object object){
