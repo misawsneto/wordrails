@@ -177,7 +177,7 @@
 			"NO_DRAFTS": "Não há rascunhos",
 			"NO_PUBLICATIONS": "Não há publicações",
 			"REGISTERD_USERS": "Usuários cadastrados",
-			"IOS_INSTALLS": "Instações iOS",
+			"IOS_INSTALLS": "Instalações iOS",
 			"ANDROID_INSTALLS": "Instalações Android",
 			"CREATE_PUBLICATION_HEADER": "Crie uma nova publicação",
 			"CREATE_PUBLICATION_DESC": "",

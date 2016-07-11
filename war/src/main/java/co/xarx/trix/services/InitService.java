@@ -58,6 +58,12 @@ public class InitService {
 	@Autowired
 	private TermConverter termConverter;
 
+	@Autowired
+	private NetworkService networkService;
+
+	@Autowired
+	private HttpServletRequest request;
+
 	public PersonData getData(PersonData personData, Integer stationId) throws IOException {
 		StationView defaultStation = getDefaultStation(personData, stationId);
 
@@ -118,12 +124,17 @@ public class InitService {
 		initData.privateCloudfrontUrl = cloudfrontUrl;
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
-		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);
+		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkData.class);
 		initData.network.logoImageId = network.getLogoImageId();
 		initData.network.loginImageId = network.getLoginImageId();
 		initData.network.splashImageId = network.getSplashImageId();
 		initData.network.faviconId = network.getFaviconId();
 		initData.network.subdomain = TenantContextHolder.getCurrentTenantId();
+
+		if(networkService.getDeviceFromRequest(request) != null && network.authCredential != null){
+			initData.network.facebookAppSecret = network.authCredential.facebookAppSecret;
+			initData.network.googleAppSecret = network.authCredential.googleAppSecret;
+		}
 
 		initData.stations = stationViews;
 		initData.personPermissions = personPermissions;
@@ -142,7 +153,6 @@ public class InitService {
 		initData.sections = menuEntries;
 
 		initData.person.links = generateSelfLinks(baseUrl + "/api/persons/" + person.id);
-		initData.network.links = generateSelfLinks(baseUrl + "/api/network/" + network.id);
 
 		Pageable pageable2 = new PageRequest(0, 100, new Sort(Sort.Direction.DESC, "id"));
 		if (initData.person != null && !initData.person.username.equals("wordrails")) {

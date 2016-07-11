@@ -3,12 +3,14 @@ package co.xarx.trix.services;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
+import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.StringUtil;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -106,5 +108,17 @@ public class NetworkService {
 		String templateFile;
 		templateFile = "complete-subscription-email.html";
 		return FileUtil.loadTemplateHTML(templateFile);
+	}
+
+	public Constants.MobilePlatform getDeviceFromRequest(HttpServletRequest request) {
+		String userAgent = request.getHeader("User-Agent");
+
+		Constants.MobilePlatform platform;
+		if ("WordRailsIOSClient".equals(userAgent))
+			return Constants.MobilePlatform.APPLE;
+		else if ("OkHttp".equals(userAgent))
+			return Constants.MobilePlatform.ANDROID;
+		else
+			return null;
 	}
 }
