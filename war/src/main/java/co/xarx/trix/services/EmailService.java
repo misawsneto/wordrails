@@ -17,7 +17,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -88,27 +87,14 @@ import java.util.Set;
 	}
 
 	public void sendInvitation(Network network, Invitation invitation, Person inviter, String emailTemplate){
-		String template;
-		try {
-			template = FileUtil.loadTemplateHTML(INVITATION_TEMPLATE_FILENAME);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
-		}
-
 		Map messageScope = new HashMap<String, String>();
 		messageScope.put("inviterName", inviter.getName());
 		messageScope.put("networkName", network.getName());
+		messageScope.put("link", "http://" + network.getRealDomain() + "/access/signup?invitation=" + invitation.hash);
 
 		String emailBody;
 		try {
-			String message = parseScope(messageScope, emailTemplate);
-
-			Map emailScope = new HashMap<String, String>();
-			emailScope.put("invitationMessage", message);
-			emailScope.put("inviteLink", "http://" + network.getRealDomain() + "/access/signup?invitation=" + invitation.hash);
-
-			emailBody = parseScope(emailScope, template);
+			emailBody = parseScope(messageScope, emailTemplate);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
