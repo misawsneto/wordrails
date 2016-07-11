@@ -188,7 +188,7 @@ public class ESPostService extends AbstractElasticSearchService {
 					.field("authorUsername")
 					.field("terms.name")
 					.boost(2) // boost this main query
-					.fuzziness(Fuzziness.AUTO)
+					.fuzziness(Fuzziness.ONE)
 					.prefixLength(1);
 
 			mainQuery.must(queryText);
