@@ -31,6 +31,7 @@ import org.elasticsearch.search.SearchHitField;
 import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -141,7 +142,7 @@ public class ESPostService extends AbstractElasticSearchService {
 		BoolQueryBuilder mainQuery = getBooleanQuery(q);
 
 		if (personId != null) {
-			mainQuery = mainQuery.must(matchQuery("authorId", personId));
+			mainQuery.must(matchQuery("authorId", personId));
 		}
 
 		if (postIds != null) {
@@ -149,7 +150,7 @@ public class ESPostService extends AbstractElasticSearchService {
 			for (Integer postId : postIds) {
 				postQuery.should(matchQuery("id", postId));
 			}
-			mainQuery = mainQuery.must(postQuery);
+			mainQuery.must(postQuery);
 		}
 
 		if (stationIds != null) {
@@ -157,16 +158,16 @@ public class ESPostService extends AbstractElasticSearchService {
 			for (Integer stationId : stationIds) {
 				stationQuery.should(matchQuery("stationId", String.valueOf(stationId)));
 			}
-			mainQuery = mainQuery.must(stationQuery);
+			mainQuery.must(stationQuery);
 		}
 
 		if (publicationType != null) {
-			mainQuery = mainQuery.must(matchQuery("state", publicationType));
+			mainQuery.must(matchQuery("state", publicationType));
 		} else if (publicationType.equalsIgnoreCase("SCHEDULED")) {
-			mainQuery = mainQuery.must(matchQuery("state", Post.STATE_PUBLISHED))
+			mainQuery.must(matchQuery("state", Post.STATE_PUBLISHED))
 					.should(rangeQuery("scheduledDate").gt(new Date()));
 		} else {
-			mainQuery = mainQuery.must(matchQuery("state", Post.STATE_PUBLISHED))
+			mainQuery.must(matchQuery("state", Post.STATE_PUBLISHED))
 					.should(matchQuery("scheduledDate", new Date(0)))
 					.should(rangeQuery("scheduledDate").lt(new Date()))
 					.minimumNumberShouldMatch(1);
@@ -243,16 +244,16 @@ public class ESPostService extends AbstractElasticSearchService {
 	private SearchRequestBuilder getSearchQuery(PostStatement p, BoolQueryBuilder q, BoolFilterBuilder f) {
 		SearchRequestBuilder requestBuilder = client.prepareSearch("trix_dev").setTypes("post");
 
-		if (p.getQuery() != null && !p.getQuery().isEmpty()) {
-			long now = Instant.now().getEpochSecond();
-  			DecayFunctionBuilder decay = ScoreFunctionBuilders
-					.gaussDecayFunction("date", now, 80)
-					.setOffset(130)
-					.setDecay(0.3);
-
-			FunctionScoreQueryBuilder scoreQueryBuilder = functionScoreQuery(q, decay);
+		if (p.getQuery() == null || p.getQuery().isEmpty()) {
+			requestBuilder.addSort("date", SortOrder.DESC);
+		} else {
+			long now = Instant.now().toEpochMilli();
+			DecayFunctionBuilder decay = ScoreFunctionBuilders.gaussDecayFunction("date", now, 80).setOffset(130).setDecay(0.3);
+			FunctionScoreQueryBuilder scoreQueryBuilder;
+			scoreQueryBuilder = functionScoreQuery(q, decay);
 			requestBuilder.setQuery(scoreQueryBuilder);
 		}
+
 		requestBuilder.addFields("id", "body").setPostFilter(f);
 		requestBuilder.setSize(9999999);
 		return requestBuilder;
