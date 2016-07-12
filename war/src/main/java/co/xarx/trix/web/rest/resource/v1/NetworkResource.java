@@ -1,10 +1,7 @@
 package co.xarx.trix.web.rest.resource.v1;
 
 import co.xarx.trix.annotation.IgnoreMultitenancy;
-import co.xarx.trix.api.PersonPermissions;
-import co.xarx.trix.api.StationPermission;
-import co.xarx.trix.api.StringResponse;
-import co.xarx.trix.api.ThemeView;
+import co.xarx.trix.api.*;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.PostEventHandler;

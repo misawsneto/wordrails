@@ -69,7 +69,7 @@ public interface NetworkApi {
 	 */
 	Response getNetworkValidationTemplate();
 
-	public class NetworkCreateDto extends Network {
+	 class NetworkCreateDto extends Network {
 		public String newSubdomain;
 		public Person person;
 	}

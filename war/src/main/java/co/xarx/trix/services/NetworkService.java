@@ -101,12 +101,12 @@ public class NetworkService {
 		Network network = networkRepository.findByTenantId(tenantId);
 
 		String template = getEmailTemplate();
-		return template.replaceAll("\\{\\{invitationTemplate}}", network.invitationMessage);
+		return template.replaceAll("\\{\\{invitationMessage}}", network.invitationMessage);
 	}
 
 	public String getEmailTemplate() throws IOException {
 		String templateFile;
-		templateFile = "complete-subscription-email.html";
+		templateFile = "invitation-template.html";
 		return FileUtil.loadTemplateHTML(templateFile);
 	}
 

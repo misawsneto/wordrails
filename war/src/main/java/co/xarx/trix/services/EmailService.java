@@ -90,15 +90,15 @@ import java.util.Set;
 		Map messageScope = new HashMap<String, String>();
 		messageScope.put("inviterName", inviter.getName());
 		messageScope.put("networkName", network.getName());
-		messageScope.put("link", "http://" + network.getRealDomain() + "/access/signup?invitation=" + invitation.hash);
+		messageScope.put("inviteLink", "http://" + network.getRealDomain() + "/access/signup?invitation=" + invitation.hash);
 
-		String emailBody;
+		String emailBody = null;
 		try {
 			emailBody = parseScope(messageScope, emailTemplate);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return;
 		}
+
 		String subject = network.name + " - Convite enviado por " + inviter.getName();
 		sendSimpleMail(invitation.email, subject, emailBody);
 	}
