@@ -19,7 +19,6 @@ public class PostDataMap extends PropertyMap<Post, PostData> {
 		}
 	}
 
-
 	@Override
 	protected void configure() {
 		map(source.getBody(), destination.getBody());

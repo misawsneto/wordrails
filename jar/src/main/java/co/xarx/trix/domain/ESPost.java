@@ -39,6 +39,7 @@ public class ESPost implements ElasticSearchEntity {
 
 	public Set<Integer> categories;
 	public Set<String> tags;
+	@Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second)
 	public Date date;
 	public String body;
 	public String topper;
