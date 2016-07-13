@@ -18,6 +18,7 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.search.SearchHit;
+import org.jcodec.common.logging.Logger;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,7 +149,11 @@ public class PersonService {
 		if(persons != null && persons.size() > 0){
 			for (Iterator<String> iterator = dto.emails.iterator(); iterator.hasNext();) {
 				String email = iterator.next();
-				persons.stream().filter(p -> p.email.equals(email)).forEach(p -> iterator.remove());
+				
+				persons.stream().filter(p -> p.email.equals(email)).forEach(p -> {
+					iterator.remove();
+					Logger.debug(email + " already is an registered user -- removing from invitees");
+				});
 			}
 		}
 
