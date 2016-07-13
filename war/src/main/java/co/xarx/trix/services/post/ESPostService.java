@@ -34,6 +34,7 @@ import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.ResultsExtractor;
@@ -58,15 +59,22 @@ public class ESPostService extends AbstractElasticSearchService {
 	private ModelMapper modelMapper;
 	private ElasticsearchTemplate elasticsearchTemplate;
 	private Client client;
+	private String esIndex;
 
 	@Autowired
 	@SuppressWarnings("SpringJavaAutowiringInspection")
-	public ESPostService(ESPersonRepository esPersonRepository, ObjectMapper objectMapper, ModelMapper modelMapper, ElasticsearchTemplate elasticsearchTemplate, Client client) {
+	public ESPostService(ESPersonRepository esPersonRepository,
+						 ObjectMapper objectMapper,
+						 ModelMapper modelMapper,
+						 ElasticsearchTemplate elasticsearchTemplate,
+						 @Value("${elasticsearch.index}")
+						 String esIndex) {
 		this.esPersonRepository = esPersonRepository;
 		this.objectMapper = objectMapper;
 		this.modelMapper = modelMapper;
 		this.elasticsearchTemplate = elasticsearchTemplate;
 		this.client = client;
+		this.esIndex = esIndex;
 	}
 
 	Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
@@ -242,7 +250,7 @@ public class ESPostService extends AbstractElasticSearchService {
 	}
 
 	private SearchRequestBuilder getSearchQuery(PostStatement p, BoolQueryBuilder q, BoolFilterBuilder f) {
-		SearchRequestBuilder requestBuilder = client.prepareSearch("trix_dev").setTypes("post");
+		SearchRequestBuilder requestBuilder = client.prepareSearch(esIndex).setTypes("post");
 
 		if (p.getQuery() == null || p.getQuery().isEmpty()) {
 			requestBuilder.addSort("date", SortOrder.DESC);
