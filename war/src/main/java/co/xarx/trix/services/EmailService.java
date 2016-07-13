@@ -13,6 +13,7 @@ import com.amazonaws.services.simpleemail.model.*;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import org.jcodec.common.logging.Logger;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -101,6 +102,7 @@ import java.util.Set;
 
 		String subject = network.name + " - Convite enviado por " + inviter.getName();
 		sendSimpleMail(invitation.email, subject, emailBody);
+		Logger.debug("Sent email to: " + invitation.email);
 	}
 
 	public void sendCredentials(Network network, Person inviter, Person invitee) throws Exception {
