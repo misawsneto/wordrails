@@ -67,6 +67,7 @@ public class ESPostService extends AbstractElasticSearchService {
 						 ObjectMapper objectMapper,
 						 ModelMapper modelMapper,
 						 ElasticsearchTemplate elasticsearchTemplate,
+						 Client client,
 						 @Value("${elasticsearch.index}")
 						 String esIndex) {
 		this.esPersonRepository = esPersonRepository;
