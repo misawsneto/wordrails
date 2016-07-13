@@ -144,7 +144,7 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 
 		String hash = null;
 
-		if(person.getImage().getExternalImageUrl() != null){
+		if(person.getImage() != null && person.getImage().getExternalImageUrl() != null){
 			response.sendRedirect(person.getImage().getExternalImageUrl());
 			return Response.ok().build();
 		}
