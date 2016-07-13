@@ -18,6 +18,7 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.search.SearchHit;
+import org.jcodec.common.logging.Logger;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,6 +168,8 @@ public class PersonService {
 		dto.emailTemplate = dto.emailTemplate.replaceAll("\\&\\#125;\\&\\#125;", "}}");
 		dto.emailTemplate = dto.emailTemplate.replaceAll("\\%7B\\%7B", "{{");
 		dto.emailTemplate = dto.emailTemplate.replaceAll("\\%7D\\%7D", "}}");
+
+		Logger.debug("Invitations are being sent!" + dto.emails.size() + " in total");
 
 		for(String email: dto.emails){
 			Invitation invitation = new Invitation(network.getRealDomain());
