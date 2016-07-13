@@ -1,5 +1,6 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.api.CellView;
 import co.xarx.trix.api.RowView;
 import co.xarx.trix.api.TermPerspectiveView;
 import co.xarx.trix.comparator.RowComparator;
@@ -109,8 +110,12 @@ public class PerspectiveService {
 		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertTo(termPerspective.splashedRow) : null);
 		termView.featuredRow = (termPerspective.featuredRow != null ? rowConverter.convertTo(termPerspective.featuredRow) : null);
 		termView.ordinaryRows = fillPostsNotPositionedInRows(termPerspective.term, rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
-		termView.homeRow = termPerspective.homeRow == null ? convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(termPerspective.taxonomyId), termPerspective.stationId, 0, Row.HOME_ROW, page, size) :
-				fillPostsNotPositionedInHomeRow(termPerspective.homeRow, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+		List<Integer> featuredIds = getFeaturedPostsFromRow(termView.featuredRow);
+		termView.homeRow = termPerspective.homeRow == null ?
+				convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(termPerspective.taxonomyId), termPerspective.stationId, 0, Row.HOME_ROW, page, size) :
+				fillPostsNotPositionedInHomeRow(termPerspective.homeRow, termPerspective.perspective.station.id,
+						featuredIds,
+						page, size, lowerLimit, upperLimit);
 		termView.homeRow.termPerspectiveId = termPerspective.id;
 		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);
 		termView.stationId = termPerspective.stationId;
@@ -120,15 +125,31 @@ public class PerspectiveService {
 		return termView;
 	}
 
-	private RowView fillPostsNotPositionedInHomeRow(Row row, Integer stationId, int page, int size, int lowerLimit, int upperLimit) {
+	private List<Integer> getFeaturedPostsFromRow(RowView featuredRow){
+		List<Integer> ids = new ArrayList<>();
+		ids.add(0);
+		if(featuredRow != null && featuredRow.cells != null && featuredRow.cells.size() > 0){
+			for (CellView cell: featuredRow.cells) {
+				if(cell.postView != null && cell.postView.postId != null)
+					ids.add(cell.postView.postId);
+			}
+		}
+		return ids;
+	}
+
+	private RowView fillPostsNotPositionedInHomeRow(Row row, Integer stationId, List<Integer> featuredIds, int page,
+													int size,
+													int lowerLimit,
+													int upperLimit) {
 		RowView rowView;
-		row.cells = fillPostsNotPositionedInHomeRows(row, stationId, page, size, lowerLimit, upperLimit);
+		row.cells = fillPostsNotPositionedInHomeRows(row, stationId, featuredIds, page, size, lowerLimit, upperLimit);
 		rowView = rowConverter.convertTo(row);
 		return rowView;
 	}
 
-	public List<Cell> fillPostsNotPositionedInHomeRows(Row row, Integer stationId, int page, int size, int lowerLimit,
-													  int	upperLimit) {
+	public List<Cell> fillPostsNotPositionedInHomeRows(Row row, Integer stationId, List<Integer> excluded, int page,
+													   int size, int lowerLimit, int	upperLimit) {
+
 		List<Cell> positionedCells = cellRepository.findCellsPositioned(row.id, lowerLimit, upperLimit);
 
 		List<Cell> cells = null;
@@ -140,7 +161,8 @@ public class PerspectiveService {
 			List<Integer> postPositionedIds = convertCellsToPostsIds(positionedCells);
 			Pageable pageable = new PageRequest(page, numberPostsNotPositioned);
 
-			if (postPositionedIds.size() > 0) {
+			if (postPositionedIds.size() > 0 || (excluded != null && excluded.size() > 0)) {
+				postPositionedIds.addAll(excluded);
 				List<Post> notPositionedPosts = (postRepository.findPostsNotPositioned(stationId, ids, postPositionedIds, pageable));
 				cells = mergePostsPositionedsNotPositioneds(row, positionedCells, notPositionedPosts, size);
 			} else {

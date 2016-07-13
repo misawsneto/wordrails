@@ -176,7 +176,10 @@ public class PerspectiveResource implements PerspectiveApi {
 					cells = perspectiveService.fillPostsNotPositionedInRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 				}else if(row.type != null && row.type.equals(Row.HOME_ROW)) {
 					rowView.type = Row.HOME_ROW;
-					cells = perspectiveService.fillPostsNotPositionedInHomeRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+					List<Integer> excluded = new ArrayList<Integer>();
+					excluded.add(0);
+					cells = perspectiveService.fillPostsNotPositionedInHomeRows(row, termPerspective.perspective
+							.station.id, excluded, page, size, lowerLimit, upperLimit);
 				}
 				Collections.sort(cells);
 				rowView.id = row.id;
@@ -206,7 +209,10 @@ public class PerspectiveResource implements PerspectiveApi {
 					cells = perspectiveService.fillPostsNotPositionedInRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 				}else if(row.type != null && row.type.equals(Row.HOME_ROW.toString())) {
 					rowView.type = Row.HOME_ROW;
-					cells = perspectiveService.fillPostsNotPositionedInHomeRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+					List<Integer> excluded = new ArrayList<Integer>();
+					excluded.add(0);
+					cells = perspectiveService.fillPostsNotPositionedInHomeRows(row, termPerspective.perspective
+							.station.id, excluded, page, size, lowerLimit, upperLimit);
 				}
 				Collections.sort(cells);
 				rowView.id = row.id;
