@@ -88,7 +88,6 @@ import java.util.Set;
 	}
 
 	public void sendInvitation(Network network, Invitation invitation, Person inviter, String emailTemplate){
-		Logger.debug("An email will be sent to: " + invitation.email);
 		Map messageScope = new HashMap<String, String>();
 		messageScope.put("inviterName", inviter.getName());
 		messageScope.put("networkName", network.getName());
@@ -101,11 +100,8 @@ import java.util.Set;
 			e.printStackTrace();
 		}
 
-		Logger.debug("Email body is ready!");
-
 		String subject = network.name + " - Convite enviado por " + inviter.getName();
 		sendSimpleMail(invitation.email, subject, emailBody);
-		Logger.debug("Sent email to: " + invitation.email);
 	}
 
 	public void sendCredentials(Network network, Person inviter, Person invitee) throws Exception {

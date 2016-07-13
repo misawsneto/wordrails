@@ -149,7 +149,11 @@ public class PersonService {
 		if(persons != null && persons.size() > 0){
 			for (Iterator<String> iterator = dto.emails.iterator(); iterator.hasNext();) {
 				String email = iterator.next();
-				persons.stream().filter(p -> p.email.equals(email)).forEach(p -> iterator.remove());
+				
+				persons.stream().filter(p -> p.email.equals(email)).forEach(p -> {
+					iterator.remove();
+					Logger.debug(email + " already is an registered user -- removing from invitees");
+				});
 			}
 		}
 
@@ -168,8 +172,6 @@ public class PersonService {
 		dto.emailTemplate = dto.emailTemplate.replaceAll("\\&\\#125;\\&\\#125;", "}}");
 		dto.emailTemplate = dto.emailTemplate.replaceAll("\\%7B\\%7B", "{{");
 		dto.emailTemplate = dto.emailTemplate.replaceAll("\\%7D\\%7D", "}}");
-
-		Logger.debug("Invitations are being sent!" + dto.emails.size() + " in total");
 
 		for(String email: dto.emails){
 			Invitation invitation = new Invitation(network.getRealDomain());
