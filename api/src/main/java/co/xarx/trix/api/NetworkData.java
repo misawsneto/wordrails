@@ -65,6 +65,18 @@ public class NetworkData {
 	public java.lang.String webFooter;
 	public java.lang.String youtubeLink;
 
+	public final java.lang.String facebookUrlRedirect = "http://demo.xarx.rocks/";
+	public final java.lang.String facebookUrlToken = "https://www.facebook.com/dialog/oauth?scope=public_profile,email&";
+	public final java.lang.String facebookUrlAuthorization = "https://graph.facebook.com/v2.3/oauth/access_token";
+
+	public final java.lang.String googleUrlRedirect = "urn:ietf:wg:oauth:2.0:oob:auto";
+	public final java.lang.String googleUrlToken = "https://www.googleapis.com/oauth2/v4/token";
+	public final java.lang.String googleUrlAuthorization = "https://accounts.google" +
+			".com/o/oauth2/v2/auth?scope=email%20profile&";
+
+	public final java.lang.String facebookUrlRevoke = "https://graph.facebook.com/v2.6/me/permissions";
+	public final java.lang.String googleUrlRevoke = "https://accounts.google.com/o/oauth2/revoke";
+
 	@Override
 	public String toString() {
 		return "[" + id + ", " + addStationRolesOnSignup + ", " + alertColors + ", " + allowSignup + ", " + allowSocialLogin + ", " + allowSponsors + ", " + appleStoreAddress + ", " + backgroundColor + ", " + backgroundColors + ", " + categoriesTaxonomyId + ", " + configured + ", " + defaultOrientationMode + ", " + defaultReadMode + ", " + domain + ", " + emailSignUpValidationEnabled + ", " + facebookAppID + ", " + facebookLink + ", " + facebookLoginAllowed + ", " + faviconHash + ", " + faviconId + ", " + flurryAppleKey + ", " + flurryKey + ", " + googleAppID + ", " + googleLoginAllowed + ", " + googlePlusLink + ", " + homeTabName + ", " + info + ", " + instagramLink + ", " + invitationMessage + ", " + linkedInLink + ", " + loginFooterMessage + ", " + loginImageHash + ", " + loginImageId + ", " + loginImageSmallHash + ", " + logoImageHash + ", " + logoImageId + ", " + mainColor + ", " + name + ", " + navbarColor + ", " + navbarSecondaryColor + ", " + networkCreationToken + ", " + newsFontSize + ", " + pinterestLink + ", " + playStoreAddress + ", " + primaryColors + ", " + primaryFont + ", " + secondaryColors + ", " + secondaryFont + ", " + splashImageHash + ", " + splashImageId + ", " + stationMenuName + ", " + subdomain + ", " + titleFontSize + ", " + trackingId + ", " + twitterLink + ", " + validationMessage + ", " + webFooter + ", " + youtubeLink + "]";
