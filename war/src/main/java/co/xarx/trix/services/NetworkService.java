@@ -114,7 +114,7 @@ public class NetworkService {
 		String userAgent = request.getHeader("User-Agent");
 
 		Constants.MobilePlatform platform;
-		if ("WordRailsIOSClient".contains(userAgent))
+		if (userAgent != null && userAgent.contains("WordRailsIOSClient"))
 			return Constants.MobilePlatform.APPLE;
 		else if ("OkHttp".contains(userAgent))
 			return Constants.MobilePlatform.ANDROID;
