@@ -16,6 +16,21 @@ app.controller('AppSigninCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 				$scope.app.invalidCredentials = true;
 			})
 		}
+
+		$scope.signup = function(person){
+	        $scope.app.loading = true;
+	        $scope.app.invalidSignup = false;
+	        $scope.app.userExists = false;
+	        trix.createPerson(person).success(function(){
+	          $scope.signin(person);
+	        }).error(function(data, status, headers, config){
+	        	$scope.app.loading = false;
+	          if(status == 409){
+            	$scope.app.userExists = true;
+	          }else
+	            $scope.app.invalidSignup = true
+	        });
+      	}
 }]);
 
 app.controller('AppSignupCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$interval', '$mdSidenav', '$translate', '$filter', '$localStorage',

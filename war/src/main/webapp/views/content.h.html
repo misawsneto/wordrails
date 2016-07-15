@@ -271,6 +271,12 @@
     <div ng-if="app.invalidCredentials" class="animated5x fadeIn md-warn-hue-1 background m-b-sm m-t-xs p-sm">
       {{::('messages.INVALID_CREDENTIALS' | translate)}}
     </div>
+    <div ng-if="app.invalidSignup" class="animated5x fadeIn md-warn-hue-1 background m-b-sm p-sm">
+      {{'messages.INVALID_SIGNUP' | translate}}
+    </div>
+    <div ng-if="app.userExists" class="animated5x fadeIn md-warn-hue-1 background m-b-sm p-sm">
+      {{'messages.USER_ALREADY_EXISTS' | translate}}
+    </div>
     <md-progress-linear class="pos-abt top-0 left-0" ng-if="app.loading" md-mode="indeterminate"></md-progress-linear>
     <!-- signin -->
     <div class="text-color m text-center" ng-if="app.signState !== 'signup' && app.signState !== 'forgot'">
@@ -333,7 +339,7 @@
           </md-input-container>
           <md-input-container class="w-full m-b-0 m-t-sm">
             <label for="testInput">{{::('titles.PASSWORD' | translate)}}</label>
-            <input type="text" id="testInput" ng-model="person.password">
+            <input type="password" id="testInput" ng-model="person.password">
           </md-input-container>
         </div>
         <md-button type="submit" class="md-accent m-b" translate="signin_signup.SIGNUP"></md-button>

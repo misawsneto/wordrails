@@ -435,6 +435,8 @@
 		"network":{
 			"NO_LANGUAGE": "Language is not available"
 		},
-		"INVALID_CREDENTIALS": "Invalid credentials. Please try again."
+		"INVALID_CREDENTIALS": "Invalid credentials. Please try again.",
+		"INVALID_SIGNUP": "Invalid data. Try again.",
+		"USER_ALREADY_EXISTS": "User already exists. Try again."
 	}
 }
