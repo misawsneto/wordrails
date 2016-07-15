@@ -1,4 +1,4 @@
-/* perfect-scrollbar v0.6.11 */
+/* perfect-scrollbar v0.6.12 */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
@@ -611,7 +611,7 @@ function bindKeyboardHandler(element, i) {
   }
 
   i.event.bind(i.ownerDocument, 'keydown', function (e) {
-    if (e.isDefaultPrevented && e.isDefaultPrevented()) {
+    if ((e.isDefaultPrevented && e.isDefaultPrevented()) || e.defaultPrevented) {
       return;
     }
 
@@ -759,7 +759,7 @@ function bindMouseWheelHandler(element, i) {
   }
 
   function shouldBeConsumedByChild(deltaX, deltaY) {
-    var child = element.querySelector('textarea:hover, .ps-child:hover');
+    var child = element.querySelector('textarea:hover, select[multiple]:hover, .ps-child:hover');
     if (child) {
       if (child.tagName !== 'TEXTAREA' && !window.getComputedStyle(child).overflow.match(/(scroll|auto)/)) {
         return false;

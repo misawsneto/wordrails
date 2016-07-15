@@ -1271,7 +1271,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 				$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
 				$mdDialog.cancel();
 			})
-			$scope.persisting = false;
 		}// end persisting
 	}
 
@@ -1293,7 +1292,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if(!$scope.persisting){
 			$scope.persisting = true;
 			trix.postPost(post).success(function(response){
-
+				$scope.persisting = false;
 				$scope.app.editingPost = response;
 				$scope.loadPostData();
 				$scope.app.postObjectChanged = false;
