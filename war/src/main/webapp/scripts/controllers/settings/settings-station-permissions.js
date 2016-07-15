@@ -219,6 +219,107 @@ trix.getStationPermission(station.id).success(function(permissions){
     	}
     }
 
+    var showNoPersonSelectedDialog = function(event){
+    $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'no-person-selected-dialog.html',
+        targetEvent: event,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+    });
+  }
+
+  $scope.openNoPersonSelected = function(ev){
+      $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+          closeTo: {
+            bottom: 1500
+          },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'confirm_no_person_selected.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+      });
+    }
+
+    // ---------- add user funcs ----------
+    $scope.showAddUserDialog = function(event){
+      $scope.addingPerson = null;
+       // show term alert
+      $mdDialog.show({
+        scope: $scope,        // use parent scope in template
+        closeTo: {
+          bottom: 1500
+        },
+        preserveScope: true, // do not forget this if use parent scope
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'add-profile-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+    }
+
+    $scope.addingPerson = null;
+    $scope.createPerson = function(){
+      if(!$scope.addingPerson || !$scope.addingPerson.name || !$scope.addingPerson.name.trim() ||
+        !$scope.addingPerson.username || !$scope.addingPerson.username.trim() ||
+        !$scope.addingPerson.email || !$scope.addingPerson.email.trim()){
+
+        $scope.app.showErrorToast($filter('translate')('settings.users.REQUIRED_FIELDS'))
+        return;
+      }
+
+      if($scope.addingPerson.password && $scope.addingPerson.password.trim() && ($scope.newPassword !== $scope.newPasswordConfirm)){
+        $scope.app.showSimpleDialog($filter('translate')('settings.profile.PASSWORDS_DONT_MATCH') + "")
+        return;
+      }
+
+      trix.createPerson($scope.addingPerson).success(function(response){
+        $mdDialog.cancel();
+        $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+        $scope.personsCount++;
+        $scope.allLoaded = false;
+        if($scope.persons.length < 20 || $scope.persons.length%20 > 0){
+          trix.getPerson(response.id, 'personProjection').success(function(p){
+            $scope.persons.push(p)
+          })
+        }
+        $scope.addingPerson = null;
+      }).error(function(data, status, headers, config){
+        if(status == 409){
+          if(data.message.indexOf('username') > -1)
+            $scope.app.showErrorToast($filter('translate')('settings.users.USERNAME_IN_USE'))
+          if(data.message.indexOf('email') > -1)
+            $scope.app.showErrorToast($filter('translate')('settings.users.EMAIL_IN_USE'))
+        }else{
+          $scope.app.showErrorToast('Dados inválidos. Tente novamente')
+          $mdDialog.cancel();
+          $scope.addingPerson = null;
+        }
+        
+      });
+    }
+
+
 var settingsStationPermissionsCtrl = $scope;
 
 }]);
