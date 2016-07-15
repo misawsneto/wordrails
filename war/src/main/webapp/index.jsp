@@ -40,7 +40,7 @@
   <base href="/">
 
 </head>
-<body ng-app="app">
+<body ng-app="app" ng-class="{'hide': app.themeLoaded}">
   ${requestedEntityHiddenHtml}
   <div class="app" ui-view ng-controller="AppCtrl" ng-class="{'bg-cover o-f-h': $state.includes('access')}" ng-style="$state.includes('access') && app.network.splashImageHash ? app.getSplash() : null"></div>
 <!-- jQuery -->
