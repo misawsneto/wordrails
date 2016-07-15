@@ -23,7 +23,7 @@ import java.util.Set;
 @JsonIgnoreProperties(value = {
 		"logoHash", "logoMediumHash"
 }, allowGetters = true, ignoreUnknown = true)
-public class Station extends BaseEntity implements Serializable {
+public class Station extends BaseEntity implements Serializable, AnalyticsEntity {
 	public static final String RESTRICTED = "RESTRICTED";
 	public static final String RESTRICTED_TO_NETWORKS = "RESTRICTED_TO_NETWORKS";
 	public static final String UNRESTRICTED = "UNRESTRICTED";

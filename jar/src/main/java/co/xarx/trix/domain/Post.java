@@ -23,7 +23,7 @@ import java.util.Set;
 @JsonIgnoreProperties(value = {
 		"imageHash", "imageLargeHash", "imageMediumHash", "imageSmallHash"
 }, allowGetters = true, ignoreUnknown = true)
-public class Post extends BaseEntity implements Serializable, ElasticSearchEntity {
+public class Post extends BaseEntity implements Serializable, ElasticSearchEntity, AnalyticsEntity {
 
 	public static final String STATE_DRAFT = "DRAFT";
 	public static final String STATE_NO_AUTHOR = "NOAUTHOR";
