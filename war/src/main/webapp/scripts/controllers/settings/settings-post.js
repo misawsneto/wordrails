@@ -1253,20 +1253,25 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			});
 			return;
 		}
-		
-		trix.putPost(post).success(function(response){
-			$scope.app.showSuccessToast($filter('translate')('settings.post.UPDATE_SUCCESS'));
-			$scope.app.editingPost.id = response;
-			$scope.app.editingPost.state = post.state;
-			// $scope.loadPostData();
-			$scope.app.postObjectChanged = false;
-			// $state.transitionTo('app.post', {'id': $scope.app.editingPost.id}, {reload: false, inherit: false, notify: false});
-			$mdDialog.cancel();
-			loadVersions($scope.app.editingPost.id);
-		}).error(function(){
-			$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
-			$mdDialog.cancel();
-		})
+
+		if(!$scope.persisting){
+			$scope.persisting = true;
+			trix.putPost(post).success(function(response){
+				$scope.persisting = false;
+				$scope.app.showSuccessToast($filter('translate')('settings.post.UPDATE_SUCCESS'));
+				$scope.app.editingPost.id = response;
+				$scope.app.editingPost.state = post.state;
+				// $scope.loadPostData();
+				$scope.app.postObjectChanged = false;
+				// $state.transitionTo('app.post', {'id': $scope.app.editingPost.id}, {reload: false, inherit: false, notify: false});
+				$mdDialog.cancel();
+				loadVersions($scope.app.editingPost.id);
+			}).error(function(){
+				$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
+				$mdDialog.cancel();
+			})
+			$scope.persisting = false;
+		}// end persisting
 	}
 
 	$scope.postPost = function(originalPost){
@@ -1284,23 +1289,26 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			return;
 		}
 
-		trix.postPost(post).success(function(response){
+		if(!$scope.persisting){
+			$scope.persisting = true;
+			trix.postPost(post).success(function(response){
 
-			$scope.app.editingPost = response;
-			$scope.loadPostData();
-			$scope.app.postObjectChanged = false;
-			$state.transitionTo('app.post', {'id': $scope.app.editingPost.id}, {reload: false, inherit: false, notify: false});
-			$mdDialog.cancel();
-			if($scope.app.checkState() == 2 && $scope.app.editingPost.state)
-				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISHED_AS_DRAFT'));
-			else if($scope.app.checkState() == 3 && $scope.app.editingPost.state)
-				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SCHEDULED'));
-			else
-				$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
-		}).error(function(){
-			$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
-			$mdDialog.cancel();
-		})
+				$scope.app.editingPost = response;
+				$scope.loadPostData();
+				$scope.app.postObjectChanged = false;
+				$state.transitionTo('app.post', {'id': $scope.app.editingPost.id}, {reload: false, inherit: false, notify: false});
+				$mdDialog.cancel();
+				if($scope.app.checkState() == 2 && $scope.app.editingPost.state)
+					$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISHED_AS_DRAFT'));
+				else if($scope.app.checkState() == 3 && $scope.app.editingPost.state)
+					$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SCHEDULED'));
+				else
+					$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
+			}).error(function(){
+				$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
+				$mdDialog.cancel();
+			})
+		}
 	}
 
 	var checkPost = function(originalPost){
