@@ -1267,6 +1267,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 				$mdDialog.cancel();
 				loadVersions($scope.app.editingPost.id);
 			}).error(function(){
+				$scope.persisting = false;
 				$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
 				$mdDialog.cancel();
 			})
@@ -1305,6 +1306,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 				else
 					$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
 			}).error(function(){
+				$scope.persisting = false;
 				$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
 				$mdDialog.cancel();
 			})
