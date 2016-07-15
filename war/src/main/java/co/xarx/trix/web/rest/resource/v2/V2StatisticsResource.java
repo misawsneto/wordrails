@@ -4,6 +4,7 @@ import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.web.rest.api.v2.V2StatisticsApi;
+import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +43,8 @@ public class V2StatisticsResource implements V2StatisticsApi {
 	@Override
 	public Response getPopularNetworks(Integer page, Integer size){
 		Map popular;
+		Interval interval = new Interval(Instant.now(), );
+
 		try {
 			popular = statisticsService.getPorpularNetworks();
 			return ok(popular);
@@ -54,28 +58,28 @@ public class V2StatisticsResource implements V2StatisticsApi {
 	public Response postStats(String end, String start, Integer postId) throws IOException {
 		if(end == null || end.isEmpty()) badRequest("end");
 
-		StatsData statsData = statisticsService.postStats(end, start, postId);
+		StatsData statsData = statisticsService.getPostStats(end, start, postId);
 		return ok(statsData);
 	}
 
 	@Override
 	public Response authorStats(String end, String start, Integer authorId) throws IOException {
 		if (end == null || end.isEmpty()) badRequest("end");
-		StatsData statsData = statisticsService.authorStats(end, start, authorId);
+		StatsData statsData = statisticsService.getAuthorStats(end, start, authorId);
 		return ok(statsData);
 	}
 
 	@Override
 	public Response networkStats(String end, String start) throws IOException {
 		if (end == null || end.isEmpty()) badRequest("end");
-		StatsData networkData = statisticsService.networkStats(end, start);
+		StatsData networkData = statisticsService.getNetworkStats(end, start);
 		return ok(networkData);
 	}
 
 	@Override
 	public Response stationStats(String end, String start, Integer stationId) throws IOException {
 		if (end == null || end.isEmpty()) badRequest("end");
-		StatsData stationData = statisticsService.stationStats(end, start, stationId);
+		StatsData stationData = statisticsService.getStationStats(end, start, stationId);
 		return ok(stationData);
 	}
 

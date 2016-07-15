@@ -22,4 +22,5 @@ public class StatsData implements Serializable {
 	public StoreStatsData iosStore;
 	public StoreStatsData androidStore;
 	public Map<String, Integer> fileSpace;
+	public Map<String, Integer> stats; // atempt to remove generalStatsJson from this class
 }

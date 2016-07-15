@@ -149,10 +149,10 @@ public class PersonService {
 		if(persons != null && persons.size() > 0){
 			for (Iterator<String> iterator = dto.emails.iterator(); iterator.hasNext();) {
 				String email = iterator.next();
-				
+
 				persons.stream().filter(p -> p.email.equals(email)).forEach(p -> {
 					iterator.remove();
-					Logger.debug(email + " already is an registered user -- removing from invitees");
+					Logger.debug(email + " already is a registered user -- removing from invitees");
 				});
 			}
 		}

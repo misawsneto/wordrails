@@ -525,7 +525,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			Person person = authProvider.getLoggedPerson();
 			return statisticsService.personStats(date, person.getId(), null);
 		} else {
-			return statisticsService.postStats(date, postId, null);
+			return statisticsService.getPostStats(date, postId, null);
 		}
 	}
 

@@ -47,7 +47,6 @@ public class V2CommentsResource extends AbstractResource implements V2CommentsAp
 
 		ImmutablePage<CommentData> pageOfData = commentSearchService.search(params, page, size);
 
-
 		Set<String> allEmbeds = Sets.newHashSet("author");
 		super.removeNotEmbeddedData(embeds, pageOfData.items(), CommentData.class, allEmbeds);
 
