@@ -1276,7 +1276,7 @@ angular.module('app')
             url: '/signup',
             templateUrl: '/views/pages/signup.html?' + GLOBAL_URL_HASH,
             resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
-            controller: 'AppSignupCtrl'
+            controller: 'AppSigninCtrl'
           })
           .state('access.forgot-password', {
             url: '/forgot-password',

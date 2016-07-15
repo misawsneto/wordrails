@@ -86,6 +86,9 @@ public class PersonService {
 	}
 
 	public Person createPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException, UserAlreadyExistsException {
+		if (dto.password == null || dto.password.isEmpty())
+			dto.password = StringUtil.generateRandomString(6, "aA#");
+
 		User newUser = userFactory.create(dto.username, dto.password);
 		Person newPerson = personFactory.create(dto.name, dto.email, newUser);
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
@@ -103,7 +106,8 @@ public class PersonService {
 	}
 
 	public Person addPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException, UserAlreadyExistsException {
-		dto.password = StringUtil.generateRandomString(6, "aA#");
+		if(dto.password == null || dto.password.isEmpty())
+			dto.password = StringUtil.generateRandomString(6, "aA#");
 
 		User newUser = userFactory.create(dto.username, dto.password);
 		Person newPerson = personFactory.create(dto.name, dto.email, newUser);
@@ -118,7 +122,7 @@ public class PersonService {
 	}
 
 	public Person validateEmail(String hash) throws BadRequestException {
-		PersonValidation validation = personValidationRepository.findByHash(hash);
+		PersonValidation validation = personValidationRepository.findByValidationHash(hash);
 
 		if(validation == null && validation.getPerson() != null){
 			return null;

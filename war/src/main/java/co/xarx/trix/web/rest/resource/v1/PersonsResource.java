@@ -332,7 +332,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
 		} catch (PersonAlreadyExistsException e) {
 			e.printStackTrace();
-			return Response.status(Status.CONFLICT).entity("Email already used by another user").build();
+			throw new ConflictException("Email already used by another user");
 		} catch (UserAlreadyExistsException e) {
 			e.printStackTrace();
 			return Response.status(Status.CONFLICT).entity("Username already used by another user").build();
@@ -346,10 +346,10 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
 		} catch (PersonAlreadyExistsException e) {
 			e.printStackTrace();
-			return Response.status(Status.CONFLICT).entity("Email already used by another user").build();
+			throw new ConflictException("Email already used by another user");
 		} catch (UserAlreadyExistsException e) {
 			e.printStackTrace();
-			return Response.status(Status.CONFLICT).entity("Username already used by another user").build();
+			throw new ConflictException("Username already used by another user");
 		}
 	}
 
@@ -360,10 +360,10 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
 		} catch (PersonAlreadyExistsException e) {
 			e.printStackTrace();
-			return Response.status(Status.CONFLICT).build();
+			throw new ConflictException("PersonAlreadyExistsException");
 		} catch (UserAlreadyExistsException e) {
 			e.printStackTrace();
-			return Response.status(Status.CONFLICT).entity("Username already used by another user").build();
+			return Response.status(Status.CONFLICT).entity("UserAlreadyExistsException").build();
 		}
 	}
 
@@ -405,10 +405,6 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 		List<Person> persons = personRepository.findPersonsByIds(personIds);
 
 		if (persons != null && persons.size() > 0) {
-//			for (Person person : persons) {
-//				if (!person.user.getTenantId().equals(network.getTenantId())) return Response.status(Status.UNAUTHORIZED).build();
-//			}
-
 			if (person.networkAdmin) {
 				for (Person p : persons) {
 					personEventHandler.handleBeforeDelete(p);

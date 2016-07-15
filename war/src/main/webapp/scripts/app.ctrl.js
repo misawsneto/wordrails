@@ -929,9 +929,11 @@ angular.module('app')
         })
       }
 
-      $scope.app.invalidCredentials = false;
       $scope.app.signIn = function(person, goToHome){
         $scope.app.loading = true;
+        $scope.app.invalidCredentials = false;
+        $scope.app.invalidSignup = false
+        $scope.app.userExists = false;
         trix.login(person.username, person.password).success(function(){
           trix.allInitData().success(function(response){
             appData = initData = response;
@@ -945,6 +947,22 @@ angular.module('app')
         }).error(function(){
           $scope.app.loading = false;
           $scope.app.invalidCredentials = true;
+        });
+      }
+
+      $scope.app.signUp = function(person, goToHome){
+        $scope.app.loading = true;
+        $scope.app.invalidCredentials = false;
+        $scope.app.invalidSignup = false
+        $scope.app.userExists = false;
+        trix.createPerson(person).success(function(){
+          $scope.app.signIn(person, goToHome);
+        }).error(function(data, status, headers, config){
+          $scope.app.loading = false;
+          if(status == 409){
+            $scope.app.userExists = true;
+          }else
+            $scope.app.invalidSignup = true
         });
       }
 
@@ -1385,10 +1403,10 @@ angular.module('app')
       ] 
       $scope.app.getNotification = function(){
         $scope.app.loadingNotifications = true;
-        trix.searchNotifications(null, $scope.page, $scope.size).success(function(response){
-          $scope.app.loadingNotifications = false;
+        // trix.searchNotifications(null, $scope.page, $scope.size).success(function(response){
+        //   $scope.app.loadingNotifications = false;
 
-        })
+        // })
       }
 
       $scope.app.getNotification();
