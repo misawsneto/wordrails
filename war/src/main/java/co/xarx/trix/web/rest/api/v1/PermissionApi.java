@@ -1,7 +1,6 @@
 package co.xarx.trix.web.rest.api.v1;
 
 import co.xarx.trix.api.StationRolesUpdate;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.*;
@@ -16,12 +15,12 @@ public interface PermissionApi {
 	@PUT
 	@Path("/stations/update")
 	@Transactional
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response updateStationsPermissions(StationRolesUpdate dto);
 
 	@POST
 	@Path("/stations/clean")
 	@Transactional
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response cleanStationsPermissions(StationRolesUpdate dto);
 }

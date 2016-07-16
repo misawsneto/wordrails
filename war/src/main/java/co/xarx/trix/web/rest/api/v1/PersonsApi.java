@@ -129,7 +129,7 @@ public interface PersonsApi {
 
 	@POST
 	@Path("/create")
-	Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException;
+	Response create(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException;
 
 	@POST
 	@Path("/create/{inviteHash}")

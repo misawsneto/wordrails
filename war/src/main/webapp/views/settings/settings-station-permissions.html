@@ -107,12 +107,18 @@
 	    </md-button>
 	  </md-fab-trigger>
 	  <md-fab-actions>
-	    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showAddUserDialog($event)">
-	    	<md-tooltip md-direction="left">
-	      	{{'settings.users.ADD_USERS' | translate}}
-	  		</md-tooltip>
-	    	<i class="mdi i-20 mdi2-plus text-dark"></i>
-	    </md-button>
+      <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showAddUserDialog($event)">
+        <md-tooltip md-direction="left">
+          {{'settings.users.ADD_USERS' | translate}}
+        </md-tooltip>
+        <i class="mdi i-20 mdi2-account-plus text-dark"></i>
+      </md-button>
+      <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showAddUserDialog($event)">
+        <md-tooltip md-direction="left">
+          {{'settings.users.ADD_USERS' | translate}}
+        </md-tooltip>
+        <i class="mdi i-20 mdi2-key-plus text-dark"></i>
+      </md-button>
 	    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showBulkChangePermissions($event)">
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.PERMISSIONS_OF_ALL_SELECTED' | translate}}
@@ -486,28 +492,50 @@
 
 
 <script type="text/ng-template" id="add-profile-dialog.html">
+    <form ng-submit="createPerson(addingPerson)">
   <md-dialog-content layout="row" layout-wrap>
-    <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center w-lg" layout="column">
-      <div class="w-full">
+      <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center w-lg" layout="column">
+        <div class="w-full">
+          <div class="text-center p w-full" translate="titles.ADD_PERSON"></div>
+          <div class="text-center p p-t-lg w-full m-t-lg">
+            <i class="mdi mdi2-account text-4x"></i>
+          </div>
 
-        <div class="text-center p w-full" translate="titles.ADD_PERSON"></div>
-
-        <div class="text-center p p-t-lg w-full m-t-lg">
-          <i class="mdi mdi2-account text-4x"></i>
+          <div class="pos-abt bottom-0 text-center w-full p-t p-b">
+            <md-button aria-label="nothing" ng-click="cancel()" class="m-0">
+              {{'titles.CANCEL' | translate}}
+            </md-button>
+            <md-button type="submit" aria-label="nothing" ng-disabled="disabled" class="m-0">
+              {{'titles.SAVE' | translate}}
+            </md-button>
+          </div>
         </div>
-
-        <div class="pos-abt bottom-0 text-center w-full p-t p-b">
-          <md-button aria-label="nothing" ng-click="cancel()" class="m-0">
-            {{'titles.CANCEL' | translate}}
-          </md-button>
-          <md-button aria-label="nothing" ng-click="createPerson(addingPerson)" ng-disabled="disabled" class="m-0">
-            {{'titles.SAVE' | translate}}
-          </md-button>
-        </div>
-      </div>
-    </md-toolbar>
-    <div class="p w-x col-400 scrollable md-background-hue-1 background">
+      </md-toolbar>
+      <div class="p w-400 col-400 scrollable md-background-hue-1 background">
         <div class="pos-rlt p">
+          {{'titles.PERMISSIONS' | translate}}:
+          <md-radio-group ng-model="stationRole">
+            <ul class="station-permissions m-t">
+              <li class="m-r" style="display: inline-block;">
+                <md-radio-button value="READER">{{'settings.users.permissions.READER' | translate}}</md-radio-button>
+              </li>
+              <li class="m-r" style="display: inline-block;">
+                <md-radio-button value="COLABORATOR">{{'settings.users.permissions.COLABORATOR' | translate}}</md-radio-button>
+              </li>
+              <li class="m-r" style="display: inline-block;">
+                <md-radio-button value="WRITER">{{'settings.users.permissions.WRITER' | translate}}</md-radio-button>
+              </li>
+              <li class="m-r" style="display: inline-block;">
+                <md-radio-button value="EDITOR">{{'settings.users.permissions.EDITOR' | translate}}</md-radio-button>
+              </li>
+              <li class="m-r" style="display: inline-block;">
+                <md-radio-button value="ADMIN">{{'settings.users.permissions.ADMIN' | translate}}</md-radio-button>
+              </li>
+            </ul>
+          </md-radio-group>
+
+          <md-divider class="m-b-md"></md-divider>
+
           <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.NAME' | translate}}</label>
@@ -523,7 +551,7 @@
           <div >
           <md-input-container class="w-xxl m-b-0">
             <label for="testInput">{{'settings.profile.EMAIL' | translate}}</label>
-            <input type="text" id="testInput" ng-model="addingPerson.email" >
+            <input type="email" id="testInput" ng-model="addingPerson.email" >
           </md-input-container>
           </div>
           <div >
@@ -547,6 +575,6 @@
           </div>
         </div>
       </div>
-    </div>
   </md-dialog-content>
+    </form>
 </script>

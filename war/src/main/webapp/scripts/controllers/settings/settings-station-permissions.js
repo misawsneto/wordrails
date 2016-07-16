@@ -278,6 +278,9 @@ trix.getStationPermission(station.id).success(function(permissions){
       })
     }
 
+
+    $scope.stationRole = 'READER';
+
     $scope.addingPerson = null;
     $scope.createPerson = function(){
       if(!$scope.addingPerson || !$scope.addingPerson.name || !$scope.addingPerson.name.trim() ||
@@ -298,27 +301,68 @@ trix.getStationPermission(station.id).success(function(permissions){
         $scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
         $scope.personsCount++;
         $scope.allLoaded = false;
-        if($scope.persons.length < 20 || $scope.persons.length%20 > 0){
-          trix.getPerson(response.id, 'personProjection').success(function(p){
-            $scope.persons.push(p)
-          })
-        }
+        applyPermissions($scope.stationRole)
         $scope.addingPerson = null;
       }).error(function(data, status, headers, config){
         if(status == 409){
-          if(data.message.indexOf('username') > -1)
+          if(data.message && data.message.toLowerCase().indexOf('username') > -1)
             $scope.app.showErrorToast($filter('translate')('settings.users.USERNAME_IN_USE'))
-          if(data.message.indexOf('email') > -1)
+          if(data.message && data.message.toLowerCase().indexOf('email') > -1)
             $scope.app.showErrorToast($filter('translate')('settings.users.EMAIL_IN_USE'))
         }else{
-          $scope.app.showErrorToast('Dados inválidos. Tente novamente')
-          $mdDialog.cancel();
-          $scope.addingPerson = null;
+          $scope.app.showErrorToast($filter('translate')('messages.INVALID_SIGNUP'))
         }
-        
       });
     }
 
+    var applyPermissions = function(permissions){
+      var username = $scope.addingPerson.username
+      var person = angular.copy($scope.addingPerson);
+      var stationRoleUpdates = {stationsIds: [$scope.station.id], usernames: [username]};
+
+      if(permissions == 'ADMIN'){
+        stationRoleUpdates.admin = true;
+        stationRoleUpdates.writer = true;
+        stationRoleUpdates.editor = true;
+        stationRoleUpdates.colaborator = true;
+      }else if(permissions == 'EDITOR'){
+        stationRoleUpdates.admin = false;
+        stationRoleUpdates.writer = true;
+        stationRoleUpdates.editor = true;
+        stationRoleUpdates.colaborator = true;
+      }else if(permissions == 'WRITER'){
+        stationRoleUpdates.admin = false;
+        stationRoleUpdates.editor = false;
+        stationRoleUpdates.writer = true;
+        stationRoleUpdates.colaborator = true;
+      }else if(permissions == 'COLABORATOR'){
+        stationRoleUpdates.admin = false;
+        stationRoleUpdates.editor = false;
+        stationRoleUpdates.writer = false;
+        stationRoleUpdates.colaborator = true;
+      }else{
+        stationRoleUpdates.admin = false;
+        stationRoleUpdates.editor = false;
+        stationRoleUpdates.writer = false;
+        stationRoleUpdates.colaborator = false;
+      }
+
+      trix.updateStationRoles(stationRoleUpdates).success(function(){
+        stationRoleUpdates.username = username;
+        stationRoleUpdates.administration = stationRoleUpdates.admin
+        stationRoleUpdates.delete = stationRoleUpdates.editor || stationRoleUpdates.admin
+        stationRoleUpdates.write = stationRoleUpdates.writer
+        stationRoleUpdates.create = stationRoleUpdates.editor || stationRoleUpdates.writer || stationRoleUpdates.colaborator
+        stationRoleUpdates.read = true
+        stationRoleUpdates.person = person;
+        $scope.permissions.push(stationRoleUpdates)
+        // $scope.app.showSuccessToast($filter('translate')('settings.users.PERMISSIONS_UPDATES'));
+        // $mdDialog.cancel();
+      }).error(function(){
+        // $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'));
+        // $mdDialog.cancel();
+      })
+    }
 
 var settingsStationPermissionsCtrl = $scope;
 

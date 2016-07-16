@@ -33,7 +33,7 @@ public class UserFactory {
 	}
 
 	public User create(String username, String password) throws UserAlreadyExistsException {
-		if(userRepository.existsByUsername(username)) {
+		if(userRepository.findUserByUsername(username) != null) {
 			throw new UserAlreadyExistsException();
 		}
 
@@ -88,5 +88,14 @@ public class UserFactory {
 			username = originalUsername + i++;
 		}
 		return username;
+	}
+
+	public void delete(String username) {
+		User user  = userRepository.findUserByUsername(username);
+		if(user != null) {
+			grantedAuthorityRepository.deleteByUserId(user.id);
+			userRepository.delete(user);
+		}
+
 	}
 }

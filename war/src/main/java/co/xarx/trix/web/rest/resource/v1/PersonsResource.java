@@ -326,6 +326,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
+	@Transactional
 	public Response addPerson(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
 		try {
 			Person person = personService.addPerson(dto);
@@ -340,7 +341,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
-	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
+	public Response create(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException {
 		try {
 			Person person = personService.createPerson(dto);
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
