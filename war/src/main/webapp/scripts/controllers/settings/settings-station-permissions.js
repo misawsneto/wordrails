@@ -352,6 +352,7 @@ trix.getStationPermission(station.id).success(function(permissions){
         stationRoleUpdates.username = username;
         stationRoleUpdates.administration = stationRoleUpdates.admin
         stationRoleUpdates.delete = stationRoleUpdates.editor || stationRoleUpdates.admin
+        stationRoleUpdates.moderate = stationRoleUpdates.editor;
         stationRoleUpdates.write = stationRoleUpdates.writer
         stationRoleUpdates.create = stationRoleUpdates.editor || stationRoleUpdates.writer || stationRoleUpdates.colaborator
         stationRoleUpdates.read = true
