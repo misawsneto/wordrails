@@ -652,15 +652,18 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.stations.forEach(function(station){
 		trix.getTermTree(null, station.categoriesTaxonomyId).success(function(response){
 			station.termTree = response;
-			if($scope.app.editingPost)
-				$scope.app.selectTerms(station.termTree, $scope.app.editingPost.terms)
+			selecteTerms();
 		});
 	})
 
-	// $scope.selectedStation = null;
-	$scope.$watch('selectedStation', function(station){
+	function selecteTerms(station){
 		if(station && station.termTree)
 			$scope.app.selectTerms(station.termTree, $scope.app.editingPost.terms)
+	}
+
+	// $scope.selectedStation = null;
+	$scope.$watch('selectedStation', function(station){
+		selecteTerms(station);
 	})
 
 	// function updateTermTree(){
@@ -1120,6 +1123,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			$timeout(function(){
 				$scope.app.postObjectChanged = false;
 			}, 1000)
+
+		selecteTerms($scope.selectedStation);
 	}
 
 	// --- mock and test
