@@ -320,6 +320,7 @@ trix.getStationPermission(station.id).success(function(permissions){
       var person = angular.copy($scope.addingPerson);
       var stationRoleUpdates = {stationsIds: [$scope.station.id], usernames: [username]};
 
+      stationRoleUpdates.read = true;
       if(permissions == 'ADMIN'){
         stationRoleUpdates.admin = true;
         stationRoleUpdates.writer = true;

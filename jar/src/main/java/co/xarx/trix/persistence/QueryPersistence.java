@@ -90,7 +90,7 @@ public class QueryPersistence {
 
 	@Transactional
 	public void deleteAuthoritiesByStation(Integer id) {
-		manager.createNativeQuery("DELETE from authorities where station_id = (:id)").setParameter("id", id).executeUpdate();
+		manager.createNativeQuery("DELETE from authorities where station_id = :id").setParameter("id", id).executeUpdate();
 	}
 
 	@Transactional
