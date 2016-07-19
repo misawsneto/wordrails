@@ -1,14 +1,12 @@
 package co.xarx.trix.eventhandler;
 
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.ESPost;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.persistence.CellRepository;
-import co.xarx.trix.persistence.CommentRepository;
-import co.xarx.trix.persistence.ESPostRepository;
-import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.post.PostService;
@@ -21,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @RepositoryEventHandler(Post.class)
 @Component
@@ -43,6 +42,8 @@ public class PostEventHandler {
 	private PostPermissionService postPermissionService;
 	@Autowired
 	private AuditService auditService;
+	@Autowired
+	private QueryPersistence queryPersistence;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
@@ -64,7 +65,8 @@ public class PostEventHandler {
 			post.slug = StringUtil.toSlug(post.title);
 		}
 
-		if (postRepository.findBySlug(post.slug) != null) {
+		List<Post> posts = queryPersistence.findPostBySlug(post.slug, TenantContextHolder.getCurrentTenantId());
+		if (posts != null && posts.size() > 0) {
 			post.slug = post.slug + "-" + StringUtil.generateRandomString(6, "aA#");
 		}
 
@@ -92,7 +94,8 @@ public class PostEventHandler {
 
 		if (post.slug == null || post.slug.isEmpty()) {
 			post.slug = StringUtil.toSlug(post.title);
-			if (postRepository.findBySlug(post.slug) != null) {
+			List<Post> posts = queryPersistence.findPostBySlug(post.slug, TenantContextHolder.getCurrentTenantId());
+			if (posts != null && posts.size() > 0) {
 				post.slug = post.slug + "-" + StringUtil.generateRandomString(6, "aA#");
 			}
 		}
