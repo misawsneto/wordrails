@@ -26,7 +26,7 @@ public class CacheFilter implements Filter {
 			httpServletResponse.setHeader("Pragma", "no-cache");
 			httpServletResponse.setDateHeader("Expires", 0);
 		}else{
-			httpServletResponse.setHeader("Cache-Control", "public, cache");
+			httpServletResponse.setHeader("Cache-Control", httpServletRequest.getHeader("Cache-Control"));
 			httpServletResponse.setHeader("Pragma", "cache");
 			httpServletResponse.setDateHeader("Expires", httpServletRequest.getDateHeader("Expires"));
 		}
