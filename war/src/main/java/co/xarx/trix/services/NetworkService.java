@@ -116,7 +116,7 @@ public class NetworkService {
 		Constants.MobilePlatform platform;
 		if (userAgent != null && userAgent.contains("WordRailsIOSClient"))
 			return Constants.MobilePlatform.APPLE;
-		else if ("OkHttp".contains(userAgent))
+		else if ("OkHttp".equals(userAgent))
 			return Constants.MobilePlatform.ANDROID;
 		else
 			return null;

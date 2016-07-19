@@ -1,6 +1,7 @@
 package co.xarx.trix.web.filter;
 
 import co.xarx.trix.services.NetworkService;
+import co.xarx.trix.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,12 +24,12 @@ public class CacheFilter implements Filter {
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
-//		if(!networkService.getDeviceFromRequest(httpServletRequest).equals(Constants.MobilePlatform.ANDROID)) {
+		if(networkService.getDeviceFromRequest(httpServletRequest) != Constants.MobilePlatform.ANDROID) {
 			httpServletResponse.setHeader("Cache-Control", "public, no-store, no-cache, must-revalidate, max-age=0, " +
 					"post-check=0, pre-check=0");
 			httpServletResponse.setHeader("Pragma", "no-cache");
 			httpServletResponse.setDateHeader("Expires", 0);
-//		}
+		}
 		chain.doFilter(request, response);
 	}
 
