@@ -19,6 +19,10 @@ import java.util.Date;
 import java.util.Set;
 
 @lombok.Getter @lombok.Setter
+@Table(
+		uniqueConstraints =
+		@UniqueConstraint(columnNames = {"slug", "tenantId"})
+)
 @Entity
 @JsonIgnoreProperties(value = {
 		"imageHash", "imageLargeHash", "imageMediumHash", "imageSmallHash"
