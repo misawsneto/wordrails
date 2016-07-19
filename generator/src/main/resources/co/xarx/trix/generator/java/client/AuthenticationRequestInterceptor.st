@@ -47,10 +47,10 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 		}
 		if (manager.isConnectedOrConnecting()) {
 			int maxAge = 0;
-			request.addHeader("Cache-Control", "max-age=" + maxAge);
+			request.addHeader("Cache-Control", "public, max-age=" + maxAge);
 		} else {
 			int maxStale = Integer.MAX_VALUE;
-			request.addHeader("Cache-Control", "only-if-cached, max-stale=" + maxStale);
+			request.addHeader("Cache-Control", "public, only-if-cached, max-stale=" + maxStale);
 		}
 	}
 
