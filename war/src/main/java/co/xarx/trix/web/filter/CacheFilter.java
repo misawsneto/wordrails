@@ -2,7 +2,6 @@ package co.xarx.trix.web.filter;
 
 import co.xarx.trix.services.NetworkService;
 import co.xarx.trix.util.Constants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -13,9 +12,6 @@ import java.io.IOException;
 @Component("cacheFilter")
 public class CacheFilter implements Filter {
 
-	@Autowired
-	NetworkService networkService;
-
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {}
 
@@ -24,7 +20,7 @@ public class CacheFilter implements Filter {
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
-		if(networkService.getDeviceFromRequest(httpServletRequest) != Constants.MobilePlatform.ANDROID) {
+		if(NetworkService.getDeviceFromRequest(httpServletRequest) != Constants.MobilePlatform.ANDROID) {
 			httpServletResponse.setHeader("Cache-Control", "public, no-store, no-cache, must-revalidate, max-age=0, " +
 					"post-check=0, pre-check=0");
 			httpServletResponse.setHeader("Pragma", "no-cache");

@@ -110,7 +110,7 @@ public class NetworkService {
 		return FileUtil.loadTemplateHTML(templateFile);
 	}
 
-	public Constants.MobilePlatform getDeviceFromRequest(HttpServletRequest request) {
+	public static Constants.MobilePlatform getDeviceFromRequest(HttpServletRequest request) {
 		String userAgent = request.getHeader("User-Agent");
 
 		Constants.MobilePlatform platform;
