@@ -66,8 +66,8 @@ public class NetworkData {
 	public java.lang.String youtubeLink;
 
 	public final java.lang.String facebookUrlRedirect = "http://demo.xarx.rocks/";
-	public final java.lang.String facebookUrlToken = "https://www.facebook.com/dialog/oauth?scope=public_profile,email&";
-	public final java.lang.String facebookUrlAuthorization = "https://graph.facebook.com/v2.3/oauth/access_token";
+	public final java.lang.String facebookUrlToken = "https://www.facebook.com/v2.6/dialog/oauth?scope=public_profile,email&";
+	public final java.lang.String facebookUrlAuthorization = "https://graph.facebook.com/v2.6/oauth/access_token";
 
 	public final java.lang.String googleUrlRedirect = "urn:ietf:wg:oauth:2.0:oob:auto";
 	public final java.lang.String googleUrlToken = "https://www.googleapis.com/oauth2/v4/token";

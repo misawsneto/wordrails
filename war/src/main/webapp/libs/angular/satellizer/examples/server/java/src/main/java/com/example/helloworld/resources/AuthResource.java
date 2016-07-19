@@ -103,8 +103,8 @@ public class AuthResource {
   public Response loginFacebook(@Valid final Payload payload,
       @Context final HttpServletRequest request) throws JsonParseException, JsonMappingException,
       IOException, ParseException, JOSEException {
-    final String accessTokenUrl = "https://graph.facebook.com/v2.3/oauth/access_token";
-    final String graphApiUrl = "https://graph.facebook.com/v2.3/me";
+    final String accessTokenUrl = "https://graph.facebook.com/v2.6/oauth/access_token";
+    final String graphApiUrl = "https://graph.facebook.com/v2.6/me";
 
     Response response;
 

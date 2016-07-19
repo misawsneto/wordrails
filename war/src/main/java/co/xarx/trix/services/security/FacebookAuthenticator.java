@@ -63,7 +63,8 @@ public class FacebookAuthenticator implements OAuthAuthenticator {
 			throw new BadCredentialsException("Invalid app id and/or app secret for facebook login");
 		}
 
-		OAuthRequest request = new OAuthRequest(Verb.GET, "https://graph.facebook.com/v2.5/" + userId + "?fields=id,name,email,cover,picture.type(large)");
+		OAuthRequest request = new OAuthRequest(Verb.GET, "https://graph.facebook.com/v2.6/" + userId + "?fields=id," +
+				"name,email,cover,picture.type(large)");
 		service.signRequest(token, request);
 		Response response = request.send();
 		System.out.println(response.getBody());
