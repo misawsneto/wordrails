@@ -4,7 +4,6 @@ import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.web.rest.api.v2.V2StatisticsApi;
-import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +11,6 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -23,16 +21,16 @@ public class V2StatisticsResource implements V2StatisticsApi {
 	public StatisticsService statisticsService;
 
 	@Override
-	public Response getMostCommonField(Integer page,
-											 Integer size,
-											 Long startTime,
-											 Long endTime,
-											 String field){
+	public Response getMostPopular(Integer page,
+								   Integer size,
+								   String startTime,
+								   String endTime,
+								   String field){
 		if(field == null || field.isEmpty()) return badRequest("field");
 		if(size == null || size == 0) size = 5;
 		Map map;
 		try {
-			map = statisticsService.findMostPopular(field, startTime, endTime, size);
+			map = statisticsService.getMostPorpular(field, startTime, endTime, size);
 			return ok(map);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -43,10 +41,9 @@ public class V2StatisticsResource implements V2StatisticsApi {
 	@Override
 	public Response getPopularNetworks(Integer page, Integer size){
 		Map popular;
-		Interval interval = new Interval(Instant.now(), );
 
 		try {
-			popular = statisticsService.getPorpularNetworks();
+			popular = statisticsService.getMostPupularNetwork(size);
 			return ok(popular);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,7 +88,7 @@ public class V2StatisticsResource implements V2StatisticsApi {
 
 	@Override
 	public Response countReadsByPostIds(List<Integer> postIds) {
-		Map<Integer, Integer> countReads = statisticsService.countPostReads(postIds);
+		Map<Integer, Integer> countReads = statisticsService.getPostReads(postIds);
 		return ok(countReads);
 	}
 

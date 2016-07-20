@@ -519,9 +519,9 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	public StatsData personStats(String date, Integer postId) throws JsonProcessingException {
 		if (postId == null) {
 			Person person = authProvider.getLoggedPerson();
-			return statisticsService.personStats(date, person.getId(), null);
+			return statisticsService.getAuthorStats(date, person.getId());
 		} else {
-			return statisticsService.getPostStats(date, postId, null);
+			return statisticsService.getPostStats(date, postId);
 		}
 	}
 

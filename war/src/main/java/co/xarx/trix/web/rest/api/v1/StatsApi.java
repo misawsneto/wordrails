@@ -40,7 +40,7 @@ public interface StatsApi {
 	Map<String, Integer> getNetworkUsedSpace();
 
 	@GET
-	@Path("/countPostReads")
+	@Path("/getPostReads")
 	@PreAuthorize("isAuthenticated()")
 	Map<Integer, Integer> countReadsByPostIds(@QueryParam("postIds") List<Integer> postIds);
 
