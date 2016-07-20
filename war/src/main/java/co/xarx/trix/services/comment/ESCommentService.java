@@ -47,6 +47,7 @@ public class ESCommentService extends AbstractElasticSearchService {
 		applyShouldFilter(f, params.getAuthors(), "authorId");
 		applyShouldFilter(f, params.getStations(), "stationId");
 		applyShouldFilter(f, params.getPosts(), "postId");
+		applyShouldFilter(f, params.getTenants(), "tenantId");
 
 
 		SearchQuery query = getSearchQuery(params.getQuery(), sorts, q, f);
