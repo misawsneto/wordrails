@@ -14,8 +14,8 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StoreStatsData implements Serializable{
-	public float averageRaiting;
-	public Integer downloads;
+//	public float averageRaiting;
+//	public Integer downloads;
 	public Integer currentInstallations;
 	public Integer weeklyActiveUsers;
 	public Integer monthlyActiveUsers;
