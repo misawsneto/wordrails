@@ -1,19 +1,22 @@
 package co.xarx.trix.services.analytics;
 
+import co.xarx.trix.api.v2.MobileStats;
 import co.xarx.trix.api.v2.ReadsCommentsRecommendsCountData;
 import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.config.security.Permissions;
 import co.xarx.trix.domain.*;
+import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.function.Predicate;
 
+import static co.xarx.trix.util.AnalyticsUtil.getInterval;
 import static co.xarx.trix.util.AnalyticsUtil.makeHistogram;
 
 @Service
@@ -44,7 +47,7 @@ public class AnalyticsSearchService {
 		return response;
 	}
 
-	public StatsData getPersonStats(Person person, Interval interval) throws JsonProcessingException {
+	public StatsData getPersonStats(Person person, Interval interval) {
 		Map reads, comments;
 		List<Integer> generalStatus = getGeneralStatus(person);
 
@@ -75,26 +78,23 @@ public class AnalyticsSearchService {
 
 	public StatsData getNetworkStats(Network network, Interval interval) {
 		Map reads, comments;
-		List<Integer> generalStatus = new ArrayList<>();
+		List<MobileStats> mobileStats = analyticsQueries.getMobileStats(network.getTenantId(), interval);
 
-		reads = (tenantId);
-		comments = countCommentByTenant(tenantId);
+		List<Integer> generalStatus = getGeneralStatus(network);
+		generalStatus.add(getByType(mobileStats, Constants.MobilePlatform.ANDROID).currentInstallations);
+		generalStatus.add(getByType(mobileStats, Constants.MobilePlatform.APPLE).currentInstallations);
 
-		generalStatus.add(countTotals(tenantId, "nginx_access.tenantId", nginxAccessIndex));
-		generalStatus.add(countTotals(tenantId, "comment.tenantId", analyticsIndex));
-		generalStatus.add(countTotals(tenantId, "recommend.tenantId", analyticsIndex));
-
-		generalStatus.add((int) (long) mobileDeviceRepository.countAndroidDevices(tenantId));
-		generalStatus.add((int) (long) mobileDeviceRepository.countAppleDevices(tenantId));
+		reads = esQueries.getReadsByEntity(network);
+		comments = analyticsQueries.getCommentsByEntity(network);
 
 		StatsData statsData = new StatsData();
 		statsData.generalStatsJson = generalStatus;
 		statsData.dateStatsJson = makeHistogram(reads, comments, interval);
 
-		statsData.androidStore = getAndroidStats(interval);
-		statsData.iosStore = getIosStats(interval);
+		statsData.androidStore = getByType(mobileStats, Constants.MobilePlatform.ANDROID);
+		statsData.iosStore = getByType(mobileStats, Constants.MobilePlatform.APPLE);
 
-		statsData.fileSpace = getFileStats();
+		statsData.fileSpace = analyticsQueries.getFileStats();
 
 		return statsData;
 	}
@@ -104,7 +104,7 @@ public class AnalyticsSearchService {
 
 		Integer totalComments = analyticsQueries.countCommentsByEntity(entity);
 		Integer totalReads = esQueries.countReadsByEntity(entity);
-		Integer totalRecommends = analyticsQueries.countCommentsByEntity(entity);
+		Integer totalRecommends = analyticsQueries.countRecommendsByEntity(entity);
 
 		generalStatus.add(totalReads); // 1st reads
 		generalStatus.add(totalComments); // 2nd comments
@@ -120,5 +120,44 @@ public class AnalyticsSearchService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public Map<Integer, Integer> getPostReads(List<Post> posts){
+		Map postReads = new HashMap();
+
+		posts.forEach( post -> {
+			postReads.put(post.getId(), esQueries.countReadsByEntity(post));
+		});
+
+		return postReads;
+	}
+
+	private MobileStats getByType(List<MobileStats> list, Constants.MobilePlatform type){
+		if(list.isEmpty()) return new MobileStats();
+
+		Predicate<MobileStats> mobilePredicate = m -> m.getType().equals(type);
+		return list.stream().filter(mobilePredicate).findFirst().get();
+	}
+
+	public Map getFileStats(){
+		return analyticsQueries.getFileStats();
+	}
+
+	public Map<String, Integer> getReadersByStation(Station station) {
+		Integer total = analyticsQueries.getPersonIdsFromStation(station.getId()).size();
+		if (total == null || total == 0) return new HashMap<>();
+
+        Interval interval = getInterval(DateTime.now(), 1);
+        List<MobileStats> mobileStats = analyticsQueries.getMobileStats(station.getTenantId(), interval);
+
+        Integer totalAndroid = getByType(mobileStats, Constants.MobilePlatform.ANDROID).currentInstallations;
+        Integer totalIos = getByType(mobileStats, Constants.MobilePlatform.APPLE).currentInstallations;
+
+		Map readers = new HashMap();
+		readers.put("total", total);
+		readers.put("ios", totalIos);
+		readers.put("android", totalAndroid);
+
+		return readers;
 	}
 }
