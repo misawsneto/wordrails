@@ -1,13 +1,14 @@
-![Project Logo](https://lh6.googleusercontent.com/-YmfKZZLZKL0/U-KVPFSbiOI/AAAAAAAAEZA/maoYT8iJCnA/w1089-h513-no/sshot-1.png)
+![Project Logo](http://i.imgur.com/yutNy7x.jpg)
 
 # [Satellizer](https://github.com/sahat/satellizer/)
 
-[![Donate](https://img.shields.io/badge/paypal-donate-blue.svg)](https://paypal.me/sahat) [![Join the chat at https://gitter.im/sahat/satellizer](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sahat/satellizer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Donate](https://img.shields.io/badge/paypal-donate-blue.svg)](https://paypal.me/sahat)
+[![Join the chat at https://gitter.im/sahat/satellizer](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sahat/satellizer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](http://img.shields.io/travis/sahat/satellizer.svg?style=flat)](https://travis-ci.org/sahat/satellizer)
-[![Test Coverage](http://img.shields.io/codeclimate/coverage/github/sahat/satellizer.svg?style=flat)](https://codeclimate.com/github/sahat/satellizer)
-[![Version](https://img.shields.io/badge/version-0.14.1-brightgreen.svg)](https://www.npmjs.org/package/satellizer)
+[![npm version](https://badge.fury.io/js/satellizer.svg)](https://badge.fury.io/js/satellizer)
+[![Book session on Codementor](https://cdn.codementor.io/badges/book_session_github.svg)](https://www.codementor.io/sahatyalkabov?utm_source=github&utm_medium=button&utm_term=sahatyalkabov&utm_campaign=github)
 
-**Live Demo:** [https://satellizer.herokuapp.com](https://satellizer.herokuapp.com)
+[**Live Demo**](https://satellizer-sahat.rhcloud.com)
 
 ---
 
@@ -35,44 +36,34 @@ in the app *config* block.
 - [Obtaining OAuth Keys](#obtaining-oauth-keys)
 - [API Reference](#api-reference)
 - [FAQ](#faq)
- - [Can I change `redirectUri` to something other than base URL?](#question-can-i-change-redirecturi-to-something-other-than-base-url)
- - [How can I send a token in a format other than `Authorization: Bearer <token>?`](#question-how-can-i-send-a-token-in-a-format-other-than-authorization-bearer-token)
- - [How can I avoid sending Authorization header on all HTTP requests?](#question-how-can-i-avoid-sending-authorization-header-on-all-http-requests)
- - [Is there a way to dynamically change `localStorage` to `sessionStorage`?](#question-is-there-a-way-to-dynamically-change-localstorage-to-sessionstorage)
- - [I am having a problem with Ionic authentication on iOS 9.](#question-i-am-having-a-problem-with-ionic-authentication-on-ios-9)
+- [Community Resources](#community-resources)
 - [Credits](#credits)
 - [License](#license)
 
 ## Installation
 
-The easiest way to get **Satellizer** is by running one of the following commands:
-
-```bash
-# Bower
-bower install satellizer
-
-# NPM
-npm install satellizer
-```
-
-Alternatively, you may [**download**](https://github.com/sahat/satellizer/releases) the latest release or use the CDN:
+#### <img src="https://upload.wikimedia.org/wikipedia/commons/e/e2/Google_Chrome_icon_%282011%29.svg" height="22" align="top"> Browser
 
 ```html
-<!--[if lte IE 9]>
-<script src="//cdnjs.cloudflare.com/ajax/libs/Base64/0.3.0/base64.min.js"></script>
-<![endif]-->
-<script src="//cdn.jsdelivr.net/satellizer/0.14.1/satellizer.min.js"></script>
+<script src="angular.js"></script>
+<script src="satellizer.js"></script>
 ```
-
-If installed via [Bower](http://bower.io/), include one of the following script tags:
 ```html
-<script src="bower_components/satellizer/satellizer.js"></script>
-<!-- or -->
-<script src="bower_components/satellizer/satellizer.min.js"></script>
+<!-- Satellizer CDN -->
+<script src="https://cdn.jsdelivr.net/satellizer/0.15.1/satellizer.min.js"></script>
 ```
 
-**Note:** Sattelizer depends on [`window.atob()`](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/atob) for decoding JSON Web Tokens. If you need to support *IE9* then use Base64 polyfill above.
+#### <img src="https://upload.wikimedia.org/wikipedia/commons/d/db/Npm-logo.svg" height="22" align="top"> NPM
 
+```
+$ npm install satellizer
+```
+
+#### <img src="https://bower.io/img/bower-logo.svg" height="22" align="top"> Bower
+
+```
+$ bower install satellizer
+```
 
 ### Requirements for Mobile Apps
 
@@ -106,7 +97,7 @@ angular.module('MyApp', ['satellizer'])
       clientId: 'Facebook App ID'
     });
 
-    // Optional: For client-side use (Implicit Grant), set responseType to 'token'
+    // Optional: For client-side use (Implicit Grant), set responseType to 'token' (default: 'code')
     $authProvider.facebook({
       clientId: 'Facebook App ID',
       responseType: 'token'
@@ -201,8 +192,8 @@ $authProvider.signupUrl = '/auth/signup';
 $authProvider.unlinkUrl = '/auth/unlink/';
 $authProvider.tokenName = 'token';
 $authProvider.tokenPrefix = 'satellizer';
-$authProvider.authHeader = 'Authorization';
-$authProvider.authToken = 'Bearer';
+$authProvider.tokenHeader = 'Authorization';
+$authProvider.tokenType = 'Bearer';
 $authProvider.storageType = 'localStorage';
 
 // Facebook
@@ -377,7 +368,7 @@ $authProvider.oauth1({
       <td><img src="http://upload.wikimedia.org/wikipedia/commons/d/d4/Opera_browser_logo_2013.png" height="35"></td>
     </tr>
     <tr>
-      <td align="center">9*</td>
+      <td align="center">9+</td>
       <td align="center">✓</td>
       <td align="center">✓</td>
       <td align="center">✓</td>
@@ -386,8 +377,6 @@ $authProvider.oauth1({
     </tr>
   </tbody>
 </table>
-
-__*__ Requires [Base64](https://github.com/davidchambers/Base64.js/) polyfill.
 
 ## Authentication Flow
 
@@ -456,7 +445,7 @@ use after page reload.
 ## Obtaining OAuth Keys
 
 <img src="https://camo.githubusercontent.com/204e6b07369021b5b9eb7d228d051aca72a457ef/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f7468756d622f322f32662f476f6f676c655f323031355f6c6f676f2e7376672f3130303070782d476f6f676c655f323031355f6c6f676f2e7376672e706e67" width="150">
-- Visit [Google Cloud Console](https://cloud.google.com/console/project)
+- Visit [Google Developer Console](https://console.developers.google.com/iam-admin/projects)
 - Click **CREATE PROJECT** button
 - Enter *Project Name*, then click **CREATE**
 - Then select *APIs & auth* from the sidebar and click on *Credentials* tab
@@ -829,7 +818,7 @@ As far as Satellizer is concerned, it does not matter what is the value of `redi
 
 #### :question: How can I send a token in a format other than `Authorization: Bearer <token>`?
 If you are unable to send a token to your server in the following format - `Authorization: Bearer <token>`, then use
-**`$authProvider.authHeader`** and **`$authProvider.authToken`** config options to change the header format. The default values are `Authorization` and `Bearer`, respectively.
+**`$authProvider.tokenHeader`** and **`$authProvider.tokenType`** config options to change the header format. The default values are `Authorization` and `Bearer`, respectively.
 
 For example, if you need to use `Authorization: Basic` header, this is where you change it.
 
@@ -856,6 +845,13 @@ If you have configured everything correctly, chances are you running into the fo
 > Failed to load resource: The resource could not be loaded because the App Transport Security policy requires the use of a secure connection.
 
 Follow instructions on this [StackOverflow post](http://stackoverflow.com/questions/32631184/the-resource-could-not-be-loaded-because-the-app-transport-security-policy-requi) by adding `NSAppTransportSecurity` to *info.plist*. That should fix the problem.
+
+## Community Resources
+
+### Tutorials
+- Ionic JWT auth with Facebook using Node.js ([Part 1](http://blog.grossman.io/ionic-jwt-auth-with-facebook-using-nodejs-part-1/) and [Part 2](http://blog.grossman.io/ionic-jwt-auth-with-facebook-using-nodejs-part-2-2/))
+- [Build an Instagram clone with AngularJS, Satellizer, Node.js and MongoDB](https://hackhands.com/building-instagram-clone-angularjs-satellizer-nodejs-mongodb/)
+
 
 ## Credits
 

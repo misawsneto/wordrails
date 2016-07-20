@@ -132,7 +132,7 @@
 	    	<md-tooltip md-direction="left">
 	      	{{'settings.users.ADD_USERS' | translate}}
 	  		</md-tooltip>
-	    	<i class="mdi i-20 mdi2-plus text-dark"></i>
+	    	<i class="mdi i-20 mdi2-account-plus text-dark"></i>
 	    </md-button>
 	    <md-button aria-label="nothing" aria-label="Add User" class="md-fab md-raised md-mini" ng-click="bulkChangeAccess($event, 'enablePersons')">
 	    	<md-tooltip md-direction="left">
@@ -246,27 +246,28 @@
 </script>
 
 <script type="text/ng-template" id="add-profile-dialog.html">
-  <md-dialog-content layout="row" layout-wrap>
-    <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center w-lg" layout="column">
-      <div class="w-full">
+  <form ng-submit="createPerson(addingPerson)">
+    <md-dialog-content layout="row" layout-wrap>
+      <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center w-lg" layout="column">
+        <div class="w-full">
 
-        <div class="text-center p w-full" translate="titles.ADD_PERSON"></div>
+          <div class="text-center p w-full" translate="titles.ADD_PERSON"></div>
 
-        <div class="text-center p p-t-lg w-full m-t-lg">
-          <i class="mdi mdi2-account text-4x"></i>
+          <div class="text-center p p-t-lg w-full m-t-lg">
+            <i class="mdi mdi2-account text-4x"></i>
+          </div>
+
+          <div class="pos-abt bottom-0 text-center w-full p-t p-b">
+            <md-button aria-label="nothing" ng-click="cancel()" class="m-0">
+              {{'titles.CANCEL' | translate}}
+            </md-button>
+            <md-button aria-label="nothing" ng-disabled="disabled" class="m-0">
+              {{'titles.SAVE' | translate}}
+            </md-button>
+          </div>
         </div>
-
-        <div class="pos-abt bottom-0 text-center w-full p-t p-b">
-          <md-button aria-label="nothing" ng-click="cancel()" class="m-0">
-            {{'titles.CANCEL' | translate}}
-          </md-button>
-          <md-button aria-label="nothing" ng-click="createPerson(addingPerson)" ng-disabled="disabled" class="m-0">
-            {{'titles.SAVE' | translate}}
-          </md-button>
-        </div>
-      </div>
-    </md-toolbar>
-    <div class="p w-x col-400 scrollable md-background-hue-1 background">
+      </md-toolbar>
+      <div class="p w-x col-400 scrollable md-background-hue-1 background">
         <div class="pos-rlt p">
           <div >
           <md-input-container class="w-xxl m-b-0">
@@ -307,8 +308,8 @@
           </div>
         </div>
       </div>
-    </div>
-  </md-dialog-content>
+    </md-dialog-content>
+  </form>
 </script>
 
 <script type="text/ng-template" id="bulk_change_access_dialog.html">

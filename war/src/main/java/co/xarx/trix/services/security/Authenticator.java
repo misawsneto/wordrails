@@ -72,7 +72,13 @@ public class Authenticator {
 			} else {
 				try {
 					user = userFactory.create(socialUser);
-					personFactory.create(socialUser.getName(), socialUser.getEmail(), user);
+					try {
+						person = personFactory.create(socialUser.getName(), socialUser.getEmail(), user);
+					} catch (Exception e) {
+						userFactory.delete(user.username);
+						throw e;
+					}
+
 				} catch (UserAlreadyExistsException e) {
 					user = userRepository.findUserByEmail(socialUser.getEmail());
 				}

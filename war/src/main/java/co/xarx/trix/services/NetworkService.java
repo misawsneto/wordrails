@@ -110,13 +110,13 @@ public class NetworkService {
 		return FileUtil.loadTemplateHTML(templateFile);
 	}
 
-	public Constants.MobilePlatform getDeviceFromRequest(HttpServletRequest request) {
+	public static Constants.MobilePlatform getDeviceFromRequest(HttpServletRequest request) {
 		String userAgent = request.getHeader("User-Agent");
 
 		Constants.MobilePlatform platform;
 		if (userAgent != null && userAgent.contains("WordRailsIOSClient"))
 			return Constants.MobilePlatform.APPLE;
-		else if ("OkHttp".contains(userAgent))
+		else if ("OkHttp".equals(userAgent))
 			return Constants.MobilePlatform.ANDROID;
 		else
 			return null;

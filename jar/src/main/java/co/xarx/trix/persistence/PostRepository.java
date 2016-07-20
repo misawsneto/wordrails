@@ -32,6 +32,9 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@Query("SELECT post FROM Post post where post.slug = :slug and post is not null")
 	Post findBySlug(@Param("slug") String slug);
 
+	@Query("SELECT post FROM Post post where post.slug = :slug")
+	Post findPostBySlug(@Param("slug") String slug);
+
 	@Override
 	@SdkExclude
 	@CacheEvict(value = "postsIds")

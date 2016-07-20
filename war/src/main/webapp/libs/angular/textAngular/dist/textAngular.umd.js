@@ -747,7 +747,23 @@ angular.module('textAngularSetup', [])
 			var imageLink;
 			imageLink = $window.prompt(taTranslations.insertImage.dialogPrompt, 'http://');
 			if(imageLink && imageLink !== '' && imageLink !== 'http://'){
-				return this.$editor().wrapSelection('insertImage', imageLink, true);
+				/* istanbul ignore next: don't know how to test this... since it needs a dialogPrompt */
+				if (taSelection.getSelectionElement().tagName.toLowerCase() === 'a') {
+					// due to differences in implementation between FireFox and Chrome, we must move the
+					// insertion point past the <a> element, otherwise FireFox inserts inside the <a>
+					// With this change, both FireFox and Chrome behave the same way!
+					taSelection.setSelectionAfterElement(taSelection.getSelectionElement());
+				}
+				// In the past we used the simple statement:
+				//return this.$editor().wrapSelection('insertImage', imageLink, true);
+				//
+				// However on Firefox only, when the content is empty this is a problem
+				// See Issue #1201
+				// Investigation reveals that Firefox only inserts a <p> only!!!!
+				// So now we use insertHTML here and all is fine.
+				// NOTE: this is what 'insertImage' is supposed to do anyway!
+				var embed = '<img src="' + imageLink + '">';
+				return this.$editor().wrapSelection('insertHTML', embed, true);
 			}
 		},
 		onElementSelect: {
@@ -773,6 +789,13 @@ angular.module('textAngularSetup', [])
 					// for all options see: http://stackoverflow.com/questions/2068344/how-do-i-get-a-youtube-video-thumbnail-from-the-youtube-api
 					// maxresdefault.jpg seems to be undefined on some.
 					var embed = '<img class="ta-insert-video" src="https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg" ta-insert-video="' + urlLink + '" contenteditable="false" allowfullscreen="true" frameborder="0" />';
+					/* istanbul ignore next: don't know how to test this... since it needs a dialogPrompt */
+					if (taSelection.getSelectionElement().tagName.toLowerCase() === 'a') {
+						// due to differences in implementation between FireFox and Chrome, we must move the
+						// insertion point past the <a> element, otherwise FireFox inserts inside the <a>
+						// With this change, both FireFox and Chrome behave the same way!
+						taSelection.setSelectionAfterElement(taSelection.getSelectionElement());
+					}
 					// insert
 					return this.$editor().wrapSelection('insertHTML', embed, true);
 				}
@@ -853,7 +876,7 @@ angular.module('textAngularSetup', [])
 @license textAngular
 Author : Austin Anderson
 License : 2013 MIT
-Version 1.5.1
+Version 1.5.2
 
 See README.md or https://github.com/fraywing/textAngular/wiki for requirements and use.
 */
@@ -895,36 +918,6 @@ var _browserDetect = {
 	}()),
 	webkit: /AppleWebKit\/([\d.]+)/i.test(navigator.userAgent)
 };
-
-// fix a webkit bug, see: https://gist.github.com/shimondoodkin/1081133
-// this is set true when a blur occurs as the blur of the ta-bind triggers before the click
-var globalContentEditableBlur = false;
-/* istanbul ignore next: Browser Un-Focus fix for webkit */
-if(_browserDetect.webkit) {
-	document.addEventListener("mousedown", function(_event){
-		var e = _event || window.event;
-		var curelement = e.target;
-		if(globalContentEditableBlur && curelement !== null){
-			var isEditable = false;
-			var tempEl = curelement;
-			while(tempEl !== null && tempEl.tagName.toLowerCase() !== 'html' && !isEditable){
-				isEditable = tempEl.contentEditable === 'true';
-				tempEl = tempEl.parentNode;
-			}
-			if(!isEditable){
-				document.getElementById('textAngular-editableFix-010203040506070809').setSelectionRange(0, 0); // set caret focus to an element that handles caret focus correctly.
-				curelement.focus(); // focus the wanted element.
-				if (curelement.select) {
-					curelement.select(); // use select to place cursor for input elements.
-				}
-			}
-		}
-		globalContentEditableBlur = false;
-	}, false); // add global click handler
-	angular.element(document).ready(function () {
-		angular.element(document.body).append(angular.element('<input id="textAngular-editableFix-010203040506070809" class="ta-hidden-input" aria-hidden="true" unselectable="on" tabIndex="-1">'));
-	});
-}
 
 // Gloabl to textAngular REGEXP vars for block and list elements.
 
@@ -1067,16 +1060,32 @@ angular.module('textAngular.factories', [])
 	var taFixChrome = function(html){
 		if(!html || !angular.isString(html) || html.length <= 0) return html;
 		// grab all elements with a style attibute
-		var spanMatch = /<([^>\/]+?)style=("([^"]+)"|'([^']+)')([^>]*)>/ig;
-		var match, styleVal, newTag, finalHtml = '', lastIndex = 0;
+		var spanMatch = /<([^>\/]+?)style=("([^\"]+)"|'([^']+)')([^>]*)>/ig;
+		var appleConvertedSpaceMatch = /<span class="Apple-converted-space">([^<]+)<\/span>/ig;
+		var match, styleVal, appleSpaceVal, newTag, finalHtml = '', lastIndex = 0;
+		// remove all the Apple-converted-space spans and replace with the content of the span
+		/* istanbul ignore next: apple-contereted-space span match */
+		while(match = appleConvertedSpaceMatch.exec(html)){
+			appleSpaceVal = match[1];
+			appleSpaceVal = appleSpaceVal.replace(/&nbsp;/ig, ' ');
+			finalHtml += html.substring(lastIndex, match.index) + appleSpaceVal;
+			lastIndex = match.index + match[0].length;
+		}
+		/* istanbul ignore next: apple-contereted-space span has matched */
+		if (lastIndex) {
+			// modified....
+			html=finalHtml;
+			finalHtml='';
+			lastIndex=0;
+		}
 		while(match = spanMatch.exec(html)){
 			// one of the quoted values ' or "
 			/* istanbul ignore next: quotations match */
 			styleVal = match[3] || match[4];
 			// test for chrome inserted junk
-			if(styleVal && styleVal.match(/line-height: 1.[0-9]{3,12};|color: inherit; line-height: 1.1;/i)){
+			if(styleVal && styleVal.match(/line-height: 1.[0-9]{3,12};|color: inherit; line-height: 1.1;|color: rgb\(\d{1,3}, \d{1,3}, \d{1,3}\);|background-color: rgb\(\d{1,3}, \d{1,3}, \d{1,3}\);/i)){
 				// replace original tag with new tag
-				styleVal = styleVal.replace(/( |)font-family: inherit;|( |)line-height: 1.[0-9]{3,12};|( |)color: inherit;/ig, '');
+				styleVal = styleVal.replace(/( |)font-family: inherit;|( |)line-height: 1.[0-9]{3,12};|( |)color: inherit;|( |)color: rgb\(\d{1,3}, \d{1,3}, \d{1,3}\);|( |)background-color: rgb\(\d{1,3}, \d{1,3}, \d{1,3}\);/ig, '');
 				newTag = '<' + match[1].trim();
 				if(styleVal.trim().length > 0) newTag += ' style=' + match[2].substring(0,1) + styleVal + match[2].substring(0,1);
 				newTag += match[5].trim() + ">";
@@ -1106,7 +1115,7 @@ angular.module('textAngular.factories', [])
 			tag: 'i'
 		}
 	];
-	
+
 	var styleMatch = [];
 	for(var i = 0; i < convert_infos.length; i++){
 		var _partialStyle = '(' + convert_infos[i].property + ':\\s*(';
@@ -1119,7 +1128,7 @@ angular.module('textAngular.factories', [])
 		styleMatch.push(_partialStyle);
 	}
 	var styleRegexString = '(' + styleMatch.join('|') + ')';
-	
+
 	function wrapNested(html, wrapTag) {
 		var depth = 0;
 		var lastIndex = 0;
@@ -1138,7 +1147,7 @@ angular.module('textAngular.factories', [])
 			angular.element(wrapTag)[0].outerHTML.substring(wrapTag.length) +
 			html.substring(lastIndex);
 	}
-	
+
 	function transformLegacyStyles(html){
 		if(!html || !angular.isString(html) || html.length <= 0) return html;
 		var i;
@@ -1186,7 +1195,7 @@ angular.module('textAngular.factories', [])
 		else finalHtml += html.substring(lastIndex);
 		return finalHtml;
 	}
-	
+
 	function transformLegacyAttributes(html){
 		if(!html || !angular.isString(html) || html.length <= 0) return html;
 		// replace all align='...' tags with text-align attributes
@@ -1215,7 +1224,7 @@ angular.module('textAngular.factories', [])
 		// return with remaining html
 		return finalHtml + html.substring(lastIndex);
 	}
-	
+
 	return function taSanitize(unsafe, oldsafe, ignore){
 		// unsafe html should NEVER built into a DOM object via angular.element. This allows XSS to be inserted and run.
 		if ( !ignore ) {
@@ -1229,7 +1238,7 @@ angular.module('textAngular.factories', [])
 		// any exceptions (lets say, color for example) should be made here but with great care
 		// setup unsafe element for modification
 		unsafe = transformLegacyAttributes(unsafe);
-		
+
 		var safe;
 		try {
 			safe = $sanitize(unsafe);
@@ -1238,9 +1247,9 @@ angular.module('textAngular.factories', [])
 		} catch (e){
 			safe = oldsafe || '';
 		}
-		
+
 		// Do processing for <pre> tags, removing tabs and return carriages outside of them
-		
+
 		var _preTags = safe.match(/(<pre[^>]*>.*?<\/pre[^>]*>)/ig);
 		var processedSafe = safe.replace(/(&#(9|10);)*/ig, '');
 		var re = /<pre[^>]*>.*?<\/pre[^>]*>/ig;
@@ -1279,6 +1288,7 @@ angular.module('textAngular.factories', [])
 		}
 	};
 }]);
+
 angular.module('textAngular.DOM', ['textAngular.factories'])
 .factory('taExecCommand', ['taSelection', 'taBrowserTag', '$document', function(taSelection, taBrowserTag, $document){
 	var listToDefault = function(listElement, defaultWrap){
@@ -1456,6 +1466,9 @@ angular.module('textAngular.DOM', ['textAngular.factories'])
 								}
 							}
 						}
+						_nodes = _nodes.filter(function(value, index, self) {
+							return self.indexOf(value) === index;
+						});
 						if(angular.element(_nodes[0]).hasClass('ta-bind')){
 							$target = angular.element(options);
 							$target[0].innerHTML = _nodes[0].innerHTML;
@@ -2644,6 +2657,12 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 								}
 							}
 							var val = _compileHtml();
+							/* istanbul ignore next: FF specific bug fix */
+							if (val==='<br>') {
+								// on Firefox this comes back sometimes as <br> which is strange, so we remove this here
+								//console.log('*************BAD****');
+								val='';
+							}
 							if(_defaultVal !== '' && val.trim() === ''){
 								_setInnerHTML(_defaultVal);
 								taSelection.setSelectionToElementStart(element.children()[0]);
@@ -2873,12 +2892,6 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 					element.find(selector).on('click', selectorClickHandler);
 				});
 				element.on('drop', fileDropHandler);
-				element.on('blur', function(){
-					/* istanbul ignore next: webkit fix */
-					if(_browserDetect.webkit) { // detect webkit
-						globalContentEditableBlur = true;
-					}
-				});
 			}
 		}
 	};

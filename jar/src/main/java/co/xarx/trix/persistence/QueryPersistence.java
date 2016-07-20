@@ -90,7 +90,7 @@ public class QueryPersistence {
 
 	@Transactional
 	public void deleteAuthoritiesByStation(Integer id) {
-		manager.createNativeQuery("DELETE from authorities where station_id = (:id)").setParameter("id", id).executeUpdate();
+		manager.createNativeQuery("DELETE from authorities where station_id = :id").setParameter("id", id).executeUpdate();
 	}
 
 	@Transactional
@@ -103,5 +103,12 @@ public class QueryPersistence {
 	public void updateRecommendsCount(Integer postId) {
 		manager.createNativeQuery("UPDATE Post p set p.recommendsCount = (select count(*) FROM person_recommend pr WHERE" +
 				" pr.post_id = :postId1) WHERE p.id = :postId2").setParameter("postId1", postId).setParameter("postId2", postId).executeUpdate();
+	}
+
+	public List<Post> findPostBySlug(String slug, String tenantId) {
+		return manager.createNativeQuery("SELECT * FROM Post p where p.slug = :slug and tenantId = :tenantId", Post
+				.class)
+				.setParameter("slug",slug).setParameter("tenantId", tenantId)
+				.getResultList();
 	}
 }

@@ -456,14 +456,12 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         $scope.addingPerson = null;
       }).error(function(data, status, headers, config){
         if(status == 409){
-          if(data.message.indexOf('username') > -1)
+          if(data.message && data.message.toLowerCase().indexOf('username') > -1)
             $scope.app.showErrorToast($filter('translate')('settings.users.USERNAME_IN_USE'))
-          if(data.message.indexOf('email') > -1)
+          if(data.message && data.message.toLowerCase().indexOf('email') > -1)
             $scope.app.showErrorToast($filter('translate')('settings.users.EMAIL_IN_USE'))
         }else{
-          $scope.app.showErrorToast('Dados inválidos. Tente novamente')
-          $mdDialog.cancel();
-          $scope.addingPerson = null;
+          $scope.app.showErrorToast($filter('translate')('messages.INVALID_SIGNUP'))
         }
         
       });

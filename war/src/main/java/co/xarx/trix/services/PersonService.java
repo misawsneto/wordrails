@@ -24,6 +24,7 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.*;
@@ -68,7 +69,13 @@ public class PersonService {
 		Assert.hasText(inviteHash);
 
 		User newUser = userFactory.create(dto.username, dto.password);
-		Person newPerson = personFactory.create(dto.name, dto.email, newUser);
+		Person newPerson = null;
+		try {
+			newPerson = personFactory.create(dto.name, dto.email, newUser);
+		} catch (Exception e) {
+			userFactory.delete(dto.username);
+			throw e;
+		}
 
 		Invitation invitation = invitationRepository.findByHash(inviteHash);
 
@@ -85,12 +92,20 @@ public class PersonService {
 		return newPerson;
 	}
 
+	@Transactional
 	public Person createPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException, UserAlreadyExistsException {
 		if (dto.password == null || dto.password.isEmpty())
 			dto.password = StringUtil.generateRandomString(6, "aA#");
 
 		User newUser = userFactory.create(dto.username, dto.password);
-		Person newPerson = personFactory.create(dto.name, dto.email, newUser);
+		Person newPerson = null;
+		try{
+			newPerson = personFactory.create(dto.name, dto.email, newUser);
+		}catch (Exception e){
+			userFactory.delete(dto.username);
+			throw e;
+		}
+
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 
 		PersonValidation validation = new PersonValidation();
@@ -110,7 +125,14 @@ public class PersonService {
 			dto.password = StringUtil.generateRandomString(6, "aA#");
 
 		User newUser = userFactory.create(dto.username, dto.password);
-		Person newPerson = personFactory.create(dto.name, dto.email, newUser);
+		Person newPerson = null;
+		try {
+			newPerson = personFactory.create(dto.name, dto.email, newUser);
+		} catch (Exception e) {
+			userFactory.delete(dto.username);
+			throw e;
+		}
+
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 
 		try {
