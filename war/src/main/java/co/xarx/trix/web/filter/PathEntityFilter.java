@@ -96,7 +96,7 @@ public class PathEntityFilter implements Filter {
 	private String homeHiddenHtmlBuilder(HttpServletRequest request) throws IOException {
 		PersonData data = (PersonData) request.getAttribute("personDataObject");
 
-		String template = FileUtil.loadTemplateHTML("simple-home-template.html");
+		String template = FileUtil.loadFileFromResource("simple-home-template.html");
 
 		StringWriter writer = new StringWriter();
 		com.github.mustachejava.MustacheFactory mf = new com.github.mustachejava.DefaultMustacheFactory();
@@ -126,7 +126,7 @@ public class PathEntityFilter implements Filter {
 		scope.put("post", post);
 		scope.put("imageURL", amazonCloudService.getPublicImageURL(post.getImageLargeHash()));
 
-		String template = FileUtil.loadTemplateHTML("simple-post-template.html");
+		String template = FileUtil.loadFileFromResource("simple-post-template.html");
 
 		StringWriter writer = new StringWriter();
 		com.github.mustachejava.MustacheFactory mf = new com.github.mustachejava.DefaultMustacheFactory();

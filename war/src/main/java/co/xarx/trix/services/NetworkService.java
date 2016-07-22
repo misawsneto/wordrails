@@ -107,13 +107,25 @@ public class NetworkService {
 	public String getEmailTemplate() throws IOException {
 		String templateFile;
 		templateFile = "invitation-template.html";
-		return FileUtil.loadTemplateHTML(templateFile);
+		return FileUtil.loadFileFromResource(templateFile);
 	}
+
+	public String getValidationMessage() throws IOException {
+	    String tenantId = TenantContextHolder.getCurrentTenantId();
+        Network network = networkRepository.findByTenantId(tenantId);
+        String htmlTemplate = FileUtil.loadFileFromResource("validation-template.html");
+
+        if(network.getValidationMessage() == null || network.getValidationMessage().isEmpty()){
+            String message = FileUtil.loadFileFromResource("default_validation_text.txt");
+            return htmlTemplate.replaceAll("\\{\\{validationMessage}}", message);
+        }
+
+        return htmlTemplate.replaceAll("\\{\\{validationMessage}}", network.getValidationMessage());
+    }
 
 	public static Constants.MobilePlatform getDeviceFromRequest(HttpServletRequest request) {
 		String userAgent = request.getHeader("User-Agent");
 
-		Constants.MobilePlatform platform;
 		if (userAgent != null && userAgent.contains("WordRailsIOSClient"))
 			return Constants.MobilePlatform.APPLE;
 		else if ("OkHttp".equals(userAgent))

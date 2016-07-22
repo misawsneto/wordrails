@@ -24,9 +24,9 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
 import java.util.*;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
@@ -41,16 +41,17 @@ public class PersonService {
 	private UserFactory userFactory;
 	private AuthService authService;
 	private EmailService emailService;
-	private PersonFactory personFactory;
-	private PersonRepository personRepository;
-	private NetworkRepository networkRepository;
-	private StationRepository stationRepository;
-	private InvitationRepository invitationRepository;
-	private StationPermissionService stationPermissionService;
-	private PersonValidationRepository personValidationRepository;
+    private PersonFactory personFactory;
+    private NetworkService networkService;
+    private PersonRepository personRepository;
+    private NetworkRepository networkRepository;
+    private StationRepository stationRepository;
+    private InvitationRepository invitationRepository;
+    private StationPermissionService stationPermissionService;
+    private PersonValidationRepository personValidationRepository;
 
 	@Autowired
-	public PersonService(PersonRepository personRepository, EmailService emailService, NetworkRepository networkRepository, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory) {
+	public PersonService(PersonRepository personRepository, EmailService emailService, NetworkRepository networkRepository, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory, NetworkService networkService) {
 		this.client = client;
 		this.authService = authService;
 		this.userFactory = userFactory;
@@ -63,7 +64,8 @@ public class PersonService {
 		this.invitationRepository = invitationRepository;
 		this.stationPermissionService = stationPermissionService;
 		this.personValidationRepository = personValidationRepository;
-	}
+        this.networkService = networkService;
+    }
 
 	public Person createFromInvite(PersonsApi.PersonCreateDto dto, String inviteHash) throws PersonAlreadyExistsException, UserAlreadyExistsException {
 		Assert.hasText(inviteHash);
@@ -92,13 +94,12 @@ public class PersonService {
 		return newPerson;
 	}
 
-	@Transactional
-	public Person createPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException, UserAlreadyExistsException {
+	public Person createPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException, UserAlreadyExistsException, IOException {
 		if (dto.password == null || dto.password.isEmpty())
 			dto.password = StringUtil.generateRandomString(6, "aA#");
 
 		User newUser = userFactory.create(dto.username, dto.password);
-		Person newPerson = null;
+		Person newPerson;
 		try{
 			newPerson = personFactory.create(dto.name, dto.email, newUser);
 		}catch (Exception e){
@@ -113,7 +114,7 @@ public class PersonService {
 		personValidationRepository.save(validation);
 
 		try {
-			emailService.validatePersonCreation(network, validation);
+			emailService.validatePersonCreation(network, validation, networkService.getValidationMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -125,7 +126,7 @@ public class PersonService {
 			dto.password = StringUtil.generateRandomString(6, "aA#");
 
 		User newUser = userFactory.create(dto.username, dto.password);
-		Person newPerson = null;
+		Person newPerson;
 		try {
 			newPerson = personFactory.create(dto.name, dto.email, newUser);
 		} catch (Exception e) {
