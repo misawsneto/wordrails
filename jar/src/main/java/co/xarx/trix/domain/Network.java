@@ -3,9 +3,7 @@ package co.xarx.trix.domain;
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.page.ContainerSection;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -70,7 +68,9 @@ public class Network extends BaseEntity implements Serializable {
 
 	@OneToOne(mappedBy = "network")
 	@SdkExclude
-	@JsonManagedReference
+	@JsonIdentityInfo(
+			generator = ObjectIdGenerators.PropertyGenerator.class,
+			property = "id")
 	public AuthCredential authCredential;
 
 	public boolean allowSocialLogin;
