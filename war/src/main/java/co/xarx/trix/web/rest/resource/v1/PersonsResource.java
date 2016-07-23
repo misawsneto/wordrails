@@ -379,13 +379,14 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 
 	@Override
 	public Response invitePerson(PersonsApi.PersonInvitationDto dto) throws ConflictException, IOException {
+		Integer totalInvited;
 		try{
-			personService.invite(dto);
+			totalInvited = personService.invite(dto).size();
 		} catch (BadRequestException e){
 			e.printStackTrace();
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		return Response.status(Status.CREATED).build();
+		return Response.status(Status.CREATED).entity("{\"totalInvited\": " + totalInvited + "}").build();
 	}
 
 	@Override

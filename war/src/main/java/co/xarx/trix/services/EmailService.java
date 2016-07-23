@@ -13,9 +13,9 @@ import com.amazonaws.services.simpleemail.model.*;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import org.jcodec.common.logging.Logger;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.awt.*;
 import java.io.StringReader;
@@ -28,7 +28,6 @@ import java.util.Set;
 	public class EmailService {
 
 	public final String VALIDATION_TEMPLATE_FILENAME = "validation-template.html";
-	public final String INVITATION_TEMPLATE_FILENAME = "invitation-template.html";
 	public final String CREDENTIALS_TEMPLATE_FILENAME = "credentials-email.html";
 
 	private final String NO_REPLY = "noreply@trix.rocks";
@@ -68,21 +67,12 @@ import java.util.Set;
 		}
 	}
 
-	public void validatePersonCreation(Network network, Person inviter, PersonValidation newcome) throws Exception {
-		String template = FileUtil.loadTemplateHTML(VALIDATION_TEMPLATE_FILENAME);
-
-		String message = network.getValidationMessage();
+	public void validatePersonCreation(Network network, PersonValidation newcome, String message) throws Exception {
 		Map messageScope = new HashMap<String, String>();
-		messageScope.put("networkName", network.getName());
+		messageScope.put("validationLink", "http://" + network.getRealDomain() + "/access/signup?validation=" + newcome.hash);
+        messageScope.put("networkName", network.getName());
 
-		String validationMessage = parseScope(messageScope, message);
-
-		Map emailsScope = new HashMap<String, String>();
-		emailsScope.put("validationLink", "http://" + network.getRealDomain() + "/access/signup?validation=" + newcome.hash);
-		emailsScope.put("name", newcome.getPerson().getName());
-		emailsScope.put("validationMessage", validationMessage);
-
-		String emailBody = parseScope(emailsScope, template);
+		String emailBody = parseScope(messageScope, message);
 		String subject = network.name + " - Boas-vindas";
 		sendSimpleMail(newcome.person.email, subject, emailBody);
 	}
@@ -105,7 +95,7 @@ import java.util.Set;
 	}
 
 	public void sendCredentials(Network network, Person inviter, Person invitee) throws Exception {
-		String template = FileUtil.loadTemplateHTML(CREDENTIALS_TEMPLATE_FILENAME);
+		String template = FileUtil.loadFileFromResource(CREDENTIALS_TEMPLATE_FILENAME);
 
 		Map messageScope = new HashMap<String, String>();
 		messageScope.put("inviterName", inviter.getName());
@@ -127,6 +117,8 @@ import java.util.Set;
 	}
 
 	public String parseScope(Map scope, String template) throws Exception {
+		Assert.notNull(template);
+
 		Set<String> keyWords = scope.keySet();
 		for(String keyWord: keyWords){
 			if(!template.contains(keyWord)) {
