@@ -129,6 +129,8 @@ public class PostEventHandler {
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Post post) throws UnauthorizedException {
+		post.tags.clear();
+		postRepository.save(post);
 		cellRepository.delete(cellRepository.findByPost(post));
 		commentRepository.delete(post.comments);
 		if (post.state.equals(Post.STATE_PUBLISHED)) {
