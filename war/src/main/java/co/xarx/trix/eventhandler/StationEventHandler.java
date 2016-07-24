@@ -207,6 +207,9 @@ public class StationEventHandler {
 			queryPersistence.deleteCellsInPosts(ids);
 			queryPersistence.deleteCommentsInPosts(ids);
 
+			for (Post post: posts) {
+				postEventHandler.handleBeforeDelete(post);
+			}
 			postRepository.forceDeleteAll(posts.stream().map(post -> post.id).collect(Collectors.toList()));
 		}
 
