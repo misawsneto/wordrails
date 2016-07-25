@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+import static co.xarx.trix.util.Logger.debug;
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
@@ -422,6 +423,8 @@ public class StatisticsService {
 
 		search.setQuery(query);
 		search.addAggregation(AggregationBuilders.dateHistogram(queryName).field(orderField).interval(DateHistogram.Interval.DAY));
+
+		debug(queryName + ": " + search.toString());
 
 		SearchResponse response = search.execute().actionGet();
 		DateHistogram histogram = response.getAggregations().get(queryName);
