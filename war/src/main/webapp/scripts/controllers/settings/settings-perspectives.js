@@ -112,6 +112,15 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
     })
   }
 
+  $scope.activatePerspective = function(){
+    trix.getStation(thisStation.id).success(function(stationResponse){
+      stationResponse.defaultPerspectiveId = t$scope.currentPerspective.id
+      trix.putStation(stationResponse).success(function(){
+        $mdDialog.cancel();
+      })
+    })
+  }
+
    $scope.showDeletePerspectiveDialog = function(event, perspective){
     $scope.perspectiveToDelete = perspective;
     $scope.disabled = false;
