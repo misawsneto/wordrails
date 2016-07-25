@@ -94,7 +94,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
   }
 
    $scope.showActivatePerspectiveDialog = function(event, perspective){
-    $scope.perspectiveToActigate = perspective;
+    $scope.perspectiveToActivate = perspective;
     $scope.disabled = false;
     $mdDialog.show({
       scope: $scope,        // use parent scope in template
@@ -113,8 +113,9 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
   }
 
   $scope.activatePerspective = function(){
-    trix.getStation(thisStation.id).success(function(stationResponse){
-      stationResponse.defaultPerspectiveId = t$scope.currentPerspective.id
+    trix.getStation($scope.thisStation.id).success(function(stationResponse){
+      $scope.currentPerspective = $scope.perspectiveToActivate;
+      $scope.thisStation.defaultPerspectiveId = stationResponse.defaultPerspectiveId = $scope.currentPerspective.id;
       trix.putStation(stationResponse).success(function(){
         $mdDialog.cancel();
       })
