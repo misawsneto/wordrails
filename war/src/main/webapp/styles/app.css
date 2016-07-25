@@ -1322,7 +1322,7 @@ a.list-group-item.hover {
 .navbar .navbar-brand img,
 .navbar .navbar-brand svg {
   display: inline-block;
-  vertical-align: -10%;
+  vertical-align: -15%;
 }
 
 @media (max-width: 991px) {
