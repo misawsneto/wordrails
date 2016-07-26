@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -80,10 +81,20 @@ public class PathEntityFilter implements Filter {
 
 				}
 			}else{
-				request.setAttribute("requestedEntityJson", "null");
-				request.setAttribute("requestedEntityMetas", "");
-				request.setAttribute("requestedEntityHiddenHtml", "");
-				request.setAttribute("entityType", "");
+				if (path.split("/").length == 2) {
+					String parts[] = path.split("/");
+					Post post = postRepository.findBySlug(parts[1]);
+					if (post != null) {
+						HttpServletResponse httpResponse = (HttpServletResponse) res;
+						httpResponse.sendRedirect("/" + post.station.stationSlug + "/" + post.slug);
+						return;
+					}
+				}else {
+					request.setAttribute("requestedEntityJson", "null");
+					request.setAttribute("requestedEntityMetas", "");
+					request.setAttribute("requestedEntityHiddenHtml", "");
+					request.setAttribute("entityType", "");
+				}
 			}
 		}
 
