@@ -108,14 +108,10 @@ public class PostEventHandler {
 	}
 
 	private void notificationCheck(Post post) {
-		if (post.state.equals(Post.STATE_PUBLISHED) && post.scheduledDate == null ||
-				(post.scheduledDate != null && post.scheduledDate.before(new Date()))
-				) {
-			if (post.notify && !post.notified) {
-				postService.sendNewPostNotification(post);
-				post.notified = true;
-				postRepository.save(post);
-			}
+		if (post.state.equals(Post.STATE_PUBLISHED) && post.notify && !post.notified) {
+			postService.sendNewPostNotification(post);
+			post.notified = true;
+			postRepository.save(post);
 		}
 	}
 

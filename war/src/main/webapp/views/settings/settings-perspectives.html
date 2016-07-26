@@ -248,7 +248,7 @@
                               <div class="clear" style="height: 36px;">
                                  <md-button ng-if="perspective.id !== currentPerspective.id" aria-label="nothing" class="no-margin m-b-sm btn-sm pull-left no-padding" style="min-height: 28px; line-height:28px;" ng-click="setCurrentPerspective(perspective);">{{'titles.SHOW' | translate}}
                                  </md-button>
-                                 <md-button ng-if="perspective.id !== thisStation.defaultPerspectiveId" aria-label="nothing" class="no-margin m-b-sm btn-sm pull-left no-padding" style="min-height: 28px; line-height:28px;" ng-click="showActivatePerspectiveDialog($event);">{{'titles.ACTIVATE' | translate}}
+                                 <md-button ng-if="perspective.id !== thisStation.defaultPerspectiveId" aria-label="nothing" class="no-margin m-b-sm btn-sm pull-left no-padding" style="min-height: 28px; line-height:28px;" ng-click="showActivatePerspectiveDialog($event, perspective);">{{'titles.ACTIVATE' | translate}}
                                  </md-button>
                                  <md-button ng-if="perspective.id !== currentPerspective.id" aria-label="nothing" class="md-warn no-margin m-b-sm btn-sm pull-right no-padding" style="min-height: 28px; line-height:28px;" ng-click="showDeletePerspectiveDialog($event, perspective)">{{'titles.REMOVE' | translate}}
                                  </md-button>
@@ -403,7 +403,7 @@
           </div>
    
           <div class="text-center">
-            <md-button aria-label="nothing" ng-click="app.deleteCategory(); disabled = true;" ng-disabled="disabled">
+            <md-button aria-label="nothing" ng-click="activatePerspective(); disabled = true;" ng-disabled="disabled">
               {{'titles.YES' | translate}}
             </md-button>
             <md-button aria-label="nothing" ng-click="cancel()">
