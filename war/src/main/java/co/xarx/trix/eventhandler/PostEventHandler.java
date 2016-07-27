@@ -4,6 +4,7 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.ESPost;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.exception.BadRequestException;
+import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
@@ -13,6 +14,9 @@ import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.services.security.PostPermissionService;
 import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
@@ -46,8 +50,14 @@ public class PostEventHandler {
 	private QueryPersistence queryPersistence;
 
 	@HandleBeforeCreate
-	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
+	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException, ConflictException {
 		Integer stationId = post.getStation().getId();
+
+
+		Pageable page = new PageRequest(0, 1, Sort.Direction.DESC, "id");
+		List<Post> postPage = postRepository.findLatestPosts(TenantContextHolder.getCurrentTenantId(), page);
+		if(postPage.get(0).title.equals(post.title))
+			throw new ConflictException("Title conflict");
 
 		boolean canPublish = postPermissionService.canPublishOnStation(stationId);
 

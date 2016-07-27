@@ -67,6 +67,10 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@CacheEvict(value = "postsIds")
 	<S extends Post> S save(S entity);
 
+	@RestResource(exported = false)
+	@Query("select post from Post post where post.tenantId = :tenantId")
+	List<Post> findLatestPosts(@Param("tenantId") String tenantId, Pageable pageable);
+
 //	@Override
 //	@SdkExclude
 //	@RestResource(exported = true)
