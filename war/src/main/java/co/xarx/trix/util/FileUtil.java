@@ -57,7 +57,7 @@ public class FileUtil {
 		return file;
 	}
 
-	public static String loadTemplateHTML(String filename) throws IOException {
+	public static String loadFileFromResource(String filename) throws IOException {
 		try {
 			String filePath = new ClassPathResource(filename).getFile().getAbsolutePath();
 			byte[] bytes = Files.readAllBytes(Paths.get(filePath));

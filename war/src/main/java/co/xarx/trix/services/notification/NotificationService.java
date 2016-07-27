@@ -86,6 +86,7 @@ public class NotificationService {
 		postView.setDate(post.getDate());
 		postView.setAuthorName(post.getAuthor().getName());
 		postView.setAuthorProfilePicture(post.getAuthor().getImageHash());
+		postView.setBody(post.getBody()); // this thing must disappear in 3 months. Today is July, 26th - 2016
 
 		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(NotificationView.of(postView), androids, apples);
 

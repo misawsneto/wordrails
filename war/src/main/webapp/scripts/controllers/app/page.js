@@ -40,9 +40,9 @@ app.controller('PageCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
     		if($scope.app.perspectiveTerms == null)
     			$scope.app.loadPerspectiveTerms()
     	}
-    	$scope.app.name = $scope.app.network.name;
+    	$scope.app.stationName = null;
     }else if($state.includes('app.station.stationHome')){
-    	$scope.app.name = $scope.thisStation.name;
+    	$scope.app.stationName = $scope.thisStation.name;
     }
 
     if($scope.app.termPerspectiveView && $scope.app.termPerspectiveView.homeRow && $scope.app.termPerspectiveView.homeRow.cells){

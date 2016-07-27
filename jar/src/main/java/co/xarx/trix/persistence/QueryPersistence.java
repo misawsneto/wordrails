@@ -20,7 +20,7 @@ public class QueryPersistence {
 
 	@Transactional
 	public void deletePostReadsInPosts(List<Integer> ids) {
-		manager.createQuery("delete from PostRead postRead where postRead.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+//		manager.createQuery("delete from PostRead postRead where postRead.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
 	}
 
 	@Transactional

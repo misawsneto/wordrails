@@ -106,7 +106,7 @@ public class ApplicationConfig implements AsyncConfigurer{
 
 	@Bean
 	public DateTimeFormatter dateTimeFormatter() {
-		return DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+		return DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
 	}
 
 	@Override

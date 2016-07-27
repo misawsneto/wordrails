@@ -14,7 +14,7 @@ public class TrixField extends AbstractField {
 	public Class<?> type;
 	public Class<?> genericType;
 	public String name;
-	public String parametrizedGenericTypeName;
+	public String parameterizedGenericTypeName;
 
 	@Override
 	public boolean isId() {
@@ -25,4 +25,6 @@ public class TrixField extends AbstractField {
 	public boolean isMappedBy() {
 		return false;
 	}
+
+
 }

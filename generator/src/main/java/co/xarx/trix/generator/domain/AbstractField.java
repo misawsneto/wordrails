@@ -77,5 +77,5 @@ public abstract class AbstractField {
 
 	public abstract String getName();
 
-	public abstract String getParametrizedGenericTypeName();
+	public abstract String getParameterizedGenericTypeName();
 }

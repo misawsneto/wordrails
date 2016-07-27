@@ -24,9 +24,9 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
 import java.util.*;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
@@ -41,16 +41,17 @@ public class PersonService {
 	private UserFactory userFactory;
 	private AuthService authService;
 	private EmailService emailService;
-	private PersonFactory personFactory;
-	private PersonRepository personRepository;
-	private NetworkRepository networkRepository;
-	private StationRepository stationRepository;
-	private InvitationRepository invitationRepository;
-	private StationPermissionService stationPermissionService;
-	private PersonValidationRepository personValidationRepository;
+    private PersonFactory personFactory;
+    private NetworkService networkService;
+    private PersonRepository personRepository;
+    private NetworkRepository networkRepository;
+    private StationRepository stationRepository;
+    private InvitationRepository invitationRepository;
+    private StationPermissionService stationPermissionService;
+    private PersonValidationRepository personValidationRepository;
 
 	@Autowired
-	public PersonService(PersonRepository personRepository, EmailService emailService, NetworkRepository networkRepository, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory) {
+	public PersonService(PersonRepository personRepository, EmailService emailService, NetworkRepository networkRepository, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory, NetworkService networkService) {
 		this.client = client;
 		this.authService = authService;
 		this.userFactory = userFactory;
@@ -63,7 +64,8 @@ public class PersonService {
 		this.invitationRepository = invitationRepository;
 		this.stationPermissionService = stationPermissionService;
 		this.personValidationRepository = personValidationRepository;
-	}
+        this.networkService = networkService;
+    }
 
 	public Person createFromInvite(PersonsApi.PersonCreateDto dto, String inviteHash) throws PersonAlreadyExistsException, UserAlreadyExistsException {
 		Assert.hasText(inviteHash);
@@ -92,13 +94,12 @@ public class PersonService {
 		return newPerson;
 	}
 
-	@Transactional
-	public Person createPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException, UserAlreadyExistsException {
+	public Person createPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException, UserAlreadyExistsException, IOException {
 		if (dto.password == null || dto.password.isEmpty())
 			dto.password = StringUtil.generateRandomString(6, "aA#");
 
 		User newUser = userFactory.create(dto.username, dto.password);
-		Person newPerson = null;
+		Person newPerson;
 		try{
 			newPerson = personFactory.create(dto.name, dto.email, newUser);
 		}catch (Exception e){
@@ -113,7 +114,7 @@ public class PersonService {
 		personValidationRepository.save(validation);
 
 		try {
-			emailService.validatePersonCreation(network, authService.getLoggedPerson(), validation);
+			emailService.validatePersonCreation(network, validation, networkService.getValidationMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -125,7 +126,7 @@ public class PersonService {
 			dto.password = StringUtil.generateRandomString(6, "aA#");
 
 		User newUser = userFactory.create(dto.username, dto.password);
-		Person newPerson = null;
+		Person newPerson;
 		try {
 			newPerson = personFactory.create(dto.name, dto.email, newUser);
 		} catch (Exception e) {
@@ -165,32 +166,37 @@ public class PersonService {
 		return person;
 	}
 
-	public List<Person> invite(PersonsApi.PersonInvitationDto dto){
-		if(dto.emails == null || dto.emails.size() == 0 || dto.emailTemplate == null){
-			throw new BadRequestException("Invalid emails or template");
-		}
-
-		List<Person> persons = personRepository.findByEmailIn(dto.emails);
-
-		if(persons != null && persons.size() > 0){
-			for (Iterator<String> iterator = dto.emails.iterator(); iterator.hasNext();) {
-				String email = iterator.next();
-
-				persons.stream().filter(p -> p.email.equals(email)).forEach(p -> {
-					iterator.remove();
-					Logger.debug(email + " already is a registered user -- removing from invitees");
-				});
-			}
-		}
-
-		if (dto.stationIds != null) {
-			for(Iterator<Integer> it = dto.stationIds.iterator(); it.hasNext();){
+	private void removeInvalidStations(List stations){
+		if (stations != null) {
+			for(Iterator<Integer> it = stations.iterator(); it.hasNext();){
 				Integer id = it.next();
 				if (stationRepository.findOne(id) == null) {
 					it.remove();
 				}
 			}
 		}
+	}
+
+	private void removeRepeatedPerson(List emails){
+		List<Person> persons = personRepository.findByEmailIn(emails);
+
+		if (persons == null || persons.size() <= 0) return;
+
+		for(Person person: persons){
+            if(emails.contains(person.getEmail())){
+                emails.remove(person.getEmail());
+                Logger.debug(person.getEmail() + " already is an registered user -- removing from invitees");
+            }
+        }
+	}
+
+	public List<String> invite(PersonsApi.PersonInvitationDto dto){
+		if(dto.emails == null || dto.emails.size() == 0 || dto.emailTemplate == null){
+			throw new BadRequestException("Invalid emails or template");
+		}
+
+		removeRepeatedPerson(dto.emails);
+		removeInvalidStations(dto.stationIds);
 
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 
@@ -204,13 +210,13 @@ public class PersonService {
 			invitation.email = email;
 			invitation.invitationStations = dto.stationIds;
 			invitationRepository.save(invitation);
-			if(dto.emailTemplate.equals("")){
+			if(dto.emailTemplate.equals("") || dto.emailTemplate == null){
 				dto.emailTemplate = network.getInvitationMessage();
 			}
 			emailService.sendInvitation(network, invitation, authService.getLoggedPerson(), dto.emailTemplate);
 		}
 
-		return persons;
+		return dto.emails;
 	}
 
 	public List<Map<String, Object>> getUserTimeline(String username) {

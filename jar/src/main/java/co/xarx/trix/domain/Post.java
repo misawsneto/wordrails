@@ -15,7 +15,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @lombok.Getter @lombok.Setter
@@ -104,6 +106,11 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@SdkInclude
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Audio featuredAudio;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@OrderColumn(name = "list_order")
+	@JoinTable(name = "post_galleries", joinColumns = @JoinColumn(name = "post_id"))
+	public List<Image> featuredGalery;
 
 	@SdkInclude
 	@NotNull
@@ -227,6 +234,20 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@SdkInclude
 	public String getImageHash() {
 		if (featuredImage != null) return featuredImage.getOriginalHash();
+
+		return null;
+	}
+
+	@SdkInclude
+	public List<String> getGaleryHashes() {
+		if (featuredGalery != null && featuredGalery.size() > 0){
+			List<String> hashes = new ArrayList<>();
+			for (Image featuredImage: featuredGalery) {
+				hashes.add(featuredImage.getOriginalHash());
+			}
+
+			return hashes;
+		}
 
 		return null;
 	}
