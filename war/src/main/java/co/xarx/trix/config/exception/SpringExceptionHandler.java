@@ -40,71 +40,112 @@ public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 	@Autowired
 	private HttpServletRequest request;
 
-	@ExceptionHandler(UnauthorizedException.class)
-	public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException e) throws JsonProcessingException {
+	@ExceptionHandler(SubdomainNotFoundException.class)
+	public ResponseEntity<Object> handleSubdomainNotFoundException(SubdomainNotFoundException e, WebRequest req) throws
+			JsonProcessingException {
 		String stackTrace = ExceptionUtils.getStackTrace(e);
 
 		String message = stackTrace != null && !stackTrace.isEmpty() ? stackTrace.replaceAll("\"", "\\\"") : "";
 
-		String error = mapper.writeValueAsString(new ErrorData(e.getClass() + " - " + message ));
+		String error = mapper.writeValueAsString(new ErrorData(e.getClass() + " - " + message));
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		logError(e);
-		return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+		return handleExceptionInternal(e, error, headers, HttpStatus.NOT_FOUND, req);
+	}
+
+	@ExceptionHandler(UnauthorizedException.class)
+	public ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException e, WebRequest req) throws
+			JsonProcessingException {
+		String stackTrace = ExceptionUtils.getStackTrace(e);
+
+		String message = stackTrace != null && !stackTrace.isEmpty() ? stackTrace.replaceAll("\"", "\\\"") : "";
+
+		String error = mapper.writeValueAsString(new ErrorData(e.getClass() + " - " + message));
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		logError(e);
+		return handleExceptionInternal(e, error, headers, HttpStatus.METHOD_NOT_ALLOWED, req);
 	}
 
 	@ExceptionHandler(AccessDeniedException.class)
 	@Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
-	public ResponseEntity<String> accessDeniedException(AccessDeniedException e) throws JsonProcessingException {
+	public ResponseEntity<Object> accessDeniedException(AccessDeniedException e, WebRequest req) throws
+			JsonProcessingException {
 		String stackTrace = ExceptionUtils.getStackTrace(e);
 		String message = stackTrace != null && !stackTrace.isEmpty() ? stackTrace.replaceAll("\"", "\\\"") : "";
 
-		String error = mapper.writeValueAsString(new ErrorData(e.getClass() + " - " + message ));
+		String error = mapper.writeValueAsString(new ErrorData(e.getClass() + " - " + message));
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
 		logError(e);
-		return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+		return handleExceptionInternal(e, error, headers, HttpStatus.FORBIDDEN, req);
 	}
 
 	@ExceptionHandler(NotImplementedException.class)
-	public ResponseEntity<String> handleNotImplementedException(NotImplementedException e) throws JsonProcessingException {
+	public ResponseEntity<Object> handleNotImplementedException(NotImplementedException e, WebRequest req) throws
+			JsonProcessingException {
 		String stackTrace = ExceptionUtils.getStackTrace(e);
 
 		String message = stackTrace != null && !stackTrace.isEmpty() ? stackTrace.replaceAll("\"", "\\\"") : "";
 
-		String error = mapper.writeValueAsString(new ErrorData(e.getClass() + " - " + message ));
+		String error = mapper.writeValueAsString(new ErrorData(e.getClass() + " - " + message));
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		logError(e);
-		return new ResponseEntity<>(error, HttpStatus.NOT_IMPLEMENTED);
+		return handleExceptionInternal(e, error, headers, HttpStatus.NOT_IMPLEMENTED, req);
 	}
 
 	@ExceptionHandler(OperationNotSupportedException.class)
-	public ResponseEntity<String> handleOperationNotSupportedException(OperationNotSupportedException e) throws JsonProcessingException {
+	public ResponseEntity<Object> handleOperationNotSupportedException(OperationNotSupportedException e, WebRequest req)
+			throws
+			JsonProcessingException {
 		String stackTrace = ExceptionUtils.getStackTrace(e);
 
 		String message = stackTrace != null && !stackTrace.isEmpty() ? stackTrace.replaceAll("\"", "\\\"") : "";
 
-		String error = mapper.writeValueAsString(new ErrorData(e.getClass() + " - " + message ));
+		String error = mapper.writeValueAsString(new ErrorData(e.getClass() + " - " + message));
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		logError(e);
-		return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
+		return handleExceptionInternal(e, error, headers, HttpStatus.METHOD_NOT_ALLOWED, req);
 	}
 
 	@ExceptionHandler(AmazonServiceException.class)
-	public ResponseEntity<String> handleAmazonServiceException(AmazonServiceException e) {
+	public ResponseEntity<Object> handleAmazonServiceException(AmazonServiceException e, WebRequest req) throws JsonProcessingException {
 		String stackTrace = ExceptionUtils.getStackTrace(e);
 		System.out.println("Caught an AmazonServiceException, " +
 				"which means your request made it " +
 				"to Amazon S3, but was rejected with an error response " +
 				"for some reason.");
 		System.out.println("Error Message: " + e.getMessage());
-		System.out.println("HTTP  Code: "    + e.getStatusCode());
+		System.out.println("HTTP  Code: " + e.getStatusCode());
 		System.out.println("AWS Error Code:" + e.getErrorCode());
 		System.out.println("Error Type:    " + e.getErrorType());
 		System.out.println("Request ID:    " + e.getRequestId());
+		String message = stackTrace != null && !stackTrace.isEmpty() ? stackTrace.replaceAll("\"", "\\\"") : "";
+
+		String error = mapper.writeValueAsString(new ErrorData(e.getClass() + " - " + message));
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
 		logError(e);
-		return new ResponseEntity<>(stackTrace, HttpStatus.METHOD_NOT_ALLOWED);
+		return handleExceptionInternal(e, error, headers, HttpStatus.METHOD_NOT_ALLOWED, req);
 	}
 
 	@ExceptionHandler(AmazonClientException.class)
-	public ResponseEntity<String> handleAmazonClientException(AmazonClientException e) {
+	public ResponseEntity<Object> handleAmazonClientException(AmazonClientException e, WebRequest req) throws JsonProcessingException {
 		String stackTrace = ExceptionUtils.getStackTrace(e);
 		System.out.println("Caught an AmazonClientException, " +
 				"which means the client encountered " +
@@ -112,20 +153,32 @@ public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 				" with S3, " +
 				"such as not being able to access the network.");
 		System.out.println("Error Message: " + e.getMessage());
+
+		String message = stackTrace != null && !stackTrace.isEmpty() ? stackTrace.replaceAll("\"", "\\\"") : "";
+
+		String error = mapper.writeValueAsString(new ErrorData(e.getClass() + " - " + message));
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
 		logError(e);
-		return new ResponseEntity<>(stackTrace, HttpStatus.METHOD_NOT_ALLOWED);
+		return handleExceptionInternal(e, error, headers, HttpStatus.METHOD_NOT_ALLOWED, req);
 	}
 
 	@ExceptionHandler(ConflictException.class)
-	public ResponseEntity<String> handleConflictException(ConflictException e) throws JsonProcessingException {
+	public ResponseEntity<Object> handleConflictException(ConflictException e, WebRequest req) throws
+			JsonProcessingException {
 		String stackTrace = ExceptionUtils.getStackTrace(e);
 
 		String message = stackTrace != null && !stackTrace.isEmpty() ? stackTrace.replaceAll("\"", "\\\"") : "";
 
-		String error = mapper.writeValueAsString(new ErrorData(e.getClass() + " - " + message ));
+		String error = mapper.writeValueAsString(new ErrorData(e.getClass() + " - " + message));
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		logError(e);
-		return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+		return handleExceptionInternal(e, error, headers, HttpStatus.CONFLICT, req);
 	}
 
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "IOException occured")
@@ -156,7 +209,37 @@ public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 
 
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<Object> handleAnyException(HttpServletRequest req, WebRequest request, Exception e) {
+	public ResponseEntity<Object> handleAnyException(HttpServletRequest req, WebRequest request, Exception e) throws JsonProcessingException {
+
+
+		Throwable t = e.getCause();
+
+		logError(e);
+
+		if (t instanceof ConflictException)
+			return handleConflictException((ConflictException) t, request);
+
+		if (t instanceof BadRequestException)
+			return handleBadRequest((BadRequestException) t, request);
+
+		if (t instanceof co.xarx.trix.exception.UnauthorizedException)
+			return handleUnauthorizedException((UnauthorizedException) t, request);
+
+		if (t instanceof co.xarx.trix.exception.SubdomainNotFoundException)
+			return handleSubdomainNotFoundException((SubdomainNotFoundException) t, request);
+
+		if (t instanceof co.xarx.trix.exception.OperationNotSupportedException)
+			return handleOperationNotSupportedException((OperationNotSupportedException) t, request);
+
+		if (t instanceof AmazonClientException)
+			return handleAmazonClientException((AmazonClientException) t, request);
+
+		if (t instanceof AmazonServiceException)
+			return handleAmazonServiceException((AmazonServiceException) t, request);
+
+		if (t instanceof NotImplementedException)
+			return handleNotImplementedException((NotImplementedException) t, request);
+
 		ErrorResource error = new ErrorResource("Generic Exception", ExceptionUtils.getRootCauseMessage(e));
 		error.setStacktrace(ExceptionUtils.getStackTrace(e));
 		error.setType(e.toString());
@@ -168,12 +251,11 @@ public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 			return handleExceptionInternal(e, ExceptionUtils.getRootCauseMessage(e), headers, HttpStatus
 					.INTERNAL_SERVER_ERROR, request);
 		}
-		
-		logError(e);
+
 		return handleExceptionInternal(e, error, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
 	}
 
-	private void logError(Throwable e){
+	private void logError(Throwable e) {
 		log.error("LOG FATAL ERROR\n" +
 						"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
 						"MESSAGE: " + e.getMessage() + "\n" +
