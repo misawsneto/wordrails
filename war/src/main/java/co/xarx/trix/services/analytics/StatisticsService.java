@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static co.xarx.trix.util.AnalyticsUtil.getInterval;
 import static co.xarx.trix.util.Logger.debug;
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
@@ -42,7 +43,7 @@ public class StatisticsService {
         this.commentRepository = commentRepository;
 	}
 
-	public Map getMostPupularNetwork(Integer size){
+	public Map getMostPupularNetworks(Integer size){
         Interval interval = getInterval(DateTime.now(), 30);
         return analyticsSearchService.findMostPopular("tenantId", interval, size);
     }

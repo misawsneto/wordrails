@@ -43,7 +43,7 @@ public class V2StatisticsResource implements V2StatisticsApi {
 		Map popular;
 
 		try {
-			popular = statisticsService.getMostPupularNetwork(size);
+			popular = statisticsService.getMostPupularNetworks(size);
 			return ok(popular);
 		} catch (Exception e) {
 			e.printStackTrace();

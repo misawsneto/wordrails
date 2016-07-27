@@ -118,7 +118,7 @@ public class AnalyticsSearchService {
 			return esQueries.findMostPopular(field, interval, size);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return new HashMap();
 		}
 	}
 
