@@ -76,6 +76,10 @@ public interface PostProjection {
 	// multimedia: images, video, audio ------------------
 	String getImageSmallHash();
 
+	String getImageHash();
+
+	List<String> getGaleryHashes();
+
 	String getImageMediumHash();
 
 	String getImageLargeHash();

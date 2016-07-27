@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import org.reflections.Reflections;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.rest.core.annotation.RestResource;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -21,10 +22,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.*;
 
 public class EntityExtractor {
@@ -59,7 +57,7 @@ public class EntityExtractor {
 							genericName = genericType.getName();
 
 						if (field.isMap()) {
-							fd.type = field.getParametrizedGenericTypeName();
+							fd.type = field.getParameterizedGenericTypeName();
 							fd.entity = new EntityDescription();
 							fd.entity.name = genericType.getSimpleName();
 							entity.fields.add(fd);
@@ -237,16 +235,20 @@ public class EntityExtractor {
 		Class<?> returnType = readMethod.getReturnType();
 		Type genericReturnType = readMethod.getGenericReturnType();
 
-		t.setType(returnType);
-		if (genericReturnType != null) {
-			t.setGenericType(genericReturnType.getClass());
-			t.setParametrizedGenericTypeName(genericReturnType.toString());
-		}
-
 		t.setMap(returnType.isAssignableFrom(Collection.class));
 		t.setMap(returnType.isAssignableFrom(Map.class));
+		t.setList(returnType.isAssignableFrom(List.class));
 		t.setIncludeAsReference(asReference);
 		t.setName(pd.getName());
+
+		t.setType(returnType);
+		if (genericReturnType != null) {
+			if(genericReturnType.getClass().equals(ParameterizedTypeImpl.class))
+				t.setGenericType((Class<?>) ((ParameterizedTypeImpl)genericReturnType).getActualTypeArguments()[0]);
+			else
+				t.setGenericType(genericReturnType.getClass());
+			t.setParameterizedGenericTypeName(genericReturnType.toString());
+		}
 
 		return t;
 	}

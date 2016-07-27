@@ -847,6 +847,22 @@
 			</dependency>
 
 			<dependency>
+				<groupId>com.typesafe.akka</groupId>
+				<artifactId>akka-actor_2.11</artifactId>
+				<version>2.4.8</version>
+			</dependency>
+			<dependency>
+				<groupId>com.typesafe.akka</groupId>
+				<artifactId>akka-remote_2.11</artifactId>
+				<version>2.4.8</version>
+			</dependency>
+			<dependency>
+				<groupId>com.typesafe.akka</groupId>
+				<artifactId>akka-cluster_2.11</artifactId>
+				<version>2.4.8</version>
+			</dependency>
+
+			<dependency>
 				<groupId>com.zaxxer</groupId>
 				<artifactId>HikariCP</artifactId>
 				<version>2.4.6</version>
