@@ -370,6 +370,8 @@
 			"PUBLISH_SUCCESS": "Publicado",
 			"PUBLISH_SCHEDULED": "Publicação agendada",
 			"PUBLISH_ERROR": "Erro ao publicar",
+			"PUBLISH_ERROR_SLUG": "Este link está sendo usado por outra publicação. Modifique e tente novamente.",
+			"PUBLISH_ERROR_TITLE": "A última publicação possui este mesmo título. Modifique e tente novamente.",
 			"EDITING": "Edição",
 			"AUTOMATIC_SAVE": "Salvar automaticamente"
 		},

@@ -370,6 +370,8 @@
 			"PUBLISH_SUCCESS": "Published",
 			"PUBLISH_SCHEDULED": "Scheduled publication",
 			"PUBLISH_ERROR": "Publication error",
+			"PUBLISH_ERROR_SLUG": "Publication link is already in use. Change it and try again.",
+			"PUBLISH_ERROR_TITLE": "The last publication has this exact title. Use another title and try again.",
 			"EDITING": "Editing",
 			"AUTOMATIC_SAVE": "Automatic save"
 		},

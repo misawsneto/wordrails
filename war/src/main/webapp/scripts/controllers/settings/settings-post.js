@@ -242,6 +242,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		invalid: false
 	}
 
+	$scope.postPermalinkMenuOpen = false;
 	$scope.applyCustomizedLink = function(slug){
 		if(!$scope.app.editingPost)
 			$scope.app.editingPost = {};
@@ -1309,10 +1310,21 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 					$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SCHEDULED'));
 				else
 					$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
-			}).error(function(){
+			}).error(function(data, status, headers, config){
+				if(status == 409){
+					if(data.message.indexOf('Title') > -1)
+						$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR_TITLE'));
+					if(data.message.indexOf('slug') > -1)
+						$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR_SLUG'));
+
+				}else {
+					$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
+					$timeout(function(){
+						$mdDialog.cancel();
+					}, 5000)
+				}
+				
 				$scope.persisting = false;
-				$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
-				$mdDialog.cancel();
 			})
 		}
 	}
