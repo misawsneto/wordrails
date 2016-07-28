@@ -10,10 +10,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PermissionData {
+	private Integer stationId;
 	private boolean read = false;
 	private boolean write = false;
 	private boolean create = false;

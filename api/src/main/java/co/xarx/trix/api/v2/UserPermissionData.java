@@ -15,13 +15,5 @@ import java.util.List;
 public class UserPermissionData {
 
 	@Getter
-	@AllArgsConstructor
-	public class Permission {
-		private Integer stationId;
-//		@JsonUnwrapped
-		private PermissionData permissionData;
-	}
-
-	@Getter
-	private List<Permission> stationPermissions = new ArrayList<>();
+	private List<PermissionData> stationPermissions = new ArrayList<>();
 }
