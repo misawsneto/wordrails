@@ -32,7 +32,6 @@ import static co.xarx.trix.util.AnalyticsUtil.getInterval;
 public class AnalyticsQueries {
 
     private FileRepository fileRepository;
-    private CommentRepository commentRepository;
 	private MobileDeviceRepository deviceRepository;
     private CommentSearchService commentSearchService;
 	private Map<Class<?>, String> commentSearchFields;
@@ -41,8 +40,7 @@ public class AnalyticsQueries {
     private Map<Constants.MobilePlatform, String> mobileTypesMapToString;
 
 	@Autowired
-	public AnalyticsQueries(CommentRepository commentRepository, MobileDeviceRepository deviceRepository, CommentSearchService commentSearchService, FileRepository fileRepository, PersonPermissionService personPermissionService){
-        this.commentRepository = commentRepository;
+	public AnalyticsQueries(MobileDeviceRepository deviceRepository, CommentSearchService commentSearchService, FileRepository fileRepository, PersonPermissionService personPermissionService){
 		this.deviceRepository = deviceRepository;
 		this.commentSearchService = commentSearchService;
 		this.fileRepository = fileRepository;
@@ -68,10 +66,6 @@ public class AnalyticsQueries {
 	public Integer countRecommendsByEntity(AnalyticsEntity entity){
 		return null;
 	}
-
-//	public List<MobileDevice> getMobileDevicesByPersonId(List<Integer> ids){
-//		return deviceRepository.findByPersonIds(ids);
-//	}
 
 	public List<MobileStats> getMobileStats(String tenantId, Interval interval){
 		List<MobileStats> stats = new ArrayList<>();
@@ -161,9 +155,5 @@ public class AnalyticsQueries {
 	public List<Integer> getPersonIdsFromStation(Integer stationId){
 		List<Person> persons = personPermissionService.getPersonFromStation(stationId, Permissions.READ);
 		return persons.stream().map(Person::getId).collect(Collectors.toList());
-	}
-
-	private String appTypeAsString(Constants.MobilePlatform type){
-		return mobileTypesMapToString.get(type);
 	}
 }
