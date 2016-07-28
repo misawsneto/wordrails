@@ -102292,35 +102292,6 @@ var trix = angular.module('trix', [])
 		}
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findByUsernamesAndRoles) {
-			window.console && console.log("findByUsernamesAndRoles");
-		}
-		this.findByUsernamesAndRoles = function(tenantId, roles, projection) {
-			var config = {};
-			config.params = {
-				tenantId: tenantId,
-				roles: roles,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/persons/search/findByUsernamesAndRoles",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findByUsernameAndTenantId) {
-			window.console && console.log("findByUsernameAndTenantId");
-		}
-		this.findByUsernameAndTenantId = function(tenantId, projection) {
-			var config = {};
-			config.params = {
-				tenantId: tenantId,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/persons/search/findByUsernameAndTenantId",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
 		if (this.findPersons) {
 			window.console && console.log("findPersons");
 		}
@@ -102349,6 +102320,35 @@ var trix = angular.module('trix', [])
 			}
 			config.params["projection"] = projection;
 			return $http.get(_config.url + "/api/persons/search/findByUsername",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findByUsernamesAndRoles) {
+			window.console && console.log("findByUsernamesAndRoles");
+		}
+		this.findByUsernamesAndRoles = function(tenantId, roles, projection) {
+			var config = {};
+			config.params = {
+				tenantId: tenantId,
+				roles: roles,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/persons/search/findByUsernamesAndRoles",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findByUsernameAndTenantId) {
+			window.console && console.log("findByUsernameAndTenantId");
+		}
+		this.findByUsernameAndTenantId = function(tenantId, projection) {
+			var config = {};
+			config.params = {
+				tenantId: tenantId,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/persons/search/findByUsernameAndTenantId",  config)
 		};
 
 		/*-------------------------- Relationship -----------------------------------------------*/
@@ -102628,6 +102628,23 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findPostsOrderByDateDesc) {
+			window.console && console.log("findPostsOrderByDateDesc");
+		}
+		this.findPostsOrderByDateDesc = function(stationId, page, size, sort, projection) {
+			var config = {};
+			config.params = {
+				stationId: stationId,
+				page: page,
+				size: size,
+				sort: sort,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/posts/search/findPostsOrderByDateDesc",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
 		if (this.findPostsPublished) {
 			window.console && console.log("findPostsPublished");
 		}
@@ -102643,23 +102660,6 @@ var trix = angular.module('trix', [])
 			}
 			config.params["projection"] = projection;
 			return $http.get(_config.url + "/api/posts/search/findPostsPublished",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findPostsOrderByDateDesc) {
-			window.console && console.log("findPostsOrderByDateDesc");
-		}
-		this.findPostsOrderByDateDesc = function(stationId, page, size, sort, projection) {
-			var config = {};
-			config.params = {
-				stationId: stationId,
-				page: page,
-				size: size,
-				sort: sort,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/posts/search/findPostsOrderByDateDesc",  config)
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
@@ -103527,20 +103527,6 @@ var trix = angular.module('trix', [])
 		}
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findStationTaxonomy) {
-			window.console && console.log("findStationTaxonomy");
-		}
-		this.findStationTaxonomy = function(stationId, projection) {
-			var config = {};
-			config.params = {
-				stationId: stationId,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/taxonomies/search/findStationTaxonomy",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
 		if (this.findByTypeAndName) {
 			window.console && console.log("findByTypeAndName");
 		}
@@ -103552,6 +103538,20 @@ var trix = angular.module('trix', [])
 			}
 			config.params["projection"] = projection;
 			return $http.get(_config.url + "/api/taxonomies/search/findByTypeAndName",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findStationTaxonomy) {
+			window.console && console.log("findStationTaxonomy");
+		}
+		this.findStationTaxonomy = function(stationId, projection) {
+			var config = {};
+			config.params = {
+				stationId: stationId,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/taxonomies/search/findStationTaxonomy",  config)
 		};
 
 		/*-------------------------- Relationship -----------------------------------------------*/
@@ -103679,45 +103679,17 @@ var trix = angular.module('trix', [])
 		}
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findTermsByPostId) {
-			window.console && console.log("findTermsByPostId");
+		if (this.countTerms) {
+			window.console && console.log("countTerms");
 		}
-		this.findTermsByPostId = function(postId, projection) {
+		this.countTerms = function(termsIds, projection) {
 			var config = {};
 			config.params = {
-				postId: postId,
+				termsIds: termsIds,
 
 			}
 			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/findTermsByPostId",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findByPerspectiveId) {
-			window.console && console.log("findByPerspectiveId");
-		}
-		this.findByPerspectiveId = function(perspectiveId, projection) {
-			var config = {};
-			config.params = {
-				perspectiveId: perspectiveId,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/findByPerspectiveId",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findTermsByPostSlug) {
-			window.console && console.log("findTermsByPostSlug");
-		}
-		this.findTermsByPostSlug = function(slug, projection) {
-			var config = {};
-			config.params = {
-				slug: slug,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/findTermsByPostSlug",  config)
+			return $http.get(_config.url + "/api/terms/search/countTerms",  config)
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
@@ -103735,6 +103707,37 @@ var trix = angular.module('trix', [])
 			}
 			config.params["projection"] = projection;
 			return $http.get(_config.url + "/api/terms/search/findTermsByParentId",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findPostsByTerm) {
+			window.console && console.log("findPostsByTerm");
+		}
+		this.findPostsByTerm = function(termId, page, size, sort, projection) {
+			var config = {};
+			config.params = {
+				termId: termId,
+				page: page,
+				size: size,
+				sort: sort,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/terms/search/findPostsByTerm",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findByTaxonomyId) {
+			window.console && console.log("findByTaxonomyId");
+		}
+		this.findByTaxonomyId = function(taxonomyId, projection) {
+			var config = {};
+			config.params = {
+				taxonomyId: taxonomyId,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/terms/search/findByTaxonomyId",  config)
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
@@ -103769,48 +103772,45 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findByTaxonomyId) {
-			window.console && console.log("findByTaxonomyId");
+		if (this.findByPerspectiveId) {
+			window.console && console.log("findByPerspectiveId");
 		}
-		this.findByTaxonomyId = function(taxonomyId, projection) {
+		this.findByPerspectiveId = function(perspectiveId, projection) {
 			var config = {};
 			config.params = {
-				taxonomyId: taxonomyId,
+				perspectiveId: perspectiveId,
 
 			}
 			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/findByTaxonomyId",  config)
+			return $http.get(_config.url + "/api/terms/search/findByPerspectiveId",  config)
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findPostsByTerm) {
-			window.console && console.log("findPostsByTerm");
+		if (this.findTermsByPostId) {
+			window.console && console.log("findTermsByPostId");
 		}
-		this.findPostsByTerm = function(termId, page, size, sort, projection) {
+		this.findTermsByPostId = function(postId, projection) {
 			var config = {};
 			config.params = {
-				termId: termId,
-				page: page,
-				size: size,
-				sort: sort,
+				postId: postId,
 
 			}
 			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/findPostsByTerm",  config)
+			return $http.get(_config.url + "/api/terms/search/findTermsByPostId",  config)
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.countTerms) {
-			window.console && console.log("countTerms");
+		if (this.findTermsByPostSlug) {
+			window.console && console.log("findTermsByPostSlug");
 		}
-		this.countTerms = function(termsIds, projection) {
+		this.findTermsByPostSlug = function(slug, projection) {
 			var config = {};
 			config.params = {
-				termsIds: termsIds,
+				slug: slug,
 
 			}
 			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/countTerms",  config)
+			return $http.get(_config.url + "/api/terms/search/findTermsByPostSlug",  config)
 		};
 
 		/*-------------------------- Relationship -----------------------------------------------*/
@@ -107194,7 +107194,7 @@ angular.module('app')
             $scope.app.maxPerm.admin = true;
           } else if(perm.write && perm.moderate && !$scope.app.maxPerm.editor){
             $scope.app.maxPerm.editor = true;
-          } else if(perm.wirte && !$scope.app.maxPerm.wirter){
+          } else if(perm.write && !$scope.app.maxPerm.writer){
             $scope.app.maxPerm.writer = true;
           } else if(perm.create && !$scope.app.maxPerm.create){
             $scope.app.maxPerm.creator = true;
