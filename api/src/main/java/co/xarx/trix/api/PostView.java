@@ -93,6 +93,14 @@ public class PostView implements Serializable, Identifiable {
 
 	public ImageView featuredImage;
 
+	public boolean imageMedia;
+
+	public boolean audioMedia;
+
+	public boolean videoMedia;
+
+	public boolean galleryMedia;
+
 	@Override
 	public Serializable getId() {
 		return postId;

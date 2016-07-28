@@ -36,4 +36,8 @@ public interface PersonProjection {
 
 	Boolean getEnabled();
 	Boolean getSeenWelcome();
+
+	Boolean getHasFacebookProfile();
+
+	Boolean getHasGoogleProfile();
 }

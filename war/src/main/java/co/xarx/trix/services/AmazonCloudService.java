@@ -196,6 +196,7 @@ public class AmazonCloudService {
 		} catch (Exception e) {
 			s3Client.abortMultipartUpload(new AbortMultipartUploadRequest(bucketName, keyName, initResponse.getUploadId()));
 
+			uploadFile(file, lenght, keyName, metadata, deleteFileAfterUpload);
 			throw new AmazonS3Exception("Error uploading file to Amazon S3", e);
 		} finally {
 			if(deleteFileAfterUpload && file.exists()) {

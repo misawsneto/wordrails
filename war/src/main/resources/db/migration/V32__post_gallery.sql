@@ -1,0 +1,1 @@
+drop table if EXISTS post_galleries;

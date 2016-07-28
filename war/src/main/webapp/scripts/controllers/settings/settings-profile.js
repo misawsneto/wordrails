@@ -75,7 +75,7 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
   // --- publications ----------
 
-    $scope.settings = $scope.app.maxPerm.creator ? {'tab': 'unpublished'} : {'tab': 'publications'}
+    $scope.settings = !($scope.app.maxPerm.admin || $scope.app.maxPerm.editor || $scope.app.maxPerm.writer) && $scope.app.maxPerm.creator  ? {'tab': 'unpublished'} : {'tab': 'publications'}
 
     $scope.dateValue = new Date();
 

@@ -65,6 +65,13 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.recommendsCount = post.recommendsCount;
 		postView.commentsCount = post.commentsCount;
 		postView.snippet = StringUtil.simpleSnippet(post.body);
+		postView.imageMedia = post.getImageMedia();
+
+		postView.audioMedia = post.getAudioMedia();
+
+		postView.videoMedia = post.getVideoMedia();
+
+		postView.galleryMedia = post.getGalleryMedia();
 
 		if (post.author != null) {
 			postView.authorName = post.author.name;

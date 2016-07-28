@@ -1,6 +1,9 @@
 package co.xarx.trix.domain.projection;
 
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.Station;
+import co.xarx.trix.domain.Term;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.rest.core.config.Projection;
 
@@ -87,4 +90,12 @@ public interface PostProjection {
 	String getFeaturedAudioHash();
 
 	String getFeaturedVideoHash();
+
+	Boolean getImageMedia();
+
+	Boolean getAudioMedia();
+
+	Boolean getVideoMedia();
+
+	Boolean getGalleryMedia();
 }

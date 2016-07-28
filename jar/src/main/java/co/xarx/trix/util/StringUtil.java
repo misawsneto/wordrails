@@ -1,10 +1,13 @@
 package co.xarx.trix.util;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Locale;
@@ -89,5 +92,18 @@ public class StringUtil {
 			throw new RuntimeException("Subdomain not found");
 		}
 		return !topDomain.equals(host) ? host.split("." + topDomain)[0] : null;
+	}
+
+	public static String toMD5(String username) {
+		try {
+			byte[] bytesOfMessage = username.getBytes("UTF-8");
+			return DigestUtils.md5Hex(new ByteArrayInputStream(bytesOfMessage));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }

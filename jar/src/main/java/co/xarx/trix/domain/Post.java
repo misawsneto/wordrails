@@ -110,7 +110,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@ManyToMany(fetch = FetchType.EAGER)
 	@OrderColumn(name = "list_order")
 	@JoinTable(name = "post_galleries", joinColumns = @JoinColumn(name = "post_id"))
-	public List<Image> featuredGalery;
+	public List<Image> featuredGallery;
 
 	@SdkInclude
 	@NotNull
@@ -255,14 +255,14 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	@SdkInclude
 	public boolean getGalleryMedia() {
-		return featuredGalery != null;
+		return featuredGallery != null && featuredGallery.size() > 0;
 	}
 
 	@SdkInclude
 	public List<String> getGaleryHashes() {
-		if (featuredGalery != null && featuredGalery.size() > 0){
+		if (featuredGallery != null && featuredGallery.size() > 0){
 			List<String> hashes = new ArrayList<>();
-			for (Image featuredImage: featuredGalery) {
+			for (Image featuredImage: featuredGallery) {
 				hashes.add(featuredImage.getOriginalHash());
 			}
 
