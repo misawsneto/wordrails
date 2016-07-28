@@ -18,7 +18,7 @@ public class UserPermissionData {
 	@AllArgsConstructor
 	public class Permission {
 		private Integer stationId;
-		@JsonUnwrapped
+//		@JsonUnwrapped
 		private PermissionData permissionData;
 	}
 
