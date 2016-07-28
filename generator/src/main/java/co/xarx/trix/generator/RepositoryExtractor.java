@@ -140,10 +140,6 @@ public class RepositoryExtractor {
 
 		annotatedTypes.putAll(pageableTypes); //ensures that pageable is always last
 
-		if("findPersons".equals(method.getName())){
-			String.valueOf(true);
-		}
-
 		query.parameters = getQueryParameters(annotatedTypes);
 
 		return query;
@@ -154,17 +150,7 @@ public class RepositoryExtractor {
 
 		for (Type type : annotatedTypes.keySet()) {
 			Annotation[] annotationz = annotatedTypes.get(type);
-			if (!Pageable.class.equals(type)) {
-				FieldDescription parameter = new FieldDescription();
-				parameter.type = getType(type);
-				for (Annotation annotation : annotationz) {
-					if (annotation instanceof Param) {
-						parameter.name = ((Param) annotation).value();
-						break;
-					}
-				}
-				parameters.add(parameter);
-			} else {
+			if (Pageable.class.equals(type)) {
 				FieldDescription page = new FieldDescription();
 				page.name = "page";
 				page.type = getType(Integer.class);
@@ -179,6 +165,17 @@ public class RepositoryExtractor {
 				sort.name = "sort";
 				sort.type = "List<String>";
 				parameters.add(sort);
+
+			} else {
+				FieldDescription parameter = new FieldDescription();
+				parameter.type = getType(type);
+				for (Annotation annotation : annotationz) {
+					if(annotation instanceof Param) {
+						parameter.name = ((Param) annotation).value();
+						break;
+					}
+				}
+				parameters.add(parameter);
 			}
 		}
 
