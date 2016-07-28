@@ -33,9 +33,6 @@ public class ESQueries {
 	private Client client;
 	private String accessIndex;
 
-	private static int WEEK_INTERVAL = 7;
-	private static int MONTH_INTERVAL = 30;
-
 	private Map<Class<?>, String> readSearchFields;
 
 	@Autowired
@@ -134,34 +131,6 @@ public class ESQueries {
 
 		return generalCounter(queryName, query, "@timestamp");
 	}
-
-//	public Map countPostreadByTenant(String tenantId) {
-//		return generalCounter("author_read_network", accessIndex, boolQuery().must(termQuery("tenantId", tenantId)).must(termQuery("_type", ACCESS_TYPE)), "@timestamp");
-//	}
-//
-//	public Map countCommentByPost(Integer postId) {
-//		return generalCounter("comments_count", analyticsIndex, boolQuery().must(termQuery("postId", postId)), "date");
-//	}
-//
-//	public Map countCommentByTenant(String tenantId) {
-//		return generalCounter("comments_count_tentant", analyticsIndex, boolQuery().must(termQuery("tenantId", tenantId)), "date");
-//	}
-
-//	public Map<Long, Integer> countPostReadByPost(Integer postId) {
-//		return generalCounter("post_read", accessIndex, boolQuery().must(termQuery("postId", postId)).must(termQuery("_type", ACCESS_TYPE)), "@timestamp");
-//	}
-
-//	public Map countPostreadByStation(Integer stationId) {
-//		return generalCounter("post_read_station", accessIndex, boolQuery().must(termQuery("stationId", stationId)).must(termQuery("_type", ACCESS_TYPE)), "@timestamp");
-//	}
-
-//	public Map countCommentByStation(Integer stationId) {
-//		return generalCounter("comment_station", analyticsIndex, boolQuery().must(termQuery("stationId", stationId)).must(termQuery("_type", "comment")), "@timestamp");
-//	}
-
-//	public Map countCommentByAuthor(Integer id) {
-//		return generalCounter("author_comment", analyticsIndex, boolQuery().must(termQuery("postAuthorId", id)), "date");
-//	}
 
 	public Integer countReadsByEntity(AnalyticsEntity entity) {
 		String fieldName = readSearchFields.get(entity.getClass());
