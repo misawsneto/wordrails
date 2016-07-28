@@ -57,18 +57,25 @@ public class StatisticsService {
 	    Interval interval = getInterval(date, 30);
         Post post = postRepository.findOne(postId);
 
+		if (post == null) return null;
+
         return analyticsSearchService.getPostStats(post, interval);
     }
 
 	public StatsData getPostStats(String end, String beginning, Integer postId){
 		Interval interval = getInterval(end, beginning);
 		Post post = postRepository.findOne(postId);
+
+		if (post == null) return null;
+
 		return analyticsSearchService.getPostStats(post, interval);
 	}
 
     public StatsData getAuthorStats(String date, Integer authorId) {
         Interval interval = getInterval(date, 30);
         Person person = personRepository.findOne(authorId);
+
+		if (person == null) return null;
 
         return analyticsSearchService.getPersonStats(person, interval);
     }
@@ -77,12 +84,16 @@ public class StatisticsService {
 		Interval interval = getInterval(end, start);
 		Person person = personRepository.findOne(authorId);
 
+		if (person == null) return null;
+
 		return analyticsSearchService.getPersonStats(person, interval);
 	}
 
 	public StatsData getStationStats(String end, String start, Integer stationId){
 		Interval interval = getInterval(end, start);
 		Station station = stationRepository.findOne(stationId);
+
+		if (station == null) return null;
 
 		return analyticsSearchService.getStationStats(station, interval);
 	}
@@ -93,6 +104,8 @@ public class StatisticsService {
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		Network network = networkRepository.findByTenantId(tenantId);
 
+		if (network== null) return null;
+
 		network.setTenantId(tenantId); //it is not supposed to happen
 
 		return analyticsSearchService.getNetworkStats(network, interval);
@@ -100,6 +113,9 @@ public class StatisticsService {
 
 	public Map<Integer, Integer> getPostReads(List<Integer> postIds){
 	    List<Post> posts = postRepository.findAll(postIds);
+
+		if(posts == null || posts.isEmpty()) return null;
+
 		return analyticsSearchService.getPostReads(posts);
 	}
 
@@ -109,8 +125,9 @@ public class StatisticsService {
 
 	public Map<String, Integer> getStationReaders(Integer stationId){
 	    Station station = stationRepository.findOne(stationId);
-        Map stationReaders = analyticsSearchService.getReadersByStation(station);
+		if (station == null) return null;
 
+        Map stationReaders = analyticsSearchService.getReadersByStation(station);
 		stationReaders.put("stationId", stationId);
 
 		return stationReaders;
