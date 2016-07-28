@@ -51,6 +51,7 @@ public class PersonPermissionService {
 			if (aces != null) {
 				for (AccessControlEntry ace : aces) {
 					PermissionData permissionData = aclService.getPermissionData(ace.getPermission());
+					permissionData.setStationId(stationId);
 					result.getStationPermissions().add(permissionData);
 				}
 			}
@@ -85,6 +86,7 @@ public class PersonPermissionService {
 
 		for (AccessControlEntry ace : aces) {
 			PermissionData permissionData = aclService.getPermissionData(ace.getPermission());
+			permissionData.setStationId(stationId);
 			result.getStationPermissions().add(permissionData);
 		}
 

@@ -128,6 +128,7 @@ public class StationPermissionService {
 
 			Permission p = ace.getPermission();
 			PermissionData permissionData = aclService.getPermissionData(p);
+			permissionData.setStationId(stationId);
 
 			StationPermissionData.Permission entry = result.new Permission(username, permissionData, null);
 
