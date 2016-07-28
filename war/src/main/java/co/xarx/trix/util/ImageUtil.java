@@ -3,6 +3,7 @@ package co.xarx.trix.util;
 
 import co.xarx.trix.domain.File;
 import net.coobird.thumbnailator.Thumbnails;
+import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -11,9 +12,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 
+@Component
 public class ImageUtil {
 
-	public static File createNewImageTrixFile(String mime, Long size) {
+	public File createNewImageTrixFile(String mime, Long size) {
 		File file = new File();
 		file.directory = File.DIR_IMAGES;
 		file.type = File.EXTERNAL;
@@ -23,12 +25,12 @@ public class ImageUtil {
 		return file;
 	}
 
-	public static ImageFile resizeImage(InputStream inputStream, Integer height, Integer width, String extension) throws IOException {
+	public ImageFile resizeImage(InputStream inputStream, Integer height, Integer width, String extension) throws IOException {
 		java.io.File file = FileUtil.createNewTempFile(inputStream);
 		return resizeImage(file, height, width, extension);
 	}
 
-	public static ImageFile resizeImage(java.io.File file, Integer height, Integer width, String extension) throws IOException {
+	public ImageFile resizeImage(java.io.File file, Integer height, Integer width, String extension) throws IOException {
 		java.io.File newFile = FileUtil.createNewTempFile();
 		BufferedImage bi = Thumbnails.of(file).forceSize(width, height).outputFormat("png").outputQuality(1).asBufferedImage();
 		ImageIO.write(bi, "png", newFile);
@@ -36,16 +38,16 @@ public class ImageUtil {
 		return new ImageFile(newFile, bi.getHeight(), bi.getWidth(), FileUtil.getHash(new FileInputStream(newFile)));
 	}
 
-	public static ImageFile resizeImage(InputStream inputStream, Integer quality, String extension, boolean resizeUp, boolean resizeDown) throws IOException {
+	public ImageFile resizeImage(InputStream inputStream, Integer quality, String extension, boolean resizeUp, boolean resizeDown) throws IOException {
 		java.io.File file = FileUtil.createNewTempFile(inputStream);
 		return resizeImage(file, quality, extension, resizeUp, resizeDown);
 	}
 
-	public static ImageFile resizeImage(java.io.File file, Integer quality, String extension, boolean resizeUp, boolean resizeDown) throws IOException {
+	public ImageFile resizeImage(java.io.File file, Integer quality, String extension, boolean resizeUp, boolean resizeDown) throws IOException {
 		java.io.File newFile = FileUtil.createNewTempFile();
 		BufferedImage bi = ImageIO.read(file);
 		if(bi == null) {
-			// favicon TODO: this needs security and validation
+			// favicon TODO-ARTHUR: this needs security and validation
 			return new ImageFile(file, 32, 32, FileUtil.getHash(new FileInputStream(file)));
 		}
 
@@ -62,30 +64,15 @@ public class ImageUtil {
 		return new ImageFile(newFile, bi.getHeight(), bi.getWidth(), FileUtil.getHash(new FileInputStream(newFile)));
 	}
 
-	public static ImageFile getImageFile(java.io.File file) throws IOException {
+	public ImageFile getImageFile(java.io.File file) throws IOException {
 		if(file == null) return null;
 
 		BufferedImage bi = ImageIO.read(file);
 		if(bi == null){
-			// favicon TODO: this needs security and validation
+			// favicon TODO-ARTHUR: this needs security and validation
 			return new ImageFile(file, 32, 32, FileUtil.getHash(new FileInputStream(file)));
 		}
 		return new ImageFile(file, bi.getHeight(), bi.getWidth(), FileUtil.getHash(new FileInputStream(file)));
 	}
 
-	public static class ImageFile {
-		public java.io.File file;
-		public Integer height;
-		public Integer width;
-		public String hash;
-		public boolean vertical;
-
-		public ImageFile(java.io.File file, Integer height, Integer width, String hash) {
-			this.file = file;
-			this.height = height;
-			this.width = width;
-			this.hash = hash;
-			this.vertical = height > width;
-		}
-	}
 }

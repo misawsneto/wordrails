@@ -5,7 +5,9 @@ EntityDto(package) ::=
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EntityDto implements Serializable {
 	private static final long serialVersionUID = -7723825842523034233L;
 
@@ -31,12 +33,15 @@ public class EntityDto implements Serializable {
 	}
 	
 	public String getSelf() {
-		for (Link link : links) {
-			String rel = link.rel;
-			if ("self".equals(rel)) {
-				return link.href;
+		if(links != null)
+			for (Link link : links) {
+				String rel = link.rel;
+				if ("self".equals(rel)) {
+					return link.href;
+				}
 			}
-		}
+		else
+			return "";
 		throw new RuntimeException();
 	}
 }>>

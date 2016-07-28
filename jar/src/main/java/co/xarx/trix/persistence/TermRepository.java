@@ -1,23 +1,33 @@
 package co.xarx.trix.persistence;
 
-import co.xarx.trix.annotation.EventLoggableRepository;
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Taxonomy;
 import co.xarx.trix.domain.Term;
-
-import java.util.List;
-
-import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
+
+@RepositoryRestResource(exported = true)
 public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPredicateExecutor<Term> {
 
+	@Override
+	@SdkExclude
+	@RestResource(exported = true)
+	void delete(Term term);
+
+	@Override
+	@SdkExclude
+	@RestResource(exported = true)
+	Term save(Term term);
 
 	@RestResource(path="findRootsPage")
 	@Query("select term from Term term where term.parent is null and term.taxonomy.id = :taxonomyId")
@@ -58,7 +68,9 @@ public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPr
 	@Query(nativeQuery=true, value="DELETE FROM post_term WHERE terms_id = ?")
 	void deletePostsTerms(Integer termId);
 
-	@Query(value="SELECT taxonomy.terms FROM StationPerspective sp join sp.taxonomy taxonomy where sp.id = :perspectiveId")
+	@Query(value="SELECT terms FROM StationPerspective sp join sp.taxonomy taxonomy join taxonomy.terms terms where sp" +
+			".id" +
+			" = :perspectiveId")
 	List<Term> findByPerspectiveId(@Param("perspectiveId") Integer perspectiveId);
 
     @RestResource(exported = false)
@@ -69,6 +81,10 @@ public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPr
 	List<Term> findByTaxonomyId(@Param("taxonomyId") Integer taxonomyId);
 
 	@RestResource(exported = false)
-	@Query(value="SELECT post FROM Post post left join post.terms term where post.state = 'PUBLISHED' and post.stationId = :stationId and term.name = :tagName")
-	List<Post> findPostsByTagAndStationId(@Param("tagName") String tagName, @Param("stationId")Integer stationId, Pageable pageable);
+	@Query(value="SELECT post FROM Post post left join post.terms term where (post.state = 'PUBLISHED' AND (post.scheduledDate is null OR post.scheduledDate < current_timestamp)) and post.stationId = :stationId and term.name = :tagName")
+	List<Post> findPostsByCategoryAndStationId(@Param("tagName") String tagName, @Param("stationId")Integer stationId, Pageable pageable);
+
+	@Query(value="SELECT post FROM Post post join post.terms term where (post.state = 'PUBLISHED' AND (post.scheduledDate is null OR post.scheduledDate < current_timestamp)) and term.id = " +
+			":termId")
+	List<Post> findPostsByTerm(@Param("termId") Integer termId, Pageable pageable);
 }

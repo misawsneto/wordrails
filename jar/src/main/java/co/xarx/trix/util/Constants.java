@@ -21,10 +21,9 @@ public final class Constants {
 	}
 
 	public static class Section {
-		public static final String QUERYABLE_LIST = "queryable_list";
+		public static final String QUERYABLE_LIST = "queryable";
 		public static final String CONTAINER = "container";
-
-		public static final String VERTICAL_LIST = "vertical_list";
+		public static final String LINK = "link";
 	}
 
 	public static class Layout {
@@ -41,7 +40,8 @@ public final class Constants {
 		public static final String POST = "post";
 		public static final String PERSON = "person";
 		public static final String STATION = "station";
-		public static final String BOOKMARK = "bookmark";
+		public static final String COMMENT = "comment";
+		public static final String APP_STATS = "app_stats";
 	}
 
 	public static class Post {
@@ -49,6 +49,19 @@ public final class Constants {
 		public static final String STATE_NO_AUTHOR = "NOAUTHOR";
 		public static final String STATE_TRASH = "TRASH";
 		public static final String STATE_PUBLISHED = "PUBLISHED";
+		public static final String STATE_UNPUBLISHED = "UNPUBLISHED";
 		public static final String STATE_SCHEDULED = "SCHEDULED";
+	}
+
+	public enum MobilePlatform {
+		APPLE,
+		ANDROID
+	}
+
+	public static class StatsEventType {
+		public static final String POST_READ = "post_read";
+		public static final String POST_COMMENT = "post_comment";
+		public static final String POST_BOOKMARK = "post_bookmark";
+		public static final String POST_RECOMMEND = "post_recommend";
 	}
 }

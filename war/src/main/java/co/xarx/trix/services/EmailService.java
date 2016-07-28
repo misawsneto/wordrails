@@ -2,6 +2,9 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.domain.Invitation;
 import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.PersonValidation;
+import co.xarx.trix.util.FileUtil;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -12,23 +15,24 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.awt.*;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Service
-public class EmailService {
+	public class EmailService {
+
+	public final String VALIDATION_TEMPLATE_FILENAME = "validation-template.html";
+	public final String CREDENTIALS_TEMPLATE_FILENAME = "credentials-email.html";
 
 	private final String NO_REPLY = "noreply@trix.rocks";
 	private final String USERNAME = "AKIAJKZJWC7NU3RF3URQ";
 	private final String PASSWORD = "2knHnAfeG5uVXmCXcLjquUUiNnxyWjJcIuCp2mxg";
-	private final String HOST = "email-smtp.us-east-1.amazonaws.com";
 
 	@Async
 	public void sendSimpleMail(String emailTo, String subject, String emailBody) {
@@ -52,74 +56,103 @@ public class EmailService {
 		// Assemble the email.
 		SendEmailRequest request = new SendEmailRequest().withSource(emailFrom).withDestination(destination).withMessage(message);
 
-		try
-		{
+		try {
 			AmazonSimpleEmailServiceClient client = new AmazonSimpleEmailServiceClient(new BasicAWSCredentials(USERNAME, PASSWORD));
 			Region REGION = Region.getRegion(Regions.US_EAST_1);
 			client.setRegion(REGION);
 			// Send the email.
 			client.sendEmail(request);
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
 	}
 
-	@Async
-	public void sendNetworkInvitation(Network network, Set<Invitation> invitations){
-		if(invitations!= null)
-		for (Invitation i : invitations){
-			sendNetworkInvitation(network, i);
-		}
+	public void validatePersonCreation(Network network, PersonValidation newcome, String message) throws Exception {
+		Map messageScope = new HashMap<String, String>();
+		messageScope.put("validationLink", "http://" + network.getRealDomain() + "/access/signup?validation=" + newcome.hash);
+        messageScope.put("networkName", network.getName());
+
+		String emailBody = parseScope(messageScope, message);
+		String subject = network.name + " - Boas-vindas";
+		sendSimpleMail(newcome.person.email, subject, emailBody);
 	}
 
-	@Async
-	public void sendNetworkInvitation(Network network, Invitation invitation){
+	public void sendInvitation(Network network, Invitation invitation, Person inviter, String emailTemplate){
+		Map messageScope = new HashMap<String, String>();
+		messageScope.put("inviterName", inviter.getName());
+		messageScope.put("networkName", network.getName());
+		messageScope.put("inviteLink", "http://" + network.getRealDomain() + "/access/signup?invitation=" + invitation.hash);
+
+		String emailBody = null;
 		try {
-			String filePath = getClass().getClassLoader().getResource("tpl/network-invitation-email.html").getFile();
-
-			filePath = System.getProperty("os.name").contains("indow") ? filePath.substring(1) : filePath;
-
-			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-			String template = new String(bytes, Charset.forName("UTF-8"));
-			sendNetworkInvitation(network, invitation, template);
-		}catch (Exception e){
+			emailBody = parseScope(messageScope, emailTemplate);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		String subject = network.name + " - Convite enviado por " + inviter.getName();
+		sendSimpleMail(invitation.email, subject, emailBody);
 	}
 
-	@Async
-	public void sendNetworkInvitation(Network network, Invitation invitation, String template){
-		try{
-			Color c1 = Color.decode(network.mainColor);
-			Color c2 = Color.decode(network.navbarColor);
+	public void sendCredentials(Network network, Person inviter, Person invitee) throws Exception {
+		String template = FileUtil.loadFileFromResource(CREDENTIALS_TEMPLATE_FILENAME);
 
-			HashMap<String, Object> scopes = new HashMap<String, Object>();
-			scopes.put("name", invitation.personName);
-			scopes.put("networkName", network.name);
-			scopes.put("primaryColor", "rgb(" + c1.getRed() + ", " + c1.getGreen() + ", " + c1.getBlue() + " )");
-			scopes.put("secondaryColor", "rgb(" + c2.getRed() + ", " + c2.getGreen() + ", " + c2.getBlue() + " )");
-			scopes.put("link", "http://" + (network.domain != null ? network.domain : network.getTenantId() + ".trix.rocks"));
-			scopes.put("invitationUrl", invitation.getUrl());
-			scopes.put("networkSubdomain", network.getTenantId());
-			scopes.put("network", network);
-			scopes.put("hash", invitation.hash);
+		Map messageScope = new HashMap<String, String>();
+		messageScope.put("inviterName", inviter.getName());
+		messageScope.put("networkName", network.getName());
 
-			StringWriter writer = new StringWriter();
+		String message = parseScope(messageScope, network.getInvitationMessage());
 
-			MustacheFactory mf = new DefaultMustacheFactory();
+		Map emailScope = new HashMap<String, String>();
+		emailScope.put("name", invitee.getName());
+		emailScope.put("invitationMessage", message);
+		emailScope.put("password", invitee.getUser().getPassword());
+		emailScope.put("username", invitee.getUsername());
+		emailScope.put("link", "http://" + network.getRealDomain());
 
-			Mustache mustache = mf.compile(new StringReader(template), "invitation-email");
-			mustache.execute(writer, scopes);
-			writer.flush();
+		String emailBody = parseScope(emailScope, template);
+		String subject = "Boas-vindas - " + network.name;
 
-			String emailBody = writer.toString();
-			String subject = "[ "+ network.name +" ]" + " Convite ";
-			sendSimpleMail(invitation.email, subject, emailBody);
-		}catch (Exception e){
-			e.printStackTrace();
+		sendSimpleMail(invitee.email, subject, emailBody);
+	}
+
+	public String parseScope(Map scope, String template) throws Exception {
+		Assert.notNull(template);
+
+		Set<String> keyWords = scope.keySet();
+		for(String keyWord: keyWords){
+			if(!template.contains(keyWord)) {
+				throw new Exception("Invalid template message. Missing key-word: " + keyWord);
+			}
 		}
+
+		StringWriter writer = new StringWriter();
+		MustacheFactory mf = new DefaultMustacheFactory();
+		Mustache mustache = mf.compile(new StringReader(template), "another_email_message");
+
+		mustache.execute(writer, scope);
+		writer.flush();
+		return writer.toString();
+	}
+
+	public Map parseTemplateData(String inviteeName, Network network, Person inviter){
+		Color c1 = Color.decode(network.primaryColors.get("500"));
+		Color c2 = Color.decode(network.secondaryColors.get("300"));
+		Integer bgColor = Integer.parseInt(network.backgroundColors.get("500").replace("#", ""), 16);
+		Integer referenceColor = Integer.parseInt("ffffff", 16);
+
+		String networkNameColor = (bgColor > referenceColor / 2) ? "black" : "white";
+
+		HashMap<String, Object> scope = new HashMap<>();
+		if(inviteeName != null) scope.put("name", inviteeName);
+		scope.put("networkName", network.name);
+		scope.put("primaryColor", "rgb(" + c1.getRed() + ", " + c1.getGreen() + ", " + c1.getBlue() + " )");
+		scope.put("secondaryColor", "rgb(" + c2.getRed() + ", " + c2.getGreen() + ", " + c2.getBlue() + " )");
+		scope.put("network", network);
+		scope.put("inviterName", inviter.getName());
+		scope.put("inviterEmail", inviter.getEmail());
+		scope.put("networkNameColor", networkNameColor);
+
+		return scope;
 	}
 }

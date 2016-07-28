@@ -1,8 +1,5 @@
 package co.xarx.trix.domain;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -34,8 +31,8 @@ public class Taxonomy extends BaseEntity implements Serializable {
 	@Size(min=1, max=100)
 	public String name;
 
-	@ManyToMany(mappedBy="taxonomies")
-	public Set<Network> networks;
+//	@ManyToMany(mappedBy="taxonomies")
+//	public Set<Network> networks;
 
 	@OneToMany(mappedBy="taxonomy")
 	public Set<Term> terms;

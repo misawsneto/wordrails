@@ -1,7 +1,8 @@
 package co.xarx.trix.aspect;
 
-import co.xarx.trix.aspect.annotations.IgnoreMultitenancy;
-import co.xarx.trix.aspect.annotations.AccessGroup;
+import co.xarx.trix.annotation.AccessGroup;
+import co.xarx.trix.annotation.IgnoreMultitenancy;
+import co.xarx.trix.annotation.IntegrationTestBean;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.MultiTenantEntity;
 import co.xarx.trix.exception.OperationNotSupportedException;
@@ -23,6 +24,7 @@ import java.util.*;
 
 @Aspect
 @Component
+@IntegrationTestBean
 public class MultitenantAspect {
 
 	private AccessService accessService;

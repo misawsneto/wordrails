@@ -1,0 +1,2 @@
+ALTER TABLE station
+	ADD stationSlug VARCHAR(255) NOT NULL;

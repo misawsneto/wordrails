@@ -1,8 +1,8 @@
 package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkInclude;
-import co.xarx.trix.domain.event.Event;
 import co.xarx.trix.domain.page.Page;
+import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
@@ -13,6 +13,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -21,7 +22,7 @@ import java.util.Set;
 @Entity
 @JsonIgnoreProperties(value = {
 		"logoHash", "logoMediumHash"
-}, allowGetters = true)
+}, allowGetters = true, ignoreUnknown = true)
 public class Station extends BaseEntity implements Serializable {
 	public static final String RESTRICTED = "RESTRICTED";
 	public static final String RESTRICTED_TO_NETWORKS = "RESTRICTED_TO_NETWORKS";
@@ -36,6 +37,10 @@ public class Station extends BaseEntity implements Serializable {
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
+
+	@Size(min = 1, max = 100)
+	@Getter(AccessLevel.NONE)
+	public String stationSlug;
 
 	@NotNull
 	@Column(columnDefinition = "boolean default false", nullable = false)
@@ -69,17 +74,11 @@ public class Station extends BaseEntity implements Serializable {
 	@Column(columnDefinition = "varchar(255) default '#5C78B0'")
 	public String primaryColor = "#5C78B0";
 
-	@ManyToOne
-	public Network network;
-
-	@OneToMany(mappedBy = "station", cascade = CascadeType.REMOVE)
-	public Set<StationRole> personsStationRoles;
-
 	@JsonIgnore
 	@OneToMany(mappedBy = "station")
 	public Set<Post> posts;
 
-	@OneToMany(mappedBy = "station")
+	@OneToMany(mappedBy = "station", cascade = CascadeType.REMOVE)
 	public Set<Page> pages;
 
 	@SdkInclude
@@ -92,8 +91,6 @@ public class Station extends BaseEntity implements Serializable {
 	public Set<Taxonomy> ownedTaxonomies;
 
 	public Integer categoriesTaxonomyId;
-
-	public Integer tagsTaxonomyId;
 
 	public int postsTitleSize;
 
@@ -117,6 +114,31 @@ public class Station extends BaseEntity implements Serializable {
 
 	public Integer defaultPerspectiveId;
 
+	@ElementCollection()
+	@JoinTable(name = "palette_station_primary_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> primaryColors;
+
+	@ElementCollection()
+	@JoinTable(name = "palette_station_secondary_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> secondaryColors;
+
+	@ElementCollection()
+	@JoinTable(name = "palette_station_alert_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> alertColors;
+
+
+	@ElementCollection()
+	@JoinTable(name = "palette_station_background_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> backgroundColors;
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -126,6 +148,13 @@ public class Station extends BaseEntity implements Serializable {
 		result = prime * result + ((visibility == null) ? 0 : visibility.hashCode());
 		result = prime * result + (writable ? 1231 : 1237);
 		return result;
+	}
+
+	@SdkInclude
+	public String getLogoHash() {
+		if (logo != null) return logo.getOriginalHash();
+
+		return null;
 	}
 
 	@Override
@@ -147,16 +176,12 @@ public class Station extends BaseEntity implements Serializable {
 	}
 
 	@SdkInclude
-	public String getLogoHash() {
-		if (logo != null) return logo.getOriginalHash();
+	public String getStationSlug(){
+		if (stationSlug == null)
+			return StringUtil.toSlug(this.name);
 
-		return null;
+		return stationSlug;
 	}
 
-	@SdkInclude
-	public String getLogoMediumHash() {
-		if (logo != null) return logo.getMediumHash();
 
-		return null;
-	}
 }

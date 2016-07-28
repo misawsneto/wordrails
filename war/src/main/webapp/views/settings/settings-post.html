@@ -1,0 +1,978 @@
+<div class="p-xs top-0 left-0 w-full pos-abt md-whiteframe-z1 md-primary-hue-1 background">
+	<!-- menu -->
+	<md-button aria-label="nothing" class="pull-right md-icon-button" style="margin-top: 2px;" ng-click="toggleOptions()">
+		<md-tooltip md-direction="top">
+    	{{'settings.post.OPTIONS' | translate}}
+  	</md-tooltip>
+		<i class="mdi mdi2-menu i-20"></i>
+	</md-button>
+	<!-- /menu -->
+	
+	<!-- publish -->
+	<div uib-dropdown class="inline pull-right" auto-close="disabled" is-open="postPublishMenuOpen">
+		<md-button aria-label="nothing" ng-if="!app.checkState() || app.checkState() > 1" uib-dropdown-toggle class="pull-right font-bold visible-sm visible-md visible-lg">
+			<i class="icon mdi2-send i-14 m-r-xs"></i> {{'titles.PUBLISH' | translate}}
+		</md-button>
+		<md-button aria-label="nothing" ng-if="app.checkState() === 1" uib-dropdown-toggle class="pull-right font-bold visible-sm visible-md visible-lg" translate="actions.UPDATE">
+			Atualizar
+		</md-button>
+		<md-button aria-label="nothing" uib-dropdown-toggle class="pull-right md-icon-button visible-xs" style="margin: 5px 0 0 0;">
+			<i class="mdi mdi2-send i-20"></i>
+		</md-button>
+		<div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="p-sm with-arrow z-index-5 dropdown-menu-scale pull-right">
+	  	<div class="arrow"></div>
+      <div class="pull-right">
+        <a ng-click="postPublishMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+      </div>
+      <div class="w-xxl">
+      <div class="p-xs m-b-sm m-t-sm l-h-1x text-base" ng-if="isWriter()">
+      	{{'settings.post.menu.PUBLICATION_MSG' | translate}}
+      </div>
+      <div class="p-xs m-b-sm m-t-sm l-h-1x text-base" ng-if="isColaborator()">
+      	{{'settings.post.menu.COLABORATE_MSG' | translate}}
+      </div>
+	  		<md-button aria-label="nothing" ng-if="!app.editingPost.id || app.checkState() !== 2" class="font-bold no-margin m-b-sm" translate="titles.SAVE_AS_DRAFT" ng-click="saveAsDraft($event)">
+			</md-button>
+			<md-divider class="m-b-sm"></md-divider>
+
+			<div ng-if="!app.editingPost.id && !isColaborator()">
+				<div class="p-xs m-b-sm m-t-sm l-h-1x text-base">
+	      	{{'settings.post.menu.COLABORATE_MSG' | translate}}
+	      </div>
+				<md-button aria-label="nothing" class="font-bold no-margin m-b-sm" ng-click="colaboratePost(app.editingPost)">
+		    	{{'actions.SEND_FOR_REVIEW' | translate}}
+				</md-button>
+				<md-divider class="m-b-sm"></md-divider>
+			</div>
+			
+			<div class="block p-l-xs">
+				<span translate="titles.POST_STATE" class="inline"></span>: <span class="font-500 text-u-c">{{app.getStateText();}}</span>
+			</div>
+			<md-divider class="m-t-sm"></md-divider>
+      <div class="p-xs m-b m-t-sm l-h-1x text-sm">
+      	{{'settings.post.menu.AUTO_SAVE_MSG' | translate}}
+      </div>
+      <md-divider class="m-b-sm"></md-divider>
+    	<md-button ng-disabled="persisting" aria-label="nothing" ng-if="isWriter() && app.checkState() > 1 && app.checkState() !== 3" class="pull-right font-bold no-margin" ng-click="publishPost()">
+    	{{'titles.PUBLISH' | translate}}
+			</md-button>
+			<md-button ng-disabled="persisting" aria-label="nothing" ng-if="isWriter() && !app.editingPost.id && app.checkState() === 3" class="pull-right font-bold no-margin" ng-click="postPost(app.editingPost)">
+	    	{{'actions.SCHEDULE' | translate}}
+			</md-button>
+			<md-button ng-disabled="persisting" aria-label="nothing" ng-if="isColaborator() && !isWriter()" class="pull-right font-bold no-margin" ng-click="colaboratePost(app.editingPost)">
+	    	{{'actions.SEND_FOR_REVIEW' | translate}}
+			</md-button>
+			<md-button ng-disabled="persisting" aria-label="nothing" ng-if="isWriter() && app.editingPost.id && (!app.checkState() || app.checkState() > 0)" class="pull-right font-bold no-margin" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
+			</md-button>
+			<!--<md-button aria-label="nothing" ng-if="app.checkState() === 1" class="pull-right font-bold no-margin" translate="actions.UPDATE">
+			</md-button>-->
+      </div>
+	  </div>
+	</div>
+	<!-- /publish -->
+
+	<!-- left links-->
+	<md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;" ng-click="showClearPostDialog($event)">
+		<md-tooltip md-direction="top">
+      	{{'settings.post.menu.CLEAR_POST' | translate}}
+  	</md-tooltip>
+  	<i class="mdi mdi2-delete i-20"></i>
+	</md-button>
+
+	<md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;" ng-click="showPostInfoDialog($event)">
+		<md-tooltip md-direction="top">
+      {{'settings.post.menu.INFO' | translate}}
+    	</md-tooltip>
+  	<i class="mdi mdi2-information-outline i-20"></i>
+	</md-button>
+
+  <!-- date button and dropdown -->
+	<div uib-dropdown class="inline" auto-close="disabled" is-open="postDateMenuOpen" ng-if="isWriter()">
+		<md-button aria-label="nothing" ng-click="resetPostDate();" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+				<md-tooltip md-direction="top">
+          {{'settings.post.menu.POST_DATE' | translate}}
+        </md-tooltip>
+	    <i class="mdi mdi2-calendar i-20"></i>
+	  </md-button>
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="dropdown-menu-scale p-sm with-arrow z-index-5">
+	  	<div class="arrow lft" ></div>
+      <div class="pull-right">
+        <a ng-click="postDateMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+      </div>
+      <div class="w">
+	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
+	      	{{'settings.post.POST_DATE_DESC' | translate}}
+	      </div>
+	      <div class="pos-rlt">
+      		<mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.POST_DATE' | translate}}" ng-model="postDate"></mdp-date-picker>
+	      </div>
+	      <div class="pos-rlt">
+        	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.POST_TIME' | translate}}" ng-model="postDate"></mdp-time-picker>
+        </div>
+        <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE" ng-click="changePostDate(postDate); postDateMenuOpen = false;"">
+			Salvar
+		</md-button>
+      </div>
+	  </div>
+  </div>
+  <!-- /date button and dropdown -->
+
+	<!-- schedule button and dropdown -->
+	<div uib-dropdown class="inline" auto-close="disabled" is-open="postScheduleMenuOpen" ng-if="isWriter()">
+	  <md-button aria-label="nothing" ng-click="resetScheduleDate();" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+	  		<md-tooltip md-direction="top">
+          {{'settings.post.menu.SCHEDULE_PUBLICATION' | translate}}
+        </md-tooltip>
+	    <i class="mdi mdi2-calendar-clock i-20"></i>
+	  </md-button>
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="dropdown-menu-scale p-sm with-arrow z-index-5">
+	  		<div class="arrow lft" ></div>
+	      <div class="pull-right">
+	        <a ng-click="postScheduleMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+	      </div>
+	      <div class="w" ng-if="!checkIfScheduled()">
+		      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
+		      	{{'settings.post.SCHEDULED_DATE_DESC' | translate}}
+		      </div>
+	      	<div class="pos-rlt">
+	      		<mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.SCHEDULED_DATE' | translate}}" ng-model="postScheduleDate">
+	      		</mdp-date-picker>
+		      </div>
+		      <div class="pos-rlt">
+	        	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.SCHEDULED_TIME' | translate}}" ng-model="postScheduleDate">
+	        	</mdp-time-picker>
+	          </div>
+	        <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE" ng-click="changeScheduledDate(postScheduleDate); postScheduleMenuOpen = false;">
+				{{'titles.SAVE' | translate}}
+			</md-button>
+	      </div>
+	      <div class="w-lg" ng-if="checkIfScheduled()">
+	      	{{'settings.post.SCHEDULED_MSG' | translate}}
+	      	<div class="p-xs p-t-md text-md-l text-center">
+	      		{{app.getLocalTime(app.editingPost.scheduledDate)}}
+	      	</div>
+      		<div class="p-t text-center">
+      			<md-button ng-click="app.editingPost.scheduledDate = null;">
+      				{{'settings.post.RESCHEDULE' | translate}}
+      			</md-button>
+      			<md-button class="" ng-click="removeScheduledDate(); resetScheduleDate();">
+					{{'titles.CANCEL' | translate}}
+				</md-button>
+      		</div>
+	      </div>
+	  </div>
+  </div>
+  <!-- /schedule button and dropdown -->
+
+  <!-- auto delete button and dropdown -->
+	<div uib-dropdown class="inline hide" auto-close="disabled" is-open="postDeleteMenuOpen">
+		<md-button aria-label="nothing" ng-click="resetDeleteDate();" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+				<md-tooltip md-direction="top">
+          {{'settings.post.menu.DELETE_DATE' | translate}}
+        </md-tooltip>
+	    <i class="mdi mdi2-calendar-remove i-20"></i>
+	  </md-button>
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="dropdown-menu-scale p-sm with-arrow z-index-5">
+	  	<div class="arrow lft" ></div>
+      <div class="pull-right">
+        <a ng-click="postDeleteMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+      </div>
+      <div class="w">
+	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
+	      	{{'settings.post.DELETE_DATE_DESC' | translate}}
+	      </div>
+  	<!-- <md-input-container class="no-margin m-b-sm w-full">
+          <label translate="settings.post.DELETE_DATE">Data inicial</label>
+          <input type="date" mdp-date-picker ng-model="postDeleteDate" ng-change="changeDeleteDate();"/>
+        </md-input-container>
+        <md-input-container class="no-margin m-b-sm w-full">
+          <label translate="settings.post.DELETE_TIME">Hora inicial</label>
+          <input type="time" mdp-time-picker ng-model="postDeleteDate" ng-change="changeDeleteDate();"/>
+        </md-input-container> -->
+        <div class="pos-rlt">
+      		<mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.DELETE_DATE' | translate}}" ng-model="postDeleteDate"></mdp-date-picker>
+	      </div>
+	      <div class="pos-rlt">
+        	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.DELETE_TIME' | translate}}" ng-model="postDeleteDate"></mdp-time-picker>
+        </div>
+        <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE">
+					Salvar
+				</md-button>
+      </div>
+	  </div>
+  </div>
+  <!-- /auto delete button and dropdown -->
+
+	<!-- customize link and dropdown -->
+	<div uib-dropdown class="inline" auto-close="disabled" is-open="postPermalinkMenuOpen" ng-if="isWriter()">
+		<md-button aria-label="nothing" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+			<md-tooltip md-direction="top">
+        {{'settings.post.menu.CUSTOMIZE_LINK' | translate}}
+      </md-tooltip>
+	    <i class="mdi mdi2-link-variant i-20"></i>
+	  </md-button>
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="dropdown-menu-scale p-sm with-arrow z-index-5">
+	  	<div class="arrow lft" ></div>
+      <div class="pull-right">
+        <a ng-click="postPermalinkMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+      </div>
+      <div class="w-xxl">
+	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
+	      	{{'settings.post.CUSTOMIZE_LINK_DESC' | translate}}
+	      </div>
+	    <span class="pos-abt text-lg">/</span>
+      	<md-input-container class="p-l no-margin m-b-sm w-full m-0 font-500 text-xs">
+          <label class="m-l" translate="settings.post.menu.CUSTOMIZE_LINK"></label>
+          <input ng-model="customizedLink.slug" />
+        </md-input-container>
+        <md-button aria-label="nothing" class="pull-right font-bold no-margin" ng-click="applyCustomizedLink(customizedLink.slug)" translate="titles.APPLY">
+					Salvar
+				</md-button>
+      </div>
+	  </div>
+  </div>
+  <!-- /customize link and dropdown -->
+
+  <!-- <md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+  	<md-tooltip md-direction="top">
+      {{'settings.post.menu.ATTACH_POST' | translate}}
+    </md-tooltip>
+    <i class="mdi mdi2-library-plus i-20"></i>
+  </md-button> -->
+	<div uib-dropdown class="inline" auto-close="disabled" is-open="postNotificatioMenuOpen" ng-if="isWriter()">
+	  <md-button aria-label="nothing" uib-dropdown-toggle  aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+	  	<md-tooltip md-direction="top">
+	      {{'settings.post.menu.NOTIFY_STATION_USERS' | translate}}
+	    </md-tooltip>
+	    <i class="mdi mdi2-bell-ring i-20"></i>
+	  </md-button>
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="dropdown-menu-scale p-sm with-arrow z-index-5">
+	  	<div class="arrow lft" ></div>
+      <div class="pull-right">
+        <a ng-click="postNotificatioMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+      </div>
+      <div class="w-md">
+	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
+	      	{{'settings.post.NOTIFY_STATION_USERS_DESC' | translate}}
+	      </div>
+	      <div class="p-h-xs">
+		      <md-checkbox aria-label="nothing" ng-model="app.editingPost.notify" >
+		      	{{'titles.NOTIFY' | translate}}
+		      </md-checkbox>
+	      </div>
+      </div>
+	  </div>
+  </div>
+
+  <md-button aria-label="nothing" ui-sref="app.preview({id: postId ? postId : app.editingPost.id ? app.editingPost.id : null})" aria-label="nothing" aria-label="Open demo menu" class="pos-abt md-icon-button" style="margin: 5px 0 0 0;" target="_blank">
+		<md-tooltip md-direction="top">
+      	{{'settings.post.menu.PREVIEW_POST' | translate}}
+  	</md-tooltip>
+  	<i class="mdi mdi2-eye i-20"></i>
+	</md-button>
+  <!-- /left links-->
+</div>
+
+<div class="pos-abt w-full top-0 bottom-0 left-0" style="margin-top: 56px;"> <!-- abs -->
+  <div class="hbox">
+    <div class="col"> <!-- col -->
+      <div class="vbox"> <!-- vbox -->
+        <div class="row-row"> <!-- row-row -->
+          <div class="cell"> <!-- cell -->
+            <div class="cell-inner"><!-- cell -->
+							<!-- stub image to get height -->
+							<img id="img-stub" ng-src="{{postFeaturedImage}}" ng-if="postFeaturedImage && (!useVideo && !useUploadedVideo && !useUploadedAudio)" class="z-index-n-1 pos-fix" style="opacity: 0">
+							<div id="post-image-container" ng-if="postFeaturedImage && (!useVideo && !useUploadedVideo && !useUploadedAudio)" class="animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md h-400" ng-if="postFeaturedImage"  ng-class="{'w-full ': landscape, 'block-800': !landscape}"
+							ng-style="{'background-image': 'url(' + postFeaturedImage + ')', 'background-position': app.imgToolsProps.x + '% ' + app.imgToolsProps.y + '%'}">
+								<md-fab-speed-dial md-open="openImageOptions" md-direction="up" class="md-scale pull-right p-t p-r p-b pos-abt bottom-0 right-0">
+								  <md-fab-trigger>
+								    <md-button aria-label="nothing" aria-label="Add..." class="md-fab md-warn md-mini">
+								    	<i class="mdi mdi2-settings i-20"></i>
+								    </md-button>
+								  </md-fab-trigger>
+								  <md-fab-actions>
+								    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
+								    	<md-tooltip md-direction="left">
+								      	{{'settings.post.TOGGLE_LANDSCAPE' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi i-20" ng-class="{'mdi2-crop-landscape': !landscape, 'mdi2-crop-square': landscape}"></i>
+								    </md-button>
+								    <md-button aria-label="nothing" aria-label="Add User" class="md-fab md-raised md-mini" ng-click="showImageCropDialog()">
+								    	<md-tooltip md-direction="left">
+								      	{{'settings.post.CROP_IMAGE' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi mdi2-crop i-20"></i>
+								    </md-button>
+								    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showImageFocuspointDialog();">
+								    	<md-tooltip md-direction="left">
+								      	{{'settings.post.FOUCUS_POINT' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi mdi2-image-filter-center-focus i-20"></i>
+								    </md-button>
+								    <!-- <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini">
+								    	<md-tooltip md-direction="left">
+								      	{{'settings.post.IMAGE_LIBRARY' | translate}}
+								    								  		</md-tooltip>
+								    	<i class="mdi mdi2-folder-image i-20"></i>
+								    </md-button> -->
+								    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="removeFeaturedImage()">
+								    	<md-tooltip md-direction="left">
+								      	{{'settings.post.REMOVE_FEATURED_IMAGE' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi mdi2-delete i-20"></i>
+								    </md-button>
+								  </md-fab-actions>
+								</md-fab-speed-dial>
+							</div>
+							
+							<div ng-if="useVideo" class="block-800 h-400 animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md">
+								<embed-video on-change="videoSelected(videoId, provider)" width=800 height=400 iframe-id="video1" api="1" player_id="video1" ng-href="{{app.videoUrl}}"></embed-video>
+								<md-button aria-label="nothing" ng-click="removeVideo();" class="md-fab md-accent md-raised md-mini pos-abt right-0 bottom-0 m-r m-b-xxl ">
+									<md-tooltip md-direction="top">
+						      	{{'titles.REMOVE' | translate}} {{'titles.VIDEO' | translate}}
+						  		</md-tooltip>
+									<i class="mdi mdi2-delete i-20"></i>
+								</md-button>
+							</div>
+	
+							<div ng-if="useUploadedVideo" class="block-800 h-400 animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md">
+								<videogular md-prevent-menu-close vg-theme="videos.theme">
+									<vg-media vg-src="videos.sources" vg-type="video">
+									</vg-media>
+									<vg-controls vg-autohide="videos.plugins.controls.autoHide" vg-autohide-time="videos.plugins.controls.autoHideTime">
+						          <vg-play-pause-button></vg-play-pause-button>
+						          <vg-time-display>{{ currentTime | date:'mm:ss':'+0000' }}</vg-time-display>
+						          <vg-scrub-bar>
+						              <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+						          </vg-scrub-bar>
+						          <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+						          <vg-time-display>{{ totalTime | date:'mm:ss':'+0000' }}</vg-time-display>
+						          <vg-volume>
+						              <vg-mute-button></vg-mute-button>
+						              <vg-volume-bar></vg-volume-bar>
+						          </vg-volume>
+											<vg-playback-button></vg-playback-button>
+						          <vg-fullscreen-button></vg-fullscreen-button>
+						      </vg-controls>
+						      <vg-overlay-play></vg-overlay-play>
+								</videogular>
+								<md-button aria-label="nothing" ng-click="removeUploadedVideo();" class="md-fab md-raised md-mini pos-abt right-0 top-0 md-accent m-r m-t">
+									<md-tooltip md-direction="left">
+						      	{{'titles.REMOVE' | translate}} {{'titles.VIDEO' | translate}}
+						  		</md-tooltip>
+									<i class="mdi mdi2-delete i-20"></i>
+								</md-button>
+							</div>
+
+							<div ng-if="useUploadedAudio" class="block-800 animated2x zoomIn pos-rlt m-h-auto  m-b-md">
+								<!-- audio player -->
+							  	<div class="text-center p-md text-5x m-b-xl">
+							  		<i class="mdi2-headphones"></i>
+							  	</div>
+								  <videogular vg-theme="audios.theme" class="videogular-container audio md-whiteframe-z2">
+								    <vg-media vg-src="audios.sources" vg-type="audio"></vg-media>
+								    <vg-controls vg-autohide="videos.plugins.controls.autoHide" vg-autohide-time="videos.plugins.controls.autoHideTime">
+								      <!-- <vg-button ng-show="audios.length-1" ng-click="play('prev')"><i class="fa fa-backward"></i></vg-button> -->
+								      <vg-play-pause-button></vg-play-pause-button>
+								      <!-- <vg-button ng-show="audios.length-1" ng-click="play('next')"><i class="fa fa-forward"></i></vg-button> -->
+
+								      <vg-time-display>{{ currentTime | date:'mm:ss':'+0000' }}</vg-time-display>
+						          <vg-scrub-bar>
+						              <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+						          </vg-scrub-bar>
+						          <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+						          <vg-time-display>{{ totalTime | date:'mm:ss':'+0000' }}</vg-time-display>
+								       
+								      <vg-volume>
+						              <vg-mute-button></vg-mute-button>
+						              <vg-volume-bar></vg-volume-bar>
+						          </vg-volume>
+								    </vg-controls>
+								  </videogular>
+								<!-- /audio player -->
+								<md-button aria-label="nothing" ng-click="removeUploadedAudio();" class="md-fab md-raised md-mini pos-abt right-0 top-0 md-accent m-r m-t">
+									<md-tooltip md-direction="left">
+						      	{{'titles.REMOVE' | translate}} {{'titles.AUDIO' | translate}}
+						  		</md-tooltip>
+									<i class="mdi mdi2-delete i-20"></i>
+								</md-button>
+							</div>
+
+							<!-- main content -->
+							<div class="block-800 m-auto p-r p-l" style="margin-top: 32px;" ng-class="{'animated zoomIn': zoomActive}">
+								<!-- media buttons -->
+
+								<!-- <div class="media-speed-dial p" ng-if="showFeaturedMediaSelector()">
+									<div class="lock-size" layout="row" layout-align="center center">
+															      <div aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm" ng-click="loadImageConfigFromStorage();">
+											<input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
+														      		<md-tooltip md-direction="top">
+								      	{{'settings.post.INSERT_FEATURED_IMAGE' | translate}}
+								  		</md-tooltip>
+									    <i class="mdi mdi2-image-area i-20" style="vertical-align: 20%"></i>
+									  </div>
+								
+															      <div ng-click="showVideoDialog()" aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm">
+									  	<md-tooltip md-direction="top">
+								      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
+								  		</md-tooltip>
+									    <i class="mdi mdi2-video i-20" style="vertical-align: 20%"></i>
+									  </div>
+								
+									  <div ng-click="showAudioDialog($event)" aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm">
+									  	<md-tooltip md-direction="top">
+								      	{{'settings.post.INSERT_FEATURED_AUDIO' | translate}}
+								  		</md-tooltip>
+									    <i class="mdi mdi2-headphones i-20" style="vertical-align: 20%"></i>
+									  </div>
+															    </div>
+								</div>
+								<!-- /media buttons -->
+								
+							<div class="w-full pos-rlt" ng-if="postFeaturedImage && (!useVideo && !useUploadedVideo && !useUploadedAudio)" style="margin-top: -30px">
+								<i>
+									<textarea rows="1" msd-elastic ng-model="featuredImage.credits"  placeholder="{{'titles.CREDITS' | translate }}" class=" w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
+					      	</textarea>
+								</i>
+								<md-button class="md-icon-button pos-abt right-0 top-0" ng-click="creditsChanged()">
+									<i class="mdi-content-save i-20"></i>
+								</md-button>
+							</div>		
+
+							<textarea rows="1" ng-if="useHeading" msd-elastic ng-model="app.editingPost.topper" placeholder="{{'titles.HEADING' | translate }}" class="w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
+	    				</textarea>
+
+								<!-- ng-mouseenter="openPlusOptions=true" ng-mouseleave="openPlusOptions=false" -->
+				      	<md-fab-speed-dial md-open="openPlusOptions"  md-direction="down" class="md-scale md-hover-full m-b-sm pull-right pos-abt z-index-1" style="margin-left: -80px;">
+								  <md-fab-trigger>
+								    <md-button aria-label="nothing" aria-label="Add..." class="md-fab md-accent md-mini">
+								    	<i class="mdi mdi2-plus i-20"></i>
+								    </md-button>
+								  </md-fab-trigger>
+								  <md-fab-actions>
+
+							      <div aria-label="menu" md-ink-ripple ng-if="showFeaturedMediaSelector()" class="md-background-hue-3 background md-btn m-auto md-fab md-raised md-mini md-fab" ng-click="loadImageConfigFromStorage();" style="margin-bottom:2px;margin-left:8px;margin-right:8px;margin-top:10px;">
+											<input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
+							      		<md-tooltip md-direction="right">
+									      	{{'settings.post.INSERT_FEATURED_IMAGE' | translate}}
+									  		</md-tooltip>
+									    	<i class="mdi mdi2-image-area i-20" style="vertical-align: 20%"></i>
+									  </div>
+
+									  <md-button aria-label="nothing" ng-if="!showFeaturedMediaSelector()" ng-disabled="!showFeaturedMediaSelector()" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
+								    	<md-tooltip md-direction="right">
+								      	{{'settings.post.INSERT_FEATURED_IMAGE' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi i-20 mdi2-image-area text-dark"></i>
+								    </md-button>
+
+								    <div aria-label="menu" md-ink-ripple ng-if="showFeaturedMediaSelector()" class="md-background-hue-3 background md-btn m-auto md-fab md-raised md-mini md-fab" ng-click="showVideoDialog($event)" style="margin-bottom:2px;margin-left:8px;margin-right:8px;margin-top:10px;">
+							      		<md-tooltip md-direction="right">
+									      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
+									  		</md-tooltip>
+									    	<i class="mdi mdi2-video i-20" style="vertical-align: 20%"></i>
+									  </div>
+
+									  <md-button aria-label="nothing" ng-if="!showFeaturedMediaSelector()" ng-disabled="!showFeaturedMediaSelector()" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
+								    	<md-tooltip md-direction="right">
+								      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi i-20 mdi2-video text-dark"></i>
+								    </md-button>
+
+								    <div aria-label="menu" md-ink-ripple ng-if="showFeaturedMediaSelector()" class="md-background-hue-3 background md-btn m-auto md-fab md-raised md-mini md-fab" ng-click="showAudioDialog($event)" style="margin-bottom:2px;margin-left:8px;margin-right:8px;margin-top:10px;">
+							      		<md-tooltip md-direction="right">
+									      	{{'settings.post.INSERT_FEATURED_AUDIO' | translate}}
+									  		</md-tooltip>
+									    	<i class="mdi mdi2-headphones i-20" style="vertical-align: 20%"></i>
+									  </div>
+
+									  <md-button aria-label="nothing" ng-if="!showFeaturedMediaSelector()" ng-disabled="!showFeaturedMediaSelector()" aria-label="Add Group" class="md-fab md-raised md-mini md-raised" ng-click="toggleLandscape();">
+								    	<md-tooltip md-direction="right">
+								      	{{'settings.post.INSERT_FEATURED_AUDIO' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi i-20 mdi2-headphones text-dark"></i>
+								    </md-button>
+
+								    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="useHeading = !useHeading">
+								    	<md-tooltip md-direction="right">
+								      	{{'settings.post.ACTIVATE_DEACTIVATE_HEADING' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi i-20 text-dark mdi2-format-quote"></i>
+								    </md-button>
+
+								    <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="useSubheading = !useSubheading">
+								    	<md-tooltip md-direction="right">
+								      	{{'settings.post.ACTIVATE_DEACTIVATE_SUBTITLE' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi i-20 text-dark mdi2-format-size"></i>
+								    </md-button>
+								
+								  </md-fab-actions>
+								</md-fab-speed-dial>
+
+				      	<textarea rows="1" msd-elastic ng-model="app.editingPost.title" placeholder="{{'titles.TITLE' | translate }}" class="font-500 h1 w-full ph-dk p-sm r" style="resize: none; background: transparent; border: none;"
+				      	ng-class="{'m-b-sm': (useHeading || useSubheading), 'm-b': !(useHeading || useSubheading)}">
+				      	</textarea>
+
+				      	<textarea rows="1" ng-if="useSubheading" msd-elastic ng-model="app.editingPost.subheading" placeholder="{{'titles.SUBTITLE' | translate }}" class="font-thin h4 w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
+				      	</textarea>
+
+				      	<md-chips ng-model="tags" placeholder="{{'titles.ENTER_TAG' | translate}}" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tag">
+				      	</md-chips>
+
+								<div class="md-whiteframe-z2 m-b-lg"> 
+									<textarea id="texteditor" froala="froalaOptions" class="md-whiteframe-z1" ng-model="app.editingPost.body"></textarea>
+					      </div>
+							</div>
+							<!-- /main content -->
+
+						</div> <!-- cell-inner -->
+					</div> <!-- cell -->
+				</div> <!-- /row-row -->
+			</div> <!-- /vbox -->
+		</div><!-- /col -->
+	</div>
+</div> <!-- /abs -->
+
+
+<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg hide">
+  <i class="mdi mdi2-eye i-24"></i>
+</md-button>
+
+<md-sidenav class="md-sidenav-right md-whiteframe-z2 w-400" md-component-id="more-options">
+  <md-toolbar class="md-theme-light">
+    <h1 class="md-toolbar-tools" translate="settings.post.OPTIONS"></h1>
+  </md-toolbar>
+  <md-content class="pos-abt bottom-0 right-0 left-0 md-background-default background" style="top:64px">
+      <div id="post-options-sidebar" class="vbox">
+        <div class="row-row">
+          <div class="cell">
+            <div class="cell-inner">
+
+              <md-tabs  md-border-bottom class="pos-abt bottom-0 right-0 left-0 top-0" md-center-tabs="true" md-stretch-tabs="always">
+                <md-tab label="{{'settings.post.DETAILS' | translate}}">
+                  <md-content>
+
+										<div class="p-t p-l p-r text-md" ng-if="!selectedStation">{{'settings.post.SELECT_STATION' | translate}}:</div>
+
+                  	<div class="p-l p-r text-md-l">
+	                  	<md-input-container class="w-full">
+												<md-select ng-model="selectedStation" placeholder="{{'titles.STATION' | translate}}">
+													<md-option ng-value="station" ng-repeat="station in stations">{{ station.name }}</md-option>
+												</md-select>
+											</md-input-container>
+										</div>
+										<div class="p-h text-md" ng-if="selectedStation.termTree">{{'titles.CATEGORIES' | translate}}:</div>
+                    <!-- list categories -->
+                    <div class="p-sm term-tree">
+                      <div class="span5 article-tree animated fadeIn">
+                        <div ng-style="{'overflow': 'auto'}">
+                          <div class="tree well">
+                            <ul>
+                              <node-tree ng-model="selectedStation.termTree"></node-tree>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- list categories -->
+                  </md-content>
+                </md-tab>
+
+                <md-tab label="{{'settings.post.PREFERENCES' | translate}}">
+                  <md-content class="p">
+                  	<!--<div class="text-md text-center font-500 m-b">
+                  		{{'settings.post.EDITING' | translate}}
+                  	</div>-->
+                  	<div class="m-b-lg">
+                  		<md-switch class="m-t-0" ng-model="automaticSave" ng-true-value="true" ng-false-value="false">
+                              {{'settings.post.AUTOMATIC_SAVE' | translate}}</md-switch>
+                  	</div>
+                    <div>
+                      <md-checkbox aria-label="nothing" ng-model="landscape" ng-change="landscape = !landscape; toggleLandscape();">
+                        {{'settings.post.TOGGLE_LANDSCAPE' | translate}}
+                      </md-checkbox>
+                    </div>
+                    <div>
+                      <md-checkbox aria-label="nothing" ng-model="useHeading">
+                        {{'titles.HEADING' | translate}}
+                      </md-checkbox>
+                    </div>
+                    <div>
+                      <md-checkbox aria-label="nothing" ng-model="useSubheading">
+                        {{'titles.SUBTITLE' | translate}}
+                      </md-checkbox>
+                    </div>
+                    <!--<md-divider></md-divider>
+                    <div class="text-md text-center font-500 m-v">
+                  		{{'titles.NOTIFICATION' | translate}}
+                  	</div>-->
+                    <div class="m-t" ng-if="isWriter()">
+                      <md-checkbox aria-label="nothing" ng-model="app.editingPost.notify">
+                        {{'settings.post.NOTIFY_USERS' | translate}}
+                      </md-checkbox>
+                    </div>
+                    <div class="text-center m-b-sm" ng-if="isWriter()">
+											<md-button aria-label="nothing" class="md-raised md-primary p-h md-whiteframe-z2" ng-click="showGeoNotificationDialog($event)">
+											<i class="mdi mdi2-google-maps i-20 m-r-sm v-m"></i>{{'titles.GEO_NOTIFICATION' | translate}}
+											</md-button>
+                    </div>
+                    <!--<md-divider></md-divider>-->
+                  </md-content>
+                </md-tab>
+                <md-tab label="{{'settings.post.REVISIONS' | translate}}">
+                	<md-list-item class="md-2-line block" ng-repeat="revision in revisions" style="padding-top: 16px">
+					          <!-- <i class="mdi mdi2-phone i-20"></i> -->
+					          <!--<img ng-src="{{phone.options.face}}?25" class="md-avatar"/>-->
+			          <div class="md-list-item-text" style="margin-right:40px;">
+			            <h4 class="clear text-ellipsis">
+			            	<span class="font-bold">#{{revision.index}}</span> 
+			            	<span class="p-l-xs p-r-xs">|</span> 
+			            	<span>{{app.getLocalTime(revision.date)}}{{app.getSecondsOnly(revision.date)}}</span>
+		            	</h4>
+			            <p class="clear text-ellipsis"> {{revision.payload.title}} </p>
+			          </div>
+			          <md-button aria-label="nothing" class="md-secondary md-icon-button" aria-label="call" ng-click="restoreRevision(revision.payload)">
+			          	<md-tooltip md-direction="bottom">
+										{{'settings.post.SHOW_VERSION' | translate}}
+			          	</md-tooltip>
+			            <i class="mdi mdi2-backup-restore i-20"></i>
+			          </md-button>
+			          <md-divider></md-divider>
+			        </md-list-item>
+                </md-tab>
+              </md-tabs>
+
+            </div>
+          </div>
+        </div>
+        <div class="pointer text-center p text-u-c font-bold pos-rlt" ng-click="showMoreOptions($event)">
+        	<md-divider class="pos-abt top-0 left-0 right-0"></md-divider>
+
+          <md-button ng-disabled="persisting" aria-label="nothing" ng-if="isWriter() && app.checkState() > 1 && !app.editingPost.id && app.checkState() !==3" class="md-raised md-primary p-h md-whiteframe-z2" ng-click="postPost(app.editingPost)">
+          	<i class="icon mdi2-send i-14 m-r-sm"></i>{{'titles.PUBLISH' | translate}}
+          </md-button>
+
+          <md-button ng-disabled="persisting" aria-label="nothing" ng-if="isWriter() && !app.editingPost.id && app.checkState() === 3" class="md-raised md-primary p-h md-whiteframe-z2" translate="actions.SCHEDULE" ng-click="postPost(app.editingPost)">
+					</md-button>
+
+					<md-button ng-disabled="persisting" aria-label="nothing" ng-if="isWriter() && app.editingPost.id" class="md-raised md-primary p-h md-whiteframe-z2" translate="actions.SAVE_CHANGES" ng-click="putPost(app.editingPost)">
+					</md-button>
+
+					<md-button aria-label="nothing" ng-if="isColaborator() && !isWriter()" class="md-raised md-primary p-h md-whiteframe-z2"  ng-click="colaboratePost(app.editingPost)">
+			    	{{'actions.SEND_FOR_REVIEW' | translate}}
+					</md-button>
+
+          <md-button aria-label="nothing"  ng-click="toggleOptions();">{{'titles.CLOSE' | translate}}</md-button>
+        </div>
+      </div>
+
+    </md-content>
+</md-sidenav>
+
+<script type="text/ng-template" id="save-to-draft-confirm-dialog.html">
+	<md-dialog-content >
+		<div class="p-sm">
+			<div class="text-md p block-400 text-center">
+				{{'settings.post.messages.CHANGE_STATE_FROM_PUBLISHED_MSG' | translate}}
+			</div>
+			<div class="text-center p-t">
+				<md-button aria-label="nothing" ng-click="app.cancelDialog();" class="m-0">
+					{{'titles.CANCEL' | translate}}
+				</md-button>
+				<md-button aria-label="nothing" ng-click="saveAsDraft(false, true);" class="m-0">
+					{{'titles.CONFIRM' | translate}}
+				</md-button>
+			</div>
+		</div>
+	</md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="clear-post-dialog.html">
+	<md-dialog-content layout="row" layout-wrap>
+		<div layout="column" layout-align="start center">
+			<md-toolbar layout-align="start start" flex class="md-warn text-center p" layout="column">
+				<div class="p-t-sm p-b-sm"><i class="mdi mdi2-alert text-2x"></i></div>
+      </md-toolbar>
+    </div>
+		<div class="p-sm">
+			<div class="text-md p block-400 text-center">
+				{{'settings.post.messages.CLEAR_CONTENT_MSG' | translate }}
+				<span ng-if="app.editingPost.id">
+					{{'settings.post.messages.NEW_POST_MSG' | translate}}
+				</span>
+				{{'settings.post.messages.CONTENT_LOST_ALERT' | translate}}
+			</div>
+			<div class="text-center p-t">
+				<md-button aria-label="nothing" ng-click="app.cancelDialog();" class="m-0">
+					{{'titles.CANCEL' | translate}}
+				</md-button>
+				<md-button aria-label="nothing" ng-click="app.clearPostContent();" class="m-0">
+					{{'settings.post.CLEAR_CONTENT' | translate}}
+				</md-button>
+				<md-button aria-label="nothing" ng-click="app.clearAndResetPost();" class="m-0">
+					{{'settings.post.NEW_POST' | translate}}
+				</md-button>
+			</div>
+		</div>
+	</md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="geolocation-dialog.html">
+	<md-dialog-content layout="row" layout-wrap>
+		<div layout="column" layout-align="start center">
+			<md-toolbar layout-align="start start" flex class="md-primary md-hue-1 text-center" layout="column">
+				<div class="w-lg">
+					<div class="m-b p-t">
+						<i class="mdi mdi2-google-maps"></i> {{'titles.GEO_NOTIFICATION' | translate}}
+					</div>
+					<div class="p-md text-base text-left" translate="settings.post.GEO_NOTIFICATION_DESC">
+					</div>
+					<div class="pos-abt bottom-0 text-center w-full p-t p-b">
+						<md-button aria-label="nothing" ng-click="app.cancelDialog();" class="m-0">
+							{{'titles.CANCEL' | translate}}
+						</md-button>
+						<md-button aria-label="nothing" ng-click="" class="m-0">
+							{{'titles.SAVE' | translate}}
+						</md-button>
+					</div>
+				</div>
+      </md-toolbar>
+    </div>
+		<div ng-controller="GeoLocationCtrl">
+			<leaflet center="center" controls='controls'></leaflet>
+		</div>
+	</md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="video-dialog.html">
+	<md-dialog-content width="6" class="md-background-hue-1 background w-500 h-m-500" style="max-height: 1000px; min-height: 350px; padding-bottom: 58px;">
+		<!-- tabs -->
+		<div class="md-whiteframe-z1">
+			<ul class="nav nav-lines nav-md b-info">
+	      <li ng-class="{'active': !uploadVideo}" md-ink-ripple>
+	        <a href md-prevent-menu-close ng-click="insertVideolink = true; uploadVideo = false;"> 
+	        	<i class="i-24 mdi2-link-variant"></i> 
+        	</a>
+      	</li>
+	      <li ng-class="{'active': uploadVideo}" md-ink-ripple ng-click="settings.tab = 'trash'">
+	      	<a href md-prevent-menu-close ng-click="insertVideolink = false; uploadVideo = true;">
+	      		<i class="i-24 mdi2-upload"></i>		
+	      	</a>
+      	</li>
+	    </ul>
+		</div>
+		<!-- /tabs -->
+
+		<!-- video link menu -->
+	  <div class="p" ng-class="{'hide': !insertVideolink}">
+	  	<!-- <div class="m-b-sm"><i class="icon mdi2-video i-24"></i> {{'titles.VIDEO' | translate}}</div> -->
+	  	<md-input-container class="w-full m-b-0">
+	  		<label>http://</label>
+	  		<input ng-model="app.videoUrl"/>
+	  		<code class="text-sm w-xl block pos-abt m-t-lg text-center">
+	  			Youtube,Dailymotion,Vimeo,Youku,Vine 
+	  		</code>
+	  	</md-input-container>
+	  	<div class="text-center m-t" ng-show="validVideoUrl">
+	  		<embed-video on-change="videoSelected(videoId, provider)" width=348 height=220 iframe-id="video2" api="1" player_id="video2" ng-href="{{app.videoUrl}}"></embed-video>
+	  	</div>
+	  	<div class="text-center m-t m-b pos-abt bottom-0 left-0 right-0">
+	  		<md-button aria-label="nothing" ng-click="insertVideo()" class="m-b-0" ng-disabled="!validVideoUrl">
+	  			{{'actions.INSERT' | translate}}
+	  		</md-button>
+	  		<md-button aria-label="nothing" ng-click="cancel()" class="m-b-0">
+	  			{{'titles.CANCEL' | translate}}
+	  		</md-button>
+	  	</div>
+	  </div>
+	  <!-- /video link menu -->
+	  <!-- video upload menu -->
+	  <div class="p" ng-class="{'hide': !uploadVideo}">
+			<div ng-if="uploadedVideo" class="animated zoomIn">
+				<!-- video player -->
+				<videogular md-prevent-menu-close vg-theme="videos.theme">
+					<vg-media vg-src="videos.sources">
+					</vg-media>
+					<vg-controls vg-autohide="videos.plugins.controls.autoHide" vg-autohide-time="videos.plugins.controls.autoHideTime">
+		          <vg-play-pause-button></vg-play-pause-button>
+		          <vg-time-display>{{ currentTime | date:'mm:ss':'+0000' }}</vg-time-display>
+		          <vg-scrub-bar>
+		              <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+		          </vg-scrub-bar>
+		          <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+		          <vg-time-display>{{ totalTime | date:'mm:ss':'+0000' }}</vg-time-display>
+		          <vg-volume>
+		              <vg-mute-button></vg-mute-button>
+		              <vg-volume-bar></vg-volume-bar>
+		          </vg-volume>
+							<vg-playback-button></vg-playback-button>
+		          <vg-fullscreen-button></vg-fullscreen-button>
+		      </vg-controls>
+		      <vg-overlay-play></vg-overlay-play>
+				</videogular>
+				<!-- /video player -->
+			</div>
+			<!-- video upload button -->
+			<md-progress-linear class="pos-abt bottom-0 left-0" ng-if="videoProcessing" md-mode="indeterminate"></md-progress-linear>
+			<div class="p text-center pos-rlt" ng-class="{'hide': uploadedVideo}">
+				<div md-ink-ripple="" class="md-btn md-fab md-raised md-accent-default background inline v-m">
+					<input id="image-upload" type="file" nv-file-select="" uploader="vuploader" name="contents" accept="video/mp4"/>
+			  		<md-tooltip md-direction="top">
+			      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
+			  		</md-tooltip>
+				    <i class="mdi mdi2-upload i-32"></i>
+				</div>
+				<div class="text-md font-500i inline v-m m-l"> {{'actions.UPLOAD_VIDEO' | translate}} </div>
+			</div>
+			<!-- /video upload button -->
+			<div class="text-center m-t m-b pos-abt bottom-0 left-0 right-0">
+	  		<md-button aria-label="nothing" ng-click="insertUploadedVideo()" class="m-b-0" ng-disabled="!uploadedVideo">
+	  			{{'actions.INSERT' | translate}}
+	  		</md-button>
+	  		<md-button aria-label="nothing" ng-show="uploadedVideo" class="m-b-0" ng-click="uploadedVideo = null;">
+	  			{{'titles.REMOVE' | translate}}
+	  		</md-button>
+	  		<md-button aria-label="nothing" ng-click="cancel()" class="m-b-0">
+	  			{{'titles.CANCEL' | translate}}
+	  		</md-button>
+	  	</div>
+	  </div>
+	  <!-- /video upload menu -->
+	</md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="audio-dialog.html">
+	<md-dialog-content width="6" class="md-background-hue-1 background w-500 h-m-500" style="max-height: 1000px; min-height: 350px; padding-bottom: 58px;">
+		<!-- tabs -->
+		<div class="md-whiteframe-z1 hide">
+			
+			<div md-ink-ripple class="m-0 inline" md-prevent-menu-close ng-click="recordAudio = true; uploadAudio = false;">
+				<div class="p-sm p-h p"> <i class="i-24 mdi2-record-rec"></i> </div>
+				<div ng-if="!uploadAudio" class="pos-abt w-full bottom-0 md-accent-default background" style="height: 2px"></div>
+			</div>
+
+			<div md-ink-ripple class="m-0 inline" md-prevent-menu-close ng-click="recordAudio = false; uploadAudio = true;">
+				<div class="p-sm p-h p"> <i class="i-24 mdi2-upload"></i> </div>
+				<div ng-if="uploadAudio" class="pos-abt w-full bottom-0 md-accent-default background" style="height: 2px"></div>
+			</div>
+
+		</div>
+		<!-- /tabs -->
+
+		<!-- audio record menu -->
+	  <div class="p" ng-class="{'hide': !recordAudio}">
+	  	<div class="p">
+	  		<ng-audio-recorder id='audioInput' audio-model='recordedInput'>
+				  <!-- Start controls, exposed via recorder-->
+				  <div ng-if="recorder.isAvailable">
+				    <md-button aria-label="nothing" ng-click="recorder.startRecord()" type="button" ng-disabled="recorder.status.isRecording">
+				        Start Record
+				    </md-button>
+				    <md-button aria-label="nothing" ng-click="recorder.stopRecord()" type="button" ng-disabled="recorder.status.isRecording === false">
+				        Stop Record
+				    </md-button>
+				    <md-button aria-label="nothing" ng-click="recorder.playbackRecording()" type="button"
+				            ng-disabled="recorder.status.isRecording || !recorder.audioModel">
+				        Play Back
+				    </md-button>
+				  </div>
+
+				  <div ng-if="!recorder.isAvailable">
+				    Message for users when recording is not possible.
+				  </div>
+				  <!-- End controls-->
+				</ng-audio-recorder>
+	  	</div>
+	  	<div class="text-center m-t m-b pos-abt bottom-0 left-0 right-0">
+	  		<md-button aria-label="nothing" ng-click="insertAudio()" class="m-b-0" ng-disabled="!validAudioUrl">
+	  			{{'actions.INSERT' | translate}}
+	  		</md-button>
+	  		<md-button aria-label="nothing" ng-click="cancel()" class="m-b-0">
+	  			{{'titles.CANCEL' | translate}}
+	  		</md-button>
+	  	</div>
+	  </div>
+	  <!-- /audio record menu -->
+	  <!-- audio upload menu -->
+	  <div class="p" ng-class="{'hide': !uploadAudio}">
+			<div ng-if="uploadedAudio" class="animated zoomIn">
+				<!-- audio player -->
+			  	<div class="text-center p-md text-5x m-b-xl">
+			  		<i class="mdi2-headphones"></i>
+			  	</div>
+				  <videogular vg-theme="audios.theme" class="videogular-container audio">
+				    <vg-media vg-src="audios.sources" vg-type="audio"></vg-media>
+				    <vg-controls>
+				      <!-- <vg-button ng-show="audios.length-1" ng-click="play('prev')"><i class="fa fa-backward"></i></vg-button> -->
+				      <vg-play-pause-button></vg-play-pause-button>
+				      <!-- <vg-button ng-show="audios.length-1" ng-click="play('next')"><i class="fa fa-forward"></i></vg-button> -->
+
+				      <vg-time-display>{{ currentTime | date:'mm:ss':'+0000' }}</vg-time-display>
+		          <vg-scrub-bar>
+		              <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+		          </vg-scrub-bar>
+		          <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+		          <vg-time-display>{{ totalTime | date:'mm:ss':'+0000' }}</vg-time-display>
+				       
+				      <vg-volume>
+		              <vg-mute-button></vg-mute-button>
+		              <vg-volume-bar></vg-volume-bar>
+		          </vg-volume>
+				    </vg-controls>
+				  </videogular>
+				<!-- /audio player -->
+			</div>
+			<!-- audio upload button -->
+			<md-progress-linear class="pos-abt bottom-0 left-0" ng-if="audioProcessing" md-mode="indeterminate"></md-progress-linear>
+			<div class="p text-center pos-rlt" ng-class="{'hide': uploadedAudio}">
+				<div md-ink-ripple="" class="md-btn md-fab md-raised md-accent-default background inline v-m">
+					<input id="image-upload" type="file" nv-file-select="" uploader="auploader" name="contents" accept="audio/mp3"/>
+			  		<md-tooltip md-direction="top">
+			      	{{'settings.post.INSERT_FEATURED_AUDIO' | translate}}
+			  		</md-tooltip>
+				    <i class="mdi mdi2-upload i-32"></i>
+				</div>
+				<div class="text-md font-500 m-l inline v-m"> {{'actions.UPLOAD_AUDIO' | translate}} </div>
+			</div>
+			<!-- /audio upload button -->
+			<div class="text-center m-t m-b pos-abt bottom-0 left-0 right-0">
+	  		<md-button aria-label="nothing" ng-click="insertUploadedAudio()" class="m-b-0" ng-disabled="!uploadedAudio">
+	  			{{'actions.INSERT' | translate}}
+	  		</md-button>
+	  		<md-button aria-label="nothing" ng-show="uploadedAudio" class="m-b-0" ng-click="uploadedAudio = null;">
+	  			{{'titles.REMOVE' | translate}}
+	  		</md-button>
+	  		<md-button aria-label="nothing" ng-click="cancel()" class="m-b-0">
+	  			{{'titles.CANCEL' | translate}}
+	  		</md-button>
+	  	</div>
+	  </div>
+	  <!-- /audio upload menu -->
+	</md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="credits-dialog.html">
+   <md-dialog aria-label="change action">
+     <md-content role="document" class="md-background-hue-1 background">
+       <div class="p-xs">
+         <div class="md-dialog-content-body text-md text-center w-400 p m-b">
+           {{'settings.post.UPDATE_CREDITS_MSG' | translate}}
+         </div>
+   
+         <div class="text-center">
+           <md-button ng-click="applyImageCredits(); disabled = true;" ng-disabled="disabled">
+             {{'titles.APPLY' | translate}}
+           </md-button>
+           <md-button ng-click="cancel()">
+             {{'titles.CANCEL' | translate}}
+           </md-button>
+           <md-button ng-click="restorePreviewsCredits(); cancel();" ng-disabled="!oldCredits">
+             {{'titles.RESTORE_PREVIEWS' | translate}}
+           </md-button>
+         <div>
+       </div>
+     </md-content>
+   </md-dialog>
+</script>

@@ -1,12 +1,12 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.scheduler.jobs.PostScheduleJob;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.Map;
 
 @Service
 public class SchedulerService {
@@ -16,33 +16,30 @@ public class SchedulerService {
 
 
 	@Transactional
-	public void unschedule(Integer postId) {
-		TriggerKey triggerKey = new TriggerKey("trigger-" + postId);
-		try {
-			if (scheduler.checkExists(triggerKey)) {
-				scheduler.unscheduleJob(new TriggerKey("trigger-" + postId));
-			}
-		} catch (SchedulerException e) {
-			e.printStackTrace();
+	public void unschedule(Integer key) throws SchedulerException {
+		TriggerKey triggerKey = new TriggerKey("trigger-" + key);
+		if (scheduler.checkExists(triggerKey)) {
+			scheduler.unscheduleJob(new TriggerKey("trigger-" + key));
 		}
 	}
 
 	@Transactional
-	public void schedule(Integer postId, Date scheduledDate) {
-		Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger-" + postId, "schedules").startAt(scheduledDate).build();
-		TriggerKey triggerKey = new TriggerKey("trigger-" + postId);
+	public <T extends Job> void schedule(String key, Class<T> jobClass, Date scheduledDate, Map<String, String>
+			properties)
+			throws
+			SchedulerException {
+		Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger-" + key, "schedules").startAt(scheduledDate).build();
+		TriggerKey triggerKey = new TriggerKey("trigger-" + key);
 
-		try {
-			if (scheduler.checkExists(triggerKey)) {
-				scheduler.rescheduleJob(triggerKey, trigger);
-			} else {
-				JobDetail job = JobBuilder.newJob(PostScheduleJob.class).withIdentity("schedule-" + postId, "schedules").build();
-				job.getJobDataMap().put("postId", String.valueOf(postId)); //must send as string because useProperties is set true
-
-				scheduler.scheduleJob(job, trigger);
+		if (scheduler.checkExists(triggerKey)) {
+			scheduler.rescheduleJob(triggerKey, trigger);
+		} else {
+			JobDetail job = JobBuilder.newJob(jobClass).withIdentity("schedule-" + key, "schedules").build();
+			for (String s : properties.keySet()) {
+				job.getJobDataMap().put(s, properties.get(s));
 			}
-		} catch (SchedulerException e) {
-			e.printStackTrace();
+
+			scheduler.scheduleJob(job, trigger);
 		}
 	}
 }

@@ -1,19 +1,18 @@
 package co.xarx.trix.picasso;
 
+import android.net.Uri;
+import co.xarx.trix.api.Trix;
+import com.squareup.picasso.Downloader;
+import retrofit.client.Header;
+import retrofit.mime.TypedInput;
+
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-import co.xarx.trix.api.WordRails;
-import retrofit.client.Header;
-import retrofit.mime.TypedInput;
-import android.net.Uri;
-
-import com.squareup.picasso.Downloader;
-
 public class FileContentsDownloader implements Downloader {
-	private WordRails wordRails;
+	private Trix wordRails;
 
-	public FileContentsDownloader(WordRails wordRails) {
+	public FileContentsDownloader(Trix wordRails) {
 		this.wordRails = wordRails;
 	}
 

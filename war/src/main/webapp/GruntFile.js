@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-	var gtx = require('gruntfile-gtx').wrap(grunt);
+    var gtx = require('gruntfile-gtx').wrap(grunt);
 
     gtx.loadAuto();
 
@@ -9,11 +9,11 @@ module.exports = function(grunt) {
     gtx.config(gruntConfig);
 
     // We need our bower components in order to develop
-    gtx.alias('build:angular', ['recess:less', 'clean:angular', 'copy:angular', 'recess:angular', 'concat:angular', 'uglify:angular']);
-    gtx.alias('build:html', ['clean:html', 'copy:html', 'recess:html', 'swig:html', 'concat:html', 'uglify:html']);
-    gtx.alias('build:landing', ['copy:landing', 'swig:landing']);
+    gtx.alias('build:webapp', ['recess:less', 'clean:webapp', 'copy:libs', 'concat:froala', 'concat:froalacss', 'concat:leafletcss','concat:leafletjs','concat:masonry', 'concat:videogular', 'recess:webapp', 'recess:homecss', 'concat:webapp', 'concat:homejs', 'uglify:webapp']);
+    // gtx.alias('build:html', ['clean:html', 'copy:html', 'recess:html', 'swig:html', 'concat:html', 'uglify:html']);
+    // gtx.alias('build:landing', ['copy:landing', 'swig:landing']);
 
-    gtx.alias('release', ['bower-install-simple', 'build:dev', 'bump-commit']);
+    gtx.alias('release', ['bower-install-simple', 'bump-commit']);
     gtx.alias('release-patch', ['bump-only:patch', 'release']);
     gtx.alias('release-minor', ['bump-only:minor', 'release']);
     gtx.alias('release-major', ['bump-only:major', 'release']);

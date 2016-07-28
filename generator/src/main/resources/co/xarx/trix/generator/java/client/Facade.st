@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -26,6 +27,9 @@ import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
+import co.xarx.trix.api.ImageUploadResponse;
+import co.xarx.trix.api.v2.PostData;
+import co.xarx.trix.api.v2.response.FileUpload;
 import co.xarx.trix.api.TermPerspectiveView;
 import co.xarx.trix.api.RowView;
 
@@ -82,6 +86,8 @@ public class $facade$ {
 		Converter _converter = new GsonConverter(_gson);
 
 		OkHttpClient _okHttpClient = new OkHttpClient();
+	    _okHttpClient.setConnectTimeout(10, TimeUnit.MINUTES);
+	    _okHttpClient.setReadTimeout(10, TimeUnit.MINUTES);
 
 		if(_cacheMaxSize > 0){
 			Cache _cache = new Cache(_cacheDirectory, _cacheMaxSize);
@@ -97,7 +103,7 @@ public class $facade$ {
 			.setEndpoint(_url + "/api")
 			.build();
 		_builder.setLogLevel(_level);
-		IWordRails target = _builder.create(IWordRails.class);
+		ITrix target = _builder.create(ITrix.class);
 
 		ClassLoader _loader = I$facade$.class.getClassLoader();
 
@@ -112,6 +118,10 @@ public class $facade$ {
 
 	public Batch createBatch() {
 		return new Batch(_facade);
+	}
+
+	public void setUsername(String username) {
+		_interceptor.setUsername(username);
 	}
 
 	public void login(){
@@ -145,6 +155,24 @@ public class $facade$ {
 			}
 		});
 	}
+
+	public List<PostView> findPostsByTerm(Integer termId, int page, int size){
+    		return _facade.findPostsByTerm(termId, page, size).content;
+    	}
+
+    public void findPostsByTerm(Integer termId, int page, int size, final Callback<List<PostView\>\> _callback){
+        _facade.findPostsByTerm(termId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+            @Override
+            public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
+                _callback.success(_t.content, _response);
+            }
+
+            @Override
+            public void failure(RetrofitError _error) {
+                _callback.failure(_error);
+            }
+        });
+    }
 
 	public List<PostView> findStationPostsByTags(String tags, Integer stationId, int page, int size){
         return _facade.findStationPostsByTags(tags, stationId, page, size).content;
@@ -190,6 +218,24 @@ public class $facade$ {
 		_facade.findPostsAndPostsPromotedByTermId(stationId, termId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
 			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
+				_callback.success(_t.content, _response);
+			}
+
+			@Override
+			public void failure(RetrofitError _error) {
+				_callback.failure(_error);
+			}
+		});
+	}
+
+	public List<TermDto> getTermTree(Integer perspectiveId){
+		return _facade.getTermTree(perspectiveId).content;
+	}
+
+	public void getTermTree(Integer perspectiveId, final Callback<List<TermDto\>\> _callback){
+		_facade.getTermTree(perspectiveId, new Callback<ContentResponse<List<TermDto\>\>\>() {
+			@Override
+			public void success(ContentResponse<List<TermDto\>\> _t, Response _response) {
 				_callback.success(_t.content, _response);
 			}
 
@@ -315,24 +361,29 @@ public class $facade$ {
 			}
 		});
 	}
+	
+	public List<PostData\> searchPosts(String q, List<Integer\> aIds, List<Integer\> sIds, String st, String from,
+                                  String until, List<Integer\> cIds, List<String\> tags, Integer page, Integer size,
+                                  List<String\> orders, List<String\> embeds, String snippet){
+        return _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, page, size, orders, embeds, snippet).content;
+    }
 
-	public SearchView searchPosts(String q, String sIds, Integer pId, String pt, Boolean nh, Boolean sd, Integer p, Integer s){
-		return _facade.searchPosts(q, sIds, pId, pt, nh, sd, p, s).content;
-	}
+    public void searchPosts(String q, List<Integer\> aIds, List<Integer\> sIds, String st, String from,
+                            String until, List<Integer\> cIds, List<String\> tags, Integer page, Integer size,
+                            List<String\> orders, List<String\> embeds, String snippet, final Callback<List<PostData\>\> _callback){
+        _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, page, size, orders, embeds, snippet, new
+        Callback<ContentResponse<List<PostData\>\>\>() {
+            @Override
+            public void success(ContentResponse<List<PostData\>\> _t, Response _response) {
+                _callback.success(_t.content, _response);
+            }
 
-	public void searchPosts(String q, String sIds, Integer pId, String pt, Boolean nh, Boolean sd, Integer p, Integer s, final Callback<SearchView\> _callback){
-		_facade.searchPosts(q, sIds, pId, pt, nh, sd, p, s, new Callback<ContentResponse<SearchView\>\>() {
-			@Override
-			public void success(ContentResponse<SearchView\> _t, Response _response) {
-				_callback.success(_t.content, _response);
-			}
-
-			@Override
-			public void failure(RetrofitError _error) {
-				_callback.failure(_error);
-			}
-		});
-	}
+            @Override
+            public void failure(RetrofitError _error) {
+                _callback.failure(_error);
+            }
+        });
+    }
 
 	public List<PostView\> searchBookmarks(String query, int page, int size){
 		return _facade.searchBookmarks(query, page, size).content;
@@ -505,19 +556,19 @@ public class $facade$ {
 	}
 
 	public BooleanResponse toggleBookmark(Integer postId){
-		return _facade.toggleBookmark(postId);
+		return _facade.toggleBookmark(postId, "");
 	}
 	
 	public void toggleBookmark(Integer postId, Callback<BooleanResponse> _callback){
-		_facade.toggleBookmark(postId, _callback);
+		_facade.toggleBookmark(postId, "", _callback);
 	}
 	
 	public BooleanResponse toggleRecommend(Integer postId){
-		return _facade.toggleRecommend(postId);
+		return _facade.toggleRecommend(postId, "");
 	}
 	
 	public void toggleRecommend(Integer postId, Callback<BooleanResponse> _callback){
-		_facade.toggleRecommend(postId, _callback);
+		_facade.toggleRecommend(postId, "", _callback);
 	}
 	
 	public Response putRegId(String regId, Integer networkId, Double lat, Double lng){
@@ -527,11 +578,11 @@ public class $facade$ {
 	public void putRegId(String regId, Integer networkId, Double lat, Double lng, Callback<Response> _callback){
 		_facade.putRegId(regId, networkId, lat, lng, _callback);
 	}
-	
+
 	public Response putLocation(String deviceCode, String device, Double lat, Double lng){
 		return _facade.putLocation(deviceCode, device, lat, lng);
 	}
-	
+
 	public void putLocation(String deviceCode, String device, Double lat, Double lng, Callback<Response> _callback){
 		_facade.putLocation(deviceCode, device, lat, lng, _callback);
 	}
@@ -566,12 +617,36 @@ public class $facade$ {
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-	public Response postImageUpload(String imageType, TypedInput contents){
+	public ImageUploadResponse postImageUpload(String imageType, TypedInput contents){
 		return _facade.postImageUpload(imageType, contents);
 	}
 	
-	public void postImageUpload(String imageType, TypedInput contents, Callback<Response> _callback){
+	public void postImageUpload(String imageType, TypedInput contents, Callback<ImageUploadResponse> _callback){
 		_facade.postImageUpload(imageType, contents, _callback);
+	}
+
+	public FileUpload postUploadVideo(TypedInput contents){
+		return _facade.postUploadVideo(contents);
+	}
+	
+	public void postUploadVideo(TypedInput contents, Callback<FileUpload> _callback){
+		_facade.postUploadVideo(contents, _callback);
+	}
+
+	public FileUpload postUploadAudio(TypedInput contents){
+		return _facade.postUploadAudio(contents);
+	}
+	
+	public void postUploadAudio(TypedInput contents, Callback<FileUpload> _callback){
+		_facade.postUploadAudio(contents, _callback);
+	}
+
+	public FileUpload postUploadDoc(TypedInput contents){
+		return _facade.postUploadDoc(contents);
+	}
+	
+	public void postUploadDoc(TypedInput contents, Callback<FileUpload> _callback){
+		_facade.postUploadDoc(contents, _callback);
 	}
 /*---------------------------------------------------------------------------*/
 

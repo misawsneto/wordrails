@@ -1,8 +1,8 @@
 package co.xarx.trix.converter;
 
-import co.xarx.trix.api.Category;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.TermView;
+import co.xarx.trix.api.v2.CategoryData;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.PostRepository;
@@ -44,7 +44,10 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		if (post.terms != null && !post.terms.isEmpty()) {
 			postView.categories = new HashSet<>();
 			for (Term term : post.terms) {
-				postView.categories.add(new Category(term.id, term.name));
+				CategoryData category = new CategoryData(term.id, term.name);
+				category.color = term.color;
+				category.imageHash = term.getImageHash();
+				postView.categories.add(category);
 			}
 		}
 
@@ -53,18 +56,22 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.imageSmallHash = post.getImageSmallHash();
 			postView.imageMediumHash = post.getImageMediumHash();
 			postView.imageLargeHash = post.getImageLargeHash();
-			postView.imageCaptionText = post.featuredImage.caption;
-			postView.imageCreditsText = post.featuredImage.credits;
-			postView.imageTitleText = post.featuredImage.title;
+			postView.imageCredits = post.featuredImage.getCredits();
 		}
 
 		postView.imageLandscape = post.imageLandscape;
 		postView.date = post.date;
 		postView.topper = post.topper;
-		postView.readsCount = post.readsCount;
 		postView.recommendsCount = post.recommendsCount;
 		postView.commentsCount = post.commentsCount;
 		postView.snippet = StringUtil.simpleSnippet(post.body);
+		postView.imageMedia = post.getImageMedia();
+
+		postView.audioMedia = post.getAudioMedia();
+
+		postView.videoMedia = post.getVideoMedia();
+
+		postView.galleryMedia = post.getGalleryMedia();
 
 		if (post.author != null) {
 			postView.authorName = post.author.name;
@@ -80,21 +87,36 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			}
 
 
-			postView.authorImageUrl = post.author.imageUrl;
-			postView.authorCoverUrl = post.author.coverUrl;
+//			postView.authorImageUrl = post.author.imageUrl;
+//			postView.authorCoverUrl = post.author.coverUrl;
 			postView.authorId = post.author.id;
 			postView.authorEmail = post.author.email;
 			postView.authorTwitter = post.author.twitterHandle;
 		}
 
 		postView.terms = getTermViews(post.terms);
-		postView.externalFeaturedImgUrl = post.externalFeaturedImgUrl;
-		postView.externalVideoUrl = post.externalVideoUrl;
+		postView.externalVideoUrl = post.getFeaturedVideo() != null ? post.getFeaturedVideo().getExternalVideoUrl() : null;
+
+		postView.featuredAudioHash = post.getFeaturedAudioHash();
+		postView.featuredVideoHash = post.getFeaturedVideoHash();
+
+//		Video video = post.getFeaturedVideo();
+//		if(video == null) {
+//			postView.video = new VideoDto();
+//			postView.video.identifier = video.identifier;
+//			postView.video.provider = video.identifier;
+//			postView.video.id = video.id;
+//		}
+
 		postView.readTime = post.readTime;
 		postView.state = post.state;
 		postView.scheduledDate = post.scheduledDate;
 		postView.lat = post.lat;
 		postView.lng = post.lng;
+
+		postView.focusX = post.focusX;
+		postView.focusY = post.focusY;
+
 		postView.stationName = post.station.name;
 		postView.stationId = post.station.id;
 		postView.notify = post.notify;

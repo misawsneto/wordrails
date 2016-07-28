@@ -1,40 +1,19 @@
 {
-  "name": "BootstrapAngularAdminWebApp",
-  "version": "2.0.1",
+  "name": "builder",
+  "version": "1.0.3",
   "description": "Admin web application template with Bootstrap 3 and AngularJS.",
   "scripts": {
     "start": "node node_modules/http-server/bin/http-server -o"
   },
-  "keywords": [
-    "AngularJS",
-    "admin",
-    "admin",
-    "dashboard",
-    "admin",
-    "panel",
-    "app",
-    "charts",
-    "components",
-    "flat",
-    "flat",
-    "ui",
-    "responsive",
-    "responsive",
-    "layout",
-    "ui",
-    "kit",
-    "ui",
-    "route",
-    "web",
-    "app",
-    "widgets"
-  ],
-  "repository": "https://heyflat@bitbucket.org/heyflat/angulr.git",
+  "keywords": [],
   "author": "Flatfull",
-  "license": "Envato REGULAR LICENSE",
-  "dependencies": {},
+  "license": "UNLICENSED",
+  "dependencies": {
+    "pgwslider": "^2.3.1"
+  },
   "devDependencies": {
-    "grunt": "^0.4.5",
+    "coffee-script": "1.10.0",
+    "grunt": "^1.0.1",
     "grunt-bower-install-simple": "^0.9.3",
     "grunt-bump": "0.0.15",
     "grunt-changelog": "^0.2.2",
@@ -47,6 +26,7 @@
     "grunt-swig": "^0.2.1",
     "gruntfile-gtx": "^0.3.0",
     "http-server": "^0.6.1",
-    "require-directory": "^2.0.0"
-  }
+    "require-directory": "^2.1.1"
+  },
+  "main": "GruntFile.js"
 }

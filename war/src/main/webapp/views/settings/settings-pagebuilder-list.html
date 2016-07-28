@@ -1,0 +1,116 @@
+<div masonry class="pos-rlt animated fadeIn" reload-on-show ng-show="stations">
+  <div class="col-lg-4 col-sm-6 col-xs-12 masonry-brick" ng-if="showHomePage">
+    <div class="md-list md-whiteframe-z1 md-background-hue-1 background m-b">
+
+      <div class="md-list-item list-group-item b-n text-md font-bold p-r-md md-primary-hue-1 background">
+        <div class="inline p-t-sm p-b-sm text-u-c">{{app.name}}</div>
+      </div>
+
+      <div class=" b-n no-padding">
+        <div class="md-list-item-content p-sm w-full">
+          <div class="p-sm font-500 text-md-l">
+            <md-input-container class="w-full">
+              <md-tooltip md-direction="top">
+                {{'settings.pages.MAIN_STATION' | translate}}
+              </md-tooltip>
+              <md-select ng-model="selectedStation" placeholder="{{'settings.pages.MAIN_STATION' | translate}}">
+                <md-option ng-value="station" ng-repeat="station in stations">{{ station.name }}</md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+        </div>
+      </div>
+
+      <div class=" b-n no-padding">
+        <div class="md-list-item-content p-sm w-full">
+          <div class="p-sm inline text-u-c font-500">{{'settings.pages.HEADER' | translate}}</div>
+          <md-button aria-label="nothing" class="md-icon-button pull-right m-0" ui-sref="app.pagebuilder.header">
+            <i class="mdi mdi2-pencil i-16"></i>
+          </md-button>
+        </div>
+      </div>
+
+      <div class=" b-n no-padding">
+        <div class="md-list-item-content p-sm w-full">
+          <div class="p-sm inline text-u-c font-500">{{'settings.pages.SIDENAV' | translate}}</div>
+          <md-button aria-label="nothing" class="md-icon-button pull-right m-0" ui-sref="app.pagebuilder.sidemenu">
+            <i class="mdi mdi2-pencil i-16"></i>
+          </md-button>
+        </div>
+      </div>
+
+      <div class="md-list-item list-group-item b-n no-padding">
+        <div class="md-list-item-content p-sm w-full">
+          <div class="p-sm inline text-u-c font-500">{{'settings.pages.FOOTER' | translate}}</div>
+          <md-button aria-label="nothing" class="md-icon-button pull-right m-0" ui-sref="app.pagebuilder.footer">
+            <i class="mdi mdi2-pencil i-16"></i>
+          </md-button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-lg-4 col-sm-6 col-xs-12 masonry-brick" ng-repeat="station in stations" ng-if="showHomePage">
+    <div class="md-list md-whiteframe-z1 md-background-hue-1 background m-b">
+
+      <div class="md-list-item list-group-item b-n text-md font-bold p-r-md md-primary-hue-1 background">
+        <div class="inline p-t-sm p-b-sm"> <i class="mdi2-radio-tower p-xs"></i> {{station.name}}</div>
+        <md-button aria-label="nothing" class="md-secondary md-fab md-mini pos-abt top-0 right-0 m-r-md m-t-xxl" aria-label="Eat cake" ui-sref="app.pagebuilder.editor">
+          <i class="mdi mdi2-plus i-20"></i>
+        </md-button>
+      </div>
+
+      <!-- <div class=" b-n no-padding m-t-md">
+        <div class="md-list-item-content p-sm w-full">
+          <div class="p-sm inline text-u-c font-500">{{'titles.SETTINGS' | translate}}</div>
+          <md-button aria-label="nothing" class="md-icon-button pull-right m-0">
+            <i class="mdi mdi2-settings i-16"></i>
+          </md-button>
+        </div>
+      </div> -->
+
+      <div class="b-n no-padding m-t-md">
+        <div class="md-list-item-content p-sm w-full">
+          <div class="p-sm inline text-u-c font-500">{{'settings.pages.HOME_PAGE' | translate}}</div>
+          <md-button aria-label="nothing" class="md-icon-button pull-right m-0">
+            <i class="mdi mdi2-eye i-16"></i>
+          </md-button>
+          <md-button aria-label="nothing" class="md-icon-button pull-right m-0">
+            <i class="mdi mdi2-pencil i-16"></i>
+          </md-button>
+        </div>
+      </div>
+
+      <!-- <div class="md-list-item list-group-item b-n no-padding">
+        <div class="md-list-item-content p-sm w-full">
+          <div class="p-sm inline text-u-c font-500">{{'settings.pages.CATEGORY_PAGES' | translate}}</div>
+          <md-button aria-label="nothing" class="md-icon-button pull-right m-0">
+            <i class="mdi mdi2-eye i-16"></i>
+          </md-button>
+          <md-button aria-label="nothing" class="md-icon-button pull-right m-0">
+            <i class="mdi mdi2-pencil i-16"></i>
+          </md-button>
+        </div>
+      </div> -->
+
+      <div class="md-list-item list-group-item b-n no-padding" ng-repeat="page in station.pages">
+        <div class="md-list-item-content p-sm">
+          <div class="p-sm inline" style="margin-right: 130px">{{page.title}}</div>
+          <div class="inline pull-right">
+            <md-button aria-label="nothing" class="md-icon-button m-0"> 
+              <i class="mdi mdi2-delete i-16"></i>
+            </md-button>
+            <md-button aria-label="nothing" class="md-icon-button m-0">
+              <i class="mdi mdi2-pencil i-16"></i>
+            </md-button>
+            <md-button aria-label="nothing" class="md-icon-button m-0">
+              <i class="mdi mdi2-eye i-16"></i>
+            </md-button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

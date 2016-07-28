@@ -27,6 +27,7 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 	IConnectivityManager manager;
 	String url;
 	String cookie;
+	boolean isSocialLogin;
 	
 	// Traditional Login
 	String username;
@@ -37,20 +38,24 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 	String userId;
 	String accessToken;
 	
-	boolean isSocialLogin;
-	
 	@Override
 	public synchronized void intercept(RequestFacade request) {
+		request.addHeader("User-Agent", "OkHttp");
+		request.addHeader("x-username", username != null && !username.equals("wordrails") ? username : "*");
 		if (cookie != null) {
 			request.addHeader("Cookie", "JSESSIONID=" + cookie);
 		}
 		if (manager.isConnectedOrConnecting()) {
 			int maxAge = 0;
-			request.addHeader("Cache-Control", "max-age=" + maxAge);
+			request.addHeader("Cache-Control", "public, max-age=" + maxAge);
 		} else {
 			int maxStale = Integer.MAX_VALUE;
-			request.addHeader("Cache-Control", "only-if-cached, max-stale=" + maxStale);
+			request.addHeader("Cache-Control", "public, only-if-cached, max-stale=" + maxStale);
 		}
+	}
+
+	synchronized void setUsername(String username) {
+		this.username = username;
 	}
 	
 	synchronized void logOut() {

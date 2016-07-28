@@ -1,0 +1,322 @@
+<div class="pos-abt top-0 bottom-0 left-0 right-0">
+  <div class="hbox">
+    <div ng-if="$mdMedia('gt-sm')" class="col w text-md font-500" ng-class="{'w-xxl p-l-xxl': $mdMedia('gt-md') && !app.isSettings(), 'w-lg': $mdMedia('gt-md') && app.isSettings()}">
+      <div class="vbox p-t-lg">
+        <div class="row-row">
+          <div class="cell o-f-v">
+            <div class="cell-inner p">
+              <ul class="settings-list text-muted m-t-xxl pos-rlt">
+                <li ng-class="{'active': search.tab === 'publications'}">
+                  <a ng-click="search.tab = 'publications'" md-ink-ripple class="settings-items">
+                  <i class="m-r i-24 v-m mdi2-newspaper"></i><span class="v-m" translate='titles.PUBLICATIONS'></span></a>
+                </li>
+                <li ng-class="{'active': search.tab === 'stations'}">
+                  <a ng-click="search.tab = 'stations'" md-ink-ripple class="settings-items">
+                  <i class="m-r i-24 v-m mdi2-radio-tower"></i><span class="v-m" translate='titles.STATIONS'></span></a>
+                </li>
+                <li ng-class="{'active': search.tab === 'persons'}">
+                  <a ng-click="search.tab = 'persons'" md-ink-ripple class="settings-items">
+                  <i class="m-r i-24 v-m mdi2-account"></i><span class="v-m" translate='titles.USERS'></span></a>
+                </li>
+                <li ng-class="{'active': search.tab === 'categories'}">
+                  <a ng-click="search.tab = 'categories'" md-ink-ripple class="settings-items">
+                  <i class="m-r i-24 v-m mdi2-format-list-bulleted"></i><span class="v-m" translate='titles.CATEGORIES'></span></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="vbox">
+
+        <div class="row-row">
+          <div id="search-container" class="cell" style="overflow-x: hidden ">
+            <div class="cell-inner">
+
+            <div ng-class="{'p-l-sm p-r-xxl m-r-lg': $mdMedia('gt-sm')}">
+
+              <div ng-if="search.tab == 'publications'" class="m-t-lg search-with-filter m-r-sm m-l-sm p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
+                <form ng-submit="doSearch(searchQuery)">
+                  <input ng-model="searchQuery" placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
+                </form>
+
+                <!-- dropdown filter -->
+                <div class="pos-abt top-0 right-0 m-t pull-right hide" uib-dropdown auto-close="disabled" is-open="advancedMenuOpen">
+                  <md-button uib-dropdown-toggle class="md-icon-button" aria-label="More" popover-trigger="click">
+                    <i class="icon mdi-content-filter-list i-24" md-style="{'color': 'default'}" ></i>
+                  </md-button>
+                  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="dropdown-menu-scale pull-right advanced-search-menu m-h-auto p-sm w-400 default-bg">
+                      <!-- <time-date-picker orientation="true" class="m-h-auto" ng-model="dateValue"></time-date-picker> -->
+                    <div class="arrow"></div>
+                    <div>
+                      <div class="pull-right">
+                        <a ng-click="advancedMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+                      </div>
+                      <div class="p-sm">
+                        <div class="m-b-sm text-u-c">
+                          Filtar por estação
+                        </div>
+                        <div class="m-b">
+                          <md-menu>
+                            <!-- Trigger element is a md-button with an icon -->
+                           <md-button ng-click="$mdOpenMenu($event)" class="md-button text-u-c" aria-label="Open sample menu">
+                             <!-- <md-icon md-font-set="material-icons" class="ng-scope ng-isolate-scope material-icons"> phone </md-icon> -->
+                             <i class="mdi mdi2-radio-tower"></i>
+                              {{'titles.STATIONS' | translate}}
+                           </md-button>
+                           <md-menu-content class="w-lg">
+                            <div class="p">
+                             <ul class="list-unstyled">
+                               <li ng-repeat="perm in stationsPermissions">
+                                <md-checkbox ng-model="perm.filter" aria-label="{{perm.stationName}}">
+                                 {{ perm.stationName }}
+                                 </md-checkbox>
+                               </li>
+                             </ul>
+                            </div>
+                           </md-menu-content>
+                          </md-menu>
+                        </div>
+                        <div class="m-b-lg text-u-c">
+                          Filtar por data
+                        </div>
+                        <div class="text-center">
+                          <div class="pos-rlt no-margin m-b-sm inline" style="width: 140px">
+                            <mdp-date-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'titles.START_DATE' | translate}}" ng-model="filter.initialDate">
+                            </mdp-date-picker>
+                          </div>
+                          <div class="pos-rlt no-margin m-b-sm inline" style="width: 140px">
+                            <mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'titles.END_DATE' | translate}}" ng-model="filter.finalDate">
+                            </mdp-time-picker>
+                          </div>
+                        </div>
+                      <!-- -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- /dropdown -->
+              </div>
+            <!--</div>-->
+            <!-- /search -->
+            <!--<div class="p-r-sm p-l-sm">-->
+              <div ng-if="search.tab == 'persons'" class="m-t-lg" masonry="{transitionDuration: '0'}" reload-on-show >
+
+                <div class="col-lg-4 col-sm-6 col-xs-12 masonry-brick" ng-repeat="person in persons">
+                  <div class="md-whiteframe-z1 scrollable md-background-hue-1 background inline w-full m-b-lg">
+                    <div class="pos-rlt p">
+                      <div ng-style="{'background-image': 'url(  {{person | coverImage: 'medium'}} )'}" style="margin: -16px -16px 0 -16px" class="hidden-folded bg-cover m-b-md md-whiteframe-z1">
+                        <div class="p w-full">
+                      <!-- <i class="mdi mdi2-account text-4x"></i> -->
+                        <div class="md-whiteframe-z1 user-avatar rounded w-64 bg-white inline pos-rlt md-primary-default background text-center bg-cover" preload-bg-image="{{app.getUserImage(person, 'medium', 'PROFILE_PICTURE')}}">
+                          <i ng-if="!person.imageHash" class="mdi2-account i-40" style="top: 16%;position: relative;"></i>
+                        </div>
+                        </div>
+                        <div class="p-v-sm p-h black-grad  text-white">
+                          <div class="block" style="opacity:0.92">
+                            <span class="block font-bold">{{person.name}}</span>
+                            <span class="text-sm">{{person.email}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="p-t-sm">
+                        {{person.bio}}
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <md-button ng-click="cancel()">{{'search.VIEW_PROFILE' | translate}}</md-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div ng-if="search.tab == 'categories'" class="m-t-lg">
+
+                <div ng-if="station.categories && station.categories.length > 0" ng-repeat="station in stations">
+                  <div class="p text-lg font-500">
+                    <i class="mdi2-radio-tower m-r-sm"></i>{{station.name}}
+                  </div>
+                  <div masonry="{transitionDuration: '0'}" reload-on-show >
+                    <div class="col-lg-4 col-sm-6 col-xs-12 masonry-brick" ng-repeat="category in station.categories">
+                      <div class="md-whiteframe-z1 scrollable md-background-hue-1 background inline w-full m-b-lg">
+                        <div class="pos-rlt p">
+                          <div ng-style="{{category | categoryImage:'large':true}}" style="margin: -16px -16px 0 -16px" class="hidden-folded bg-cover m-b-md md-whiteframe-z1">
+                            <div class="p-lg w-full">
+                            </div>
+                            <div class="p-v-sm p-h black-grad  text-white">
+                              <div class="block text-2x" style="opacity:0.92">
+                                <span class="block font-thin">{{category.name}}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="p-t-sm">
+                            {{category.description}}
+                          </div>
+                        </div>
+                        <div class="text-right">
+                          <md-button ng-href="{{app.getCategoryLink(station.stationSlug, category.name)}}" target="{{app.isSettings() ? '_self' : ''}}">{{'search.VIEW_CATEGORY' | translate}}</md-button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div ng-if="search.tab == 'stations'" class="m-t-lg" masonry="{transitionDuration: '0'}" reload-on-show >
+
+                <div class="col-lg-4 col-sm-6 col-xs-12 masonry-brick" ng-repeat="station in stations">
+                  <div class="md-whiteframe-z1 scrollable md-background-hue-1 background inline w-full m-b-lg">
+                    <div class="pos-rlt p">
+                      <div  style="margin: -16px -16px 0 -16px" class="hidden-folded bg-cover m-b-md">
+                        <div class="p w-full text-center">
+                      <!-- <i class="mdi mdi2-account text-4x"></i> -->
+                          <div class="md-whiteframe-z1 user-avatar rounded w-64 bg-white inline pos-rlt md-primary-default background text-center bg-cover">
+                            <i ng-if="!station.logoHash" class="mdi2-radio-tower i-40" style="top: 16%;position: relative;"></i>
+                          </div>
+                        </div>
+                        <div class="p-v-sm p-h text-center">
+                          <div class="block" style="opacity:0.92">
+                            <span class="block font-bold text-md">{{station.name}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div >
+                        {{station.description}}
+                      </div>
+                    </div>
+                    <div class="text-center">
+                      <md-button ng-click="cancel()">{{'search.VIEW_STATION' | translate}}</md-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                
+              <div layout="row" ng-if="search.tab == 'publications'">
+                <div flex="65">
+                  <div class="m-b-xxl p-l-sm ">
+                    <div class="m-b-lg m-t-lg">
+                      <ul class="bg-t" infinite-scroll="paginate()" infinite-scroll-container='"#search-container"' infinite-scroll-distance="1">
+                        <li class="md-whiteframe-z1 md-background-hue-1 background fade-in-hover-container" ng-repeat="publication in publications">
+                          <div class="pos-rlt animated fadeIn">
+                            <div class="list-group-item b-n p">
+                              <a ui-sref="app.userprofile({username: publication.authorUsername})">
+                                <div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="pull-left m-r-sm bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1 text-center md-primary-hue-1 background">
+                                  <i ng-if="!app.hasAuthorImage(publication)" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
+                                </div>
+                                <div class="clear font-normal p-xs font-500 block">
+                                  {{publication.authorName}}
+                                </div>
+                              </a>
+                              <div class="m-t m-r pos-abt font-500 text-md ng-binding right-0 top-0">
+                                <i class="icon mdi2-radio-tower"></i> {{app.getStationById(publication.stationId).name}}
+                              </div>
+                            </div>
+                            <div class="clear font-thin">
+                                <a ui-sref="app.station.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" class="pull-left w-full" ng-if="app.hasImage(publication)" style="height: 196px;">
+                                  <div preload-bg-image="{{app.getImageLink(publication, 'large')}}" class="img-responsive md-whiteframe-z1 thumb-lg w-full h-full bg-cover">
+                                  </div>
+                                </a>
+                            </div>
+                          </div>
+                          <div class="p m-b-md" style="line-height: inherit;" ng-click="showPost(publication); publication.selected = !publication.selected">
+                            <div class="pos-rlt">
+                              <div class="animated animated1x md-background-hue-1 background" >
+                                <div class="clear font-thin">
+                                  <div class="m-r-xxl text-md">
+                                    <a ui-sref="app.station.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})" class="font-500 block text-md-l">{{publication.title}}</a>
+                                    <div  class="text-base font-normal p-v-sm">
+                                      {{app.getLocalTime(publication.date)}}
+                                    </div>
+                                    <div class="m-b-sm">
+                                      <span class="label r m-t-xs m-r-xs md-accent-default background" ng-repeat="tag in publication.tags">{{tag}}</span>
+                                    </div>
+                                    <a ui-sref="app.station.read({'stationSlug': app.getStationById(publication.stationId).stationSlug, 'postSlug': publication.slug})">
+                                    {{publication.snippet | characters:220}}
+                                    </a>
+                                  </div>
+                                  <div class="news-comment-shares z-index-2">
+                                    <md-divider class="m-b-sm m-t"></md-divider>
+                                    <div class="p-t-xs">
+                                        <md-button ng-click="app.toggleRecommend(publication)" style="width: 36px; height: 36px; padding: 6px; margin-left: 0;" class="not-trans md-icon-button" ng-style="app.isRecommended(publication) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isRecommended(publication)}"><i class="mdi2-heart i-16"></i></md-button>
+
+                                        <span class="v-m p-v-sm m-r-sm">{{publication.recommendsCount}}</span>
+
+                                        <md-button ng-click="app.toggleBookmark(publication)" style="width: 36px; height: 36px; padding: 6px;" class="not-trans md-icon-button" ng-style="app.isBookmarked(publication) ? null : {'background-color': actionButtonColors, 'opacity': '0.6'}" ng-class="{'md-accent-default background': app.isBookmarked(publication)}"><i class="mdi2-bookmark i-16"></i></md-button>
+                                        
+                                        <md-button ng-click="app.showSharesPostDialog($event, publication)" style="width: 36px; height: 36px; padding: 6px; opacity: 0.6; margin-right: 0" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}"><i class="mdi2-share i-20"></i></md-button>
+
+                                        <span class="pull-right v-m p-v-sm m-r-sm">{{publication.commentsCount}}</span>
+                                        
+                                        <md-button style="width: 36px; height: 36px; padding: 6px; opacity: 0.6;" class="not-trans md-icon-button pull-right" ng-style="{'background-color': actionButtonColors}" ng-click="app.showComments(publication)"><i class="mdi2-comment i-16"></i></md-button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li ng-if="!publicationsCtrl.allLoaded">
+                          <div class="p-md text-center animated animated5x fadeIn">
+                            <md-progress-circular class="m-auto" md-diameter="144"></md-progress-circular>
+                          </div>
+                        </li>
+                      </ul>
+                      
+                    </div>
+                  </div>
+                </div>
+                <div flex="35">
+                  <div class="m-l-lg m-t-lg m-r-sm text-md pos-rlt" ng-if="topTags && topTags.length">
+                    <div class="text-u-c m-b-xs">
+                      Tags
+                    </div>
+                    <md-divider ng-class=" m-b-xs"></md-divider>
+                    <div class="m-t-sm">
+                      <div class="inline font-500 p-h-sm p-v-xs r-2x m-t-xs m-r-xs md-accent-default background" ng-repeat="tag in topTags | limitTo: 10">  {{tag.tag}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="m-l-lg m-t-xl m-r-sm text-md pos-rlt">
+                    <div class="text-u-c m-b-xs">
+                      {{'titles.USERS' | translate}}
+                    </div>
+                    <md-divider ng-class=" m-b-xs"></md-divider>
+                    <div class="m-t-sm">
+                      <div class="m-b-sm" ng-repeat="person in persons | limitTo:5" ng-click="showPerson($event,person)">
+                        <span class="pull-left thumb-sm m-r">
+                          <div ng-style="app.getUserImage(person, 'small', 'PROFILE_PICTURE', true)" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(person)}">
+                            <i ng-if="!app.hasProfilePicture(person)" style="line-height: 36px;" class="mdi2-account i-24"></i>
+                          </div>
+                        </span>
+                        <span class="clear">
+                          <span class="text-md font-bold">{{person.name}}</span>
+                          <div class="text-muted clear text-ellipsis">{{person.username}} | {{person.email}}</div>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+    
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!--<div aria-label="menu" class="pos-fix bottom-0 right-0 m-b-xl animated" style="margin-right: 60px" ng-click="scrollToTop();" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}">
+  <i class="mdi2-chevron-double-up i-32"></i>
+</div>-->
+
+<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg animated" ng-class="{'fadeOut': !showScrollUp, 'fadeIn': showScrollUp}" ng-click="scrollToTop();">
+  <!-- <md-tooltip md-direction="top">
+    {{'titles.REMOVE_ALL' | translate}}
+  </md-tooltip> -->
+  <i class="mdi2-chevron-up i-32"></i>
+</md-button>

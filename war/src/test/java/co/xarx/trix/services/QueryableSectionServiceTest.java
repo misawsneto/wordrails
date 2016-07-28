@@ -4,11 +4,8 @@ import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.Identifiable;
 import co.xarx.trix.domain.page.Block;
 import co.xarx.trix.domain.page.QueryableListSection;
-import co.xarx.trix.domain.page.QueryableSection;
-import co.xarx.trix.domain.query.FixedQuery;
-import co.xarx.trix.domain.query.PageableQuery;
-import co.xarx.trix.domain.query.Query;
-import co.xarx.trix.domain.query.statement.PostStatement;
+import co.xarx.trix.domain.page.query.*;
+import co.xarx.trix.domain.page.query.statement.PostStatement;
 import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,21 +20,37 @@ import static junit.framework.TestCase.assertEquals;
 
 public class QueryableSectionServiceTest {
 
-	private static final Integer PAGEABLE_ID_BASE = 30;
-	private static final Integer FIXED_ID_BASE = 80;
+	private static final Integer PAGEABLE_ID_BASE = 10;
+	private static final Integer FIXED_ID_BASE = 100;
 
-	QueryableSectionService service;
-	QueryableSection section;
+	SectionPopulatorService service;
+	QueryableListSection section;
 	List<Integer> fixedIndexes = Lists.newArrayList(2, 8, 13, 1, 15);
 	Integer iFixed;
 
-	private class QR extends QueryRunnerService {
+	private class PostStatementMock extends PostStatement {
+		boolean isFixed;
+
+		public PostStatementMock(boolean isFixed) {
+			this.isFixed = isFixed;
+		}
+	}
+
+	private class ExecutorFactoryMock implements ExecutorFactory {
 		@Override
-		protected List<Identifiable> getItens(Query query, Integer size, Integer from) {
+		public Executor getExecutor(String alias) {
+			return new FakeExecutor();
+		}
+	}
+
+	private class FakeExecutor implements Executor<Identifiable, PostStatementMock> {
+
+		@Override
+		public List<Identifiable> execute(PostStatementMock statement, Integer size, Integer from) {
 			List<Identifiable> result = new ArrayList<>();
 			for (int i = from; i < from + size; i++) {
 				PostView pv = new PostView();
-				if (query instanceof FixedQuery) {
+				if (statement.isFixed) {
 					pv.setPostId(fixedIndexes.get(iFixed++) + FIXED_ID_BASE);
 				} else {
 					pv.setPostId(i + PAGEABLE_ID_BASE);
@@ -50,20 +63,23 @@ public class QueryableSectionServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		PostStatement objectStatement = new PostStatement();
+		PostStatement fixedPS = new PostStatementMock(true);
 
 		List<FixedQuery> fixedQueries = new ArrayList<>();
-		FixedQuery f1 = new FixedQuery(objectStatement, Lists.newArrayList(2, 8));
-		FixedQuery f2 = new FixedQuery(objectStatement, Lists.newArrayList(13));
-		FixedQuery f3 = new FixedQuery(objectStatement, Lists.newArrayList(1, 15));
+		FixedQuery f1 = new FixedQuery(fixedPS, Lists.newArrayList(2, 8));
+		FixedQuery f2 = new FixedQuery(fixedPS, Lists.newArrayList(13));
+		FixedQuery f3 = new FixedQuery(fixedPS, Lists.newArrayList(1, 15));
 		fixedQueries.add(f1);
 		fixedQueries.add(f2);
 		fixedQueries.add(f3);
 
-		section = new QueryableListSection(10, fixedQueries);
-		section.setPageableQuery(new PageableQuery(objectStatement));
+		PostStatement pageablePS = new PostStatementMock(false);
 
-		service = new QueryableSectionService(new QR());
+		section = new QueryableListSection(10, fixedQueries);
+		section.setPageableQuery(new PageableQuery(pageablePS));
+
+		QueryRunner qr = new QueryRunnerService(new ExecutorFactoryMock());
+		service = new SectionPopulatorService(qr);
 	}
 
 	@Test
@@ -71,7 +87,7 @@ public class QueryableSectionServiceTest {
 		iFixed = 0;
 		Map<Integer, Block> blocks = service.fetchQueries(section, 0);
 
-		List<Serializable> expectedIdList = Lists.newArrayList(30, 81, 82, 31, 32, 33, 34, 35, 88, 36);
+		List<Serializable> expectedIdList = Lists.newArrayList(10, 101, 102, 11, 12, 13, 14, 15, 108, 16);
 		List<Serializable> idList = blocks.values().stream().map(block -> block.getObject().getId()).collect(Collectors.toList());
 
 		assertEquals(expectedIdList, idList);
@@ -82,7 +98,18 @@ public class QueryableSectionServiceTest {
 		iFixed = 0;
 		Map<Integer, Block> blocks = service.fetchQueries(section, section.getSize());
 
-		List<Serializable> expectedIdList = Lists.newArrayList(37, 38, 39, 93, 40, 95, 41, 42, 43, 44);
+		List<Serializable> expectedIdList = Lists.newArrayList(17, 18, 19, 113, 20, 115, 21, 22, 23, 24);
+		List<Serializable> idList = blocks.values().stream().map(block -> block.getObject().getId()).collect(Collectors.toList());
+
+		assertEquals(expectedIdList, idList);
+	}
+
+	@Test
+	public void testPageThree() throws Exception {
+		iFixed = 0;
+		Map<Integer, Block> blocks = service.fetchQueries(section, section.getSize() * 2);
+
+		List<Serializable> expectedIdList = Lists.newArrayList(25, 26, 27, 28, 29, 30, 31, 32, 33, 34);
 		List<Serializable> idList = blocks.values().stream().map(block -> block.getObject().getId()).collect(Collectors.toList());
 
 		assertEquals(expectedIdList, idList);

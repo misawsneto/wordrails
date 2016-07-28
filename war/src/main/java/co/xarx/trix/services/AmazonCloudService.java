@@ -3,15 +3,12 @@ package co.xarx.trix.services;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.exception.OperationNotSupportedException;
 import co.xarx.trix.util.FileUtil;
-import co.xarx.trix.util.StringUtil;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,7 +16,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 public class AmazonCloudService {
 
 	Logger log = Logger.getLogger(AmazonCloudService.class.getName());
@@ -36,6 +32,10 @@ public class AmazonCloudService {
 
 	private AmazonS3Client s3Client;
 
+	public AmazonCloudService(AmazonS3Client s3Client) {
+		this.s3Client = s3Client;
+	}
+
 	public AmazonCloudService(String accessKey, String accessSecretKey, String cloudfrontUrl, String bucketName) {
 		this.cloudfrontUrl = cloudfrontUrl;
 		this.bucketName = bucketName;
@@ -50,20 +50,18 @@ public class AmazonCloudService {
 		return "http://" + cloudfrontUrl + "/" + tenantId + "/images/" + fileName;
 	}
 
+	public String getPublicFileURL(String fileName, String diretory) throws IOException {
+		String tenantId = TenantContextHolder.getCurrentTenantId();
+		if (tenantId == null || tenantId.isEmpty())
+			throw new OperationNotSupportedException("This request is invalid because no Tenant ID was set");
+		return "http://" + cloudfrontUrl + "/" + tenantId + "/" + diretory + "/" + fileName;
+	}
+
 	public String getPublicApkURL(String fileName) throws IOException {
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		if(tenantId == null || tenantId.isEmpty())
 			throw new OperationNotSupportedException("This request is invalid because no Tenant ID was set");
-		return "http://" + cloudfrontUrl + "/" + tenantId + "/apk/" + fileName;
-	}
-
-	public String uploadPublicImage(InputStream input, Long lenght, String size, String mime) throws IOException, AmazonS3Exception {
-		java.io.File tmpFile = java.io.File.createTempFile(StringUtil.generateRandomString(5, "aA#"), ".tmp");
-
-		FileUtils.copyInputStreamToFile(input, tmpFile);
-		String hash = FileUtil.getHash(new FileInputStream(tmpFile));
-		uploadPublicImage(tmpFile, lenght, hash, size, mime, true);
-		return hash;
+		return "https://" + cloudfrontUrl + "/" + tenantId + "/apk/" + fileName;
 	}
 
 	public String uploadAPK(java.io.File file, Long lenght, String mime, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
@@ -87,15 +85,27 @@ public class AmazonCloudService {
 	 */
 	public String uploadPublicImage(java.io.File file, Long lenght, String hash,
 	                                String sizeTag, String mime, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
-		if(hash == null) {
-			hash = FileUtil.getHash(new FileInputStream(file));
+
+		return uploadPublicFile(file, lenght, hash, sizeTag, mime, deleteFileAfterUpload, IMAGE_DIR);
+	}
+
+	/**
+	 * send hash null if needs to generate it
+	 */
+	public String uploadPublicFile(java.io.File file, Long lenght, String hash,
+									String sizeTag, String mime, boolean deleteFileAfterUpload, String fileDir) throws
+			IOException,
+			AmazonS3Exception {
+
+		try (InputStream is = new FileInputStream(file)){
+			if (hash == null) {
+				hash = FileUtil.getHash(is);
+			}
 		}
 
 		ObjectMetadata md = new ObjectMetadata();
 		md.setContentType(mime);
-		md.addUserMetadata("size", sizeTag);
-
-		String path = getKey(IMAGE_DIR, hash);
+		String path = getKey(fileDir, hash);
 		uploadFile(file, lenght, path, md, deleteFileAfterUpload);
 
 		return hash;
@@ -130,7 +140,7 @@ public class AmazonCloudService {
 		}
 	}
 
-	private void uploadFile(java.io.File file, Long lenght, String keyName, ObjectMetadata metadata, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
+	protected void uploadFile(java.io.File file, Long lenght, String keyName, ObjectMetadata metadata, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
 		if("dev".equals(profile) && !("demo".equals(TenantContextHolder.getCurrentTenantId()) || "test".equals(TenantContextHolder.getCurrentTenantId()))) {
 			throw new OperationNotSupportedException("Can't upload images in dev profile in network that is not demo");
 		}
@@ -186,6 +196,7 @@ public class AmazonCloudService {
 		} catch (Exception e) {
 			s3Client.abortMultipartUpload(new AbortMultipartUploadRequest(bucketName, keyName, initResponse.getUploadId()));
 
+			uploadFile(file, lenght, keyName, metadata, deleteFileAfterUpload);
 			throw new AmazonS3Exception("Error uploading file to Amazon S3", e);
 		} finally {
 			if(deleteFileAfterUpload && file.exists()) {

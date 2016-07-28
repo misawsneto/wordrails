@@ -9,14 +9,8 @@ import java.util.Map;
 public interface NetworkProjection {
 	Integer getId();
 	String getName();
-	Integer getLogoId();
-	Integer getLogoSmallId();
-	Integer getFaviconId();
-	Integer getSplashImageId();
-	Integer getLoginImageId();
-	Integer getLoginImageSmallId();
 
-	ImageProjection getLogo();
+	ImageProjection getLogoImage();
 	ImageProjection getSplashImage();
 	ImageProjection getLoginImage();
 	ImageProjection getFaviconImage();
@@ -28,6 +22,10 @@ public interface NetworkProjection {
 	String getYoutubeLink();
 	String getGooglePlusLink();
 	String getTwitterLink();
+
+	String getInstagramLink();
+	String getPinterestLink();
+	String getLinkedInLink();
 	
 	String getFlurryKey();
 	String getTrackingId();

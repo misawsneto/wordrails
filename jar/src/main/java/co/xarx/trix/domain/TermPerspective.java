@@ -1,6 +1,7 @@
 package co.xarx.trix.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(name="term_perspective",uniqueConstraints = {@UniqueConstraint(columnNames={"station_perspective_id","term_id"})})
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TermPerspective extends BaseEntity {
 
 	@Id

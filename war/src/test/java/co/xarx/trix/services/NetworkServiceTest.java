@@ -18,26 +18,26 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class NetworkServiceTest {
 
-	private NetworkRepository networkRepository;
 	private NetworkService networkService;
+	private NetworkRepository networkRepository;
 
 	@Before
 	public void setUp() throws Exception {
 		networkRepository = mock(NetworkRepository.class);
 
-		List<Network> networkList = new ArrayList<>();
-		Network network1 = new Network();
-		network1.id = 1;
-		network1.domain = "xarx.portodigital.org";
-		network1.tenantId = "pd";
+		List<Object[]> networkList = new ArrayList<>();
+		Object[] network1 = new Object[3];
+		network1[0] = 1;
+		network1[1] = "xarx.portodigital.org";
+		network1[2] = "pd";
 		networkList.add(network1);
-		Network network2 = new Network();
-		network2.id = 2;
-		network2.domain = "tupy.com";
-		network2.tenantId = "demo";
+		Object[] network2 = new Object[3];
+		network2[0] = 2;
+		network2[1] = "tupy.com";
+		network2[2] = "demo";
 		networkList.add(network2);
 
-		when(networkRepository.findAll()).thenReturn(networkList);
+		when(networkRepository.findIdsAndDomain()).thenReturn(networkList);
 
 		networkService = new NetworkService(networkRepository);
 	}

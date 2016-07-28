@@ -16,8 +16,6 @@ public class CORSCustomFilter implements Filter{
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -45,17 +43,18 @@ public class CORSCustomFilter implements Filter{
 			origin = "*";
 
 		resp.setHeader("Access-Control-Allow-Origin", origin);
-		resp.setHeader("Access-Control-Expose-Headers", "Access-Control-Allow-Origin,Access-Control-Allow-Credentials,"+trixAuthHeader);
+		resp.setHeader("Access-Control-Expose-Headers", "Access-Control-Allow-Origin," +
+				"Access-Control-Allow-Credentials,Location,"+trixAuthHeader);
 		resp.setHeader("Access-Control-Allow-Credentials", "true");
 		resp.setHeader("Access-Control-Max-Age", "3600");
-		resp.setHeader("Access-Control-Allow-Headers", "Authorization,Content-Type,Content-Range,Content-Disposition,Content-Description,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers," + trixAuthHeader);
+		resp.setHeader("Access-Control-Allow-Headers", "Authorization,Content-Type,Content-Range,Content-Disposition," +
+				"Content-Description,X-Requested-With,accept,Origin,Access-Control-Request-Method," +
+				"Access-Control-Request-Headers,Location," + trixAuthHeader);
 		resp.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,HEAD,OPTIONS");
 	}
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

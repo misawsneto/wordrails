@@ -1,18 +1,26 @@
 package co.xarx.trix.domain;
 
 import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @lombok.Getter
 @lombok.Setter
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "network_id"}))
+@NoArgsConstructor
+//@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "network_id"}))
 public class Invitation extends BaseEntity {
+
+	public Invitation(String baseUrl){
+		this.hash = UUID.randomUUID().toString();
+		this.invitationUrl = "http://" + baseUrl + "/access/invitation?hash=" + hash;
+	}
 
 	@Id
 	@Setter(AccessLevel.NONE)
@@ -23,37 +31,32 @@ public class Invitation extends BaseEntity {
 	@Column(unique = true)
 	public String hash;
 
-	@Email
-	public String email;
-
-	public String personName;
-
+	@Transient
 	public String invitationUrl;
+
+	@OneToOne
+	@JoinColumn(name = "person_id")
+	public Person person;
+
+	@Lob
+	public String email;
 
 	public boolean multipleUser = false;
 
 	public boolean active = true;
 
-	@ManyToOne
-	@JoinColumn(name = "station_id")
-	public Station station;
-
-	@ManyToOne
-	@JoinColumn(name = "network_id")
-	public Network network;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "invitation_station", joinColumns = @JoinColumn(name = "invitation_id"))
+	@Column(name = "station_id")
+	public List<Integer> invitationStations;
 
 	@PrePersist
 	void onCreate() {
-		createdAt = new Date();
-		invitationUrl = getUrl();
-	}
-
-	public String getUrl() {
-		return "http://" + network.getTenantId() + ".trix.rocks/" + "invitation?hash=" + hash;
+		setCreatedAt(new Date());
 	}
 
 	@PreUpdate
 	void onUpdate() {
-		updatedAt = new Date();
+		setUpdatedAt(new Date());
 	}
 }

@@ -42,8 +42,7 @@ public class JavaField extends AbstractField {
 		return field.getName();
 	}
 
-	@Override
-	public String getParametrizedGenericTypeName() {
+	public String getParameterizedGenericTypeName() {
 		return field.getGenericType().toString();
 	}
 

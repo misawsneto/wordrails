@@ -1,0 +1,353 @@
+<div id="settings-colors">
+	<div class="p-sm pos-abt top-0 left-0 w-full md-whiteframe-z0 md-primary-hue-1 background">
+		<md-button aria-label="nothing" class="pull-right font-bold" ng-click="openApplyThemeDialog($event)" translate="settings.colors.APPLY_THEME">
+			Aplicar Cores
+		</md-button>
+		<md-button aria-label="nothing" class="pull-right font-bold" ng-click="setTheme()" >
+			{{app.testingTheme ? 'settings.colors.RESET_THEME' : 'settings.colors.TEST_THEME'| translate}}
+		</md-button>
+		<md-button aria-label="nothing" class="pull-right font-bold" ng-click="togglePalette()" translate="settings.COLOR_PALETTE">
+		  	Paleta de Cores
+		</md-button>
+		<md-button aria-label="nothing" ng-click="isMobile = !isMobile" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
+      <i class="i-20" ng-class="{'mdi-hardware-desktop-windows': isMobile, 'mdi-hardware-phone-android': !isMobile }"></i>
+    </md-button>
+    <!-- <md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;">
+      <i class="i-20 mdi-editor-format-color-fill"></i>
+    </md-button> -->
+	</div>
+
+    <div class="p-t-lg">
+      <div class="color-selector-container animated zoomIn">
+        <div class="content m-t-md">
+          <div class="mockup-browser md-whiteframe-z2" ng-class="{'mobile': isMobile}" md-theme="{{editingThemeName}}" md-theme-watch="true">
+            <md-content>
+              <md-sidenav class="md-sidenav-left md-whiteframe-z2 w-lg" md-component-id="sidenav-demo">
+                <div class="box md-background-hue-1 background ng-scope">
+                  <div class="box-row">
+                    <div class="box-cell scrollable hover">
+                      <div class="box-inner">
+                        <div class="p hidden-folded indigo-50" style="background-image:url(images/bg.png); background-size:cover">
+                          <div class="rounded w-64 bg-white inline pos-rlt">
+                            <img src="/images/a0.jpg" class="img-responsive rounded">
+                          </div>
+                          <a class="block m-t-sm ng-binding">
+                            <span class="block font-bold ng-binding">Demo</span>
+                            demo@demo.com
+                          </a>
+                        </div>
+                        <div id="nav">
+                          <nav ui-nav>
+                            <ul class="nav">
+                              <li class="nav-header m-v-sm hidden-folded" translate="titles.STATIONS">
+                                Estação
+                              </li>
+
+                              <li ui-sref-active="active">
+                                <a md-ink-ripple>
+                                  <span class="font-normal">{{'titles.STATION' | translate}} 1</span>
+                                </a>
+                              </li>
+
+                              <li ui-sref-active="active">
+                                <a md-ink-ripple >
+                                  <span class="font-normal">{{'titles.STATION' | translate}} 2</span>
+                                </a>
+                              </li>
+
+                              <li ui-sref-active="active">
+                                <a md-ink-ripple >
+                                  <span class="font-normal">{{'titles.STATION' | translate}} 3</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </nav>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </md-sidenav>
+
+              <md-toast class="ng-scope md-top md-right" style="width: 150px; min-width: 150px; z-index: 51">
+                <md-toolbar class="md-warn md-{{editingThemeName}}-theme w-sm pull-right m-t text-base r" style="padding: 5px 10px; min-height: 45px;" translate="settings.colors.ALERT">Alerta</md-toolbar>
+              </md-toast>
+
+              <md-toolbar class="no-radius md-primary" style="min-height: 50px; height: 50px">
+                <a md-ink-ripple ng-click="toggleDemo()" class="pull-left i-16" style="    padding: 0 16px;
+                  line-height: 50px;
+                  max-width: 55px;">
+                <i class="mdi-navigation-menu i-24"></i></a>
+              </md-toolbar>
+
+              <md-content ng-if="!isMobile">
+                <div class="p">
+                  <div class="row">
+                    <div class="col-lg-4">
+                      <div class="card md-whiteframe-z1">
+                        <div class="item">
+                          <img src="/images/c8.jpg" class="w-full r-t" alt="Washed Out">
+                          <div class="bottom text-white p">
+                            Title
+                          </div>
+                        </div>
+                        <md-button aria-label="nothing" md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                        <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
+                        <md-content class="p text-base md-hue-1">
+                          <h3>Paracosm</h3>
+                          <p>
+                            The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                            two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                          </p>
+                        </md-content>
+                      </div>
+                    </div>
+                    <div class="col-lg-4">
+                      <div class="card md-whiteframe-z1">
+                        <div class="item">
+                          <img src="/images/c1.jpg" class="w-full r-t" alt="Washed Out">
+                          <div class="bottom text-white p">
+                            Title
+                          </div>
+                        </div>
+                        <md-button aria-label="nothing" md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                        <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
+                        <md-content class="p text-base md-hue-1">
+                          <h3>Paracosm</h3>
+                          <p>
+                            The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                            two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                          </p>
+                        </md-content>
+                      </div>
+                    </div>
+                    <div class="col-lg-4">
+                      <div class="card md-whiteframe-z1">
+                        <div class="item">
+                          <img src="/images/c6.jpg" class="w-full r-t" alt="Washed Out">
+                          <div class="bottom text-white p">
+                            Title
+                          </div>
+                        </div>
+                        <md-button aria-label="nothing" md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                        <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
+                        <md-content class="p text-base md-hue-1">
+                          <h3>Paracosm</h3>
+                          <p>
+                            The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                            two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                          </p>
+                        </md-content>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </md-content>
+
+              <md-content class="w-full" ng-if="isMobile">
+                <md-tabs md-dynamic-height md-border-bottom class="md-primary">
+                  <md-tab label="{{'settings.colors.TAB' | translate}} 1">
+                    <div class="p">
+                      <div class="card md-whiteframe-z1">
+                        <div class="item">
+                          <img src="/images/c8.jpg" class="w-full r-t" alt="Washed Out">
+                          <div class="bottom text-white p">
+                            Title
+                          </div>
+                        </div>
+                        <md-button aria-label="nothing" md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                        <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
+                        <md-content class="p text-base md-hue-1">
+                          <h3>Paracosm</h3>
+                          <p>
+                            The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                            two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                          </p>
+                        </md-content>
+                      </div>
+                    </div>
+                  </md-tab>
+                  <md-tab label="{{'settings.colors.TAB' | translate}} 2">
+                    <div class="p">
+                      <div class="card md-whiteframe-z1">
+                        <div class="item">
+                          <img src="/images/c2.jpg" class="w-full r-t" alt="Washed Out">
+                          <div class="bottom text-white p">
+                            Title
+                          </div>
+                        </div>
+                        <md-button aria-label="nothing" md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                        <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
+                        <md-content class="p text-base md-hue-1">
+                          <h3>Paracosm</h3>
+                          <p>
+                            The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                            two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                          </p>
+                        </md-content>
+                      </div>
+                    </div>
+                  </md-tab>
+                </md-tabs>
+              </md-content>
+              <!-- /mockup-grid -->
+            <md-button aria-label="nothing" md-ink-ripple aria-label="menu" class="md-fab md-accent pos-abt right-0 bottom-0 m-r m-b">
+              <i class="mdi-editor-mode-edit i-24"></i>
+            </md-button>
+          </md-content><!-- /content -->
+        </div><!-- /mockup-browser -->
+      </div><!-- /container -->
+    </div>
+  </div>
+</div>
+
+<md-sidenav class="md-sidenav-right md-whiteframe-z2 theming" md-component-id="palette-selector">
+  <md-toolbar class="md-theme-light">
+    <h1 class="md-toolbar-tools" translate="settings.COLOR_PALETTE"></h1>
+  </md-toolbar>
+  <div layout-padding>
+    <div>
+      <!-- primary -->
+      <md-content class="palette m-b w-lg m-h-auto">
+        <div class="p-r-10" layout="row" layout-align="center center" style="background-color:{{primaryPalette.base}};"
+          ng-class="{'palette-color-light': !isLight(primaryPalette.base), 'palette-color-dark': isLight(primaryPalette.base)}">
+          <div class="md-toolbar-tools text-md">
+          {{primaryPalette.name}}
+          </div>
+          <span flex></span>
+              <spectrum-colorpicker ng-model="primaryPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{preferredFormat: 'hex', clickoutFiresChange: true, showInput: true, showPalette: true}" ng-change="calcPalette(0);"></spectrum-colorpicker>
+        </div>
+        <md-list flex class="palette-colors spaced">
+            <md-list-item class="light-canvas" ng-repeat="color in primaryPalette.colors | filter: baseColorFilter | orderByBase:'name'">
+                <div class="palette-color" style="background-color:{{color.hex}};" ng-class="{'palette-color-light': !color.darkContrast, 'palette-color-dark': color.darkContrast}">
+                    <span class="name color-text w-48" ng-bind="color.name"></span>
+                    <span ng-bind="color.hex" class="palette-color-hex color-text"></span>
+                    <a class="palette-color-hex color-text" href="http://colorhexa.com/{{color.hex.replace('#', '')}}" target="_blank">
+                          <ng-md-icon icon="open_in_new" size="12" style="fill:#000; opacity:0.5"></ng-md-icon>
+                          <md-tooltip>Open Color In Colorhexa.com for Details</md-tooltip>
+                      </a>
+                      <div class="palette-color-mutators">
+                          <!-- Removed lighten and darken buttons until saturation issues are worked out. -->
+                          <spectrum-colorpicker ng-model="color.hex" format="'hex'" ng-change="app.setThemeTesting(false);" options="{preferredFormat: 'hex', clickoutFiresChange: true, showInput: true, showPalette: true}"></spectrum-colorpicker>
+                      </div>
+                      <div class="palette-color-contrast" ng-click="color.darkContrast = !color.darkContrast">
+                        <md-tooltip>{{'settings.CONTRAST' | translate}}</md-tooltip>
+                      </div>
+                </div>
+            </md-list-item>
+        </md-list>
+      </md-content>
+      <!-- /primary -->
+
+      <!-- secondary -->
+      <md-content class="palette m-b w-lg m-h-auto">
+        <div class="p-r-10" layout="row" layout-align="center center" style="background-color:{{accentPalette.base}};"
+          ng-class="{'palette-color-light': !isLight(accentPalette.base), 'palette-color-dark': isLight(accentPalette.base)}">
+          <div class="md-toolbar-tools text-md">
+          {{accentPalette.name}}
+          </div>
+          <span flex></span>
+              <spectrum-colorpicker ng-model="accentPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{preferredFormat: 'hex', clickoutFiresChange: true, showInput: true, showPalette: true}" ng-change="calcPalette(1)"></spectrum-colorpicker>
+        </div>
+        <md-list flex class="palette-colors spaced">
+            <md-list-item class="light-canvas" ng-repeat="color in accentPalette.colors | filter: baseColorFilter | orderByAccent:'name'">
+                <div class="palette-color" style="background-color:{{color.hex}};" ng-class="{'palette-color-light': !color.darkContrast, 'palette-color-dark': color.darkContrast}">
+                    <span class="name color-text w-48" ng-bind="color.name"></span>
+                    <span ng-bind="color.hex" class="palette-color-hex color-text"></span>
+                    <a class="palette-color-hex color-text" href="http://colorhexa.com/{{color.hex.replace('#', '')}}" target="_blank">
+                          <ng-md-icon icon="open_in_new" size="12" style="fill:#000; opacity:0.5"></ng-md-icon>
+                          <md-tooltip>Open Color In Colorhexa.com for Details</md-tooltip>
+                      </a>
+                      <div class="palette-color-mutators">
+                          <!-- Removed lighten and darken buttons until saturation issues are worked out. -->
+                          <spectrum-colorpicker ng-model="color.hex" format="'hex'" ng-change="app.setThemeTesting(false);" options="{preferredFormat: 'hex', clickoutFiresChange: true, showInput: true, showPalette: true}"></spectrum-colorpicker>
+                      </div>
+                      <div class="palette-color-contrast" ng-click="color.darkContrast = !color.darkContrast">
+                        <md-tooltip>Toggle contrast</md-tooltip>
+                      </div>
+                </div>
+            </md-list-item>
+        </md-list>
+      </md-content>
+      <!-- /secondary -->
+      
+      <!-- warn -->
+      <md-content class="palette m-b w-lg m-h-auto">
+        <div class="p-r-10" layout="row" layout-align="center center" style="background-color:{{warnPalette.base}};"
+          ng-class="{'palette-color-light': !isLight(warnPalette.base), 'palette-color-dark': isLight(warnPalette.base)}">
+          <div class="md-toolbar-tools text-md">
+          {{warnPalette.name}}
+          </div>
+          <span flex></span>
+              <spectrum-colorpicker ng-model="warnPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{preferredFormat: 'hex', clickoutFiresChange: true, showInput: true, showPalette: true}" ng-change="calcPalette(2)"></spectrum-colorpicker>
+        </div>
+        <md-list flex class="palette-colors spaced">
+            <md-list-item class="light-canvas" ng-repeat="color in warnPalette.colors | filter: baseColorFilter | orderByBase:'name'">
+                <div class="palette-color" style="background-color:{{color.hex}};" ng-class="{'palette-color-light': !color.darkContrast, 'palette-color-dark': color.darkContrast}">
+                    <span class="name color-text w-48" ng-bind="color.name"></span>
+                    <span ng-bind="color.hex" class="palette-color-hex color-text"></span>
+                    <a class="palette-color-hex color-text" href="http://colorhexa.com/{{color.hex.replace('#', '')}}" target="_blank">
+                          <ng-md-icon icon="open_in_new" size="12" style="fill:#000; opacity:0.5"></ng-md-icon>
+                          <md-tooltip>Open Color In Colorhexa.com for Details</md-tooltip>
+                      </a>
+                      <div class="palette-color-mutators">
+                          <!-- Removed lighten and darken buttons until saturation issues are worked out. -->
+                          <spectrum-colorpicker ng-model="color.hex" format="'hex'" ng-change="app.setThemeTesting(false);" options="{ clickoutFiresChange: true, showInput: true, showPalette: true}"></spectrum-colorpicker>
+                      </div>
+                      <div class="palette-color-contrast" ng-click="color.darkContrast = !color.darkContrast">
+                        <md-tooltip>Toggle contrast</md-tooltip>
+                      </div>
+                </div>
+            </md-list-item>
+        </md-list>
+      </md-content>
+      <!-- /warn -->
+
+      <!-- background -->
+      <md-content class="palette m-b w-lg m-h-auto" style="background-color:{{backgroundPalette}};">
+        <div layout="row" layout-align="center center" style="padding-right: 15px;"
+            ng-class="{'palette-color-light': !isLight(backgroundPalette), 'palette-color-dark': isLight(backgroundPalette)}">
+          <div class="md-toolbar-tools text-md" translate="settings.COLOR_BACKGROUND">
+            Cor de Fundo
+          </div>
+        </div>
+        <div class="p text-center m-t m-b-xxl p-t-md">
+          <md-menu md-position-mode="target-right target">
+            <md-button aria-label="nothing" aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+              <i class="mdi-editor-format-color-fill i-24" ng-class="{'palette-color-light': !isLight(backgroundPalette), 'palette-color-dark': isLight(backgroundPalette)}"
+              ></i>
+            </md-button>
+            <md-menu-content width="3" class="no-padding">
+              <md-menu-item ng-repeat="color in backgrounds">
+                <md-button aria-label="nothing" ng-click="changeBackgroundColor(color);" style="background-color:{{color}};" ng-class="{'palette-color-light': !isLight(color), 'palette-color-dark': isLight(color)}">
+                    {{color}}
+                </md-button>
+              </md-menu-item>
+            </md-menu-content>
+          </md-menu>
+        </div>
+      </md-content>
+      <!-- /background -->
+    </div>
+  </div>
+</md-sidenav>
+
+<script type="text/ng-template" id="apply_theme_dialog.html">
+  <md-dialog aria-label="Remove Categories Dialog" id="apply-theme-dialog">
+    <md-content role="document" class="md-background-default background">
+      <div class="p">
+        <div class="md-dialog-content-body text-md p-r p-l w-xxl m-b" ng-bind-html="'settings.colors.APPLY_THEME_DIALOG' | translate">
+        </div>
+
+        <div class="text-center">
+          <button ng-click="app.applyTheme()" md-ink-ripple style="font-size:18px;" class="md-btn md-flat btn-fw" ng-disabled="!app.enableButtons">
+            {{'titles.YES' | translate }}
+          </button>
+          <button ng-click="cancel()" md-ink-ripple style="font-size:18px;" class="md-btn md-flat btn-fw" ng-disabled="!app.enableButtons">
+            {{'titles.NO' | translate }}
+          </button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>

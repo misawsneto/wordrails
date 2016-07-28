@@ -1,5 +1,6 @@
 package co.xarx.trix.api;
 
+import co.xarx.trix.api.v2.CategoryData;
 import co.xarx.trix.domain.Identifiable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,6 +18,10 @@ public class PostView implements Serializable, Identifiable {
 
 	private static final long serialVersionUID = -1474032487285763669L;
 
+	public PostView(Integer id) {
+		this.postId = id;
+	}
+
 	public String title;
 
 	@Id
@@ -29,7 +34,7 @@ public class PostView implements Serializable, Identifiable {
 	public String imageMediumHash;
 	public String imageLargeHash;
 
-	public Set<Category> categories;
+	public Set<CategoryData> categories;
 	public Set<String> tags;
     public List<TermView> terms;
 	public Boolean sponsored;
@@ -38,7 +43,6 @@ public class PostView implements Serializable, Identifiable {
 	public String body;
 	public String topper;
 	public String state;
-	public int readsCount;
 	public int bookmarksCount;
 	public int recommendsCount;
 	public int commentsCount;
@@ -70,19 +74,32 @@ public class PostView implements Serializable, Identifiable {
 	public String externalFeaturedImgUrl;
 	public String externalVideoUrl;
 
-	public String imageCaptionText;
-	public String imageCreditsText;
-	public String imageTitleText;
+	public String imageCredits;
 
 	public String featuredVideoHash;
 	public String featuredAudioHash;
 
+//	public VideoDto video;
+
 	public Double lat;
 	public Double lng;
+
+	public Integer focusX;
+	public Integer focusY;
 
 	public String subheading;
 	public Date scheduledDate;
 	public boolean notify;
+
+	public ImageView featuredImage;
+
+	public boolean imageMedia;
+
+	public boolean audioMedia;
+
+	public boolean videoMedia;
+
+	public boolean galleryMedia;
 
 	@Override
 	public Serializable getId() {

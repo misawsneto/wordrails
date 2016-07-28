@@ -1,0 +1,41 @@
+<div class="center-block w-xxl w-auto-xs p-v-md m-t ">
+ <md-content class="md-background-hue-1 background md-whiteframe-z2">
+    <md-progress-linear class="pos-abt top-0 left-0" ng-if="app.loading" md-mode="indeterminate"></md-progress-linear>
+    <!-- signin -->
+    <div class="text-color m-sm text-center">
+      <form name="form" ng-submit="app.createNetwork(createNetworkObject)" class="text-md w-full">
+        <div class="p" style="padding-bottom: 0">
+          <md-input-container class="w-full m-b-0">
+            <label for="testInput">{{'titles.NETWORK_NAME' | translate}}</label>
+            <input class="p-xs" md-autofocus type="text" ng-model="createNetworkObject.name" md-autofocus>
+          </md-input-container>
+          <md-input-container class="w-full m-b-0">
+            <label for="testInput">subdomain.trix.rocks</label>
+            <input class="p-xs" md-autofocus type="text" ng-focus="changeSubdomain()" ng-model="createNetworkObject.newSubdomain">
+          </md-input-container>
+        </div>
+        <div class="p" style="padding-bottom: 0">
+          <md-input-container class="w-full m-b-0">
+            <label for="testInput">{{'titles.NAME' | translate}}</label>
+            <input class="p-xs" md-autofocus type="text" ng-model="createNetworkObject.person.name">
+          </md-input-container>
+          <md-input-container class="w-full m-b-0 m-t-sm">
+            <label for="testInput">{{'titles.USERNAME' | translate}}</label>
+            <input class="p-xs" ng-focus="changePersonName()" type="text" ng-model="createNetworkObject.person.username">
+          </md-input-container>
+          <md-input-container class="w-full m-b-0 m-t-sm">
+            <label for="testInput">{{'titles.EMAIL' | translate}}</label>
+            <input class="p-xs" type="email" ng-model="createNetworkObject.person.email">
+          </md-input-container>
+          <md-input-container class="w-full m-b-0 m-t-sm">
+            <label for="testInput">{{'titles.PASSWORD' | translate}}</label>
+            <input class="p-xs" type="password" ng-model="createNetworkObject.person.password">
+          </md-input-container>
+        </div>
+        <md-button type="submit" class="md-accent m-b" translate="titles.CREATE_NETWORK">Create network</md-button>
+      </form>
+    </div>
+  </md-content>
+</div>
+
+<!--</div>-->

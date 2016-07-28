@@ -2,43 +2,40 @@ package co.xarx.trix.converter;
 
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.Network;
-import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.MobileNotification;
+import co.xarx.trix.persistence.MobileNotificationRepository;
 import co.xarx.trix.persistence.NetworkRepository;
-import co.xarx.trix.persistence.NotificationRepository;
-import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NotificationConverter extends AbstractConverter<Notification, NotificationView> {
+public class NotificationConverter extends AbstractConverter<MobileNotification, NotificationView> {
 
 	@Autowired
 	NetworkRepository networkRepository;
 
-	@Autowired NotificationRepository notificationRepository;
+	@Autowired
+	MobileNotificationRepository mobileNotificationRepository;
 	@Autowired PostConverter postConverter;
 
 	@Override
-	public Notification convertFrom(NotificationView notificationView) {
-		return notificationRepository.findOne(notificationView.id);
+	public MobileNotification convertFrom(NotificationView notificationView) {
+		return mobileNotificationRepository.findOne(notificationView.id);
 	}
 
 	@Override
-	public NotificationView convertTo(Notification notification) {
-		NotificationView notificationView = new NotificationView(notification.message, notification.message, notification.hash, notification.test);
+	public NotificationView convertTo(MobileNotification mobileNotification) {
+		NotificationView notificationView = new NotificationView(mobileNotification.message, mobileNotification.message, mobileNotification.hash, mobileNotification.test);
 		String tenantId = TenantContextHolder.getCurrentTenantId();
-		Network network = networkRepository.findByTenantId(tenantId);
 
-		notificationView.id = notification.id;
-		notificationView.hash = notification.hash;
-		notificationView.message = notification.message;
-		notificationView.networkId = network != null ? network.id : null;
-		notificationView.post = notification.post != null ? postConverter.convertTo(notification.post) : null;
-		notificationView.postId = notification.post != null ? notification.post.id : null;
-		notificationView.postTitle = notification.post != null ? notification.post.title : null;
-		notificationView.postSnippet = notification.post != null ? StringUtil.simpleSnippet(notification.post.body) : null;
-		notificationView.type = notification.type;
+		notificationView.id = mobileNotification.id;
+		notificationView.hash = mobileNotification.hash;
+		notificationView.message = mobileNotification.message;
+//		notificationView.post = mobileNotification.post != null ? postConverter.convertTo(mobileNotification.post) : null;
+		notificationView.postId = mobileNotification.postId;
+//		notificationView.postTitle = mobileNotification.post != null ? mobileNotification.post.title : null;
+//		notificationView.postSnippet = mobileNotification.post != null ? StringUtil.simpleSnippet(mobileNotification.post.body) : null;
+		notificationView.type = mobileNotification.type;
 		
 		return notificationView;
 	}

@@ -1,6 +1,9 @@
 package co.xarx.trix.domain.projection;
 
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.Station;
+import co.xarx.trix.domain.Term;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.rest.core.config.Projection;
 
@@ -24,8 +27,6 @@ public interface PostProjection {
 
 	String getBody();
 
-	Sponsor getSponsor();
-
 	Person getAuthor();
 
 	Station getStation();
@@ -44,27 +45,24 @@ public interface PostProjection {
 
 	Integer getBookmarksCount();
 
-	Integer getReadsCount();
-
 	Integer getRecommendsCount();
 
 	Integer getCommentsCount();
 
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	Date getCreatedAt();
+
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	Date getUpdatedAt();
 
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	Date getScheduledDate();
-
-	String getExternalFeaturedImgUrl();
 
 	String getExternalVideoUrl();
 
 	Integer getReadTime();
 
-	String getImageCaptionText();
-
-	String getImageCreditsText();
-
-	String getImageTitleText();
+	String getImageCredits();
 
 	Boolean getNotify();
 
@@ -72,14 +70,32 @@ public interface PostProjection {
 
 	Double getLng();
 
+	Integer getFocusX();
+
+	Integer getFocusY();
+
     Set<String> getTags();
 
-	// images ------------------
+	// multimedia: images, video, audio ------------------
 	String getImageSmallHash();
+
+	String getImageHash();
+
+	List<String> getGaleryHashes();
 
 	String getImageMediumHash();
 
 	String getImageLargeHash();
 
-	Integer getImageId();
+	String getFeaturedAudioHash();
+
+	String getFeaturedVideoHash();
+
+	Boolean getImageMedia();
+
+	Boolean getAudioMedia();
+
+	Boolean getVideoMedia();
+
+	Boolean getGalleryMedia();
 }

@@ -1,12 +1,13 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.annotation.SdkInclude;
-import co.xarx.trix.domain.event.PostEvent;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
-import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -14,21 +15,27 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @lombok.Getter @lombok.Setter
+@Table(
+		uniqueConstraints =
+		@UniqueConstraint(columnNames = {"slug", "tenantId"})
+)
 @Entity
 @JsonIgnoreProperties(value = {
 		"imageHash", "imageLargeHash", "imageMediumHash", "imageSmallHash"
-}, allowGetters = true)
-public class Post extends BaseEntity implements Serializable, ElasticSearchEntity{
+}, allowGetters = true, ignoreUnknown = true)
+public class Post extends BaseEntity implements Serializable, ElasticSearchEntity {
 
 	public static final String STATE_DRAFT = "DRAFT";
 	public static final String STATE_NO_AUTHOR = "NOAUTHOR";
 	public static final String STATE_TRASH = "TRASH";
 	public static final String STATE_PUBLISHED = "PUBLISHED";
-	public static final String STATE_SCHEDULED = "SCHEDULED";
+	public static final String STATE_UNPUBLISHED = "UNPUBLISHED";
 
 	private static final long serialVersionUID = 7468718930497246401L;
 
@@ -45,8 +52,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public String getType() {
 		return "post";
 	}
-
-	public Integer originalPostId;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@NotNull
@@ -72,10 +77,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Column(length = 1024)
 	public String subheading;
 
-	@DiffIgnore
-	@ManyToOne
-	public Sponsor sponsor;
-
 	@Lob
 	public String originalSlug;
 
@@ -98,13 +99,18 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Image featuredImage;
 
-	@OneToMany
-	@JoinTable(
-			name="post_video",
-			joinColumns = @JoinColumn( name="post_id"),
-			inverseJoinColumns = @JoinColumn( name="video_id")
-	)
-	public Set<Video> videos;
+	@SdkInclude
+	@ManyToOne(fetch = FetchType.EAGER)
+	public Video featuredVideo;
+
+	@SdkInclude
+	@ManyToOne(fetch = FetchType.EAGER)
+	public Audio featuredAudio;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@OrderColumn(name = "list_order")
+	@JoinTable(name = "post_galleries", joinColumns = @JoinColumn(name = "post_id"))
+	public List<Image> featuredGallery;
 
 	@SdkInclude
 	@NotNull
@@ -121,18 +127,16 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public Integer stationId;
 
 	@Column(updatable = false)
-	public int readsCount = 0;
+	public Integer bookmarksCount = 0;
 
 	@Column(updatable = false)
-	public int bookmarksCount = 0;
+	public Integer recommendsCount = 0;
 
 	@Column(updatable = false)
-	public int recommendsCount = 0;
+	public Integer commentsCount = 0;
 
-	@Column(updatable = false)
-	public int commentsCount = 0;
-
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
+	@JoinTable(name = "post_term", joinColumns = @JoinColumn(name = "posts_id"))
 	public Set<Term> terms;
 
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -142,35 +146,47 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Column(columnDefinition = "boolean default true", nullable = false)
 	public boolean imageLandscape = true;
 
-	@Column(length = 1024)
-	public String externalFeaturedImgUrl;
-
-	@Column(length = 1024)
-	public String externalVideoUrl;
-
 	@Column(columnDefinition = "int(11) DEFAULT 0")
-	public int readTime;
+	public Integer readTime;
 
 	@Column(columnDefinition = "boolean DEFAULT false")
 	public boolean notify = false;
 
-	@Lob
-	public String imageCaptionText;
-
-	@Lob
-	@Deprecated
-	public String imageCreditsText;
+	@Column(columnDefinition = "boolean DEFAULT false")
+	@SdkExclude
+	@JsonIgnore
+	public boolean notified = false;
 
 	public Double lat;
 
 	public Double lng;
 
-	@Lob
-	@Deprecated
-	public String imageTitleText;
+	@Column(columnDefinition = "int DEFAULT 50")
+	public Integer focusX;
 
-	public String featuredVideoHash;
+	@Column(columnDefinition = "int DEFAULT 50")
+	public Integer focusY;
+
+	@Getter(AccessLevel.NONE)
 	public String featuredAudioHash;
+
+	@SdkInclude
+	public String getFeaturedVideoHash() {
+		return featuredVideo != null ? (featuredVideo.file != null ? featuredVideo.file.hash : null) : null;
+	}
+
+	@SdkInclude
+	public String getExternalVideoUrl() {
+		return featuredVideo != null ? featuredVideo.getExternalVideoUrl() : null;
+	}
+
+	@SdkInclude
+	public String getFeaturedAudioHash(){
+		if(featuredAudioHash != null)
+			return featuredAudioHash;
+
+		return featuredAudio != null ? (featuredAudio.file != null ? featuredAudio.file.hash : null) : null;
+	}
 
 	@PrePersist
 	public void onCreate() {
@@ -178,19 +194,19 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 		if (date == null)
 			date = new Date();
-		createdAt = new Date();
+		setCreatedAt(new Date());
 	}
 
 	@PreUpdate
 	public void onUpdate() {
 		onChanges();
 
-		updatedAt = new Date();
-		lastModificationDate = updatedAt;
+		lastModificationDate = getUpdatedAt();
+		setUpdatedAt(new Date());
 	}
 
 	private void onChanges() {
-		stationId = station.id;
+		stationId = station != null ? station.id : null;
 		readTime = calculateReadTime(body);
 	}
 
@@ -222,26 +238,64 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 		return null;
 	}
 
-	@Deprecated
+	@SdkInclude
+	public boolean getImageMedia(){
+		return  featuredImage != null && !(getGalleryMedia() || getAudioMedia() || getVideoMedia());
+	}
+
+	@SdkInclude
+	public boolean getAudioMedia() {
+		return featuredAudio != null;
+	}
+
+	@SdkInclude
+	public boolean getVideoMedia() {
+		return featuredVideo != null;
+	}
+
+	@SdkInclude
+	public boolean getGalleryMedia() {
+		return featuredGallery != null && featuredGallery.size() > 0;
+	}
+
+	@SdkInclude
+	public List<String> getGaleryHashes() {
+		if (featuredGallery != null && featuredGallery.size() > 0){
+			List<String> hashes = new ArrayList<>();
+			for (Image featuredImage: featuredGallery) {
+				hashes.add(featuredImage.getOriginalHash());
+			}
+
+			return hashes;
+		}
+
+		return null;
+	}
+
+	@SdkInclude
+	public String getImageCredits(){
+		if(featuredImage != null) return featuredImage.getCredits();
+
+		return null;
+	}
+
 	@SdkInclude
 	public String getImageLargeHash() {
-		if (featuredImage != null) return featuredImage.getLargeHash();
+		if (featuredImage != null) return featuredImage.getHashes().get("large");
 
 		return null;
 	}
 
-	@Deprecated
 	@SdkInclude
 	public String getImageMediumHash() {
-		if (featuredImage != null) return featuredImage.getMediumHash();
+		if (featuredImage != null) return featuredImage.getHashes().get("medium");
 
 		return null;
 	}
 
-	@Deprecated
 	@SdkInclude
 	public String getImageSmallHash() {
-		if (featuredImage != null) return featuredImage.getSmallHash();
+		if (featuredImage != null) return featuredImage.getHashes().get("small");
 
 		return null;
 	}

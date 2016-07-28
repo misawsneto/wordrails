@@ -65,4 +65,9 @@ public class StationPerspective extends BaseEntity implements Serializable{
 			taxonomyType = taxonomy.type;
 		}
 	}
+
+	@Override
+	public String toString() {
+		return id + "";
+	}
 }

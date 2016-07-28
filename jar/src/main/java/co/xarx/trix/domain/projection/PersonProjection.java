@@ -1,16 +1,14 @@
 package co.xarx.trix.domain.projection;
 
-import co.xarx.trix.domain.NetworkRole;
 import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.StationRole;
-import co.xarx.trix.domain.User;
 import org.springframework.data.rest.core.config.Projection;
 
-import java.util.Set;
+import java.util.Date;
 
 
 @Projection(types = Person.class)
 public interface PersonProjection {
+
 	Integer getId();
 
 	String getName();
@@ -19,8 +17,6 @@ public interface PersonProjection {
 
 	String getEmail();
 
-	User getUser();
-
 	String getCoverLargeHash();
 
 	String getCoverMediumHash();
@@ -28,4 +24,20 @@ public interface PersonProjection {
 	String getImageMediumHash();
 
 	String getImageSmallHash();
+
+//	String getImageOriginalHash();
+//	String getCoverOriginalHash();
+
+	Date getLastLogin();
+
+	String getImageHash();
+	String getCoverHash();
+	String getBio();
+
+	Boolean getEnabled();
+	Boolean getSeenWelcome();
+
+	Boolean getHasFacebookProfile();
+
+	Boolean getHasGoogleProfile();
 }

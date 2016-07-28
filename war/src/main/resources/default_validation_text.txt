@@ -1,0 +1,1 @@
+Para validar a sua conta em {{networkName}}, por favor, acesse o link abaixo:

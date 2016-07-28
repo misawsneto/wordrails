@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>co.xarx</groupId>
 		<artifactId>trix-parent</artifactId>
-		<version>1.1.0</version>
+		<version>1.2.0</version>
 		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 
@@ -17,26 +17,64 @@
 
 	<build>
 		<plugins>
+			<!--<plugin>-->
+				<!--<groupId>org.jooq</groupId>-->
+				<!--<artifactId>jooq-codegen-maven</artifactId>-->
+				<!--<version>3.8.0</version>-->
+
+				<!--&lt;!&ndash; The plugin should hook into the generate goal &ndash;&gt;-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<phase>generate-sources</phase>-->
+						<!--<goals>-->
+							<!--<goal>generate</goal>-->
+						<!--</goals>-->
+					<!--</execution>-->
+				<!--</executions>-->
+
+				<!--<dependencies>-->
+					<!--<dependency>-->
+						<!--<groupId>mysql</groupId>-->
+						<!--<artifactId>mysql-connector-java</artifactId>-->
+						<!--<version>5.1.31</version>-->
+					<!--</dependency>-->
+				<!--</dependencies>-->
+
+				<!--&lt;!&ndash; Specify the plugin configuration.-->
+					 <!--The configuration format is the same as for the standalone code generator &ndash;&gt;-->
+				<!--<configuration>-->
+
+					<!--&lt;!&ndash; JDBC connection parameters &ndash;&gt;-->
+					<!--<jdbc>-->
+						<!--<driver>com.mysql.jdbc.Driver</driver>-->
+						<!--<url>jdbc:mysql://localhost:3306/trix_dev</url>-->
+						<!--<user>wordrails</user>-->
+						<!--<password>wordrails</password>-->
+					<!--</jdbc>-->
+
+					<!--&lt;!&ndash; Generator parameters &ndash;&gt;-->
+					<!--<generator>-->
+						<!--<database>-->
+							<!--<name>org.jooq.util.mysql.MySQLDatabase</name>-->
+							<!--<includes>.*</includes>-->
+
+							<!--<excludes>-->
+								<!--schema_version | qrtz_.* | jv_.* | acl_.*-->
+							<!--</excludes>-->
+							<!--<inputSchema>trix_dev</inputSchema>-->
+						<!--</database>-->
+						<!--<target>-->
+							<!--<packageName>co.xarx.trix.jooq</packageName>-->
+							<!--<directory>target/generated-sources</directory>-->
+						<!--</target>-->
+					<!--</generator>-->
+				<!--</configuration>-->
+			<!--</plugin>-->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.3.2</version>
 				<executions>
-					<execution>
-						<id>ImplementationGenerator</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>java</goal>
-						</goals>
-						<configuration>
-							<mainClass>co.xarx.trix.generator.ImplementationGenerator</mainClass>
-							<arguments>
-								<argument>${project.build.directory}/generated-sources/java</argument>
-							</arguments>
-							<includePluginDependencies>true</includePluginDependencies>
-						</configuration>
-					</execution>
-
 					<execution>
 						<id>JavaScriptClientGenerator</id>
 						<phase>generate-sources</phase>
@@ -44,7 +82,7 @@
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>co.xarx.trix.generator.JavaScriptClientGenerator</mainClass>
+							<mainClass>co.xarx.trix.generator.generator.JavaScriptClientGenerator</mainClass>
 							<arguments>
 								<argument>${basedir}/src/main/webapp/js</argument>
 							</arguments>
@@ -58,7 +96,7 @@
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>co.xarx.trix.generator.AngularClientGenerator</mainClass>
+							<mainClass>co.xarx.trix.generator.generator.AngularClientGenerator</mainClass>
 							<arguments>
 								<argument>${basedir}/src/main/webapp/js</argument>
 							</arguments>
@@ -68,6 +106,36 @@
 				</executions>
 			</plugin>
 
+			<plugin>
+				<groupId>org.bsc.maven</groupId>
+				<artifactId>maven-processor-plugin</artifactId>
+				<version>2.2.4</version>
+				<configuration>
+					<failOnError>false</failOnError>
+					<defaultOutputDirectory>
+						target/generated-sources
+					</defaultOutputDirectory>
+					<processors>
+						<processor>org.mapstruct.ap.MappingProcessor</processor>
+					</processors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>process</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>process</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.mapstruct</groupId>
+						<artifactId>mapstruct-processor</artifactId>
+						<version>1.0.0.Final</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 			<plugin>
 				<groupId>com.mysema.maven</groupId>
 				<artifactId>apt-maven-plugin</artifactId>
@@ -107,12 +175,20 @@
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
+
 				</plugin>
+
+
 			</plugins>
 		</pluginManagement>
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
@@ -179,6 +255,25 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jackson2-provider</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxb-provider</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>tjws</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
 		</dependency>
@@ -188,15 +283,15 @@
 			<artifactId>slf4j-log4j12</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-core</artifactId>
-		</dependency>
+		<!--&lt;!&ndash;<dependency>-->
+			<!--<groupId>org.springframework.integration</groupId>-->
+			<!--<artifactId>spring-integration-core</artifactId>-->
+		<!--</dependency>-->
 
-		<dependency>
-			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-jdbc</artifactId>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.integration</groupId>-->
+			<!--<artifactId>spring-integration-jdbc</artifactId>-->
+		<!--</dependency>&ndash;&gt;-->
 
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -206,11 +301,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
 		</dependency>
 
 
@@ -278,6 +368,11 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-crypto</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-acl</artifactId>
 		</dependency>
 
 		<dependency>
@@ -362,6 +457,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-keyvalue</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 		</dependency>
@@ -413,18 +513,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!--<dependency>-->
-			<!--<groupId>org.powermock</groupId>-->
-			<!--<artifactId>powermock-module-junit4-rule</artifactId>-->
-			<!--<scope>test</scope>-->
-		<!--</dependency>-->
-
-		<!--<dependency>-->
-			<!--<groupId>org.powermock</groupId>-->
-			<!--<artifactId>powermock-classloading-xstream</artifactId>-->
-			<!--<scope>test</scope>-->
-		<!--</dependency>-->
-
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
@@ -436,12 +524,83 @@
 			<artifactId>apns</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>2.0.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jcodec</groupId>
+			<artifactId>jcodec</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.bytedeco</groupId>
+			<artifactId>javacv</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-jdk8</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>es.arcadiaconsulting.appstorestats</groupId>
+			<artifactId>appstoresstats-android</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>es.arcadiaconsulting.appstorestats</groupId>
+			<artifactId>appstoresstats-ios</artifactId>
+		</dependency>
+
 		<!--<dependency>-->
-			<!--<groupId>org.mortbay.jetty.alpn</groupId>-->
-			<!--<artifactId>alpn-boot</artifactId>-->
-			<!--<scope>runtime</scope>-->
+			<!--<groupId>org.jooq</groupId>-->
+			<!--<artifactId>jooq</artifactId>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>org.jooq</groupId>-->
+			<!--<artifactId>jooq-meta</artifactId>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>org.jooq</groupId>-->
+			<!--<artifactId>jooq-codegen</artifactId>-->
 		<!--</dependency>-->
 
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.typesafe.akka</groupId>
+			<artifactId>akka-actor_2.11</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.typesafe.akka</groupId>
+			<artifactId>akka-remote_2.11</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.typesafe.akka</groupId>
+			<artifactId>akka-cluster_2.11</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+		</dependency>
 
 	</dependencies>
 </project>

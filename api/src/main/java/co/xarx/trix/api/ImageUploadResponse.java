@@ -10,4 +10,5 @@ public class ImageUploadResponse {
 	public String imageHash;
 	public String link;
 	public String filelink;
+	public String credits;
 }

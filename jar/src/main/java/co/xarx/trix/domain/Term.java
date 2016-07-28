@@ -1,7 +1,7 @@
 package co.xarx.trix.domain;
 
 
-import co.xarx.trix.domain.event.Event;
+import co.xarx.trix.annotation.SdkInclude;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -19,7 +19,7 @@ import java.util.Set;
 @Table(uniqueConstraints = {
 		@UniqueConstraint(columnNames={"taxonomy_id","name_parent"})
 })
-public class Term extends BaseEntity implements Serializable{
+public class Term extends BaseEntity implements Serializable, Comparable<Term>{
 	private static final long serialVersionUID = 7891255759575029731L;
 
 	@Id
@@ -33,23 +33,8 @@ public class Term extends BaseEntity implements Serializable{
 	public String name_parent;
 
 	@DiffIgnore
-	@JsonBackReference("cells")
-	@OneToMany(mappedBy="term")
-	public Set<Cell> cells;
-
-	@DiffIgnore
-	@JsonBackReference("posts")
-	@ManyToMany(mappedBy="terms")
-	public Set<Post> posts;
-
-	@DiffIgnore
-	@JsonBackReference("rows")
-	@OneToMany(mappedBy="term")
-	public Set<Row> rows;
-
-	@DiffIgnore
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	public Taxonomy taxonomy;
 
 	@JsonBackReference("parent")
@@ -67,6 +52,33 @@ public class Term extends BaseEntity implements Serializable{
 
 	public Integer taxonomyId;
 	public String taxonomyName;
+
+	public String color;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	public Image image;
+
+	@Lob
+	public String description;
+
+	public String getTermName(){
+		if(name != null)
+			return name;
+		return null;
+	}
+
+	public Integer getTermID(){
+		if(id != null)
+			return id;
+		return null;
+	}
+
+	@SdkInclude
+	public String getImageHash() {
+		if (image != null) return image.getOriginalHash();
+
+		return null;
+	}
 
 	@PrePersist
 	void onCreate(){
@@ -109,83 +121,17 @@ public class Term extends BaseEntity implements Serializable{
 				'}';
 	}
 
-	public String getName() {
-		return name;
-	}
+	@Override
+	public int compareTo(Term o) {
+		if(this.id != null &&  o.id != null)
+			return Integer.compare(this.id, o.id);
+		else if(this.id == null && o.id != null)
+			return 1;
+		else if(this.id != null && o.id == null)
+			return -1;
+		else if(this.id == null && o.id == null)
+			return 1;
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Set<Cell> getCells() {
-		return cells;
-	}
-
-	public void setCells(Set<Cell> cells) {
-		this.cells = cells;
-	}
-
-	public Set<Post> getPosts() {
-		return posts;
-	}
-
-	public void setPosts(Set<Post> posts) {
-		this.posts = posts;
-	}
-
-	public Set<Row> getRows() {
-		return rows;
-	}
-
-	public void setRows(Set<Row> rows) {
-		this.rows = rows;
-	}
-
-	public Taxonomy getTaxonomy() {
-		return taxonomy;
-	}
-
-	public void setTaxonomy(Taxonomy taxonomy) {
-		this.taxonomy = taxonomy;
-	}
-
-	public Term getParent() {
-		return parent;
-	}
-
-	public void setParent(Term parent) {
-		this.parent = parent;
-	}
-
-	public Set<Term> getChildren() {
-		return children;
-	}
-
-	public void setChildren(Set<Term> children) {
-		this.children = children;
-	}
-
-	public Set<TermPerspective> getTermPerspectives() {
-		return termPerspectives;
-	}
-
-	public void setTermPerspectives(Set<TermPerspective> termPerspectives) {
-		this.termPerspectives = termPerspectives;
-	}
-
-	public Integer getTaxonomyId() {
-		return taxonomyId;
-	}
-
-	public void setTaxonomyId(Integer taxonomyId) {
-		this.taxonomyId = taxonomyId;
-	}
-
-	public String getTaxonomyName() {
-		return taxonomyName;
-	}
-
-	public void setTaxonomyName(String taxonomyName) {
-		this.taxonomyName = taxonomyName;
+		else return 0;
 	}
 }

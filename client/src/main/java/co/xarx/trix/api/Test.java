@@ -7,8 +7,8 @@ import java.io.IOException;
 
 public class Test {
 
-	private static WordRails getLocal() throws IOException {
-		return new WordRails(
+	private static Trix getLocal() throws IOException {
+		return new Trix(
 				new MockConnectivityManager(true),
 				new File("."), 0,
 				"http://sport.xarxlocal.com", "sport", "Sport@dmiN",
@@ -16,10 +16,8 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		//WordRails wordRails = getTest("demo", "demo");
-		WordRails wordRails = getLocal();
+		Trix wordRails = getLocal();
 		wordRails.login();
 		wordRails.getInitialData();
-
 	}
 }

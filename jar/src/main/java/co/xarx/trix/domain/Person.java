@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,19 +16,21 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor
 @Entity
 @Table(name = "person",
 		uniqueConstraints = {
 				@UniqueConstraint(columnNames = {"user_id", "username"}),
-				@UniqueConstraint(columnNames = {"username", "tenantId"})
+				@UniqueConstraint(columnNames = {"username", "tenantId"}),
+				@UniqueConstraint(columnNames = {"email", "tenantId"})
 		})
 @JsonIgnoreProperties(value = {
 		"imageHash", "imageLargeHash", "imageMediumHash", "imageSmallHash",
 		"coverHash", "coverLargeHash", "coverMediumHash"
-}, allowGetters = true)
+}, allowGetters = true, ignoreUnknown = true)
 public class Person extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 7728358342573034233L;
@@ -47,12 +50,24 @@ public class Person extends BaseEntity implements Serializable {
 
 	@OrderColumn(name = "list_order")
 	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "person_bookmark",joinColumns = @JoinColumn(name = "person_id"))
+	@CollectionTable(name = "person_bookmark", joinColumns = @JoinColumn(name = "person_id"))
 	@Column(name = "post_id")
 	public List<Integer> bookmarkPosts;
 
+	@OrderColumn(name = "list_order")
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "person_recommend",
+			joinColumns = @JoinColumn(name = "person_id")
+
+	)
+	@Column(name = "post_id")
+	public List<Integer> recommendPosts;
+
+	public boolean networkAdmin = false;
+
+	@JsonIgnore
 	@NotNull
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToOne(fetch = FetchType.EAGER)
 	public User user;
 
 	@Size(max = 2048)
@@ -60,25 +75,26 @@ public class Person extends BaseEntity implements Serializable {
 
 	@Column
 	@Email
+	@NotNull
 	public String email;
 
 	@ManyToOne
-	@JsonIgnore
 	public Image image;
 
 	@ManyToOne
-	@JsonIgnore
 	public Image cover;
-
-	public String imageUrl;
-	public String coverUrl;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date lastLogin;
 
 	@Transient
+	@RestResource(exported = false)
 	public String password;
+
+	@Column(columnDefinition = "boolean default false")
+	public Boolean seenWelcome = false;
+
 	@Transient
 	public String passwordConfirm;
 
@@ -89,6 +105,14 @@ public class Person extends BaseEntity implements Serializable {
 		if (image != null) return image.getOriginalHash();
 
 		return null;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public boolean getEnabled() {
+		if (user != null) return user.isEnabled();
+
+		return false;
 	}
 
 	@Deprecated
@@ -136,6 +160,54 @@ public class Person extends BaseEntity implements Serializable {
 		if (cover != null) return cover.getMediumHash();
 
 		return null;
+	}
+
+	@SdkInclude
+	public Boolean getHasFacebookProfile(){
+		if (user != null && user.getUserConnections() != null && !user.getUserConnections().isEmpty()) {
+			return user.getUserConnections()
+					.stream()
+					.findFirst()
+					.map(uc -> "facebook".equals(uc.getProviderId()))
+					.orElse(false);
+		}
+
+		return null;
+	}
+
+	@SdkInclude
+	public Boolean getHasGoogleProfile() {
+		if (user != null && user.getUserConnections() != null && !user.getUserConnections().isEmpty()) {
+			return user.getUserConnections()
+					.stream()
+					.findFirst()
+					.map(uc -> "google".equals(uc.getProviderId()))
+					.orElse(false);
+		}
+
+		return null;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getImageSocialUrl() {
+		if (user != null && user.getUserConnections() != null && !user.getUserConnections().isEmpty()) {
+			return user.getUserConnections()
+					.stream()
+					.filter(uc -> uc.getImageUrl() != null)
+					.findFirst()
+					.map(UserConnection::getImageUrl)
+					.orElse(null);
+		}
+
+		return null;
+	}
+
+	@PrePersist
+	public void prePersist() {
+		if (seenWelcome == null) {
+			seenWelcome = false;
+		}
 	}
 
 }

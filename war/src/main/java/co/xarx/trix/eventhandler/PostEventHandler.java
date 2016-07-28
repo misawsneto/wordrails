@@ -1,24 +1,29 @@
 package co.xarx.trix.eventhandler;
 
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.domain.ESPost;
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.elasticsearch.domain.ESPost;
-import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.exception.BadRequestException;
+import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.security.PostAndCommentSecurityChecker;
+import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ElasticSearchService;
-import co.xarx.trix.services.PostService;
-import co.xarx.trix.services.SchedulerService;
+import co.xarx.trix.services.post.PostService;
+import co.xarx.trix.services.security.PostPermissionService;
 import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.core.annotation.*;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @RepositoryEventHandler(Post.class)
 @Component
@@ -27,90 +32,115 @@ public class PostEventHandler {
 	@Autowired
 	private PostService postService;
 	@Autowired
-	private SchedulerService schedulerService;
-	@Autowired
-	private PostReadRepository postReadRepository;
-	@Autowired
 	private CellRepository cellRepository;
 	@Autowired
 	private CommentRepository commentRepository;
-	@Autowired
-	private ImageRepository imageRepository;
-	@Autowired
-	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
-	@Autowired
-	private RecommendRepository recommendRepository;
-	@Autowired
-	private NotificationRepository notificationRepository;
 	@Autowired
 	private ElasticSearchService elasticSearchService;
 	@Autowired
 	private ESPostRepository esPostRepository;
 
+	@Autowired
+	private PostRepository postRepository;
+	@Autowired
+	private PostPermissionService postPermissionService;
+	@Autowired
+	private AuditService auditService;
+	@Autowired
+	private QueryPersistence queryPersistence;
+
 	@HandleBeforeCreate
-	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
+	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException, ConflictException {
+		Integer stationId = post.getStation().getId();
 
-		if (postAndCommentSecurityChecker.canWrite(post)) {
-			savePost(post);
-		} else {
-			throw new UnauthorizedException();
-		}
-	}
 
-	public void savePost(Post post) {
-		Date now = new Date();
-		if (post.date == null) {
-			post.date = now;
+		Pageable page = new PageRequest(0, 1, Sort.Direction.DESC, "id");
+		List<Post> postPage = postRepository.findLatestPosts(TenantContextHolder.getCurrentTenantId(), page);
+		if(postPage.get(0).title.equals(post.title) && postPage.get(0).station.id.equals(post.station.id))
+			throw new ConflictException("Title conflict");
+
+		boolean canPublish = postPermissionService.canPublishOnStation(stationId);
+
+		if (!canPublish) {
+			boolean canCreate = postPermissionService.canCreateOnStation(stationId);
+
+			if (canCreate) {
+				post.setState(Post.STATE_UNPUBLISHED);
+			} else {
+				throw new AccessDeniedException("No permission to create");
+			}
 		}
 
 		if (post.slug == null || post.slug.isEmpty()) {
-			String originalSlug = StringUtil.toSlug(post.title);
-			try {
-				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#").toLowerCase();
-			} catch (DataIntegrityViolationException ex) {
-				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#").toLowerCase();
+			post.slug = StringUtil.toSlug(post.title);
+		}
+
+		List<Post> posts = queryPersistence.findPostBySlug(post.slug, TenantContextHolder.getCurrentTenantId());
+		if (posts != null && posts.size() > 0) {
+			post.slug = post.slug + "-" + StringUtil.generateRandomString(6, "aA#");
+		}
+
+		handleBeforeSave(post);
+	}
+
+	@HandleBeforeSave
+	public void handleBeforeSave(Post post) {
+		if (post.date == null) {
+			if(post.scheduledDate == null)
+				post.date = new Date();
+			else
+				post.date = new Date(post.scheduledDate.getTime());
+		}else{
+			if (post.scheduledDate != null && post.date.after(post.scheduledDate))
+				post.date = new Date(post.scheduledDate.getTime());
+		}
+
+		if(post.featuredVideo != null){
+			post.imageLandscape = false;
+			if (post.featuredImage == null) {
+				postService.setVideoFeaturedImage(post);
 			}
-		} else {
-			post.originalSlug = post.slug;
+		}
+
+		if (post.slug == null || post.slug.isEmpty()) {
+			post.slug = StringUtil.toSlug(post.title);
+			List<Post> posts = queryPersistence.findPostBySlug(post.slug, TenantContextHolder.getCurrentTenantId());
+			if (posts != null && posts.size() > 0) {
+				post.slug = post.slug + "-" + StringUtil.generateRandomString(6, "aA#");
+			}
 		}
 	}
 
 	@HandleAfterCreate
 	public void handleAfterCreate(Post post) {
-		if (post.state.equals(Post.STATE_SCHEDULED)) {
-			schedulerService.schedule(post.id, post.scheduledDate);
-		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
-			if (post.notify)
-				postService.sendNewPostNotification(post);
+		notificationCheck(post);
+		elasticSearchService.mapThenSave(post, ESPost.class);
+	}
 
-			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
+	private void notificationCheck(Post post) {
+		if (post.state.equals(Post.STATE_PUBLISHED) && post.notify && !post.notified) {
+			postService.sendNewPostNotification(post);
+			post.notified = true;
+			postRepository.save(post);
 		}
 	}
 
 	@HandleAfterSave
 	public void handleAfterSave(Post post) {
-		if (post.state.equals(Post.STATE_SCHEDULED)) {
-			schedulerService.schedule(post.id, post.scheduledDate);
-		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
-			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
-		}
+		notificationCheck(post);
+		auditService.saveChange(post);
+		elasticSearchService.mapThenSave(post, ESPost.class);
 	}
 
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Post post) throws UnauthorizedException {
-		if (postAndCommentSecurityChecker.canRemove(post)) {
-
-			cellRepository.delete(cellRepository.findByPost(post));
-			commentRepository.delete(post.comments);
-			postReadRepository.deleteByPost(post);
-			notificationRepository.deleteByPost(post);
-			recommendRepository.deleteByPost(post);
-			if (post.state.equals(Post.STATE_PUBLISHED)) {
-				elasticSearchService.deleteIndex(post.id, esPostRepository); // evitando bug de remoção de post que tiveram post alterado.
-			}
-		} else {
-			throw new UnauthorizedException();
+		post.tags.clear();
+		postRepository.save(post);
+		cellRepository.delete(cellRepository.findByPost(post));
+		commentRepository.delete(post.comments);
+		if (post.state.equals(Post.STATE_PUBLISHED)) {
+			esPostRepository.delete(post.id); // evitando bug de remoção de post que tiveram post alterado.
 		}
 	}
 }

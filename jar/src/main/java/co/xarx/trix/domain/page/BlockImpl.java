@@ -1,7 +1,9 @@
 package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.Identifiable;
+import lombok.Getter;
 
+@Getter
 public class BlockImpl<T extends Identifiable> implements Block {
 
 	private T object;
@@ -12,13 +14,7 @@ public class BlockImpl<T extends Identifiable> implements Block {
 		this.objectType = objectType;
 	}
 
-	@Override
-	public T getObject() {
-		return object;
-	}
-
-	@Override
-	public Class getObjectType() {
-		return objectType;
+	public String getType() {
+		return objectType.getSimpleName().toLowerCase();
 	}
 }

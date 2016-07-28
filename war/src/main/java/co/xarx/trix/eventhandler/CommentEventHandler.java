@@ -1,13 +1,15 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.Comment;
+import co.xarx.trix.domain.ESComment;
+import co.xarx.trix.elasticsearch.mapper.ESCommentMapper;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.security.PostAndCommentSecurityChecker;
+import co.xarx.trix.services.ElasticSearchService;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
-import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
-import org.springframework.data.rest.core.annotation.HandleBeforeSave;
+import org.springframework.data.rest.core.annotation.HandleAfterCreate;
+import org.springframework.data.rest.core.annotation.HandleAfterSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 
@@ -15,26 +17,28 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommentEventHandler {
 
-	private @Autowired PostAndCommentSecurityChecker postAndCommentSecurityChecker;
-	private @Autowired QueryPersistence queryPersistence;
+	@Autowired
+	private QueryPersistence queryPersistence;
+	@Autowired
+	private ESCommentMapper commentMapper;
+	@Autowired
+	private ElasticSearchService elasticSearchService;
 
-	@HandleBeforeCreate
-	public void handleBeforeCreate(Comment comment) throws UnauthorizedException {
-		if(!postAndCommentSecurityChecker.canComment(comment)){
-			throw new UnauthorizedException();
-		}
+	@HandleAfterCreate
+	public void handleAfterCreate(Comment comment) throws UnauthorizedException {
 		queryPersistence.updateCommentsCount(comment.post.id);
+		elasticSearchService.mapThenSave(Lists.newArrayList(comment), commentMapper);
 	}
 
-	@HandleBeforeSave
-	public void handleBeforeSave(Comment comment) throws UnauthorizedException {
-		if(!postAndCommentSecurityChecker.canEdit(comment)){
-			throw new UnauthorizedException();
-		}
+	@HandleAfterSave
+	public void handleAfterSave(Comment comment) throws UnauthorizedException {
+		queryPersistence.updateCommentsCount(comment.post.id);
+		elasticSearchService.mapThenSave(Lists.newArrayList(comment), commentMapper);
 	}
 
-	@HandleBeforeDelete
-	public void handleBeforeDelete(Comment comment) throws UnauthorizedException {
+	@HandleAfterCreate
+	public void handleAfterDelete(Comment comment) throws UnauthorizedException {
 		queryPersistence.updateCommentsCount(comment.post.id);
+		elasticSearchService.deleteEntity(comment.getId()+"", ESComment.class);
 	}
 }
