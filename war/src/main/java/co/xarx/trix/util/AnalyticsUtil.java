@@ -42,10 +42,6 @@ public class AnalyticsUtil {
 		throw new BadRequestException("Wrong time range. 'end' must be a date after 'start'");
 	}
 
-	public static boolean isValidTimeRange(Long begin, Long end) {
-		return begin != null && end != null && begin < end;
-	}
-
 	public static TreeMap<Long, ReadsCommentsRecommendsCountData> makeHistogram(Map postReads, Map comments, Interval interval) {
 		TreeMap<Long, ReadsCommentsRecommendsCountData> stats = new TreeMap<>();
 
