@@ -238,6 +238,7 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
         $scope.currentPerspective.termPerspectiveView.homeRow.cells.splice(i,1);
     }
     $scope.toRemoveIndex = null;
+    $scope.perspectiveChanged = true;
     $mdDialog.cancel();
   }
 
