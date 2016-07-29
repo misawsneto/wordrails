@@ -13,7 +13,7 @@ app.controller('PageCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDial
 	    	if(!$scope.loadingPerspective && $scope.app.termPerspectiveView && $scope.app.termPerspectiveView.homeRow && $scope.app.termPerspectiveView.homeRow.cells && !$scope.app.termPerspectiveView.homeRow.allLoaded){
 	    		$scope.app.termPerspectiveView.homeRow.page = $scope.app.page
 		    	$scope.loadingPerspective = true;
-		    	trix.getRowView($scope.thisStation.defaultPerspectiveId, $scope.app.termPerspectiveView.id, null, $scope.app.page, 20)
+		    	trix.getRowView($scope.thisStation.defaultPerspectiveId, $scope.app.termPerspectiveView.id, null, $scope.app.page, 10)
 		    	.success(function(response){
 		            if(response.cells && response.cells.length > 0){
 		                response.cells.forEach(function(cell, index){
