@@ -178,14 +178,22 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}
 	}
 
+	if ( angular.isDefined($localStorage.lastSelectedStation) ) {
+		$scope.lastSelectedStation = $localStorage.lastSelectedStation
+  }
+
 	// check if is colaborator only
 	$scope.isColaboratorOnly = true;
 	$scope.app.permissions.stationPermissions.forEach(function(perm){
 		if(perm.write && $scope.isColaboratorOnly){
 			$scope.isColaboratorOnly = false;
 			$scope.stations.forEach(function(station){
-				if(station.id === perm.stationId)
-					$scope.selectedStation = station
+				if(!$scope.selectedStation){
+					if($scope.lastSelectedStation && $scope.lastSelectedStation.id === station.id)
+						$scope.selectedStation = station;
+					else if(station.id === perm.stationId)
+						$scope.selectedStation = station;
+				}
 			})
 		}
 		for (var i = $scope.stations.length - 1; i >= 0; i--) { // remove station with read only permissions
@@ -665,6 +673,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	// $scope.selectedStation = null;
 	$scope.$watch('selectedStation', function(station){
 		selecteTerms(station);
+		// save settings to local storage
+        $localStorage.lastSelectedStation = station;
 	})
 
 	// function updateTermTree(){

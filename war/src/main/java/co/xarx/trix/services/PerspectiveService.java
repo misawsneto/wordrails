@@ -151,6 +151,11 @@ public class PerspectiveService {
 													   int size, int lowerLimit, int	upperLimit) {
 
 		List<Cell> positionedCells = cellRepository.findCellsPositioned(row.id, lowerLimit, upperLimit);
+		List<Cell> previousPosition = cellRepository.findCellsPositioned(row.id, 0, lowerLimit);
+
+		for (Cell cel : previousPosition) {
+			excluded.add(cel.post.id);
+		}
 
 		List<Cell> cells = null;
 
