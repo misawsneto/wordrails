@@ -165,6 +165,7 @@ public class PerspectiveResource implements PerspectiveApi {
 				int upperLimit = page * size;
 
 				Row row = rowRepository.findByPerspectiveAndTerm(termPerspective, term);
+				Row featuredRow = termPerspective.featuredRow;
 
 				if(row == null)
 					return rowView;
@@ -176,8 +177,7 @@ public class PerspectiveResource implements PerspectiveApi {
 					cells = perspectiveService.fillPostsNotPositionedInRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 				}else if(row.type != null && row.type.equals(Row.HOME_ROW)) {
 					rowView.type = Row.HOME_ROW;
-					List<Integer> excluded = new ArrayList<Integer>();
-					excluded.add(0);
+					List<Integer> excluded = getFeaturedPostsFromRow(featuredRow);
 					cells = perspectiveService.fillPostsNotPositionedInHomeRows(row, termPerspective.perspective
 							.station.id, excluded, page, size, lowerLimit, upperLimit);
 				}
@@ -201,6 +201,7 @@ public class PerspectiveResource implements PerspectiveApi {
 				int upperLimit = (page * size) + size;
 
 				Row row = termPerspective.homeRow;
+				Row featuredRow = termPerspective.featuredRow;
 
 				List<Cell> cells = new ArrayList<Cell>();
 				rowView = new RowView();
@@ -209,8 +210,7 @@ public class PerspectiveResource implements PerspectiveApi {
 					cells = perspectiveService.fillPostsNotPositionedInRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 				}else if(row.type != null && row.type.equals(Row.HOME_ROW.toString())) {
 					rowView.type = Row.HOME_ROW;
-					List<Integer> excluded = new ArrayList<Integer>();
-					excluded.add(0);
+					List<Integer> excluded = getFeaturedPostsFromRow(featuredRow);
 					cells = perspectiveService.fillPostsNotPositionedInHomeRows(row, termPerspective.perspective
 							.station.id, excluded, page, size, lowerLimit, upperLimit);
 				}
@@ -227,5 +227,17 @@ public class PerspectiveResource implements PerspectiveApi {
 			}
 		}
 		return rowView;
+	}
+
+	private List<Integer> getFeaturedPostsFromRow(Row featuredRow) {
+		List<Integer> ids = new ArrayList<>();
+		ids.add(0);
+		if (featuredRow != null && featuredRow.cells != null && featuredRow.cells.size() > 0) {
+			for (Cell cell : featuredRow.cells) {
+				if (cell.post != null)
+					ids.add(cell.post.id);
+			}
+		}
+		return ids;
 	}
 }

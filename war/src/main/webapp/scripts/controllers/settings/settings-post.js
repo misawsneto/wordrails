@@ -1117,6 +1117,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.useSubheading = $scope.app.editingPost.subheading ? true:false
 		$scope.tags = angular.copy($scope.app.editingPost.tags);
 		$scope.useVideo = $scope.app.editingPost.externalVideoUrl;
+		$scope.useUploadedVideo = $scope.app.editingPost.mediaVideo && $scope.app.editingPost.featuredVideoHash != null;
+		$scope.featuredVideo = $scope.app.editingPost.featuredVideo;
+
+		$scope.useUploadedAudio = $scope.app.editingPost.mediaAudio && $scope.app.editingPost.featuredAudioHash != null;
+		$scope.featuredAudio = $scope.app.editingPost.featuredAudio;
 
 		if($scope.app.editingPost.date){
 			$scope.postDate = new Date($scope.app.editingPost.date);
@@ -1128,6 +1133,15 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			$timeout(function(){
 				$scope.app.videoUrl = $scope.app.editingPost.externalVideoUrl
 			}, 100)
+		}else if($scope.useUploadedVideo && $scope.featuredVideo){
+			// --- video ---
+			$scope.featuredVideo.link = $scope.featuredVideo.filelink = TRIX.baseUrl + "/api/files/videos/" + $scope.app.editingPost.featuredVideoHash;
+			$scope.uploadedVideo = $scope.featuredVideo;
+		}
+
+		if($scope.useUploadedAudio && $scope.featuredAudio){
+			$scope.featuredAudio.link = $scope.featuredAudio.filelink = TRIX.baseUrl + "/api/files/audios/" + $scope.app.editingPost.featuredAudioHash;
+			$scope.uploadedAudio = $scope.featuredAudio;
 		}
 
 		if(!lockContent)

@@ -239,22 +239,22 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	}
 
 	@SdkInclude
-	public boolean getImageMedia(){
-		return  featuredImage != null && !(getGalleryMedia() || getAudioMedia() || getVideoMedia());
+	public boolean getMediaImage(){
+		return  featuredImage != null && !(getMediaGallery() || getMediaAudio() || getMediaVideo());
 	}
 
 	@SdkInclude
-	public boolean getAudioMedia() {
+	public boolean getMediaAudio() {
 		return featuredAudio != null;
 	}
 
 	@SdkInclude
-	public boolean getVideoMedia() {
+	public boolean getMediaVideo() {
 		return featuredVideo != null;
 	}
 
 	@SdkInclude
-	public boolean getGalleryMedia() {
+	public boolean getMediaGallery() {
 		return featuredGallery != null && featuredGallery.size() > 0;
 	}
 

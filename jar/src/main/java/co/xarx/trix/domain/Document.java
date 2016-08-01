@@ -47,4 +47,8 @@ public class Document extends BaseEntity implements Serializable {
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
+
+	public String getHash() {
+		return file != null ? file.hash : null;
+	}
 }
