@@ -39,6 +39,12 @@ public interface PostProjection {
 
 	ImageProjection getFeaturedImage();
 
+	VideoProjection getFeaturedVideo();
+
+	AudioProjection getFeaturedAudio();
+
+	List<ImageProjection> getFeaturedGallery();
+
 	String getState();
 
 	boolean getImageLandscape();
@@ -91,11 +97,11 @@ public interface PostProjection {
 
 	String getFeaturedVideoHash();
 
-	Boolean getImageMedia();
+	Boolean getMediaImage();
 
-	Boolean getAudioMedia();
+	Boolean getMediaAudio();
 
-	Boolean getVideoMedia();
+	Boolean getMediaVideo();
 
-	Boolean getGalleryMedia();
+	Boolean getMediaGallery();
 }
