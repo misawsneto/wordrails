@@ -97,7 +97,7 @@ public class AnalyticsQueries {
 
 	public Map getCommentsByEntity(AnalyticsEntity entity){
 		CommentStatement params = buildStatement(entity);
-		ImmutablePage<CommentData> comments = commentSearchService.search(params, null, null);
+		ImmutablePage<CommentData> comments = commentSearchService.search(params, 0, 9999999);
 
 		Map<Long, Long> hist = new HashMap();
 		for(CommentData c: comments){
@@ -116,12 +116,19 @@ public class AnalyticsQueries {
 
 	public Integer countCommentsByEntity(AnalyticsEntity entity){
 		CommentStatement params = buildStatement(entity);
-		return commentSearchService.search(params, null, null).size();
+		return commentSearchService.search(params, 0, 99999999).size();
 	}
 
 	public CommentStatement buildStatement(AnalyticsEntity entity){
-		List<Integer> entityId = Lists.newArrayList(entity.getId());
 		String fieldName = commentSearchFields.get(entity.getClass().getName());
+		List<Object> entityId;
+
+		if(fieldName.equals("tenants")){
+			entityId = Lists.newArrayList(entity.getTenantId());
+		} else {
+			entityId = Lists.newArrayList(entity.getId());
+		}
+
 		Field field = null;
 
 		try {

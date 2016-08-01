@@ -102,8 +102,8 @@ public class AnalyticsSearchService {
 	public List<Integer> getGeneralStatus(AnalyticsEntity entity) {
 		List<Integer> generalStatus = new ArrayList<>();
 
-		Integer totalComments = analyticsQueries.countCommentsByEntity(entity);
 		Integer totalReads = esQueries.countReadsByEntity(entity);
+		Integer totalComments = analyticsQueries.countCommentsByEntity(entity);
 		Integer totalRecommends = analyticsQueries.countRecommendsByEntity(entity);
 
 		generalStatus.add(totalReads); // 1st reads

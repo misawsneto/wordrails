@@ -132,12 +132,17 @@ public class ESQueries {
 		return generalCounter(queryName, query, "@timestamp");
 	}
 
-	public Integer countReadsByEntity(AnalyticsEntity entity) {
+	public Integer countReadsByEntity(AnalyticsEntity entity){
 		String fieldName = readSearchFields.get(entity.getClass());
+
+		if(fieldName.equals("nginx_access.tenantId")){
+			return countTotals(entity.getTenantId(), fieldName);
+		}
+
 		return countTotals(entity.getId(), fieldName);
 	}
 
-	public Integer countTotals(Integer id, String entity) {
+	public Integer countTotals(Object id, String entity) {
 		BoolQueryBuilder boolQuery = new BoolQueryBuilder();
 		boolQuery.must(termQuery(entity, id));
 		boolQuery.must(termQuery("verb", "get"));
