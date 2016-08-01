@@ -59,7 +59,6 @@ public class NotificationBatchPublisher {
 
 		Assert.notNull(notification, "Notification must not be null");
 
-
 		for (String device : devices) {
 			MobileNotification noti = new MobileNotification(device, notification.hash, MobileNotification.Status.SEND_ERROR, notification.message, notification.type);
 			noti.errorCodeName = "Failed to send notification to server";

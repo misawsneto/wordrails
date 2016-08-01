@@ -106,19 +106,6 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 
 	@Override
 	public Response getImage(String hash, String size) throws IOException {
-
-		Map<String, String> hashes;
-		try {
-			hashes = imageService.getHashes(hash);
-		} catch (EntityNotFoundException e) {
-			throw new NotFoundException("Image does not exist. Hash:" + hash);
-		}
-
-		hash = hashes.get(size);
-
-		if(StringUtils.isEmpty(hash))
-			return Response.status(Response.Status.NO_CONTENT).build();
-
 		response.setHeader("Pragma", "public");
 		response.setHeader("Cache-Control", "max-age=2592000");
 
@@ -128,7 +115,30 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 		String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format(c.getTime());
 		response.setHeader("Expires", o);
 
-		response.sendRedirect(amazonCloudService.getPublicImageURL(hash));
+		Map<String, String> hashes;
+		if ("audio".equals(hash)) {
+			response.sendRedirect("http://" + request.getHeader("Host") +
+					"/images/" +
+					"audio.png");
+
+		}else if ("video".equals(hash)) {
+			response.sendRedirect("http://" + request.getHeader("Host") +
+					"/images/" +
+					"video.png");
+
+		}else {
+			try {
+				hashes = imageService.getHashes(hash);
+			} catch (EntityNotFoundException e) {
+				throw new NotFoundException("Image does not exist. Hash:" + hash);
+			}
+			hash = hashes.get(size);
+			if (StringUtils.isEmpty(hash))
+				return Response.status(Response.Status.NO_CONTENT).build();
+
+			response.sendRedirect(amazonCloudService.getPublicImageURL(hash));
+		}
+
 		return Response.ok().build();
 	}
 

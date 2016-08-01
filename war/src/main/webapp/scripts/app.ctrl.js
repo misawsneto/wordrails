@@ -524,7 +524,7 @@ angular.module('app')
             $scope.app.maxPerm.admin = true;
           } else if(perm.write && perm.moderate && !$scope.app.maxPerm.editor){
             $scope.app.maxPerm.editor = true;
-          } else if(perm.wirte && !$scope.app.maxPerm.wirter){
+          } else if(perm.write && !$scope.app.maxPerm.writer){
             $scope.app.maxPerm.writer = true;
           } else if(perm.create && !$scope.app.maxPerm.create){
             $scope.app.maxPerm.creator = true;

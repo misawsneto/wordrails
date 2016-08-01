@@ -100134,7 +100134,7 @@ PasswordResetDto.getSelf = function(object){
 	return TRIX_BACKEND + "/api/passwordResets/" + id;
 }
 
-function PersonDto(id, bio, bookmarkPosts, coverHash, coverLargeHash, coverMediumHash, email, enabled, imageHash, imageLargeHash, imageMediumHash, imageSmallHash, imageSocialUrl, lastLogin, name, networkAdmin, recommendPosts, seenWelcome, twitterHandle, username) {
+function PersonDto(id, bio, bookmarkPosts, coverHash, coverLargeHash, coverMediumHash, email, enabled, hasFacebookProfile, hasGoogleProfile, imageHash, imageLargeHash, imageMediumHash, imageSmallHash, imageSocialUrl, lastLogin, name, networkAdmin, recommendPosts, seenWelcome, twitterHandle, username) {
 	return {
 		id: id,
 		bio: bio,
@@ -100144,6 +100144,8 @@ function PersonDto(id, bio, bookmarkPosts, coverHash, coverLargeHash, coverMediu
 		coverMediumHash: coverMediumHash,
 		email: email,
 		enabled: enabled,
+		hasFacebookProfile: hasFacebookProfile,
+		hasGoogleProfile: hasGoogleProfile,
 		imageHash: imageHash,
 		imageLargeHash: imageLargeHash,
 		imageMediumHash: imageMediumHash,
@@ -100163,9 +100165,10 @@ PersonDto.getSelf = function(object){
 	return TRIX_BACKEND + "/api/persons/" + id;
 }
 
-function PostDto(id, author, body, bookmarksCount, commentsCount, date, externalVideoUrl, featuredAudio, featuredAudioHash, featuredImage, featuredVideo, featuredVideoHash, focusX, focusY, imageCredits, imageHash, imageId, imageLandscape, imageLargeHash, imageMediumHash, imageSmallHash, lastModificationDate, lat, lng, notify, originalSlug, readTime, recommendsCount, scheduledDate, slug, state, station, stationId, subheading, tags, title, topper) {
+function PostDto(id, audioMedia, author, body, bookmarksCount, commentsCount, date, externalVideoUrl, featuredAudio, featuredAudioHash, featuredImage, featuredVideo, featuredVideoHash, focusX, focusY, galleryMedia, imageCredits, imageHash, imageId, imageLandscape, imageLargeHash, imageMedia, imageMediumHash, imageSmallHash, lastModificationDate, lat, lng, notify, originalSlug, readTime, recommendsCount, scheduledDate, slug, state, station, stationId, subheading, tags, title, topper, videoMedia) {
 	return {
 		id: id,
+		audioMedia: audioMedia,
 		author: author,
 		body: body,
 		bookmarksCount: bookmarksCount,
@@ -100179,11 +100182,13 @@ function PostDto(id, author, body, bookmarksCount, commentsCount, date, external
 		featuredVideoHash: featuredVideoHash,
 		focusX: focusX,
 		focusY: focusY,
+		galleryMedia: galleryMedia,
 		imageCredits: imageCredits,
 		imageHash: imageHash,
 		imageId: imageId,
 		imageLandscape: imageLandscape,
 		imageLargeHash: imageLargeHash,
+		imageMedia: imageMedia,
 		imageMediumHash: imageMediumHash,
 		imageSmallHash: imageSmallHash,
 		lastModificationDate: lastModificationDate,
@@ -100201,7 +100206,8 @@ function PostDto(id, author, body, bookmarksCount, commentsCount, date, external
 		subheading: subheading,
 		tags: tags,
 		title: title,
-		topper: topper
+		topper: topper,
+		videoMedia: videoMedia
 	};
 }
 PostDto.getSelf = function(object){
@@ -102580,20 +102586,6 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findStateById) {
-			window.console && console.log("findStateById");
-		}
-		this.findStateById = function(id, projection) {
-			var config = {};
-			config.params = {
-				id: id,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/posts/search/findStateById",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
 		if (this.findBySlug) {
 			window.console && console.log("findBySlug");
 		}
@@ -102608,20 +102600,31 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findByAuthorUsernameAndStateOrderByDateDesc) {
-			window.console && console.log("findByAuthorUsernameAndStateOrderByDateDesc");
+		if (this.findPostBySlug) {
+			window.console && console.log("findPostBySlug");
 		}
-		this.findByAuthorUsernameAndStateOrderByDateDesc = function(state, page, size, sort, projection) {
+		this.findPostBySlug = function(slug, projection) {
 			var config = {};
 			config.params = {
-				state: state,
-				page: page,
-				size: size,
-				sort: sort,
+				slug: slug,
 
 			}
 			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/posts/search/findByAuthorUsernameAndStateOrderByDateDesc",  config)
+			return $http.get(_config.url + "/api/posts/search/findPostBySlug",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findStateById) {
+			window.console && console.log("findStateById");
+		}
+		this.findStateById = function(id, projection) {
+			var config = {};
+			config.params = {
+				id: id,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/posts/search/findStateById",  config)
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
@@ -102657,6 +102660,23 @@ var trix = angular.module('trix', [])
 			}
 			config.params["projection"] = projection;
 			return $http.get(_config.url + "/api/posts/search/findPostsPublished",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findByAuthorUsernameAndStateOrderByDateDesc) {
+			window.console && console.log("findByAuthorUsernameAndStateOrderByDateDesc");
+		}
+		this.findByAuthorUsernameAndStateOrderByDateDesc = function(state, page, size, sort, projection) {
+			var config = {};
+			config.params = {
+				state: state,
+				page: page,
+				size: size,
+				sort: sort,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/posts/search/findByAuthorUsernameAndStateOrderByDateDesc",  config)
 		};
 
 		/*-------------------------- Relationship -----------------------------------------------*/
@@ -102731,6 +102751,44 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Relationship -----------------------------------------------*/
+		if (this.getPostFeaturedGallery) {
+			console.log("getPostFeaturedGallery");
+		}
+		this.getPostFeaturedGallery = function(id, projection) {
+			var config = {};
+			config.params = {};
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/posts/" + id + "/featuredGallery",  config)
+		};
+		if (this.patchPostFeaturedGallery) {
+			window.console && console.log("patchPostFeaturedGallery");
+		}
+		this.patchPostFeaturedGallery = function(id, featuredGallery) {		
+			var _data = "";
+			for (var i = 0; i < featuredGallery.length; ++i) {
+				_data += featuredGallery[i] + "\n";
+			}
+			var config = {};
+			config.headers = {};
+			config.headers['Content-Type'] = "text/uri-list";
+			return $http.get(_config.url + "/api/posts/" + id + "/featuredGallery", _data, config)
+		};
+
+		if (this.putPostFeaturedGallery) {
+			window.console && console.log("putPostFeaturedGallery");
+		}
+		this.putPostFeaturedGallery = function(id, featuredGallery) {		
+			var _data = "";
+			for (var i = 0; i < featuredGallery.length; ++i) {
+				_data += featuredGallery[i] + "\n";
+			}
+			var config = {};
+			config.headers = {};
+			config.headers['Content-Type'] = "text/uri-list";
+			return $http.put(_config.url + "/api/posts/" + id + "/featuredGallery", _data, config)
+		};
+
+		/*-------------------------- Relationship -----------------------------------------------*/
 
 		if (this.getPostFeaturedImage) {
 			console.log("getPostFeaturedImage");
@@ -102788,6 +102846,44 @@ var trix = angular.module('trix', [])
 				config.headers['Content-Type'] = "text/uri-list";
 				return $http.put(_config.url + "/api/posts/" + id + "/featuredVideo", featuredVideo, config)
 			}
+		};
+
+		/*-------------------------- Relationship -----------------------------------------------*/
+		if (this.getPostGaleryHashes) {
+			console.log("getPostGaleryHashes");
+		}
+		this.getPostGaleryHashes = function(id, projection) {
+			var config = {};
+			config.params = {};
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/posts/" + id + "/galeryHashes",  config)
+		};
+		if (this.patchPostGaleryHashes) {
+			window.console && console.log("patchPostGaleryHashes");
+		}
+		this.patchPostGaleryHashes = function(id, galeryHashes) {		
+			var _data = "";
+			for (var i = 0; i < galeryHashes.length; ++i) {
+				_data += galeryHashes[i] + "\n";
+			}
+			var config = {};
+			config.headers = {};
+			config.headers['Content-Type'] = "text/uri-list";
+			return $http.get(_config.url + "/api/posts/" + id + "/galeryHashes", _data, config)
+		};
+
+		if (this.putPostGaleryHashes) {
+			window.console && console.log("putPostGaleryHashes");
+		}
+		this.putPostGaleryHashes = function(id, galeryHashes) {		
+			var _data = "";
+			for (var i = 0; i < galeryHashes.length; ++i) {
+				_data += galeryHashes[i] + "\n";
+			}
+			var config = {};
+			config.headers = {};
+			config.headers['Content-Type'] = "text/uri-list";
+			return $http.put(_config.url + "/api/posts/" + id + "/galeryHashes", _data, config)
 		};
 
 		/*-------------------------- Relationship -----------------------------------------------*/
@@ -103614,6 +103710,37 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findPostsByTerm) {
+			window.console && console.log("findPostsByTerm");
+		}
+		this.findPostsByTerm = function(termId, page, size, sort, projection) {
+			var config = {};
+			config.params = {
+				termId: termId,
+				page: page,
+				size: size,
+				sort: sort,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/terms/search/findPostsByTerm",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findByTaxonomyId) {
+			window.console && console.log("findByTaxonomyId");
+		}
+		this.findByTaxonomyId = function(taxonomyId, projection) {
+			var config = {};
+			config.params = {
+				taxonomyId: taxonomyId,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/terms/search/findByTaxonomyId",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
 		if (this.findRootsPage) {
 			window.console && console.log("findRootsPage");
 		}
@@ -103645,37 +103772,6 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findByTaxonomyId) {
-			window.console && console.log("findByTaxonomyId");
-		}
-		this.findByTaxonomyId = function(taxonomyId, projection) {
-			var config = {};
-			config.params = {
-				taxonomyId: taxonomyId,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/findByTaxonomyId",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findPostsByTerm) {
-			window.console && console.log("findPostsByTerm");
-		}
-		this.findPostsByTerm = function(termId, page, size, sort, projection) {
-			var config = {};
-			config.params = {
-				termId: termId,
-				page: page,
-				size: size,
-				sort: sort,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/findPostsByTerm",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
 		if (this.findByPerspectiveId) {
 			window.console && console.log("findByPerspectiveId");
 		}
@@ -103690,20 +103786,6 @@ var trix = angular.module('trix', [])
 		};
 
 		/*-------------------------- Queries -----------------------------------------------*/
-		if (this.findTermsByPostSlug) {
-			window.console && console.log("findTermsByPostSlug");
-		}
-		this.findTermsByPostSlug = function(slug, projection) {
-			var config = {};
-			config.params = {
-				slug: slug,
-
-			}
-			config.params["projection"] = projection;
-			return $http.get(_config.url + "/api/terms/search/findTermsByPostSlug",  config)
-		};
-
-		/*-------------------------- Queries -----------------------------------------------*/
 		if (this.findTermsByPostId) {
 			window.console && console.log("findTermsByPostId");
 		}
@@ -103715,6 +103797,20 @@ var trix = angular.module('trix', [])
 			}
 			config.params["projection"] = projection;
 			return $http.get(_config.url + "/api/terms/search/findTermsByPostId",  config)
+		};
+
+		/*-------------------------- Queries -----------------------------------------------*/
+		if (this.findTermsByPostSlug) {
+			window.console && console.log("findTermsByPostSlug");
+		}
+		this.findTermsByPostSlug = function(slug, projection) {
+			var config = {};
+			config.params = {
+				slug: slug,
+
+			}
+			config.params["projection"] = projection;
+			return $http.get(_config.url + "/api/terms/search/findTermsByPostSlug",  config)
 		};
 
 		/*-------------------------- Relationship -----------------------------------------------*/
@@ -107098,7 +107194,7 @@ angular.module('app')
             $scope.app.maxPerm.admin = true;
           } else if(perm.write && perm.moderate && !$scope.app.maxPerm.editor){
             $scope.app.maxPerm.editor = true;
-          } else if(perm.wirte && !$scope.app.maxPerm.wirter){
+          } else if(perm.write && !$scope.app.maxPerm.writer){
             $scope.app.maxPerm.writer = true;
           } else if(perm.create && !$scope.app.maxPerm.create){
             $scope.app.maxPerm.creator = true;

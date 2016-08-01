@@ -162,6 +162,32 @@ public class Person extends BaseEntity implements Serializable, AnalyticsEntity 
 		return null;
 	}
 
+	@SdkInclude
+	public Boolean getHasFacebookProfile(){
+		if (user != null && user.getUserConnections() != null && !user.getUserConnections().isEmpty()) {
+			return user.getUserConnections()
+					.stream()
+					.findFirst()
+					.map(uc -> "facebook".equals(uc.getProviderId()))
+					.orElse(false);
+		}
+
+		return null;
+	}
+
+	@SdkInclude
+	public Boolean getHasGoogleProfile() {
+		if (user != null && user.getUserConnections() != null && !user.getUserConnections().isEmpty()) {
+			return user.getUserConnections()
+					.stream()
+					.findFirst()
+					.map(uc -> "google".equals(uc.getProviderId()))
+					.orElse(false);
+		}
+
+		return null;
+	}
+
 	@Deprecated
 	@SdkInclude
 	public String getImageSocialUrl() {

@@ -168,6 +168,14 @@ public class FilesResource extends AbstractResource implements FilesApi {
 		String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format(c.getTime());
 		response.setHeader("Expires", o);
 
+		if("audio".equals(hash))
+			response.sendRedirect("http://" + request.getHeader("Host") + "/images/" +
+					"audio.png");
+
+		if ("video".equals(hash))
+			response.sendRedirect("http://" + request.getHeader("Host") + "/images/" +
+					"video.png");
+
 		response.sendRedirect(amazonCloudService.getPublicFileURL(hash, type));
 		return Response.ok().build();
 	}

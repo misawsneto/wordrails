@@ -178,14 +178,22 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}
 	}
 
+	if ( angular.isDefined($localStorage.lastSelectedStation) ) {
+		$scope.lastSelectedStation = $localStorage.lastSelectedStation
+  }
+
 	// check if is colaborator only
 	$scope.isColaboratorOnly = true;
 	$scope.app.permissions.stationPermissions.forEach(function(perm){
 		if(perm.write && $scope.isColaboratorOnly){
 			$scope.isColaboratorOnly = false;
 			$scope.stations.forEach(function(station){
-				if(station.id === perm.stationId)
-					$scope.selectedStation = station
+				if(!$scope.selectedStation){
+					if($scope.lastSelectedStation && $scope.lastSelectedStation.id === station.id)
+						$scope.selectedStation = station;
+					else if(station.id === perm.stationId)
+						$scope.selectedStation = station;
+				}
 			})
 		}
 		for (var i = $scope.stations.length - 1; i >= 0; i--) { // remove station with read only permissions
@@ -242,6 +250,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		invalid: false
 	}
 
+	$scope.postPermalinkMenuOpen = false;
 	$scope.applyCustomizedLink = function(slug){
 		if(!$scope.app.editingPost)
 			$scope.app.editingPost = {};
@@ -664,6 +673,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	// $scope.selectedStation = null;
 	$scope.$watch('selectedStation', function(station){
 		selecteTerms(station);
+		// save settings to local storage
+        $localStorage.lastSelectedStation = station;
 	})
 
 	// function updateTermTree(){
@@ -1106,6 +1117,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.useSubheading = $scope.app.editingPost.subheading ? true:false
 		$scope.tags = angular.copy($scope.app.editingPost.tags);
 		$scope.useVideo = $scope.app.editingPost.externalVideoUrl;
+		$scope.useUploadedVideo = $scope.app.editingPost.mediaVideo && $scope.app.editingPost.featuredVideoHash != null;
+		$scope.featuredVideo = $scope.app.editingPost.featuredVideo;
+
+		$scope.useUploadedAudio = $scope.app.editingPost.mediaAudio && $scope.app.editingPost.featuredAudioHash != null;
+		$scope.featuredAudio = $scope.app.editingPost.featuredAudio;
 
 		if($scope.app.editingPost.date){
 			$scope.postDate = new Date($scope.app.editingPost.date);
@@ -1117,6 +1133,15 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			$timeout(function(){
 				$scope.app.videoUrl = $scope.app.editingPost.externalVideoUrl
 			}, 100)
+		}else if($scope.useUploadedVideo && $scope.featuredVideo){
+			// --- video ---
+			$scope.featuredVideo.link = $scope.featuredVideo.filelink = TRIX.baseUrl + "/api/files/videos/" + $scope.app.editingPost.featuredVideoHash;
+			$scope.uploadedVideo = $scope.featuredVideo;
+		}
+
+		if($scope.useUploadedAudio && $scope.featuredAudio){
+			$scope.featuredAudio.link = $scope.featuredAudio.filelink = TRIX.baseUrl + "/api/files/audios/" + $scope.app.editingPost.featuredAudioHash;
+			$scope.uploadedAudio = $scope.featuredAudio;
 		}
 
 		if(!lockContent)
@@ -1309,10 +1334,21 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 					$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SCHEDULED'));
 				else
 					$scope.app.showSuccessToast($filter('translate')('settings.post.PUBLISH_SUCCESS'));
-			}).error(function(){
+			}).error(function(data, status, headers, config){
+				if(status == 409){
+					if(data.message.indexOf('Title') > -1)
+						$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR_TITLE'));
+					if(data.message.indexOf('slug') > -1)
+						$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR_SLUG'));
+
+				}else {
+					$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
+					$timeout(function(){
+						$mdDialog.cancel();
+					}, 5000)
+				}
+				
 				$scope.persisting = false;
-				$scope.app.showErrorToast($filter('translate')('settings.post.PUBLISH_ERROR'));
-				$mdDialog.cancel();
 			})
 		}
 	}

@@ -2,7 +2,6 @@ package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.annotation.SdkInclude;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Setter;
 
@@ -30,6 +29,9 @@ public class Audio extends BaseEntity implements Serializable {
 	public Integer id;
 
 	public String title;
+
+	@Column(columnDefinition = "int(11) DEFAULT 0")
+	public Integer duration;
 
 	@SdkInclude
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

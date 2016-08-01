@@ -29,6 +29,8 @@ import com.squareup.okhttp.OkHttpClient;
 
 import co.xarx.trix.api.ImageUploadResponse;
 import co.xarx.trix.api.v2.PostData;
+import co.xarx.trix.api.v2.PersonalNotificationData;
+import co.xarx.trix.api.v2.response.FileUpload;
 import co.xarx.trix.api.v2.response.FileUpload;
 import co.xarx.trix.api.TermPerspectiveView;
 import co.xarx.trix.api.RowView;
@@ -421,14 +423,14 @@ public class $facade$ {
 		});
 	}
 
-	public List<NotificationView\> searchNotifications(String query, int page, int size){
+	public List<PersonalNotificationData\> searchNotifications(String query, int page, int size){
 		return _facade.searchNotifications(query, page, size).content;
 	}
 
-	public void searchNotifications(String query, int page, int size, final Callback<List<NotificationView\>\> _callback){
-		_facade.searchNotifications(query, page, size, new Callback<ContentResponse<List<NotificationView\>\>\>() {
+	public void searchNotifications(String query, int page, int size, final Callback<List<PersonalNotificationData\>\> _callback){
+		_facade.searchNotifications(query, page, size, new Callback<ContentResponse<List<PersonalNotificationData\>\>\>() {
 			@Override
-			public void success(ContentResponse<List<NotificationView\>\> _t, Response _response) {
+			public void success(ContentResponse<List<PersonalNotificationData\>\> _t, Response _response) {
 				_callback.success(_t.content, _response);
 			}
 

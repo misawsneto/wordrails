@@ -15,10 +15,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @lombok.Getter @lombok.Setter
 @Table(
@@ -110,7 +107,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@ManyToMany(fetch = FetchType.EAGER)
 	@OrderColumn(name = "list_order")
 	@JoinTable(name = "post_galleries", joinColumns = @JoinColumn(name = "post_id"))
-	public List<Image> featuredGalery;
+	public List<Image> featuredGallery;
 
 	@SdkInclude
 	@NotNull
@@ -233,16 +230,63 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	@SdkInclude
 	public String getImageHash() {
-		if (featuredImage != null) return featuredImage.getOriginalHash();
+		Image featuredImage = getFeaturedImage();
+		if (featuredImage != null)
+			return featuredImage.getOriginalHash();
+		else{
 
-		return null;
+			Image image = getFeaturedImage();
+			return image != null ? image.getOriginalHash() : null;
+		}
+
+	}
+
+	public Image getFeaturedImage(){
+		if(featuredImage == null){
+			String hash = getMediaAudio() ? "audio" : getMediaVideo() ? "video" : null;
+			if(hash != null){
+				Image image = new Image();
+				HashMap<String, String> hashes = new HashMap<>();
+				hashes.put("original", hash);
+				hashes.put("large", hash);
+				hashes.put("medium", hash);
+				hashes.put("small", hash);
+				image.setHashes(hashes);
+
+				image.setOriginalHash(hash);
+
+				return image;
+			}
+		}
+
+		return featuredImage;
+	}
+
+	@SdkInclude
+	public boolean getMediaImage(){
+		return  featuredImage != null && !(getMediaGallery() || getMediaAudio() || getMediaVideo());
+	}
+
+	@SdkInclude
+	public boolean getMediaAudio() {
+		return featuredAudio != null;
+	}
+
+	@SdkInclude
+	public boolean getMediaVideo() {
+		return featuredVideo != null;
+	}
+
+	@SdkInclude
+	public boolean getMediaGallery() {
+		return featuredGallery != null && featuredGallery.size() > 0;
 	}
 
 	@SdkInclude
 	public List<String> getGaleryHashes() {
-		if (featuredGalery != null && featuredGalery.size() > 0){
+		if (featuredGallery != null && featuredGallery.size() > 0){
 			List<String> hashes = new ArrayList<>();
-			for (Image featuredImage: featuredGalery) {
+			for (Image featuredImage: featuredGallery) {
 				hashes.add(featuredImage.getOriginalHash());
 			}
 
@@ -261,6 +305,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	@SdkInclude
 	public String getImageLargeHash() {
+		Image featuredImage = getFeaturedImage();
 		if (featuredImage != null) return featuredImage.getHashes().get("large");
 
 		return null;
@@ -268,6 +313,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	@SdkInclude
 	public String getImageMediumHash() {
+		Image featuredImage = getFeaturedImage();
 		if (featuredImage != null) return featuredImage.getHashes().get("medium");
 
 		return null;
@@ -275,6 +321,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	@SdkInclude
 	public String getImageSmallHash() {
+		Image featuredImage = getFeaturedImage();
 		if (featuredImage != null) return featuredImage.getHashes().get("small");
 
 		return null;

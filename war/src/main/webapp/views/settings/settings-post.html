@@ -109,7 +109,7 @@
 	      <div class="pos-rlt">
         	<mdp-time-picker mdp-open-on-click class="w-full" mdp-placeholder="{{'settings.post.POST_TIME' | translate}}" ng-model="postDate"></mdp-time-picker>
         </div>
-        <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE" ng-click="changePostDate(postDate); postDateMenuOpen = false;"">
+        <md-button aria-label="nothing" class="pull-right font-bold no-margin" translate="titles.SAVE" ng-click="postDateMenuOpen = false; changePostDate(postDate);">
 			Salvar
 		</md-button>
       </div>

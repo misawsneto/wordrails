@@ -51,12 +51,12 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			}
 		}
 
-		if (post.featuredImage != null) {
+		if (post.getFeaturedImage() != null) {
 			postView.featuredImageHash = post.getImageHash();
 			postView.imageSmallHash = post.getImageSmallHash();
 			postView.imageMediumHash = post.getImageMediumHash();
 			postView.imageLargeHash = post.getImageLargeHash();
-			postView.imageCredits = post.featuredImage.getCredits();
+			postView.imageCredits = post.getFeaturedImage().getCredits();
 		}
 
 		postView.imageLandscape = post.imageLandscape;
@@ -65,6 +65,14 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.recommendsCount = post.recommendsCount;
 		postView.commentsCount = post.commentsCount;
 		postView.snippet = StringUtil.simpleSnippet(post.body);
+
+		postView.mediaImage = post.getMediaImage();
+
+		postView.mediaAudio = post.getMediaAudio();
+
+		postView.mediaVideo = post.getMediaVideo();
+
+		postView.mediaGallery = post.getMediaGallery();
 
 		if (post.author != null) {
 			postView.authorName = post.author.name;

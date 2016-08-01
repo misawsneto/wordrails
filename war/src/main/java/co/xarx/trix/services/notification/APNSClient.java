@@ -10,6 +10,7 @@ import com.notnoop.apns.ApnsNotification;
 import com.notnoop.apns.ApnsService;
 import org.eclipse.persistence.jpa.jpql.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -25,10 +26,12 @@ public class APNSClient implements NotificationServerClient {
 
 	private ApnsService service;
 	private AppleCertificateRepository appleCertificateRepository;
+	private String apnsProfile;
 
 	@Autowired
-	public APNSClient(AppleCertificateRepository appleCertificateRepository) throws IOException {
+	public APNSClient(AppleCertificateRepository appleCertificateRepository, @Value("${apns.profile:prod}") String apnsProfile) throws IOException {
 		this.appleCertificateRepository = appleCertificateRepository;
+		this.apnsProfile = apnsProfile;
 	}
 
 	@Override
@@ -83,10 +86,18 @@ public class APNSClient implements NotificationServerClient {
 		Assert.isNotNull(password, "Password must not be null");
 		Assert.isNotNull(is, "Certificate must not be null");
 
-		service = APNS
-				.newService()
-				.withCert(is, password)
-				.withProductionDestination()
-				.build();
+		if (apnsProfile.equals("dev")){
+			service = APNS
+					.newService()
+					.withCert(is, password)
+					.withSandboxDestination()
+					.build();
+		} else {
+			service = APNS
+					.newService()
+					.withCert(is, password)
+					.withProductionDestination()
+					.build();
+		}
 	}
 }

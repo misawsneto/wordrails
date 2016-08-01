@@ -24,6 +24,7 @@ import retrofit.mime.TypedString;
 
 import co.xarx.trix.api.ImageUploadResponse;
 import co.xarx.trix.api.v2.PostData;
+import co.xarx.trix.api.v2.PersonalNotificationData;
 import co.xarx.trix.api.v2.response.FileUpload;
 
 interface I$facade$ {
@@ -161,10 +162,10 @@ interface I$facade$ {
 	void searchRecommends(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
 	@GET("/notifications/searchNotifications")
-	ContentResponse<List<NotificationView\>\> searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size);
+	ContentResponse<List<PersonalNotificationData\>\> searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size);
 	
 	@GET("/notifications/searchNotifications")
-	void searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<NotificationView\>\>\> _callback);
+	void searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PersonalNotificationData\>\>\> _callback);
 		
 	@GET("/posts/{stationId}/allPostRead")
 	ContentResponse<List<PostView\>\> getAllPostReadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId,

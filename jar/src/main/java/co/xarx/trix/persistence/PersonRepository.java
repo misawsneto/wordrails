@@ -42,7 +42,7 @@ public interface PersonRepository extends DatabaseRepository<Person, Integer> {
 
 	@RestResource(exported = true)
 	@Query("select p from Person p where username like %:usernameOrEmailOrName% OR email like %:usernameOrEmailOrName% OR name like %:usernameOrEmailOrName%")
-	List<Person> findPersons(@Param("usernameOrEmailOrName") String usernameOrEmail, Pageable pageable);
+	List<Person> findPersons(@Param ("usernameOrEmailOrName") String usernameOrEmail, Pageable pageable);
 
 	@RestResource(exported = false)
 	@Query("select count(*) from Person person")
