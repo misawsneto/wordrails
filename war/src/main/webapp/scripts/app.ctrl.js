@@ -503,6 +503,10 @@ angular.module('app')
           .accentPalette('myAccent',{'default':'300', 'hue-1': '500', 'hue-2': '800', 'hue-3': 'A100'})
           .warnPalette('myWarn')
           .backgroundPalette('myBackground', {'default':'500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A100'});
+
+          if(!tinycolor($scope.app.network.backgroundColors['500']).isLight()){
+            themeProvider.theme(themeName).dark();
+          }
     
           themeProvider.reload($injector);
           themeProvider.setDefaultTheme(themeName)
