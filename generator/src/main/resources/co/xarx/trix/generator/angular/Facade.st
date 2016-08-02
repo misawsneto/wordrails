@@ -438,12 +438,12 @@ var trix = angular.module('trix', [])
 
 	this.toggleBookmark = function(postId) {
 		var config = {"headers": {"Content-Type": "application/json"}}
-		return \$http.put(_config.url + "/api/v2/bookmarks/" + postId, {}, config)
+		return \$http.put(_config.url + "/api/v2/bookmarks/toggle/" + postId, {}, config)
 	};
 
 	this.toggleRecommend = function(postId) {
         var config = {"headers": {"Content-Type": "application/json"}}
-        return \$http.put(_config.url + "/api/v2/recommends/" + postId, {}, config)
+        return \$http.put(_config.url + "/api/v2/recommends/toggle/" + postId, {}, config)
     };
 
 	this.setMainStation = function(stationId, value) {
