@@ -340,5 +340,13 @@ interface I$facade$ {
 
 /*---------------------------------------------------------------------------*/
 
+	@POST("/posts/{postId}/comments")
+	CommentDto postComment(@Path("postId") Integer postId, @Body CommentDto comment);	
+
+	@POST("/posts/{postId}/comments")
+	void postComment(@Path("postId") Integer postId, @Body CommentDto comment, Callback<CommentDto> _callback);
+
+/*---------------------------------------------------------------------------*/
+
 $entities:IFacadeMethods(); separator="\n\n"$
 }>>
