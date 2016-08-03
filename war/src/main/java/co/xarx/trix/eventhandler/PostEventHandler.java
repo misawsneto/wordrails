@@ -8,6 +8,7 @@ import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
+import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.post.PostService;
@@ -49,6 +50,9 @@ public class PostEventHandler {
 	private AuditService auditService;
 	@Autowired
 	private QueryPersistence queryPersistence;
+
+	@Autowired
+	private AsyncService asyncService;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException, ConflictException {
@@ -123,7 +127,7 @@ public class PostEventHandler {
 				&& (post.scheduledDate == null || (post.scheduledDate != null && post.scheduledDate.before(new Date())) )
 				) {
 			Logger.info("Start sending notifications");
-			postService.sendNewPostNotification(post);
+			asyncService.sendNotification(TenantContextHolder.getCurrentTenantId(), post);
 			post.notified = true;
 			postRepository.save(post);
 			Logger.info("Continue saving post after creating notifications");

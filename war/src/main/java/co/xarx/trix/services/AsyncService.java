@@ -1,7 +1,9 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.domain.Post;
 import co.xarx.trix.persistence.PersonRepository;
+import co.xarx.trix.services.post.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -15,6 +17,9 @@ public class AsyncService {
 
 	@Autowired
 	public PersonRepository personRepository;
+
+	@Autowired
+	public PostService postService;
 
 //	@Autowired
 //	ElasticsearchTemplate elasticsearchTemplate;
@@ -34,6 +39,12 @@ public class AsyncService {
 	public <V> Future<V> run(String tenantId, Callable<V> runnable) throws Exception {
 		TenantContextHolder.setCurrentTenantId(tenantId);
 		return new AsyncResult<>(runnable.call());
+	}
+
+	@Async
+	public void sendNotification(String tenantId, Post post) {
+		TenantContextHolder.setCurrentTenantId(tenantId);
+		postService.sendNewPostNotification(post);
 	}
 
 //	@Async
