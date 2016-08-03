@@ -37,7 +37,7 @@ public class PostView implements Serializable, Identifiable {
 	public Set<CategoryData> categories;
 	public Set<String> tags;
     public List<TermView> terms;
-	public Boolean sponsored;
+	public boolean sponsored;
 	public java.util.Date date;
 	public String snippet;
 	public String body;

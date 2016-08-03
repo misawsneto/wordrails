@@ -2,10 +2,12 @@ package co.xarx.trix.services.notification;
 
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.domain.MobileNotification;
+import co.xarx.trix.services.AccessService;
 import co.xarx.trix.util.ListUtil;
-import co.xarx.trix.util.Logger;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.jcodec.common.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -16,8 +18,18 @@ import java.util.*;
 @Service
 public class NotificationBatchPublisher {
 
+	@Autowired
+	private AccessService accessService;
+
 	public List<MobileNotification> sendNotifications(NotificationSender sender, NotificationView notification,
 													  Collection<String> devices, MobileNotification.DeviceType deviceType) {
+
+		Logger.info("Sending notification");
+
+		if(!(accessService.hasPermissionOnTenant(true, "demo") || accessService.hasPermissionOnProfile(true, "prod"))) {
+			return new ArrayList<MobileNotification>();
+		}
+
 		Assert.notEmpty(devices, "Devices must not be null and not empty");
 		Assert.notNull(notification, "Notification must not be null");
 
@@ -46,6 +58,8 @@ public class NotificationBatchPublisher {
 				}
 			}
 		}
+
+		Logger.info("Finish sending notification");
 
 		return mobileNotifications;
 	}

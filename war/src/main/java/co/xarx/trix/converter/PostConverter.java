@@ -123,6 +123,8 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.notify = post.notify;
 		postView.tags = post.tags;
 
+		postView.sponsored = post.sponsored;
+
 		return postView;
 	}
 

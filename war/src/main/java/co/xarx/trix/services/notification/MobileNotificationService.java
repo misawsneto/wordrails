@@ -1,6 +1,5 @@
 package co.xarx.trix.services.notification;
 
-import co.xarx.trix.annotation.AccessGroup;
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.MobileNotification;
@@ -36,11 +35,11 @@ public class MobileNotificationService {
 		this.androidNS = androidNS;
 	}
 
-	@AccessGroup(tenants = {"demo"}, profiles = {"prod"}, inclusion = true)
+//	@AccessGroup(tenants = {"demo"}, profiles = {"prod"}, inclusion = true)
 	public List<MobileNotification> sendNotifications(NotificationView notification,
 													  Collection<String> androidDevices, Collection<String> appleDevices) throws NotificationException {
 		Future<List<MobileNotification>> futureAndroidNotifications = null;
-		Future<List<MobileNotification>> futureAppleNotifications;
+		Future<List<MobileNotification>> futureAppleNotifications = null;
 		try {
 			futureAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
 					() -> notificationBatchPublisher.sendNotifications(androidNS, notification, androidDevices, MobileNotification.DeviceType.ANDROID));
