@@ -1,6 +1,7 @@
 package co.xarx.trix.services.notification;
 
 import co.xarx.trix.api.NotificationView;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.MobileNotification;
 import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.services.AsyncService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 @Service
@@ -38,19 +40,11 @@ public class MobileNotificationService {
 													  Collection<String> androidDevices, Collection<String> appleDevices) throws NotificationException {
 		Future<List<MobileNotification>> futureAndroidNotifications = null;
 		Future<List<MobileNotification>> futureAppleNotifications = null;
-
-		List<MobileNotification> androidNotifications = null;
-		List<MobileNotification> appleNotifications = null;
 		try {
-			androidNotifications = notificationBatchPublisher.sendNotifications(androidNS, notification,
-					androidDevices, MobileNotification.DeviceType.ANDROID);
-
-			appleNotifications = notificationBatchPublisher.sendNotifications(appleNS, notification,
-					appleDevices, MobileNotification.DeviceType.APPLE);
-//			futureAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-//					() -> notificationBatchPublisher.sendNotifications(androidNS, notification, androidDevices, MobileNotification.DeviceType.ANDROID));
-//			futureAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-//					() -> notificationBatchPublisher.sendNotifications(appleNS, notification, appleDevices, MobileNotification.DeviceType.APPLE));
+			futureAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
+					() -> notificationBatchPublisher.sendNotifications(androidNS, notification, androidDevices, MobileNotification.DeviceType.ANDROID));
+			futureAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
+					() -> notificationBatchPublisher.sendNotifications(appleNS, notification, appleDevices, MobileNotification.DeviceType.APPLE));
 		} catch (Exception e) {
 			if (futureAndroidNotifications != null)
 				futureAndroidNotifications.cancel(true);
@@ -60,17 +54,15 @@ public class MobileNotificationService {
 		List<MobileNotification> mobileNotifications;
 
 		try {
-		mobileNotifications = androidNotifications;
-//		} catch (InterruptedException | ExecutionException e) {
-		}catch(Exception e){
+			mobileNotifications = futureAndroidNotifications.get();
+		} catch (InterruptedException | ExecutionException e) {
 			mobileNotifications = notificationBatchPublisher.getErrorNotifications(androidDevices,
 					notification, e, MobileNotification.DeviceType.ANDROID);
 		}
 
 		try {
-			mobileNotifications.addAll(appleNotifications);
-//		} catch (InterruptedException | ExecutionException e) {
-		} catch (Exception e) {
+			mobileNotifications.addAll(futureAppleNotifications.get());
+		} catch (InterruptedException | ExecutionException e) {
 			mobileNotifications.addAll(notificationBatchPublisher.getErrorNotifications(appleDevices,
 					notification, e, MobileNotification.DeviceType.APPLE));
 		}
