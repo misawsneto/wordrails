@@ -30,5 +30,5 @@ public interface V2CommentsApi {
 
 	@PUT
 	@Path("/")
-	public void deleteComment(List<CommentData> comments) throws IOException;
+	void deleteComment(List<CommentData> comments) throws IOException;
 }

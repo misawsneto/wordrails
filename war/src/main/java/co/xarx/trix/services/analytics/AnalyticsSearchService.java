@@ -104,7 +104,7 @@ public class AnalyticsSearchService {
 
 		Integer totalReads = esQueries.countReadsByEntity(entity);
 		Integer totalComments = analyticsQueries.countCommentsByEntity(entity);
-		Integer totalRecommends = analyticsQueries.countRecommendsByEntity(entity);
+		Integer totalRecommends = esQueries.countRecommendsByEntity(entity);
 
 		generalStatus.add(totalReads); // 1st reads
 		generalStatus.add(totalComments); // 2nd comments

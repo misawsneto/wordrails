@@ -32,8 +32,7 @@ public class ESQueries {
 
 	private Client client;
 	private String accessIndex;
-
-	private Map<Class<?>, String> readSearchFields;
+	private Map<Class<?>, String> requestSearchFields;
 
 	@Autowired
 	public ESQueries(Client client,
@@ -41,7 +40,7 @@ public class ESQueries {
 
 		this.client = client;
 		this.accessIndex = accessIndex;
-		this.readSearchFields = loadReadSearchFields();
+		this.requestSearchFields = loadRequestSearchFields();
 	}
 
 	@PostConstruct
@@ -50,7 +49,7 @@ public class ESQueries {
 		Assert.isTrue(isThereNginxIndex, "Big problem! Index is not there: " + accessIndex);
 	}
 
-	private Map loadReadSearchFields() {
+	private Map loadRequestSearchFields() {
 		Map fields = new HashMap<Class<?>, String>();
 
 		fields.put(Post.class, "nginx_access.postId");
@@ -122,7 +121,7 @@ public class ESQueries {
 	}
 
 	public Map getReadsByEntity(AnalyticsEntity entity){
-		String fieldName = readSearchFields.get(entity.getClass());
+		String fieldName = requestSearchFields.get(entity.getClass());
 		String queryName = fieldName + "_reads";
 
 		BoolQueryBuilder query = new BoolQueryBuilder();
@@ -133,19 +132,19 @@ public class ESQueries {
 	}
 
 	public Integer countReadsByEntity(AnalyticsEntity entity){
-		String fieldName = readSearchFields.get(entity.getClass());
+		String fieldName = requestSearchFields.get(entity.getClass());
 
 		if(fieldName.equals("nginx_access.tenantId")){
-			return countTotals(entity.getTenantId(), fieldName);
+			return countTotals(entity.getTenantId(), fieldName, "get");
 		}
 
-		return countTotals(entity.getId(), fieldName);
+		return countTotals(entity.getId(), fieldName, "get");
 	}
 
-	public Integer countTotals(Object id, String entity) {
+	public Integer countTotals(Object id, String entity, String verb) {
 		BoolQueryBuilder boolQuery = new BoolQueryBuilder();
 		boolQuery.must(termQuery(entity, id));
-		boolQuery.must(termQuery("verb", "get"));
+		boolQuery.must(termQuery("verb", verb));
 
 		SearchRequestBuilder search = client.prepareSearch(accessIndex);
 		search.setQuery(boolQuery);
@@ -176,5 +175,18 @@ public class ESQueries {
 		}
 
 		return buckets;
+	}
+
+	public Integer countRecommendsByEntity(AnalyticsEntity entity){
+		String fieldName = requestSearchFields.get(entity.getClass());
+		Object id;
+
+		if(fieldName.equals("nginx_access.tenantId")){
+			id = entity.getTenantId();
+		} else {
+			id = entity.getId();
+		}
+
+		return countTotals(id, fieldName, "put");
 	}
 }

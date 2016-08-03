@@ -10,7 +10,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-//@AllArgsConstructor
 @Entity
 @Table(name = "statementcomment")
 @PrimaryKeyJoinColumn(name = "statement_id", referencedColumnName = "id")

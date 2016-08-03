@@ -35,7 +35,6 @@ public class AnalyticsQueries {
 	private MobileDeviceRepository deviceRepository;
     private CommentSearchService commentSearchService;
 	private Map<Class<?>, String> commentSearchFields;
-	private Map<Class<?>, String> recommendSearchFields;
     private PersonPermissionService personPermissionService;
     private Map<Constants.MobilePlatform, String> mobileTypesMapToString;
 
@@ -61,10 +60,6 @@ public class AnalyticsQueries {
 		fields.put(Network.class.getName(), "tenants");
 
 		return fields;
-	}
-
-	public Integer countRecommendsByEntity(AnalyticsEntity entity){
-		return null;
 	}
 
 	public List<MobileStats> getMobileStats(String tenantId, Interval interval){
