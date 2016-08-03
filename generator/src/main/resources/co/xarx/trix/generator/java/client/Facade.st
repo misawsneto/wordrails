@@ -652,5 +652,15 @@ public class $facade$ {
 	}
 /*---------------------------------------------------------------------------*/
 
+    public CommentDto postComment(Integer postId, CommentDto comment) {
+        return _facade.postComment(postId, comment);
+    }
+
+    public void postComment(Integer postId, CommentDto comment, final Callback<CommentDto> _callback) {
+    	_facade.postComment(postId, comment, _callback);
+    }
+
+/*---------------------------------------------------------------------------*/
+
 $entities:FacadeMethods(); separator="\n\n"$
 }>>
