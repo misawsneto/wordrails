@@ -13,6 +13,7 @@ import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.services.security.PostPermissionService;
 import co.xarx.trix.util.StringUtil;
+import org.jcodec.common.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -121,9 +122,11 @@ public class PostEventHandler {
 		if (post.state.equals(Post.STATE_PUBLISHED) && post.notify && !post.notified
 				&& (post.scheduledDate == null || (post.scheduledDate != null && post.scheduledDate.before(new Date())) )
 				) {
+			Logger.info("Start sending notifications");
 			postService.sendNewPostNotification(post);
 			post.notified = true;
 			postRepository.save(post);
+			Logger.info("Continue saving post after creating notifications");
 		}
 	}
 

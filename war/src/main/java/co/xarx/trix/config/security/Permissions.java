@@ -13,6 +13,7 @@ public final class Permissions extends BasePermission {
 	}
 
 	public static final Permission MODERATION = new Permissions(1 << 5, 'M'); // 32
+	public static final Permission SPONSOR = new Permissions(1 << 6, 'S'); // 64
 
 	public static boolean containsPermission(Permission cumulativePermission, Permission singlePermission) {
 		return (cumulativePermission.getMask() & singlePermission.getMask()) == singlePermission.getMask();
@@ -44,6 +45,14 @@ public final class Permissions extends BasePermission {
 	public static CumulativePermission getColaborator() {
 		CumulativePermission permission = getReader();
 		permission.set(CREATE);
+
+		return permission;
+	}
+
+	public static CumulativePermission getSponsor() {
+		CumulativePermission permission = getReader();
+		permission.set(CREATE);
+		permission.set(SPONSOR);
 
 		return permission;
 	}
