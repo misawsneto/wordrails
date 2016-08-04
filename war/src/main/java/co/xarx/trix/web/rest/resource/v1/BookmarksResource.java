@@ -24,10 +24,10 @@ public class BookmarksResource extends AbstractResource implements BookmarksApi 
 	}
 
 	@Override
-	public ContentResponse<List<PostView>> searchBookmarks(String q, Integer page, Integer size) {
+	public ContentResponse<List<PostView>> searchBookmarks() {
 
 		ContentResponse<List<PostView>> response = new ContentResponse<>();
-		response.content = postService.searchBookmarks(q, page, size);
+		response.content = postService.searchBookmarks();
 
 		return response;
 	}

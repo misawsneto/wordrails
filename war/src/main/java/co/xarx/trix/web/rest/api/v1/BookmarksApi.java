@@ -17,9 +17,7 @@ public interface BookmarksApi {
 	@Path("/searchBookmarks")
 	@Produces(MediaType.APPLICATION_JSON)
 	@PreAuthorize("isAuthenticated()")
-	ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q,
-													@QueryParam("page") Integer page,
-													@QueryParam("size") Integer size);
+	ContentResponse<List<PostView>> searchBookmarks();
 
 	@PUT
 	@Path("/toggleBookmark")

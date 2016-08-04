@@ -136,7 +136,7 @@ public class PostService {
 		return postsViews.getRight();
 	}
 
-	public List<PostView> searchBookmarks(String q, Integer page, Integer size){
+	public List<PostView> searchBookmarks(){
 		Person person = authProvider.getLoggedPerson();
 
 		List<Post> posts = person.bookmarkPosts != null && person.bookmarkPosts.size() > 0 ?
