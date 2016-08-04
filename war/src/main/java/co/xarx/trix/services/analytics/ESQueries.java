@@ -122,34 +122,30 @@ public class ESQueries {
 
 	public Map getReadsByEntity(AnalyticsEntity entity){
 		String fieldName = requestSearchFields.get(entity.getClass());
-		String queryName = fieldName + "_reads";
+		String queryName = "reads_by_" + fieldName;
+		Object id = getEntityIdentifier(entity);
 
 		BoolQueryBuilder query = new BoolQueryBuilder();
-		query.must(termQuery(fieldName, entity.getId()));
+		query.must(termQuery(fieldName, id));
+		query.must(termQuery("action", "postread"));
+		query.must(termQuery("verb", "get"));
 		query.must(termQuery("_type", Constants.AnalyticsType.READ));
 
 		return generalCounter(queryName, query, "@timestamp");
 	}
 
-	public Integer countReadsByEntity(AnalyticsEntity entity){
+	public Map getCommentsByEntity(AnalyticsEntity entity){
 		String fieldName = requestSearchFields.get(entity.getClass());
+		String queryName = "comments_by_" + fieldName;
+		Object id = getEntityIdentifier(entity);
 
-		if(fieldName.equals("nginx_access.tenantId")){
-			return countTotals(entity.getTenantId(), fieldName, "get");
-		}
+		BoolQueryBuilder query = new BoolQueryBuilder();
+		query.must(termQuery(fieldName, id));
+		query.must(termQuery("action", "comment"));
+		query.must(termQuery("verb", "post"));
+		query.must(termQuery("_type", Constants.AnalyticsType.READ));
 
-		return countTotals(entity.getId(), fieldName, "get");
-	}
-
-	public Integer countTotals(Object id, String entity, String verb) {
-		BoolQueryBuilder boolQuery = new BoolQueryBuilder();
-		boolQuery.must(termQuery(entity, id));
-		boolQuery.must(termQuery("verb", verb));
-
-		SearchRequestBuilder search = client.prepareSearch(accessIndex);
-		search.setQuery(boolQuery);
-
-		return (int) search.execute().actionGet().getHits().getTotalHits();
+		return generalCounter(queryName, query, "@timestamp");
 	}
 
 	public Map findMostPopular(String field, Interval interval, Integer size) throws Exception {
@@ -177,16 +173,34 @@ public class ESQueries {
 		return buckets;
 	}
 
-	public Integer countRecommendsByEntity(AnalyticsEntity entity){
+	public Integer countActionsByEntity(String action, String httpVerb, AnalyticsEntity entity){
 		String fieldName = requestSearchFields.get(entity.getClass());
-		Object id;
+		Object id = getEntityIdentifier(entity);
 
-		if(fieldName.equals("nginx_access.tenantId")){
+		return countTotals(id, fieldName, action, httpVerb);
+	}
+
+	public Integer countTotals(Object id, String field, String action, String httpVerb) {
+		BoolQueryBuilder boolQuery = new BoolQueryBuilder();
+		boolQuery.must(termQuery(field, id));
+		boolQuery.must(termQuery("verb", httpVerb));
+		boolQuery.must(termQuery("action", action));
+
+		SearchRequestBuilder search = client.prepareSearch(accessIndex);
+		search.setQuery(boolQuery);
+
+		return (int) search.execute().actionGet().getHits().getTotalHits();
+	}
+
+	private Object getEntityIdentifier(AnalyticsEntity entity) {
+		String field = requestSearchFields.get(entity.getClass());
+		Object id;
+		if(field.equals("nginx_access.tenantId")){
 			id = entity.getTenantId();
 		} else {
 			id = entity.getId();
 		}
-
-		return countTotals(id, fieldName, "put");
+		return id;
 	}
+
 }

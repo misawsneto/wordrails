@@ -33,33 +33,18 @@ public class AnalyticsQueries {
 
     private FileRepository fileRepository;
 	private MobileDeviceRepository deviceRepository;
-    private CommentSearchService commentSearchService;
-	private Map<Class<?>, String> commentSearchFields;
     private PersonPermissionService personPermissionService;
     private Map<Constants.MobilePlatform, String> mobileTypesMapToString;
 
 	@Autowired
-	public AnalyticsQueries(MobileDeviceRepository deviceRepository, CommentSearchService commentSearchService, FileRepository fileRepository, PersonPermissionService personPermissionService){
+	public AnalyticsQueries(MobileDeviceRepository deviceRepository, FileRepository fileRepository, PersonPermissionService personPermissionService){
 		this.deviceRepository = deviceRepository;
-		this.commentSearchService = commentSearchService;
 		this.fileRepository = fileRepository;
 		this.personPermissionService = personPermissionService;
-		this.commentSearchFields = loadCommentStatementField();
 
 		mobileTypesMapToString = new HashMap<>();
 		mobileTypesMapToString.put(Constants.MobilePlatform.ANDROID, "ANDROID");
 		mobileTypesMapToString.put(Constants.MobilePlatform.APPLE, "APPLE");
-	}
-
-	private Map loadCommentStatementField() {
-		Map fields = new HashMap<Class<?>, String>();
-
-		fields.put(Post.class.getName(), "posts");
-		fields.put(Person.class.getName(), "authors");
-		fields.put(Station.class.getName(), "stations");
-		fields.put(Network.class.getName(), "tenants");
-
-		return fields;
 	}
 
 	public List<MobileStats> getMobileStats(String tenantId, Interval interval){
@@ -89,62 +74,7 @@ public class AnalyticsQueries {
 				interval.getEnd().toString());
 	}
 
-
-	public Map getCommentsByEntity(AnalyticsEntity entity){
-		CommentStatement params = buildStatement(entity);
-		ImmutablePage<CommentData> comments = commentSearchService.search(params, 0, 9999999);
-
-		Map<Long, Long> hist = new HashMap();
-		for(CommentData c: comments){
-			long date = c.getDate().getTime();
-
-			if(hist.get(date) == null){
-				hist.put(date, 1L);
-			} else {
-				long i = hist.get(date);
-				hist.put(date, i + 1);
-			}
-		}
-
-		return hist;
-	}
-
-	public Integer countCommentsByEntity(AnalyticsEntity entity){
-		CommentStatement params = buildStatement(entity);
-		return commentSearchService.search(params, 0, 99999999).size();
-	}
-
-	public CommentStatement buildStatement(AnalyticsEntity entity){
-		String fieldName = commentSearchFields.get(entity.getClass().getName());
-		List<Object> entityId;
-
-		if(fieldName.equals("tenants")){
-			entityId = Lists.newArrayList(entity.getTenantId());
-		} else {
-			entityId = Lists.newArrayList(entity.getId());
-		}
-
-		Field field = null;
-
-		try {
-			field = CommentStatement.class.getDeclaredField(fieldName);
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		}
-		field.setAccessible(true);
-
-		CommentStatement params = new CommentStatement();
-
-		try {
-			field.set(params, entityId);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-
-		return params;
-	}
-
-	public Map<String, Integer> getFileStats() {
+	public Map<String, Integer> getFileStats(){
 		List<Object[]> mimeSums = fileRepository.sumFilesSizeByMime(TenantContextHolder.getCurrentTenantId());
 		Map<String, Integer> map = new HashMap<>();
 

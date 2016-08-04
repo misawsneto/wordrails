@@ -36,7 +36,7 @@ public class AnalyticsSearchService {
 		List<Integer> generalStatus = getGeneralStatus(post);
 
 		reads = esQueries.getReadsByEntity(post);
-		comments = analyticsQueries.getCommentsByEntity(post);
+		comments = esQueries.getCommentsByEntity(post);
 
 		TreeMap<Long, ReadsCommentsRecommendsCountData> stats = makeHistogram(reads, comments, interval);
 
@@ -52,7 +52,7 @@ public class AnalyticsSearchService {
 		List<Integer> generalStatus = getGeneralStatus(person);
 
 		reads = esQueries.getReadsByEntity(person);
-		comments = analyticsQueries.getCommentsByEntity(person);
+		comments = esQueries.getCommentsByEntity(person);
 
 		StatsData response = new StatsData();
 		response.generalStatsJson = generalStatus;
@@ -66,7 +66,7 @@ public class AnalyticsSearchService {
 		List<Integer> generalStatus = getGeneralStatus(station);
 
 		reads = esQueries.getReadsByEntity(station);
-		comments = analyticsQueries.getCommentsByEntity(station);
+		comments = esQueries.getCommentsByEntity(station);
 
 		StatsData StatsData = new StatsData();
 		StatsData.generalStatsJson = generalStatus;
@@ -85,7 +85,7 @@ public class AnalyticsSearchService {
 		generalStatus.add(getByType(mobileStats, Constants.MobilePlatform.APPLE).currentInstallations);
 
 		reads = esQueries.getReadsByEntity(network);
-		comments = analyticsQueries.getCommentsByEntity(network);
+		comments = esQueries.getCommentsByEntity(network);
 
 		StatsData statsData = new StatsData();
 		statsData.generalStatsJson = generalStatus;
@@ -102,9 +102,9 @@ public class AnalyticsSearchService {
 	public List<Integer> getGeneralStatus(AnalyticsEntity entity) {
 		List<Integer> generalStatus = new ArrayList<>();
 
-		Integer totalReads = esQueries.countReadsByEntity(entity);
-		Integer totalComments = analyticsQueries.countCommentsByEntity(entity);
-		Integer totalRecommends = esQueries.countRecommendsByEntity(entity);
+		Integer totalReads = esQueries.countActionsByEntity("postread", "get",entity);
+		Integer totalComments = esQueries.countActionsByEntity("comment", "post", entity);
+		Integer totalRecommends = esQueries.countActionsByEntity("recommend", "put", entity);
 
 		generalStatus.add(totalReads); // 1st reads
 		generalStatus.add(totalComments); // 2nd comments
@@ -126,7 +126,7 @@ public class AnalyticsSearchService {
 		Map postReads = new HashMap();
 
 		posts.forEach( post -> {
-			postReads.put(post.getId(), esQueries.countReadsByEntity(post));
+			postReads.put(post.getId(), esQueries.countActionsByEntity("postread", "get", post));
 		});
 
 		return postReads;
