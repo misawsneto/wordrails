@@ -19,18 +19,18 @@ public class AsyncService {
 //	@Autowired
 //	ElasticsearchTemplate elasticsearchTemplate;
 
-	@Async
+	@Async(value = "myExecuter")
 	public void run(Runnable runnable) {
 		runnable.run();
 	}
 
-	@Async
+	@Async(value = "myExecuter")
 	public void run(String tenantId, Runnable runnable) {
 		TenantContextHolder.setCurrentTenantId(tenantId);
 		runnable.run();
 	}
 
-	@Async
+	@Async(value = "myExecuter")
 	public <V> Future<V> run(String tenantId, Callable<V> runnable) throws Exception {
 		TenantContextHolder.setCurrentTenantId(tenantId);
 		return new AsyncResult<>(runnable.call());

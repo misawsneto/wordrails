@@ -19,7 +19,6 @@ import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.session.ExpiringSession;
 import org.springframework.session.data.redis.RedisOperationsSessionRepository;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.web.http.HttpSessionStrategy;
@@ -113,7 +112,8 @@ public class SessionConfig extends CachingConfigurerSupport {
 
 	@Bean
 	public RedisOperationsSessionRepository sessionRepository(@Qualifier("sessionRedisTemplate")
-																  RedisOperations<String, ExpiringSession> sessionRedisTemplate) {
+																  RedisOperations<Object, Object>
+																		  sessionRedisTemplate) {
 		RedisOperationsSessionRepository sessionRepository = new RedisOperationsSessionRepository(sessionRedisTemplate);
 		sessionRepository.setDefaultMaxInactiveInterval(345600);
 
