@@ -5,12 +5,12 @@ import co.xarx.trix.persistence.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-@Service
+@Component
 public class AsyncService {
 
 	@Autowired
