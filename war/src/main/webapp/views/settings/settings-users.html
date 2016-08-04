@@ -30,6 +30,7 @@
 														</md-checkbox>
 													</th>
 													<th class="text-l-c">{{'titles.USERS' | translate}}</th>
+													<th style="width:30px;"></th>
 													<th style="min-width:170px;" class="text-center display-t-c v-m no-padding">{{'titles.LAST_LOGIN' | translate}}</th>
 													<th style="min-width:110px;" class="text-center display-t-c v-m no-padding">
 														ativar/desativar
@@ -57,6 +58,10 @@
 								                <span class="text-md font-bold">{{person.name}}</span>
 								                <div class="text-muted clear text-ellipsis">{{person.username}} | {{person.email}}</div>
 								              </span>
+													</td>
+													<td class="display-t-c v-m text-center">
+														<i ng-if="person.hasFacebookProfile" class="mdi-facebook-box i-24"></i>
+														<i ng-if="person.hasGoogleProfile" class="mdi-google-plus-box i-24"></i>
 													</td>
 													<td class="display-t-c v-m text-center" ng-if="!person.lastLogin"> - </td>
 													<td class="display-t-c v-m text-center" ng-if="person.lastLogin">{{app.getLocalTime(person.lastLogin)}}</td>

@@ -139,21 +139,11 @@ public class PostService {
 	public List<PostView> searchBookmarks(String q, Integer page, Integer size){
 		Person person = authProvider.getLoggedPerson();
 
-		Pair<Integer, List<PostView>> postsViews = postSearchService.searchPosts(q, person.getId(), page, size, person.getBookmarkPosts());
+		List<Post> posts = person.bookmarkPosts != null && person.bookmarkPosts.size() > 0 ?
+				postRepository.findAll(person.bookmarkPosts) : new ArrayList<>();
 
-		List<Integer> ids = new ArrayList<Integer>();
+		List<PostView> pvs = postConverter.convertToViews(posts);
 
-		for (PostView pv : postsViews.getRight()) {
-			ids.add(pv.postId);
-		}
-
-		List<Post> posts = postRepository.findAll(ids);
-
-		List<PostView> pvs = new ArrayList<>();
-
-		for (Post post : posts) {
-			pvs.add(postConverter.convertTo(post));
-		}
 		return pvs;
 	}
 

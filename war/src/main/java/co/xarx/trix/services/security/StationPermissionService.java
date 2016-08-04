@@ -179,7 +179,7 @@ public class StationPermissionService {
 			if (auth != null) {
 				stationPermissionDto.admin = permissionEvaluator.hasPermission(auth, station, ADMINISTRATION);
 				stationPermissionDto.editor = permissionEvaluator.hasPermission(auth, station, MODERATION);
-				stationPermissionDto.sponsoror = permissionEvaluator.hasPermission(auth, station, SPONSOR);
+				stationPermissionDto.sponsor = permissionEvaluator.hasPermission(auth, station, SPONSOR);
 				stationPermissionDto.writer = permissionEvaluator.hasPermission(auth, station, WRITE);
 				stationPermissionDto.creator = permissionEvaluator.hasPermission(auth, station, CREATE);
 			}

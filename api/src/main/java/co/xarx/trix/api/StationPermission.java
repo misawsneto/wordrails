@@ -29,5 +29,5 @@ public class StationPermission implements Serializable {
 	public boolean moderator;
 	public boolean writer;
 	public boolean creator;
-	public boolean sponsoror;
+	public boolean sponsor;
 }
