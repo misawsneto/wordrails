@@ -67,7 +67,7 @@ public class PostService {
 	@Autowired
 	private ImageService imageService;
 
-	@Async
+	@Async(value = "myExecuter")
 	public void asyncSendNewPostNotification(Post post, String tentantId) throws NotificationException {
 		TenantContextHolder.setCurrentTenantId(tentantId);
 		sendNewPostNotification(post);
