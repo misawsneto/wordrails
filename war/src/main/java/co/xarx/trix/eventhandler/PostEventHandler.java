@@ -123,7 +123,7 @@ public class PostEventHandler {
 				&& (post.scheduledDate == null || (post.scheduledDate != null && post.scheduledDate.before(new Date())) )
 				) {
 			Logger.info("Start sending notifications");
-			postService.sendNewPostNotification(post);
+			postService.asyncSendNewPostNotification(post, TenantContextHolder.getCurrentTenantId());
 			post.notified = true;
 			postRepository.save(post);
 			Logger.info("Continue saving post after creating notifications");

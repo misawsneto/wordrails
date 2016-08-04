@@ -110,6 +110,7 @@ public class ApplicationConfig implements AsyncConfigurer{
 	}
 
 	@Override
+	@Bean(name = "myExecuter")
 	public Executor getAsyncExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(5);
