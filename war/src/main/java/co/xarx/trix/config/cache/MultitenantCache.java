@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 import org.springframework.util.Assert;
 
+import java.util.concurrent.Callable;
+
 /**
  * A {@link Cache} implementation that provides support for multi-tenancy by translating the lookup
  * keys into a tenant-context-specific key using {@link TenantContextHolder}.  The nuts and bolts of the
@@ -53,6 +55,22 @@ public final class MultitenantCache implements Cache {
 	public <T> T get(Object key, Class<T> type) {
 		Object translatedKey = translateKey(key);
 		return delegate.get(translatedKey, type);
+	}
+
+	@Override
+	public <T> T get(Object key, Callable<T> callable) {
+		ValueWrapper val = delegate.get(key);
+		if (val != null) {
+			return (T) val.get();
+		}
+
+		try {
+			return  callable.call();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	@Override

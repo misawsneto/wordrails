@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static co.xarx.trix.config.security.Permissions.MODERATION;
+import static co.xarx.trix.config.security.Permissions.SPONSOR;
 import static org.springframework.security.acls.domain.BasePermission.*;
 
 @Component
@@ -48,6 +49,7 @@ public class AccessControlListService {
 		permissionData.setDelete(Permissions.containsPermission(p, DELETE));
 		permissionData.setAdministration(Permissions.containsPermission(p, ADMINISTRATION));
 		permissionData.setModerate(Permissions.containsPermission(p, MODERATION));
+		permissionData.setSponsor(Permissions.containsPermission(p, SPONSOR));
 
 		return permissionData;
 	}

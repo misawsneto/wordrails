@@ -4,7 +4,6 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.User;
 import co.xarx.trix.persistence.PersonRepository;
-import co.xarx.trix.services.AsyncService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
@@ -14,9 +13,6 @@ import java.util.Date;
 
 @Component
 class AuthenticationApplicationListener implements ApplicationListener<InteractiveAuthenticationSuccessEvent> {
-
-	@Autowired
-	AsyncService asyncService;
 
 	@Autowired
 	PersonRepository personRepository;

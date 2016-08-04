@@ -154,6 +154,9 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@JsonIgnore
 	public boolean notified = false;
 
+	@Column(columnDefinition = "boolean DEFAULT false")
+	public boolean sponsored = false;
+
 	public Double lat;
 
 	public Double lng;

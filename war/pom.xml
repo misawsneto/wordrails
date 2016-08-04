@@ -607,5 +607,22 @@
 			<artifactId>HikariCP</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.nutch</groupId>
+			<artifactId>nutch</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.rometools/rome -->
+		<dependency>
+			<groupId>com.rometools</groupId>
+			<artifactId>rome</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>

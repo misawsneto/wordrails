@@ -56,7 +56,7 @@ public class StationPermissionService {
 		dto.usernames.remove(loggedUsername);
 
 		List<Sid> sids = dto.usernames.stream().map(PrincipalSid::new).collect(Collectors.toList());
-		updateStationsPermissions(sids, dto.stationsIds, dto.colaborator, dto.writer, dto.editor, dto.admin);
+		updateStationsPermissions(sids, dto.stationsIds, dto.colaborator, dto.writer, dto.editor, dto.admin, dto.sponsor);
 	}
 
 	public List<Integer> findStationsWithReadPermission() {
@@ -76,7 +76,7 @@ public class StationPermissionService {
 	}
 
 	public void updateStationsPermissions(List<Sid> sids, List<Integer> stationIds, boolean colaborator, boolean writer, boolean
-			editor, boolean admin) {
+			editor, boolean admin, boolean sponsor) {
 		Assert.notEmpty(sids, "Sids must have elements");
 		Assert.notEmpty(stationIds, "Station ids must have elements");
 
@@ -94,6 +94,9 @@ public class StationPermissionService {
 		}else
 		if (colaborator) {
 			permission = Permissions.getColaborator();
+		}
+		if (sponsor) {
+			permission = Permissions.getSponsor();
 		}
 
 		Map<ObjectIdentity, MutableAcl> acls = aclService.findAcls(stationIds);
@@ -176,7 +179,9 @@ public class StationPermissionService {
 			if (auth != null) {
 				stationPermissionDto.admin = permissionEvaluator.hasPermission(auth, station, ADMINISTRATION);
 				stationPermissionDto.editor = permissionEvaluator.hasPermission(auth, station, MODERATION);
-				stationPermissionDto.writer = permissionEvaluator.hasPermission(auth, station, CREATE);
+				stationPermissionDto.sponsor = permissionEvaluator.hasPermission(auth, station, SPONSOR);
+				stationPermissionDto.writer = permissionEvaluator.hasPermission(auth, station, WRITE);
+				stationPermissionDto.creator = permissionEvaluator.hasPermission(auth, station, CREATE);
 			}
 
 			stationPermissionDtos.add(stationPermissionDto);

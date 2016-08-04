@@ -14,8 +14,6 @@ public class PersonData implements Serializable {
 	public StationView defaultStation;
 	public PersonPermissions personPermissions;
 	public UserPermissionData permissions;
-	public List<PostView> recent;
-	public List<PostView> popular;
 
 	public Date lastLogin;
 

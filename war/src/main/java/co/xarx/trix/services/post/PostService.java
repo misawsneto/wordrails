@@ -2,6 +2,7 @@ package co.xarx.trix.services.post;
 
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.api.PostView;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.config.security.Permissions;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedInputStream;
@@ -64,6 +66,12 @@ public class PostService {
 
 	@Autowired
 	private ImageService imageService;
+
+	@Async(value = "myExecuter")
+	public void asyncSendNewPostNotification(Post post, String tentantId) throws NotificationException {
+		TenantContextHolder.setCurrentTenantId(tentantId);
+		sendNewPostNotification(post);
+	}
 
 	public void sendNewPostNotification(Post post) throws NotificationException {
 		List<MobileDevice> mobileDevices;
@@ -128,24 +136,14 @@ public class PostService {
 		return postsViews.getRight();
 	}
 
-	public List<PostView> searchBookmarks(String q, Integer page, Integer size){
+	public List<PostView> searchBookmarks(){
 		Person person = authProvider.getLoggedPerson();
 
-		Pair<Integer, List<PostView>> postsViews = postSearchService.searchPosts(q, person.getId(), page, size, person.getBookmarkPosts());
+		List<Post> posts = person.bookmarkPosts != null && person.bookmarkPosts.size() > 0 ?
+				postRepository.findAll(person.bookmarkPosts) : new ArrayList<>();
 
-		List<Integer> ids = new ArrayList<Integer>();
+		List<PostView> pvs = postConverter.convertToViews(posts);
 
-		for (PostView pv : postsViews.getRight()) {
-			ids.add(pv.postId);
-		}
-
-		List<Post> posts = postRepository.findAll(ids);
-
-		List<PostView> pvs = new ArrayList<>();
-
-		for (Post post : posts) {
-			pvs.add(postConverter.convertTo(post));
-		}
 		return pvs;
 	}
 

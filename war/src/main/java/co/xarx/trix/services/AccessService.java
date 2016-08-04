@@ -30,7 +30,7 @@ public class AccessService {
 		return hasPermissionOnProfile || hasPermissionOnTenant;
 	}
 
-	public boolean hasPermissionOnTenant(boolean isGranted, String[] tenants) {
+	public boolean hasPermissionOnTenant(boolean isGranted, String... tenants) {
 		boolean inList = Sets.newHashSet(tenants).contains(tenantProvider.getTenantId());
 		return isGranted == inList;
 	}

@@ -5,6 +5,7 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.config.multitenancy.TenantProvider;
 import co.xarx.trix.elasticsearch.mapper.*;
 import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.notification.APNSClient;
 import co.xarx.trix.services.notification.GCMClient;
 import co.xarx.trix.services.notification.MobileNotificationSender;
@@ -109,7 +110,13 @@ public class ApplicationConfig implements AsyncConfigurer{
 		return DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
 	}
 
+	@Bean
+	public AsyncService asyncService() {
+		return new AsyncService();
+	}
+
 	@Override
+	@Bean(name = "myExecuter")
 	public Executor getAsyncExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(5);

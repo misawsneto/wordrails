@@ -13,6 +13,7 @@ import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.services.security.PostPermissionService;
 import co.xarx.trix.util.StringUtil;
+import org.jcodec.common.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -117,13 +118,15 @@ public class PostEventHandler {
 		elasticSearchService.mapThenSave(post, ESPost.class);
 	}
 
-	private void notificationCheck(Post post) {
+	public void notificationCheck(Post post) {
 		if (post.state.equals(Post.STATE_PUBLISHED) && post.notify && !post.notified
 				&& (post.scheduledDate == null || (post.scheduledDate != null && post.scheduledDate.before(new Date())) )
 				) {
-			postService.sendNewPostNotification(post);
+			Logger.info("Start sending notifications");
+			postService.asyncSendNewPostNotification(post, TenantContextHolder.getCurrentTenantId());
 			post.notified = true;
 			postRepository.save(post);
+			Logger.info("Continue saving post after creating notifications");
 		}
 	}
 
