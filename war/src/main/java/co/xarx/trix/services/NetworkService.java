@@ -133,4 +133,10 @@ public class NetworkService {
 		else
 			return null;
 	}
+
+	public Network getNetwork(){
+		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+		network.setTenantId(TenantContextHolder.getCurrentTenantId());
+		return network;
+	}
 }
