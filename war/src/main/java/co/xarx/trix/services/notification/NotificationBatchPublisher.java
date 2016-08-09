@@ -24,7 +24,7 @@ public class NotificationBatchPublisher {
 	public List<MobileNotification> sendNotifications(NotificationSender sender, NotificationView notification,
 													  Collection<String> devices, MobileNotification.DeviceType deviceType) {
 
-		Logger.info("Sending notification");
+		Logger.info("Sending notification. " + devices.size() + " devices. Type: " + deviceType.name());
 
 		if(!(accessService.hasPermissionOnTenant(true, "demo") || accessService.hasPermissionOnProfile(true, "prod"))) {
 			return new ArrayList<MobileNotification>();
