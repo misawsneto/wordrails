@@ -10,7 +10,9 @@ import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.ImageService;
 import co.xarx.trix.services.MobileService;
+import co.xarx.trix.services.SchedulerService;
 import co.xarx.trix.services.notification.MobileNotificationService;
+import co.xarx.trix.services.notification.job.SendNotificationJob;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
@@ -19,6 +21,7 @@ import co.xarx.trix.util.StringUtil;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -63,6 +66,8 @@ public class PostService {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PostSearchService postSearchService;
+	@Autowired
+	private SchedulerService schedulerService;
 
 	@Autowired
 	private ImageService imageService;
@@ -108,11 +113,27 @@ public class PostService {
 		return notification;
 	}
 
-	public void publishScheduledPost(Integer postId, boolean allowNotifications) throws NotificationException {
+	public void schedulePostUnpublishing(Integer postId, Date date) throws SchedulerException {
+		Map<String, String> properties = new HashMap<>();
+		properties.put("postId", postId + "");
+		properties.put("tenantId", TenantContextHolder.getCurrentTenantId());
+
+		schedulerService.schedule(postId + "", SendNotificationJob.class, date, properties);
+	}
+
+	private void publishScheduledPost(Integer postId, boolean allowNotifications) throws NotificationException {
 		Post post = postRepository.findOne(postId);
 		turnPublished(allowNotifications, post);
 		if (post != null) {
 			post.date = new Date();
+			postRepository.save(post);
+		}
+	}
+
+	public void unpublishPost(Integer postId){
+		Post post = postRepository.findOne(postId);
+		if(post != null){
+			post.setState(Post.STATE_UNPUBLISHED);
 			postRepository.save(post);
 		}
 	}
