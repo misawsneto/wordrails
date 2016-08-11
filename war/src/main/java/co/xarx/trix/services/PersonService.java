@@ -1,7 +1,6 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.api.StationRolesUpdate;
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.*;
