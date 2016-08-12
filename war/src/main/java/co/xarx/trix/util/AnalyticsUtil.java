@@ -42,7 +42,7 @@ public class AnalyticsUtil {
 		throw new BadRequestException("Wrong time range. 'end' must be a date after 'start'");
 	}
 
-	public static TreeMap<Long, ReadsCommentsRecommendsCountData> makeHistogram(Map postReads, Map comments, Interval interval) {
+	public static TreeMap<Long, ReadsCommentsRecommendsCountData> makeHistogram(Map<Long, Long> postReads, Map<Long, Long> comments, Map<Long, Long> recommends, Interval interval) {
 		TreeMap<Long, ReadsCommentsRecommendsCountData> stats = new TreeMap<>();
 
 		DateTime firstDay = interval.getEnd();
@@ -53,11 +53,15 @@ public class AnalyticsUtil {
 		do {
 			ReadsCommentsRecommendsCountData count = new ReadsCommentsRecommendsCountData();
 			if (postReads.containsKey(lastestDay.getMillis())) {
-				count.readsCount = (long) postReads.get(lastestDay.getMillis());
+				count.readsCount = postReads.get(lastestDay.getMillis()).intValue();
 			}
 
 			if (comments.containsKey(lastestDay.getMillis())) {
-				count.commentsCount = (long) comments.get(lastestDay.getMillis());
+				count.commentsCount = comments.get(lastestDay.getMillis());
+			}
+
+			if(recommends.containsKey(lastestDay.getMillis())){
+				count.recommendsCount = recommends.get(lastestDay.getMillis());
 			}
 
 			stats.put(lastestDay.getMillis(), count);

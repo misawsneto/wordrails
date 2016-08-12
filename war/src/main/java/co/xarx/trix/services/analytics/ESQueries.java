@@ -102,7 +102,7 @@ public class ESQueries {
 		return getIndexFields("", map);
 	}
 
-	private Map generalCounter(String queryName, QueryBuilder query, String orderField) {
+	private Map<Long, Long> generalCounter(String queryName, QueryBuilder query, String orderField) {
 		SearchRequestBuilder search = client.prepareSearch(accessIndex);
 
 		search.setQuery(query);
@@ -120,7 +120,7 @@ public class ESQueries {
 		return hist;
 	}
 
-	public Map getReadsByEntity(AnalyticsEntity entity){
+	public Map<Long, Long> getReadsByEntity(AnalyticsEntity entity){
 		String fieldName = requestSearchFields.get(entity.getClass());
 		String queryName = "reads_by_" + fieldName;
 		Object id = getEntityIdentifier(entity);
@@ -134,7 +134,21 @@ public class ESQueries {
 		return generalCounter(queryName, query, "@timestamp");
 	}
 
-	public Map getCommentsByEntity(AnalyticsEntity entity){
+	public Map<Long, Long> getRecommendsByEntity(AnalyticsEntity entity){
+		String fieldName = requestSearchFields.get(entity.getClass());
+		String queryName = "comments_by_" + fieldName;
+		Object id = getEntityIdentifier(entity);
+
+		BoolQueryBuilder query = new BoolQueryBuilder();
+		query.must(termQuery(fieldName, id));
+		query.must(termQuery("action", "recommend"));
+		query.must(termQuery("verb", "put"));
+		query.must(termQuery("_type", Constants.AnalyticsType.READ));
+
+		return generalCounter(queryName, query, "@timestamp");
+	}
+
+	public Map<Long, Long> getCommentsByEntity(AnalyticsEntity entity){
 		String fieldName = requestSearchFields.get(entity.getClass());
 		String queryName = "comments_by_" + fieldName;
 		Object id = getEntityIdentifier(entity);

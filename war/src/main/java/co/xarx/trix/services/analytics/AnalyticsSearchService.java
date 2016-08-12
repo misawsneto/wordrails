@@ -32,71 +32,66 @@ public class AnalyticsSearchService {
 	}
 
 	public StatsData getPostStats(Post post, Interval interval) {
-		Map reads, comments;
 		List<Integer> generalStatus = getGeneralStatus(post);
-
-		reads = esQueries.getReadsByEntity(post);
-		comments = esQueries.getCommentsByEntity(post);
-
-		TreeMap<Long, ReadsCommentsRecommendsCountData> stats = makeHistogram(reads, comments, interval);
+		TreeMap<Long, ReadsCommentsRecommendsCountData> histogram = getHistogram(post, interval);
 
 		StatsData response = new StatsData();
 		response.generalStatsJson = generalStatus;
-		response.dateStatsJson = stats;
+		response.dateStatsJson = histogram;
 
 		return response;
 	}
 
 	public StatsData getPersonStats(Person person, Interval interval) {
-		Map reads, comments;
 		List<Integer> generalStatus = getGeneralStatus(person);
-
-		reads = esQueries.getReadsByEntity(person);
-		comments = esQueries.getCommentsByEntity(person);
+		TreeMap<Long, ReadsCommentsRecommendsCountData> histogram = getHistogram(person, interval);
 
 		StatsData response = new StatsData();
 		response.generalStatsJson = generalStatus;
-		response.dateStatsJson = makeHistogram(reads, comments, interval);
+		response.dateStatsJson = histogram;
 
 		return response;
 	}
 
 	public StatsData getStationStats(Station station, Interval interval) {
-		Map reads, comments;
 		List<Integer> generalStatus = getGeneralStatus(station);
-
-		reads = esQueries.getReadsByEntity(station);
-		comments = esQueries.getCommentsByEntity(station);
+		TreeMap<Long, ReadsCommentsRecommendsCountData> histogram = getHistogram(station, interval);
 
 		StatsData StatsData = new StatsData();
 		StatsData.generalStatsJson = generalStatus;
-		StatsData.dateStatsJson = makeHistogram(reads, comments, interval);
+		StatsData.dateStatsJson = histogram;
 
 		return StatsData;
 	}
 
 
 	public StatsData getNetworkStats(Network network, Interval interval) {
-		Map reads, comments;
 		List<MobileStats> mobileStats = analyticsQueries.getMobileStats(network.getTenantId(), interval);
-
 		List<Integer> generalStatus = getGeneralStatus(network);
 		generalStatus.add(getByType(mobileStats, Constants.MobilePlatform.ANDROID).currentInstallations);
 		generalStatus.add(getByType(mobileStats, Constants.MobilePlatform.APPLE).currentInstallations);
-
-		reads = esQueries.getReadsByEntity(network);
-		comments = esQueries.getCommentsByEntity(network);
+		TreeMap<Long, ReadsCommentsRecommendsCountData> histogram = getHistogram(network, interval);
 
 		StatsData statsData = new StatsData();
 		statsData.generalStatsJson = generalStatus;
-		statsData.dateStatsJson = makeHistogram(reads, comments, interval);
+		statsData.dateStatsJson = histogram;
 
+		// repeting data. Ideal: remove generalStatus list and use Key-Value
 		statsData.androidStore = getByType(mobileStats, Constants.MobilePlatform.ANDROID);
 		statsData.iosStore = getByType(mobileStats, Constants.MobilePlatform.APPLE);
 
 		statsData.fileSpace = analyticsQueries.getFileStats();
 
 		return statsData;
+	}
+
+	public TreeMap<Long, ReadsCommentsRecommendsCountData> getHistogram(AnalyticsEntity entity, Interval interval){
+		Map<Long, Long> reads, comments, recommends;
+		reads = esQueries.getReadsByEntity(entity);
+		comments = esQueries.getCommentsByEntity(entity);
+		recommends = esQueries.getRecommendsByEntity(entity);
+
+		return makeHistogram(reads, comments, recommends, interval);
 	}
 
 	public List<Integer> getGeneralStatus(AnalyticsEntity entity) {
@@ -136,7 +131,10 @@ public class AnalyticsSearchService {
 		if(list.isEmpty()) return new MobileStats();
 
 		Predicate<MobileStats> mobilePredicate = m -> m.getType().equals(type);
-		return list.stream().filter(mobilePredicate).findFirst().get();
+		Optional<MobileStats> optional = list.stream().filter(mobilePredicate).findFirst();
+		if(optional.isPresent()) return optional.get();
+
+		return null;
 	}
 
 	public Map getFileStats(){

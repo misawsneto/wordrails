@@ -4,8 +4,7 @@ import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.security.PersonPermissionService;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import co.xarx.trix.services.NetworkService;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,29 +14,29 @@ import java.util.*;
 
 import static co.xarx.trix.util.AnalyticsUtil.getInterval;
 import static co.xarx.trix.util.Logger.debug;
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 @Service
 public class StatisticsService {
 
 	private PostRepository postRepository;
-    private PersonRepository personRepository;
-    private CommentRepository commentRepository;
-    private NetworkRepository networkRepository;
-    private StationRepository stationRepository;
+	private NetworkService networkService;
+	private PersonRepository personRepository;
+	private CommentRepository commentRepository;
+	private StationRepository stationRepository;
     private AnalyticsSearchService analyticsSearchService;
 
 	@Autowired
 	public StatisticsService(
-            PostRepository postRepository,
-            CommentRepository commentRepository,
-            PersonRepository personRepository,
-            NetworkRepository networkRepository, StationRepository stationRepository,
-            AnalyticsSearchService analyticsSearchService) {
+			PostRepository postRepository,
+			NetworkService networkService,
+			PersonRepository personRepository,
+			CommentRepository commentRepository,
+			StationRepository stationRepository,
+			AnalyticsSearchService analyticsSearchService) {
 		this.postRepository = postRepository;
+		this.networkService = networkService;
 		this.personRepository = personRepository;
-        this.networkRepository = networkRepository;
         this.stationRepository = stationRepository;
 		this.analyticsSearchService = analyticsSearchService;
         this.commentRepository = commentRepository;
@@ -101,12 +100,8 @@ public class StatisticsService {
 	public StatsData getNetworkStats(String end, String start) {
 		Interval interval = getInterval(end, start);
 
-		String tenantId = TenantContextHolder.getCurrentTenantId();
-		Network network = networkRepository.findByTenantId(tenantId);
-
-		if (network== null) return null;
-
-		network.setTenantId(tenantId); //it is not supposed to happen
+		Network network = networkService.getNetwork();
+		if (network == null) return null;
 
 		return analyticsSearchService.getNetworkStats(network, interval);
 	}
