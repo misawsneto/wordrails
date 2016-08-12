@@ -1,7 +1,6 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.api.StationRolesUpdate;
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.*;
@@ -24,6 +23,7 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
@@ -44,14 +44,13 @@ public class PersonService {
     private PersonFactory personFactory;
     private NetworkService networkService;
     private PersonRepository personRepository;
-    private NetworkRepository networkRepository;
     private StationRepository stationRepository;
     private InvitationRepository invitationRepository;
     private StationPermissionService stationPermissionService;
     private PersonValidationRepository personValidationRepository;
 
 	@Autowired
-	public PersonService(PersonRepository personRepository, EmailService emailService, NetworkRepository networkRepository, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory, NetworkService networkService) {
+	public PersonService(PersonRepository personRepository, EmailService emailService, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory, NetworkService networkService) {
 		this.client = client;
 		this.authService = authService;
 		this.userFactory = userFactory;
@@ -60,24 +59,18 @@ public class PersonService {
 		this.nginxAccessIndex = nginxAccessIndex;
 		this.personRepository = personRepository;
 		this.stationRepository = stationRepository;
-		this.networkRepository = networkRepository;
 		this.invitationRepository = invitationRepository;
 		this.stationPermissionService = stationPermissionService;
 		this.personValidationRepository = personValidationRepository;
         this.networkService = networkService;
     }
 
+    @Transactional
 	public Person createFromInvite(PersonsApi.PersonCreateDto dto, String inviteHash) throws PersonAlreadyExistsException, UserAlreadyExistsException {
 		Assert.hasText(inviteHash);
 
 		User newUser = userFactory.create(dto.username, dto.password);
-		Person newPerson = null;
-		try {
-			newPerson = personFactory.create(dto.name, dto.email, newUser);
-		} catch (Exception e) {
-			userFactory.delete(dto.username);
-			throw e;
-		}
+		Person newPerson = personFactory.create(dto.name, dto.email, newUser);
 
 		Invitation invitation = invitationRepository.findByHash(inviteHash);
 
@@ -94,20 +87,15 @@ public class PersonService {
 		return newPerson;
 	}
 
+	@Transactional
 	public Person createPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException, UserAlreadyExistsException, IOException {
 		if (dto.password == null || dto.password.isEmpty())
 			dto.password = StringUtil.generateRandomString(6, "aA#");
 
 		User newUser = userFactory.create(dto.username, dto.password);
-		Person newPerson;
-		try{
-			newPerson = personFactory.create(dto.name, dto.email, newUser);
-		}catch (Exception e){
-			userFactory.delete(dto.username);
-			throw e;
-		}
+		Person newPerson = personFactory.create(dto.name, dto.email, newUser);
 
-		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+		Network network = networkService.getNetwork();
 
 		PersonValidation validation = new PersonValidation();
 		validation.setPerson(newPerson);
@@ -121,21 +109,15 @@ public class PersonService {
 		return newPerson;
 	}
 
+	@Transactional
 	public Person addPerson(PersonsApi.PersonCreateDto dto) throws PersonAlreadyExistsException, UserAlreadyExistsException {
 		if(dto.password == null || dto.password.isEmpty())
 			dto.password = StringUtil.generateRandomString(6, "aA#");
 
 		User newUser = userFactory.create(dto.username, dto.password);
-		Person newPerson;
-		try {
-			newPerson = personFactory.create(dto.name, dto.email, newUser);
-		} catch (Exception e) {
-			userFactory.delete(dto.username);
-			throw e;
-		}
+		Person newPerson = personFactory.create(dto.name, dto.email, newUser);
 
-		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
-
+		Network network = networkService.getNetwork();
 		try {
 			emailService.sendCredentials(network, authService.getLoggedPerson(), newPerson);
 		} catch (Exception e) {
@@ -151,8 +133,7 @@ public class PersonService {
 			return null;
 		}
 
-		String tenantId = TenantContextHolder.getCurrentTenantId();
-		Network network = networkRepository.findByTenantId(tenantId);
+		Network network = networkService.getNetwork();
 
 		Person person = validation.getPerson();
 		validation.validated = true;
@@ -164,6 +145,16 @@ public class PersonService {
 
 		personValidationRepository.save(validation);
 		return person;
+	}
+
+	private void cleanInvitationDto(PersonsApi.PersonInvitationDto dto){
+		removeRepeatedPerson(dto.emails);
+		removeInvalidStations(dto.stationIds);
+
+		dto.emailTemplate = dto.emailTemplate.replaceAll("\\&\\#123;\\&\\#123;", "{{");
+		dto.emailTemplate = dto.emailTemplate.replaceAll("\\&\\#125;\\&\\#125;", "}}");
+		dto.emailTemplate = dto.emailTemplate.replaceAll("\\%7B\\%7B", "{{");
+		dto.emailTemplate = dto.emailTemplate.replaceAll("\\%7D\\%7D", "}}");
 	}
 
 	private void removeInvalidStations(List stations){
@@ -195,15 +186,8 @@ public class PersonService {
 			throw new BadRequestException("Invalid emails or template");
 		}
 
-		removeRepeatedPerson(dto.emails);
-		removeInvalidStations(dto.stationIds);
-
-		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
-
-		dto.emailTemplate = dto.emailTemplate.replaceAll("\\&\\#123;\\&\\#123;", "{{");
-		dto.emailTemplate = dto.emailTemplate.replaceAll("\\&\\#125;\\&\\#125;", "}}");
-		dto.emailTemplate = dto.emailTemplate.replaceAll("\\%7B\\%7B", "{{");
-		dto.emailTemplate = dto.emailTemplate.replaceAll("\\%7D\\%7D", "}}");
+		cleanInvitationDto(dto);
+		Network network = networkService.getNetwork();
 
 		for(String email: dto.emails){
 			Invitation invitation = new Invitation(network.getRealDomain());
@@ -223,14 +207,12 @@ public class PersonService {
 		Person person = personRepository.findByUsername(username);
 		Assert.notNull(person, "Person not found: personId " + username);
 
-		List<Map<String, Object>> timeline = new ArrayList<>();
-
 		SearchRequestBuilder search = client.prepareSearch(nginxAccessIndex);
 		search.setQuery(boolQuery().must(termQuery("username", person.username)));
-
 		SearchResponse searchResponse = search.execute().actionGet();
-
 		DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+
+		List<Map<String, Object>> timeline = new ArrayList<>();
 
 		SearchHit[] hits = searchResponse.getHits().getHits();
 		for (SearchHit hit : hits) {

@@ -9,6 +9,7 @@ import co.xarx.trix.util.StringUtil;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -89,38 +90,36 @@ public class NetworkService {
 	}
 
 	public String getNetworkValidationTemplate() throws IOException {
-		String tenantId = TenantContextHolder.getCurrentTenantId();
-		Network network = networkRepository.findByTenantId(tenantId);
+		String message = getInvitationMessage();
+		String template = getInvitationTemplate();
 
-		String template = getEmailTemplate();
-		return template.replaceAll("\\{\\{invitationTemplate}}", network.invitationMessage);
+		return template.replaceAll("\\{\\{invitationTemplate}}", message);
 	}
 
 	public String getNetworkInvitationTemplate() throws IOException {
-		String tenantId = TenantContextHolder.getCurrentTenantId();
-		Network network = networkRepository.findByTenantId(tenantId);
+		String message = getInvitationMessage();
+		String template = getInvitationTemplate();
 
-		String template = getEmailTemplate();
-		return template.replaceAll("\\{\\{invitationMessage}}", network.invitationMessage);
+		return template.replaceAll("\\{\\{invitationMessage}}", message);
 	}
 
-	public String getEmailTemplate() throws IOException {
+	public String getInvitationTemplate() throws IOException {
 		String templateFile;
 		templateFile = "invitation-template.html";
 		return FileUtil.loadFileFromResource(templateFile);
 	}
 
 	public String getValidationMessage() throws IOException {
-	    String tenantId = TenantContextHolder.getCurrentTenantId();
-        Network network = networkRepository.findByTenantId(tenantId);
+        Network network = getNetwork();
         String htmlTemplate = FileUtil.loadFileFromResource("validation-template.html");
 
         if(network.getValidationMessage() == null || network.getValidationMessage().isEmpty()){
             String message = FileUtil.loadFileFromResource("default_validation_text.txt");
-            return htmlTemplate.replaceAll("\\{\\{validationMessage}}", message);
-        }
+        	network.setValidationMessage(message);
+			networkRepository.save(network);
+		}
 
-        return htmlTemplate.replaceAll("\\{\\{validationMessage}}", network.getValidationMessage());
+		return htmlTemplate.replaceAll("\\{\\{validationMessage}}", network.getValidationMessage());
     }
 
 	public static Constants.MobilePlatform getDeviceFromRequest(HttpServletRequest request) {
@@ -132,5 +131,23 @@ public class NetworkService {
 			return Constants.MobilePlatform.ANDROID;
 		else
 			return null;
+	}
+
+	public Network getNetwork(){
+		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+		network = networkRepository.findOne(network.id);
+		network.setTenantId(TenantContextHolder.getCurrentTenantId());
+		return network;
+	}
+
+	public String getInvitationMessage() throws IOException {
+		Network network = getNetwork();
+
+		if(network.getInvitationMessage() == null || network.getInvitationMessage().isEmpty()){
+			String message = FileUtil.loadFileFromResource("default_invitation_text.txt");
+			network.setInvitationMessage(message);
+			networkRepository.save(network);
+		}
+		return network.getInvitationMessage();
 	}
 }

@@ -5,7 +5,6 @@ import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.PasswordReset;
 import co.xarx.trix.domain.User;
 import co.xarx.trix.exception.BadRequestException;
-import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.PasswordResetRepository;
 import co.xarx.trix.persistence.UserRepository;
 import org.springframework.util.Assert;
@@ -21,15 +20,15 @@ public class PasswordService {
 	private UserRepository userRepository;
 	private EmailService emailService;
 	private PasswordResetRepository passwordResetRepository;
-	private NetworkRepository networkRepository;
+	private NetworkService networkService;
 
 	@Autowired
 	public PasswordService(UserRepository userRepository, EmailService emailService,
-						   PasswordResetRepository passwordResetRepository, NetworkRepository networkRepository) {
+						   PasswordResetRepository passwordResetRepository, NetworkService networkService) {
 		this.userRepository = userRepository;
 		this.emailService = emailService;
 		this.passwordResetRepository = passwordResetRepository;
-		this.networkRepository = networkRepository;
+		this.networkService = networkService;
 	}
 
 	public User resetPassword(String email){
@@ -69,7 +68,7 @@ public class PasswordService {
 	}
 
 	public String createEmailBody(String username, String hash) {
-		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+		Network network = networkService.getNetwork();
 		String baseUrl = "http://" + network.getRealDomain() + "/access/newpwd?hash=" + hash;
 
 		return "Oi, " + username + ". Clique aqui para recuperar sua senha: " + baseUrl;

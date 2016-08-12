@@ -291,7 +291,7 @@ public class Network extends BaseEntity implements Serializable, AnalyticsEntity
 
 	@JsonIgnore
 	public String getRealDomain() {
-		if(getDomain() != null)
+		if(getDomain() != null && !getDomain().isEmpty())
 			return getDomain();
 
 		return getSubdomain() + ".trix.rocks";

@@ -69,7 +69,7 @@ import java.util.Set;
 
 	public void validatePersonCreation(Network network, PersonValidation newcome, String message) throws Exception {
 		Map messageScope = new HashMap<String, String>();
-		messageScope.put("validationLink", "http://" + network.getRealDomain() + "/access/signup?validation=" + newcome.hash);
+		messageScope.put("validationLink", "http://" + network.getRealDomain() + "/access/signin?validation=" + newcome.hash);
         messageScope.put("networkName", network.getName());
 
 		String emailBody = parseScope(messageScope, message);
@@ -135,24 +135,24 @@ import java.util.Set;
 		return writer.toString();
 	}
 
-	public Map parseTemplateData(String inviteeName, Network network, Person inviter){
-		Color c1 = Color.decode(network.primaryColors.get("500"));
-		Color c2 = Color.decode(network.secondaryColors.get("300"));
-		Integer bgColor = Integer.parseInt(network.backgroundColors.get("500").replace("#", ""), 16);
-		Integer referenceColor = Integer.parseInt("ffffff", 16);
-
-		String networkNameColor = (bgColor > referenceColor / 2) ? "black" : "white";
-
-		HashMap<String, Object> scope = new HashMap<>();
-		if(inviteeName != null) scope.put("name", inviteeName);
-		scope.put("networkName", network.name);
-		scope.put("primaryColor", "rgb(" + c1.getRed() + ", " + c1.getGreen() + ", " + c1.getBlue() + " )");
-		scope.put("secondaryColor", "rgb(" + c2.getRed() + ", " + c2.getGreen() + ", " + c2.getBlue() + " )");
-		scope.put("network", network);
-		scope.put("inviterName", inviter.getName());
-		scope.put("inviterEmail", inviter.getEmail());
-		scope.put("networkNameColor", networkNameColor);
-
-		return scope;
-	}
+//	public Map parseTemplateData(String inviteeName, Network network, Person inviter){
+//		Color c1 = Color.decode(network.primaryColors.get("500"));
+//		Color c2 = Color.decode(network.secondaryColors.get("300"));
+//		Integer bgColor = Integer.parseInt(network.backgroundColors.get("500").replace("#", ""), 16);
+//		Integer referenceColor = Integer.parseInt("ffffff", 16);
+//
+//		String networkNameColor = (bgColor > referenceColor / 2) ? "black" : "white";
+//
+//		HashMap<String, Object> scope = new HashMap<>();
+//		if(inviteeName != null) scope.put("name", inviteeName);
+//		scope.put("networkName", network.name);
+//		scope.put("primaryColor", "rgb(" + c1.getRed() + ", " + c1.getGreen() + ", " + c1.getBlue() + " )");
+//		scope.put("secondaryColor", "rgb(" + c2.getRed() + ", " + c2.getGreen() + ", " + c2.getBlue() + " )");
+//		scope.put("network", network);
+//		scope.put("inviterName", inviter.getName());
+//		scope.put("inviterEmail", inviter.getEmail());
+//		scope.put("networkNameColor", networkNameColor);
+//
+//		return scope;
+//	}
 }
