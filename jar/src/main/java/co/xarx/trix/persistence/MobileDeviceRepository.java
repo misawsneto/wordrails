@@ -39,6 +39,10 @@ public interface MobileDeviceRepository extends DatabaseRepository<MobileDevice,
 	Object countAppleDevices(@Param("tenantId") String tenantId);
 
 	@RestResource(exported = false)
+	@Query("select count(*) from MobileDevice md where md.type = :type and tenantId = :tenantId")
+	Object countDevicesByTenantIdAndType(@Param("tenantId") String tenantId, @Param("type") Constants.MobilePlatform type);
+
+	@RestResource(exported = false)
 	@Query("SELECT count(*) FROM MobileDevice md WHERE md.type = :type AND (date(md.updatedAt) >= date(:start) AND date(md.updatedAt) <= date(:end)) AND md.tenantId = :tenantId")
 	Object countActiveDevices(@Param("tenantId") String tenantId, @Param("type") Constants.MobilePlatform type, @Param("start") String start, @Param("end") String end);
 }

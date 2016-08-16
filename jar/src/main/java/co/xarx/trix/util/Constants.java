@@ -64,4 +64,8 @@ public final class Constants {
 		public static final String POST_BOOKMARK = "post_bookmark";
 		public static final String POST_RECOMMEND = "post_recommend";
 	}
+
+	public static class AnalyticsType {
+		public static final String READ = "nginx_access";
+	}
 }

@@ -16,11 +16,11 @@ public interface V2StatisticsApi {
 	@GET
 	@Path("/getMostPopular")
 	@Produces(MediaType.APPLICATION_JSON)
-	Response getMostCommonField(@QueryParam("page") Integer page,
-											 @QueryParam("size") Integer size,
-											 @QueryParam("startTime") Long startTime,
-											 @QueryParam("endTime") Long endTime,
-											 @QueryParam("field") String field);
+	Response getMostPopular(@QueryParam("page") Integer page,
+							@QueryParam("size") Integer size,
+							@QueryParam("startTime") String startTime,
+							@QueryParam("endTime") String endTime,
+							@QueryParam("field") String field);
 
 	@GET
 	@Path("/popularNetworks")
@@ -54,7 +54,7 @@ public interface V2StatisticsApi {
 	Response getNetworkUsedSpace();
 
 	@GET
-	@Path("/countPostReads")
+	@Path("/getPostReads")
 	@PreAuthorize("isAuthenticated()")
 	Response countReadsByPostIds(@QueryParam("postIds") List<Integer> postIds);
 

@@ -19,7 +19,8 @@ import java.util.TreeMap;
 public class StatsData implements Serializable {
 	public List<Integer> generalStatsJson;
 	public TreeMap<Long, ReadsCommentsRecommendsCountData> dateStatsJson;
-	public StoreStatsData iosStore;
-	public StoreStatsData androidStore;
+	public MobileStats iosStore;
+	public MobileStats androidStore;
 	public Map<String, Integer> fileSpace;
+	public Map<String, Integer> stats; // atempt to remove generalStatsJson from this class
 }

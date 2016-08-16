@@ -1,6 +1,7 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import com.google.common.collect.Lists;
 import org.elasticsearch.index.query.BoolFilterBuilder;
 import org.elasticsearch.index.query.RangeFilterBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
