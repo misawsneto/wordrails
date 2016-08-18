@@ -45,6 +45,7 @@ app.controller('AppForgotCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 		trix.recoverPassword($scope.person.email).success(function(){
 			$scope.app.loading = false;
 			$scope.app.invalidCredentials = false;
+			$state.go('access.recoversuccess');
 		}).error(function(){
 			$scope.app.loading = false;
 			$scope.app.invalidCredentials = true;
