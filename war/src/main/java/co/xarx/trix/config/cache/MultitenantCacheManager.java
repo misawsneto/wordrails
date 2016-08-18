@@ -44,7 +44,7 @@ public final class MultitenantCacheManager implements CacheManager {
 		String tenantContext = getTenantContext();
 		if (tenantContext == null) {
 			TargetLookupFailureException e = new TargetLookupFailureException("Tenant context required but not available");
-			Logger.error(e.toString());
+			Logger.error(e.getMessage());
 			throw e;
 		}
 		return cache;

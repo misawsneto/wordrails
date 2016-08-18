@@ -9,7 +9,7 @@ app.controller('AppSigninCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 					document.location.href = $state.params.next
 				else
 					document.location.href = '/'
-				$scope.app.loading = true;
+				$scope.app.loading = false;
 				$scope.app.invalidCredentials = false;
 			}).error(function(){
 				$scope.app.loading = false;
@@ -40,7 +40,21 @@ app.controller('AppSignupCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 
 app.controller('AppForgotCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$interval', '$mdSidenav', '$translate', '$filter', '$localStorage',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $interval, $mdSidenav, $translate, $filter, $localStorage){
+	$scope.recoverPassword = function(){
+		$scope.app.loading = true;
+		trix.recoverPassword($scope.person.email).success(function(){
+			$scope.app.loading = false;
+			$scope.app.invalidCredentials = false;
+		}).error(function(){
+			$scope.app.loading = false;
+			$scope.app.invalidCredentials = true;
+			$scope.app.showErrorToast($filter('translate')('messages.NOT_FOUND_USER'))
+		})
+	}
 
+	$scope.goToHome = function(){
+		document.location.href = '/';
+	}
 }]);
 
 app.controller('AppNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$interval', '$mdSidenav', '$translate', '$filter', '$localStorage',
