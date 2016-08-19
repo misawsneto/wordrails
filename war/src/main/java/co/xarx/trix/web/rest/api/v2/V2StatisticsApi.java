@@ -40,17 +40,17 @@ public interface V2StatisticsApi {
 
 	@GET
 	@Path("/network")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response networkStats(@QueryParam("end") String end, @QueryParam("start") String start) throws IOException;
 
 	@GET
 	@Path("/station")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response stationStats(@QueryParam("end") String end, @QueryParam("start") String start, @QueryParam("stationId") Integer stationId) throws IOException;
 
 	@GET
 	@Path("/storage")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response getNetworkUsedSpace();
 
 	@GET
@@ -60,11 +60,11 @@ public interface V2StatisticsApi {
 
 	@GET
 	@Path("/countReadersByStation")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response countReadersByStation(@QueryParam("stationId") Integer stationId);
 
 	@GET
 	@Path("/dashboardStats")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response dashboardStats();
 }
