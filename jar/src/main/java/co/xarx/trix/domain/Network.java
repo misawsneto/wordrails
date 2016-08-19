@@ -24,7 +24,7 @@ import java.util.Objects;
 		"faviconHash", "splashImageHash", "loginImageHash", "loginImageSmallHash", "subdomain",
 		"facebookLoginAllowed", "googleLoginAllowed"
 }, allowGetters = true, ignoreUnknown = true)
-public class Network extends BaseEntity implements Serializable {
+public class Network extends BaseEntity implements Serializable, AnalyticsEntity {
 
 	private static final long serialVersionUID = 7723825842358687233L;
 

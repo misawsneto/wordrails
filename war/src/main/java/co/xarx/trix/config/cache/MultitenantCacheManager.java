@@ -2,6 +2,7 @@ package co.xarx.trix.config.cache;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.exception.TargetLookupFailureException;
+import org.jcodec.common.logging.Logger;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.redis.cache.RedisCache;
@@ -42,7 +43,9 @@ public final class MultitenantCacheManager implements CacheManager {
 		Cache cache = redisCaches.get(name);
 		String tenantContext = getTenantContext();
 		if (tenantContext == null) {
-			throw new TargetLookupFailureException("Tenant context required but not available");
+			TargetLookupFailureException e = new TargetLookupFailureException("Tenant context required but not available");
+			Logger.error(e.getMessage());
+			throw e;
 		}
 		return cache;
 	}

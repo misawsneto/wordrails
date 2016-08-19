@@ -31,7 +31,7 @@ import java.util.List;
 		"imageHash", "imageLargeHash", "imageMediumHash", "imageSmallHash",
 		"coverHash", "coverLargeHash", "coverMediumHash"
 }, allowGetters = true, ignoreUnknown = true)
-public class Person extends BaseEntity implements Serializable {
+public class Person extends BaseEntity implements Serializable, AnalyticsEntity {
 
 	private static final long serialVersionUID = 7728358342573034233L;
 

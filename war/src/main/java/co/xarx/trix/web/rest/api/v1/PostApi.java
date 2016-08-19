@@ -80,7 +80,7 @@ public interface PostApi {
 
 	@GET
 	@Path("/getPostViewBySlug")
-	@PostAuthorize("hasPermission(#returnObject.postId, 'co.xarx.trix.domain.Post', 'read') or returnObject==null")
+	@PostAuthorize("hasPermission(returnObject.postId, 'co.xarx.trix.domain.Post', 'read') or returnObject==null")
 	PostView getPostViewBySlug(@QueryParam("slug") String slug, @QueryParam("withBody") Boolean withBody)
 			throws ServletException, IOException;
 

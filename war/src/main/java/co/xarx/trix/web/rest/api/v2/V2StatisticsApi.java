@@ -16,11 +16,11 @@ public interface V2StatisticsApi {
 	@GET
 	@Path("/getMostPopular")
 	@Produces(MediaType.APPLICATION_JSON)
-	Response getMostCommonField(@QueryParam("page") Integer page,
-											 @QueryParam("size") Integer size,
-											 @QueryParam("startTime") Long startTime,
-											 @QueryParam("endTime") Long endTime,
-											 @QueryParam("field") String field);
+	Response getMostPopular(@QueryParam("page") Integer page,
+							@QueryParam("size") Integer size,
+							@QueryParam("startTime") String startTime,
+							@QueryParam("endTime") String endTime,
+							@QueryParam("field") String field);
 
 	@GET
 	@Path("/popularNetworks")
@@ -40,31 +40,31 @@ public interface V2StatisticsApi {
 
 	@GET
 	@Path("/network")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response networkStats(@QueryParam("end") String end, @QueryParam("start") String start) throws IOException;
 
 	@GET
 	@Path("/station")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response stationStats(@QueryParam("end") String end, @QueryParam("start") String start, @QueryParam("stationId") Integer stationId) throws IOException;
 
 	@GET
 	@Path("/storage")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response getNetworkUsedSpace();
 
 	@GET
-	@Path("/countPostReads")
+	@Path("/getPostReads")
 	@PreAuthorize("isAuthenticated()")
 	Response countReadsByPostIds(@QueryParam("postIds") List<Integer> postIds);
 
 	@GET
 	@Path("/countReadersByStation")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response countReadersByStation(@QueryParam("stationId") Integer stationId);
 
 	@GET
 	@Path("/dashboardStats")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response dashboardStats();
 }

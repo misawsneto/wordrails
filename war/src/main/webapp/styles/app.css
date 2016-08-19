@@ -9119,3 +9119,8 @@ ul.pgwSlider > li,
 .text-l-c {
   text-transform: lowercase;
 }
+
+.bg-big md-content {
+  margin-right: auto;
+  margin-left: auto;
+}

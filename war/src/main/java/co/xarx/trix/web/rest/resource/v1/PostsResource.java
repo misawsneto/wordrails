@@ -8,7 +8,6 @@ import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.services.post.PostSearchService;
-import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.PostApi;
 import com.google.common.collect.Lists;
@@ -43,8 +42,6 @@ public class PostsResource extends AbstractResource implements PostApi {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PostConverter postConverter;
-	@Autowired
-	private AuthService authProvider;
 	@Autowired
 	private PostSearchService postSearchService;
 

@@ -21,16 +21,17 @@ public class V2StatisticsResource implements V2StatisticsApi {
 	public StatisticsService statisticsService;
 
 	@Override
-	public Response getMostCommonField(Integer page,
-											 Integer size,
-											 Long startTime,
-											 Long endTime,
-											 String field){
-		if(field == null || field.isEmpty()) return badRequest("field");
-		if(size == null || size == 0) size = 5;
+	public Response getMostPopular(Integer page,
+								   Integer size,
+								   String startTime,
+								   String endTime,
+								   String field){
+		if(field == null || field.isEmpty()) return badRequest("field", "must be defined");
+		checkSize(size);
+
 		Map map;
 		try {
-			map = statisticsService.findMostPopular(field, startTime, endTime, size);
+			map = statisticsService.getMostPorpular(field, startTime, endTime, size);
 			return ok(map);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -41,8 +42,11 @@ public class V2StatisticsResource implements V2StatisticsApi {
 	@Override
 	public Response getPopularNetworks(Integer page, Integer size){
 		Map popular;
+
+		checkSize(size);
+
 		try {
-			popular = statisticsService.getPorpularNetworks();
+			popular = statisticsService.getMostPupularNetworks(size);
 			return ok(popular);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -51,31 +55,38 @@ public class V2StatisticsResource implements V2StatisticsApi {
 	}
 
 	@Override
-	public Response postStats(String end, String start, Integer postId) throws IOException {
-		if(end == null || end.isEmpty()) badRequest("end");
+	public Response postStats(String end, String start, Integer postId) {
+		checkDate(end);
+		StatsData statsData = statisticsService.getPostStats(end, start, postId);
+		if(statsData == null) return notFound("post");
 
-		StatsData statsData = statisticsService.postStats(end, start, postId);
 		return ok(statsData);
 	}
 
 	@Override
 	public Response authorStats(String end, String start, Integer authorId) throws IOException {
-		if (end == null || end.isEmpty()) badRequest("end");
-		StatsData statsData = statisticsService.authorStats(end, start, authorId);
+		checkDate(end);
+		StatsData statsData = statisticsService.getAuthorStats(end, start, authorId);
+		if(statsData == null) return notFound("author");
+
 		return ok(statsData);
 	}
 
 	@Override
 	public Response networkStats(String end, String start) throws IOException {
-		if (end == null || end.isEmpty()) badRequest("end");
-		StatsData networkData = statisticsService.networkStats(end, start);
+		checkDate(end);
+		StatsData networkData = statisticsService.getNetworkStats(end, start);
+		if(networkData == null) return notFound("network");
+
 		return ok(networkData);
 	}
 
 	@Override
 	public Response stationStats(String end, String start, Integer stationId) throws IOException {
-		if (end == null || end.isEmpty()) badRequest("end");
-		StatsData stationData = statisticsService.stationStats(end, start, stationId);
+		checkDate(end);
+		StatsData stationData = statisticsService.getStationStats(end, start, stationId);
+		if(stationData == null) return notFound("station");
+
 		return ok(stationData);
 	}
 
@@ -87,13 +98,13 @@ public class V2StatisticsResource implements V2StatisticsApi {
 
 	@Override
 	public Response countReadsByPostIds(List<Integer> postIds) {
-		Map<Integer, Integer> countReads = statisticsService.countPostReads(postIds);
+		Map<Integer, Integer> countReads = statisticsService.getPostReads(postIds);
 		return ok(countReads);
 	}
 
 	@Override
 	public Response countReadersByStation(Integer stationId) {
-		if(stationId == null) return badRequest("stationId");
+		if(stationId == null) return badRequest("stationId", "must be defined");
 
 		Map<String, Integer> map = statisticsService.getStationReaders(stationId);
 
@@ -111,8 +122,8 @@ public class V2StatisticsResource implements V2StatisticsApi {
 		throw new ServiceUnavailableException(message);
 	}
 
-	public Response badRequest(String fieldName){
-		throw new BadRequestException(fieldName + " must be defined");
+	public Response badRequest(String fieldName, String message){
+		throw new BadRequestException(fieldName + " " + message);
 	}
 
 	public Response notFound(String fieldName){
@@ -121,5 +132,15 @@ public class V2StatisticsResource implements V2StatisticsApi {
 
 	public Response ok(Object object){
 		return Response.status(Response.Status.OK).entity(object).build();
+	}
+
+	private void checkDate(String end) {
+		if(end == null || end.isEmpty()) badRequest("end", "must be a valid date");
+	}
+
+	private void checkSize(Integer size) {
+		if(size == null) size = 5;
+
+		if(size < 1) badRequest("size", "must be bigger then 0 (zero)");
 	}
 }

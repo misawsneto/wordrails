@@ -1,10 +1,7 @@
 package co.xarx.trix.domain.page.query.statement;
 
 import co.xarx.trix.domain.Comment;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;

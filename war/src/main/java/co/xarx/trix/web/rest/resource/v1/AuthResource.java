@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.ws.rs.NotAllowedException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
@@ -94,7 +95,7 @@ public class AuthResource extends AbstractResource implements AuthApi {
 	@Override
 	public Response resetPassword(String email) {
 		if(passwordService.resetPassword(email) == null){
-			return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
+			throw new NotFoundException("User not found");
 		}
 		return Response.status(Response.Status.OK).build();
 	}

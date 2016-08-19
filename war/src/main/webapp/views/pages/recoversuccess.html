@@ -1,0 +1,23 @@
+<div class="center-block w-xxl w-auto-xs p-v-md m-t-lg" style="margin-top:80px">
+ <md-content class="md-background-hue-1 background md-whiteframe-z2 w-xxl">
+ <md-progress-linear class="pos-abt top-0 left-0" ng-if="app.loading" md-mode="indeterminate"></md-progress-linear>
+ <div class="text-color m">
+      <div class="m-b p-t p-h w-full">
+        <span class="text-md font-500">{{'signin_signup.RECOVER' | translate}}</span>
+        <p class="m-t" >{{'signin_signup.RECOVER_MSG' | translate}}.</p>
+      </div>
+      <div name="reset" class="text-md w-full" ng-submit="recoverPassword()">
+        <div class="p text-center">
+          <md-button type="submit" class="md-accent md-fab" ng-click="goToHome()">
+            <i class="mdi mdi2-home i-24"></i>
+          </md-button>
+        </div>
+      </div>
+      <div class="text-center">
+        <div>{{'signin_signup.HAVE_AN_ACCOUNT' | translate}}?
+        <button class="md-btn" ui-sref="access.signin" translate="signin_signup.SIGNIN">Entrar</button>
+        </div>
+      </div>
+    </div>
+  </md-content>
+</div>

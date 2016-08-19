@@ -380,7 +380,7 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 
 	@Override
 	public Response networkStats(String date, String beginning, Integer postId) throws JsonProcessingException {
-		return Response.status(Status.OK).entity(objectMapper.writeValueAsString(statisticsService.networkStats(date, beginning))).build();
+		return Response.status(Status.OK).entity(objectMapper.writeValueAsString(statisticsService.getNetworkStats(date, beginning))).build();
 	}
 
 	@Override

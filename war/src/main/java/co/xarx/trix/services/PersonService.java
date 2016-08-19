@@ -1,7 +1,6 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.api.StationRolesUpdate;
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.*;
@@ -51,7 +50,7 @@ public class PersonService {
     private PersonValidationRepository personValidationRepository;
 
 	@Autowired
-	public PersonService(PersonRepository personRepository, EmailService emailService, NetworkRepository networkRepository, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory, NetworkService networkService) {
+	public PersonService(PersonRepository personRepository, EmailService emailService, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory, NetworkService networkService) {
 		this.client = client;
 		this.authService = authService;
 		this.userFactory = userFactory;
