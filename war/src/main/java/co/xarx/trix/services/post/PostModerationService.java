@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.Date;
+
 @Slf4j
 @Service
 @IntegrationTestBean
@@ -34,6 +36,18 @@ public class PostModerationService {
 
 		postRepository.updateState(postId, Constants.Post.STATE_PUBLISHED);
 	}
+
+	public void scheduleUnpublishing(Integer postId, Date date){
+		Assert.notNull(postId);
+		Assert.isTrue(postId > 0, "Post ID must be a positive int");
+		Post post = postRepository.findOne(postId);
+
+		if(post != null){
+			post.unpublishDate = date;
+			postRepository.save(post);
+		}
+	}
+
 
 	public void unpublish(Integer postId) throws IllegalStateException {
 		Assert.notNull(postId);

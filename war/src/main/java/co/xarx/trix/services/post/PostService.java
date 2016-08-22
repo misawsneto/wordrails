@@ -66,8 +66,6 @@ public class PostService {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PostSearchService postSearchService;
-	@Autowired
-	private SchedulerService schedulerService;
 
 	@Autowired
 	private ImageService imageService;
@@ -113,40 +111,15 @@ public class PostService {
 		return notification;
 	}
 
-	public void schedulePostUnpublishing(Integer postId, Date date) throws SchedulerException {
-		Map<String, String> properties = new HashMap<>();
-		properties.put("postId", postId + "");
-		properties.put("tenantId", TenantContextHolder.getCurrentTenantId());
-
-		schedulerService.schedule(postId + "", SendNotificationJob.class, date, properties);
-	}
-
-	private void publishScheduledPost(Integer postId, boolean allowNotifications) throws NotificationException {
-		Post post = postRepository.findOne(postId);
-		turnPublished(allowNotifications, post);
-		if (post != null) {
-			post.date = new Date();
-			postRepository.save(post);
-		}
-	}
-
-	public void unpublishPost(Integer postId){
-		Post post = postRepository.findOne(postId);
-		if(post != null){
-			post.setState(Post.STATE_UNPUBLISHED);
-			postRepository.save(post);
-		}
-	}
-
-	public void turnPublished(boolean allowNotifications, Post post) {
-		if (post != null && !post.state.equals(Post.STATE_PUBLISHED)) {
-			if (post.notify && allowNotifications) {
-				sendNewPostNotification(post);
-			}
-
-			post.state = Post.STATE_PUBLISHED;
-		}
-	}
+//	public void turnPublished(boolean allowNotifications, Post post) {
+//		if (post != null && !post.state.equals(Post.STATE_PUBLISHED)) {
+//			if (post.notify && allowNotifications) {
+//				sendNewPostNotification(post);
+//			}
+//
+//			post.state = Post.STATE_PUBLISHED;
+//		}
+//	}
 
 	public List<PostView> searchRecommends(String q, Integer page, Integer size){
 		Person person = personRepository.findByUsername(authProvider.getUser().getUsername());

@@ -39,6 +39,11 @@ public interface V2PostsApi {
 	@Path("/{postId}/unpublish")
 	Response unpublish(@PathParam("postId") Integer postId);
 
+	@PUT
+	@Path("/{postId}/unpublish/{date}")
+	Response scheduleUnpublishing(@PathParam("postId") Integer postId, @PathParam("date") String date);
+
+
 	@GET
 	@Path("/findPostsByIds")
 	ContentResponse<List<PostView>> findPostsByIds(@QueryParam("ids") List<Integer> ids);
