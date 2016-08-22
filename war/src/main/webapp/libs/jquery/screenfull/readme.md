@@ -2,8 +2,13 @@
 
 > Simple wrapper for cross-browser usage of the JavaScript [Fullscreen API](https://developer.mozilla.org/en/DOM/Using_full-screen_mode), which lets you bring the page or any element into fullscreen. Smoothens out the browser implementation differences, so you don't have to.
 
+---
 
-### [Demo](http://sindresorhus.com/screenfull.js)
+<p align="center"><b>🔥 Want to strengthen your core JavaScript skills and master ES6?</b><br>I would personally recommend this awesome <a href="https://ES6.io/friend/AWESOME">ES6 course</a> by Wes Bos.</p>
+
+---
+
+### [Demo](https://sindresorhus.com/screenfull.js)
 
 ### [Check out my other projects](https://github.com/sindresorhus?tab=repositories)
 
@@ -73,7 +78,7 @@ Safari doesn't support use of the keyboard in fullscreen.
 #### Fullscreen the page
 
 ```js
-document.getElementById('button').addEventListener('click', function () {
+document.getElementById('button').addEventListener('click', () => {
 	if (screenfull.enabled) {
 		screenfull.request();
 	} else {
@@ -86,8 +91,9 @@ document.getElementById('button').addEventListener('click', function () {
 #### Fullscreen an element
 
 ```js
-var elem = document.getElementById('target');
-document.getElementById('button').addEventListener('click', function () {
+const elem = document.getElementById('target');
+
+document.getElementById('button').addEventListener('click', () => {
 	if (screenfull.enabled) {
 		screenfull.request(elem);
 	}
@@ -98,8 +104,9 @@ document.getElementById('button').addEventListener('click', function () {
 #### Fullscreen an element with jQuery
 
 ```js
-var target = $('#target')[0]; // Get DOM element from jQuery collection
-$('#button').click(function () {
+const target = $('#target')[0]; // Get DOM element from jQuery collection
+
+$('#button').on('click', () => {
 	if (screenfull.enabled) {
 		screenfull.request(target);
 	}
@@ -110,10 +117,9 @@ $('#button').click(function () {
 #### Toggle fullscreen on a image with jQuery
 
 ```js
-$('img').click(function () {
+$('img').on('click', event => {
 	if (screenfull.enabled) {
-		// We can use `this` since we want the clicked element
-		screenfull.toggle(this);
+		screenfull.toggle(event.target);
 	}
 });
 ```
@@ -123,7 +129,7 @@ $('img').click(function () {
 
 ```js
 if (screenfull.enabled) {
-	document.addEventListener(screenfull.raw.fullscreenchange, function () {
+	document.addEventListener(screenfull.raw.fullscreenchange, () => {
 		console.log('Am I fullscreen? ' + (screenfull.isFullscreen ? 'Yes' : 'No'));
 	});
 }
@@ -133,13 +139,13 @@ if (screenfull.enabled) {
 
 ```js
 if (screenfull.enabled) {
-	document.addEventListener(screenfull.raw.fullscreenerror, function (event) {
+	document.addEventListener(screenfull.raw.fullscreenerror, event => {
 		console.error('Failed to enable fullscreen', event);
 	});
 }
 ```
 
-See the [demo](http://sindresorhus.com/screenfull.js) for more examples, and view the source.
+See the [demo](https://sindresorhus.com/screenfull.js) for more examples, and view the source.
 
 #### Fullscreen an element with Angular.js
 
@@ -192,7 +198,7 @@ Returns a boolean whether you are allowed to enter fullscreen. If your page is i
 Exposes the raw properties (prefixed if needed) used internally: `requestFullscreen`, `exitFullscreen`, `fullscreenElement`, `fullscreenEnabled`, `fullscreenchange`, `fullscreenerror`
 
 ```js
-$(document).on(screenfull.raw.fullscreenchange, function () {
+$(document).on(screenfull.raw.fullscreenchange, () => {
 	console.log('Fullscreen change');
 });
 ```
@@ -205,8 +211,8 @@ $(document).on(screenfull.raw.fullscreenchange, function () {
 That's not supported by browsers for security reasons. There is, however, a dirty workaround. Create a seamless iframe that fills the screen and navigate to the page in that instead.
 
 ```js
-$('#new-page-btn').click(function () {
-	var iframe = document.createElement('iframe')
+$('#new-page-btn').click(() => {
+	const iframe = document.createElement('iframe')
 
 	iframe.setAttribute('id', 'external-iframe');
 	iframe.setAttribute('src', 'http://new-page-website.com');
@@ -235,4 +241,4 @@ $('#new-page-btn').click(function () {
 
 ## License
 
-MIT © [Sindre Sorhus](http://sindresorhus.com)
+MIT © [Sindre Sorhus](https://sindresorhus.com)

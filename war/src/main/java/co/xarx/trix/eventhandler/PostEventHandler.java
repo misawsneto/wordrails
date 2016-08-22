@@ -57,7 +57,10 @@ public class PostEventHandler {
 
 		Pageable page = new PageRequest(0, 1, Sort.Direction.DESC, "id");
 		List<Post> postPage = postRepository.findLatestPosts(TenantContextHolder.getCurrentTenantId(), page);
-		if(postPage.get(0).title.equals(post.title) && postPage.get(0).station.id.equals(post.station.id))
+		if(postPage != null && postPage.size() > 0 && postPage.get(0).title.equals(post.title) && postPage.get(0)
+				.station.id
+				.equals(post
+				.station.id))
 			throw new ConflictException("Title conflict");
 
 		boolean canPublish = postPermissionService.canPublishOnStation(stationId);

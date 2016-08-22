@@ -1284,6 +1284,18 @@ angular.module('app')
             resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
             controller: 'AppForgotCtrl'
           })
+          .state('access.forgotpwd', {
+            url: '/forgotpwd',
+            templateUrl: '/views/pages/forgot-password.html?' + GLOBAL_URL_HASH,
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
+            controller: 'AppForgotCtrl'
+          })
+          .state('access.recoversuccess', {
+            url: '/recoversuccess',
+            templateUrl: '/views/pages/recoversuccess.html?' + GLOBAL_URL_HASH,
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
+            controller: 'AppForgotCtrl'
+          })
           .state('access.createnetwork', {
             url: '/createnetwork',
             templateUrl: '/views/pages/create-network.html?' + GLOBAL_URL_HASH,
