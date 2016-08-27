@@ -1,7 +1,10 @@
 package co.xarx.trix.api.v2;
 
-/**
- * Created by guto on 8/26/16.
- */
-public class TImelineData {
+import lombok.AllArgsConstructor;
+
+import java.util.List;
+
+@AllArgsConstructor
+public class PersonTimelineData {
+    public List<PersonEventData> events;
 }
