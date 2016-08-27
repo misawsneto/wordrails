@@ -9,7 +9,6 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHitField;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +27,9 @@ import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 @Service
 public class TimelineService {
     private Client client;
+    private DateTimeFormatter fmt;
     private String nginxAccessIndex;
     private PersonRepository personRepository;
-    private DateTimeFormatter fmt;
 
     @Autowired
     public TimelineService(Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, PersonRepository personRepository){
