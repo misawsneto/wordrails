@@ -68,4 +68,9 @@ public class V2PersonsResource extends AbstractResource implements V2PersonsApi 
 
 		return Response.ok().entity(data).build();
 	}
+
+	@Override
+	public Response deletePerson(String username) {
+		return null;
+	}
 }

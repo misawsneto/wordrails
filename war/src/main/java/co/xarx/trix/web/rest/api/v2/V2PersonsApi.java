@@ -32,6 +32,10 @@ public interface V2PersonsApi {
 	@Path("{username}/permissions/station")
 	Response getPermissions(@PathParam("username") String username);
 
+	@DELETE
+	@Path("{username}")
+	Response deletePerson(@PathParam("username") String username);
+
 //	@GET
 //	@Path("{username}/permissions/station")
 //	Response getPermissions(@PathParam("username") String username);

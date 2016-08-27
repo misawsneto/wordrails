@@ -17,6 +17,7 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHitField;
 import org.jcodec.common.logging.Logger;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -36,8 +37,6 @@ import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 @Service
 public class PersonService {
 
-	private Client client;
-	private String nginxAccessIndex;
 	private UserFactory userFactory;
 	private AuthService authService;
 	private EmailService emailService;
@@ -50,13 +49,11 @@ public class PersonService {
     private PersonValidationRepository personValidationRepository;
 
 	@Autowired
-	public PersonService(PersonRepository personRepository, EmailService emailService, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory, NetworkService networkService) {
-		this.client = client;
+	public PersonService(PersonRepository personRepository, EmailService emailService, InvitationRepository invitationRepository, AuthService authService, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory, NetworkService networkService) {
 		this.authService = authService;
 		this.userFactory = userFactory;
 		this.emailService = emailService;
 		this.personFactory = personFactory;
-		this.nginxAccessIndex = nginxAccessIndex;
 		this.personRepository = personRepository;
 		this.stationRepository = stationRepository;
 		this.invitationRepository = invitationRepository;
@@ -201,46 +198,5 @@ public class PersonService {
 		}
 
 		return dto.emails;
-	}
-
-	public List<Map<String, Object>> getUserTimeline(String username) {
-		Person person = personRepository.findByUsername(username);
-		Assert.notNull(person, "Person not found: personId " + username);
-
-		SearchRequestBuilder search = client.prepareSearch(nginxAccessIndex);
-		search.setQuery(boolQuery().must(termQuery("username", person.username)));
-		SearchResponse searchResponse = search.execute().actionGet();
-		DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-
-		List<Map<String, Object>> timeline = new ArrayList<>();
-
-		SearchHit[] hits = searchResponse.getHits().getHits();
-		for (SearchHit hit : hits) {
-			Map source = hit.sourceAsMap();
-
-			int response = (int) source.get("response");
-			if (response < 200 || response >= 400) {
-				continue;
-			}
-
-			Long timestamp = fmt.parseDateTime(source.get("@timestamp").toString()).getMillis()/1000;
-			source.put("date", timestamp);
-			source.remove("message");
-			source.remove("host");
-			source.remove("type");
-			source.remove("clientip");
-			source.remove("ZONE");
-			source.remove("verb");
-			source.remove("httpversion");
-			source.remove("bytes");
-			source.remove("referrer");
-			source.remove("os_name");
-			source.remove("device");
-			source.remove("browser");
-
-			timeline.add(source);
-		}
-
-		return timeline;
 	}
 }

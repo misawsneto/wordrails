@@ -1,6 +1,8 @@
 package co.xarx.trix.web.rest.resource.v2;
 
+import co.xarx.trix.api.v2.PersonTimelineData;
 import co.xarx.trix.services.PersonService;
+import co.xarx.trix.services.TimelineService;
 import co.xarx.trix.web.rest.api.v2.V2TimelineApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,18 +13,18 @@ import java.util.Map;
 
 @Component
 public class V2TimelineResource implements V2TimelineApi {
-	private PersonService personService;
+	private TimelineService timelineService;
 
 	@Autowired
-	public V2TimelineResource(PersonService personService){
-		this.personService = personService;
+	public V2TimelineResource(TimelineService timelineService){
+        this.timelineService = timelineService;
 	}
 
 	@Override
 	public Response getPersonTimeline(String username) {
-		List<Map<String, Object>> timeline = personService.getUserTimeline(username);
+		PersonTimelineData timeline = timelineService.getUserTimeline(username);
 
-		if(timeline.isEmpty()){
+		if(timeline.events.isEmpty()){
 			return Response.noContent().build();
 		} else {
 			return Response.ok()
