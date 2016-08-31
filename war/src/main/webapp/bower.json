@@ -28,7 +28,7 @@
     "angular-translate-loader-static-files": "^2.11.1",
     "angular-translate-storage-cookie": "^2.11.1",
     "angular-translate-storage-local": "^2.11.1",
-    "angular-bootstrap": "^2.0.2",
+    "angular-bootstrap": "^2.1.3",
     "angular-loading-bar": "^0.9.0",
     "angular-bootstrap-nav-tree": "*",
     "angular-ui-router": "^0.3.1",
@@ -42,7 +42,7 @@
     "ng-grid": "~2.0.13",
     "ngstorage": "^0.3.11",
     "oclazyload": "^1.0.9",
-    "textAngular": "^1.5.5",
+    "textAngular": "^1.5.7",
     "venturocket-angular-slider": "~0.3.2",
     "jquery": "2.2.4",
     "animate.css": "^3.5.2",
@@ -74,9 +74,9 @@
     "lifely-focuspoint": "focuspoint#^1.0.5",
     "ng-jcrop": "^2.1.2",
     "angular-leaflet-directive": "^0.10.0",
-    "leaflet-draw": "^0.3.0",
+    "leaflet-draw": "^0.3.2",
     "angular-masonry": "^0.16.0",
-    "fizzy-ui-utils": "^2.0.2",
+    "fizzy-ui-utils": "^2.0.3",
     "get-style-property": "^1.0.4",
     "angular-carousel": "^1.0.1",
     "angular-ui-ace": "^0.2.3",
@@ -97,7 +97,7 @@
     "wavesurfer-angular": "^1.0.1",
     "angular-clamp": "*",
     "angular-moment": "^0.10.3",
-    "angular-materialize": "^0.1.9",
+    "angular-materialize": "^0.2.1",
     "perfect-scrollbar": "^0.6.12",
     "angular-perfect-scrollbar": "^0.0.4",
     "satellizer": "^0.15.4",
@@ -111,6 +111,6 @@
     "froala-image-caption": "^1.0.2",
     "angular-slick": "^0.2.1",
     "angular-drag-and-drop-lists": "^1.4.0",
-    "angulartics": "^1.1.2"
+    "angulartics": "^1.1.3"
   }
 }

@@ -3,9 +3,11 @@ package co.xarx.trix.services;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.PasswordReset;
+import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.User;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PasswordResetRepository;
+import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserRepository;
 import org.springframework.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +19,16 @@ import java.util.UUID;
 @Service
 public class PasswordService {
 
+	private PersonRepository personRepository;
 	private UserRepository userRepository;
 	private EmailService emailService;
 	private PasswordResetRepository passwordResetRepository;
 	private NetworkService networkService;
 
 	@Autowired
-	public PasswordService(UserRepository userRepository, EmailService emailService,
+	public PasswordService(PersonRepository personRepository, UserRepository userRepository, EmailService emailService,
 						   PasswordResetRepository passwordResetRepository, NetworkService networkService) {
+		this.personRepository = personRepository;
 		this.userRepository = userRepository;
 		this.emailService = emailService;
 		this.passwordResetRepository = passwordResetRepository;
@@ -33,20 +37,21 @@ public class PasswordService {
 
 	public User resetPassword(String email){
 		Assert.hasText(email, "Null email");
-		User user = userRepository.findUserByEmail(email);
+//		User user = userRepository.findUserByEmail(email);
+		Person person = personRepository.findByEmail(email);
 
-		if(user == null){
+		if(person != null && person.user == null){
 			return null;
 		}
 
 		PasswordReset passwordReset = new PasswordReset();
-		passwordReset.setUser(user);
+		passwordReset.setUser(person.user);
 		passwordReset.setHash(UUID.randomUUID().toString());
 
 		passwordResetRepository.save(passwordReset);
-		emailService.sendSimpleMail(email, "Recuperação de senha", createEmailBody(user.getUsername(), passwordReset.hash));
+		emailService.sendSimpleMail(email, "Recuperação de senha", createEmailBody(person, passwordReset.hash));
 
-		return user;
+		return person.user;
 	}
 
 	@Transactional
@@ -67,7 +72,7 @@ public class PasswordService {
 		passwordResetRepository.deleteByUserId(passwordReset.user.id);
 	}
 
-	public String createEmailBody(String username, String hash) {
+	public String createEmailBody(Person username, String hash) {
 		Network network = networkService.getNetwork();
 		String baseUrl = "http://" + network.getRealDomain() + "/access/newpwd?hash=" + hash;
 

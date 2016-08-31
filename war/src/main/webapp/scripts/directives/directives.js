@@ -253,7 +253,7 @@ angular.module('app')
   .directive('hashToLink', function(TRIX){
     return function(scope, element, attrs){
       attrs.$observe('hashToLink', function(obj) {
-        if(obj){
+        if(obj && obj.hash){
           element.css({
             "background-image": "url(" + TRIX.baseUrl + "/api/images/get/"+ obj.hash  + "?size=" +obj.size+ ")", "background-position": "50% 20%"
           });
@@ -265,7 +265,7 @@ angular.module('app')
   .directive('userHashToLink', function(TRIX){
     return function(scope, element, attrs){
       attrs.$observe('userHashToLink', function(obj) {
-        if(obj){
+        if(obj && obj.hash){
           element.css({
             "background-image": "url(" + TRIX.baseUrl + "/api/images/get/"+ obj.hash  + "?size=" +obj.size+ ")", "background-position": "50% 20%"
           });
@@ -281,7 +281,7 @@ angular.module('app')
   .directive('coverHashToLink', function(TRIX){
     return function(scope, element, attrs){
       attrs.$observe('coverHashToLink', function(obj) {
-        if(obj){
+        if(obj && obj.hash){
           element.css({
             "background-image": "url(" + TRIX.baseUrl + "/api/images/get/"+ obj.hash  + "?size=" +obj.size+ ")", "background-position": "50% 20%"
           });
