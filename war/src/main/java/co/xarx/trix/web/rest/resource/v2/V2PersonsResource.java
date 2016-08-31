@@ -80,7 +80,12 @@ public class V2PersonsResource extends AbstractResource implements V2PersonsApi 
 
 	@Override
 	public Response deletePerson(String email) {
-		personService.deletePerson(email);
+		try {
+			personService.deletePerson(email);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 		return Response.ok().build();
 	}
 
