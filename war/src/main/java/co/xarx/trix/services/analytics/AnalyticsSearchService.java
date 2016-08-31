@@ -61,22 +61,18 @@ public class AnalyticsSearchService {
 		return StatsData;
 	}
 
-
 	public StatsData getNetworkStats(Network network, Interval interval) {
-		List<MobileStats> mobileStats = analyticsQueries.getMobileStats(network.getTenantId(), interval);
-		List<Integer> generalStatus = getGeneralStatus(network);
-		generalStatus.add(getByType(mobileStats, Constants.MobilePlatform.ANDROID).currentInstallations);
-		generalStatus.add(getByType(mobileStats, Constants.MobilePlatform.APPLE).currentInstallations);
-		TreeMap<Long, ReadsCommentsRecommendsCountData> histogram = getHistogram(network, interval);
-
 		StatsData statsData = new StatsData();
-		statsData.generalStatsJson = generalStatus;
-		statsData.dateStatsJson = histogram;
+		List<MobileStats> mobileStats = analyticsQueries.getMobileStats(network.getTenantId(), interval);
+
+		statsData.generalStatsJson = getGeneralStatus(network);
+		statsData.generalStatsJson.add(getByType(mobileStats, Constants.MobilePlatform.ANDROID).currentInstallations);
+		statsData.generalStatsJson.add(getByType(mobileStats, Constants.MobilePlatform.APPLE).currentInstallations);
+		statsData.dateStatsJson = getHistogram(network, interval);
 
 		// repeting data. Ideal: remove generalStatus list and use Key-Value
 		statsData.androidStore = getByType(mobileStats, Constants.MobilePlatform.ANDROID);
 		statsData.iosStore = getByType(mobileStats, Constants.MobilePlatform.APPLE);
-
 		statsData.fileSpace = analyticsQueries.getFileStats();
 
 		return statsData;
