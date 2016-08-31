@@ -19,5 +19,5 @@ public interface PersonValidationRepository extends DatabaseRepository<PersonVal
 	@RestResource(exported = false)
 	@Modifying
 //	@Query("delete from PersonValidation WHERE person.id = :personId")
-	void deleteByPerson(@Param("person") Person person);
+	void deleteByPersonId(@Param("id") Integer id);
 }
