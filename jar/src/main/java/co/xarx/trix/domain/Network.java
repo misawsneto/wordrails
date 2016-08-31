@@ -115,6 +115,9 @@ public class Network extends BaseEntity implements Serializable, AnalyticsEntity
 
 	public boolean configured;
 
+	@Column(columnDefinition = "varchar(255) default 'pt'", nullable = false)
+	public String language;
+
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean emailSignUpValidationEnabled;
 
