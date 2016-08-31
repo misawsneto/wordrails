@@ -157,4 +157,8 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@Modifying
 	@Query("UPDATE Post p set p.state = :state where p.id = :postId")
 	void updateState(@Param("postId") int postId, @Param("state") String state);
+
+	@Modifying
+	@Query("UPDATE Post p SET p.author.id = :newAuthorId WHERE p.author.id = :oldAuthorId")
+	void updatePostAuthor(@Param("oldAuthorId") Integer oldAuthorId, @Param("newAuthorId") Integer newAuthorId);
 }

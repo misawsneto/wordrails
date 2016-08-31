@@ -19,6 +19,5 @@ public interface PersonalNotificationRepository extends JpaRepository<PersonalNo
 
 	@RestResource(exported = false)
 	@Modifying
-//	@Query("delete from PersonalNotification WHERE person.id = :personId")
-	void deleteByPerson(@Param("person") Person person);
+	void deleteByPersonId(@Param("id") Integer id);
 }
