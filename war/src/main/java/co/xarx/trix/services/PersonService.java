@@ -220,7 +220,7 @@ public class PersonService {
         Person admin = authService.getLoggedPerson();
 
 		if(admin.equals(person)){
-			throw new Exception("User cannot remove itself");
+			throw new Exception("User cannot remove oneself");
 		}
 
         invitationRepository.deleteByEmail(person.getEmail());
