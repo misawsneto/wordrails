@@ -205,7 +205,7 @@ public class PersonService {
 	}
 
 	@Transactional
-	public void deletePerson(String email) throws PersonNotFoundException {
+	public void deletePerson(String email) throws Exception {
 		Person person = personRepository.findByEmail(email);
 
 		if(person == null) {
@@ -216,8 +216,12 @@ public class PersonService {
 		}
 	}
 
-	private void deletePersonAndDependencies(Person person){
+	private void deletePersonAndDependencies(Person person) throws Exception {
         Person admin = authService.getLoggedPerson();
+
+		if(admin.equals(person)){
+			throw new Exception("User cannot remove itself");
+		}
 
         invitationRepository.deleteByEmail(person.getEmail());
         personValidationRepository.deleteByPersonId(person.getId());
@@ -226,6 +230,7 @@ public class PersonService {
         postRepository.updatePostAuthor(person.getId(), admin.getId());
 
         mobileDeviceRepository.deleteByPersonId(person.getId());
+		mobileDeviceRepository.deleteByLastPersonLoggedId(person.getId());
         esPersonRepository.delete(person.getId());
 
         if(person.cover != null) imageRepository.delete(person.cover);
