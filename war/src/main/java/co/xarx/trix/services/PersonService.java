@@ -6,6 +6,7 @@ import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.person.PersonAlreadyExistsException;
 import co.xarx.trix.services.person.PersonFactory;
+import co.xarx.trix.services.person.PersonNotFoundException;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.StationPermissionService;
 import co.xarx.trix.services.user.UserAlreadyExistsException;
@@ -13,16 +14,8 @@ import co.xarx.trix.services.user.UserFactory;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.action.search.SearchRequestBuilder;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHitField;
 import org.jcodec.common.logging.Logger;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -30,7 +23,6 @@ import org.springframework.util.Assert;
 import java.io.IOException;
 import java.util.*;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 @Slf4j
@@ -39,28 +31,40 @@ public class PersonService {
 
 	private UserFactory userFactory;
 	private AuthService authService;
-	private EmailService emailService;
+    private EmailService emailService;
     private PersonFactory personFactory;
     private NetworkService networkService;
+    private PostRepository postRepository;
+    private ImageRepository imageRepository;
     private PersonRepository personRepository;
+    private CommentRepository commentRepository;
     private StationRepository stationRepository;
+    private ESPersonRepository esPersonRepository;
     private InvitationRepository invitationRepository;
+    private MobileDeviceRepository mobileDeviceRepository;
     private StationPermissionService stationPermissionService;
-    private PersonValidationRepository personValidationRepository;
+	private PersonValidationRepository personValidationRepository;
+	private PersonalNotificationRepository personalNotificationRepository;
 
 	@Autowired
-	public PersonService(PersonRepository personRepository, EmailService emailService, InvitationRepository invitationRepository, AuthService authService, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory, NetworkService networkService) {
+	public PersonService(PersonRepository personRepository, EmailService emailService, InvitationRepository invitationRepository, AuthService authService, StationRepository stationRepository, PersonFactory personFactory, PostRepository postRepository, ImageRepository imageRepository, MobileDeviceRepository mobileDeviceRepository, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory, NetworkService networkService, CommentRepository commentRepository, ESPersonRepository esPersonRepository, PersonalNotificationRepository personalNotificationRepository) {
 		this.authService = authService;
-		this.userFactory = userFactory;
-		this.emailService = emailService;
-		this.personFactory = personFactory;
-		this.personRepository = personRepository;
-		this.stationRepository = stationRepository;
-		this.invitationRepository = invitationRepository;
-		this.stationPermissionService = stationPermissionService;
-		this.personValidationRepository = personValidationRepository;
+        this.userFactory = userFactory;
+        this.emailService = emailService;
+        this.personFactory = personFactory;
         this.networkService = networkService;
-    }
+        this.postRepository = postRepository;
+        this.imageRepository = imageRepository;
+        this.personRepository = personRepository;
+        this.commentRepository = commentRepository;
+        this.stationRepository = stationRepository;
+        this.esPersonRepository = esPersonRepository;
+        this.invitationRepository = invitationRepository;
+        this.mobileDeviceRepository = mobileDeviceRepository;
+        this.stationPermissionService = stationPermissionService;
+        this.personValidationRepository = personValidationRepository;
+        this.personalNotificationRepository = personalNotificationRepository;
+	}
 
     @Transactional
 	public Person createFromInvite(PersonsApi.PersonCreateDto dto, String inviteHash) throws PersonAlreadyExistsException, UserAlreadyExistsException {
@@ -123,7 +127,7 @@ public class PersonService {
 		return newPerson;
 	}
 
-	public Person validateEmail(String hash) throws BadRequestException {
+	public Person validatePersonEmail(String hash) throws BadRequestException {
 		PersonValidation validation = personValidationRepository.findByValidationHash(hash);
 
 		if(validation == null && validation.getPerson() != null){
@@ -199,4 +203,34 @@ public class PersonService {
 
 		return dto.emails;
 	}
+
+	@Transactional
+	public void deletePerson(String email) throws PersonNotFoundException {
+		Person person = personRepository.findByEmail(email);
+
+		if(person == null) {
+            invitationRepository.deleteByEmail(email);
+        } else {
+            deletePersonAndDependencies(person);
+			userFactory.delete(person.getUsername());
+		}
+	}
+
+	private void deletePersonAndDependencies(Person person){
+        Person admin = authService.getLoggedPerson();
+
+        invitationRepository.deleteByEmail(person.getEmail());
+        personValidationRepository.deleteByPersonId(person.getId());
+        personalNotificationRepository.deleteByPersonId(person.getId());
+        commentRepository.updateCommentsAuthor(person.getId(), admin.getId());
+        postRepository.updatePostAuthor(person.getId(), admin.getId());
+
+        mobileDeviceRepository.deleteByPersonId(person.getId());
+        esPersonRepository.delete(person.getId());
+
+        if(person.cover != null) imageRepository.delete(person.cover);
+        if(person.image != null) imageRepository.delete(person.image);
+
+        personRepository.delete(person);
+    }
 }

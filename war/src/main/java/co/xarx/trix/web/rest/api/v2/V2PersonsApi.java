@@ -2,6 +2,7 @@ package co.xarx.trix.web.rest.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -24,17 +25,22 @@ public interface V2PersonsApi {
 						   @QueryParam("embed") List<String> embeds);
 
 	@GET
-	@Path("{username}/permissions/station/{stationId}")
+	@Path("/{username}/permissions/station/{stationId}")
 	Response getPermissions(@PathParam("username") String username,
 							@PathParam("stationId") Integer stationId);
 
 	@GET
-	@Path("{username}/permissions/station")
+	@Path("/{username}/permissions/station")
 	Response getPermissions(@PathParam("username") String username);
 
 	@DELETE
-	@Path("{username}")
-	Response deletePerson(@PathParam("username") String username);
+	@Path("/{email}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	Response deletePerson(@PathParam("email") String username);
+
+	@GET
+	@Path("/{username}/timeline")
+	Response getPersonTimeline(@PathParam("username") String username);
 
 //	@GET
 //	@Path("{username}/permissions/station")
