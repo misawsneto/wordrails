@@ -89,6 +89,7 @@ public class PostView implements Serializable, Identifiable {
 
 	public String subheading;
 	public Date scheduledDate;
+	public Date unpublishDate;
 	public boolean notify;
 
 	public ImageView featuredImage;
