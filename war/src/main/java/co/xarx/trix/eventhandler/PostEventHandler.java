@@ -69,7 +69,11 @@ public class PostEventHandler {
 			boolean canCreate = postPermissionService.canCreateOnStation(stationId);
 
 			if (canCreate) {
-				post.setState(Post.STATE_UNPUBLISHED);
+				if(post.state == null && (!post.state.equals(Post.STATE_UNPUBLISHED) || !post.state.equals(Post
+						.STATE_DRAFT)))
+					throw new AccessDeniedException("No permission to use state: " + post.state);
+				else
+					post.setState(Post.STATE_UNPUBLISHED);
 			} else {
 				throw new AccessDeniedException("No permission to create");
 			}
