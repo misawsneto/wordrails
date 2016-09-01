@@ -42,6 +42,5 @@ public interface TaxonomyRepository extends DatabaseRepository<Taxonomy, Integer
 	void deleteTaxonomyNetworks(Integer taxonomyId);
 
 	@RestResource(exported=false)
-	@Modifying
 	public  Taxonomy findByOwningStationId(Integer id);
 }
