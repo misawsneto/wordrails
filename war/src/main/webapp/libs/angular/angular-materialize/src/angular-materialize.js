@@ -1,6 +1,6 @@
 (function (angular) {
     var undefined;
-    angular.module("ui.materialize", ["ui.materialize.ngModel", "ui.materialize.collapsible", "ui.materialize.toast", "ui.materialize.sidenav", "ui.materialize.material_select", "ui.materialize.dropdown", "ui.materialize.inputfield", "ui.materialize.input_date", "ui.materialize.tabs", "ui.materialize.pagination", "ui.materialize.pushpin", "ui.materialize.scrollspy", "ui.materialize.parallax","ui.materialize.modal", "ui.materialize.tooltipped",  "ui.materialize.slider", "ui.materialize.materialboxed", "ui.materialize.scrollFire", "ui.materialize.nouislider", "ui.materialize.input_clock"]);
+    angular.module("ui.materialize", ["ui.materialize.ngModel", "ui.materialize.collapsible", "ui.materialize.toast", "ui.materialize.sidenav", "ui.materialize.material_select", "ui.materialize.dropdown", "ui.materialize.inputfield", "ui.materialize.input_date", "ui.materialize.tabs", "ui.materialize.pagination", "ui.materialize.pushpin", "ui.materialize.scrollspy", "ui.materialize.parallax","ui.materialize.modal", "ui.materialize.tooltipped",  "ui.materialize.slider", "ui.materialize.materialboxed", "ui.materialize.scrollFire", "ui.materialize.nouislider", "ui.materialize.input_clock", "ui.materialize.carousel"]);
 
     /*     example usage:
      <div scroll-fire="func('Scrolled', 2000)" ></scroll-fire>
@@ -143,6 +143,41 @@
             };
         }]);
 
+    /* example usage:
+     <div carousel height='500' transition='400'></div>
+     */
+    angular.module("ui.materialize.carousel", [])
+        .directive("carousel", ["$timeout", function($timeout){
+            return {
+                restrict: 'A',
+                scope: {
+                    timeConstant: '@',
+                    dist: '@',
+                    shift: '@',
+                    padding: '@',
+                    fullWidth: '@',
+                    indicators: '@',
+                    noWrap: '@'
+                },
+                link: function(scope, element, attrs) {
+                    element.addClass("carousel");
+
+                    $timeout(function(){
+                        element.carousel({
+                            time_constant: (angular.isDefined(scope.timeConstant)) ? scope.timeConstant : 200,
+                            dist: (angular.isDefined(scope.dist)) ? scope.dist : -100,
+                            shift: (angular.isDefined(scope.shift)) ? scope.shift : 0,
+                            padding: (angular.isDefined(scope.padding)) ? scope.padding : 0,
+                            full_width: (angular.isDefined(scope.fullWidth)) ? scope.fullWidth : false,
+                            indicators: (angular.isDefined(scope.indicators)) ? scope.indicators : false,
+                            no_wrap: (angular.isDefined(scope.noWrap)) ? scope.noWrap : false
+                        });
+                    });
+                }
+            };
+        }]);
+
+
 
     angular.module("ui.materialize.collapsible", [])
         .directive("collapsible", ["$timeout", function ($timeout) {
@@ -281,12 +316,12 @@
                 link: function (scope, element, attrs) {
                     if (element.is("select")) {
 						//BugFix 139: In case of multiple enabled. Avoid the circular looping.
-                        function initSelect(newVal, oldVal) {                            
-                            if(attrs.multiple){
-                                if(oldVal !== undefined && newVal !== undefined){
-                                  if(oldVal.length === newVal.length){
-                                      return;
-                                  }
+                        function initSelect(newVal, oldVal) {
+                            if (attrs.multiple) {
+                                if (oldVal !== undefined && newVal !== undefined) {
+                                    if (oldVal.length === newVal.length) {
+                                        return;
+                                    }
                                 }
                                 var activeUl = element.siblings("ul.active");
                                 if (newVal !== undefined && activeUl.length) { // If select is open
@@ -295,11 +330,8 @@
                                         return;
                                     }
                                 }
-                            } else {
-                                if (newVal == element.val()){
-                                    return;
-                                }
                             }
+
                             element.siblings(".caret").remove();
                             scope.$evalAsync(function () {
                                 //element.material_select();
@@ -405,11 +437,21 @@
      */
     angular.module("ui.materialize.inputfield", [])
         .directive('inputField', ["$timeout", function ($timeout) {
+            var inputLabelIdCounter = 0;
             return {
                 transclude: true,
                 scope: {},
                 link: function (scope, element) {
                     $timeout(function () {
+                        var input = element.find("> > input, > > textarea");
+                        var label = element.find("> > label");
+
+                        if (input.length == 1 && label.length == 1 && !input.attr("id") && !label.attr("for")) {
+                            var id = "angularMaterializeID" + inputLabelIdCounter++;
+                            input.attr("id", id);
+                            label.attr("for", id);
+                        }
+
                         Materialize.updateTextFields();
 
                         // The "> > [selector]", is to restrict to only those tags that are direct children of the directive element. Otherwise we might hit to many elements with the selectors.
@@ -734,7 +776,7 @@
                 link: function (scope, element) {
                     $(element).addClass("timepicker");
                     if (!(scope.ngReadonly)) {
-                        element.clockpicker({
+                        element.pickatime({
                             default: (angular.isDefined(scope.default)) ? scope.default : '',
                             fromnow: (angular.isDefined(scope.fromnow)) ? scope.fromnow : 0,
                             donetext: (angular.isDefined(scope.donetext)) ? scope.donetext : 'Done',
@@ -1073,13 +1115,15 @@
                         $compile(element.contents())(scope);
 
                         var complete = function () {
-                            angular.isFunction(scope.complete) && scope.$eval(scope.complete());
+                            angular.isFunction(scope.complete) && scope.$apply(scope.complete);
 
                             scope.open = false;
                             scope.$apply();
                         };
                         var ready = function() {
-                          angular.isFunction(scope.ready) && scope.$eval(scope.ready());
+                          angular.isFunction(scope.ready) && scope.$apply(scope.ready);
+                          // Need to keep open boolean in sync.
+                          scope.open = true;
                           // If tab support is enabled we need to re-init the tabs
                           // See https://github.com/Dogfalo/materialize/issues/1634
                           if (scope.enableTabs) {
@@ -1117,16 +1161,45 @@
     angular.module("ui.materialize.tooltipped", [])
         .directive("tooltipped", ["$compile", "$timeout", function ($compile, $timeout) {
             return {
-                restrict: "EA",
+                restrict: "A",
                 scope: true,
                 link: function (scope, element, attrs) {
-                    element.addClass("tooltipped");
-                    $compile(element.contents())(scope);
 
-                    $timeout(function () {
-                        element.tooltip();
+                    var rmDestroyListener = Function.prototype; //assigning to noop
+
+                    function init() {
+                        element.addClass("tooltipped");
+                        $compile(element.contents())(scope);
+
+                        $timeout(function () {
+                            // https://github.com/Dogfalo/materialize/issues/3546
+                            // if element.addClass("tooltipped") would not be executed, then probably this would not be needed
+                            if (element.attr('data-tooltip-id')){
+                                element.tooltip('remove');
+                            }
+                            element.tooltip();
+                        });
+                        rmDestroyListener = scope.$on('$destroy', function () {
+                            element.tooltip("remove");
+                        });
+                    };
+
+                    attrs.$observe('tooltipped', function (value) {
+                        if (value === 'false' && rmDestroyListener !== Function.prototype) {
+                            element.tooltip("remove");
+                            rmDestroyListener();
+                            rmDestroyListener = Function.prototype;
+                        } else if (value !== 'false' && rmDestroyListener === Function.prototype) {
+                            init();
+                        }
                     });
-                    scope.$on('$destroy', function () {
+
+                    if (attrs.tooltipped !== 'false') {
+                        init();
+                    }
+
+                    // just to be sure, that tooltip is removed when somehow element is destroyed, but the parent scope is not
+                    element.on('$destroy', function() {
                         element.tooltip("remove");
                     });
                 }

@@ -135,7 +135,6 @@ public class NetworkService {
 
 	public Network getNetwork(){
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
-		network = networkRepository.findOne(network.id);
 		network.setTenantId(TenantContextHolder.getCurrentTenantId());
 		return network;
 	}
