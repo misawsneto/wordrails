@@ -37,6 +37,9 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 	@Autowired
 	private HttpServletRequest request;
 
+	@Autowired
+	private SlackBot slackBot;
+
 	@Override
 	public Response toResponse(Throwable throwable) {
 		Status status;
@@ -66,7 +69,7 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 			log.info("Access denied for url " + request.getRequestURL() + " - Session ID: " + request
 					.getRequestedSessionId());
 		} else {
-			log.error("LOG FATAL ERROR\n" +
+			logError("LOG FATAL ERROR\n" +
 							"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
 							"MESSAGE: " + throwable.getMessage() + "\n" +
 							"URL: " + request.getRequestURL(),
@@ -83,5 +86,10 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	private void logError(String message, Throwable throwable){
+		log.error(message, throwable);
+		slackBot.logError(message);
 	}
 }
