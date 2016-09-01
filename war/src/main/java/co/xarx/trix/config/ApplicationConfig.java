@@ -134,9 +134,13 @@ public class ApplicationConfig implements AsyncConfigurer{
 	}
 
 	@Bean
-	public SlackSession slackSession() throws IOException {
+	public SlackSession slackSession() {
 		SlackSession session = SlackSessionFactory.createWebSocketSlackSession(slackToken);
-		session.connect();
+		try {
+			session.connect();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return session;
 	}
 
