@@ -105,10 +105,12 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+
 		<repository>
 			<id>gcm-server-repository</id>
 			<url>https://raw.githubusercontent.com/slorber/gcm-server-repository/master/releases/</url>
 		</repository>
+
 		<repository>
 			<id>scribe-java-mvn-repo</id>
 			<url>https://raw.github.com/fernandezpablo85/scribe-java/mvn-repo/</url>
@@ -117,6 +119,7 @@
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</repository>
+
 		<repository>
 			<id>elasticsearch-releases</id>
 			<url>http://maven.elasticsearch.org/releases</url>
@@ -127,6 +130,12 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+
 	</repositories>
 
 	<dependencyManagement>
@@ -893,6 +902,12 @@
 				<groupId>org.jsoup</groupId>
 				<artifactId>jsoup</artifactId>
 				<version>1.9.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.github.Ullink</groupId>
+				<artifactId>simple-slack-api</artifactId>
+				<version>0.6.0</version>
 			</dependency>
 
 		</dependencies>

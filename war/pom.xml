@@ -624,5 +624,10 @@
 			<artifactId>jsoup</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.Ullink</groupId>
+			<artifactId>simple-slack-api</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>
