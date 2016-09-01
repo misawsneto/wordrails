@@ -13,8 +13,8 @@ public class ServerUtil {
         status.append("\nstatus: OK\n");
         status.append("hostname: " + getHostname() + "\n");
         status.append("time: " + new Date().toString() + "\n");
-        status.append("JVM mem use: " + runtime.totalMemory() + "\n");
-        status.append("JVM mem available: " + runtime.freeMemory() + "\n");
+        status.append("JVM mem use: " + runtime.totalMemory() / 1048576 + "MB\n");
+        status.append("JVM mem available: " + runtime.freeMemory() / 1048576 + "MB\n");
 
         return status.toString();
     }
@@ -26,5 +26,4 @@ public class ServerUtil {
             return "unknown";
         }
     }
-
 }
