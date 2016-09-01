@@ -11,6 +11,9 @@ import co.xarx.trix.services.notification.GCMClient;
 import co.xarx.trix.services.notification.MobileNotificationSender;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.Sender;
+import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.modelmapper.ModelMapper;
@@ -26,6 +29,7 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.io.IOException;
 import java.util.concurrent.Executor;
 
 @Configuration
@@ -49,6 +53,8 @@ public class ApplicationConfig implements AsyncConfigurer{
 	private String bucketName;
 	@Value("${trix.gcm.key}")
 	private String gcmKey;
+	@Value("${slack-token}")
+	private String slackToken;
 
 	@Bean
 	public ObjectMapper simpleMapper() {
@@ -125,6 +131,13 @@ public class ApplicationConfig implements AsyncConfigurer{
 		executor.setThreadNamePrefix("Async-");
 		executor.initialize();
 		return executor;
+	}
+
+	@Bean
+	public SlackSession slackSession() throws IOException {
+		SlackSession session = SlackSessionFactory.createWebSocketSlackSession(slackToken);
+		session.connect();
+		return session;
 	}
 
 	@Override
