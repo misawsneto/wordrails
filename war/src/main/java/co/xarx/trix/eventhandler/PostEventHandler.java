@@ -61,7 +61,7 @@ public class PostEventHandler {
 				.station.id
 				.equals(post
 				.station.id))
-			throw new ConflictException("Title conflict");
+			throw new ConflictException("Title conflict: " + post.title);
 
 		boolean canPublish = postPermissionService.canPublishOnStation(stationId);
 
