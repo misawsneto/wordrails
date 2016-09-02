@@ -69,11 +69,13 @@ public class PostEventHandler {
 			boolean canCreate = postPermissionService.canCreateOnStation(stationId);
 
 			if (canCreate) {
-				if(post.state == null && (!post.state.equals(Post.STATE_UNPUBLISHED) || !post.state.equals(Post
-						.STATE_DRAFT)))
-					throw new AccessDeniedException("No permission to use state: " + post.state);
-				else
+				if(post.state != null) {
+					if (!post.state.equals(Post.STATE_UNPUBLISHED) && !post.state.equals(Post
+							.STATE_DRAFT))
+						throw new AccessDeniedException("No permission to use state: " + post.state);
+				}else{
 					post.setState(Post.STATE_UNPUBLISHED);
+				}
 			} else {
 				throw new AccessDeniedException("No permission to create");
 			}
@@ -121,8 +123,8 @@ public class PostEventHandler {
 
 	@HandleAfterCreate
 	public void handleAfterCreate(Post post) {
-		notificationCheck(post);
 		elasticSearchService.mapThenSave(post, ESPost.class);
+		notificationCheck(post);
 	}
 
 	public void notificationCheck(Post post) {
