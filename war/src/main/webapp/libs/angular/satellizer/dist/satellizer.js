@@ -1,5 +1,5 @@
 /**
- * Satellizer 0.15.4
+ * Satellizer 0.15.5
  * (c) 2016 Sahat Yalkabov 
  * License: MIT 
  */
@@ -136,6 +136,20 @@
                     scopeDelimiter: ' ',
                     oauthType: '2.0',
                     popupOptions: { width: 1028, height: 529 }
+                },
+                spotify: {
+                    name: 'spotify',
+                    url: '/auth/spotify',
+                    authorizationEndpoint: 'https://accounts.spotify.com/authorize',
+                    redirectUri: window.location.origin,
+                    optionalUrlParams: ['state'],
+                    requiredUrlParams: ['scope'],
+                    scope: ['user-read-email'],
+                    scopePrefix: '',
+                    scopeDelimiter: ',',
+                    oauthType: '2.0',
+                    popupOptions: { width: 500, height: 530 },
+                    state: function () { return encodeURIComponent(Math.random().toString(36).substr(2)); }
                 }
             };
             this.httpInterceptor = function () { return true; };
@@ -264,6 +278,9 @@
         AuthProvider.prototype.bitbucket = function (options) {
             angular.extend(this.SatellizerConfig.providers.bitbucket, options);
         };
+        AuthProvider.prototype.spotify = function (options) {
+            angular.extend(this.SatellizerConfig.providers.spotify, options);
+        };
         AuthProvider.prototype.oauth1 = function (options) {
             this.SatellizerConfig.providers[options.name] = angular.extend(options, {
                 oauthType: '1.0'
@@ -379,10 +396,9 @@
     }
 
     var Shared = (function () {
-        function Shared($q, $window, $log, SatellizerConfig, SatellizerStorage) {
+        function Shared($q, $window, SatellizerConfig, SatellizerStorage) {
             this.$q = $q;
             this.$window = $window;
-            this.$log = $log;
             this.SatellizerConfig = SatellizerConfig;
             this.SatellizerStorage = SatellizerStorage;
             var _a = this.SatellizerConfig, tokenName = _a.tokenName, tokenPrefix = _a.tokenPrefix;
@@ -404,11 +420,10 @@
             }
         };
         Shared.prototype.setToken = function (response) {
-            if (!response) {
-                return this.$log.warn('Can\'t set token without passing a value');
-            }
-            var token;
+            var tokenRoot = this.SatellizerConfig.tokenRoot;
+            var tokenName = this.SatellizerConfig.tokenName;
             var accessToken = response && response.access_token;
+            var token;
             if (accessToken) {
                 if (angular.isObject(accessToken) && angular.isObject(accessToken.data)) {
                     response = accessToken;
@@ -418,14 +433,12 @@
                 }
             }
             if (!token && response) {
-                var tokenRootData = this.SatellizerConfig.tokenRoot && this.SatellizerConfig.tokenRoot.split('.').reduce(function (o, x) { return o[x]; }, response.data);
-                token = tokenRootData ? tokenRootData[this.SatellizerConfig.tokenName] : response.data && response.data[this.SatellizerConfig.tokenName];
+                var tokenRootData = tokenRoot && tokenRoot.split('.').reduce(function (o, x) { return o[x]; }, response.data);
+                token = tokenRootData ? tokenRootData[tokenName] : response.data && response.data[tokenName];
             }
-            if (!token) {
-                var tokenPath = this.SatellizerConfig.tokenRoot ? this.SatellizerConfig.tokenRoot + '.' + this.SatellizerConfig.tokenName : this.SatellizerConfig.tokenName;
-                return this.$log.warn('Expecting a token named "' + tokenPath);
+            if (token) {
+                this.SatellizerStorage.set(this.prefixedTokenName, token);
             }
-            this.SatellizerStorage.set(this.prefixedTokenName, token);
         };
         Shared.prototype.removeToken = function () {
             this.SatellizerStorage.remove(this.prefixedTokenName);
@@ -438,8 +451,8 @@
                         var base64Url = token.split('.')[1];
                         var base64 = base64Url.replace('-', '+').replace('_', '/');
                         var exp = JSON.parse(this.$window.atob(base64)).exp;
-                        if (exp) {
-                            return (Math.round(new Date().getTime() / 1000) >= exp) ? false : true;
+                        if (typeof exp === 'number') {
+                            return Math.round(new Date().getTime() / 1000) < exp;
                         }
                     }
                     catch (e) {
@@ -457,7 +470,7 @@
         Shared.prototype.setStorageType = function (type) {
             this.SatellizerConfig.storageType = type;
         };
-        Shared.$inject = ['$q', '$window', '$log', 'SatellizerConfig', 'SatellizerStorage'];
+        Shared.$inject = ['$q', '$window', 'SatellizerConfig', 'SatellizerStorage'];
         return Shared;
     }());
 
@@ -497,7 +510,6 @@
             this.$window = $window;
             this.$q = $q;
             this.popup = null;
-            this.url = 'about:blank'; // TODO remove
             this.defaults = {
                 redirectUri: null
             };
@@ -509,8 +521,7 @@
             });
             return parts.join(',');
         };
-        Popup.prototype.open = function (url, name, popupOptions) {
-            this.url = url; // TODO remove
+        Popup.prototype.open = function (url, name, popupOptions, redirectUri, dontPoll) {
             var width = popupOptions.width || 500;
             var height = popupOptions.height || 500;
             var options = this.stringifyOptions({
@@ -520,16 +531,22 @@
                 left: this.$window.screenX + ((this.$window.outerWidth - width) / 2)
             });
             var popupName = this.$window['cordova'] || this.$window.navigator.userAgent.indexOf('CriOS') > -1 ? '_blank' : name;
-            this.popup = window.open(this.url, popupName, options);
+            this.popup = this.$window.open(url, popupName, options);
             if (this.popup && this.popup.focus) {
                 this.popup.focus();
             }
-            //
-            // if (this.$window['cordova']) {
-            //   return this.eventListener(this.defaults.redirectUri); // TODO pass redirect uri
-            // } else {
-            //   return this.polling(redirectUri);
-            // }
+            if (dontPoll) {
+                return;
+            }
+            if (this.$window['cordova']) {
+                return this.eventListener(redirectUri);
+            }
+            else {
+                if (url === 'about:blank') {
+                    this.popup.location = url;
+                }
+                return this.polling(redirectUri);
+            }
         };
         Popup.prototype.polling = function (redirectUri) {
             var _this = this;
@@ -574,7 +591,7 @@
             var _this = this;
             return this.$q(function (resolve, reject) {
                 _this.popup.addEventListener('loadstart', function (event) {
-                    if (!event.url.includes(redirectUri)) {
+                    if (event.url.indexOf(redirectUri) !== 0) {
                         return;
                     }
                     var parser = document.createElement('a');
@@ -628,8 +645,11 @@
         OAuth1.prototype.init = function (options, userData) {
             var _this = this;
             angular.extend(this.defaults, options);
+            var name = options.name, popupOptions = options.popupOptions;
+            var redirectUri = this.defaults.redirectUri;
+            // Should open an empty popup and wait until request token is received
             if (!this.$window['cordova']) {
-                this.SatellizerPopup.open('about:blank', options.name, options.popupOptions);
+                this.SatellizerPopup.open('about:blank', name, popupOptions, redirectUri, true);
             }
             return this.getRequestToken().then(function (response) {
                 return _this.openPopup(options, response).then(function (popupResponse) {
@@ -638,14 +658,14 @@
             });
         };
         OAuth1.prototype.openPopup = function (options, response) {
-            var popupUrl = [options.authorizationEndpoint, this.buildQueryString(response.data)].join('?');
+            var url = [options.authorizationEndpoint, this.buildQueryString(response.data)].join('?');
+            var redirectUri = this.defaults.redirectUri;
             if (this.$window['cordova']) {
-                this.SatellizerPopup.open(popupUrl, options.name, options.popupOptions);
-                return this.SatellizerPopup.eventListener(this.defaults.redirectUri);
+                return this.SatellizerPopup.open(url, options.name, options.popupOptions, redirectUri);
             }
             else {
-                this.SatellizerPopup.popup.location = popupUrl;
-                return this.SatellizerPopup.polling(this.defaults.redirectUri);
+                this.SatellizerPopup.popup.location = url;
+                return this.SatellizerPopup.polling(redirectUri);
             }
         };
         OAuth1.prototype.getRequestToken = function () {
@@ -708,29 +728,25 @@
             var _this = this;
             return this.$q(function (resolve, reject) {
                 angular.extend(_this.defaults, options);
-                _this.$timeout(function () {
-                    var stateName = _this.defaults.name + '_state';
-                    var _a = _this.defaults, name = _a.name, state = _a.state, popupOptions = _a.popupOptions, redirectUri = _a.redirectUri, responseType = _a.responseType;
-                    if (typeof state === 'function') {
-                        _this.SatellizerStorage.set(stateName, state());
+                var stateName = _this.defaults.name + '_state';
+                var _a = _this.defaults, name = _a.name, state = _a.state, popupOptions = _a.popupOptions, redirectUri = _a.redirectUri, responseType = _a.responseType;
+                if (typeof state === 'function') {
+                    _this.SatellizerStorage.set(stateName, state());
+                }
+                else if (typeof state === 'string') {
+                    _this.SatellizerStorage.set(stateName, state);
+                }
+                var url = [_this.defaults.authorizationEndpoint, _this.buildQueryString()].join('?');
+                _this.SatellizerPopup.open(url, name, popupOptions, redirectUri).then(function (oauth) {
+                    if (responseType === 'token' || !url) {
+                        return resolve(oauth);
                     }
-                    else if (typeof state === 'string') {
-                        _this.SatellizerStorage.set(stateName, state);
+                    if (oauth.state && oauth.state !== _this.SatellizerStorage.get(stateName)) {
+                        return reject(new Error('The value returned in the state parameter does not match the state value from your original ' +
+                            'authorization code request.'));
                     }
-                    var url = [_this.defaults.authorizationEndpoint, _this.buildQueryString()].join('?');
-                    _this.SatellizerPopup.open(url, name, popupOptions);
-                    _this.SatellizerPopup.polling(redirectUri).then(function (oauth) {
-                        if (responseType === 'token' || !url) {
-                            return resolve(oauth);
-                        }
-                        if (oauth.state && oauth.state !== _this.SatellizerStorage.get(stateName)) {
-                            return reject(new Error('The value returned in the state parameter does not match the state value from your original ' +
-                                'authorization code request.'));
-                        }
-                        resolve(_this.exchangeForToken(oauth, userData));
-                    })
-                        .catch(function (error) { return reject(error); });
-                });
+                    resolve(_this.exchangeForToken(oauth, userData));
+                }).catch(function (error) { return reject(error); });
             });
         };
         OAuth2.prototype.exchangeForToken = function (oauthData, userData) {
@@ -815,7 +831,7 @@
                         oauth = new OAuth2(_this.$http, _this.$window, _this.$timeout, _this.$q, _this.SatellizerConfig, _this.SatellizerPopup, _this.SatellizerStorage);
                         break;
                     default:
-                        return reject(new Error('Unknown OAuth Type'));
+                        return reject(new Error('Invalid OAuth Type'));
                 }
                 return oauth.init(provider, userData).then(function (response) {
                     if (provider.url) {

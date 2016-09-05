@@ -198,7 +198,12 @@ public class StationEventHandler {
 		List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByStationId(station.id);
 		stationPerspectiveRepository.delete(stationsPerspectives);
 
-		Taxonomy taxonomy = taxonomyRepository.findOne(station.categoriesTaxonomyId);
+		Taxonomy taxonomy = station.categoriesTaxonomyId != null ? taxonomyRepository.findOne(station
+				.categoriesTaxonomyId) : null;
+
+		if(taxonomy == null){
+			taxonomy = taxonomyRepository.findByOwningStationId(station.id);
+		}
 
 		if (taxonomy != null) {
 			taxonomyEventHandler.handleBeforeDelete(taxonomy);

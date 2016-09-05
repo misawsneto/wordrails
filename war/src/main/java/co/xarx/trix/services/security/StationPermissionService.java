@@ -85,34 +85,33 @@ public class StationPermissionService {
 
 		if (admin) {
 			permission = Permissions.getAdmin();
-		}else
-		if (editor) {
+		} else if (editor) {
 			permission = Permissions.getEditor();
-		}else
-		if (writer) {
+		} else if (writer) {
 			permission = Permissions.getWriter();
-		}else
-		if (colaborator) {
+		} else if (colaborator) {
 			permission = Permissions.getColaborator();
 		}
 		if (sponsor) {
 			permission = Permissions.getSponsor();
 		}
 
-		Map<ObjectIdentity, MutableAcl> acls = aclService.findAcls(stationIds);
-		for (MutableAcl acl : acls.values()) {
-			List<AccessControlEntry> entries = acl.getEntries();
-			for (Sid sid : sids) {
-				List<AccessControlEntry> aces = aclService.findAce(entries, sid);
-				if(aces == null || aces.size() == 0) {
-					acl.insertAce(acl.getEntries().size(), permission, sid, true);
-				} else {
-					for (AccessControlEntry ace : aces) {
-						acl.updateAce(entries.indexOf(ace), permission);
+		if (stationIds.size() > 0){
+			Map<ObjectIdentity, MutableAcl> acls = aclService.findAcls(stationIds);
+			for (MutableAcl acl : acls.values()) {
+				List<AccessControlEntry> entries = acl.getEntries();
+				for (Sid sid : sids) {
+					List<AccessControlEntry> aces = aclService.findAce(entries, sid);
+					if (aces == null || aces.size() == 0) {
+						acl.insertAce(acl.getEntries().size(), permission, sid, true);
+					} else {
+						for (AccessControlEntry ace : aces) {
+							acl.updateAce(entries.indexOf(ace), permission);
+						}
 					}
-				}
 
-				aclService.updateAcl(acl);
+					aclService.updateAcl(acl);
+				}
 			}
 		}
 	}
@@ -142,16 +141,18 @@ public class StationPermissionService {
 	}
 
 	public void deleteStationPermissions(List<String> usernames, List<Integer> stationIds) {
-		Map<ObjectIdentity, MutableAcl> acls = aclService.findAcls(stationIds);
-		for (MutableAcl acl : acls.values()) {
-			for (int i = 0; i < acl.getEntries().size(); i++) {
-				AccessControlEntry ace = acl.getEntries().get(i);
-				if (ace.getSid() instanceof PrincipalSid) {
-					if(usernames.contains(((PrincipalSid) ace.getSid()).getPrincipal()))
-						acl.deleteAce(i);
+		if(stationIds.size() > 0) {
+			Map<ObjectIdentity, MutableAcl> acls = aclService.findAcls(stationIds);
+			for (MutableAcl acl : acls.values()) {
+				for (int i = 0; i < acl.getEntries().size(); i++) {
+					AccessControlEntry ace = acl.getEntries().get(i);
+					if (ace.getSid() instanceof PrincipalSid) {
+						if (usernames.contains(((PrincipalSid) ace.getSid()).getPrincipal()))
+							acl.deleteAce(i);
+					}
 				}
+				aclService.updateAcl(acl);
 			}
-			aclService.updateAcl(acl);
 		}
 	}
 

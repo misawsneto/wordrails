@@ -40,4 +40,7 @@ public interface TaxonomyRepository extends DatabaseRepository<Taxonomy, Integer
 	@Modifying
 	@Query(nativeQuery=true, value="DELETE FROM network_taxonomy WHERE taxonomies_id = ?")
 	void deleteTaxonomyNetworks(Integer taxonomyId);
+
+	@RestResource(exported=false)
+	public  Taxonomy findByOwningStationId(Integer id);
 }

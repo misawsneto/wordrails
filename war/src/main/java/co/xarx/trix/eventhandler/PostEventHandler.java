@@ -61,7 +61,7 @@ public class PostEventHandler {
 				.station.id
 				.equals(post
 				.station.id))
-			throw new ConflictException("Title conflict");
+			throw new ConflictException("Title conflict: " + post.title);
 
 		boolean canPublish = postPermissionService.canPublishOnStation(stationId);
 
@@ -69,7 +69,13 @@ public class PostEventHandler {
 			boolean canCreate = postPermissionService.canCreateOnStation(stationId);
 
 			if (canCreate) {
-				post.setState(Post.STATE_UNPUBLISHED);
+				if(post.state != null) {
+					if (!post.state.equals(Post.STATE_UNPUBLISHED) && !post.state.equals(Post
+							.STATE_DRAFT))
+						throw new AccessDeniedException("No permission to use state: " + post.state);
+				}else{
+					post.setState(Post.STATE_UNPUBLISHED);
+				}
 			} else {
 				throw new AccessDeniedException("No permission to create");
 			}
@@ -117,8 +123,8 @@ public class PostEventHandler {
 
 	@HandleAfterCreate
 	public void handleAfterCreate(Post post) {
-		notificationCheck(post);
 		elasticSearchService.mapThenSave(post, ESPost.class);
+		notificationCheck(post);
 	}
 
 	public void notificationCheck(Post post) {

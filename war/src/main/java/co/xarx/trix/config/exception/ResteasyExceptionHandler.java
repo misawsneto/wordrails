@@ -67,7 +67,7 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 
 		if (status.equals(Status.FORBIDDEN)) {
 			log.info("Access denied for url " + request.getRequestURL() + " - Session ID: " + request
-					.getRequestedSessionId());
+					.getRequestedSessionId() + " - User-Agent: " + request.getHeader("User-Agent"));
 		} else {
 			logError("LOG FATAL ERROR\n" +
 							"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
