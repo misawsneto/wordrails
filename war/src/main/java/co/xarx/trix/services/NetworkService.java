@@ -115,8 +115,7 @@ public class NetworkService {
 
         if(network.getValidationMessage() == null || network.getValidationMessage().isEmpty()){
             String message = FileUtil.loadFileFromResource("default_validation_text.txt");
-//        	network.setValidationMessage(message);
-//			networkRepository.save(network);
+        	network.setValidationMessage(message);
 		}
 
 		return htmlTemplate.replaceAll("\\{\\{validationMessage}}", network.getValidationMessage());

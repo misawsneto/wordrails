@@ -71,7 +71,11 @@
                     if ((pos + 1) >= text.length) {
                         var clampTag = createElement();
                         resetElement(clampTag, true);
-                        clampTag.html(text.slice(lineStart));
+			if(lineStart === 1){
+				clampTag.html(text);
+			}else{
+				clampTag.html(text.slice(lineStart));
+			}
                         element.append(clampTag);
                         estimateTag.remove();
                     }
