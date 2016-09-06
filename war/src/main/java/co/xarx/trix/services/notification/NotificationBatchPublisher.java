@@ -37,6 +37,7 @@ public class NotificationBatchPublisher {
 		List<MobileNotification> mobileNotifications = new ArrayList<>();
 
 		List<List<String>> parts = ListUtil.partition(new ArrayList<>(devices), sender.getBatchSize());
+		sender.start();
 		for (int i = 0; i < parts.size(); i++) {
 			List<String> part = parts.get(i);
 			try {
@@ -58,7 +59,7 @@ public class NotificationBatchPublisher {
 				}
 			}
 		}
-
+		sender.stop();
 		Logger.info("Finish sending notification");
 
 		return mobileNotifications;

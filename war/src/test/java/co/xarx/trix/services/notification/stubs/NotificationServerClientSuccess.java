@@ -19,4 +19,14 @@ public class NotificationServerClientSuccess implements NotificationServerClient
 	@Override
 	public void send(NotificationView notification, Collection<String> devices) throws IOException {
 	}
+
+	@Override
+	public void start() {
+
+	}
+
+	@Override
+	public void stop() {
+
+	}
 }

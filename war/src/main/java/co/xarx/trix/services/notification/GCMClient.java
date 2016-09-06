@@ -60,4 +60,14 @@ public class GCMClient implements NotificationServerClient {
 			}
 		}
 	}
+
+	@Override
+	public void start() {
+		//it does nothing
+	}
+
+	@Override
+	public void stop() {
+		//it does nothing
+	}
 }

@@ -36,8 +36,6 @@ public class APNSClient implements NotificationServerClient {
 
 	@Override
 	public void send(NotificationView notification, Collection<String> devices) throws IOException {
-		initService();
-
 		String payload = APNS.newPayload()
 				.badge(1)
 				.sound("default")
@@ -51,11 +49,25 @@ public class APNSClient implements NotificationServerClient {
 				.build();
 
 		Collection<? extends ApnsNotification> push = service.push(devices, payload);
-		System.out.println(push);
+//		System.out.println(push);
 	}
 
 	@Override
-	public Map<String, NotificationResult> getErrorDevices() {
+	public void start() {
+		try {
+			initService();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void stop() {
+		service.stop();
+	}
+
+	@Override
+	public Map<String, NotificationResult> getErrorDevices(){
 		Map<String, NotificationResult> errorDevices = new HashMap<>();
 		Map<String, Date> inactiveDevices = service.getInactiveDevices();
 		for (String s : inactiveDevices.keySet()) {
@@ -68,7 +80,7 @@ public class APNSClient implements NotificationServerClient {
 		return errorDevices;
 	}
 
-	private void initService() throws IOException {
+	public void initService() throws IOException {
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		AppleCertificate certificate = appleCertificateRepository.findByTenantId(tenantId);
 		Assert.isNotNull(certificate, "Apple certificate not found");
@@ -91,12 +103,14 @@ public class APNSClient implements NotificationServerClient {
 					.newService()
 					.withCert(is, password)
 					.withSandboxDestination()
+					.asPool(1)
 					.build();
 		} else {
 			service = APNS
 					.newService()
 					.withCert(is, password)
 					.withProductionDestination()
+					.asPool(3)
 					.build();
 		}
 	}

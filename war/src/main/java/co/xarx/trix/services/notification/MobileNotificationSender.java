@@ -19,6 +19,16 @@ public class MobileNotificationSender implements NotificationSender {
 	}
 
 	@Override
+	public void start(){
+		this.client.start();
+	}
+
+	@Override
+	public void stop(){
+		this.client.stop();
+	}
+
+	@Override
 	public Map<String, NotificationResult> sendMessageToDevices(NotificationView notification, Collection<String> devices) throws IOException {
 
 		client.send(notification, devices);

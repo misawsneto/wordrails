@@ -19,4 +19,14 @@ public class NotificationServerClientError implements NotificationServerClient {
 	public void send(NotificationView notification, Collection<String> devices) throws IOException {
 		throw new IOException();
 	}
+
+	@Override
+	public void start() {
+
+	}
+
+	@Override
+	public void stop() {
+
+	}
 }

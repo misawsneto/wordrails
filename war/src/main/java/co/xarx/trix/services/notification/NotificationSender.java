@@ -11,4 +11,8 @@ public interface NotificationSender {
 	Map<String, NotificationResult> sendMessageToDevices(NotificationView notification, Collection<String> devices) throws IOException;
 
 	Integer getBatchSize();
+
+	void start();
+
+	void stop();
 }
