@@ -9,6 +9,7 @@ import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsNotification;
 import com.notnoop.apns.ApnsService;
 import org.eclipse.persistence.jpa.jpql.Assert;
+import org.jcodec.common.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -49,7 +50,7 @@ public class APNSClient implements NotificationServerClient {
 				.build();
 
 		Collection<? extends ApnsNotification> push = service.push(devices, payload);
-//		System.out.println(push);
+		Logger.debug(push != null && push.size() > 0 ? push.toString() : "");
 	}
 
 	@Override
