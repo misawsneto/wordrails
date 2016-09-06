@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 import static co.xarx.trix.util.AnalyticsUtil.getInterval;
-import static co.xarx.trix.util.Logger.debug;
-import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 @Service
 public class StatisticsService {
