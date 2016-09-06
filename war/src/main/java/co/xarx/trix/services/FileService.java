@@ -24,10 +24,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.Callable;
+import org.jcodec.common.logging.Logger;
 
-/**
- * Created by misael on 4/12/2016.
- */
 @Service
 public class FileService {
 	public static final Integer MAX_SIZE_8 = 8388608;
@@ -94,7 +92,7 @@ public class FileService {
 				fileRepository.save(file);
 			}
 		}catch (Throwable e){
-			Logger.error("error getting metada data", e);
+			Logger.error("error getting metada data\n" + e.toString());
 		}
 
 	}
