@@ -4,13 +4,15 @@ import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.User;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 @RepositoryRestResource(exported = true)
-public interface UserRepository extends DatabaseRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Integer>, QueryDslPredicateExecutor<User> {
 
 	@RestResource(exported = false)
 	@Query("SELECT CASE WHEN COUNT(u) > 0 THEN 'true' ELSE 'false' END FROM User u WHERE u.username = :username")
