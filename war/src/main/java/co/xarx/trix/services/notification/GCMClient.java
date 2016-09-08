@@ -35,6 +35,7 @@ public class GCMClient implements NotificationServerClient {
 		return errorDevices;
 	}
 
+	@Deprecated
 	@Override
 	public void send(NotificationView notification, Collection<String> d) throws IOException {
 		MulticastResult multicastResult;

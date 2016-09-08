@@ -98,7 +98,7 @@ public class NotificationService {
 
 	private NotificationRequest saveRequest(String title, String message, Integer postId) {
 		NotificationRequest request = newNotification(title, message);
-		request.setType(NotificationType.POST);
+		request.setType(NotificationType.POST_ADDED);
 		request.setPostId(postId);
 
 		notificationRequestRepository.save(request);

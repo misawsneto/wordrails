@@ -11,6 +11,7 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.FormParam;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
@@ -49,6 +50,11 @@ public class V2NotificationsResource extends AbstractResource implements V2Notif
 		}
 
 		return Response.ok().build();
+	}
+
+	@Override
+	public Response seenIt(Integer id, @FormParam("seenAt") String seenAt) {
+		return null;
 	}
 
 //	@Override

@@ -63,6 +63,8 @@ public class PostService {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PostSearchService postSearchService;
+	@Autowired
+	private NotificationRepository notificationRepository;
 
 	@Autowired
 	private ImageService imageService;
@@ -71,6 +73,13 @@ public class PostService {
 	public void asyncSendNewPostNotification(Post post, String tentantId) throws NotificationException {
 		TenantContextHolder.setCurrentTenantId(tentantId);
 		sendNewPostNotification(post);
+	}
+
+	public void createPostAddedNotification(Post post){
+		Notification notification = new Notification();
+		notification.setType(NotificationType.POST_ADDED);
+		notification.setEntityId(post.getId());
+		notification.setMessage();
 	}
 
 	public void sendNewPostNotification(Post post) throws NotificationException {
@@ -100,7 +109,7 @@ public class PostService {
 	public NotificationView getCreatePostNotification(Post post) {
 		String hash = StringUtil.generateRandomString(10, "Aa#");
 		NotificationView notification = new NotificationView(post.title, post.title, hash, false);
-		notification.type = MobileNotification.Type.POST_ADDED.toString();
+		notification.type = NotificationType.POST_ADDED.toString();
 		notification.post = postConverter.convertTo(post);
 		notification.postId = post.id;
 		notification.postTitle = post.title;

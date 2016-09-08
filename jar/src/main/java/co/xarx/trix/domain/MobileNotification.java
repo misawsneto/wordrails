@@ -12,19 +12,7 @@ import javax.validation.constraints.Size;
 @lombok.Getter
 @lombok.Setter
 @lombok.NoArgsConstructor
-public class MobileNotification extends BaseEntity {
-
-	public enum Type {
-		ADDED_TO_STATION,
-		REMOVED_FROM_STATION,
-		POST_COMMENTED,
-		POST_DELETED,
-		POST_ADDED,
-		BREAKING_NEWS,
-		MESSAGE,
-		IREPORT_INVITE,
-		IREPORT_REVOKE
-	}
+public class MobileNotification extends Notification {
 
 	public enum DeviceType {
 		ANDROID,
@@ -37,7 +25,7 @@ public class MobileNotification extends BaseEntity {
 		SUCCESS
 	}
 
-	public MobileNotification(String regId, String hash, Status status, String message, String type) {
+	public MobileNotification(String regId, String hash, Status status, String message, NotificationType type) {
 		this.regId = regId;
 		this.hash = hash;
 		this.status = status.toString();
@@ -71,13 +59,6 @@ public class MobileNotification extends BaseEntity {
 	public String deviceType;
 
 	public boolean deviceDeactivated;
-
-	@NotEmpty
-	@Size(min=1,max=500)
-	public String message;
-
-	@NotEmpty
-	public String type;
 
 	public void setDeviceType(DeviceType deviceType) {
 		this.deviceType = deviceType.toString();

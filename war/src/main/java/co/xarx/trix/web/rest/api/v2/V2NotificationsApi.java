@@ -1,5 +1,7 @@
 package co.xarx.trix.web.rest.api.v2;
 
+import org.jboss.resteasy.annotations.Form;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -24,4 +26,8 @@ public interface V2NotificationsApi {
 								  @FormParam("scheduledAt") String date,
 								  @FormParam("message") String message,
 								  @PathParam("postId") Integer postId);
+
+	@PUT
+	@Path("/{id}")
+	Response seenIt(@PathParam("id") Integer id, @FormParam("seenAt") String seenAt);
 }
