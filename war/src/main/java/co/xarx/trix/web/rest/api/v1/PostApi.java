@@ -86,7 +86,7 @@ public interface PostApi {
 
 	@GET
 	@Path("/{postId}/getPostViewById")
-	@PostAuthorize("hasPermission(#postId, 'co.xarx.trix.domain.Post', 'read')")
+//	@PostAuthorize("hasPermission(#postId, 'co.xarx.trix.domain.Post', 'read')")
 	PostView getPostViewById(@PathParam("postId") Integer postId, @QueryParam("withBody") Boolean withBody)
 			throws ServletException, IOException;
 
