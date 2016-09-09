@@ -25,6 +25,8 @@ public class Notification extends BaseEntity {
     @Size(min=1,max=500)
     public String message;
 
+    public Boolean sendNotification;
+
     @NotEmpty
     @Enumerated(EnumType.STRING)
     public NotificationType type;
