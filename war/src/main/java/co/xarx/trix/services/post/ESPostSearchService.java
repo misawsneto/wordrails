@@ -37,17 +37,13 @@ public class ESPostSearchService extends AbstractSearchService implements PostSe
 	private ESPostService esPostService;
 	private PostRepository postRepository;
 	private StationPermissionService stationPermissionService;
-	private PermissionFilterService permissionFilterService;
-	private StationRepository stationRepository;
 
 	@Autowired
-	public ESPostSearchService(ModelMapper mapper, ESPostService esPostService, PostRepository postRepository, StationPermissionService stationPermissionService, PermissionFilterService permissionFilterService, StationRepository stationRepository) {
+	public ESPostSearchService(ModelMapper mapper, ESPostService esPostService, PostRepository postRepository, StationPermissionService stationPermissionService) {
 		this.mapper = mapper;
 		this.esPostService = esPostService;
 		this.postRepository = postRepository;
 		this.stationPermissionService = stationPermissionService;
-		this.permissionFilterService = permissionFilterService;
-		this.stationRepository = stationRepository;
 	}
 
 	@Override
