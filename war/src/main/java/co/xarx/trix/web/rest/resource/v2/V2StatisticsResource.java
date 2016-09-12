@@ -27,7 +27,7 @@ public class V2StatisticsResource implements V2StatisticsApi {
 								   String endTime,
 								   String field){
 		if(field == null || field.isEmpty()) return badRequest("field", "must be defined");
-		checkSize(size);
+		if(size == null || size <= 0) return badRequest("size", "must be defined and bigger than zero");
 
 		Map map;
 		try {
@@ -42,8 +42,7 @@ public class V2StatisticsResource implements V2StatisticsApi {
 	@Override
 	public Response getPopularNetworks(Integer page, Integer size){
 		Map popular;
-
-		checkSize(size);
+		if(size == null || size <= 0) return badRequest("size", "must be defined and bigger than zero");
 
 		try {
 			popular = statisticsService.getMostPupularNetworks(size);
@@ -136,11 +135,5 @@ public class V2StatisticsResource implements V2StatisticsApi {
 
 	private void checkDate(String end) {
 		if(end == null || end.isEmpty()) badRequest("end", "must be a valid date");
-	}
-
-	private void checkSize(Integer size) {
-		if(size == null) size = 5;
-
-		if(size < 1) badRequest("size", "must be bigger then 0 (zero)");
 	}
 }
