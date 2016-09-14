@@ -40,14 +40,9 @@ public class StatisticsService {
         this.commentRepository = commentRepository;
 	}
 
-	public Map getMostPupularNetworks(Integer size){
-        Interval interval = getInterval(DateTime.now(), 30);
-        return analyticsSearchService.findMostPopular("tenantId", interval, size);
-    }
-
-	public Map getMostPorpular(String field, String start, String end, Integer size) throws Exception {
-	    Interval interval = getInterval(end, start);
-		return analyticsSearchService.findMostPopular(field, interval, size);
+	public Map getMostPopular(String field, String byField, Object byValue, String start, String end, Integer size){
+		Interval interval = getInterval(end, start);
+		return analyticsSearchService.findMostPopular(field, byField, byValue, interval, size);
 	}
 
 	public StatsData getPostStats(String date, Integer postId){
