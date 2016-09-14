@@ -43,8 +43,9 @@ public class MobileResource extends AbstractResource implements MobileApi {
 
 	private Response updateMobile(String token, Double lat, Double lng, Constants.MobilePlatform type) {
 		Person person = authService.getLoggedPerson();
-		Logger.info("Updating " + type.toString() + " device " + token + " for person " + person.id);
-		mobileService.updateDevice(person.getId(), token, lat, lng, type);
+		Integer id = person != null ? person.getId() : 0;
+		Logger.info("Updating " + type.toString() + " device " + token + " for person " + id);
+		mobileService.updateDevice(id, token, lat, lng, type);
 		return Response.status(Response.Status.OK).build();
 	}
 }

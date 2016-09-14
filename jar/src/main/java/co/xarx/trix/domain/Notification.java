@@ -30,4 +30,7 @@ public class Notification extends BaseEntity {
     @NotEmpty
     @Enumerated(EnumType.STRING)
     public NotificationType type;
+
+    @ManyToMany
+    public Person target;
 }

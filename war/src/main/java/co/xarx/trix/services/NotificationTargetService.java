@@ -1,7 +1,20 @@
 package co.xarx.trix.services;
 
-/**
- * Created by guto on 9/12/16.
- */
+import co.xarx.trix.domain.Comment;
+import co.xarx.trix.domain.Post;
+import org.springframework.stereotype.Service;
+
+@Service
 public class NotificationTargetService {
+    /**
+     *
+     * @param post
+     */
+    public void postCheckTarget(Post post){
+
+    }
+
+    public void commentCheckTarget(Comment comment){
+
+    }
 }

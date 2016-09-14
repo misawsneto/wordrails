@@ -75,12 +75,13 @@ public class PostService {
 		sendNewPostNotification(post);
 	}
 
-	public void createPostAddedNotification(Post post){
-		Notification notification = new Notification();
-		notification.setType(NotificationType.POST_ADDED);
-		notification.setEntityId(post.getId());
-		notification.setMessage();
-	}
+//	public void createPostAddedNotification(Post post){
+//		Notification notification = new Notification();
+//		notification.setType(NotificationType.POST_ADDED);
+//		notification.setPostId(post.getId());
+//		notification.setMessage();
+//		notificationRepository.save(notification);
+//	}
 
 	public void sendNewPostNotification(Post post) throws NotificationException {
 		List<MobileDevice> mobileDevices;
@@ -109,7 +110,7 @@ public class PostService {
 	public NotificationView getCreatePostNotification(Post post) {
 		String hash = StringUtil.generateRandomString(10, "Aa#");
 		NotificationView notification = new NotificationView(post.title, post.title, hash, false);
-		notification.type = NotificationType.POST_ADDED.toString();
+		notification.type = NotificationType.POST_ADDED;
 		notification.post = postConverter.convertTo(post);
 		notification.postId = post.id;
 		notification.postTitle = post.title;
