@@ -1,8 +1,8 @@
 app.controller('PageCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdDialog', '$state', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$interval', '$mdSidenav', '$translate', '$filter', '$localStorage', '$sce', 'station',
 	function($scope , $rootScope,  $log ,  $timeout ,  $mdDialog ,  $state ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $interval, $mdSidenav, $translate, $filter, $localStorage, $sce, station){
 
-			$scope.app.defaultStation = trixService.selectDefaultStation($scope.app.stations, $scope.app.defaultStation ? $scope.app.defaultStation.stationId : null);
-      $scope.app.stationsPermissions = trixService.getStationPermissions(angular.copy($scope.app));
+		$scope.app.defaultStation = trixService.selectDefaultStation($scope.app.stations, $scope.app.defaultStation ? $scope.app.defaultStation.stationId : null);
+      	$scope.app.stationsPermissions = trixService.getStationPermissions(angular.copy($scope.app));
 
 	    $scope.thisStation = station ? station : $scope.app.defaultStation;
 

@@ -4,14 +4,17 @@ import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.Taxonomy;
 
 import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 @RepositoryRestResource(exported = true)
-public interface TaxonomyRepository extends DatabaseRepository<Taxonomy, Integer> {
+public interface TaxonomyRepository extends JpaRepository<Taxonomy, Integer>, QueryDslPredicateExecutor<Taxonomy> {
 
 	Taxonomy findByTypeAndName(@Param("type") String type, @Param("name") String name);
 
@@ -40,4 +43,7 @@ public interface TaxonomyRepository extends DatabaseRepository<Taxonomy, Integer
 	@Modifying
 	@Query(nativeQuery=true, value="DELETE FROM network_taxonomy WHERE taxonomies_id = ?")
 	void deleteTaxonomyNetworks(Integer taxonomyId);
+
+	@RestResource(exported=false)
+	public  Taxonomy findByOwningStationId(Integer id);
 }

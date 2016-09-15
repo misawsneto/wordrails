@@ -1,8 +1,13 @@
 package co.xarx.trix.web.rest.resource.v2;
 
 import co.xarx.trix.api.v2.PersonData;
+import co.xarx.trix.api.v2.PersonTimelineData;
 import co.xarx.trix.api.v2.UserPermissionData;
 import co.xarx.trix.domain.page.query.statement.PersonStatement;
+import co.xarx.trix.services.PersonService;
+import co.xarx.trix.services.TimelineService;
+import co.xarx.trix.services.person.PersonAlreadyExistsException;
+import co.xarx.trix.services.person.PersonNotFoundException;
 import co.xarx.trix.services.person.PersonSearchService;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.SpringDataUtil;
@@ -16,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Set;
@@ -23,11 +29,15 @@ import java.util.Set;
 @Component
 public class V2PersonsResource extends AbstractResource implements V2PersonsApi {
 
+	private PersonService personService;
+	private TimelineService timelineService;
 	private PersonSearchService personSearchService;
 	private PersonPermissionService personPermissionService;
 
 	@Autowired
-	public V2PersonsResource(PersonSearchService personSearchService, PersonPermissionService personPermissionService) {
+	public V2PersonsResource(PersonService personService, TimelineService timelineService, PersonSearchService personSearchService, PersonPermissionService personPermissionService) {
+		this.personService = personService;
+		this.timelineService = timelineService;
 		this.personSearchService = personSearchService;
 		this.personPermissionService = personPermissionService;
 	}
@@ -65,7 +75,31 @@ public class V2PersonsResource extends AbstractResource implements V2PersonsApi 
 	@Override
 	public Response getPermissions(String username) {
 		UserPermissionData data = personPermissionService.getPermissions(new PrincipalSid(username));
-
 		return Response.ok().entity(data).build();
+	}
+
+	@Override
+	public Response deletePerson(String email) {
+		try {
+			personService.deletePerson(email);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
+		return Response.ok().build();
+	}
+
+	@Override
+	public Response getPersonTimeline(String username) {
+		PersonTimelineData timeline = timelineService.getUserTimeline(username);
+
+		if(timeline.events.isEmpty()){
+			return Response.noContent().build();
+		} else {
+			return Response.ok()
+					.entity(timeline)
+					.build();
+		}
+
 	}
 }

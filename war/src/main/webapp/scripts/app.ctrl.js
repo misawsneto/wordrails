@@ -154,6 +154,14 @@ angular.module('app')
         $state.go(state);
       }
 
+      $scope.app.isSettings = function(){
+        return document.location.pathname.slice(0, '/settings'.length) == '/settings';
+      }
+
+      $scope.app.isAccess = function(){
+        return document.location.pathname.slice(0, '/access'.length) == '/access';
+      }
+
       $scope.app.getNetworkLogo = function(){
         if($scope.app.network && $scope.app.network.logoImageHash)
           return '/api/images/get/' + $scope.app.network.logoImageHash + '?size=original';
@@ -1384,10 +1392,6 @@ angular.module('app')
             $scope.disabled = $scope.recommendApply = false;
           })
         }
-      }
-
-      $scope.app.isSettings = function(){
-        return document.location.pathname.slice(0, '/settings'.length) == '/settings';
       }
 
       appDataCtrl = $scope;
