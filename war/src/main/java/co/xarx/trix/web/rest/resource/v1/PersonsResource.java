@@ -463,6 +463,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
+	@Transactional
 	public PersonData getAllInitData() throws IOException {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
@@ -477,6 +478,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	}
 
 	@Override
+	@Transactional
 	public PersonData getInitialData() throws IOException {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		Network network = networkService.getNetworkFromHost(request.getHeader("Host"));

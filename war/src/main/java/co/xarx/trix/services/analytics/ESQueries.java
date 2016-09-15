@@ -2,6 +2,9 @@ package co.xarx.trix.services.analytics;
 
 import co.xarx.trix.domain.*;
 import co.xarx.trix.util.Constants;
+import org.apache.lucene.queryparser.xml.builders.BooleanQueryBuilder;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.TermQuery;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -162,25 +165,42 @@ public class ESQueries {
 		return generalCounter(queryName, query, "@timestamp");
 	}
 
-	public Map findMostPopular(String field, Interval interval, Integer size) throws Exception {
-		if (!isValidField(field)) {
-			throw new Exception("Invalid field in nginx: " + field);
-		}
-
-		String term = "by_" + field;
-
+	private SearchRequestBuilder prepareRangkingQuery(String field, Interval interval, Integer size, String term, BoolQueryBuilder must){
 		SearchRequestBuilder search = client.prepareSearch();
 		search.setTypes(Constants.AnalyticsType.READ).addAggregation(AggregationBuilders.terms(term).field(field).size(size));
-
 		search.addAggregation(AggregationBuilders.range("timestamp")
 				.field("@timestamp").addRange(interval.getStart().getMillis(), interval.getEnd().getMillis()));
 
+		if(must != null) search.setQuery(must);
+
+		return search;
+	}
+
+	public Map findMostPopular(String field, String byField, Object byValue, Interval interval, Integer size) throws Exception {
+		if (!isValidField(field)) {
+			throw new Exception("Invalid field in nginx: " + field);
+		}
+		String term = "popular_" + field;
+		BoolQueryBuilder must = null;
+
+		if(byField != null && !byField.isEmpty() && byValue != null){
+			if(!isValidField(byField)) throw new Exception("Invalid field in nginx: " + byField);
+
+			must = new BoolQueryBuilder();
+			must.must(termQuery(byField, byValue));
+			term += "_by_" + byField;
+		}
+
+		SearchRequestBuilder search = prepareRangkingQuery(field, interval, size, term, must);
 		SearchResponse response = search.execute().actionGet();
 
-		Terms networks = response.getAggregations().get(term);
-		Map buckets = new HashMap();
+		Terms terms = response.getAggregations().get(term);
+		return parseRanking(terms);
+	}
 
-		for (Terms.Bucket b : networks.getBuckets()) {
+	private Map parseRanking(Terms results){
+		Map buckets = new HashMap();
+		for (Terms.Bucket b : results.getBuckets()) {
 			buckets.put(b.getKey(), b.getDocCount());
 		}
 

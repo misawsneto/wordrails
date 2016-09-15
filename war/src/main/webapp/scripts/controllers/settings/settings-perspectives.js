@@ -319,6 +319,12 @@ app.controller('SettingsPerspectivesCtrl', ['$scope', '$log', '$timeout', '$mdDi
       $scope.perspectiveChanged = true;
     }
 
+    $scope.reloadMasonryAsync = function(){
+      $timeout(function(){
+            $scope.reloadMasonry();
+          },1000);
+    };
+
     $scope.removeFeaturedPost = function(post){
       if($scope.editingFeaturedRow && $scope.editingFeaturedRow.cells && $scope.editingFeaturedRow.cells.length > 0){
         var cells = $scope.editingFeaturedRow.cells;

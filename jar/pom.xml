@@ -156,7 +156,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.android.gcm</groupId>
+			<groupId>com.google.gcm</groupId>
 			<artifactId>gcm-server</artifactId>
 		</dependency>
 

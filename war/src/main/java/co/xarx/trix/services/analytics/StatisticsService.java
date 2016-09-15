@@ -4,7 +4,6 @@ import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.NetworkService;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +19,8 @@ import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 public class StatisticsService {
 
 	private PostRepository postRepository;
-	private NetworkService networkService;
 	private PersonRepository personRepository;
+	private NetworkRepository networkRepository;
 	private CommentRepository commentRepository;
 	private StationRepository stationRepository;
     private AnalyticsSearchService analyticsSearchService;
@@ -29,27 +28,21 @@ public class StatisticsService {
 	@Autowired
 	public StatisticsService(
 			PostRepository postRepository,
-			NetworkService networkService,
 			PersonRepository personRepository,
-			CommentRepository commentRepository,
+			NetworkRepository networkRepository, CommentRepository commentRepository,
 			StationRepository stationRepository,
 			AnalyticsSearchService analyticsSearchService) {
 		this.postRepository = postRepository;
-		this.networkService = networkService;
 		this.personRepository = personRepository;
-        this.stationRepository = stationRepository;
+		this.networkRepository = networkRepository;
+		this.stationRepository = stationRepository;
 		this.analyticsSearchService = analyticsSearchService;
         this.commentRepository = commentRepository;
 	}
 
-	public Map getMostPupularNetworks(Integer size){
-        Interval interval = getInterval(DateTime.now(), 30);
-        return analyticsSearchService.findMostPopular("tenantId", interval, size);
-    }
-
-	public Map getMostPorpular(String field, String start, String end, Integer size) throws Exception {
-	    Interval interval = getInterval(end, start);
-		return analyticsSearchService.findMostPopular(field, interval, size);
+	public Map getMostPopular(String field, String byField, Object byValue, String start, String end, Integer size){
+		Interval interval = getInterval(end, start);
+		return analyticsSearchService.findMostPopular(field, byField, byValue, interval, size);
 	}
 
 	public StatsData getPostStats(String date, Integer postId){
@@ -97,12 +90,13 @@ public class StatisticsService {
 		return analyticsSearchService.getStationStats(station, interval);
 	}
 
-	public StatsData getNetworkStats(String end, String start) {
+	public StatsData getNetworkStats(String end, String start){
 		Interval interval = getInterval(end, start);
 
-		Network network = networkService.getNetwork();
+		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 		if (network == null) return null;
 
+		network.setTenantId(TenantContextHolder.getCurrentTenantId());
 		return analyticsSearchService.getNetworkStats(network, interval);
 	}
 

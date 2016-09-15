@@ -105407,6 +105407,8 @@ angular.module('app')
 
         var isSettigns = path.slice(0, '/settings'.length) == '/settings';
 
+        var isAccess = path.slice(0, '/access'.length) == '/access'
+
         if(isSettigns){
           layout = '/views/layout.html?' + GLOBAL_URL_HASH;aside = '/views/aside.html?' + GLOBAL_URL_HASH;content= '/views/content.html?' + GLOBAL_URL_HASH;
         }else{
@@ -106137,6 +106139,11 @@ angular.module('app')
                 },
                 controller: 'PageCtrl'
               })
+              .state('app.empty', {
+                url: '/empty',
+                template: '<div ui-view></div>',
+                data : { title: 'Home', folded: false }
+              })
               .state('app.station', {
                 url: '/{stationSlug}',
                 abstract: true,
@@ -106565,11 +106572,15 @@ angular.module('app')
             ;
         }
 
+        if(!isAccess && !isSettigns && (initData.stations == null || initData.stations.length == 0)){
+          document.location.href = '/access/signin';
+          return;
+        }
+
         if(isSettigns)
           createSettingsRoutes();
         else
           createHomeRoutes();
-
 
         $stateProvider
         .state('app.search', {
@@ -106920,6 +106931,14 @@ angular.module('app')
 
       $scope.app.goToState = function(state){
         $state.go(state);
+      }
+
+      $scope.app.isSettings = function(){
+        return document.location.pathname.slice(0, '/settings'.length) == '/settings';
+      }
+
+      $scope.app.isAccess = function(){
+        return document.location.pathname.slice(0, '/access'.length) == '/access';
       }
 
       $scope.app.getNetworkLogo = function(){
@@ -108152,10 +108171,6 @@ angular.module('app')
             $scope.disabled = $scope.recommendApply = false;
           })
         }
-      }
-
-      $scope.app.isSettings = function(){
-        return document.location.pathname.slice(0, '/settings'.length) == '/settings';
       }
 
       appDataCtrl = $scope;
