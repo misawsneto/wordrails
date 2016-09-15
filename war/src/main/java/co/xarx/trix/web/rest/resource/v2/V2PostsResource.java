@@ -173,4 +173,9 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 
 		return Response.ok().build();
 	}
+
+	@Override
+	public Response setPostSeen(Integer postId, Integer readTime, String date) {
+		return null;
+	}
 }
