@@ -22,14 +22,12 @@ import co.xarx.trix.web.rest.api.v2.V2PostsApi;
 import com.google.common.collect.Sets;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.persistence.sessions.server.ReadConnectionPool;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -38,17 +36,18 @@ import java.util.Set;
 @NoArgsConstructor
 public class V2PostsResource extends AbstractResource implements V2PostsApi {
 
+	private PostService postService;
+	private AuditService auditService;
+	private PostConverter postConverter;
+	private PostRepository postRepository;
+	private DateTimeFormatter dateTimeFormatter;
+	private PostSearchService postSearchService;
+	private ElasticSearchService elasticSearchService;
 	private PostModerationService postModerationService;
 	private PostPermissionService postPermissionService;
-	private PostSearchService postSearchService;
-	private PostRepository postRepository;
-	private PostConverter postConverter;
-	private AuditService auditService;
-	private DateTimeFormatter dateTimeFormatter;
-	private ElasticSearchService elasticSearchService;
 
 	@Autowired
-	public V2PostsResource(PostModerationService postModerationService, PostPermissionService postPermissionService,
+	public V2PostsResource(PostService postService, PostModerationService postModerationService, PostPermissionService postPermissionService,
 						   PostSearchService postSearchService, PostRepository postRepository, PostConverter
 									   postConverter, AuditService auditService, DateTimeFormatter dateTimeFormatter, ElasticSearchService
 									   elasticSearchService){
@@ -61,6 +60,7 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 		this.postRepository = postRepository;
 		this.postConverter = postConverter;
 		this.auditService = auditService;
+		this.postService = postService;
 	}
 
 	@Override
@@ -176,6 +176,11 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 
 	@Override
 	public Response setPostSeen(Integer postId, Integer readTime, String date) {
+		Post post = postRepository.findOne(postId);
+
+		if(post == null) return Response.status(Response.Status.NOT_FOUND).build();
+
+		postService.newPostread(post, request);
 		return null;
 	}
 }

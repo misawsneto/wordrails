@@ -18,15 +18,19 @@ import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.StringUtil;
+import com.amazonaws.services.waf.model.HTTPHeader;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.http.protocol.HTTP;
+import org.apache.lucene.store.IOContext;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,6 +70,8 @@ public class PostService {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PostSearchService postSearchService;
+	@Autowired
+	private ESPostreadRepository esPostreadRepository;
 
 	@Autowired
 	private ImageService imageService;
@@ -225,5 +231,20 @@ public class PostService {
 			}
 		}
 		return  null;
+	}
+
+	public void newPostread(Post post, HttpServletRequest request){
+		ESPostread postread = new ESPostread();
+
+		postread.setId(UUID.randomUUID().variant());
+		postread.setTenantId(TenantContextHolder.getCurrentTenantId());
+		postread.setStationId(post.getStation().getId());
+		postread.setAuthorId(post.getAuthor().getId());
+
+		postread.setTimestamp(new Date());
+		postread.setMessage(request.getHeader("User-Agent"));
+		postread.setHost(request.getLocalName());
+		postread.setClientip(request.getRemoteAddr());
+		postread.setReferrer(request.getHeader("referer"));
 	}
 }
