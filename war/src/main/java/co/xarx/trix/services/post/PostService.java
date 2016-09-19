@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -236,15 +237,23 @@ public class PostService {
 	public void newPostread(Post post, HttpServletRequest request){
 		ESPostread postread = new ESPostread();
 
-		postread.setId(UUID.randomUUID().variant());
+        Integer id = new BigInteger(UUID.randomUUID().toString().getBytes()).intValue();
+
+		postread.setId(id);
 		postread.setTenantId(TenantContextHolder.getCurrentTenantId());
 		postread.setStationId(post.getStation().getId());
 		postread.setAuthorId(post.getAuthor().getId());
+        postread.setPostSlug(post.getSlug());
+        postread.setPostId(post.getId());
 
 		postread.setTimestamp(new Date());
+
 		postread.setMessage(request.getHeader("User-Agent"));
+//        postread.setRequest(request.getRequestURI());
 		postread.setHost(request.getLocalName());
 		postread.setClientip(request.getRemoteAddr());
 		postread.setReferrer(request.getHeader("referer"));
+
+        esPostreadRepository.save(postread);
 	}
 }

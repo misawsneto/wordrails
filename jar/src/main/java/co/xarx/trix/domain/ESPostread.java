@@ -11,8 +11,8 @@ import java.util.Date;
 
 @Getter
 @Setter
-@Document(indexName = "#{properties.index}", type = Constants.ObjectType.POSTREAD)
-public class ESPostread implements ElasticSearchEntity {
+@Document(indexName = "#{properties.access_index}", type = Constants.ObjectType.POSTREAD)
+public class ESPostread implements ElasticSearchEntity{
 
     @Id
     public Integer id;
