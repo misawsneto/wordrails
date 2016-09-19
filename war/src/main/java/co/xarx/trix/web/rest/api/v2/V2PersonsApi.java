@@ -31,8 +31,4 @@ public interface V2PersonsApi {
 	@GET
 	@Path("{username}/permissions/station")
 	Response getPermissions(@PathParam("username") String username);
-
-//	@GET
-//	@Path("{username}/permissions/station")
-//	Response getPermissions(@PathParam("username") String username);
 }
