@@ -26,7 +26,7 @@ public class ProfilerAspect {
 		long finish = System.currentTimeMillis();
 		long elapsedTime = finish - start;
 		String className = method.getDeclaringClass().getSimpleName();
-		log.debug("@ profile - Method " + className + "." + method.getName() + "\n\t Elapsed time: " + elapsedTime);
+		log.info("@ profile - Method " + className + "." + method.getName() + "\n\t Elapsed time: " + elapsedTime);
 		return output;
 	}
 
