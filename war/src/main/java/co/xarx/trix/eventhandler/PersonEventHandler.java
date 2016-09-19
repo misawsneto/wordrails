@@ -14,25 +14,13 @@ import java.util.List;
 public class PersonEventHandler {
 
 	@Autowired
-	private ImageRepository imageRepository;
-	@Autowired
-	private MobileNotificationRepository mobileNotificationRepository;
-	@Autowired
 	private PersonRepository personRepository;
-	@Autowired
-	private QueryPersistence queryPersistence;
 	@Autowired
 	private TermRepository termRepository;
 	@Autowired
-	private PostRepository postRepository;
-	@Autowired
 	private ElasticSearchService elasticSearchService;
 	@Autowired
-	private ESPersonRepository esPersonRepository;
-	@Autowired
 	private UserRepository userRepository;
-	@Autowired
-	private MobileDeviceRepository mobileDeviceRepository;
 
 	@HandleBeforeSave
 	public void handleBeforeSave(Person person) {
@@ -41,26 +29,6 @@ public class PersonEventHandler {
 		if (originalPerson != null && !originalPerson.name.equals(person.name)) {
 			termRepository.updateTermsNamesAuthorTaxonomies(person.name, originalPerson.name);
 		}
-	}
-
-	@HandleBeforeDelete
-	public void handleBeforeDelete(Person person) {
-		if(person.cover != null) {
-			imageRepository.delete(person.cover);
-		}
-
-//		postReadRepository.deleteByPersonId(person.id);
-
-		List<Post> posts = postRepository.findAllFromPerson(person.id);
-		for (Post post: posts){
-			postRepository.delete(post);
-		}
-
-		queryPersistence.setNoAuthor(person.id);
-
-		mobileDeviceRepository.deleteByPersonId(person.id);
-		userRepository.delete(person.user.id);
-		esPersonRepository.delete(person.getId());
 	}
 
 	@HandleAfterSave

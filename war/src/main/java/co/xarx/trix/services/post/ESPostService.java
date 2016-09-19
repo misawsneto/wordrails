@@ -275,14 +275,19 @@ public class ESPostService extends AbstractElasticSearchService {
 	}
 
 	private void applyStateFilter(BoolFilterBuilder f, String state) {
-		long now = Instant.now().toEpochMilli();
 		if (state != null && !state.isEmpty()) {
+			long now = Instant.now().toEpochMilli();
+
 			if (state.equalsIgnoreCase("SCHEDULED")) {
 				f.must(queryFilter(queryStringQuery("PUBLISHED").defaultField("state")));
-				applyDateFilter(f, String.valueOf(now), null, "scheduledDate");
+				applyDateFilter(f, now, null, "scheduledDate");
 			} else if (state.equalsIgnoreCase("PUBLISHED")) {
 				f.must(queryFilter(queryStringQuery("PUBLISHED").defaultField("state")));
-				applyDateFilter(f, null, String.valueOf(now), "scheduledDate");
+				applyDateFilter(f, null, now, "scheduledDate");
+				applyDateFilter(f, now, Long.MAX_VALUE, "unpublishDate");
+			} else if (state.equalsIgnoreCase("UNPUBLISHED")) {
+				f.must(queryFilter(queryStringQuery("PUBLISHED").defaultField("state")));
+				applyDateFilter(f, 0, now, "unpublishDate");
 			} else {
 				f.must(queryFilter(queryStringQuery(state).defaultField("state")));
 			}

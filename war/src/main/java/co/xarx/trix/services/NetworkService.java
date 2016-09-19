@@ -144,7 +144,6 @@ public class NetworkService {
 		if(network.getInvitationMessage() == null || network.getInvitationMessage().isEmpty()){
 			String message = FileUtil.loadFileFromResource("default_invitation_text.txt");
 			network.setInvitationMessage(message);
-			networkRepository.save(network);
 		}
 		return network.getInvitationMessage();
 	}

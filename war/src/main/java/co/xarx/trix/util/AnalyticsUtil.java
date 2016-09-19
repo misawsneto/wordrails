@@ -2,6 +2,7 @@ package co.xarx.trix.util;
 
 import co.xarx.trix.api.v2.ReadsCommentsRecommendsCountData;
 import co.xarx.trix.exception.BadRequestException;
+import com.mysema.commons.lang.Assert;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Interval;

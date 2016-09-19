@@ -33,6 +33,10 @@ public interface MobileDeviceRepository extends JpaRepository<MobileDevice, Inte
 	@Modifying
 	void deleteByPersonId(Integer id);
 
+	@Modifying
+	@RestResource(exported = false)
+	void deleteByLastPersonLoggedId(Integer id);
+
 	@RestResource(exported = false)
 	@Query("select count(*) from MobileDevice md where md.type = 'ANDROID' and tenantId = :tenantId")
 	Object countAndroidDevices(@Param("tenantId") String tenantId);

@@ -10,7 +10,9 @@ import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.ImageService;
 import co.xarx.trix.services.MobileService;
+import co.xarx.trix.services.SchedulerService;
 import co.xarx.trix.services.notification.MobileNotificationService;
+import co.xarx.trix.services.notification.job.SendNotificationJob;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
@@ -19,6 +21,7 @@ import co.xarx.trix.util.StringUtil;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -108,24 +111,15 @@ public class PostService {
 		return notification;
 	}
 
-	public void publishScheduledPost(Integer postId, boolean allowNotifications) throws NotificationException {
-		Post post = postRepository.findOne(postId);
-		turnPublished(allowNotifications, post);
-		if (post != null) {
-			post.date = new Date();
-			postRepository.save(post);
-		}
-	}
-
-	public void turnPublished(boolean allowNotifications, Post post) {
-		if (post != null && !post.state.equals(Post.STATE_PUBLISHED)) {
-			if (post.notify && allowNotifications) {
-				sendNewPostNotification(post);
-			}
-
-			post.state = Post.STATE_PUBLISHED;
-		}
-	}
+//	public void turnPublished(boolean allowNotifications, Post post) {
+//		if (post != null && !post.state.equals(Post.STATE_PUBLISHED)) {
+//			if (post.notify && allowNotifications) {
+//				sendNewPostNotification(post);
+//			}
+//
+//			post.state = Post.STATE_PUBLISHED;
+//		}
+//	}
 
 	public List<PostView> searchRecommends(String q, Integer page, Integer size){
 		Person person = personRepository.findByUsername(authProvider.getUser().getUsername());
