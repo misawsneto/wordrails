@@ -10,9 +10,8 @@ import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.ImageService;
 import co.xarx.trix.services.MobileService;
-import co.xarx.trix.services.SchedulerService;
+import co.xarx.trix.services.analytics.StatEventsService;
 import co.xarx.trix.services.notification.MobileNotificationService;
-import co.xarx.trix.services.notification.job.SendNotificationJob;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
@@ -21,12 +20,13 @@ import co.xarx.trix.util.StringUtil;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
-import org.quartz.SchedulerException;
+import org.eclipse.persistence.jpa.jpql.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,6 +66,8 @@ public class PostService {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PostSearchService postSearchService;
+	@Autowired
+	private StatEventsService statEventsService;
 
 	@Autowired
 	private ImageService imageService;
@@ -141,9 +143,11 @@ public class PostService {
 		return pvs;
 	}
 
-	public boolean toggleBookmark(Integer postId){
+	public boolean toggleBookmark(Integer postId, HttpServletRequest request){
 		Person person = authProvider.getLoggedPerson();
 		Person originalPerson = personRepository.findOne(person.id);
+		Post post = postRepository.findOne(postId);
+		Assert.isNotNull(post, "Post not found");
 
 		boolean success;
 
@@ -155,6 +159,7 @@ public class PostService {
 			originalPerson.bookmarkPosts.add(postId);
 			person.bookmarkPosts.add(postId);
 			success = true;
+			statEventsService.newBookmarkEvent(post, request);
 		}
 
 		originalPerson.bookmarkPosts = new ArrayList<>(new HashSet<>(originalPerson.bookmarkPosts));
@@ -166,9 +171,11 @@ public class PostService {
 
 	}
 
-	public boolean toggleRecommend(Integer postId){
+	public boolean toggleRecommend(Integer postId, HttpServletRequest request){
 		Person person = authProvider.getLoggedPerson();
 		Person originalPerson = personRepository.findOne(person.id);
+		Post post = postRepository.findOne(postId);
+		Assert.isNotNull(post, "Post not found");
 
 		boolean response;
 
@@ -180,6 +187,7 @@ public class PostService {
 			originalPerson.recommendPosts.add(postId);
 			person.recommendPosts.add(postId);
 			response = true;
+			statEventsService.newRecommendEvent(post, request);
 		}
 
 		originalPerson.recommendPosts = new ArrayList<>(new HashSet<>(originalPerson.recommendPosts));

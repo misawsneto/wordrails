@@ -61,4 +61,10 @@ public interface V2PostsApi {
 	@Path("/bulkUpdateStates")
 	Response bulkUpdateStates(BulkUpdateState bulkUpdateState) throws NoSuchFieldException,
 			IllegalAccessException;
+
+	@PUT
+	@Path("/{postId}/seen")
+	Response setPostSeen(@PathParam("postId") Integer postId,
+						 @QueryParam("timeReading") Integer timeReading,
+						 @QueryParam("date") String date);
 }

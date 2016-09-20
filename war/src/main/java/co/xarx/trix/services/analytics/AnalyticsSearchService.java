@@ -90,9 +90,9 @@ public class AnalyticsSearchService {
 	public List<Integer> getGeneralStatus(AnalyticsEntity entity) {
 		List<Integer> generalStatus = new ArrayList<>();
 
-		Integer totalReads = esQueries.countActionsByEntity("postread", "get",entity);
-		Integer totalComments = esQueries.countActionsByEntity("comment", "post", entity);
-		Integer totalRecommends = esQueries.countActionsByEntity("recommend", "put", entity);
+		Integer totalReads = esQueries.countActionsByEntity(Constants.StatsEventType.POST_READ, entity);
+		Integer totalComments = esQueries.countActionsByEntity(Constants.StatsEventType.POST_COMMENT, entity);
+		Integer totalRecommends = esQueries.countActionsByEntity(Constants.StatsEventType.POST_RECOMMEND, entity);
 
 		generalStatus.add(totalReads); // 1st reads
 		generalStatus.add(totalComments); // 2nd comments
@@ -114,7 +114,7 @@ public class AnalyticsSearchService {
 		Map postReads = new HashMap();
 
 		posts.forEach( post -> {
-			postReads.put(post.getId(), esQueries.countActionsByEntity("postread", "get", post));
+			postReads.put(post.getId(), esQueries.countActionsByEntity(Constants.StatsEventType.POST_READ, post));
 		});
 
 		return postReads;

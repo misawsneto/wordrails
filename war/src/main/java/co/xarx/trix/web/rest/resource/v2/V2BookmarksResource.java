@@ -4,6 +4,7 @@ import co.xarx.trix.api.BooleanResponse;
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.services.post.PostService;
+import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2BookmarksApi;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Component
 @NoArgsConstructor
-public class V2BookmarksResource implements V2BookmarksApi {
+public class V2BookmarksResource extends AbstractResource implements V2BookmarksApi {
 	@Autowired
 	private PostService postService;
 
@@ -30,7 +31,7 @@ public class V2BookmarksResource implements V2BookmarksApi {
 	@Override
 	public BooleanResponse toggleBookmark(Integer postId) {
 		BooleanResponse br = new BooleanResponse();
-		br.response = postService.toggleBookmark(postId);
+		br.response = postService.toggleBookmark(postId, request);
 		return br;
 	}
 }
