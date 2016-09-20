@@ -12,7 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Document(indexName = "#{properties.access_index}", type = Constants.ObjectType.ANALYTICS_INDEX_TYPE)
-public class ESPostread implements ElasticSearchEntity{
+public class ESstatEvent implements ElasticSearchEntity {
 
     @Id
     public Integer id;
@@ -50,13 +50,15 @@ public class ESPostread implements ElasticSearchEntity{
     public String postSlug;
 
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
-    public String os_name;
+    public String osName;
 
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     public String device;
 
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     public String browser;
+
+    public Integer personId;
 
     public Integer authorId;
 

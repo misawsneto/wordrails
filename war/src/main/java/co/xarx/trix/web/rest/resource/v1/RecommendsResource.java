@@ -34,7 +34,7 @@ public class RecommendsResource extends AbstractResource implements RecommendsAp
 	@Override
 	public BooleanResponse toggleRecommend(Integer postId) {
 		BooleanResponse br = new BooleanResponse();
-		br.response = postService.toggleRecommend(postId);
+		br.response = postService.toggleRecommend(postId, request);
 		return br;
 	}
 }

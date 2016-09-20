@@ -5,14 +5,16 @@ import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.ESPost;
+import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.analytics.StatEventsService;
 import co.xarx.trix.services.post.PostModerationService;
 import co.xarx.trix.services.post.PostSearchService;
-import co.xarx.trix.services.post.PostService;
+import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.PostPermissionService;
 import co.xarx.trix.util.ImmutablePage;
 import co.xarx.trix.util.SpringDataUtil;
@@ -36,31 +38,33 @@ import java.util.Set;
 @NoArgsConstructor
 public class V2PostsResource extends AbstractResource implements V2PostsApi {
 
-	private PostService postService;
+	private AuthService authProvider;
 	private AuditService auditService;
 	private PostConverter postConverter;
 	private PostRepository postRepository;
 	private DateTimeFormatter dateTimeFormatter;
 	private PostSearchService postSearchService;
+	private StatEventsService statEventsService;
 	private ElasticSearchService elasticSearchService;
 	private PostModerationService postModerationService;
 	private PostPermissionService postPermissionService;
 
 	@Autowired
-	public V2PostsResource(PostService postService, PostModerationService postModerationService, PostPermissionService postPermissionService,
+	public V2PostsResource(AuthService authProvider, PostModerationService postModerationService, PostPermissionService postPermissionService,
 						   PostSearchService postSearchService, PostRepository postRepository, PostConverter
-									   postConverter, AuditService auditService, DateTimeFormatter dateTimeFormatter, ElasticSearchService
+									   postConverter, AuditService auditService, DateTimeFormatter dateTimeFormatter, StatEventsService statEventsService, ElasticSearchService
 									   elasticSearchService){
 		this.postModerationService = postModerationService;
 		this.postPermissionService = postPermissionService;
 		this.elasticSearchService = elasticSearchService;
 		this.dateTimeFormatter = dateTimeFormatter;
+		this.statEventsService = statEventsService;
 
 		this.postSearchService = postSearchService;
 		this.postRepository = postRepository;
 		this.postConverter = postConverter;
 		this.auditService = auditService;
-		this.postService = postService;
+		this.authProvider = authProvider;
 	}
 
 	@Override
@@ -180,7 +184,7 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 
 		if(post == null) return Response.status(Response.Status.NOT_FOUND).build();
 
-		postService.newPostread(post, request);
+		statEventsService.newPostreadEvent(post, request);
 		return null;
 	}
 }

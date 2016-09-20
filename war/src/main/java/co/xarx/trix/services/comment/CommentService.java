@@ -11,9 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by misael on 06/06/2016.
- */
 @Slf4j
 @Service
 public class CommentService {
