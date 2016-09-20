@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-@Document(indexName = "#{properties.access_index}", type = Constants.ObjectType.POSTREAD)
+@Document(indexName = "#{properties.access_index}", type = Constants.ObjectType.ANALYTICS_INDEX_TYPE)
 public class ESPostread implements ElasticSearchEntity{
 
     @Id
@@ -48,8 +48,6 @@ public class ESPostread implements ElasticSearchEntity{
 
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     public String postSlug;
-
-    public String action;
 
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     public String os_name;
