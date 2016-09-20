@@ -8,9 +8,6 @@ import org.springframework.data.rest.core.config.Projection;
 
 import java.util.Set;
 
-/**
- * Created by misael on 15/09/2015.
- */
 @Projection(types=StationPerspective.class)
 public interface StationPerspectiveProjection {
     Integer getId();

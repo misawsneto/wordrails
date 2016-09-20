@@ -9,9 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-/**
- * Created by misael on 3/13/2016.
- */
 @Entity
 @lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 public class GeoPoint extends BaseEntity{

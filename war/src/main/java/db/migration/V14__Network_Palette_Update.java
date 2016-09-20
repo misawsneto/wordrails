@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by misael on 4/27/2016.
- */
 @SuppressWarnings({"SpringJavaAutowiredMembersInspection", "unused"})
 public class V14__Network_Palette_Update extends SpringContextMigration {
 	@Override
