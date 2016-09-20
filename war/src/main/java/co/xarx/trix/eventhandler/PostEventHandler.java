@@ -10,6 +10,8 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.NotificationTargetService;
+import co.xarx.trix.services.notification.NotificationService;
 import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.services.security.PostPermissionService;
 import co.xarx.trix.util.StringUtil;

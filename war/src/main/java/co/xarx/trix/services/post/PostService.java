@@ -66,6 +66,8 @@ public class PostService {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PostSearchService postSearchService;
+	@Autowired
+	private StatEventsService statEventsService;
 
 	@Autowired
 	private ImageService imageService;
