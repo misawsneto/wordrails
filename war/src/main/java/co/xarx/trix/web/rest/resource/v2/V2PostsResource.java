@@ -8,6 +8,7 @@ import co.xarx.trix.domain.ESPost;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
+import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ElasticSearchService;
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -38,7 +40,6 @@ import java.util.Set;
 @NoArgsConstructor
 public class V2PostsResource extends AbstractResource implements V2PostsApi {
 
-	private AuthService authProvider;
 	private AuditService auditService;
 	private PostConverter postConverter;
 	private PostRepository postRepository;
@@ -50,7 +51,7 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	private PostPermissionService postPermissionService;
 
 	@Autowired
-	public V2PostsResource(AuthService authProvider, PostModerationService postModerationService, PostPermissionService postPermissionService,
+	public V2PostsResource(PostModerationService postModerationService, PostPermissionService postPermissionService,
 						   PostSearchService postSearchService, PostRepository postRepository, PostConverter
 									   postConverter, AuditService auditService, DateTimeFormatter dateTimeFormatter, StatEventsService statEventsService, ElasticSearchService
 									   elasticSearchService){
@@ -64,7 +65,6 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 		this.postRepository = postRepository;
 		this.postConverter = postConverter;
 		this.auditService = auditService;
-		this.authProvider = authProvider;
 	}
 
 	@Override
@@ -179,12 +179,18 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	}
 
 	@Override
-	public Response setPostSeen(Integer postId, Integer readTime, String date) {
+	public Response setPostSeen(Integer postId, Integer timeReading, String date){
 		Post post = postRepository.findOne(postId);
-
 		if(post == null) return Response.status(Response.Status.NOT_FOUND).build();
 
-		statEventsService.newPostreadEvent(post, request);
-		return null;
+		Date timestamp;
+		try{
+			timestamp = dateTimeFormatter.parseDateTime(date).toDate();
+		} catch (Exception e){
+			throw new BadRequestException("Date format: " + "yyyy-MM-dd'T'HH:mm:ssZ");
+		}
+
+		statEventsService.newPostreadEvent(post, request, timeReading, timestamp);
+		return Response.ok().build();
 	}
 }

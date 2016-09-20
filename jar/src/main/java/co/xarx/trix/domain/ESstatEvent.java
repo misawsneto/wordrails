@@ -55,6 +55,8 @@ public class ESstatEvent implements ElasticSearchEntity {
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     public String device;
 
+    public Integer timeReading;
+
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     public String browser;
 

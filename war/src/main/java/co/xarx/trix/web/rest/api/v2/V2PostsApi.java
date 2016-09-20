@@ -65,6 +65,6 @@ public interface V2PostsApi {
 	@PUT
 	@Path("/{postId}/seen")
 	Response setPostSeen(@PathParam("postId") Integer postId,
-						 @QueryParam("readTime") Integer readTime,
+						 @QueryParam("timeReading") Integer timeReading,
 						 @QueryParam("date") String date);
 }

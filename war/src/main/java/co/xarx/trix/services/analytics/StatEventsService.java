@@ -46,9 +46,11 @@ public class StatEventsService {
         statEventRepository.save(event);
     }
 
-    public void newPostreadEvent(Post post, HttpServletRequest request){
+    public void newPostreadEvent(Post post, HttpServletRequest request, Integer timeReading, Date date){
         ESstatEvent postread = newEvent(post, request);
         postread.setType(Constants.StatsEventType.POST_READ);
+        postread.setTimestamp(date);
+        postread.setTimeReading(timeReading);
         statEventRepository.save(postread);
     }
 
