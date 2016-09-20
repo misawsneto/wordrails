@@ -371,7 +371,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	@Override
 	public Response validatePersonEmail(String hash){
 		Assert.hasText(hash, "A valid hash mush be sent");
-		if(personService.validateEmail(hash) == null){
+		if(personService.validatePersonEmail(hash) == null){
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		return Response.status(Status.OK).build();
@@ -399,26 +399,6 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			resp.content = personRepository.countPersons().intValue();
 		}
 		return resp;
-	}
-
-	@Override
-	public Response deleteMany(List<Integer> personIds) {
-		Person person = authProvider.getLoggedPerson();
-		List<Person> persons = personRepository.findPersonsByIds(personIds);
-
-		if (persons != null && persons.size() > 0) {
-			if (person.networkAdmin) {
-				for (Person p : persons) {
-					personEventHandler.handleBeforeDelete(p);
-				}
-
-				personRepository.delete(persons);
-			} else {
-				return Response.status(Status.UNAUTHORIZED).build();
-			}
-		}
-
-		return Response.status(Status.OK).build();
 	}
 
 	@Override

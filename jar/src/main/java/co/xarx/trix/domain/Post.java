@@ -81,6 +81,10 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date scheduledDate;
 
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date unpublishDate;
+
 	@Lob
 	@Column(unique = true)
 	public String slug;

@@ -5,13 +5,17 @@ import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.ESPost;
+import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
+import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.analytics.StatEventsService;
 import co.xarx.trix.services.post.PostModerationService;
 import co.xarx.trix.services.post.PostSearchService;
+import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.PostPermissionService;
 import co.xarx.trix.util.ImmutablePage;
 import co.xarx.trix.util.SpringDataUtil;
@@ -21,10 +25,13 @@ import co.xarx.trix.web.rest.api.v2.V2PostsApi;
 import com.google.common.collect.Sets;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -33,27 +40,31 @@ import java.util.Set;
 @NoArgsConstructor
 public class V2PostsResource extends AbstractResource implements V2PostsApi {
 
+	private AuditService auditService;
+	private PostConverter postConverter;
+	private PostRepository postRepository;
+	private DateTimeFormatter dateTimeFormatter;
+	private PostSearchService postSearchService;
+	private StatEventsService statEventsService;
+	private ElasticSearchService elasticSearchService;
 	private PostModerationService postModerationService;
 	private PostPermissionService postPermissionService;
-	private PostSearchService postSearchService;
-	private PostRepository postRepository;
-	private PostConverter postConverter;
-	private AuditService auditService;
-	private ElasticSearchService elasticSearchService;
 
 	@Autowired
 	public V2PostsResource(PostModerationService postModerationService, PostPermissionService postPermissionService,
 						   PostSearchService postSearchService, PostRepository postRepository, PostConverter
-									   postConverter, AuditService auditService, ElasticSearchService
+									   postConverter, AuditService auditService, DateTimeFormatter dateTimeFormatter, StatEventsService statEventsService, ElasticSearchService
 									   elasticSearchService){
 		this.postModerationService = postModerationService;
 		this.postPermissionService = postPermissionService;
+		this.elasticSearchService = elasticSearchService;
+		this.dateTimeFormatter = dateTimeFormatter;
+		this.statEventsService = statEventsService;
 
 		this.postSearchService = postSearchService;
 		this.postRepository = postRepository;
 		this.postConverter = postConverter;
 		this.auditService = auditService;
-		this.elasticSearchService = elasticSearchService;
 	}
 
 	@Override
@@ -117,6 +128,24 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	}
 
 	@Override
+	public Response scheduleUnpublishing(Integer postId, String date) {
+		boolean canUnpublish = postPermissionService.canPublishPost(postId);
+
+		if(canUnpublish){
+			try {
+				DateTime unpublishDate = dateTimeFormatter.parseDateTime(date);
+				postModerationService.scheduleUnpublishing(postId,  unpublishDate.toDate());
+			} catch (IllegalArgumentException e){
+				return Response.status(Response.Status.BAD_GATEWAY).entity(e.getMessage()).build();
+			}
+		} else {
+			return Response.status(Response.Status.FORBIDDEN).entity("User cannot unpublish post").build();
+		}
+
+		return Response.ok().build();
+	}
+
+	@Override
 	public ContentResponse<List<PostView>> findPostsByIds(List<Integer> ids) {
 		List<Post> posts = postRepository.findAll(ids);
 		ContentResponse<List<PostView>> response = new ContentResponse<>();
@@ -146,6 +175,22 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 			elasticSearchService.mapThenSave(post, ESPost.class);
 		}
 
+		return Response.ok().build();
+	}
+
+	@Override
+	public Response setPostSeen(Integer postId, Integer timeReading, String date){
+		Post post = postRepository.findOne(postId);
+		if(post == null) return Response.status(Response.Status.NOT_FOUND).build();
+
+		Date timestamp;
+		try{
+			timestamp = dateTimeFormatter.parseDateTime(date).toDate();
+		} catch (Exception e){
+			throw new BadRequestException("Date format: " + "yyyy-MM-dd'T'HH:mm:ssZ");
+		}
+
+		statEventsService.newPostreadEvent(post, request, timeReading, timestamp);
 		return Response.ok().build();
 	}
 }

@@ -67,6 +67,7 @@ public class ESPost implements ElasticSearchEntity {
 
 	public String subheading;
 	public Date scheduledDate;
+	public Date unpublishDate;
 	public boolean notify;
 
 	@Override

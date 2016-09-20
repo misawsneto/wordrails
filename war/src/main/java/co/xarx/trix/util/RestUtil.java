@@ -22,7 +22,7 @@ public class RestUtil {
 		return gson.toJson(je);
 	}
 
-	public String getDeviceFromUserAgent(String userAgent) {
+	public static String getDeviceFromUserAgent(String userAgent) {
 		UserAgent ua = UserAgent.parseUserAgentString(userAgent);
 		return ua.getBrowser().getName();
 	}

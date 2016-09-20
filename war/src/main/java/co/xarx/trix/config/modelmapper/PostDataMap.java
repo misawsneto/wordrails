@@ -3,9 +3,11 @@ package co.xarx.trix.config.modelmapper;
 import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Term;
+import co.xarx.trix.elasticsearch.mapper.PostMap;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.PropertyMap;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,6 +20,23 @@ public class PostDataMap extends PropertyMap<Post, PostData> {
 			return terms.stream().map(Term::getId).collect(Collectors.toSet());
 		}
 	}
+
+	class ScheduledDateCondition extends AbstractConverter<Date, Date> {
+
+		@Override
+		protected Date convert(Date source) {
+			return source != null ? source : new Date(0);
+		}
+	}
+
+//	class UnpublishDateCondition extends AbstractConverter<Date, Date> {
+//
+//		@Override
+//		protected Date convert(Date source) {
+//			return source != null ? source : new Date(Long.MAX_VALUE);
+//		}
+//	}
+
 
 	@Override
 	protected void configure() {
@@ -35,6 +54,9 @@ public class PostDataMap extends PropertyMap<Post, PostData> {
 		using(new TermToIntegerConverter()).map(source.getTerms(), destination.getCategoriesIds());
 		map(source.getTerms(), destination.getCategories());
 		map(source.getFeaturedVideo().getExternalVideoUrl(), destination.getVideo().getUrl());
+		map(source.getUnpublishDate(), destination.getUnpublishDate());
+
+		using(new PostDataMap.ScheduledDateCondition()).map(source.getScheduledDate(), destination.getScheduledDate());
 
 //		Condition<Image, PostData> picsNull = c -> c.getSource().getPictures() == null;
 
