@@ -70,12 +70,12 @@ public class MobileNotificationService {
 					notification, e, MobileNotification.DeviceType.APPLE));
 		}
 
-		try {
-			mobileNotifications = futureFcmNotifications.get();
-		} catch (InterruptedException | ExecutionException e) {
-			mobileNotifications = notificationBatchPublisher.getErrorNotifications(fcmDevices,
-					notification, e, MobileNotification.DeviceType.FCM);
-		}
+//		try {
+//			mobileNotifications.addAll(futureFcmNotifications.get());
+//		} catch (InterruptedException | ExecutionException e) {
+//			mobileNotifications = notificationBatchPublisher.getErrorNotifications(fcmDevices,
+//					notification, e, MobileNotification.DeviceType.FCM);
+//		}
 
 		return mobileNotifications;
 	}
