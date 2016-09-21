@@ -25,9 +25,6 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.Callable;
 
-/**
- * Created by misael on 4/12/2016.
- */
 @Service
 public class FileService {
 	public static final Integer MAX_SIZE_8 = 8388608;

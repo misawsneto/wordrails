@@ -84,7 +84,6 @@ public class ESPostSearchService extends AbstractSearchService implements PostSe
 		return esPostService.searchIndex(mainQuery, pageable, sort);
 	}
 
-	@TimeIt
 	@Override
 	public ImmutablePage<Post> search(PostStatement params, Integer page, Integer size) {
 		if (params.getStations() == null || params.getStations().isEmpty()) {
@@ -108,7 +107,6 @@ public class ESPostSearchService extends AbstractSearchService implements PostSe
 		return new ImmutablePage(result, page, searchResults.size());
 	}
 
-	@TimeIt
 	@Override
 	public ImmutablePage<PostData> searchData(PostStatement params, Integer page, Integer size) {
 		ImmutablePage<Post> posts = search(params, page, size);
