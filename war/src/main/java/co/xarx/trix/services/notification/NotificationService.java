@@ -63,8 +63,9 @@ public class NotificationService {
 		List<Integer> personsIds = persons.stream().map(Person::getId).collect(Collectors.toList());
 		List<String> androids = mobileDeviceRepository.findAndroids(personsIds);
 		List<String> apples = mobileDeviceRepository.findApples(personsIds);
+		List<String> fcms = mobileDeviceRepository.findFCMs(personsIds);
 
-		saveMobileNotifications(postId, post, androids, apples);
+		saveMobileNotifications(postId, post, androids, apples, fcms);
 	}
 
 	public void schedulePostNotification(Date date, String title, String message, Integer postId) throws SchedulerException {
@@ -77,7 +78,7 @@ public class NotificationService {
 		schedulerService.schedule(postId + "", SendNotificationJob.class, date, properties);
 	}
 
-	private void saveMobileNotifications(Integer postId, Post post, List<String> androids, List<String> apples) {
+	private void saveMobileNotifications(Integer postId, Post post, List<String> androids, List<String> apples, List<String> fcms) {
 		PostView postView = new PostView(postId);
 		if (post.getFeaturedImage() != null) {
 			postView.setFeaturedImageHash(post.getFeaturedImage().getOriginalHash());
@@ -88,7 +89,7 @@ public class NotificationService {
 		postView.setAuthorProfilePicture(post.getAuthor().getImageHash());
 		postView.setBody(post.getBody()); // this thing must disappear in 3 months. Today is July, 26th - 2016
 
-		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(NotificationView.of(postView), androids, apples);
+		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(NotificationView.of(postView), androids, apples, fcms);
 
 		for (MobileNotification mobileNotification : mobileNotifications) {
 			mobileNotification.setPostId(postId);

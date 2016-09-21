@@ -30,6 +30,11 @@ public interface MobileDeviceRepository extends JpaRepository<MobileDevice, Inte
 	List<String> findApples(@Param("personIds") List<Integer> personIds);
 
 	@RestResource(exported = false)
+	@Query("SELECT device.deviceCode FROM MobileDevice device " +
+			"where device.person.id in (:personIds) and device.type = 'FCM'")
+	List<String> findFCMs(@Param("personIds") List<Integer> personIds);
+
+	@RestResource(exported = false)
 	@Modifying
 	void deleteByPersonId(Integer id);
 
