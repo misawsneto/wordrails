@@ -28,7 +28,8 @@ public class MobileNotification extends BaseEntity {
 
 	public enum DeviceType {
 		ANDROID,
-		APPLE
+		APPLE,
+		FCM
 	}
 
 	public enum Status {

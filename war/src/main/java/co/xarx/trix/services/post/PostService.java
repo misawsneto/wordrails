@@ -93,9 +93,10 @@ public class PostService {
 
 		Collection appleDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.APPLE);
 		Collection androidDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.ANDROID);
+		Collection fcmDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.FCM);
 
 		NotificationView notification = getCreatePostNotification(post);
-		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(notification, androidDevices, appleDevices);
+		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(notification, androidDevices, appleDevices, fcmDevices);
 		for (MobileNotification n : mobileNotifications) {
 			n.setPostId(post.getId());
 			mobileNotificationRepository.save(n);

@@ -27,11 +27,13 @@ public class MobileResource extends AbstractResource implements MobileApi {
 	}
 
 	@Override
-	public Response updateLocation(String token, String device, Double lat, Double lng) {
+	public Response updateLocation(String token, String device, Double lat, Double lng, Boolean fcm) {
 		String userAgent = request.getHeader("User-Agent");
 
 		Constants.MobilePlatform platform;
-		if (device.equals("apple") || device.equals("ios") || userAgent.contains("WordRailsIOSClient"))
+		if (fcm != null && fcm){
+			platform = Constants.MobilePlatform.FCM;
+		} else if (device.equals("apple") || device.equals("ios") || userAgent.contains("WordRailsIOSClient"))
 			platform = Constants.MobilePlatform.APPLE;
 		else if(device.equals("android") || userAgent.contains("OkHttp"))
 			platform = Constants.MobilePlatform.ANDROID;

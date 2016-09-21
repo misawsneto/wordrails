@@ -37,14 +37,17 @@ public class MobileNotificationService {
 
 //	@AccessGroup(tenants = {"demo"}, profiles = {"prod"}, inclusion = true)
 	public List<MobileNotification> sendNotifications(NotificationView notification,
-													  Collection<String> androidDevices, Collection<String> appleDevices) throws NotificationException {
+													  Collection<String> androidDevices, Collection<String> appleDevices, Collection<String> fcmDevices) throws NotificationException {
 		Future<List<MobileNotification>> futureAndroidNotifications = null;
 		Future<List<MobileNotification>> futureAppleNotifications = null;
+		Future<List<MobileNotification>> futureFcmNotifications = null;
 		try {
 			futureAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
 					() -> notificationBatchPublisher.sendNotifications(androidNS, notification, androidDevices, MobileNotification.DeviceType.ANDROID));
 			futureAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
 					() -> notificationBatchPublisher.sendNotifications(appleNS, notification, appleDevices, MobileNotification.DeviceType.APPLE));
+//			futureFcmNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
+//					() -> notificationBatchPublisher.sendNotifications(appleNS, notification, fcmDevices, MobileNotification.DeviceType.APPLE));
 		} catch (Exception e) {
 			if (futureAndroidNotifications != null)
 				futureAndroidNotifications.cancel(true);
@@ -65,6 +68,13 @@ public class MobileNotificationService {
 		} catch (InterruptedException | ExecutionException e) {
 			mobileNotifications.addAll(notificationBatchPublisher.getErrorNotifications(appleDevices,
 					notification, e, MobileNotification.DeviceType.APPLE));
+		}
+
+		try {
+			mobileNotifications = futureFcmNotifications.get();
+		} catch (InterruptedException | ExecutionException e) {
+			mobileNotifications = notificationBatchPublisher.getErrorNotifications(fcmDevices,
+					notification, e, MobileNotification.DeviceType.FCM);
 		}
 
 		return mobileNotifications;
