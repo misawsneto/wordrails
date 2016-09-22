@@ -8,6 +8,7 @@ import co.xarx.trix.persistence.ESstatEventRepository;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.RestUtil;
+import org.jcodec.common.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,13 @@ public class StatEventsService {
 
     @Async(value = "myExecuter")
     public void newPostreadEvent(Post post, HttpServletRequest request, Integer timeReading, Date date){
-        ESstatEvent postread = newEvent(post, request);
+		try {
+			Thread.sleep(4000);
+			Logger.info("after logging...");
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		ESstatEvent postread = newEvent(post, request);
         postread.setType(Constants.StatsEventType.POST_READ);
         postread.setTimestamp(date);
         postread.setTimeReading(timeReading);
