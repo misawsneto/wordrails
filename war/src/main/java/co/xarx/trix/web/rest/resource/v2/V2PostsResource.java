@@ -190,7 +190,7 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 			throw new BadRequestException("Date format: " + "yyyy-MM-dd'T'HH:mm:ssZ");
 		}
 
-		statEventsService.newPostreadEvent(post, request, timeReading, timestamp);
+		statEventsService.newPostreadEvent(post, null, timeReading, timestamp);
 		return Response.ok().build();
 	}
 }

@@ -39,7 +39,9 @@ public class NetworkDomainFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) res;
 		String host = request.getHeader("Host");
 		String path = request.getRequestURI().substring(request.getContextPath().length()).replaceAll("[/]+$", "");
-		boolean appliedPath = APPLIED_PATHS.contains(path) || APPLIED_PATHS.stream().anyMatch(p -> !p.equals("") &&
+		boolean appliedPath = APPLIED_PATHS.contains(path) || APPLIED_PATHS.stream().anyMatch(p ->
+				path != null && p != null &&
+				!p.equals("") &&
 				!path.equals("") &&
 				path.startsWith(p));
 
