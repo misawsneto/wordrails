@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.HashMap;
+import java.util.*;
 
 @Component("pathEntityFilter")
 public class PathEntityFilter implements Filter {
@@ -36,29 +36,23 @@ public class PathEntityFilter implements Filter {
 	public void init(FilterConfig filterConfig) throws ServletException {
 	}
 
+	private static final Set<String> APPLIED_PATHS = Collections.unmodifiableSet(new HashSet<>(
+			Arrays.asList("", "/api", "/index.jsp", "/settings.jsp")));
+
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
 		HttpServletRequest request = (HttpServletRequest) req;
+		HttpServletResponse response = (HttpServletResponse) res;
+		String host = request.getHeader("Host");
 		String path = (String) request.getAttribute("originalPath");
+		boolean appliedPath = APPLIED_PATHS.contains(path) || APPLIED_PATHS.stream().anyMatch(p ->
+				path != null && p != null &&
+				!p.equals("") &&
+				!path.equals("") &&
+				path.startsWith(p));
 
-		if (path != null && !path.startsWith("/css")
-				&& !path.startsWith("/font")
-				&& !path.startsWith("/fonts")
-				&& !path.startsWith("/img")
-				&& !path.startsWith("/js")
-				&& !path.startsWith("/api")
-				&& !path.startsWith("/l10n")
-				&& !path.startsWith("/i18n")
-				&& !path.startsWith("/libs")
-				&& !path.startsWith("/views")
-				&& !path.startsWith("/styles")
-				&& !path.startsWith("/scripts")
-				&& !path.startsWith("/images")
-				&& !path.startsWith("/home")
-				&& !path.startsWith("/404.html")
-				&& !path.startsWith("/505.html")
-				&& !path.startsWith("/access/createnetwork")) {
+		if (appliedPath) {
 
 			if("/".equals(path)){
 				homeHiddenHtmlBuilder(request);
