@@ -191,7 +191,7 @@ public class StationPermissionService {
 		return stationPermissionDtos;
 	}
 
-	public void getPersons(StationPermissionData data) {
+	public void fetchPersons(StationPermissionData data) {
 		List<StationPermissionData.Permission> permissions = data.getUserPermissions();
 		if(permissions != null && permissions.size() > 0){
 			List<String> usernames = permissions.stream().map(StationPermissionData.Permission::getUsername).collect(Collectors.toList());
