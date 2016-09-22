@@ -41,7 +41,7 @@ public interface V2PostsApi {
 
 	@PUT
 	@Path("/{postId}/unpublish/{date}")
-	Response scheduleUnpublishing(@PathParam("postId") Integer postId, @PathParam("date") String date);
+	Response scheduleUnpublishing(@PathParam("postId") Integer postId, @PathParam("date") Long date);
 
 
 	@GET

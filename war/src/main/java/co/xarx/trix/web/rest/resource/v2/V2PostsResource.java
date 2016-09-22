@@ -5,7 +5,6 @@ import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.ESPost;
-import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.exception.BadRequestException;
@@ -15,7 +14,6 @@ import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.analytics.StatEventsService;
 import co.xarx.trix.services.post.PostModerationService;
 import co.xarx.trix.services.post.PostSearchService;
-import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.PostPermissionService;
 import co.xarx.trix.util.ImmutablePage;
 import co.xarx.trix.util.SpringDataUtil;
@@ -25,8 +23,6 @@ import co.xarx.trix.web.rest.api.v2.V2PostsApi;
 import com.google.common.collect.Sets;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +39,6 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	private AuditService auditService;
 	private PostConverter postConverter;
 	private PostRepository postRepository;
-	private DateTimeFormatter dateTimeFormatter;
 	private PostSearchService postSearchService;
 	private StatEventsService statEventsService;
 	private ElasticSearchService elasticSearchService;
@@ -53,12 +48,11 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	@Autowired
 	public V2PostsResource(PostModerationService postModerationService, PostPermissionService postPermissionService,
 						   PostSearchService postSearchService, PostRepository postRepository, PostConverter
-									   postConverter, AuditService auditService, DateTimeFormatter dateTimeFormatter, StatEventsService statEventsService, ElasticSearchService
+									   postConverter, AuditService auditService, StatEventsService statEventsService, ElasticSearchService
 									   elasticSearchService){
 		this.postModerationService = postModerationService;
 		this.postPermissionService = postPermissionService;
 		this.elasticSearchService = elasticSearchService;
-		this.dateTimeFormatter = dateTimeFormatter;
 		this.statEventsService = statEventsService;
 
 		this.postSearchService = postSearchService;
@@ -128,16 +122,15 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	}
 
 	@Override
-	public Response scheduleUnpublishing(Integer postId, String date) {
+	public Response scheduleUnpublishing(Integer postId, Long timestamp) {
 		boolean canUnpublish = postPermissionService.canPublishPost(postId);
 
+		if(timestamp == null || timestamp < 0){
+			return Response.status(Response.Status.BAD_GATEWAY).entity("Date must be defined as a valid timestamp").build();
+		}
+
 		if(canUnpublish){
-			try {
-				DateTime unpublishDate = dateTimeFormatter.parseDateTime(date);
-				postModerationService.scheduleUnpublishing(postId,  unpublishDate.toDate());
-			} catch (IllegalArgumentException e){
-				return Response.status(Response.Status.BAD_GATEWAY).entity(e.getMessage()).build();
-			}
+			postModerationService.scheduleUnpublishing(postId,  new Date(timestamp));
 		} else {
 			return Response.status(Response.Status.FORBIDDEN).entity("User cannot unpublish post").build();
 		}
@@ -182,7 +175,7 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	public Response setPostSeen(Integer postId, Integer timeReading, Long timestamp){
 		Post post = postRepository.findOne(postId);
 		if(post == null) return Response.status(Response.Status.NOT_FOUND).build();
-		if(timestamp == null) throw new BadRequestException("A date must be defined as a timestamp");
+		if(timestamp == null || timestamp < 0) throw new BadRequestException("A date must be defined as a timestamp");
 
 		statEventsService.newPostreadEvent(post, request, timeReading, new Date(timestamp));
 		return Response.ok().build();
