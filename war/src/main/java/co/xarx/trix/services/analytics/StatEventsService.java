@@ -55,7 +55,7 @@ public class StatEventsService {
     public void newPostreadEvent(Post post, HttpServletRequest request, Integer timeReading, Date date){
 		try {
 			Thread.sleep(4000);
-			Logger.info("after logging...");
+			System.out.println("after logging...");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
