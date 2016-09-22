@@ -624,5 +624,10 @@
 			<artifactId>jsoup</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-server-sdk</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>
