@@ -25,7 +25,7 @@ public class V2StationPermissionsResource implements V2StationPermissionsApi {
 	@Override
 	public Response getPermissions(@P("sid") Integer stationId) throws IOException {
 		StationPermissionData data = stationPermissionService.getPermissions(stationId);
-		stationPermissionService.getPersons(data);
+		stationPermissionService.fetchPersons(data);
 
 		return Response.ok().entity(data).build();
 	}

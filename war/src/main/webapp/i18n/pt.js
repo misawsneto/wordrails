@@ -266,6 +266,8 @@
 			"PERMISSIONS_OF_ALL_SELECTED": "Alterar permissões de usuário selecionados",
 			"INVITE_USERS": "Convidar usuários",
 			"ADD_USERS": "Adicionar usuários",
+			"ADD_PERMISSION": "Adicionar permissão",
+			"CREATE_USER": "Criar usuário",
 			"REDIFINE_PASSWORD": "Redefinir senha",
 			"EDIT_PROFILE": "Editar perfil",
 			"ENABLE_ALL_SELECTED_MSG": "Tem certeza que deseja ativar todos os usuários selecionados",
