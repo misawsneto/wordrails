@@ -48,8 +48,8 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	@Autowired
 	public V2PostsResource(PostModerationService postModerationService, PostPermissionService postPermissionService,
 						   PostSearchService postSearchService, PostRepository postRepository, PostConverter
-									   postConverter, AuditService auditService, StatEventsService statEventsService, ElasticSearchService
-									   elasticSearchService){
+								   postConverter, AuditService auditService, StatEventsService statEventsService, ElasticSearchService
+								   elasticSearchService){
 		this.postModerationService = postModerationService;
 		this.postPermissionService = postPermissionService;
 		this.elasticSearchService = elasticSearchService;
@@ -177,18 +177,7 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 		if(post == null) return Response.status(Response.Status.NOT_FOUND).build();
 		if(timestamp == null || timestamp < 0) throw new BadRequestException("A date must be defined as a timestamp");
 
-<<<<<<< HEAD
-		Date timestamp;
-		try{
-			timestamp = dateTimeFormatter.parseDateTime(date).toDate();
-		} catch (Exception e){
-			throw new BadRequestException("Date format: " + "yyyy-MM-dd'T'HH:mm:ssZ");
-		}
-
-		statEventsService.newPostreadEvent(post, null, timeReading, timestamp);
-=======
-		statEventsService.newPostreadEvent(post, request, timeReading, new Date(timestamp));
->>>>>>> 06866829d220252bf3ce94fb1a46add14f530865
+		statEventsService.newPostreadEvent(post, null, timeReading, new Date(timestamp));
 		return Response.ok().build();
 	}
 }
