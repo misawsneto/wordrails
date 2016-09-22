@@ -8,13 +8,16 @@ import co.xarx.trix.persistence.ESstatEventRepository;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.RestUtil;
+import lombok.Getter;
+import lombok.Setter;
+import org.jcodec.common.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class StatEventsService {
@@ -27,18 +30,21 @@ public class StatEventsService {
         this.authProvider = authProvider;
     }
 
-    public void newRecommendEvent(Post post, HttpServletRequest request){
+    @Async(value = "myExecuter")
+    public void newRecommendEvent(Post post, RequestWrapper request){
         ESstatEvent recommend = newEvent(post, request);
         recommend.setType(Constants.StatsEventType.POST_RECOMMEND);
         statEventRepository.save(recommend);
     }
 
-    public void newBookmarkEvent(Post post, HttpServletRequest request){
+    @Async(value = "myExecuter")
+    public void newBookmarkEvent(Post post, RequestWrapper request){
         ESstatEvent bookmark = newEvent(post, request);
         bookmark.setType(Constants.StatsEventType.POST_BOOKMARK);
         statEventRepository.save(bookmark);
     }
 
+    @Async(value = "myExecuter")
     public void newCommentEvent(Comment comment){
         ESstatEvent event = newEvent(comment.getPost());
         event.setType(Constants.StatsEventType.POST_COMMENT);
@@ -46,8 +52,9 @@ public class StatEventsService {
         statEventRepository.save(event);
     }
 
-    public void newPostreadEvent(Post post, HttpServletRequest request, Integer timeReading, Date date){
-        ESstatEvent postread = newEvent(post, request);
+    @Async(value = "myExecuter")
+    public void newPostreadEvent(Post post, RequestWrapper request, Integer timeReading, Date date){
+		ESstatEvent postread = newEvent(post, request);
         postread.setType(Constants.StatsEventType.POST_READ);
         postread.setTimestamp(date);
         postread.setTimeReading(timeReading);
@@ -71,7 +78,7 @@ public class StatEventsService {
         return event;
     }
 
-    private ESstatEvent newEvent(Post post, HttpServletRequest request){
+    private ESstatEvent newEvent(Post post, RequestWrapper request){
         ESstatEvent event = newEvent(post);
 
         String message = request.getHeader("User-Agent");
