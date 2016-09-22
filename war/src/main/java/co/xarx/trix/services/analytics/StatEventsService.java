@@ -9,6 +9,7 @@ import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.RestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,18 +28,21 @@ public class StatEventsService {
         this.authProvider = authProvider;
     }
 
+    @Async(value = "myExecuter")
     public void newRecommendEvent(Post post, HttpServletRequest request){
         ESstatEvent recommend = newEvent(post, request);
         recommend.setType(Constants.StatsEventType.POST_RECOMMEND);
         statEventRepository.save(recommend);
     }
 
+    @Async(value = "myExecuter")
     public void newBookmarkEvent(Post post, HttpServletRequest request){
         ESstatEvent bookmark = newEvent(post, request);
         bookmark.setType(Constants.StatsEventType.POST_BOOKMARK);
         statEventRepository.save(bookmark);
     }
 
+    @Async(value = "myExecuter")
     public void newCommentEvent(Comment comment){
         ESstatEvent event = newEvent(comment.getPost());
         event.setType(Constants.StatsEventType.POST_COMMENT);
@@ -46,6 +50,7 @@ public class StatEventsService {
         statEventRepository.save(event);
     }
 
+    @Async(value = "myExecuter")
     public void newPostreadEvent(Post post, HttpServletRequest request, Integer timeReading, Date date){
         ESstatEvent postread = newEvent(post, request);
         postread.setType(Constants.StatsEventType.POST_READ);
