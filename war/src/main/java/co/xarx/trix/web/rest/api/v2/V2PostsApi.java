@@ -41,7 +41,7 @@ public interface V2PostsApi {
 
 	@PUT
 	@Path("/{postId}/unpublish/{date}")
-	Response scheduleUnpublishing(@PathParam("postId") Integer postId, @PathParam("date") String date);
+	Response scheduleUnpublishing(@PathParam("postId") Integer postId, @PathParam("date") Long date);
 
 
 	@GET
@@ -66,5 +66,5 @@ public interface V2PostsApi {
 	@Path("/{postId}/seen")
 	Response setPostSeen(@PathParam("postId") Integer postId,
 						 @QueryParam("timeReading") Integer timeReading,
-						 @QueryParam("date") String date);
+						 @QueryParam("date") Long timestamp);
 }

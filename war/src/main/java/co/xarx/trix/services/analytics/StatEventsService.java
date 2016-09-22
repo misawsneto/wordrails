@@ -59,7 +59,7 @@ public class StatEventsService {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		ESstatEvent postread = newEvent(post, request);
+		ESstatEvent postread = new ESstatEvent();
         postread.setType(Constants.StatsEventType.POST_READ);
         postread.setTimestamp(date);
         postread.setTimeReading(timeReading);
