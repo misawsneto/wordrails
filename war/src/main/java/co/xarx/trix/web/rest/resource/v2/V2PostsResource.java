@@ -179,18 +179,12 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	}
 
 	@Override
-	public Response setPostSeen(Integer postId, Integer timeReading, String date){
+	public Response setPostSeen(Integer postId, Integer timeReading, Long timestamp){
 		Post post = postRepository.findOne(postId);
 		if(post == null) return Response.status(Response.Status.NOT_FOUND).build();
+		if(timestamp == null) throw new BadRequestException("A date must be defined as a timestamp");
 
-		Date timestamp;
-		try{
-			timestamp = dateTimeFormatter.parseDateTime(date).toDate();
-		} catch (Exception e){
-			throw new BadRequestException("Date format: " + "yyyy-MM-dd'T'HH:mm:ssZ");
-		}
-
-		statEventsService.newPostreadEvent(post, request, timeReading, timestamp);
+		statEventsService.newPostreadEvent(post, request, timeReading, new Date(timestamp));
 		return Response.ok().build();
 	}
 }
