@@ -1,7 +1,40 @@
 package co.xarx.trix.services.analytics;
 
-/**
- * Created by guto on 9/22/16.
- */
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+@Getter
+@Setter
 public class RequestWrapper {
+    Map<String, String> headers;
+    Map<String, String> parameters;
+    String localName;
+    String remoteAddr;
+
+    public RequestWrapper(HttpServletRequest request){
+        headers = new HashMap<>();
+        parameters = new HashMap<>();
+
+        Enumeration headerNames = request.getHeaderNames();
+
+        while(headerNames.hasMoreElements()) {
+            String headerName = (String) headerNames.nextElement();
+            headers.put(headerName, request.getHeader(headerName));
+        }
+
+        Enumeration params = request.getParameterNames();
+        while(params.hasMoreElements()){
+            String paramName = (String)params.nextElement();
+            parameters.put(paramName, request.getParameter(paramName));
+        }
+    }
+
+    public String getHeader(String headerName){
+        return headers.get(headerName);
+    }
 }

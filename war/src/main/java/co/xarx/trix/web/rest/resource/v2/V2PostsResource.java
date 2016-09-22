@@ -11,6 +11,7 @@ import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.analytics.RequestWrapper;
 import co.xarx.trix.services.analytics.StatEventsService;
 import co.xarx.trix.services.post.PostModerationService;
 import co.xarx.trix.services.post.PostSearchService;
@@ -177,7 +178,8 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 		if(post == null) return Response.status(Response.Status.NOT_FOUND).build();
 		if(timestamp == null || timestamp < 0) throw new BadRequestException("A date must be defined as a timestamp");
 
-		statEventsService.newPostreadEvent(post, request, timeReading, new Date(timestamp));
+		RequestWrapper rw = new RequestWrapper(request);
+		statEventsService.newPostreadEvent(post, rw, timeReading, new Date(timestamp));
 		return Response.ok().build();
 	}
 }

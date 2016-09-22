@@ -10,6 +10,7 @@ import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.ImageService;
 import co.xarx.trix.services.MobileService;
+import co.xarx.trix.services.analytics.RequestWrapper;
 import co.xarx.trix.services.analytics.StatEventsService;
 import co.xarx.trix.services.notification.MobileNotificationService;
 import co.xarx.trix.services.security.AuthService;
@@ -159,7 +160,7 @@ public class PostService {
 			originalPerson.bookmarkPosts.add(postId);
 			person.bookmarkPosts.add(postId);
 			success = true;
-			statEventsService.newBookmarkEvent(post, request);
+			statEventsService.newBookmarkEvent(post, new RequestWrapper(request));
 		}
 
 		originalPerson.bookmarkPosts = new ArrayList<>(new HashSet<>(originalPerson.bookmarkPosts));
@@ -187,7 +188,7 @@ public class PostService {
 			originalPerson.recommendPosts.add(postId);
 			person.recommendPosts.add(postId);
 			response = true;
-			statEventsService.newRecommendEvent(post, request);
+			statEventsService.newRecommendEvent(post, new RequestWrapper(request));
 		}
 
 		originalPerson.recommendPosts = new ArrayList<>(new HashSet<>(originalPerson.recommendPosts));
