@@ -3,9 +3,13 @@ app.controller('SettingsStationPermissionsCtrl', ['$scope', '$log', '$timeout', 
 
 $scope.station = station;
 
-trix.getStationPermission(station.id).success(function(permissions){
-	$scope.permissions = permissions.userPermissions;
-})
+  var loadPermissions = function(){
+    trix.getStationPermission(station.id).success(function(permissions){
+      $scope.permissions = permissions.userPermissions;
+    })
+  }
+
+  loadPermissions();
 
   $scope.toggleAll = function(toggleSelectValue){
 
@@ -149,7 +153,7 @@ trix.getStationPermission(station.id).success(function(permissions){
       updatePermissions(stationRoleUpdates, permissions)
     }
 
-    var updatePermissions = function(stationRoleUpdates, permissions){
+    var updatePermissions = function(stationRoleUpdates, permissions, reload){
     	if(permissions == 'ADMIN'){
         stationRoleUpdates.admin = true;
         stationRoleUpdates.writer = true;
@@ -181,6 +185,8 @@ trix.getStationPermission(station.id).success(function(permissions){
         $scope.app.showSuccessToast($filter('translate')('settings.users.PERMISSIONS_UPDATES'));
         updateTable(stationRoleUpdates)
         $mdDialog.cancel();
+        if(reload)
+          loadPermissions();
       }).error(function(){
         $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'));
         $mdDialog.cancel();
@@ -279,6 +285,7 @@ trix.getStationPermission(station.id).success(function(permissions){
     }
 
     $scope.stationRole = 'READER';
+    $scope.userStationRole = 'READER';
 
     $scope.addingPerson = null;
     $scope.createPerson = function(){
@@ -368,6 +375,7 @@ trix.getStationPermission(station.id).success(function(permissions){
 		// -------- users search and pagination ---------
 
 	$scope.showAddPermissionDialog = function(event){
+    $scope.doSearchUsers();
 		$mdDialog.show({
 			scope: $scope,        // use parent scope in template
 			closeTo: {
@@ -386,14 +394,14 @@ trix.getStationPermission(station.id).success(function(permissions){
 	}
 
 	$scope.doSearchUsers = function(){
-		if($scope.search || ($scope.search && $scope.search.trim()))
+		if($scope.searchUsers || ($scope.searchUsers && $scope.searchUsers.trim()))
 			useSearchField = true;
 		$scope.persons = [];
 		$scope.showProgress = false;
 		$scope.page = 0;
 		loading = false
 		$scope.allLoaded = false
-		$scope.paginate()
+		$scope.paginateUsers()
 	}
 
 	$scope.page = 0;
@@ -415,7 +423,7 @@ trix.getStationPermission(station.id).success(function(permissions){
 				$scope.showProgress = true;
 				trix.getPersons($scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess).error(getPersonsError);
 			}else if(!$scope.allLoaded && useSearchField){
-				trix.findPersons($scope.search, $scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess).error(getPersonsError);
+				trix.findPersons($scope.searchUsers, $scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess).error(getPersonsError);
 			}
 		}
 	}
@@ -428,18 +436,59 @@ trix.getStationPermission(station.id).success(function(permissions){
 			$scope.persons = [];
 		}
 
+    $scope.showProgress = false;
+    loading = false;
+
 		if(response.persons && response.persons.length > 0){
 			response.persons.forEach(function(p){
-				$scope.persons.push(p);
+        var insert = true;
+        for (var i = $scope.permissions.length - 1; i >= 0; i--) {
+          if($scope.permissions[i].person.id == p.id)
+            insert = false;
+        }
+        if(insert)
+	        $scope.persons.push(p);
 			})
-			$scope.page++;
+      $scope.page++;
+      if($scope.persons && $scope.persons.length < 10)
+        $scope.paginateUsers();
 		}else{
 			$scope.allLoaded = true;
 		}
-
-		$scope.showProgress = false;
-		loading = false;
 	}
+
+  $scope.toggleAllUser = function(toggleSelectValue){
+
+    if(toggleSelectValue && $scope.persons){
+      $scope.persons.forEach(function(person, index){
+        if(person.id != $scope.app.person.id)
+         person.selected = true;
+      }); 
+    }else if($scope.persons){
+      $scope.persons.forEach(function(person, index){
+        if(person.id != $scope.app.person.id)
+          person.selected = false;
+      }); 
+    }
+  }
+
+  function getSelectedUsers(){
+    var ret = []
+    $scope.persons && $scope.persons.length > 0 && $scope.persons.forEach(function(person, index){
+      if(person.selected)
+        ret.push(person.username);
+    });
+    return ret;
+  }
+
+
+  $scope.applyBulkPermissions = function(permissions){
+    var stationRoleUpdates = {stationsIds: [station.id], usernames: []};
+    stationRoleUpdates.usernames = getSelectedUsers();
+
+    updatePermissions(stationRoleUpdates, permissions, true)
+  }
+
 
 	$scope.showProgress = true;
 	// get initial users

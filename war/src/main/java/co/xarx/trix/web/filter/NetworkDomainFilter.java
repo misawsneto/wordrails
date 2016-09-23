@@ -72,8 +72,6 @@ public class NetworkDomainFilter implements Filter {
 					HttpSession session = request.getSession();
 					session.setAttribute("userAgent", request.getHeader("User-Agent"));
 					session.setAttribute("tenantId", tenantId);
-
-//			tenantProvider.setTenantId(tenantId);
 					request.setAttribute("personData", "{}");
 				}
 			}
