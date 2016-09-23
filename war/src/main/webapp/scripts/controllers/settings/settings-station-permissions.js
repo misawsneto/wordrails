@@ -278,7 +278,6 @@ trix.getStationPermission(station.id).success(function(permissions){
       })
     }
 
-
     $scope.stationRole = 'READER';
 
     $scope.addingPerson = null;
@@ -365,6 +364,88 @@ trix.getStationPermission(station.id).success(function(permissions){
         // $mdDialog.cancel();
       })
     }
+
+		// -------- users search and pagination ---------
+
+	$scope.showAddPermissionDialog = function(event){
+		$mdDialog.show({
+			scope: $scope,        // use parent scope in template
+			closeTo: {
+				bottom: 1500
+			},
+			preserveScope: true, // do not forget this if use parent scope
+			controller: $scope.app.defaultDialog,
+			templateUrl: 'add-permission-dialog.html',
+			parent: angular.element(document.body),
+			targetEvent: event,
+			clickOutsideToClose:true
+			// onComplete: function(){
+
+			// }
+		})
+	}
+
+	$scope.doSearchUsers = function(){
+		if($scope.search || ($scope.search && $scope.search.trim()))
+			useSearchField = true;
+		$scope.persons = [];
+		$scope.showProgress = false;
+		$scope.page = 0;
+		loading = false
+		$scope.allLoaded = false
+		$scope.paginate()
+	}
+
+	$scope.page = 0;
+	var loading = false;
+	var useSearchField = false;
+	$scope.allLoaded = false;
+	$scope.beginning = true;
+	$scope.window = 20
+
+	$scope.personsCount = 0;
+	trix.countPersonsByNetwork().success(function(response){
+		$scope.personsCount = response;
+	})
+
+	$scope.paginateUsers = function(){
+		if(!loading){
+			loading = true;
+			if(!$scope.allLoaded && !useSearchField){
+				$scope.showProgress = true;
+				trix.getPersons($scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess).error(getPersonsError);
+			}else if(!$scope.allLoaded && useSearchField){
+				trix.findPersons($scope.search, $scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess).error(getPersonsError);
+			}
+		}
+	}
+
+	var getPersonsError = function(response){
+	}
+
+	var getPersonsSuccess = function(response){
+		if(!$scope.persons || !$scope.persons.length){
+			$scope.persons = [];
+		}
+
+		if(response.persons && response.persons.length > 0){
+			response.persons.forEach(function(p){
+				$scope.persons.push(p);
+			})
+			$scope.page++;
+		}else{
+			$scope.allLoaded = true;
+		}
+
+		$scope.showProgress = false;
+		loading = false;
+	}
+
+	$scope.showProgress = true;
+	// get initial users
+	// trix.getPersons($scope.page, $scope.window, null, 'personProjection').success(getPersonsSuccess);
+
+	// -------- /users pagination ---------
 
 var settingsStationPermissionsCtrl = $scope;
 
