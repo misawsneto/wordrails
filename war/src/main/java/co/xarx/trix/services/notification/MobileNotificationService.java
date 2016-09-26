@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -29,11 +30,12 @@ public class MobileNotificationService {
 	@Autowired
 	public MobileNotificationService(NotificationBatchPublisher notificationBatchPublisher,
 									 AsyncService asyncService,
-									 MobileNotificationSender appleNS, MobileNotificationSender androidNS) {
+									 MobileNotificationSender appleNS, MobileNotificationSender androidNS, MobileNotificationSender fcmNS) {
 		this.notificationBatchPublisher = notificationBatchPublisher;
 		this.asyncService = asyncService;
 		this.appleNS = appleNS;
 		this.androidNS = androidNS;
+		this.fcmNS = fcmNS;
 	}
 
 //	@AccessGroup(tenants = {"demo"}, profiles = {"prod"}, inclusion = true)
@@ -58,10 +60,10 @@ public class MobileNotificationService {
 			throw new NotificationException(e);
 		}
 
-		List<MobileNotification> mobileNotifications;
+		List<MobileNotification> mobileNotifications = new ArrayList<>();
 
 		try {
-			mobileNotifications = futureAndroidNotifications.get();
+			mobileNotifications.addAll(futureAndroidNotifications.get());
 		} catch (InterruptedException | ExecutionException e) {
 			mobileNotifications = notificationBatchPublisher.getErrorNotifications(androidDevices,
 					notification, e, MobileNotification.DeviceType.ANDROID);
