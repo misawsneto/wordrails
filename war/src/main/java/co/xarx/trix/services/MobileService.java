@@ -117,13 +117,14 @@ public class MobileService {
 		if (device == null) {
 			device = new MobileDevice();
 
-			device.deviceCode = deviceCode;
-			device.person = person;
-			device.active = true;
-			device.type = type;
 		}
 
+		device.type = type;
+		device.deviceCode = deviceCode;
 		device.person = person;
+		device.active = true;
+		device.person = person;
+
 		if(person != null)
 			device.lastPersonLogged = person;
 		if (lat != null) device.lat = lat;
