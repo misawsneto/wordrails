@@ -55,7 +55,7 @@ public class FCMClient implements NotificationServerClient {
     }
 
     public Message createMessage(NotificationView notificationView){
-        Notification notification = new Notification.Builder(notificationView.post.imageMediumHash)
+        Notification notification = new Notification.Builder(notificationView.post.featuredImageHash)
                 .title(notificationView.title)
                 .body(notificationView.message)
                 .build();
