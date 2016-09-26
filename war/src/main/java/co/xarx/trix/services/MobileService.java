@@ -66,6 +66,8 @@ public class MobileService {
 		try {
 			mobileDeviceRepository.save(device);
 		} catch (ObjectOptimisticLockingFailureException ignored) {
+		}catch (Exception e){
+			e.printStackTrace();
 		}
 	}
 
