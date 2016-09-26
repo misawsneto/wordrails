@@ -289,19 +289,19 @@
 
 				<div class="search-with-filter m-r m-l md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2 m-b-md">
 					<form ng-submit="doSearchUsers()">
-						<input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-md-l bg-t" ng-model="searchQuery">
+						<input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-md-l bg-t" ng-model="searchUsers">
 					</form>
 				</div>
 
 				<div class="b-t">
-					<div id="users-search-results" class="md-background-hue-1 background pos-rlt w-full inline" style="height:230px; max-height:230px; overflow: auto;">
+					<div id="users-search-results" class="b-b md-background-hue-1 background pos-rlt w-full inline" style="height:230px; max-height:230px; overflow: auto; box-shadow: inset 0px 0px 25px -10px rgba(0,0,0,0.5);">
 						<div class="h-full">
 							<div class="table-responsive o-visible text-base" infinite-scroll="paginateUsers()" infinite-scroll-container="'#users-search-results'">
 								<table id="users-search-table" class="table b-t b-light">
 									<thead>
 									<tr>
 										<th style="width:15px;">
-											<md-checkbox aria-label="nothing" class="no-margin" ng-model="toggleSelectValue" ng-change="toggleAll(toggleSelectValue)">
+											<md-checkbox aria-label="nothing" class="no-margin" ng-model="toggleSelectValue" ng-change="toggleAllUser(toggleSelectValue)">
 											</md-checkbox>
 										</th>
 										<th class="text-l-c">{{'titles.USERS' | translate}}</th>
@@ -332,11 +332,10 @@
 						</div>
 					</div>
 				</div>
-				<md-divider></md-divider>
 				<div class="clear pos-rel">
-					<div class="p-xs text-base w-400 pull-left p-t p-l">
+					<div class="p-xs text-base w-400 pull-left p-t-sm p-l">
 						<span class="text-md">Permissões:</span>
-						<md-radio-group ng-model="stationRole">
+						<md-radio-group ng-model="userStationRole">
 							<ul class="station-permissions m-t">
 								<li class="m-r" style="display: inline-block;">
 									<md-radio-button value="READER">{{'settings.users.permissions.READER' | translate}}</md-radio-button>
@@ -358,7 +357,7 @@
 					</div>
 
 					<div class="m-t-xl p-t p-b p-r text-right">
-						<md-button class="font-500 md-accent" translate="titles.APPLY" ng-click="applyFeaturedPosts();">
+						<md-button class="font-500 md-accent" translate="titles.APPLY" ng-click="applyBulkPermissions(userStationRole);">
 						</md-button>
 						<md-button class="font-500" ng-click="cancel();" translate="titles.CANCEL">
 						</md-button>
