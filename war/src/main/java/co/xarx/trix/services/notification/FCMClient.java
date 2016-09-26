@@ -63,7 +63,7 @@ public class FCMClient implements NotificationServerClient {
         return new Message.Builder()
                 .notification(notification)
                 .addData("type", notificationView.type)
-                .addData("postId", String.valueOf(notificationView.postId))
+                .addData("entityId", String.valueOf(notificationView.postId))
                 .delayWhileIdle(true)
                 .timeToLive(86400).build();
 
