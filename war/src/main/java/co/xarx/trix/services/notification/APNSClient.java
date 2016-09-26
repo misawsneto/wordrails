@@ -52,7 +52,7 @@ public class APNSClient implements NotificationServerClient {
 				.build();
 
 		Collection<? extends ApnsNotification> push = service.push(devices, payload);
-		Logger.debug(push != null && push.size() > 0 ? push.toString() : "");
+//		Logger.debug(push != null && push.size() > 0 ? push.toString() : "");
 	}
 
 	@Override
