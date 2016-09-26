@@ -7,8 +7,10 @@ import co.xarx.trix.elasticsearch.mapper.*;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.notification.APNSClient;
+import co.xarx.trix.services.notification.FCMSender;
 import co.xarx.trix.services.notification.GCMClient;
 import co.xarx.trix.services.notification.MobileNotificationSender;
+import co.xarx.trix.services.notification.FCMClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.Sender;
 import org.joda.time.format.DateTimeFormat;
@@ -49,6 +51,8 @@ public class ApplicationConfig implements AsyncConfigurer{
 	private String bucketName;
 	@Value("${trix.gcm.key}")
 	private String gcmKey;
+	@Value("${trix.fcm.key}")
+	private String fcmKey;
 
 	@Bean
 	public ObjectMapper simpleMapper() {
@@ -60,10 +64,14 @@ public class ApplicationConfig implements AsyncConfigurer{
 		return TenantContextHolder::getCurrentTenantId;
 	}
 
-
 	@Bean
 	public Sender gcmSender() {
 		return new Sender(gcmKey);
+	}
+
+	@Bean
+	public FCMSender fcmSender() {
+		return new FCMSender(fcmKey);
 	}
 
 	@Bean
@@ -73,6 +81,11 @@ public class ApplicationConfig implements AsyncConfigurer{
 
 	@Bean
 	public MobileNotificationSender androidNS(GCMClient client) {
+		return new MobileNotificationSender(client, 1000);
+	}
+
+	@Bean
+	public MobileNotificationSender fcmNS(FCMClient client) {
 		return new MobileNotificationSender(client, 1000);
 	}
 

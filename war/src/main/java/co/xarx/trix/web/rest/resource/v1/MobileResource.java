@@ -31,16 +31,28 @@ public class MobileResource extends AbstractResource implements MobileApi {
 		String userAgent = request.getHeader("User-Agent");
 
 		Constants.MobilePlatform platform;
-		if (fcm != null && fcm){
-			platform = Constants.MobilePlatform.FCM;
-		} else if (device.equals("apple") || device.equals("ios") || userAgent.contains("WordRailsIOSClient"))
+
+		if (fcm != null && fcm && isAndroid(userAgent, device)){
+			platform = Constants.MobilePlatform.FCM_ANDROID;
+		} else if (fcm != null && fcm && isIOs(userAgent, device)){
+			platform = Constants.MobilePlatform.FCM_APPLE;
+		} else if (isIOs(userAgent, device)) {
 			platform = Constants.MobilePlatform.APPLE;
-		else if(device.equals("android") || userAgent.contains("OkHttp"))
+		} else if(isAndroid(userAgent, device)) {
 			platform = Constants.MobilePlatform.ANDROID;
-		else
+		} else {
 			return Response.status(Response.Status.BAD_REQUEST).entity("Invalid device").build();
+		}
 
 		return updateMobile(token, lat, lng, platform);
+	}
+
+	private boolean isIOs(String userAgent, String device){
+		return device.equals("apple") || device.equals("ios") || userAgent.contains("WordRailsIOSClient");
+	}
+
+	private boolean isAndroid(String userAgent, String device){
+		return device.equals("android") || userAgent.contains("OkHttp");
 	}
 
 	private Response updateMobile(String token, Double lat, Double lng, Constants.MobilePlatform type) {

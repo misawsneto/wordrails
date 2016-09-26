@@ -56,7 +56,8 @@ public final class Constants {
 	public enum MobilePlatform {
 		APPLE,
 		ANDROID,
-		FCM
+		FCM_ANDROID,
+		FCM_APPLE
 	}
 
 	public static class StatsEventType {

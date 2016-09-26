@@ -63,9 +63,10 @@ public class NotificationService {
 		List<Integer> personsIds = persons.stream().map(Person::getId).collect(Collectors.toList());
 		List<String> androids = mobileDeviceRepository.findAndroids(personsIds);
 		List<String> apples = mobileDeviceRepository.findApples(personsIds);
-		List<String> fcms = mobileDeviceRepository.findFCMs(personsIds);
+		List<String> fcmAndroids = mobileDeviceRepository.findAndroidFCMs(personsIds);
+		List<String> fcmApples = mobileDeviceRepository.findIOSFCMs(personsIds);
 
-		saveMobileNotifications(postId, post, androids, apples, fcms);
+		saveMobileNotifications(postId, post, androids, apples, fcmAndroids, fcmApples);
 	}
 
 	public void schedulePostNotification(Date date, String title, String message, Integer postId) throws SchedulerException {
@@ -78,7 +79,7 @@ public class NotificationService {
 		schedulerService.schedule(postId + "", SendNotificationJob.class, date, properties);
 	}
 
-	private void saveMobileNotifications(Integer postId, Post post, List<String> androids, List<String> apples, List<String> fcms) {
+	private void saveMobileNotifications(Integer postId, Post post, List<String> androids, List<String> apples, List<String> fcmAndrois, List<String> fcmApples) {
 		PostView postView = new PostView(postId);
 		if (post.getFeaturedImage() != null) {
 			postView.setFeaturedImageHash(post.getFeaturedImage().getOriginalHash());
@@ -89,7 +90,7 @@ public class NotificationService {
 		postView.setAuthorProfilePicture(post.getAuthor().getImageHash());
 		postView.setBody(post.getBody()); // this thing must disappear in 3 months. Today is July, 26th - 2016
 
-		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(NotificationView.of(postView), androids, apples, fcms);
+		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(NotificationView.of(postView), androids, apples, fcmAndrois, fcmApples);
 
 		for (MobileNotification mobileNotification : mobileNotifications) {
 			mobileNotification.setPostId(postId);

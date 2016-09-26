@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class GCMClient implements NotificationServerClient {
 	private Map<String, NotificationResult> errorDevices;
 
 	@Autowired
-	public GCMClient(Sender sender) {
+	public GCMClient(@Qualifier("gcmSender") Sender sender) {
 		this.errorDevices = new HashMap<>();
 		this.sender = sender;
 		this.mapper = new ObjectMapper();

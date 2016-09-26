@@ -24,6 +24,7 @@ public class MobileNotificationService {
 	private AsyncService asyncService;
 	private MobileNotificationSender appleNS;
 	private MobileNotificationSender androidNS;
+	private MobileNotificationSender fcmNS;
 
 	@Autowired
 	public MobileNotificationService(NotificationBatchPublisher notificationBatchPublisher,
@@ -37,17 +38,20 @@ public class MobileNotificationService {
 
 //	@AccessGroup(tenants = {"demo"}, profiles = {"prod"}, inclusion = true)
 	public List<MobileNotification> sendNotifications(NotificationView notification,
-													  Collection<String> androidDevices, Collection<String> appleDevices, Collection<String> fcmDevices) throws NotificationException {
+													  Collection<String> androidDevices, Collection<String> appleDevices, Collection<String> fcmAndroidDevices, Collection<String> fcmAppleDevices) throws NotificationException {
 		Future<List<MobileNotification>> futureAndroidNotifications = null;
 		Future<List<MobileNotification>> futureAppleNotifications = null;
-		Future<List<MobileNotification>> futureFcmNotifications = null;
+		Future<List<MobileNotification>> futureFcmAndroidNotifications = null;
+		Future<List<MobileNotification>> futureFcmAppleNotifications = null;
 		try {
 			futureAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
 					() -> notificationBatchPublisher.sendNotifications(androidNS, notification, androidDevices, MobileNotification.DeviceType.ANDROID));
 			futureAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
 					() -> notificationBatchPublisher.sendNotifications(appleNS, notification, appleDevices, MobileNotification.DeviceType.APPLE));
-//			futureFcmNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-//					() -> notificationBatchPublisher.sendNotifications(appleNS, notification, fcmDevices, MobileNotification.DeviceType.APPLE));
+			futureFcmAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
+					() -> notificationBatchPublisher.sendNotifications(fcmNS, notification, fcmAndroidDevices, MobileNotification.DeviceType.FCM_ANDROID));
+			futureFcmAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
+					() -> notificationBatchPublisher.sendNotifications(fcmNS, notification, fcmAppleDevices, MobileNotification.DeviceType.FCM_APPLE));
 		} catch (Exception e) {
 			if (futureAndroidNotifications != null)
 				futureAndroidNotifications.cancel(true);
@@ -70,12 +74,19 @@ public class MobileNotificationService {
 					notification, e, MobileNotification.DeviceType.APPLE));
 		}
 
-//		try {
-//			mobileNotifications.addAll(futureFcmNotifications.get());
-//		} catch (InterruptedException | ExecutionException e) {
-//			mobileNotifications = notificationBatchPublisher.getErrorNotifications(fcmDevices,
-//					notification, e, MobileNotification.DeviceType.FCM);
-//		}
+		try {
+			mobileNotifications.addAll(futureFcmAndroidNotifications.get());
+		} catch (InterruptedException | ExecutionException e) {
+			mobileNotifications = notificationBatchPublisher.getErrorNotifications(fcmAndroidDevices,
+					notification, e, MobileNotification.DeviceType.FCM_ANDROID);
+		}
+
+		try {
+			mobileNotifications.addAll(futureFcmAppleNotifications.get());
+		} catch (InterruptedException | ExecutionException e) {
+			mobileNotifications = notificationBatchPublisher.getErrorNotifications(fcmAppleDevices,
+					notification, e, MobileNotification.DeviceType.FCM_APPLE);
+		}
 
 		return mobileNotifications;
 	}

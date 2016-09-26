@@ -31,8 +31,13 @@ public interface MobileDeviceRepository extends JpaRepository<MobileDevice, Inte
 
 	@RestResource(exported = false)
 	@Query("SELECT device.deviceCode FROM MobileDevice device " +
-			"where device.person.id in (:personIds) and device.type = 'FCM'")
-	List<String> findFCMs(@Param("personIds") List<Integer> personIds);
+			"where device.person.id in (:personIds) and device.type = 'FCM_ANDROID'")
+	List<String> findAndroidFCMs(@Param("personIds") List<Integer> personIds);
+
+	@RestResource(exported = false)
+	@Query("SELECT device.deviceCode FROM MobileDevice device " +
+			"where device.person.id in (:personIds) and device.type = FCM_APPLE")
+	List<String> findIOSFCMs(@Param("personIds") List<Integer> personIds);
 
 	@RestResource(exported = false)
 	@Modifying
