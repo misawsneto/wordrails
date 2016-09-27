@@ -51,6 +51,8 @@ public class MobileNotification extends BaseEntity {
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
+	
+	public String messageId;
 
 	public String regId;
 

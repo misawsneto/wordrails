@@ -51,6 +51,11 @@ public class V2NotificationsResource extends AbstractResource implements V2Notif
 		return Response.ok().build();
 	}
 
+	@Override
+	public Response setNotificationSeen(String messageId) {
+		return null;
+	}
+
 //	@Override
 //	public Response notifyLater(Map<String, String> params) {
 //		CreateNotificationForm form;

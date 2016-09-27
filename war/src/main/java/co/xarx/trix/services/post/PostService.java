@@ -102,6 +102,10 @@ public class PostService {
 		for (MobileNotification n : mobileNotifications) {
 			n.setPostId(post.getId());
 			mobileNotificationRepository.save(n);
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+			}
 		}
 	}
 

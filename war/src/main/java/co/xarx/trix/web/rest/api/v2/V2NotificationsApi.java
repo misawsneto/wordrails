@@ -24,4 +24,8 @@ public interface V2NotificationsApi {
 								  @FormParam("scheduledAt") String date,
 								  @FormParam("message") String message,
 								  @PathParam("postId") Integer postId);
+
+	@PUT
+	@Path("/{messageId}/seen")
+	Response setNotificationSeen(@PathParam("messageId") String messageId);
 }
