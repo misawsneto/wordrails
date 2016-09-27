@@ -8,6 +8,16 @@ public class NotificationResult {
 	private String errorMessage;
 	private boolean deviceDeactivated;
 
+	private String messageId;
+
+	public String getMessageId(){
+		return this.messageId;
+	}
+
+	public void setMessageId(String messageId){
+		this.messageId = messageId;
+	}
+
 	public MobileNotification.Status getStatus() {
 		return status;
 	}
