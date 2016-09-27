@@ -23,6 +23,7 @@ public class FCMClient implements NotificationServerClient {
     public FCMClient(FCMSender sender){
         this.sender = sender;
         this.errorDevices = new HashMap<>();
+        this.successDevices = new HashMap<>();
     }
 
     @Override

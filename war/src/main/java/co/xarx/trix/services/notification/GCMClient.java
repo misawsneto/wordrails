@@ -25,6 +25,7 @@ public class GCMClient implements NotificationServerClient {
 	@Autowired
 	public GCMClient(@Qualifier("gcmSender") Sender sender) {
 		this.errorDevices = new HashMap<>();
+		this.successDevices = new HashMap<>();
 		this.sender = sender;
 		this.mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);

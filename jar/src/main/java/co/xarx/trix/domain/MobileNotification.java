@@ -52,6 +52,8 @@ public class MobileNotification extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
+	public String messageId;
+
 	public String regId;
 
 	@NotNull
@@ -73,6 +75,8 @@ public class MobileNotification extends BaseEntity {
 	public String deviceType;
 
 	public boolean deviceDeactivated;
+
+	public boolean seen;
 
 	@NotEmpty
 	@Size(min=1,max=500)
