@@ -20,6 +20,7 @@ public class GCMClient implements NotificationServerClient {
 	private Sender sender;
 
 	private Map<String, NotificationResult> errorDevices;
+	private Map<String, NotificationResult> successDevices;
 
 	@Autowired
 	public GCMClient(@Qualifier("gcmSender") Sender sender) {
@@ -34,6 +35,11 @@ public class GCMClient implements NotificationServerClient {
 	@Override
 	public Map<String, NotificationResult> getErrorDevices() {
 		return errorDevices;
+	}
+
+	@Override
+	public Map<String, NotificationResult> getSuccessDevices() {
+		return successDevices;
 	}
 
 	@Override
@@ -58,6 +64,11 @@ public class GCMClient implements NotificationServerClient {
 					notificationResult.setDeviceDeactivated(true);
 				}
 				errorDevices.put(devices.get(i), notificationResult);
+			}else{
+				NotificationResult notificationResult = new NotificationResult();
+				notificationResult.setStatus(MobileNotification.Status.SUCCESS);
+				notificationResult.setMessageId(r.getMessageId());
+				successDevices.put(devices.get(i), notificationResult);
 			}
 		}
 	}

@@ -16,6 +16,7 @@ import java.util.*;
 public class FCMClient implements NotificationServerClient {
 
     private Map<String, NotificationResult> errorDevices;
+	private Map<String, NotificationResult> successDevices;
     private FCMSender sender;
 
     @Autowired
@@ -28,6 +29,11 @@ public class FCMClient implements NotificationServerClient {
     public Map<String, NotificationResult> getErrorDevices() {
         return errorDevices;
     }
+
+	@Override
+	public Map<String, NotificationResult> getSuccessDevices() {
+		return successDevices;
+	}
 
     @Override
     public void send(NotificationView notificationView, Collection<String> d) throws IOException {
@@ -50,7 +56,12 @@ public class FCMClient implements NotificationServerClient {
                     notificationResult.setDeviceDeactivated(true);
                 }
                 errorDevices.put(devices.get(i), notificationResult);
-            }
+            }else{
+				NotificationResult notificationResult = new NotificationResult();
+				notificationResult.setStatus(MobileNotification.Status.SUCCESS);
+				notificationResult.setMessageId(r.getMessageId());
+				successDevices.put(devices.get(i), notificationResult);
+			}
         }
     }
 

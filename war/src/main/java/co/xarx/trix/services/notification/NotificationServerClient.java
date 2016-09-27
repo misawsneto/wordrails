@@ -11,4 +11,6 @@ public interface NotificationServerClient {
 	Map<String, NotificationResult> getErrorDevices();
 
 	void send(NotificationView notification, Collection<String> devices) throws IOException;
+
+	Map<String,NotificationResult> getSuccessDevices();
 }
