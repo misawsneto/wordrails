@@ -23,6 +23,7 @@ public class FCMClient implements NotificationServerClient {
     public FCMClient(FCMSender sender){
         this.sender = sender;
         this.errorDevices = new HashMap<>();
+        this.successDevices = new HashMap<>();
     }
 
     @Override
@@ -66,7 +67,7 @@ public class FCMClient implements NotificationServerClient {
     }
 
     public Message createMessage(NotificationView notificationView){
-        Notification notification = new Notification.Builder(notificationView.post.featuredImageHash)
+        Notification notification = new Notification.Builder(notificationView.post.getImageLargeHash())
                 .title(notificationView.title)
                 .body(notificationView.message)
                 .build();

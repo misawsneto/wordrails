@@ -1,10 +1,14 @@
 package co.xarx.trix.web.rest.resource.v2;
 
+import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.v2.PersonalNotificationData;
+import co.xarx.trix.api.v2.request.MessageFCM;
 import co.xarx.trix.services.notification.NotificationService;
 import co.xarx.trix.services.notification.PersonalNotificationService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2NotificationsApi;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.quartz.SchedulerException;
@@ -48,6 +52,13 @@ public class V2NotificationsResource extends AbstractResource implements V2Notif
 			return Response.serverError().entity("Error scheduling post").build();
 		}
 
+		return Response.ok().build();
+	}
+
+	@Override
+	public Response setNotificationSeen(MessageFCM message) {
+		String messageId = message.id;
+		notificationService.setNotificationSeen(messageId);
 		return Response.ok().build();
 	}
 
