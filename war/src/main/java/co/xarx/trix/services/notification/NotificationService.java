@@ -85,7 +85,7 @@ public class NotificationService {
 	@TimeIt
 	public void setNotificationSeen(String messageId) throws NotFoundException{
 		MobileNotification notification = mobileNotificationRepository.findByMessageId(messageId);
-		if(notification == null) throw new NotFoundException("Notification not found")S;
+		if(notification == null) throw new NotFoundException("Notification not found");
 
 		notification.setSeen(true);
 		mobileNotificationRepository.save(notification);
