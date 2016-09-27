@@ -1,5 +1,6 @@
 package co.xarx.trix.services.notification;
 
+import co.xarx.trix.annotation.TimeIt;
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
@@ -14,9 +15,11 @@ import co.xarx.trix.services.notification.job.SendNotificationJob;
 import co.xarx.trix.services.security.PersonPermissionService;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.NotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -77,6 +80,15 @@ public class NotificationService {
 		properties.put("tenantId", TenantContextHolder.getCurrentTenantId());
 
 		schedulerService.schedule(postId + "", SendNotificationJob.class, date, properties);
+	}
+
+	@TimeIt
+	public void setNotificationSeen(String messageId) throws NotFoundException{
+		MobileNotification notification = mobileNotificationRepository.findByMessageId(messageId);
+		if(notification == null) throw new NotFoundException("Notification not found")S;
+
+		notification.setSeen(true);
+		mobileNotificationRepository.save(notification);
 	}
 
 	private void saveMobileNotifications(Integer postId, Post post, List<String> androids, List<String> apples, List<String> fcmAndrois, List<String> fcmApples) {

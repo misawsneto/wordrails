@@ -1,5 +1,9 @@
 package co.xarx.trix.web.rest.api.v2;
 
+import co.xarx.trix.api.PostView;
+import co.xarx.trix.api.v2.request.MessageFCM;
+import co.xarx.trix.web.rest.resource.v2.V2NotificationsResource;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -26,6 +30,6 @@ public interface V2NotificationsApi {
 								  @PathParam("postId") Integer postId);
 
 	@PUT
-	@Path("/{messageId}/seen")
-	Response setNotificationSeen(@PathParam("messageId") String messageId);
+	@Path("/seen")
+	Response setNotificationSeen(MessageFCM message);
 }

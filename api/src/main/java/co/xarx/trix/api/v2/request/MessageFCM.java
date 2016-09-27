@@ -1,7 +1,11 @@
 package co.xarx.trix.api.v2.request;
 
-/**
- * Created by guto on 9/27/16.
- */
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class MessageFCM {
+    public String id;
 }
