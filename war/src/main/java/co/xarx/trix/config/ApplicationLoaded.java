@@ -14,9 +14,11 @@ public class ApplicationLoaded implements ApplicationListener<ContextRefreshedEv
 	@Autowired
 	private ApplicationContext applicationContext;
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent ) {
-		ActorSystem system = applicationContext.getBean(ActorSystem.class);
-		SpringExtension ext = applicationContext.getBean(SpringExtension.class);
-		// Use the Spring Extension to create props for a named actor bean
-		ActorRef supervisor = system.actorOf(ext.props("supervisor"));
+		if(contextRefreshedEvent.getSource().toString().contains("Dispatcher")) {
+			ActorSystem system = applicationContext.getBean(ActorSystem.class);
+			SpringExtension ext = applicationContext.getBean(SpringExtension.class);
+			// Use the Spring Extension to create props for a named actor bean
+			ActorRef supervisor = system.actorOf(ext.props("supervisor"), "supervisor");
+		}
     }
 }

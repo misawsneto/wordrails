@@ -126,6 +126,7 @@ public class PostEventHandler {
 	}
 
 	@HandleAfterCreate
+	@Transactional
 	public void handleAfterCreate(Post post) {
 		elasticSearchService.mapThenSave(post, ESPost.class);
 		notificationCheck(post);

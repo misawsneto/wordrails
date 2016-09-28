@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public interface MobileDeviceRepository extends JpaRepository<MobileDevice, Inte
 
 	@RestResource(exported = false)
 	@Query("SELECT device.deviceCode FROM MobileDevice device " +
-			"where device.person.id in (:personIds) and device.type = FCM_APPLE")
+			"where device.person.id in (:personIds) and device.type = 'FCM_APPLE'")
 	List<String> findIOSFCMs(@Param("personIds") List<Integer> personIds);
 
 	@RestResource(exported = false)
@@ -46,6 +47,15 @@ public interface MobileDeviceRepository extends JpaRepository<MobileDevice, Inte
 	@Modifying
 	@RestResource(exported = false)
 	void deleteByLastPersonLoggedId(Integer id);
+
+//	@Modifying
+//	@Query("DELETE from Post post WHERE post.id in (:ids)")
+//	void forceDeleteAll(@Param("ids") List<Integer> ids);
+
+    @RestResource(exported = false)
+    @Modifying
+    @Query("DELETE FROM MobileDevice mobileDevice WHERE mobileDevice.deviceCode IN (:deviceCodes)")
+    void deleteByDeviceCode(@Param("deviceCodes") List<String> deviceCodes);
 
 	@RestResource(exported = false)
 	@Query("select count(*) from MobileDevice md where md.type = 'ANDROID' and tenantId = :tenantId")

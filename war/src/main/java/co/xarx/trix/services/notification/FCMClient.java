@@ -77,7 +77,8 @@ public class FCMClient implements NotificationServerClient {
                 .addData("type", notificationView.type)
                 .addData("entityId", String.valueOf(notificationView.postId))
                 .delayWhileIdle(true)
-                .timeToLive(86400).build();
+                .priority(Message.Priority.HIGH)
+                .timeToLive(0).build();
 
     }
 }
