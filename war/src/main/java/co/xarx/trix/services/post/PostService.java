@@ -26,7 +26,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -69,6 +74,8 @@ public class PostService {
 	private PostSearchService postSearchService;
 	@Autowired
 	private StatEventsService statEventsService;
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Autowired
 	private ImageService imageService;
@@ -102,11 +109,26 @@ public class PostService {
 		for (MobileNotification n : mobileNotifications) {
 			n.setPostId(post.getId());
 			mobileNotificationRepository.save(n);
+
+			//Ugly but saves our server
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
+                e.printStackTrace();
 			}
 		}
+		removeBadDevices(mobileNotifications);
+	}
+
+	@Transactional(readOnly = false, isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
+	private void removeBadDevices(List<MobileNotification> mobileNotifications){
+		List<String> devicesToDelete = new ArrayList<>();
+		for(MobileNotification notification: mobileNotifications){
+			if(notification.getErrorCodeName() != null){
+				devicesToDelete.add(notification.getRegId());
+			}
+		}
+        mobileDeviceRepository.deleteByDeviceCode(devicesToDelete);
 	}
 
 	public NotificationView getCreatePostNotification(Post post) {
