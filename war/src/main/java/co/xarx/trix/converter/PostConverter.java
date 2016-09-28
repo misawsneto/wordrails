@@ -112,6 +112,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.readTime = post.readTime;
 		postView.state = post.state;
 		postView.scheduledDate = post.scheduledDate;
+		postView.unpublishDate = post.unpublishDate;
 		postView.lat = post.lat;
 		postView.lng = post.lng;
 

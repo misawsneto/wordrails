@@ -1,5 +1,6 @@
 package co.xarx.trix.services.notification;
 
+import co.xarx.trix.annotation.TimeIt;
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
@@ -14,9 +15,11 @@ import co.xarx.trix.services.notification.job.SendNotificationJob;
 import co.xarx.trix.services.security.PersonPermissionService;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.NotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,8 +66,10 @@ public class NotificationService {
 		List<Integer> personsIds = persons.stream().map(Person::getId).collect(Collectors.toList());
 		List<String> androids = mobileDeviceRepository.findAndroids(personsIds);
 		List<String> apples = mobileDeviceRepository.findApples(personsIds);
+		List<String> fcmAndroids = mobileDeviceRepository.findAndroidFCMs(personsIds);
+		List<String> fcmApples = mobileDeviceRepository.findIOSFCMs(personsIds);
 
-		saveMobileNotifications(postId, post, androids, apples);
+		saveMobileNotifications(postId, post, androids, apples, fcmAndroids, fcmApples);
 	}
 
 	public void schedulePostNotification(Date date, String title, String message, Integer postId) throws SchedulerException {
@@ -77,7 +82,16 @@ public class NotificationService {
 		schedulerService.schedule(postId + "", SendNotificationJob.class, date, properties);
 	}
 
-	private void saveMobileNotifications(Integer postId, Post post, List<String> androids, List<String> apples) {
+	@TimeIt
+	public void setNotificationSeen(String messageId) throws NotFoundException{
+		MobileNotification notification = mobileNotificationRepository.findByMessageId(messageId);
+		if(notification == null) throw new NotFoundException("Notification not found");
+
+		notification.setSeen(true);
+		mobileNotificationRepository.save(notification);
+	}
+
+	private void saveMobileNotifications(Integer postId, Post post, List<String> androids, List<String> apples, List<String> fcmAndrois, List<String> fcmApples) {
 		PostView postView = new PostView(postId);
 		if (post.getFeaturedImage() != null) {
 			postView.setFeaturedImageHash(post.getFeaturedImage().getOriginalHash());
@@ -88,7 +102,7 @@ public class NotificationService {
 		postView.setAuthorProfilePicture(post.getAuthor().getImageHash());
 		postView.setBody(post.getBody()); // this thing must disappear in 3 months. Today is July, 26th - 2016
 
-		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(NotificationView.of(postView), androids, apples);
+		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(NotificationView.of(postView), androids, apples, fcmAndrois, fcmApples);
 
 		for (MobileNotification mobileNotification : mobileNotifications) {
 			mobileNotification.setPostId(postId);

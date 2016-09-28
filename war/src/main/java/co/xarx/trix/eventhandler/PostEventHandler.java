@@ -10,6 +10,7 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.notification.NotificationService;
 import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.services.security.PostPermissionService;
 import co.xarx.trix.util.StringUtil;
@@ -50,6 +51,9 @@ public class PostEventHandler {
 	@Autowired
 	private QueryPersistence queryPersistence;
 
+	@Autowired
+	private NotificationService notificationService;
+
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException, ConflictException {
 		Integer stationId = post.getStation().getId();
@@ -57,8 +61,11 @@ public class PostEventHandler {
 
 		Pageable page = new PageRequest(0, 1, Sort.Direction.DESC, "id");
 		List<Post> postPage = postRepository.findLatestPosts(TenantContextHolder.getCurrentTenantId(), page);
-		if(postPage.get(0).title.equals(post.title) && postPage.get(0).station.id.equals(post.station.id))
-			throw new ConflictException("Title conflict");
+		if(postPage != null && postPage.size() > 0 && postPage.get(0).title.equals(post.title) && postPage.get(0)
+				.station.id
+				.equals(post
+				.station.id))
+			throw new ConflictException("Title conflict: " + post.title);
 
 		boolean canPublish = postPermissionService.canPublishOnStation(stationId);
 
@@ -66,7 +73,13 @@ public class PostEventHandler {
 			boolean canCreate = postPermissionService.canCreateOnStation(stationId);
 
 			if (canCreate) {
-				post.setState(Post.STATE_UNPUBLISHED);
+				if(post.state != null) {
+					if (!post.state.equals(Post.STATE_UNPUBLISHED) && !post.state.equals(Post
+							.STATE_DRAFT))
+						throw new AccessDeniedException("No permission to use state: " + post.state);
+				}else{
+					post.setState(Post.STATE_UNPUBLISHED);
+				}
 			} else {
 				throw new AccessDeniedException("No permission to create");
 			}
@@ -114,8 +127,8 @@ public class PostEventHandler {
 
 	@HandleAfterCreate
 	public void handleAfterCreate(Post post) {
-		notificationCheck(post);
 		elasticSearchService.mapThenSave(post, ESPost.class);
+		notificationCheck(post);
 	}
 
 	public void notificationCheck(Post post) {

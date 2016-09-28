@@ -71,7 +71,7 @@
 									</div> 
                 </div>
               </div>
-              <div ng-if="personsCount && persons" class="md-whiteframe-z1 text-sm md-background-hue-1 background pos-abt bottom-0 z-index-5" style="width: calc(100% - 16px)">
+              <div ng-if="false" class="md-whiteframe-z1 text-sm md-background-hue-1 background pos-abt bottom-0 z-index-5" style="width: calc(100% - 16px)">
               	<md-divider></md-divider>
               	<div class="p-sm font-code">
                 	{{'titles.TOTAL' | translate}}: {{personsCount}} 
@@ -109,13 +109,13 @@
 	  <md-fab-actions>
       <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showAddUserDialog($event)">
         <md-tooltip md-direction="left">
-          {{'settings.users.ADD_USERS' | translate}}
+          {{'settings.users.CREATE_USER' | translate}}
         </md-tooltip>
         <i class="mdi i-20 mdi2-account-plus text-dark"></i>
       </md-button>
-      <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showAddUserDialog($event)">
+      <md-button aria-label="nothing" aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showAddPermissionDialog($event)">
         <md-tooltip md-direction="left">
-          {{'settings.users.ADD_USERS' | translate}}
+          {{'settings.users.ADD_PERMISSION' | translate}}
         </md-tooltip>
         <i class="mdi i-20 mdi2-key-plus text-dark"></i>
       </md-button>
@@ -276,6 +276,96 @@
       </div>
     </div>
   </md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="add-permission-dialog.html">
+	<md-dialog aria-label="change action">
+		<md-content class="md-background-hue-1 background">
+			<div class="w-700">
+
+				<div class="p text-u-c font-bold text-md-l">
+					<i class="mdi2-key-plus p-r-sm i-24 icon v-m"></i>{{'settings.users.ADD_PERMISSION' | translate}}
+				</div>
+
+				<div class="search-with-filter m-r m-l md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2 m-b-md">
+					<form ng-submit="doSearchUsers()">
+						<input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-md-l bg-t" ng-model="searchUsers">
+					</form>
+				</div>
+
+				<div class="b-t">
+					<div id="users-search-results" class="b-b md-background-hue-1 background pos-rlt w-full inline" style="height:230px; max-height:230px; overflow: auto; box-shadow: inset 0px 0px 25px -10px rgba(0,0,0,0.5);">
+						<div class="h-full">
+							<div class="table-responsive o-visible text-base" infinite-scroll="paginateUsers()" infinite-scroll-container="'#users-search-results'">
+								<table id="users-search-table" class="table b-t b-light">
+									<thead>
+									<tr>
+										<th style="width:15px;">
+											<md-checkbox aria-label="nothing" class="no-margin" ng-model="toggleSelectValue" ng-change="toggleAllUser(toggleSelectValue)">
+											</md-checkbox>
+										</th>
+										<th class="text-l-c">{{'titles.USERS' | translate}}</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr ng-repeat="person in persons" class="b-l-3x b-l-s b-c-t" 	ng-style="person.selected ? app.getMaterialBGColor('myPrimary', '50', '0.3') : null" ng-class="{'b-l-primary': isActivePerson(person)}">
+										<td class="display-t-c v-m">
+											<md-checkbox aria-label="nothing" class="no-margin" ng-if="person.id != app.person.id"
+																	 ng-model="person.selected" ng-true-value="true" ng-false-value="false" ng-click="app.stopPropagation($event)">
+											</md-checkbox>
+										</td>
+										<td class="display-t-c v-m clearfix">
+							              <span class="pull-left thumb-sm m-r">
+															<div ng-style="app.getUserImage(person, 'small', 'PROFILE_PICTURE', true)" style="height: 40px;" class="bg-cover img-responsive img-circle thumb md-whiteframe-z1 text-center" ng-class="{'md-primary-hue-1 background': !app.hasProfilePicture(person)}">
+																<i ng-if="!app.hasProfilePicture(person)" style="line-height: 36px;" class="mdi2-account i-24"></i>
+															</div>
+							              </span>
+											<span class="clear">
+								                <span class="text-md font-bold">{{person.name}}</span>
+								                <div class="text-muted clear text-ellipsis">{{person.username}} | {{person.email}}</div>
+								              </span>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="clear pos-rel">
+					<div class="p-xs text-base w-400 pull-left p-t-sm p-l">
+						<span class="text-md">Permissões:</span>
+						<md-radio-group ng-model="userStationRole">
+							<ul class="station-permissions m-t">
+								<li class="m-r" style="display: inline-block;">
+									<md-radio-button value="READER">{{'settings.users.permissions.READER' | translate}}</md-radio-button>
+								</li>
+								<li class="m-r" style="display: inline-block;">
+									<md-radio-button value="COLABORATOR">{{'settings.users.permissions.COLABORATOR' | translate}}</md-radio-button>
+								</li>
+								<li class="m-r" style="display: inline-block;">
+									<md-radio-button value="WRITER">{{'settings.users.permissions.WRITER' | translate}}</md-radio-button>
+								</li>
+								<li class="m-r" style="display: inline-block;">
+									<md-radio-button value="EDITOR">{{'settings.users.permissions.EDITOR' | translate}}</md-radio-button>
+								</li>
+								<li class="m-r" style="display: inline-block;">
+									<md-radio-button value="ADMIN">{{'settings.users.permissions.ADMIN' | translate}}</md-radio-button>
+								</li>
+							</ul>
+						</md-radio-group>
+					</div>
+
+					<div class="m-t-xl p-t p-b p-r text-right">
+						<md-button class="font-500 md-accent" translate="titles.APPLY" ng-click="applyBulkPermissions(userStationRole);">
+						</md-button>
+						<md-button class="font-500" ng-click="cancel();" translate="titles.CANCEL">
+						</md-button>
+					</div>
+				</div>
+			</div>
+		</md-content>
+	</md-dialog>
 </script>
 
 <script type="text/ng-template" id="bulk_change_access_dialog.html">
@@ -458,7 +548,7 @@
               </li>
             </ul>
           </md-radio-group>
-          
+
         </div>
         <div class="text-right">
           <md-button aria-label="nothing" ng-click="applyUserPermissions(stationRole)" class="no-margin m-r">Confirmar</md-button>

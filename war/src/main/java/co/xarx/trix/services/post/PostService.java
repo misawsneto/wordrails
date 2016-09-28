@@ -10,6 +10,8 @@ import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.ImageService;
 import co.xarx.trix.services.MobileService;
+import co.xarx.trix.services.analytics.RequestWrapper;
+import co.xarx.trix.services.analytics.StatEventsService;
 import co.xarx.trix.services.notification.MobileNotificationService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.PersonPermissionService;
@@ -19,11 +21,13 @@ import co.xarx.trix.util.StringUtil;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
+import org.eclipse.persistence.jpa.jpql.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,6 +67,8 @@ public class PostService {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PostSearchService postSearchService;
+	@Autowired
+	private StatEventsService statEventsService;
 
 	@Autowired
 	private ImageService imageService;
@@ -88,12 +94,18 @@ public class PostService {
 
 		Collection appleDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.APPLE);
 		Collection androidDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.ANDROID);
+		Collection fcmAndroidDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.FCM_ANDROID);
+		Collection fcmAppleDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.FCM_APPLE);
 
 		NotificationView notification = getCreatePostNotification(post);
-		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(notification, androidDevices, appleDevices);
+		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(notification, androidDevices, appleDevices, fcmAndroidDevices, fcmAppleDevices);
 		for (MobileNotification n : mobileNotifications) {
 			n.setPostId(post.getId());
 			mobileNotificationRepository.save(n);
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+			}
 		}
 	}
 
@@ -108,24 +120,15 @@ public class PostService {
 		return notification;
 	}
 
-	public void publishScheduledPost(Integer postId, boolean allowNotifications) throws NotificationException {
-		Post post = postRepository.findOne(postId);
-		turnPublished(allowNotifications, post);
-		if (post != null) {
-			post.date = new Date();
-			postRepository.save(post);
-		}
-	}
-
-	public void turnPublished(boolean allowNotifications, Post post) {
-		if (post != null && !post.state.equals(Post.STATE_PUBLISHED)) {
-			if (post.notify && allowNotifications) {
-				sendNewPostNotification(post);
-			}
-
-			post.state = Post.STATE_PUBLISHED;
-		}
-	}
+//	public void turnPublished(boolean allowNotifications, Post post) {
+//		if (post != null && !post.state.equals(Post.STATE_PUBLISHED)) {
+//			if (post.notify && allowNotifications) {
+//				sendNewPostNotification(post);
+//			}
+//
+//			post.state = Post.STATE_PUBLISHED;
+//		}
+//	}
 
 	public List<PostView> searchRecommends(String q, Integer page, Integer size){
 		Person person = personRepository.findByUsername(authProvider.getUser().getUsername());
@@ -147,9 +150,11 @@ public class PostService {
 		return pvs;
 	}
 
-	public boolean toggleBookmark(Integer postId){
+	public boolean toggleBookmark(Integer postId, HttpServletRequest request){
 		Person person = authProvider.getLoggedPerson();
 		Person originalPerson = personRepository.findOne(person.id);
+		Post post = postRepository.findOne(postId);
+		Assert.isNotNull(post, "Post not found");
 
 		boolean success;
 
@@ -161,6 +166,7 @@ public class PostService {
 			originalPerson.bookmarkPosts.add(postId);
 			person.bookmarkPosts.add(postId);
 			success = true;
+			statEventsService.newBookmarkEvent(post, new RequestWrapper(request));
 		}
 
 		originalPerson.bookmarkPosts = new ArrayList<>(new HashSet<>(originalPerson.bookmarkPosts));
@@ -172,9 +178,11 @@ public class PostService {
 
 	}
 
-	public boolean toggleRecommend(Integer postId){
+	public boolean toggleRecommend(Integer postId, HttpServletRequest request){
 		Person person = authProvider.getLoggedPerson();
 		Person originalPerson = personRepository.findOne(person.id);
+		Post post = postRepository.findOne(postId);
+		Assert.isNotNull(post, "Post not found");
 
 		boolean response;
 
@@ -186,6 +194,7 @@ public class PostService {
 			originalPerson.recommendPosts.add(postId);
 			person.recommendPosts.add(postId);
 			response = true;
+			statEventsService.newRecommendEvent(post, new RequestWrapper(request));
 		}
 
 		originalPerson.recommendPosts = new ArrayList<>(new HashSet<>(originalPerson.recommendPosts));

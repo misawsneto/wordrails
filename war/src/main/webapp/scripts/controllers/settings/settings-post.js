@@ -69,7 +69,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
         // Allow to upload any file.
         fileAllowedTypes: ['*'],
-        toolbarSticky: false
+        toolbarSticky: true
     }
 
 
@@ -1104,7 +1104,12 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		var hash = $scope.app.editingPost.featuredImageHash ? $scope.app.editingPost.featuredImageHash : $scope.app.editingPost.imageHash ? $scope.app.editingPost.imageHash : $scope.app.editingPost.featuredImage ? $scope.app.editingPost.featuredImage.originalHash : null;
 		setPostFeaturedImage(hash)
-		$scope.featuredImage = $scope.app.editingPost.featuredImage
+		if(!$scope.featuredImage)
+			$scope.featuredImage = $scope.app.editingPost.featuredImage
+
+		if(!$scope.app.editingPost.featuredImage)
+			$scope.app.editingPost.featuredImage = $scope.featuredImage
+
 		if($scope.featuredImage){
 			$scope.featuredImage.credits = $scope.app.editingPost.imageCredits
 			$scope.app.imgToolsProps.x =  $scope.app.editingPost.focusX;

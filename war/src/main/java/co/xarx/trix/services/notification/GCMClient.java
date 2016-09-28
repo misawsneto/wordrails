@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -19,10 +20,12 @@ public class GCMClient implements NotificationServerClient {
 	private Sender sender;
 
 	private Map<String, NotificationResult> errorDevices;
+	private Map<String, NotificationResult> successDevices;
 
 	@Autowired
-	public GCMClient(Sender sender) {
+	public GCMClient(@Qualifier("gcmSender") Sender sender) {
 		this.errorDevices = new HashMap<>();
+		this.successDevices = new HashMap<>();
 		this.sender = sender;
 		this.mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
@@ -33,6 +36,11 @@ public class GCMClient implements NotificationServerClient {
 	@Override
 	public Map<String, NotificationResult> getErrorDevices() {
 		return errorDevices;
+	}
+
+	@Override
+	public Map<String, NotificationResult> getSuccessDevices() {
+		return successDevices;
 	}
 
 	@Override
@@ -57,6 +65,11 @@ public class GCMClient implements NotificationServerClient {
 					notificationResult.setDeviceDeactivated(true);
 				}
 				errorDevices.put(devices.get(i), notificationResult);
+			}else{
+				NotificationResult notificationResult = new NotificationResult();
+				notificationResult.setStatus(MobileNotification.Status.SUCCESS);
+				notificationResult.setMessageId(r.getMessageId());
+				successDevices.put(devices.get(i), notificationResult);
 			}
 		}
 	}

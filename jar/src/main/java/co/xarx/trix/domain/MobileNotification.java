@@ -28,7 +28,9 @@ public class MobileNotification extends BaseEntity {
 
 	public enum DeviceType {
 		ANDROID,
-		APPLE
+		APPLE,
+		FCM_ANDROID,
+		FCM_APPLE
 	}
 
 	public enum Status {
@@ -49,6 +51,8 @@ public class MobileNotification extends BaseEntity {
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
+
+	public String messageId;
 
 	public String regId;
 
@@ -71,6 +75,8 @@ public class MobileNotification extends BaseEntity {
 	public String deviceType;
 
 	public boolean deviceDeactivated;
+
+	public boolean seen;
 
 	@NotEmpty
 	@Size(min=1,max=500)

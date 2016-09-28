@@ -13,6 +13,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.List;
 
 @Path("/networks")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -50,8 +51,7 @@ public interface NetworkApi {
 	@Path("/stats")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response networkStats(@QueryParam("date") String date,
-						   @QueryParam("beggining") String beginning,
-						   @QueryParam("postId") Integer postId) throws IOException;
+						   @QueryParam("beggining") String beginning) throws IOException;
 
 	@GET
 	@Path("/invitationTemplate")

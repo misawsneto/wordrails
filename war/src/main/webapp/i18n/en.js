@@ -138,7 +138,9 @@
 		"SIGNUP_MSG": "Sign up to",
 		"SIGNIN_OR_SIGNUP_MSG": "Sign in or sign up to",
 		"FORGOT": "Forgot your credentials",
-		"FORGOT_MSG": "Enter your email address below and we will send you instructions on how to change your password."
+		"FORGOT_MSG": "Enter your email address below and we will send you instructions on how to change your password.",
+		"RECOVER": "Success",
+		"RECOVER_MSG": "We send an email which contain a link for you to reconfigure your password"
 	},
 	"actions":{
 		"ADD": "Add",
@@ -264,6 +266,8 @@
 			"PERMISSIONS_OF_ALL_SELECTED": "Change permissions of selected users",
 			"INVITE_USERS": "Invite users",
 			"ADD_USERS": "Invite users",
+			"ADD_PERMISSION": "Add permission",
+			"CREATE_USER": "Create user",
 			"REDIFINE_PASSWORD": "Redifine password",
 			"EDIT_PROFILE": "Edit profile",
 			"ENABLE_ALL_SELECTED_MSG": "Are you sure you want to enable all selected users",
@@ -439,6 +443,7 @@
 		},
 		"INVALID_CREDENTIALS": "Invalid credentials. Please try again.",
 		"INVALID_SIGNUP": "Invalid data. Try again.",
-		"USER_ALREADY_EXISTS": "User already exists. Try again."
+		"USER_ALREADY_EXISTS": "User already exists. Try again.",
+		"NOT_FOUND_USER": "No user found with that email."
 	}
 }

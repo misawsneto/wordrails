@@ -14,7 +14,6 @@ import java.util.UUID;
 @lombok.Setter
 @Entity
 @NoArgsConstructor
-//@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "network_id"}))
 public class Invitation extends BaseEntity {
 
 	public Invitation(String baseUrl){

@@ -19,4 +19,9 @@ public class NotificationServerClientSuccess implements NotificationServerClient
 	@Override
 	public void send(NotificationView notification, Collection<String> devices) throws IOException {
 	}
+
+	@Override
+	public Map<String, NotificationResult> getSuccessDevices() {
+		return new HashMap<>();
+	}
 }

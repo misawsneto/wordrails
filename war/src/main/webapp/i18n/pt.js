@@ -138,7 +138,9 @@
 		"SIGNUP_MSG": "Cadastrar-se em",
 		"SIGNIN_OR_SIGNUP_MSG": "Entrar ou cadastrar-se em",
 		"FORGOT": "Esqueceu seus dados de acesso",
-		"FORGOT_MSG": "Insira seu email abaixo e nós enviaremos instruções para a troca de sua senha"
+		"FORGOT_MSG": "Insira seu email abaixo e nós enviaremos instruções para a troca de sua senha",
+		"RECOVER": "Sucesso",
+		"RECOVER_MSG": "Enviamos um email que contém o link para que você reconfigure sua senha"
 	},
 	"actions":{
 		"ADD": "Adicionar",
@@ -264,6 +266,8 @@
 			"PERMISSIONS_OF_ALL_SELECTED": "Alterar permissões de usuário selecionados",
 			"INVITE_USERS": "Convidar usuários",
 			"ADD_USERS": "Adicionar usuários",
+			"ADD_PERMISSION": "Adicionar permissão",
+			"CREATE_USER": "Criar usuário",
 			"REDIFINE_PASSWORD": "Redefinir senha",
 			"EDIT_PROFILE": "Editar perfil",
 			"ENABLE_ALL_SELECTED_MSG": "Tem certeza que deseja ativar todos os usuários selecionados",
@@ -439,6 +443,7 @@
 		},
 		"INVALID_CREDENTIALS": "Credenciais inválidas. Por favor tente novamente.",
 		"INVALID_SIGNUP": "Dados inválidos. Tente novamente.",
-		"USER_ALREADY_EXISTS": "Usuário já existe. Tente novamente."
+		"USER_ALREADY_EXISTS": "Usuário já existe. Tente novamente.",
+		"NOT_FOUND_USER": "Nenhum usuário encontrado com esse email."
 	}
 }

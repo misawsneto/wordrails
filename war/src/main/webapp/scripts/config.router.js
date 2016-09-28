@@ -30,6 +30,8 @@ angular.module('app')
 
         var isSettigns = path.slice(0, '/settings'.length) == '/settings';
 
+        var isAccess = path.slice(0, '/access'.length) == '/access'
+
         if(isSettigns){
           layout = '/views/layout.html?' + GLOBAL_URL_HASH;aside = '/views/aside.html?' + GLOBAL_URL_HASH;content= '/views/content.html?' + GLOBAL_URL_HASH;
         }else{
@@ -760,6 +762,11 @@ angular.module('app')
                 },
                 controller: 'PageCtrl'
               })
+              .state('app.empty', {
+                url: '/empty',
+                template: '<div ui-view></div>',
+                data : { title: 'Home', folded: false }
+              })
               .state('app.station', {
                 url: '/{stationSlug}',
                 abstract: true,
@@ -1188,11 +1195,15 @@ angular.module('app')
             ;
         }
 
+        if(!isAccess && !isSettigns && (initData.stations == null || initData.stations.length == 0)){
+          document.location.href = '/access/signin';
+          return;
+        }
+
         if(isSettigns)
           createSettingsRoutes();
         else
           createHomeRoutes();
-
 
         $stateProvider
         .state('app.search', {
@@ -1281,6 +1292,18 @@ angular.module('app')
           .state('access.forgot-password', {
             url: '/forgot-password',
             templateUrl: '/views/pages/forgot-password.html?' + GLOBAL_URL_HASH,
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
+            controller: 'AppForgotCtrl'
+          })
+          .state('access.forgotpwd', {
+            url: '/forgotpwd',
+            templateUrl: '/views/pages/forgot-password.html?' + GLOBAL_URL_HASH,
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
+            controller: 'AppForgotCtrl'
+          })
+          .state('access.recoversuccess', {
+            url: '/recoversuccess',
+            templateUrl: '/views/pages/recoversuccess.html?' + GLOBAL_URL_HASH,
             resolve: load(['/scripts/controllers/app/signin-signup-forgot.js?' + GLOBAL_URL_HASH ]),
             controller: 'AppForgotCtrl'
           })

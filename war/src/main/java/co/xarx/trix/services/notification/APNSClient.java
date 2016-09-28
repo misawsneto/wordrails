@@ -8,7 +8,9 @@ import co.xarx.trix.persistence.AppleCertificateRepository;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsNotification;
 import com.notnoop.apns.ApnsService;
+import lombok.Getter;
 import org.eclipse.persistence.jpa.jpql.Assert;
+import org.jcodec.common.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,22 +18,24 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
+@Getter
 public class APNSClient implements NotificationServerClient {
 
-	private ApnsService service;
-	private AppleCertificateRepository appleCertificateRepository;
 	private String apnsProfile;
+	private ApnsService service;
+	private Map<String, NotificationResult> errorDevices;
+	private Map<String, NotificationResult> successDevices;
+	private AppleCertificateRepository appleCertificateRepository;
 
 	@Autowired
 	public APNSClient(AppleCertificateRepository appleCertificateRepository, @Value("${apns.profile:prod}") String apnsProfile) throws IOException {
-		this.appleCertificateRepository = appleCertificateRepository;
 		this.apnsProfile = apnsProfile;
+		errorDevices = new HashMap<>();
+		successDevices = new HashMap<>();
+		this.appleCertificateRepository = appleCertificateRepository;
 	}
 
 	@Override
@@ -50,13 +54,20 @@ public class APNSClient implements NotificationServerClient {
 				.instantDeliveryOrSilentNotification()
 				.build();
 
-		Collection<? extends ApnsNotification> push = service.push(devices, payload);
-		System.out.println(push);
+		service.push(devices, payload);
+		extractErrorDevices();
+		extractSuccessDevices(devices);
 	}
 
-	@Override
-	public Map<String, NotificationResult> getErrorDevices() {
-		Map<String, NotificationResult> errorDevices = new HashMap<>();
+	public void extractSuccessDevices(Collection<String> devices) {
+		for(String device: devices){
+			NotificationResult result = new NotificationResult();
+			result.setStatus(MobileNotification.Status.SUCCESS);
+			successDevices.put(device, result);
+		}
+	}
+
+	public void extractErrorDevices() {
 		Map<String, Date> inactiveDevices = service.getInactiveDevices();
 		for (String s : inactiveDevices.keySet()) {
 			NotificationResult r = new NotificationResult();
@@ -65,7 +76,6 @@ public class APNSClient implements NotificationServerClient {
 			r.setDeviceDeactivated(true);
 			errorDevices.put(s, r);
 		}
-		return errorDevices;
 	}
 
 	private void initService() throws IOException {

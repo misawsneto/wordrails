@@ -436,7 +436,8 @@ angular.module('textAngularSetup', [])
 		}
 	};
 }])
-.run(['taRegisterTool', '$window', 'taTranslations', 'taSelection', 'taToolFunctions', '$sanitize', 'taOptions', function(taRegisterTool, $window, taTranslations, taSelection, taToolFunctions, $sanitize, taOptions){
+.run(['taRegisterTool', '$window', 'taTranslations', 'taSelection', 'taToolFunctions', '$sanitize', 'taOptions', '$log',
+	function(taRegisterTool, $window, taTranslations, taSelection, taToolFunctions, $sanitize, taOptions, $log){
 	// test for the version of $sanitize that is in use
 	// You can disable this check by setting taOptions.textAngularSanitize == false
 	var gv = {}; $sanitize('', gv);
@@ -660,24 +661,124 @@ angular.module('textAngularSetup', [])
 		iconclass: 'fa fa-ban',
 		tooltiptext: taTranslations.clear.tooltip,
 		action: function(deferred, restoreSelection){
-			var i;
+			var i, selectedElements, elementsSeen;
+
 			this.$editor().wrapSelection("removeFormat", null);
 			var possibleNodes = angular.element(taSelection.getSelectionElement());
+			selectedElements = taSelection.getAllSelectedElements();
+			//$log.log('selectedElements:', selectedElements);
 			// remove lists
-			var removeListElements = function(list){
+			var removeListElements = function(list, pe){
 				list = angular.element(list);
-				var prevElement = list;
+				var prevElement = pe;
+				if (!pe) {
+					prevElement = list;
+				}
 				angular.forEach(list.children(), function(liElem){
-					var newElem = angular.element('<p></p>');
-					newElem.html(angular.element(liElem).html());
-					prevElement.after(newElem);
-					prevElement = newElem;
+					if (liElem.tagName.toLowerCase() === 'ul' ||
+						liElem.tagName.toLowerCase() === 'ol') {
+						prevElement = removeListElements(liElem, prevElement);
+					} else {
+						var newElem = angular.element('<p></p>');
+						newElem.html(angular.element(liElem).html());
+						prevElement.after(newElem);
+						prevElement = newElem;
+					}
 				});
 				list.remove();
+				return prevElement;
 			};
+
+			angular.forEach(selectedElements, function(element) {
+				if (element.nodeName.toLowerCase() === 'ul' ||
+					element.nodeName.toLowerCase() === 'ol') {
+					//console.log('removeListElements', element);
+					removeListElements(element);
+				}
+			});
+
 			angular.forEach(possibleNodes.find("ul"), removeListElements);
 			angular.forEach(possibleNodes.find("ol"), removeListElements);
-			if(possibleNodes[0].tagName.toLowerCase() === 'li'){
+
+			// clear out all class attributes. These do not seem to be cleared via removeFormat
+			var $editor = this.$editor();
+			var recursiveRemoveClass = function(node){
+				node = angular.element(node);
+				/* istanbul ignore next: this is not triggered in tests any longer since we now never select the whole displayELement */
+				if(node[0] !== $editor.displayElements.text[0]) {
+					node.removeAttr('class');
+				}
+				angular.forEach(node.children(), recursiveRemoveClass);
+			};
+			angular.forEach(possibleNodes, recursiveRemoveClass);
+			// check if in list. If not in list then use formatBlock option
+			if(possibleNodes[0] && possibleNodes[0].tagName.toLowerCase() !== 'li' &&
+				possibleNodes[0].tagName.toLowerCase() !== 'ol' &&
+				possibleNodes[0].tagName.toLowerCase() !== 'ul') {
+				this.$editor().wrapSelection("formatBlock", "default");
+			}
+			restoreSelection();
+		}
+	});
+
+		/* jshint -W099 */
+	/****************************
+	 //  we don't use this code - since the previous way CLEAR is expected to work does not clear partially selected <li>
+
+	 var removeListElement = function(listE){
+				console.log(listE);
+				var _list = listE.parentNode.childNodes;
+				console.log('_list', _list);
+				var _preLis = [], _postLis = [], _found = false;
+				for (i = 0; i < _list.length; i++) {
+					if (_list[i] === listE) {
+						_found = true;
+					} else if (!_found) _preLis.push(_list[i]);
+					else _postLis.push(_list[i]);
+				}
+				var _parent = angular.element(listE.parentNode);
+				var newElem = angular.element('<p></p>');
+				newElem.html(angular.element(listE).html());
+				if (_preLis.length === 0 || _postLis.length === 0) {
+					if (_postLis.length === 0) _parent.after(newElem);
+					else _parent[0].parentNode.insertBefore(newElem[0], _parent[0]);
+
+					if (_preLis.length === 0 && _postLis.length === 0) _parent.remove();
+					else angular.element(listE).remove();
+				} else {
+					var _firstList = angular.element('<' + _parent[0].tagName + '></' + _parent[0].tagName + '>');
+					var _secondList = angular.element('<' + _parent[0].tagName + '></' + _parent[0].tagName + '>');
+					for (i = 0; i < _preLis.length; i++) _firstList.append(angular.element(_preLis[i]));
+					for (i = 0; i < _postLis.length; i++) _secondList.append(angular.element(_postLis[i]));
+					_parent.after(_secondList);
+					_parent.after(newElem);
+					_parent.after(_firstList);
+					_parent.remove();
+				}
+				taSelection.setSelectionToElementEnd(newElem[0]);
+			};
+
+	 elementsSeen = [];
+	 if (selectedElements.length !==0) console.log(selectedElements);
+	 angular.forEach(selectedElements, function (element) {
+				if (elementsSeen.indexOf(element) !== -1 || elementsSeen.indexOf(element.parentElement) !== -1) {
+					return;
+				}
+				elementsSeen.push(element);
+				if (element.nodeName.toLowerCase() === 'li') {
+					console.log('removeListElement', element);
+					removeListElement(element);
+				}
+				else if (element.parentElement && element.parentElement.nodeName.toLowerCase() === 'li') {
+					console.log('removeListElement', element.parentElement);
+					elementsSeen.push(element.parentElement);
+					removeListElement(element.parentElement);
+				}
+			});
+	 **********************/
+
+	/**********************
+	 if(possibleNodes[0].tagName.toLowerCase() === 'li'){
 				var _list = possibleNodes[0].parentNode.childNodes;
 				var _preLis = [], _postLis = [], _found = false;
 				for(i = 0; i < _list.length; i++){
@@ -707,22 +808,16 @@ angular.module('textAngularSetup', [])
 				}
 				taSelection.setSelectionToElementEnd(newElem[0]);
 			}
-			// clear out all class attributes. These do not seem to be cleared via removeFormat
-			var $editor = this.$editor();
-			var recursiveRemoveClass = function(node){
-				node = angular.element(node);
-				if(node[0] !== $editor.displayElements.text[0]) node.removeAttr('class');
-				angular.forEach(node.children(), recursiveRemoveClass);
-			};
-			angular.forEach(possibleNodes, recursiveRemoveClass);
-			// check if in list. If not in list then use formatBlock option
-			if(possibleNodes[0].tagName.toLowerCase() !== 'li' &&
-				possibleNodes[0].tagName.toLowerCase() !== 'ol' &&
-				possibleNodes[0].tagName.toLowerCase() !== 'ul') this.$editor().wrapSelection("formatBlock", "default");
-			restoreSelection();
-		}
-	});
+	 *******************/
 
+
+	/* istanbul ignore next: if it's javascript don't worry - though probably should show some kind of error message */
+	var blockJavascript = function (link) {
+		if (link.toLowerCase().indexOf('javascript')!==-1) {
+			return true;
+		}
+		return false;
+	};
 
 	taRegisterTool('insertImage', {
 		iconclass: 'fa fa-picture-o',
@@ -732,22 +827,25 @@ angular.module('textAngularSetup', [])
 			imageLink = $window.prompt(taTranslations.insertImage.dialogPrompt, 'http://');
 			if(imageLink && imageLink !== '' && imageLink !== 'http://'){
 				/* istanbul ignore next: don't know how to test this... since it needs a dialogPrompt */
-				if (taSelection.getSelectionElement().tagName.toLowerCase() === 'a') {
-					// due to differences in implementation between FireFox and Chrome, we must move the
-					// insertion point past the <a> element, otherwise FireFox inserts inside the <a>
-					// With this change, both FireFox and Chrome behave the same way!
-					taSelection.setSelectionAfterElement(taSelection.getSelectionElement());
+				// block javascript here
+				if (!blockJavascript(imageLink)) {
+					if (taSelection.getSelectionElement().tagName.toLowerCase() === 'a') {
+						// due to differences in implementation between FireFox and Chrome, we must move the
+						// insertion point past the <a> element, otherwise FireFox inserts inside the <a>
+						// With this change, both FireFox and Chrome behave the same way!
+						taSelection.setSelectionAfterElement(taSelection.getSelectionElement());
+					}
+					// In the past we used the simple statement:
+					//return this.$editor().wrapSelection('insertImage', imageLink, true);
+					//
+					// However on Firefox only, when the content is empty this is a problem
+					// See Issue #1201
+					// Investigation reveals that Firefox only inserts a <p> only!!!!
+					// So now we use insertHTML here and all is fine.
+					// NOTE: this is what 'insertImage' is supposed to do anyway!
+					var embed = '<img src="' + imageLink + '">';
+					return this.$editor().wrapSelection('insertHTML', embed, true);
 				}
-				// In the past we used the simple statement:
-				//return this.$editor().wrapSelection('insertImage', imageLink, true);
-				//
-				// However on Firefox only, when the content is empty this is a problem
-				// See Issue #1201
-				// Investigation reveals that Firefox only inserts a <p> only!!!!
-				// So now we use insertHTML here and all is fine.
-				// NOTE: this is what 'insertImage' is supposed to do anyway!
-				var embed = '<img src="' + imageLink + '">';
-				return this.$editor().wrapSelection('insertHTML', embed, true);
 			}
 		},
 		onElementSelect: {
@@ -761,27 +859,32 @@ angular.module('textAngularSetup', [])
 		action: function(){
 			var urlPrompt;
 			urlPrompt = $window.prompt(taTranslations.insertVideo.dialogPrompt, 'https://');
-			if (urlPrompt && urlPrompt !== '' && urlPrompt !== 'https://') {
+			// block javascript here
+			/* istanbul ignore else: if it's javascript don't worry - though probably should show some kind of error message */
+			if (!blockJavascript(urlPrompt)) {
 
-				videoId = taToolFunctions.extractYoutubeVideoId(urlPrompt);
+				if (urlPrompt && urlPrompt !== '' && urlPrompt !== 'https://') {
 
-				/* istanbul ignore else: if it's invalid don't worry - though probably should show some kind of error message */
-				if(videoId){
-					// create the embed link
-					var urlLink = "https://www.youtube.com/embed/" + videoId;
-					// create the HTML
-					// for all options see: http://stackoverflow.com/questions/2068344/how-do-i-get-a-youtube-video-thumbnail-from-the-youtube-api
-					// maxresdefault.jpg seems to be undefined on some.
-					var embed = '<img class="ta-insert-video" src="https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg" ta-insert-video="' + urlLink + '" contenteditable="false" allowfullscreen="true" frameborder="0" />';
-					/* istanbul ignore next: don't know how to test this... since it needs a dialogPrompt */
-					if (taSelection.getSelectionElement().tagName.toLowerCase() === 'a') {
-						// due to differences in implementation between FireFox and Chrome, we must move the
-						// insertion point past the <a> element, otherwise FireFox inserts inside the <a>
-						// With this change, both FireFox and Chrome behave the same way!
-						taSelection.setSelectionAfterElement(taSelection.getSelectionElement());
+					videoId = taToolFunctions.extractYoutubeVideoId(urlPrompt);
+
+					/* istanbul ignore else: if it's invalid don't worry - though probably should show some kind of error message */
+					if (videoId) {
+						// create the embed link
+						var urlLink = "https://www.youtube.com/embed/" + videoId;
+						// create the HTML
+						// for all options see: http://stackoverflow.com/questions/2068344/how-do-i-get-a-youtube-video-thumbnail-from-the-youtube-api
+						// maxresdefault.jpg seems to be undefined on some.
+						var embed = '<img class="ta-insert-video" src="https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg" ta-insert-video="' + urlLink + '" contenteditable="false" allowfullscreen="true" frameborder="0" />';
+						/* istanbul ignore next: don't know how to test this... since it needs a dialogPrompt */
+						if (taSelection.getSelectionElement().tagName.toLowerCase() === 'a') {
+							// due to differences in implementation between FireFox and Chrome, we must move the
+							// insertion point past the <a> element, otherwise FireFox inserts inside the <a>
+							// With this change, both FireFox and Chrome behave the same way!
+							taSelection.setSelectionAfterElement(taSelection.getSelectionElement());
+						}
+						// insert
+						return this.$editor().wrapSelection('insertHTML', embed, true);
 					}
-					// insert
-					return this.$editor().wrapSelection('insertHTML', embed, true);
 				}
 			}
 		},
@@ -796,9 +899,19 @@ angular.module('textAngularSetup', [])
 		iconclass: 'fa fa-link',
 		action: function(){
 			var urlLink;
-			urlLink = $window.prompt(taTranslations.insertLink.dialogPrompt, 'http://');
+			// if this link has already been set, we need to just edit the existing link
+			/* istanbul ignore if: we do not test this */
+			if (taSelection.getSelectionElement().tagName.toLowerCase() === 'a') {
+				urlLink = $window.prompt(taTranslations.insertLink.dialogPrompt, taSelection.getSelectionElement().href);
+			} else {
+				urlLink = $window.prompt(taTranslations.insertLink.dialogPrompt, 'http://');
+			}
 			if(urlLink && urlLink !== '' && urlLink !== 'http://'){
-				return this.$editor().wrapSelection('createLink', urlLink, true);
+				// block javascript here
+				/* istanbul ignore else: if it's javascript don't worry - though probably should show some kind of error message */
+				if (!blockJavascript(urlLink)) {
+					return this.$editor().wrapSelection('createLink', urlLink, true);
+				}
 			}
 		},
 		activeState: function(commonElement){

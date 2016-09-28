@@ -154,6 +154,22 @@ angular.module('app')
         $state.go(state);
       }
 
+      $scope.app.isSettings = function(){
+        return document.location.pathname.slice(0, '/settings'.length) == '/settings';
+      }
+
+      $scope.app.isAccess = function(){
+        return document.location.pathname.slice(0, '/access'.length) == '/access';
+      }
+
+      $scope.app.getNetworkLogo = function(){
+        if($scope.app.network && $scope.app.network.logoImageHash)
+          return '/api/images/get/' + $scope.app.network.logoImageHash + '?size=original';
+        else
+          return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+      }
+
+
       // trix.socialLogin(null, 'ya29.Ci8SAyz6uzLe7dGR79p5UuaUnTbjBul-aIUflX0LZ0I-nTTobetqeP5CnKfOkEngNg'
       //   , 'google');
 
@@ -1376,10 +1392,6 @@ angular.module('app')
             $scope.disabled = $scope.recommendApply = false;
           })
         }
-      }
-
-      $scope.app.isSettings = function(){
-        return document.location.pathname.slice(0, '/settings'.length) == '/settings';
       }
 
       appDataCtrl = $scope;

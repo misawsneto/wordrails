@@ -35,7 +35,7 @@ public class BookmarksResource extends AbstractResource implements BookmarksApi 
 	@Override
 	public BooleanResponse toggleBookmark(Integer postId) {
 		BooleanResponse br = new BooleanResponse();
-		br.response = postService.toggleBookmark(postId);
+		br.response = postService.toggleBookmark(postId, request);
 		return br;
 	}
 }

@@ -41,7 +41,7 @@ public final class Constants {
 		public static final String PERSON = "person";
 		public static final String STATION = "station";
 		public static final String COMMENT = "comment";
-		public static final String APP_STATS = "app_stats";
+		public static final String ANALYTICS_INDEX_TYPE = "analytics";
 	}
 
 	public static class Post {
@@ -55,7 +55,9 @@ public final class Constants {
 
 	public enum MobilePlatform {
 		APPLE,
-		ANDROID
+		ANDROID,
+		FCM_ANDROID,
+		FCM_APPLE
 	}
 
 	public static class StatsEventType {
@@ -63,9 +65,5 @@ public final class Constants {
 		public static final String POST_COMMENT = "post_comment";
 		public static final String POST_BOOKMARK = "post_bookmark";
 		public static final String POST_RECOMMEND = "post_recommend";
-	}
-
-	public static class AnalyticsType {
-		public static final String READ = "nginx_access";
 	}
 }

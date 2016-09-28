@@ -1,5 +1,5 @@
 /*!
- * angular-translate - v2.11.1 - 2016-07-17
+ * angular-translate - v2.12.1 - 2016-09-15
  * 
  * Copyright (c) 2016 The angular-translate team, Pascal Precht; Licensed MIT
  */
@@ -29,7 +29,8 @@
 runTranslate.$inject = ['$translate'];
 $translate.$inject = ['$STORAGE_KEY', '$windowProvider', '$translateSanitizationProvider', 'pascalprechtTranslateOverrider'];
 $translateDefaultInterpolation.$inject = ['$interpolate', '$translateSanitization'];
-translateDirective.$inject = ['$translate', '$q', '$interpolate', '$compile', '$parse', '$rootScope'];
+translateDirective.$inject = ['$translate', '$interpolate', '$compile', '$parse', '$rootScope'];
+translateAttrDirective.$inject = ['$translate', '$rootScope'];
 translateCloakDirective.$inject = ['$translate', '$rootScope'];
 translateFilterFactory.$inject = ['$parse', '$translate'];
 $translationCache.$inject = ['$cacheFactory'];
@@ -84,6 +85,7 @@ function $translateSanitizationProvider () {
   'use strict';
 
   var $sanitize,
+      $sce,
       currentStrategy = null, // TODO change to either 'sanitize', 'escape' or ['sanitize', 'escapeParameters'] in 3.0.
       hasConfiguredStrategy = false,
       hasShownNoStrategyConfiguredWarning = false,
@@ -120,27 +122,44 @@ function $translateSanitizationProvider () {
    */
 
   strategies = {
-    sanitize: function (value, mode) {
+    sanitize: function (value, mode/*, context*/) {
       if (mode === 'text') {
         value = htmlSanitizeValue(value);
       }
       return value;
     },
-    escape: function (value, mode) {
+    escape: function (value, mode/*, context*/) {
       if (mode === 'text') {
         value = htmlEscapeValue(value);
       }
       return value;
     },
-    sanitizeParameters: function (value, mode) {
+    sanitizeParameters: function (value, mode/*, context*/) {
       if (mode === 'params') {
         value = mapInterpolationParameters(value, htmlSanitizeValue);
       }
       return value;
     },
-    escapeParameters: function (value, mode) {
+    escapeParameters: function (value, mode/*, context*/) {
       if (mode === 'params') {
         value = mapInterpolationParameters(value, htmlEscapeValue);
+      }
+      return value;
+    },
+    sce: function (value, mode, context) {
+      if (mode === 'text') {
+        value = htmlTrustValue(value);
+      } else if (mode === 'params') {
+        if (context !== 'filter') {
+          // do html escape in filter context #1101
+          value = mapInterpolationParameters(value, htmlEscapeValue);
+        }
+      }
+      return value;
+    },
+    sceParameters: function (value, mode/*, context*/) {
+      if (mode === 'params') {
+        value = mapInterpolationParameters(value, htmlTrustValue);
       }
       return value;
     }
@@ -213,12 +232,12 @@ function $translateSanitizationProvider () {
 
     var cachedStrategyMap = {};
 
-    var applyStrategies = function (value, mode, selectedStrategies) {
+    var applyStrategies = function (value, mode, context, selectedStrategies) {
       angular.forEach(selectedStrategies, function (selectedStrategy) {
         if (angular.isFunction(selectedStrategy)) {
-          value = selectedStrategy(value, mode);
+          value = selectedStrategy(value, mode, context);
         } else if (angular.isFunction(strategies[selectedStrategy])) {
-          value = strategies[selectedStrategy](value, mode);
+          value = strategies[selectedStrategy](value, mode, context);
         } else if (angular.isString(strategies[selectedStrategy])) {
           if (!cachedStrategyMap[strategies[selectedStrategy]]) {
             try {
@@ -228,7 +247,7 @@ function $translateSanitizationProvider () {
               throw new Error('pascalprecht.translate.$translateSanitization: Unknown sanitization strategy: \'' + selectedStrategy + '\'');
             }
           }
-          value = cachedStrategyMap[strategies[selectedStrategy]](value, mode);
+          value = cachedStrategyMap[strategies[selectedStrategy]](value, mode, context);
         } else {
           throw new Error('pascalprecht.translate.$translateSanitization: Unknown sanitization strategy: \'' + selectedStrategy + '\'');
         }
@@ -246,6 +265,9 @@ function $translateSanitizationProvider () {
 
     if ($injector.has('$sanitize')) {
       $sanitize = $injector.get('$sanitize');
+    }
+    if ($injector.has('$sce')) {
+      $sce = $injector.get('$sce');
     }
 
     return {
@@ -276,14 +298,15 @@ function $translateSanitizationProvider () {
        * @param {string|object} value The value which should be sanitized.
        * @param {string} mode The current sanitization mode, either 'params' or 'text'.
        * @param {string|StrategyFunction|array} [strategy] Optional custom strategy which should be used instead of the currently selected strategy.
+       * @param {string} [context] The context of this call: filter, service. Default is service
        * @returns {string|object} sanitized value
        */
-      sanitize: function (value, mode, strategy) {
+      sanitize: function (value, mode, strategy, context) {
         if (!currentStrategy) {
           showNoStrategyConfiguredWarning();
         }
 
-        if (arguments.length < 3) {
+        if (!strategy && strategy !== null) {
           strategy = currentStrategy;
         }
 
@@ -291,8 +314,12 @@ function $translateSanitizationProvider () {
           return value;
         }
 
+        if (!context) {
+          context = 'service';
+        }
+
         var selectedStrategies = angular.isArray(strategy) ? strategy : [strategy];
-        return applyStrategies(value, mode, selectedStrategies);
+        return applyStrategies(value, mode, context, selectedStrategies);
       }
     };
   }];
@@ -310,8 +337,17 @@ function $translateSanitizationProvider () {
     return $sanitize(value);
   };
 
+  var htmlTrustValue = function (value) {
+    if (!$sce) {
+      throw new Error('pascalprecht.translate.$translateSanitization: Error cannot find $sce service.');
+    }
+    return $sce.trustAsHtml(value);
+  };
+
   var mapInterpolationParameters = function (value, iteratee, stack) {
-    if (angular.isObject(value)) {
+    if (angular.isDate(value)) {
+      return value;
+    } else if (angular.isObject(value)) {
       var result = angular.isArray(value) ? [] : {};
 
       if (!stack) {
@@ -410,7 +446,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
         }
       };
 
-  var version = '2.11.1';
+  var version = '2.12.1';
 
   // tries to determine the browsers language
   var getFirstBrowserLanguage = function () {
@@ -1710,7 +1746,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
               getFallbackTranslation(langKey, translation.substr(2), interpolateParams, Interpolator)
                 .then(deferred.resolve, deferred.reject);
             } else {
-              var interpolatedValue = Interpolator.interpolate(translationTable[translationId], interpolateParams);
+              var interpolatedValue = Interpolator.interpolate(translationTable[translationId], interpolateParams, 'service');
               interpolatedValue = applyPostProcessing(translationId, translationTable[translationId], interpolatedValue, interpolateParams, langKey);
 
               deferred.resolve(interpolatedValue);
@@ -1747,7 +1783,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
 
         if (translationTable && Object.prototype.hasOwnProperty.call(translationTable, translationId)) {
           Interpolator.setLocale(langKey);
-          result = Interpolator.interpolate(translationTable[translationId], interpolateParams);
+          result = Interpolator.interpolate(translationTable[translationId], interpolateParams, 'filter');
           result = applyPostProcessing(translationId, translationTable[translationId], result, interpolateParams, langKey);
           if (result.substr(0, 2) === '@:') {
             return getFallbackTranslationInstant(langKey, result.substr(2), interpolateParams, Interpolator);
@@ -1903,7 +1939,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
               .then(deferred.resolve, deferred.reject);
           } else {
             //
-            var resolvedTranslation = Interpolator.interpolate(translation, interpolateParams);
+            var resolvedTranslation = Interpolator.interpolate(translation, interpolateParams, 'service');
             resolvedTranslation = applyPostProcessing(translationId, translation, resolvedTranslation, interpolateParams, uses);
             deferred.resolve(resolvedTranslation);
           }
@@ -1962,7 +1998,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
           if (translation.substr(0, 2) === '@:') {
             result = determineTranslationInstant(translation.substr(2), interpolateParams, interpolationId, uses);
           } else {
-            result = Interpolator.interpolate(translation, interpolateParams);
+            result = Interpolator.interpolate(translation, interpolateParams, 'filter');
             result = applyPostProcessing(translationId, translation, result, interpolateParams, uses);
           }
         } else {
@@ -2255,7 +2291,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
             return translation;
           }, function (key) {
             // find first available fallback language if that request has failed
-            if (!$uses && $fallbackLanguage && $fallbackLanguage.length > 0) {
+            if (!$uses && $fallbackLanguage && $fallbackLanguage.length > 0 && $fallbackLanguage[0] !== key) {
               return $translate.use($fallbackLanguage[0]).then(deferred.resolve, deferred.reject);
             } else {
               return deferred.reject(key);
@@ -2522,7 +2558,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
             result = applyNotFoundIndicators(translationId);
           } else {
             // Return translation of default interpolator if not found anything.
-            result = defaultInterpolator.interpolate(translationId, interpolateParams);
+            result = defaultInterpolator.interpolate(translationId, interpolateParams, 'filter');
             if ($missingTranslationHandlerFactory && !pendingLoader) {
               result = translateByHandler(translationId, interpolateParams);
             }
@@ -2759,9 +2795,9 @@ function $translateDefaultInterpolation ($interpolate, $translateSanitization) {
    *
    * @returns {string} interpolated string.
    */
-  $translateInterpolator.interpolate = function (value, interpolationParams) {
+  $translateInterpolator.interpolate = function (value, interpolationParams, context) {
     interpolationParams = interpolationParams || {};
-    interpolationParams = $translateSanitization.sanitize(interpolationParams, 'params');
+    interpolationParams = $translateSanitization.sanitize(interpolationParams, 'params', undefined, context);
 
     var interpolatedText;
     if (angular.isNumber(value)) {
@@ -2770,7 +2806,7 @@ function $translateDefaultInterpolation ($interpolate, $translateSanitization) {
     } else if (angular.isString(value)) {
       // strings must be interpolated (that's the job here)
       interpolatedText = $interpolate(value)(interpolationParams);
-      interpolatedText = $translateSanitization.sanitize(interpolatedText, 'text');
+      interpolatedText = $translateSanitization.sanitize(interpolatedText, 'text', undefined, context);
     } else {
       // neither a number or a string, cant interpolate => empty string
       interpolatedText = '';
@@ -2790,14 +2826,15 @@ angular.module('pascalprecht.translate')
 /**
  * @ngdoc directive
  * @name pascalprecht.translate.directive:translate
- * @requires $compile
- * @requires $filter
- * @requires $interpolate
+ * @requires $interpolate, 
+ * @requires $compile, 
+ * @requires $parse, 
+ * @requires $rootScope
  * @restrict AE
  *
  * @description
  * Translates given translation id either through attribute or DOM content.
- * Internally it uses `translate` filter to translate translation id. It possible to
+ * Internally it uses $translate service to translate the translation id. It possible to
  * pass an optional `translate-values` object literal as string into translation id.
  *
  * @param {string=} translate Translation id which could be either string or interpolated string.
@@ -2881,7 +2918,7 @@ angular.module('pascalprecht.translate')
    </example>
  */
 .directive('translate', translateDirective);
-function translateDirective($translate, $q, $interpolate, $compile, $parse, $rootScope) {
+function translateDirective($translate, $interpolate, $compile, $parse, $rootScope) {
 
   'use strict';
 
@@ -3003,7 +3040,7 @@ function translateDirective($translate, $q, $interpolate, $compile, $parse, $roo
         });
 
         for (var translateAttr in iAttr) {
-          if (iAttr.hasOwnProperty(translateAttr) && translateAttr.substr(0, 13) === 'translateAttr') {
+          if (iAttr.hasOwnProperty(translateAttr) && translateAttr.substr(0, 13) === 'translateAttr' && translateAttr.length > 13) {
             observeAttributeTranslation(translateAttr);
           }
         }
@@ -3100,7 +3137,7 @@ function translateDirective($translate, $q, $interpolate, $compile, $parse, $roo
         }
 
         // Replaced watcher on translateLanguage with event listener
-        var unbindTranslateLanguage = scope.$on('translateLanguageChanged', updateTranslations);
+        scope.$on('translateLanguageChanged', updateTranslations);
 
         // Ensures the text will be refreshed after the current language was changed
         // w/ $translate.use(...)
@@ -3118,10 +3155,7 @@ function translateDirective($translate, $q, $interpolate, $compile, $parse, $roo
           observeElementTranslation(iAttr.translate);
         }
         updateTranslations();
-        scope.$on('$destroy', function(){
-          unbindTranslateLanguage();
-          unbind();
-        });
+        scope.$on('$destroy', unbind);
       };
     }
   };
@@ -3144,6 +3178,156 @@ function getTranslateNamespace(scope) {
 }
 
 translateDirective.displayName = 'translateDirective';
+
+angular.module('pascalprecht.translate')
+/**
+ * @ngdoc directive
+ * @name pascalprecht.translate.directive:translate-attr
+ * @restrict A
+ *
+ * @description
+ * Translates attributes like translate-attr-ATTR, but with an object like ng-class.
+ * Internally it uses `translate` service to translate translation id. It possible to
+ * pass an optional `translate-values` object literal as string into translation id.
+ *
+ * @param {string=} translate-attr Object literal mapping attributes to translation ids.
+ * @param {string=} translate-values Values to pass into the translation ids. Can be passed as object literal string.
+ *
+ * @example
+   <example module="ngView">
+    <file name="index.html">
+      <div ng-controller="TranslateCtrl">
+
+        <input translate-attr="{ placeholder: translationId, title: 'WITH_VALUES' }" translate-values="{value: 5}" />
+
+      </div>
+    </file>
+    <file name="script.js">
+      angular.module('ngView', ['pascalprecht.translate'])
+
+      .config(function ($translateProvider) {
+
+        $translateProvider.translations('en',{
+          'TRANSLATION_ID': 'Hello there!',
+          'WITH_VALUES': 'The following value is dynamic: {{value}}',
+        }).preferredLanguage('en');
+
+      });
+
+      angular.module('ngView').controller('TranslateCtrl', function ($scope) {
+        $scope.translationId = 'TRANSLATION_ID';
+
+        $scope.values = {
+          value: 78
+        };
+      });
+    </file>
+    <file name="scenario.js">
+      it('should translate', function () {
+        inject(function ($rootScope, $compile) {
+          $rootScope.translationId = 'TRANSLATION_ID';
+
+          element = $compile('<input translate-attr="{ placeholder: translationId, title: 'WITH_VALUES' }" translate-values="{ value: 5 }" />')($rootScope);
+          $rootScope.$digest();
+          expect(element.attr('placeholder)).toBe('Hello there!');
+          expect(element.attr('title)).toBe('The following value is dynamic: 5');
+        });
+      });
+    </file>
+   </example>
+ */
+.directive('translateAttr', translateAttrDirective);
+function translateAttrDirective($translate, $rootScope) {
+
+  'use strict';
+
+  return {
+    restrict: 'A',
+    priority: $translate.directivePriority(),
+    link: function linkFn(scope, element, attr) {
+
+      var translateAttr,
+          translateValues,
+          previousAttributes = {};
+
+      // Main update translations function
+      var updateTranslations = function () {
+        angular.forEach(translateAttr, function (translationId, attributeName) {
+          if (!translationId) {
+            return;
+          }
+          previousAttributes[attributeName] = true;
+
+          // if translation id starts with '.' and translateNamespace given, prepend namespace
+          if (scope.translateNamespace && translationId.charAt(0) === '.') {
+            translationId = scope.translateNamespace + translationId;
+          }
+          $translate(translationId, translateValues, attr.translateInterpolation, undefined, scope.translateLanguage)
+            .then(function (translation) {
+              element.attr(attributeName, translation);
+            }, function (translationId) {
+              element.attr(attributeName, translationId);
+            });
+        });
+
+        // Removing unused attributes that were previously used
+        angular.forEach(previousAttributes, function (flag, attributeName) {
+          if (!translateAttr[attributeName]) {
+            element.removeAttr(attributeName);
+            delete previousAttributes[attributeName];
+          }
+        });
+      };
+
+      // Watch for attribute changes
+      watchAttribute(
+        scope,
+        attr.translateAttr,
+        function (newValue) { translateAttr = newValue; },
+        updateTranslations
+      );
+      // Watch for value changes
+      watchAttribute(
+        scope,
+        attr.translateValues,
+        function (newValue) { translateValues = newValue; },
+        updateTranslations
+      );
+
+      if (attr.translateValues) {
+        scope.$watch(attr.translateValues, updateTranslations, true);
+      }
+
+      // Replaced watcher on translateLanguage with event listener
+      scope.$on('translateLanguageChanged', updateTranslations);
+
+      // Ensures the text will be refreshed after the current language was changed
+      // w/ $translate.use(...)
+      var unbind = $rootScope.$on('$translateChangeSuccess', updateTranslations);
+
+      updateTranslations();
+      scope.$on('$destroy', unbind);
+    }
+  };
+}
+
+function watchAttribute(scope, attribute, valueCallback, changeCallback) {
+  'use strict';
+  if (!attribute) {
+    return;
+  }
+  if (attribute.substr(0, 2) === '::') {
+    attribute = attribute.substr(2);
+  } else {
+    scope.$watch(attribute, function(newValue) {
+      valueCallback(newValue);
+      changeCallback();
+    }, true);
+  }
+  valueCallback(scope.$eval(attribute));
+}
+
+translateAttrDirective.displayName = 'translateAttrDirective';
 
 angular.module('pascalprecht.translate')
 /**

@@ -6,6 +6,7 @@ import co.xarx.trix.services.notification.NotificationServerClient;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class NotificationServerClientError implements NotificationServerClient {
@@ -18,5 +19,10 @@ public class NotificationServerClientError implements NotificationServerClient {
 	@Override
 	public void send(NotificationView notification, Collection<String> devices) throws IOException {
 		throw new IOException();
+	}
+
+	@Override
+	public Map<String, NotificationResult> getSuccessDevices() {
+		return new HashMap<>();
 	}
 }

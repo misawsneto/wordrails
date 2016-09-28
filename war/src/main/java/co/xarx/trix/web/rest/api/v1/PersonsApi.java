@@ -52,6 +52,7 @@ public interface PersonsApi {
 	@PreAuthorize("isAuthenticated()")
 	void findPerson(@PathParam("id") Integer id) throws IOException;
 
+	@Deprecated
 	@GET
 	@Path("/search/findByUsername")
 	@Transactional
@@ -148,11 +149,11 @@ public interface PersonsApi {
 	@Path("/stats/count")
 	ContentResponse<Integer> countPersonsByNetwork(@QueryParam("q") String q);
 
-	@PUT
-	@Path("/deleteMany/network")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	Response deleteMany(List<Integer> personIds);
+//	@PUT
+//	@Path("/deleteMany/network")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	Response deleteMany(List<Integer> personIds);
 
 	@PUT
 	@Path("/{personId}/disable")

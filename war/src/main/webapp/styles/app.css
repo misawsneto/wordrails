@@ -9079,7 +9079,8 @@ ul.pgwSlider > li,
 .simpleDemo ul[dnd-list] li {
   display: block;
   margin-bottom: -1px;
-  background-color: #fff;
+  /* background-color: #fff; */
+
 }
 
 /**
@@ -9118,4 +9119,9 @@ ul.pgwSlider > li,
 
 .text-l-c {
   text-transform: lowercase;
+}
+
+.bg-big md-content {
+  margin-right: auto;
+  margin-left: auto;
 }

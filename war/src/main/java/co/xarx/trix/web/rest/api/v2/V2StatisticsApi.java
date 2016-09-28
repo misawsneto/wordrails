@@ -18,15 +18,19 @@ public interface V2StatisticsApi {
 	@Produces(MediaType.APPLICATION_JSON)
 	Response getMostPopular(@QueryParam("page") Integer page,
 							@QueryParam("size") Integer size,
-							@QueryParam("startTime") String startTime,
-							@QueryParam("endTime") String endTime,
-							@QueryParam("field") String field);
+							@QueryParam("start") String startTime,
+							@QueryParam("end") String endTime,
+							@QueryParam("field") String field,
+							@QueryParam("byField") String byField,
+							@QueryParam("byValue") String byValue);
 
 	@GET
 	@Path("/popularNetworks")
-	@Produces(MediaType.APPLICATION_JSON)
 	@PreAuthorize("isAuthenticated()")
-	Response getPopularNetworks(@QueryParam("page") Integer page, @QueryParam("size") Integer size);
+	Response getPopularNetworks(@QueryParam("page") Integer page,
+								@QueryParam("size") Integer size,
+								@QueryParam("start") String start,
+								@QueryParam("end") String end);
 
 	@GET
 	@Path("/post")
@@ -40,17 +44,17 @@ public interface V2StatisticsApi {
 
 	@GET
 	@Path("/network")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response networkStats(@QueryParam("end") String end, @QueryParam("start") String start) throws IOException;
 
 	@GET
 	@Path("/station")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response stationStats(@QueryParam("end") String end, @QueryParam("start") String start, @QueryParam("stationId") Integer stationId) throws IOException;
 
 	@GET
 	@Path("/storage")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response getNetworkUsedSpace();
 
 	@GET
@@ -60,11 +64,11 @@ public interface V2StatisticsApi {
 
 	@GET
 	@Path("/countReadersByStation")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response countReadersByStation(@QueryParam("stationId") Integer stationId);
 
 	@GET
 	@Path("/dashboardStats")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response dashboardStats();
 }

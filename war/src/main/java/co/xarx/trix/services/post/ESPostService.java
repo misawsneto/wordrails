@@ -23,13 +23,16 @@ import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolFilterBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.functionscore.DecayFunctionBuilder;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
+import org.elasticsearch.index.query.functionscore.script.ScriptScoreFunctionBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHitField;
 import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.elasticsearch.search.highlight.HighlightField;
+import org.elasticsearch.search.rescore.QueryRescorer;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.modelmapper.ModelMapper;
@@ -49,7 +52,9 @@ import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.FilterBuilders.boolFilter;
 import static org.elasticsearch.index.query.FilterBuilders.queryFilter;
+import static org.elasticsearch.index.query.FilterBuilders.termsFilter;
 import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders.factorFunction;
 
 @Service
 public class ESPostService extends AbstractElasticSearchService {
@@ -256,27 +261,33 @@ public class ESPostService extends AbstractElasticSearchService {
 		if (p.getQuery() == null || p.getQuery().isEmpty()) {
 			requestBuilder.addSort("date", SortOrder.DESC);
 		} else {
-			long now = Instant.now().toEpochMilli();
-			DecayFunctionBuilder decay = ScoreFunctionBuilders.gaussDecayFunction("date", now, 80).setOffset(130).setDecay(0.3);
-			FunctionScoreQueryBuilder scoreQueryBuilder;
-			scoreQueryBuilder = functionScoreQuery(q, decay);
-			requestBuilder.setQuery(scoreQueryBuilder);
+//			long now = Instant.now().toEpochMilli();
+//			DecayFunctionBuilder decay = ScoreFunctionBuilders.gaussDecayFunction("date", now, 80).setOffset(130).setDecay(0.3);
+//			FunctionScoreQueryBuilder scoreQueryBuilder;
+//			scoreQueryBuilder = functionScoreQuery(q, decay);
+			requestBuilder.setQuery(q);
 		}
 
-		requestBuilder.addFields("id", "body").setPostFilter(f);
+		requestBuilder.addFields("id", "body");
+		requestBuilder.setPostFilter(f);
 		requestBuilder.setSize(9999999);
 		return requestBuilder;
 	}
 
 	private void applyStateFilter(BoolFilterBuilder f, String state) {
-		long now = Instant.now().toEpochMilli();
 		if (state != null && !state.isEmpty()) {
+			long now = Instant.now().toEpochMilli();
+
 			if (state.equalsIgnoreCase("SCHEDULED")) {
 				f.must(queryFilter(queryStringQuery("PUBLISHED").defaultField("state")));
-				applyDateFilter(f, String.valueOf(now), null, "scheduledDate");
+				applyDateFilter(f, now, null, "scheduledDate");
 			} else if (state.equalsIgnoreCase("PUBLISHED")) {
 				f.must(queryFilter(queryStringQuery("PUBLISHED").defaultField("state")));
-				applyDateFilter(f, null, String.valueOf(now), "scheduledDate");
+				applyDateFilter(f, null, now, "scheduledDate");
+				applyDateFilter(f, now, Long.MAX_VALUE, "unpublishDate");
+			} else if (state.equalsIgnoreCase("UNPUBLISHED")) {
+				f.must(queryFilter(queryStringQuery("UNPUBLISHED").defaultField("state")));
+//				applyDateFilter(f, now, Long.MAX_VALUE, "unpublishDate");
 			} else {
 				f.must(queryFilter(queryStringQuery(state).defaultField("state")));
 			}

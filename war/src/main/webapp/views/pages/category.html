@@ -51,7 +51,7 @@
             <a ui-sref="app.userprofile({username: postView.authorUsername})">
                <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover md-primary-hue-1 background" 
                   ng-style="app.getImagesPerson(postView, postView.authorId, 'small', 'PROFILE_PICTURE', true) ">
-                  <i ng-if="::(!app.hasAuthorImage(postView))" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
+                  <i class="mdi2-account i-20" style="top: 16%;position: relative;" ng-class="{'opacity-0': app.hasAuthorImage(cell.postView)}"></i>
                </div>
                <div class="inline p-t v-t font-500" ui-sref="app.userprofile({username: postView.authorUsername})">
                   {{::postView.authorName}}
@@ -106,7 +106,7 @@
             <a ui-sref="app.userprofile({username: postView.authorUsername})">
                <div class="inline m-sm user-avatar rounded w-32 bg-white inline pos-rlt text-center bg-cover md-primary-hue-1 background" 
                   ng-style="app.getImagesPerson(postView, postView.authorId, 'small', 'PROFILE_PICTURE', true) ">
-                  <i ng-if="::(!app.hasAuthorImage(postView))" class="mdi2-account i-20" style="top: 16%;position: relative;"></i>
+                  <i class="mdi2-account i-20" style="top: 16%;position: relative;" ng-class="{'opacity-0': app.hasAuthorImage(cell.postView)}"></i>
                </div>
                <div class="inline p-t v-t font-500" ui-sref="app.userprofile({username: postView.authorUsername})">
                   {{::postView.authorName}}
