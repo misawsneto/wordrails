@@ -1,5 +1,6 @@
 package co.xarx.trix.services.post;
 
+import akka.actor.ActorSystem;
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
@@ -25,10 +26,7 @@ import org.eclipse.persistence.jpa.jpql.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -38,11 +36,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Service
+@Component
 public class PostService {
 
 	@Value("${spring.profiles.active:'dev'}")
@@ -76,9 +77,14 @@ public class PostService {
 	private StatEventsService statEventsService;
 	@PersistenceContext
 	private EntityManager entityManager;
+	@Autowired
+	private ActorSystem system;
 
 	@Autowired
 	private ImageService imageService;
+
+	@PersistenceContext
+	private EntityManager em;
 
 	@Async(value = "myExecuter")
 	public void asyncSendNewPostNotification(Post post, String tentantId) throws NotificationException {
@@ -117,19 +123,17 @@ public class PostService {
                 e.printStackTrace();
 			}
 		}
-		removeBadDevices(mobileNotifications);
-	}
 
-	@Transactional(readOnly = false, isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
-	private void removeBadDevices(List<MobileNotification> mobileNotifications){
 		List<String> devicesToDelete = new ArrayList<>();
-		for(MobileNotification notification: mobileNotifications){
-			if(notification.getErrorCodeName() != null){
-				devicesToDelete.add(notification.getRegId());
+		for (MobileNotification noti : mobileNotifications) {
+			if (noti.getErrorCodeName() != null) {
+				devicesToDelete.add(noti.getRegId());
 			}
 		}
-        mobileDeviceRepository.deleteByDeviceCode(devicesToDelete);
+
+		mobileDeviceRepository.deleteByDeviceCode(devicesToDelete);
 	}
+
 
 	public NotificationView getCreatePostNotification(Post post) {
 		String hash = StringUtil.generateRandomString(10, "Aa#");
