@@ -26,5 +26,5 @@ public interface MobileNotificationRepository extends JpaRepository<MobileNotifi
 //	@Query("update MobileNotification SET seen = 1 WHERE messageId = :messageId")
 //	void setNotificationSeen(@Param("messageId") String messageId);
 
-	MobileNotification findByMessageId(String messageId);
+	List<MobileNotification> findByMessageId(String messageId);
 }

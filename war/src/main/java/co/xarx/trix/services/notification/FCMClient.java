@@ -67,7 +67,7 @@ public class FCMClient implements NotificationServerClient {
     }
 
     public Message createMessage(NotificationView notificationView){
-        Notification notification = new Notification.Builder(notificationView.post.getImageLargeHash())
+        Notification notification = new Notification.Builder(notificationView.post.featuredImageHash)
                 .title(notificationView.title)
                 .body(notificationView.message)
                 .build();
@@ -77,7 +77,8 @@ public class FCMClient implements NotificationServerClient {
                 .addData("type", notificationView.type)
                 .addData("entityId", String.valueOf(notificationView.postId))
                 .delayWhileIdle(true)
-                .timeToLive(86400).build();
+                .priority(Message.Priority.HIGH)
+                .timeToLive(0).build();
 
     }
 }
