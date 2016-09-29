@@ -62,6 +62,7 @@ public final class Constants {
 
 	public static class StatsEventType {
 		public static final String POST_READ = "post_read";
+		public static final String TERM_READ = "term_read";
 		public static final String POST_COMMENT = "post_comment";
 		public static final String POST_BOOKMARK = "post_bookmark";
 		public static final String POST_RECOMMEND = "post_recommend";

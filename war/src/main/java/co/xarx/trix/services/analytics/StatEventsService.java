@@ -4,6 +4,7 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Comment;
 import co.xarx.trix.domain.ESstatEvent;
 import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.ESstatEventRepository;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.util.Constants;
@@ -46,7 +47,7 @@ public class StatEventsService {
 
     @Async(value = "myExecuter")
     public void newCommentEvent(Comment comment){
-        ESstatEvent event = newEvent(comment.getPost());
+        ESstatEvent event = newEvent(comment.getPost(), new RequestWrapper());
         event.setType(Constants.StatsEventType.POST_COMMENT);
         event.setPersonId(comment.getAuthor().getId());
         statEventRepository.save(event);
@@ -55,43 +56,50 @@ public class StatEventsService {
     @Async(value = "myExecuter")
     public void newPostreadEvent(Post post, RequestWrapper request, Integer timeReading, Date date){
 		ESstatEvent postread = newEvent(post, request);
+
         postread.setType(Constants.StatsEventType.POST_READ);
         postread.setTimestamp(date);
         postread.setTimeReading(timeReading);
+
         statEventRepository.save(postread);
     }
 
-    private ESstatEvent newEvent(Post post){
+    @Async(value = "myExecuter")
+    public void newTermView(Term term, RequestWrapper request, Integer timeReading, Date date){
         ESstatEvent event = new ESstatEvent();
 
-        Integer id = generateRandonId();
+        event.setTimestamp(date);
+        event.setTermId(term.getId());
+        event.setTimeReading(timeReading);
+        event.setTenantId(term.getTenantId());
+        event.setType(Constants.StatsEventType.TERM_READ);
 
-        event.setId(id);
-        event.setPostId(post.getId());
-        event.setTimestamp(new Date());
-        event.setPostSlug(post.getSlug());
-        event.setAuthorId(post.getAuthor().getId());
-        event.setStationId(post.getStation().getId());
-        event.setTenantId(TenantContextHolder.getCurrentTenantId());
-        event.setPersonId(authProvider.getLoggedPerson().getId());
-
-        return event;
+        statEventRepository.save(newEvent(request, event));
     }
 
     private ESstatEvent newEvent(Post post, RequestWrapper request){
-        ESstatEvent event = newEvent(post);
+        ESstatEvent event = new ESstatEvent();
 
-        String message = request.getHeader("User-Agent");
+        event.setPostId(post.getId());
+        event.setTimestamp(new Date());
+        event.setPostSlug(post.getSlug());
+        event.setTenantId(post.getTenantId());
+        event.setAuthorId(post.getAuthor().getId());
+        event.setStationId(post.getStation().getId());
+        event.setPersonId(authProvider.getLoggedPerson().getId());
+
+        return newEvent(request, event);
+    }
+
+    private ESstatEvent newEvent(RequestWrapper request, ESstatEvent event){
+
+        String message = request.getHeader("user-agent");
         event.setMessage(message);
-        event.setDevice(RestUtil.getDeviceFromUserAgent(message));
+        event.setBrowser(RestUtil.getDeviceFromUserAgent(message));
         event.setHost(request.getLocalName());
         event.setClientip(request.getRemoteAddr());
         event.setReferrer(request.getHeader("referer"));
 
         return event;
-    }
-
-    private Integer generateRandonId(){
-        return new BigInteger(UUID.randomUUID().toString().getBytes()).intValue();
     }
 }

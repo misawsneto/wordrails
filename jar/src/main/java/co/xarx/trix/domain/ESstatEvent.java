@@ -7,12 +7,18 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import java.math.BigInteger;
 import java.util.Date;
+import java.util.UUID;
 
 @Getter
 @Setter
 @Document(indexName = "#{properties.access_index}", type = Constants.ObjectType.ANALYTICS_INDEX_TYPE)
 public class ESstatEvent implements ElasticSearchEntity {
+
+    public ESstatEvent(){
+        this.id = new BigInteger(UUID.randomUUID().toString().getBytes()).intValue();
+    }
 
     @Id
     public Integer id;
@@ -29,18 +35,6 @@ public class ESstatEvent implements ElasticSearchEntity {
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     public String clientip;
 
-    public String verb;
-
-    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
-    public String request;
-
-    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
-    public String httpversion;
-
-    public Integer response;
-
-    public Integer bytes;
-
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     public String referrer;
 
@@ -48,12 +42,6 @@ public class ESstatEvent implements ElasticSearchEntity {
 
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     public String postSlug;
-
-    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
-    public String osName;
-
-    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
-    public String device;
 
     public Integer timeReading;
 
@@ -65,6 +53,8 @@ public class ESstatEvent implements ElasticSearchEntity {
     public Integer authorId;
 
     public Integer stationId;
+
+    public Integer termId;
 
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     public String tenantId;

@@ -1,6 +1,7 @@
 package co.xarx.trix.services.analytics;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class RequestWrapper {
     Map<String, String> headers;
     Map<String, String> parameters;
@@ -32,6 +34,9 @@ public class RequestWrapper {
             String paramName = (String)params.nextElement();
             parameters.put(paramName, request.getParameter(paramName));
         }
+
+        this.localName = request.getLocalName();
+        this.remoteAddr = request.getRemoteAddr();
     }
 
     public String getHeader(String headerName){
