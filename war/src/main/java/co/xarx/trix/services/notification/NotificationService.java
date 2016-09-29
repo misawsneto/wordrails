@@ -84,11 +84,15 @@ public class NotificationService {
 
 	@TimeIt
 	public void setNotificationSeen(String messageId) throws NotFoundException{
-		MobileNotification notification = mobileNotificationRepository.findByMessageId(messageId);
-		if(notification == null) throw new NotFoundException("Notification not found");
+		List<MobileNotification> notifications = mobileNotificationRepository.findByMessageId(messageId);
+		if(notifications!=null && notifications.size() > 0) {
+			for(MobileNotification notification: notifications) {
+				if (notification == null) throw new NotFoundException("Notification not found");
 
-		notification.setSeen(true);
-		mobileNotificationRepository.save(notification);
+				notification.setSeen(true);
+				mobileNotificationRepository.save(notification);
+			}
+		}
 	}
 
 	private void saveMobileNotifications(Integer postId, Post post, List<String> androids, List<String> apples, List<String> fcmAndrois, List<String> fcmApples) {
