@@ -14,13 +14,13 @@ import javax.ws.rs.core.Response;
 import java.util.Date;
 
 @Component
-public class V2TermsApi extends AbstractResource implements V2TermsApi {
+public class V2TermsResource extends AbstractResource implements V2TermsApi {
 
     private TermRepository termRepository;
     private StatEventsService statEventsService;
 
     @Autowired
-    public V2TermsApi(TermRepository termRepository, StatEventsService statEventsService){
+    public V2TermsResource(TermRepository termRepository, StatEventsService statEventsService){
         this.termRepository = termRepository;
         this.statEventsService = statEventsService;
     }
