@@ -26,6 +26,7 @@ import co.xarx.trix.api.ImageUploadResponse;
 import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.api.v2.PersonalNotificationData;
 import co.xarx.trix.api.v2.response.FileUpload;
+import co.xarx.trix.api.v2.request.MessageFCM;
 
 interface I$facade$ {
 	@POST("/batch")
@@ -276,11 +277,11 @@ interface I$facade$ {
 	
 	@PUT("/mobile/location")
 	@FormUrlEncoded
-	Response putLocation(@Field("deviceCode") String deviceCode, @Field("device") String device, @Field("lat") Double lat, @Field("lng") Double lng);
+	Response putLocation(@Field("deviceCode") String deviceCode, @Field("device") String device, @Field("lat") Double lat, @Field("lng") Double lng, @Field("fcm") Boolean fcm);
 	
 	@PUT("/mobile/location")
 	@FormUrlEncoded
-	void putLocation(@Field("deviceCode") String deviceCode, @Field("device") String device, @Field("lat") Double lat, @Field("lng") Double lng, Callback<Response> _callback);
+	void putLocation(@Field("deviceCode") String deviceCode, @Field("device") String device, @Field("lat") Double lat, @Field("lng") Double lng, @Field("fcm") Boolean fcm, Callback<Response> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -345,6 +346,22 @@ interface I$facade$ {
 
 	@POST("/posts/{postId}/comments")
 	void postComment(@Path("postId") Integer postId, @Body CommentDto comment, Callback<CommentDto> _callback);
+
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+
+    @PUT("/v2/posts/{postId}/seen")
+    Response putPostSeen(@Path("postId") Integer postId, @Query("timeReading") Integer timeReading, @Query("date") Long date, @Body String str);
+
+    @PUT("/v2/posts/{postId}/seen")
+    void putPostSeen(@Path("postId") Integer postId, @Query("timeReading") Integer timeReading, @Query("date") Long date, @Body String str, Callback<Response> _callback);
+
+    @PUT("/v2/notifications/seen")
+    Response putNotificationSeen(@Body MessageFCM messageFcm);
+
+    @PUT("/v2/notifications/seen")
+    void putNotificationSeen(@Body MessageFCM messageFcm, Callback<Response> _callback);
 
 /*---------------------------------------------------------------------------*/
 
