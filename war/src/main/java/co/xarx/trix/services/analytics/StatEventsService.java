@@ -86,7 +86,6 @@ public class StatEventsService {
         event.setTenantId(post.getTenantId());
         event.setAuthorId(post.getAuthor().getId());
         event.setStationId(post.getStation().getId());
-        event.setPersonId(authProvider.getLoggedPerson().getId());
 
         return newEvent(request, event);
     }
@@ -99,6 +98,7 @@ public class StatEventsService {
         event.setHost(request.getLocalName());
         event.setClientip(request.getRemoteAddr());
         event.setReferrer(request.getHeader("referer"));
+        event.setPersonId(authProvider.getLoggedPerson().getId());
 
         return event;
     }
