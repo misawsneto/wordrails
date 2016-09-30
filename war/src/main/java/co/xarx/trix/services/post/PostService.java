@@ -131,7 +131,7 @@ public class PostService {
 			}
 		}
 
-		mobileDeviceRepository.deleteByDeviceCode(devicesToDelete);
+//		mobileDeviceRepository.deleteByDeviceCode(devicesToDelete);
 	}
 
 
