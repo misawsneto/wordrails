@@ -684,6 +684,14 @@ public class $facade$ {
     	_facade.putNotificationSeen(messageFcm, _callback);
     }
 
+	public Response putTermSeen(Integer termId, Integer timeReading, Long date) {
+        return _facade.putTermSeen(termId, timeReading, date, "");
+    }
+
+    public void putTermSeen(Integer termId, Integer timeReading, Long date, Callback<Response> _callback) {
+    	_facade.putTermSeen(termId, timeReading, date, "", _callback);
+    }
+
 /*---------------------------------------------------------------------------*/
 
 $entities:FacadeMethods(); separator="\n\n"$
