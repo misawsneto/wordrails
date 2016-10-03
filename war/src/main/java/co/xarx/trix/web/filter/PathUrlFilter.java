@@ -32,14 +32,9 @@ public class PathUrlFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) res;
 		String host = request.getHeader("Host");
 		String path = request.getRequestURI().substring(request.getContextPath().length()).replaceAll("[/]+$", "");
-		boolean appliedPath = APPLIED_PATHS.contains(path) || APPLIED_PATHS.stream().anyMatch(p ->
-				path != null && p != null &&
-				!p.equals("") &&
-				!path.equals("") &&
-				path.startsWith(p));
 
 		String originalPath = (String) request.getAttribute("originalPath");
-		if(originalPath == null && appliedPath)
+		if(originalPath == null)
 			request.setAttribute("originalPath", path);
 
 		chain.doFilter(req, res);

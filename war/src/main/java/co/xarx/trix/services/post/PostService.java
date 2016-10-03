@@ -25,6 +25,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.persistence.jpa.jpql.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -82,6 +83,9 @@ public class PostService {
 
 	@Autowired
 	private ImageService imageService;
+
+	@Autowired
+	private CacheManager cacheManager;
 
 	@PersistenceContext
 	private EntityManager em;
@@ -266,5 +270,22 @@ public class PostService {
 			}
 		}
 		return  null;
+	}
+
+	public PostView getPostViewBySlug(String slug, Boolean withBody) {
+		PostView postView = cacheManager.getCache("postViewBySlug").get(slug, PostView.class);
+		if(postView == null){
+			Post post = postRepository.findBySlug(slug);
+			if (post != null) {
+				postView = postConverter.convertTo(post);
+				postView.body = post.body;
+				cacheManager.getCache("postViewBySlug").put(slug, postView);
+			}
+		}
+
+		if(postView != null && (withBody == null || !withBody)) {
+			postView.body = null;
+		}
+		return postView;
 	}
 }

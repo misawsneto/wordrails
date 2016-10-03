@@ -8,6 +8,7 @@ import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.services.post.PostSearchService;
+import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.PostApi;
 import com.google.common.collect.Lists;
@@ -48,6 +49,9 @@ public class PostsResource extends AbstractResource implements PostApi {
 
 	@Autowired
 	private CacheManager cacheManager;
+
+	@Autowired
+	PostService postService;
 
 	@Deprecated
 	public ContentResponse<SearchView> searchPosts(
@@ -123,21 +127,7 @@ public class PostsResource extends AbstractResource implements PostApi {
 
 	@Transactional
 	public PostView getPostViewBySlug(String slug, Boolean withBody) throws ServletException, IOException {
-		PostView postView = cacheManager.getCache("postViewBySlug").get(slug, PostView.class);
-		if(postView == null){
-			Post post = postRepository.findBySlug(slug);
-			if (post != null) {
-				postView = postConverter.convertTo(post);
-				postView.body = post.body;
-				cacheManager.getCache("postViewBySlug").put(slug, postView);
-			}
-		}
-
-		if(postView != null && (withBody == null || !withBody)) {
-			postView.body = null;
-		}
-
-		return postView;
+		return postService.getPostViewBySlug(slug, withBody);
 	}
 
 	@Transactional
