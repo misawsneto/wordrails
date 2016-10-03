@@ -76,6 +76,6 @@ public class PasswordService {
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 		String baseUrl = "http://" + network.getRealDomain() + "/access/newpwd?hash=" + hash;
 
-		return "Oi, " + username + ". Clique aqui para recuperar sua senha: " + baseUrl;
+		return "Oi, " + username.getUser().getUsername() + ". Clique aqui para recuperar sua senha: " + baseUrl;
 	}
 }

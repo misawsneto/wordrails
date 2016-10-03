@@ -10,10 +10,10 @@ public class FCMLearning {
 
     public static void main(String[] args) throws IOException {
         List<String> regId = new ArrayList<>();
-        regId.add("fB6vdmUzjRc:APA91bG5JPgj-HuKMaHvF5GqXi0iOmvc9eZrRPUHSwqKrCoT4RzI1DXvxO_jHYL3");
-        regId.add("e3FUMEiYcBw:APA91bFPZZAGN3gip6czpAqYKwmJxTrosGgaWDpu2d9SVYCuMx_49vu76g-aRqLgNe8glXI6XczqdS7X2D854TgjmyTu6oGKDM_3V6nqSXV_VMSSFHk2ocPY8IVLfRjsj1Hbg6VOQvTO");
+        regId.add("fJppkVIIrpc:APA91bHT7nYFZK5fbwlgzupG1LixVVzdRYb1Mz75u6ocCKbW7SxrtLjjpkQr2-BokGKrv-YSLczSnbBBaGnZkLSHfeynOlE1v5H7rB4nZ7WuLbjnO6wDAP2zsk1zjm4nFXAHs522MjqT");
 
-        String serverKey = "AIzaSyDqZfV7QfeeQmTXykYgwFyJrUCEWAqxKds";
+//        String serverKey = "AIzaSyDqZfV7QfeeQmTXykYgwFyJrUCEWAqxKds";
+        String serverKey = "AIzaSyAb9u29xm5WsjzxjYgYiMPK7C0wFCrRgmg";
 
         Notification notification = new Notification.Builder("Icon")
                 .title("Xarx Rocks!")
@@ -26,7 +26,7 @@ public class FCMLearning {
                 .addData("entity_id", "123")
                 .addData("receiver_id", "321")
                 .delayWhileIdle(true)
-                .timeToLive(86400)
+                .timeToLive(0)
                 .build();
 
         MulticastResult result = sender.send(message, regId, 1);

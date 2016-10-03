@@ -179,7 +179,8 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 		if(timestamp == null || timestamp < 0) throw new BadRequestException("A date must be defined as a timestamp");
 
 		RequestWrapper rw = new RequestWrapper(request);
-		statEventsService.newPostreadEvent(post, rw, timeReading, new Date(timestamp));
+		Date date = timestamp != null ? new Date(timestamp) : new Date();
+		statEventsService.newPostreadEvent(post, rw, timeReading, date);
 		return Response.ok().build();
 	}
 }
