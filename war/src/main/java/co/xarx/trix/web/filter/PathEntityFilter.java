@@ -51,19 +51,20 @@ public class PathEntityFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 		String host = request.getHeader("Host");
-		String path = (String) request.getAttribute("originalPath");
-//		boolean appliedPath = APPLIED_PATHS.contains(path) || APPLIED_PATHS.stream().anyMatch(p ->
-//				path != null && p != null &&
-//				!p.equals("") &&
-//				!path.equals("") &&
-//				path.startsWith(p));
+		String path = request.getRequestURI().substring(request.getContextPath().length()).replaceAll("[/]+$", "");
+		String originalPath = (String) request.getAttribute("originalPath");
+		boolean appliedPath = APPLIED_PATHS.contains(path) || APPLIED_PATHS.stream().anyMatch(p ->
+				path != null && p != null &&
+				!p.equals("") &&
+				!path.equals("") &&
+						path.startsWith(p));
 
-//		if (appliedPath) {
+		if (appliedPath) {
 
-			if("/".equals(path)){
+			if("/".equals(originalPath)){
 				homeHiddenHtmlBuilder(request);
-			}else if(path.split("/").length == 3){
-				String parts [] = path.split("/");
+			}else if(originalPath.split("/").length == 3){
+				String parts [] = originalPath.split("/");
 				if("home".equals(parts[2])){
 					String html = homeHiddenHtmlBuilder(request);
 					request.setAttribute("requestedEntityJson", "null");
@@ -82,8 +83,8 @@ public class PathEntityFilter implements Filter {
 
 				}
 			}else{
-				if (path.split("/").length == 2) {
-					String parts[] = path.split("/");
+				if (originalPath.split("/").length == 2) {
+					String parts[] = originalPath.split("/");
 					Post post = postRepository.findBySlug(parts[1]);
 					if (post != null) {
 						HttpServletResponse httpResponse = (HttpServletResponse) res;
@@ -97,7 +98,7 @@ public class PathEntityFilter implements Filter {
 					request.setAttribute("entityType", "");
 				}
 			}
-//		}
+		}
 
 		chain.doFilter(req, res);
 	}
