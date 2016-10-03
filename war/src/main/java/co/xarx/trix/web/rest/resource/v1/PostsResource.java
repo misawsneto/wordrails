@@ -16,6 +16,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +45,9 @@ public class PostsResource extends AbstractResource implements PostApi {
 	private PostConverter postConverter;
 	@Autowired
 	private PostSearchService postSearchService;
+
+	@Autowired
+	private CacheManager cacheManager;
 
 	@Deprecated
 	public ContentResponse<SearchView> searchPosts(
@@ -119,12 +123,18 @@ public class PostsResource extends AbstractResource implements PostApi {
 
 	@Transactional
 	public PostView getPostViewBySlug(String slug, Boolean withBody) throws ServletException, IOException {
-		Post post = postRepository.findBySlug(slug);
-		PostView postView = null;
-		if (post != null) {
-			postView = postConverter.convertTo(post);
-			if(withBody != null && withBody)
+		PostView postView = cacheManager.getCache("postViewBySlug").get(slug, PostView.class);
+		if(postView == null){
+			Post post = postRepository.findBySlug(slug);
+			if (post != null) {
+				postView = postConverter.convertTo(post);
 				postView.body = post.body;
+				cacheManager.getCache("postViewBySlug").put(slug, postView);
+			}
+		}
+
+		if(postView != null && (withBody == null || !withBody)) {
+			postView.body = null;
 		}
 
 		return postView;
@@ -132,12 +142,18 @@ public class PostsResource extends AbstractResource implements PostApi {
 
 	@Transactional
 	public PostView getPostViewById(Integer postId, Boolean withBody) throws ServletException, IOException {
-		Post post = postRepository.findOne(postId);
-		PostView postView = null;
-		if (post != null) {
-			postView = postConverter.convertTo(post);
-			if(withBody != null && withBody)
+		PostView postView = cacheManager.getCache("postViewById").get(postId, PostView.class);
+		if(postView == null){
+			Post post = postRepository.findOne(postId);
+			if (post != null) {
+				postView = postConverter.convertTo(post);
 				postView.body = post.body;
+				cacheManager.getCache("postViewById").put(postId, postView);
+			}
+		}
+
+		if(postView != null && (withBody == null || !withBody)) {
+			postView.body = null;
 		}
 
 		return postView;
