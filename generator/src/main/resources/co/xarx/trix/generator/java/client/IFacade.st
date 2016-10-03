@@ -363,6 +363,12 @@ interface I$facade$ {
     @PUT("/v2/notifications/seen")
     void putNotificationSeen(@Body MessageFCM messageFcm, Callback<Response> _callback);
 
+    @PUT("/v2/terms/{termId}/seen")
+    Response putTermSeen(@Path("termId") Integer termId, @Query("timeReading") Integer timeReading, @Query("date") Long date, @Body String str);
+
+    @PUT("/v2/terms/{termId}/seen")
+    void putTermSeen(@Path("termId") Integer termId, @Query("timeReading") Integer timeReading, @Query("date") Long date, @Body String str, Callback<Response> _callback);
+
 /*---------------------------------------------------------------------------*/
 
 $entities:IFacadeMethods(); separator="\n\n"$
