@@ -1,13 +1,13 @@
 package co.xarx.trix.config;
 
+import co.xarx.trix.api.PostByTerm;
 import co.xarx.trix.api.PostView;
-import co.xarx.trix.api.v2.PostData;
+import co.xarx.trix.api.TermPerspectiveView;
 import co.xarx.trix.api.v2.StationData;
 import co.xarx.trix.config.cache.MultitenantCacheManager;
 import co.xarx.trix.config.web.CookieAndHeaderHttpSessionStrategy;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.User;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -84,6 +84,12 @@ public class SessionConfig extends CachingConfigurerSupport {
 		RedisTemplate postViewBySlugRedisTemplate = redisTemplate();
 		postViewBySlugRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(PostView.class));
 
+		RedisTemplate termPerspectiveViewRedisTemplate = redisTemplate();
+		termPerspectiveViewRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(TermPerspectiveView.class));
+
+		RedisTemplate postsByTermRedisTemplate = redisTemplate();
+		postsByTermRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(PostByTerm.class));
+
 		templates.put("network", new HashMap<RedisTemplate, Integer>() {{put(networkRedisTemplate, 60);}});
 		templates.put("person", new HashMap<RedisTemplate, Integer>(){{put(personRedisTemplate, 60);}});
 		templates.put("user", new HashMap<RedisTemplate, Integer>(){{put(userRedisTemplate, 60);}});
@@ -93,6 +99,8 @@ public class SessionConfig extends CachingConfigurerSupport {
 		templates.put("postsIds", new HashMap<RedisTemplate, Integer>(){{put(postsIdsRedisTemplate, 600);}});
 		templates.put("postViewById", new HashMap<RedisTemplate, Integer>(){{put(postViewByIdRedisTemplate, 600);}});
 		templates.put("postViewBySlug", new HashMap<RedisTemplate, Integer>(){{put(postViewBySlugRedisTemplate, 600);}});
+		templates.put("termPerspectiveView", new HashMap<RedisTemplate, Integer>(){{put(termPerspectiveViewRedisTemplate, 600);}});
+		templates.put("postsByTerm", new HashMap<RedisTemplate, Integer>(){{put(postsByTermRedisTemplate, 600);}});
 
 		return new MultitenantCacheManager(templates);
 	}
