@@ -105,10 +105,12 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+
 		<repository>
 			<id>gcm-server-repository</id>
 			<url>https://raw.githubusercontent.com/slorber/gcm-server-repository/master/releases/</url>
 		</repository>
+
 		<repository>
 			<id>scribe-java-mvn-repo</id>
 			<url>https://raw.github.com/fernandezpablo85/scribe-java/mvn-repo/</url>
@@ -117,6 +119,7 @@
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</repository>
+
 		<repository>
 			<id>elasticsearch-releases</id>
 			<url>http://maven.elasticsearch.org/releases</url>
@@ -127,6 +130,12 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+
 	</repositories>
 
 	<dependencyManagement>
@@ -905,6 +914,23 @@
 				<groupId>com.google.firebase</groupId>
 				<artifactId>firebase-server-sdk</artifactId>
 				<version>3.0.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ullink.slack</groupId>
+				<artifactId>simpleslackapi</artifactId>
+				<version>0.6.0</version>
+
+                <exclusions>
+                    <exclusion>
+                        <artifactId>logback-classic</artifactId>
+                        <groupId>ch.qos.logback</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>log4j-over-slf4j</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                </exclusions>
 			</dependency>
 
 		</dependencies>
