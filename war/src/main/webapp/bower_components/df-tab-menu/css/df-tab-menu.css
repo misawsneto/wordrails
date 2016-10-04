@@ -33,7 +33,7 @@
 .df-tab-menu > li > a:hover {
 	text-decoration: none;
 	border-bottom: 2px solid #80d8ff;
-	opacity: 1;
+	/* opacity: 1; */
 }
 
 .df-tab-menu > li.df-tab-menu-active > a {
