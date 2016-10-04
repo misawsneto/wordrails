@@ -3,7 +3,6 @@ package co.xarx.trix.generator;
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.generator.scope.FieldDescription;
 import co.xarx.trix.generator.scope.QueryDescription;
-import co.xarx.trix.persistence.DatabaseRepository;
 import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Pageable;
@@ -89,7 +88,7 @@ public class RepositoryExtractor {
 				ParameterizedType parameterizedType = (ParameterizedType) genericInterface;
 				Class<?> entity = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 				Type rawType = parameterizedType.getRawType();
-				if (JpaRepository.class.equals(rawType) || DatabaseRepository.class.equals(rawType)) {
+				if (JpaRepository.class.equals(rawType)) {
 					repositoryEntities.put(entity, repositoryClass);
 					List<QueryDescription> queries = getQueriesFromMethods(repositoryClass.getDeclaredMethods());
 					queriesMap.put(entity, queries);

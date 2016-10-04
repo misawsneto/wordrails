@@ -19,7 +19,7 @@ public interface MobileApi {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@PreAuthorize("permitAll()")
 	Response updateLocation(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String device,
-							@FormParam("lat") Double lat, @FormParam("lng") Double lng);
+							@FormParam("lat") Double lat, @FormParam("lng") Double lng, @FormParam("fcm") Boolean fcm);
 
 
 }

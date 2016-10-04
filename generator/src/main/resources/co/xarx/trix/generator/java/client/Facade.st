@@ -32,6 +32,7 @@ import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.api.v2.PersonalNotificationData;
 import co.xarx.trix.api.v2.response.FileUpload;
 import co.xarx.trix.api.v2.response.FileUpload;
+import co.xarx.trix.api.v2.request.MessageFCM;
 import co.xarx.trix.api.TermPerspectiveView;
 import co.xarx.trix.api.RowView;
 
@@ -133,6 +134,9 @@ public class $facade$ {
 	public void logout(){
 		_interceptor.logOut();
 	}
+
+/*---------------------------------------------------------------------------*/
+
 
 /*---------------------------------------------------------------------------*/
 	$entities:{entity | $GetSelf(entity)$}; separator="\n\n"$
@@ -581,12 +585,12 @@ public class $facade$ {
 		_facade.putRegId(regId, networkId, lat, lng, _callback);
 	}
 
-	public Response putLocation(String deviceCode, String device, Double lat, Double lng){
-		return _facade.putLocation(deviceCode, device, lat, lng);
+	public Response putLocation(String deviceCode, String device, Double lat, Double lng, Boolean fcm){
+		return _facade.putLocation(deviceCode, device, lat, lng, fcm);
 	}
 
-	public void putLocation(String deviceCode, String device, Double lat, Double lng, Callback<Response> _callback){
-		_facade.putLocation(deviceCode, device, lat, lng, _callback);
+	public void putLocation(String deviceCode, String device, Double lat, Double lng, Boolean fcm, Callback<Response> _callback){
+		_facade.putLocation(deviceCode, device, lat, lng, fcm, _callback);
 	}
 /*---------------------------------------------------------------------------*/
 
@@ -658,6 +662,34 @@ public class $facade$ {
 
     public void postComment(Integer postId, CommentDto comment, final Callback<CommentDto> _callback) {
     	_facade.postComment(postId, comment, _callback);
+    }
+
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+
+	public Response putPostSeen(Integer postId, Integer timeReading, Long date) {
+        return _facade.putPostSeen(postId, timeReading, date, "");
+    }
+
+    public void putPostSeen(Integer postId, Integer timeReading, Long date, Callback<Response> _callback) {
+    	_facade.putPostSeen(postId, timeReading, date, "", _callback);
+    }
+
+	public Response putNotificationSeen(MessageFCM messageFcm) {
+        return _facade.putNotificationSeen(messageFcm);
+    }
+
+    public void putNotificationSeen(MessageFCM messageFcm, Callback<Response> _callback) {
+    	_facade.putNotificationSeen(messageFcm, _callback);
+    }
+
+	public Response putTermSeen(Integer termId, Integer timeReading, Long date) {
+        return _facade.putTermSeen(termId, timeReading, date, "");
+    }
+
+    public void putTermSeen(Integer termId, Integer timeReading, Long date, Callback<Response> _callback) {
+    	_facade.putTermSeen(termId, timeReading, date, "", _callback);
     }
 
 /*---------------------------------------------------------------------------*/

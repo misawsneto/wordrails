@@ -103,6 +103,7 @@ public class NotificationBatchPublisher {
 			noti.setDeviceType(deviceType);
 			noti.deviceDeactivated = r.isDeviceDeactivated();
 			noti.test = notification.test;
+			noti.messageId = r.getMessageId();
 			notis.add(noti);
 		}
 

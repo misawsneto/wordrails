@@ -6,6 +6,7 @@ import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.person.PersonAlreadyExistsException;
 import co.xarx.trix.services.person.PersonFactory;
+import co.xarx.trix.services.person.PersonNotFoundException;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.StationPermissionService;
 import co.xarx.trix.services.user.UserAlreadyExistsException;
@@ -13,15 +14,8 @@ import co.xarx.trix.services.user.UserFactory;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.action.search.SearchRequestBuilder;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.search.SearchHit;
 import org.jcodec.common.logging.Logger;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -29,41 +23,48 @@ import org.springframework.util.Assert;
 import java.io.IOException;
 import java.util.*;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 @Slf4j
 @Service
 public class PersonService {
 
-	private Client client;
-	private String nginxAccessIndex;
 	private UserFactory userFactory;
 	private AuthService authService;
-	private EmailService emailService;
+    private EmailService emailService;
     private PersonFactory personFactory;
     private NetworkService networkService;
+    private PostRepository postRepository;
+    private ImageRepository imageRepository;
     private PersonRepository personRepository;
+    private CommentRepository commentRepository;
     private StationRepository stationRepository;
+    private ESPersonRepository esPersonRepository;
     private InvitationRepository invitationRepository;
+    private MobileDeviceRepository mobileDeviceRepository;
     private StationPermissionService stationPermissionService;
-    private PersonValidationRepository personValidationRepository;
+	private PersonValidationRepository personValidationRepository;
+	private PersonalNotificationRepository personalNotificationRepository;
 
 	@Autowired
-	public PersonService(PersonRepository personRepository, EmailService emailService, InvitationRepository invitationRepository, AuthService authService, Client client, @Value("${elasticsearch.nginxAccessIndex}") String nginxAccessIndex, StationRepository stationRepository, PersonFactory personFactory, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory, NetworkService networkService) {
-		this.client = client;
+	public PersonService(PersonRepository personRepository, EmailService emailService, InvitationRepository invitationRepository, AuthService authService, StationRepository stationRepository, PersonFactory personFactory, PostRepository postRepository, ImageRepository imageRepository, MobileDeviceRepository mobileDeviceRepository, StationPermissionService stationPermissionService, PersonValidationRepository personValidationRepository, UserFactory userFactory, NetworkService networkService, CommentRepository commentRepository, ESPersonRepository esPersonRepository, PersonalNotificationRepository personalNotificationRepository) {
 		this.authService = authService;
-		this.userFactory = userFactory;
-		this.emailService = emailService;
-		this.personFactory = personFactory;
-		this.nginxAccessIndex = nginxAccessIndex;
-		this.personRepository = personRepository;
-		this.stationRepository = stationRepository;
-		this.invitationRepository = invitationRepository;
-		this.stationPermissionService = stationPermissionService;
-		this.personValidationRepository = personValidationRepository;
+        this.userFactory = userFactory;
+        this.emailService = emailService;
+        this.personFactory = personFactory;
         this.networkService = networkService;
-    }
+        this.postRepository = postRepository;
+        this.imageRepository = imageRepository;
+        this.personRepository = personRepository;
+        this.commentRepository = commentRepository;
+        this.stationRepository = stationRepository;
+        this.esPersonRepository = esPersonRepository;
+        this.invitationRepository = invitationRepository;
+        this.mobileDeviceRepository = mobileDeviceRepository;
+        this.stationPermissionService = stationPermissionService;
+        this.personValidationRepository = personValidationRepository;
+        this.personalNotificationRepository = personalNotificationRepository;
+	}
 
     @Transactional
 	public Person createFromInvite(PersonsApi.PersonCreateDto dto, String inviteHash) throws PersonAlreadyExistsException, UserAlreadyExistsException {
@@ -126,7 +127,7 @@ public class PersonService {
 		return newPerson;
 	}
 
-	public Person validateEmail(String hash) throws BadRequestException {
+	public Person validatePersonEmail(String hash) throws BadRequestException {
 		PersonValidation validation = personValidationRepository.findByValidationHash(hash);
 
 		if(validation == null && validation.getPerson() != null){
@@ -203,44 +204,38 @@ public class PersonService {
 		return dto.emails;
 	}
 
-	public List<Map<String, Object>> getUserTimeline(String username) {
-		Person person = personRepository.findByUsername(username);
-		Assert.notNull(person, "Person not found: personId " + username);
+	@Transactional
+	public void deletePerson(String email) throws Exception {
+		Person person = personRepository.findByEmail(email);
 
-		SearchRequestBuilder search = client.prepareSearch(nginxAccessIndex);
-		search.setQuery(boolQuery().must(termQuery("username", person.username)));
-		SearchResponse searchResponse = search.execute().actionGet();
-		DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+		if(person == null) {
+            invitationRepository.deleteByEmail(email);
+        } else {
+            deletePersonAndDependencies(person);
+			userFactory.delete(person.getUsername());
+		}
+	}
 
-		List<Map<String, Object>> timeline = new ArrayList<>();
+	private void deletePersonAndDependencies(Person person) throws Exception {
+        Person admin = authService.getLoggedPerson();
 
-		SearchHit[] hits = searchResponse.getHits().getHits();
-		for (SearchHit hit : hits) {
-			Map source = hit.sourceAsMap();
-
-			int response = (int) source.get("response");
-			if (response < 200 || response >= 400) {
-				continue;
-			}
-
-			Long timestamp = fmt.parseDateTime(source.get("@timestamp").toString()).getMillis()/1000;
-			source.put("date", timestamp);
-			source.remove("message");
-			source.remove("host");
-			source.remove("type");
-			source.remove("clientip");
-			source.remove("ZONE");
-			source.remove("verb");
-			source.remove("httpversion");
-			source.remove("bytes");
-			source.remove("referrer");
-			source.remove("os_name");
-			source.remove("device");
-			source.remove("browser");
-
-			timeline.add(source);
+		if(admin.equals(person)){
+			throw new Exception("User cannot remove oneself");
 		}
 
-		return timeline;
-	}
+        invitationRepository.deleteByEmail(person.getEmail());
+        personValidationRepository.deleteByPersonId(person.getId());
+        personalNotificationRepository.deleteByPersonId(person.getId());
+        commentRepository.updateCommentsAuthor(person.getId(), admin.getId());
+        postRepository.updatePostAuthor(person.getId(), admin.getId());
+
+        mobileDeviceRepository.deleteByPersonId(person.getId());
+		mobileDeviceRepository.deleteByLastPersonLoggedId(person.getId());
+        esPersonRepository.delete(person.getId());
+
+        if(person.cover != null) imageRepository.delete(person.cover);
+        if(person.image != null) imageRepository.delete(person.image);
+
+        personRepository.delete(person);
+    }
 }

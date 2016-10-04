@@ -625,8 +625,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.github.Ullink</groupId>
-			<artifactId>simple-slack-api</artifactId>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-server-sdk</artifactId>
 		</dependency>
 
 	</dependencies>

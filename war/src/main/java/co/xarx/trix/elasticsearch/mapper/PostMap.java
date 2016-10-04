@@ -31,6 +31,15 @@ public class PostMap<T extends Post> extends PropertyMap<T, ESPost> {
 		}
 	}
 
+	class UnpublishDateCondition extends AbstractConverter<Date, Date> {
+
+		@Override
+		protected Date convert(Date source) {
+			return source != null ? source : new Date(Long.MAX_VALUE);
+		}
+	}
+
+
 	@Override
 	protected void configure() {
 		map().setStationId(source.getStation().id);
@@ -39,6 +48,7 @@ public class PostMap<T extends Post> extends PropertyMap<T, ESPost> {
 		map().setFeaturedImageCredits(source.getFeaturedImage().getCredits());
 		map().setFeaturedImageTitle(source.getFeaturedImage().getTitle());
 		using(new ScheduledDateCondition()).map(source.getScheduledDate(), destination.scheduledDate);
+		using(new UnpublishDateCondition()).map(source.getUnpublishDate(), destination.unpublishDate);
 		using(new TermToIntegerConverter()).map(source.getTerms(), destination.categories);
 	}
 }

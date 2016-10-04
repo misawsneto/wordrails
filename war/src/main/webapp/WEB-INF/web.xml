@@ -231,6 +231,8 @@
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
@@ -281,6 +283,7 @@
 	<filter-mapping>
 		<filter-name>CacheFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/data/*</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>

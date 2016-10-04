@@ -54,7 +54,6 @@ public interface StationsApi {
 	Response setMainStation(@PathParam("stationId") Integer stationId, @FormParam("value") boolean value);
 
 	@DELETE
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Path("/{stationId}/force")
 	Response forceDelete(@PathParam("stationId") Integer stationId);
 

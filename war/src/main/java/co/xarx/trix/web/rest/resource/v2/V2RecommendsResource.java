@@ -4,6 +4,7 @@ import co.xarx.trix.api.BooleanResponse;
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.services.post.PostService;
+import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v2.V2RecommendApi;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Component
 @NoArgsConstructor
-public class V2RecommendsResource implements V2RecommendApi {
+public class V2RecommendsResource extends AbstractResource implements V2RecommendApi {
 	private PostService postService;
 
 	@Autowired
@@ -32,7 +33,7 @@ public class V2RecommendsResource implements V2RecommendApi {
 	@Override
 	public BooleanResponse toggleRecommend(Integer postId) {
 		BooleanResponse br = new BooleanResponse();
-		br.response = postService.toggleRecommend(postId);
+		br.response = postService.toggleRecommend(postId, request);
 		return br;
 	}
 }

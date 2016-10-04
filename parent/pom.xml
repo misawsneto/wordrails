@@ -573,10 +573,16 @@
 				<version>1.10.44</version>
 			</dependency>
 
+			<!--<dependency>-->
+				<!--<groupId>com.google.android.gcm</groupId>-->
+				<!--<artifactId>gcm-server</artifactId>-->
+				<!--<version>1.0.2</version>-->
+			<!--</dependency>-->
+
 			<dependency>
-				<groupId>com.google.android.gcm</groupId>
+				<groupId>com.google.gcm</groupId>
 				<artifactId>gcm-server</artifactId>
-				<version>1.0.2</version>
+				<version>1.0.0</version>
 			</dependency>
 
 			<dependency>
@@ -776,7 +782,7 @@
 			<dependency>
 				<groupId>eu.bitwalker</groupId>
 				<artifactId>UserAgentUtils</artifactId>
-				<version>1.18</version>
+				<version>1.20</version>
 			</dependency>
 
 			<dependency>
@@ -905,9 +911,9 @@
 			</dependency>
 
 			<dependency>
-				<groupId>com.github.Ullink</groupId>
-				<artifactId>simple-slack-api</artifactId>
-				<version>0.6.0</version>
+				<groupId>com.google.firebase</groupId>
+				<artifactId>firebase-server-sdk</artifactId>
+				<version>3.0.1</version>
 			</dependency>
 
 		</dependencies>

@@ -65,6 +65,6 @@ public interface TermsApi {
 	@GET
 	@Path("/search/findPostsByCategory")
 	@PreAuthorize("permitAll()")
-	public ContentResponse<List<PostView>> findPostsByCategory(@QueryParam("categoryName") String categoryName,
+	ContentResponse<List<PostView>> findPostsByCategory(@QueryParam("categoryName") String categoryName,
 															   @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size);
 }

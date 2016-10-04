@@ -7,9 +7,6 @@ import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 
-/**
- * Created by misael on 02/10/2015.
- */
 @RepositoryEventHandler(Row.class)
 @Component
 public class RowEventHandler {

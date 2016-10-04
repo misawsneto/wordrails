@@ -25,33 +25,24 @@ public class V2StatisticsResource implements V2StatisticsApi {
 								   Integer size,
 								   String startTime,
 								   String endTime,
-								   String field){
+								   String field,
+								   String byField,
+								   String byValue){
 		if(field == null || field.isEmpty()) return badRequest("field", "must be defined");
 		checkSize(size);
 
 		Map map;
-		try {
-			map = statisticsService.getMostPorpular(field, startTime, endTime, size);
-			return ok(map);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return serviceUnavailable("There is a problem with the service of statistics");
-		}
+		map = statisticsService.getMostPopular(field, byField, byValue, startTime, endTime, size);
+		return ok(map);
 	}
 
 	@Override
-	public Response getPopularNetworks(Integer page, Integer size){
+	public Response getPopularNetworks(Integer page, Integer size, String start, String end){
+		checkSize(size);
 		Map popular;
 
-		checkSize(size);
-
-		try {
-			popular = statisticsService.getMostPupularNetworks(size);
-			return ok(popular);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return serviceUnavailable("There is a problem with the service of statistics");
-		}
+		popular = statisticsService.getMostPopular("tenantId", null, null, start, end, size);
+		return ok(popular);
 	}
 
 	@Override
@@ -59,7 +50,6 @@ public class V2StatisticsResource implements V2StatisticsApi {
 		checkDate(end);
 		StatsData statsData = statisticsService.getPostStats(end, start, postId);
 		if(statsData == null) return notFound("post");
-
 		return ok(statsData);
 	}
 

@@ -108,7 +108,7 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 
 		try {
 			client.execute(request, context).getEntity().getContent().close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		

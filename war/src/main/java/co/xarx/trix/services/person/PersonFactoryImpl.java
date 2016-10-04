@@ -34,16 +34,18 @@ public class PersonFactoryImpl implements PersonFactory {
 		Person person = newPerson(name, user.getUsername(), email);
 		person.setUser(user);
 
-		person.image = new Image(Image.Type.PROFILE_PICTURE);
-		person.image.setOriginalHash(StringUtil.toMD5(person.username));
-		HashMap<String, String> hashes = new HashMap<>();
-		hashes.put(Image.SIZE_LARGE, person.image.getOriginalHash());
-		hashes.put(Image.SIZE_MEDIUM, person.image.getOriginalHash());
-		hashes.put(Image.SIZE_SMALL, person.image.getOriginalHash());
-		hashes.put(Image.SIZE_ORIGINAL, person.image.getOriginalHash());
-		person.image.setHashes(hashes);
-		person.image.setExternalImageUrl(person.getImageSocialUrl());
-		imageRepository.save(person.image);
+		if(person.getImageSocialUrl() != null && !person.getImageSocialUrl().isEmpty()){
+			person.image = new Image(Image.Type.PROFILE_PICTURE);
+			person.image.setOriginalHash(StringUtil.toMD5(person.username));
+			HashMap<String, String> hashes = new HashMap<>();
+			hashes.put(Image.SIZE_LARGE, person.image.getOriginalHash());
+			hashes.put(Image.SIZE_MEDIUM, person.image.getOriginalHash());
+			hashes.put(Image.SIZE_SMALL, person.image.getOriginalHash());
+			hashes.put(Image.SIZE_ORIGINAL, person.image.getOriginalHash());
+			person.image.setHashes(hashes);
+			person.image.setExternalImageUrl(person.getImageSocialUrl());
+			imageRepository.save(person.image);
+		}
 
 		personRepository.save(person);
 		return person;

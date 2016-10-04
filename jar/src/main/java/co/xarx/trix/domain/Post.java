@@ -81,6 +81,10 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date scheduledDate;
 
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date unpublishDate;
+
 	@Lob
 	@Column(unique = true)
 	public String slug;
@@ -233,15 +237,8 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	@SdkInclude
 	public String getImageHash() {
-		Image featuredImage = getFeaturedImage();
-		if (featuredImage != null)
-			return featuredImage.getOriginalHash();
-		else{
-
-			Image image = getFeaturedImage();
-			return image != null ? image.getOriginalHash() : null;
-		}
-
+		Image image = getFeaturedImage();
+		return image != null ? image.getOriginalHash() : null;
 	}
 
 	public Image getFeaturedImage(){

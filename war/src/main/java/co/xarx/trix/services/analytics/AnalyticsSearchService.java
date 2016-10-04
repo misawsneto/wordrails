@@ -90,9 +90,9 @@ public class AnalyticsSearchService {
 	public List<Integer> getGeneralStatus(AnalyticsEntity entity) {
 		List<Integer> generalStatus = new ArrayList<>();
 
-		Integer totalReads = esQueries.countActionsByEntity("postread", "get",entity);
-		Integer totalComments = esQueries.countActionsByEntity("comment", "post", entity);
-		Integer totalRecommends = esQueries.countActionsByEntity("recommend", "put", entity);
+		Integer totalReads = esQueries.countActionsByEntity(Constants.StatsEventType.POST_READ, entity);
+		Integer totalComments = esQueries.countActionsByEntity(Constants.StatsEventType.POST_COMMENT, entity);
+		Integer totalRecommends = esQueries.countActionsByEntity(Constants.StatsEventType.POST_RECOMMEND, entity);
 
 		generalStatus.add(totalReads); // 1st reads
 		generalStatus.add(totalComments); // 2nd comments
@@ -101,9 +101,9 @@ public class AnalyticsSearchService {
 		return generalStatus;
 	}
 
-	public Map findMostPopular(String field, Interval interval, Integer size){
+	public Map findMostPopular(String field, String byField, Object byValue, Interval interval, Integer size){
 		try {
-			return esQueries.findMostPopular(field, interval, size);
+			return esQueries.findMostPopular(field, byField, byValue, interval, size);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new HashMap();
@@ -114,7 +114,7 @@ public class AnalyticsSearchService {
 		Map postReads = new HashMap();
 
 		posts.forEach( post -> {
-			postReads.put(post.getId(), esQueries.countActionsByEntity("postread", "get", post));
+			postReads.put(post.getId(), esQueries.countActionsByEntity(Constants.StatsEventType.POST_READ, post));
 		});
 
 		return postReads;

@@ -2,9 +2,6 @@ package co.xarx.trix.api;
 
 import java.util.Map;
 
-/**
- * Created by misael on 2/16/2016.
- */
 public class ThemeView {
 	public Map<String, String> primaryColors ;
 

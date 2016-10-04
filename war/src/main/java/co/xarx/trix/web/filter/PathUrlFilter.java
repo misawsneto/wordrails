@@ -5,7 +5,12 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component("pathUrlFilter")
 public class PathUrlFilter implements Filter {
@@ -17,11 +22,17 @@ public class PathUrlFilter implements Filter {
 	public void init(FilterConfig filterConfig) throws ServletException {
 	}
 
+	private static final Set<String> APPLIED_PATHS = Collections.unmodifiableSet(new HashSet<>(
+			Arrays.asList("", "/api", "/index.jsp", "/settings.jsp")));
+
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
 		HttpServletRequest request = (HttpServletRequest) req;
-		String path = request.getRequestURI();
+		HttpServletResponse response = (HttpServletResponse) res;
+		String host = request.getHeader("Host");
+		String path = request.getRequestURI().substring(request.getContextPath().length()).replaceAll("[/]+$", "");
+
 		String originalPath = (String) request.getAttribute("originalPath");
 		if(originalPath == null)
 			request.setAttribute("originalPath", path);

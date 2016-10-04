@@ -4,7 +4,10 @@ import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Comment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
@@ -13,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 @RepositoryRestResource(exported = true)
-public interface CommentRepository extends DatabaseRepository<Comment, Integer> {
+public interface CommentRepository extends JpaRepository<Comment, Integer>, QueryDslPredicateExecutor<Comment> {
 
 	@Override
 	@SdkExclude
@@ -36,4 +39,9 @@ public interface CommentRepository extends DatabaseRepository<Comment, Integer> 
 	@RestResource(exported = false)
 	@Query("select count(*) from Comment comment where (comment.post.state = 'PUBLISHED' AND (comment.post.scheduledDate is null OR comment.post.scheduledDate < current_timestamp))")
 	Long countPublished();
+
+	@RestResource(exported = false)
+	@Modifying
+	@Query("UPDATE Comment set author.id = :newAuthorId WHERE author.id = :oldAuthorId")
+	void updateCommentsAuthor(@Param("oldAuthorId") Integer oldAuthorId, @Param("newAuthorId") Integer newAuthorId);
 }

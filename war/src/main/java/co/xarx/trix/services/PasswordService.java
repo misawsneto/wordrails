@@ -6,6 +6,7 @@ import co.xarx.trix.domain.PasswordReset;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.User;
 import co.xarx.trix.exception.BadRequestException;
+import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.PasswordResetRepository;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserRepository;
@@ -19,25 +20,24 @@ import java.util.UUID;
 @Service
 public class PasswordService {
 
-	private PersonRepository personRepository;
-	private UserRepository userRepository;
 	private EmailService emailService;
+	private UserRepository userRepository;
+	private PersonRepository personRepository;
+	private NetworkRepository networkRepository;
 	private PasswordResetRepository passwordResetRepository;
-	private NetworkService networkService;
 
 	@Autowired
 	public PasswordService(PersonRepository personRepository, UserRepository userRepository, EmailService emailService,
-						   PasswordResetRepository passwordResetRepository, NetworkService networkService) {
-		this.personRepository = personRepository;
-		this.userRepository = userRepository;
+						   PasswordResetRepository passwordResetRepository, NetworkRepository networkRepository) {
 		this.emailService = emailService;
+		this.userRepository = userRepository;
+		this.personRepository = personRepository;
+		this.networkRepository = networkRepository;
 		this.passwordResetRepository = passwordResetRepository;
-		this.networkService = networkService;
 	}
 
 	public User resetPassword(String email){
 		Assert.hasText(email, "Null email");
-//		User user = userRepository.findUserByEmail(email);
 		Person person = personRepository.findByEmail(email);
 
 		if(person != null && person.user == null){
@@ -73,9 +73,10 @@ public class PasswordService {
 	}
 
 	public String createEmailBody(Person username, String hash) {
-		Network network = networkService.getNetwork();
+		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+		network.tenantId = TenantContextHolder.getCurrentTenantId();
 		String baseUrl = "http://" + network.getRealDomain() + "/access/newpwd?hash=" + hash;
 
-		return "Oi, " + username + ". Clique aqui para recuperar sua senha: " + baseUrl;
+		return "Oi, " + username.getUser().getUsername() + ". Clique aqui para recuperar sua senha: " + baseUrl;
 	}
 }

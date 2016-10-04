@@ -25,17 +25,10 @@ public class MobileNotificationSender implements NotificationSender {
 
 		Map<String, NotificationResult> notificationResultMap = new HashMap<>();
 		Map<String, NotificationResult> errorDevices = client.getErrorDevices();
+		Map<String, NotificationResult> successDevices = client.getSuccessDevices();
 
-		for (String device : devices) {
-			NotificationResult r = errorDevices.get(device);
-
-			if (r == null) {
-				r = new NotificationResult();
-				r.setStatus(MobileNotification.Status.SUCCESS);
-			}
-
-			notificationResultMap.put(device, r);
-		}
+		notificationResultMap.putAll(successDevices);
+		notificationResultMap.putAll(errorDevices);
 
 		return notificationResultMap;
 	}

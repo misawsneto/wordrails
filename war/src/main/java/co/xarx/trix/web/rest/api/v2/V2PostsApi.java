@@ -39,6 +39,11 @@ public interface V2PostsApi {
 	@Path("/{postId}/unpublish")
 	Response unpublish(@PathParam("postId") Integer postId);
 
+	@PUT
+	@Path("/{postId}/unpublish/{date}")
+	Response scheduleUnpublishing(@PathParam("postId") Integer postId, @PathParam("date") Long date);
+
+
 	@GET
 	@Path("/findPostsByIds")
 	ContentResponse<List<PostView>> findPostsByIds(@QueryParam("ids") List<Integer> ids);
@@ -56,4 +61,10 @@ public interface V2PostsApi {
 	@Path("/bulkUpdateStates")
 	Response bulkUpdateStates(BulkUpdateState bulkUpdateState) throws NoSuchFieldException,
 			IllegalAccessException;
+
+	@PUT
+	@Path("/{postId}/seen")
+	Response setPostSeen(@PathParam("postId") Integer postId,
+						 @QueryParam("timeReading") Integer timeReading,
+						 @QueryParam("date") Long timestamp);
 }

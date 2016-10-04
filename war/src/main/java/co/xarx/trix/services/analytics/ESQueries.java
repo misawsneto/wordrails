@@ -2,6 +2,9 @@ package co.xarx.trix.services.analytics;
 
 import co.xarx.trix.domain.*;
 import co.xarx.trix.util.Constants;
+import org.apache.lucene.queryparser.xml.builders.BooleanQueryBuilder;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.TermQuery;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -36,26 +39,20 @@ public class ESQueries {
 
 	@Autowired
 	public ESQueries(Client client,
-					  @Value("${elasticsearch.nginxAccessIndex}") String accessIndex){
+					  @Value("${elasticsearch.access_index}") String accessIndex){
 
 		this.client = client;
 		this.accessIndex = accessIndex;
 		this.requestSearchFields = loadRequestSearchFields();
 	}
 
-	@PostConstruct
-	public void checkIndices() throws ExecutionException, InterruptedException {
-		boolean isThereNginxIndex = client.admin().indices().exists(new IndicesExistsRequest(accessIndex)).get().isExists();
-		Assert.isTrue(isThereNginxIndex, "Big problem! Index is not there: " + accessIndex);
-	}
-
 	private Map loadRequestSearchFields() {
 		Map fields = new HashMap<Class<?>, String>();
 
-		fields.put(Post.class, "nginx_access.postId");
-		fields.put(Person.class, "nginx_access.authorId");
-		fields.put(Station.class, "nginx_access.stationId");
-		fields.put(Network.class, "nginx_access.tenantId");
+		fields.put(Post.class, Constants.ObjectType.ANALYTICS_INDEX_TYPE + ".postId");
+		fields.put(Person.class, Constants.ObjectType.ANALYTICS_INDEX_TYPE + ".authorId");
+		fields.put(Station.class, Constants.ObjectType.ANALYTICS_INDEX_TYPE + ".stationId");
+		fields.put(Network.class, Constants.ObjectType.ANALYTICS_INDEX_TYPE + ".tenantId");
 
 		return fields;
 	}
@@ -90,7 +87,7 @@ public class ESQueries {
 			throw new Exception("The data cannot be retrived: No index metadata");
 		}
 
-		MappingMetaData mappingMetaData = indexMetaData.mapping(Constants.AnalyticsType.READ);
+		MappingMetaData mappingMetaData = indexMetaData.mapping(Constants.ObjectType.ANALYTICS_INDEX_TYPE);
 		Map<String, Object> map = null;
 
 		try {
@@ -127,11 +124,9 @@ public class ESQueries {
 
 		BoolQueryBuilder query = new BoolQueryBuilder();
 		query.must(termQuery(fieldName, id));
-		query.must(termQuery("action", "postread"));
-		query.must(termQuery("verb", "get"));
-		query.must(termQuery("_type", Constants.AnalyticsType.READ));
+		query.must(termQuery("type", Constants.StatsEventType.POST_READ));
 
-		return generalCounter(queryName, query, "@timestamp");
+		return generalCounter(queryName, query, "timestamp");
 	}
 
 	public Map<Long, Long> getRecommendsByEntity(AnalyticsEntity entity){
@@ -141,11 +136,9 @@ public class ESQueries {
 
 		BoolQueryBuilder query = new BoolQueryBuilder();
 		query.must(termQuery(fieldName, id));
-		query.must(termQuery("action", "recommend"));
-		query.must(termQuery("verb", "put"));
-		query.must(termQuery("_type", Constants.AnalyticsType.READ));
+		query.must(termQuery("type", Constants.StatsEventType.POST_RECOMMEND));
 
-		return generalCounter(queryName, query, "@timestamp");
+		return generalCounter(queryName, query, "timestamp");
 	}
 
 	public Map<Long, Long> getCommentsByEntity(AnalyticsEntity entity){
@@ -155,50 +148,64 @@ public class ESQueries {
 
 		BoolQueryBuilder query = new BoolQueryBuilder();
 		query.must(termQuery(fieldName, id));
-		query.must(termQuery("action", "comment"));
-		query.must(termQuery("verb", "post"));
-		query.must(termQuery("_type", Constants.AnalyticsType.READ));
+		query.must(termQuery("type", Constants.StatsEventType.POST_COMMENT));
 
-		return generalCounter(queryName, query, "@timestamp");
+		return generalCounter(queryName, query, "timestamp");
 	}
 
-	public Map findMostPopular(String field, Interval interval, Integer size) throws Exception {
+	private SearchRequestBuilder prepareRangkingQuery(String field, Interval interval, Integer size, String term, BoolQueryBuilder must){
+		SearchRequestBuilder search = client.prepareSearch();
+		search.setTypes(Constants.ObjectType.ANALYTICS_INDEX_TYPE).addAggregation(AggregationBuilders.terms(term).field(field).size(size));
+		search.addAggregation(AggregationBuilders.range("timestamp")
+				.field("timestamp").addRange(interval.getStart().getMillis(), interval.getEnd().getMillis()));
+
+		if(must != null) search.setQuery(must);
+
+		return search;
+	}
+
+	public Map findMostPopular(String field, String byField, Object byValue, Interval interval, Integer size) throws Exception {
 		if (!isValidField(field)) {
 			throw new Exception("Invalid field in nginx: " + field);
 		}
+		String term = "popular_" + field;
+		BoolQueryBuilder must = null;
 
-		String term = "by_" + field;
+		if(byField != null && !byField.isEmpty() && byValue != null){
+			if(!isValidField(byField)) throw new Exception("Invalid field in nginx: " + byField);
 
-		SearchRequestBuilder search = client.prepareSearch();
-		search.setTypes(Constants.AnalyticsType.READ).addAggregation(AggregationBuilders.terms(term).field(field).size(size));
+			must = new BoolQueryBuilder();
+			must.must(termQuery(byField, byValue));
+			term += "_by_" + byField;
+		}
 
-		search.addAggregation(AggregationBuilders.range("timestamp")
-				.field("@timestamp").addRange(interval.getStart().getMillis(), interval.getEnd().getMillis()));
-
+		SearchRequestBuilder search = prepareRangkingQuery(field, interval, size, term, must);
 		SearchResponse response = search.execute().actionGet();
 
-		Terms networks = response.getAggregations().get(term);
-		Map buckets = new HashMap();
+		Terms terms = response.getAggregations().get(term);
+		return parseRanking(terms);
+	}
 
-		for (Terms.Bucket b : networks.getBuckets()) {
+	private Map parseRanking(Terms results){
+		Map buckets = new HashMap();
+		for (Terms.Bucket b : results.getBuckets()) {
 			buckets.put(b.getKey(), b.getDocCount());
 		}
 
 		return buckets;
 	}
 
-	public Integer countActionsByEntity(String action, String httpVerb, AnalyticsEntity entity){
+	public Integer countActionsByEntity(String type, AnalyticsEntity entity){
 		String fieldName = requestSearchFields.get(entity.getClass());
 		Object id = getEntityIdentifier(entity);
 
-		return countTotals(id, fieldName, action, httpVerb);
+		return countTotals(id, fieldName, type);
 	}
 
-	public Integer countTotals(Object id, String field, String action, String httpVerb) {
+	public Integer countTotals(Object id, String field, String type) {
 		BoolQueryBuilder boolQuery = new BoolQueryBuilder();
 		boolQuery.must(termQuery(field, id));
-		boolQuery.must(termQuery("verb", httpVerb));
-		boolQuery.must(termQuery("action", action));
+		boolQuery.must(termQuery("type", type));
 
 		SearchRequestBuilder search = client.prepareSearch(accessIndex);
 		search.setQuery(boolQuery);
@@ -209,7 +216,7 @@ public class ESQueries {
 	private Object getEntityIdentifier(AnalyticsEntity entity) {
 		String field = requestSearchFields.get(entity.getClass());
 		Object id;
-		if(field.equals("nginx_access.tenantId")){
+		if(field.equals(Constants.ObjectType.ANALYTICS_INDEX_TYPE + ".tenantId")){
 			id = entity.getTenantId();
 		} else {
 			id = entity.getId();
