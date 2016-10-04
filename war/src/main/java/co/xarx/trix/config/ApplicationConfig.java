@@ -85,7 +85,12 @@ public class ApplicationConfig implements AsyncConfigurer{
 	}
 
 	@Bean
-	public MobileNotificationSender fcmNS(FCMClient client) {
+	public MobileNotificationSender androidFcmNS(FCMClient client) {
+		return new MobileNotificationSender(client, 1000);
+	}
+
+	@Bean
+	public MobileNotificationSender appleFcmNS(FCMClient client) {
 		return new MobileNotificationSender(client, 1000);
 	}
 

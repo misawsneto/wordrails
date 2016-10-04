@@ -25,17 +25,20 @@ public class MobileNotificationService {
 	private AsyncService asyncService;
 	private MobileNotificationSender appleNS;
 	private MobileNotificationSender androidNS;
-	private MobileNotificationSender fcmNS;
+	private MobileNotificationSender androidFcmNS;
+	private MobileNotificationSender appleFcmNS;
 
 	@Autowired
 	public MobileNotificationService(NotificationBatchPublisher notificationBatchPublisher,
 									 AsyncService asyncService,
-									 MobileNotificationSender appleNS, MobileNotificationSender androidNS, MobileNotificationSender fcmNS) {
+									 MobileNotificationSender appleNS, MobileNotificationSender androidNS,
+									 MobileNotificationSender androidFcmNS, MobileNotificationSender appleFcmNS) {
 		this.notificationBatchPublisher = notificationBatchPublisher;
 		this.asyncService = asyncService;
 		this.appleNS = appleNS;
 		this.androidNS = androidNS;
-		this.fcmNS = fcmNS;
+		this.androidFcmNS = androidFcmNS;
+		this.appleFcmNS = appleFcmNS;
 	}
 
 //	@AccessGroup(tenants = {"demo"}, profiles = {"prod"}, inclusion = true)
@@ -51,9 +54,10 @@ public class MobileNotificationService {
 			futureAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
 					() -> notificationBatchPublisher.sendNotifications(appleNS, notification, appleDevices, MobileNotification.DeviceType.APPLE));
 			futureFcmAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-					() -> notificationBatchPublisher.sendNotifications(fcmNS, notification, fcmAndroidDevices, MobileNotification.DeviceType.FCM_ANDROID));
+					() -> notificationBatchPublisher.sendNotifications(androidFcmNS, notification, fcmAndroidDevices, MobileNotification.DeviceType.FCM_ANDROID));
 			futureFcmAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-					() -> notificationBatchPublisher.sendNotifications(fcmNS, notification, fcmAppleDevices, MobileNotification.DeviceType.FCM_APPLE));
+					() -> notificationBatchPublisher.sendNotifications(appleFcmNS, notification, fcmAppleDevices,
+							MobileNotification.DeviceType.FCM_APPLE));
 		} catch (Exception e) {
 			if (futureAndroidNotifications != null)
 				futureAndroidNotifications.cancel(true);

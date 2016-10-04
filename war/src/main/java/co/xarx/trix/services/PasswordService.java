@@ -74,8 +74,9 @@ public class PasswordService {
 
 	public String createEmailBody(Person username, String hash) {
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+		network.tenantId = TenantContextHolder.getCurrentTenantId();
 		String baseUrl = "http://" + network.getRealDomain() + "/access/newpwd?hash=" + hash;
 
-		return "Oi, " + username + ". Clique aqui para recuperar sua senha: " + baseUrl;
+		return "Oi, " + username.getUser().getUsername() + ". Clique aqui para recuperar sua senha: " + baseUrl;
 	}
 }

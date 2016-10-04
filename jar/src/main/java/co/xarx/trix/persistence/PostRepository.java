@@ -37,7 +37,7 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 
 	@Override
 	@SdkExclude
-	@CacheEvict(value = "postsIds")
+	@CacheEvict(value = {"postsIds", "postViewById"})
 	@RestResource(exported = true)
 	void delete(Integer id);
 
@@ -64,7 +64,7 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@Override
 	@SdkExclude
 	@RestResource(exported = true)
-	@CacheEvict(value = "postsIds")
+	@CacheEvict(value = {"postsIds"})
 	<S extends Post> S save(S entity);
 
 	@RestResource(exported = false)

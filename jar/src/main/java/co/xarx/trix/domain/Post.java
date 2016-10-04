@@ -237,15 +237,8 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	@SdkInclude
 	public String getImageHash() {
-		Image featuredImage = getFeaturedImage();
-		if (featuredImage != null)
-			return featuredImage.getOriginalHash();
-		else{
-
-			Image image = getFeaturedImage();
-			return image != null ? image.getOriginalHash() : null;
-		}
-
+		Image image = getFeaturedImage();
+		return image != null ? image.getOriginalHash() : null;
 	}
 
 	public Image getFeaturedImage(){

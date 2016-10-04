@@ -14,6 +14,7 @@ import co.xarx.trix.services.PerspectiveService;
 import co.xarx.trix.web.rest.api.v1.PerspectiveApi;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,12 +35,13 @@ public class PerspectiveResource implements PerspectiveApi {
 	private TermPerspectiveRepository termPerspectiveRepository;
 	private RowRepository rowRepository;
 	private PerspectiveService perspectiveService;
+	private CacheManager cacheManager;
 
 	@Autowired
 	public PerspectiveResource(RowConverter rowConverter, CellConverter cellConverter,
 							   StationPerspectiveRepository stationPerspectiveRepository,
 							   TermRepository termRepository, TermPerspectiveRepository termPerspectiveRepository,
-							   RowRepository rowRepository, PerspectiveService perspectiveService) {
+							   RowRepository rowRepository, PerspectiveService perspectiveService, CacheManager cacheManager) {
 		this.rowConverter = rowConverter;
 		this.cellConverter = cellConverter;
 		this.stationPerspectiveRepository = stationPerspectiveRepository;
@@ -47,6 +49,7 @@ public class PerspectiveResource implements PerspectiveApi {
 		this.termPerspectiveRepository = termPerspectiveRepository;
 		this.rowRepository = rowRepository;
 		this.perspectiveService = perspectiveService;
+		this.cacheManager = cacheManager;
 	}
 
 	@Override
@@ -129,7 +132,20 @@ public class PerspectiveResource implements PerspectiveApi {
 													  int page,
 													  int size){
 
-		return perspectiveService.termPerspectiveView(termPerspectiveId, termId, stationPerspectiveId, page, size);
+		String hash = termPerspectiveId + "_" + termId + "_" + stationPerspectiveId + "_" + page + "_" + size;
+
+		TermPerspectiveView termPerspectiveView = cacheManager.getCache("termPerspectiveView").get(hash, TermPerspectiveView.class);
+
+		if(termPerspectiveView == null){
+			termPerspectiveView = perspectiveService.termPerspectiveView(termPerspectiveId,
+					termId, stationPerspectiveId, page, size, hash);
+			if(termPerspectiveView != null){
+				cacheManager.getCache("termPerspectiveView").put(hash, termPerspectiveView);
+			}
+
+		}
+
+		return termPerspectiveView;
 	}
 
 	@Override

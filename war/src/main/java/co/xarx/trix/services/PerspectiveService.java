@@ -12,6 +12,7 @@ import co.xarx.trix.converter.RowConverter;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,8 +46,9 @@ public class PerspectiveService {
 	@Autowired
 	private CellRepository cellRepository;
 
+	@Cacheable(value = "termPerspectiveView", key = "#hash")
 	public TermPerspectiveView termPerspectiveView(Integer termPerspectiveId, Integer termId, Integer
-			stationPerspectiveId, int page, int size)  {
+			stationPerspectiveId, int page, int size, String hash)  {
 		TermPerspectiveView termView = new TermPerspectiveView();
 		StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
 

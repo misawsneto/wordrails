@@ -1,6 +1,5 @@
 package co.xarx.trix.services.analytics;
 
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Comment;
 import co.xarx.trix.domain.ESstatEvent;
 import co.xarx.trix.domain.Post;
@@ -9,15 +8,10 @@ import co.xarx.trix.persistence.ESstatEventRepository;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.RestUtil;
-import lombok.Getter;
-import lombok.Setter;
-import org.jcodec.common.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import java.math.BigInteger;
 import java.util.*;
 
 @Service
@@ -86,7 +80,6 @@ public class StatEventsService {
         event.setTenantId(post.getTenantId());
         event.setAuthorId(post.getAuthor().getId());
         event.setStationId(post.getStation().getId());
-        event.setPersonId(authProvider.getLoggedPerson().getId());
 
         return newEvent(request, event);
     }
@@ -99,6 +92,7 @@ public class StatEventsService {
         event.setHost(request.getLocalName());
         event.setClientip(request.getRemoteAddr());
         event.setReferrer(request.getHeader("referer"));
+        event.setPersonId(authProvider.getLoggedPerson().getId());
 
         return event;
     }

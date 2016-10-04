@@ -35,6 +35,7 @@ public class PostData implements Serializable, Identifiable {
 	private Set<Integer> categoriesIds;
 	private Set<CategoryData> categories;
 	private Set<String> tags;
+	private Set<TermData> terms;
 
 	private Integer authorId;
 	private String authorName;

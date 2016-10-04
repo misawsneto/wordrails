@@ -1,6 +1,7 @@
 package co.xarx.trix.web.rest.resource.v1;
 
 import co.xarx.trix.api.ContentResponse;
+import co.xarx.trix.api.PostByTerm;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.TermView;
 import co.xarx.trix.converter.PostConverter;
@@ -18,6 +19,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -48,6 +51,9 @@ public class TermsResource extends AbstractResource implements TermsApi {
 	private AmazonCloudService amazonCloudService;
 	@Autowired
 	private PostRepository postRepository;
+
+	@Autowired
+	CacheManager cacheManager;
 
 	@Override
 	public void getTerms() throws IOException {
@@ -178,10 +184,24 @@ public class TermsResource extends AbstractResource implements TermsApi {
 	public ContentResponse<List<PostView>> findPostsByTerm(Integer termId, int page, int size, String sort) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
 
-		List<Post> posts = termRepository.findPostsByTerm(termId, pageable);
+		String hash = termId + "_" + page + "_" + size + "_" + sort;
+
+		PostByTerm postByTerm = cacheManager.getCache("postsByTerm").get(hash, PostByTerm.class);
+
+		List<PostView> postsViews = null;
+		List<Post> posts = null;
+		if(postByTerm == null){
+			posts =  termRepository.findPostsByTerm(termId, pageable);
+			postByTerm = new PostByTerm();
+			postByTerm.posts = postConverter.convertToViews(posts);
+			cacheManager.getCache("postsByTerm").put(hash, postByTerm);
+		}
+
+		postsViews = postByTerm.posts;
+
 
 		ContentResponse<List<PostView>> response = new ContentResponse<>();
-		response.content = postConverter.convertToViews(posts);
+		response.content = postsViews;
 		return response;
 	}
 
