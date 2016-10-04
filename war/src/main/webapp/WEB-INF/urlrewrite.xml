@@ -42,6 +42,7 @@
 		<condition type="request-uri" operator="notequal">^/home(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/404.html$</condition>
 		<condition type="request-uri" operator="notequal">^/505.html$</condition>
+		<condition type="request-uri" operator="notequal">^/favicon.ico$</condition>
 		<condition type="request-uri" operator="notequal">^/access/createnetwork$</condition>
 		<from>^/(.*)</from>
 		<!--<from>^/(.+)$</from>-->
