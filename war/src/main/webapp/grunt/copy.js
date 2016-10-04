@@ -97,6 +97,7 @@ module.exports = {
             {
                 src:  [
                     'jquery/dist/jquery.js',
+                    'jquery/dist/jquery.min.js',
                     'bootstrap/dist/**',
                     'datatables/media/js/jquery.dataTables.min.js',
                     'plugins/integration/bootstrap/3/**',
@@ -112,6 +113,7 @@ module.exports = {
                     'flot-spline/js/jquery.flot.spline.min.js',
                     'flot.orderbars/js/jquery.flot.orderBars.js',
                     'moment/moment.js',
+                    'moment/min/moment-with-locales.js',
                     'moment/min/moment-with-locales.min.js',
                     'waves/dist/**',
                     'screenfull/**',

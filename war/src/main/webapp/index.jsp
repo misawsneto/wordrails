@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="/libs/angular/angular-material/angular-material.css?${buildNumber}" type="text/css" />
 
   <link rel="stylesheet" href="/libs/jquery/bootstrap/dist/css/bootstrap.css?${buildNumber}" type="text/css" />
-  
+
   <link rel="stylesheet" href="/styles/material-design-icons.css?${buildNumber}" type="text/css" />
   <link rel="stylesheet" href="/styles/font.css?${buildNumber}" type="text/css" />
   <link rel="stylesheet" href="/styles/materialize.css?${buildNumber}" type="text/css" />
@@ -62,7 +62,7 @@
   <script src="/libs/angular/angular-ui-router/release/angular-ui-router.js?${buildNumber}"></script>
   <script src="/libs/angular/ngstorage/ngStorage.js?${buildNumber}"></script>
   <script src="/libs/angular/angular-ui-utils/ui-utils.js?${buildNumber}"></script>
-  
+
   <!-- bootstrap -->
   <script src="/libs/angular/angular-bootstrap/ui-bootstrap-tpls.js?${buildNumber}"></script>
 

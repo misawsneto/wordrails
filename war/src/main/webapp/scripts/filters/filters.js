@@ -2,32 +2,31 @@
 
 /* Filters */
 // need load the moment.js to use this filter. 
-angular.module('app')
-  .filter('fromNow', function() {
+app.filter('fromNow', [function() {
+      return function(date) {
+        return moment(date).fromNow();
+      }
+    }])
+
+  .filter('fromNow', [function() {
     return function(date) {
       return moment(date).fromNow();
     }
-  })
+  }])
 
-  .filter('fromNow', function() {
-  return function(date) {
-    return moment(date).fromNow();
-  }
-})
-
-.filter('fromNow2', function() {
+.filter('fromNow2', [function() {
   return function(date) {
     return moment(date).format('DD [de] MMMM [de] YYYY | HH:mm');
   }
-})
+}])
 
-.filter('fromNow3', function() {
+.filter('fromNow3', [function() {
   return function(date) {
     return moment(date).format('DD/MM/YY - HH:mm');
   }
-})
+}])
 
-.filter('permissions', function() {
+.filter('permissions', [function() {
   return function(permissions, search) {
     if(!search || search == '')
       return permissions;
@@ -42,26 +41,25 @@ angular.module('app')
         return false;
       }
     });
-    
   }
-})
+}])
 
 /**
  * Filters for modifying colors
  */
-.filter('darken', function(){
+.filter('darken', [function(){
     return function(color){
         return tinycolor( color ).darken( 5 );
     };
-})
+}])
 
-.filter('lighten', function(){
+.filter('lighten', [function(){
     return function(color){
         return tinycolor( color ).lighten( 5 );
     };
-})
+}])
 
-.filter('orderByBase', function(){
+.filter('orderByBase', [function(){
    return function(items, field, reverse) {
     var filtered = [];
     angular.forEach(items, function(item) {
@@ -73,9 +71,9 @@ angular.module('app')
     if(reverse) filtered.reverse();
     return filtered;
   };
-})
+}])
 
-.filter('orderByAccent', function(){
+.filter('orderByAccent', [function(){
    return function(items, field, reverse) {
     var filtered = [];
     angular.forEach(items, function(item) {
@@ -87,9 +85,9 @@ angular.module('app')
     if(reverse) filtered.reverse();
     return filtered;
   };
-})
+}])
 
-.filter('generateRandom', function(){
+.filter('generateRandom', [function(){
   return function(length, chars){
     var mask = "";
     if (chars.indexOf("a") > -1) mask += "abcdefghijklmnopqrstuvwxyz";
@@ -106,27 +104,27 @@ angular.module('app')
 
     return result;
   };
-})
+}])
 
-.filter('myDateTimeFormat', function myDateTimeFormat() {
+.filter('myDateTimeFormat', [function myDateTimeFormat() {
   return function(text) {
     return moment.utc(text, "YYYY-MM-DD HH:mm:ss").tz('America/Recife').format("DD/MM/YYYY HH:mm:ss");;
   }
-})
+}])
 
-.filter('stripHtml', function myDateTimeFormat() {
+.filter('stripHtml', [function myDateTimeFormat() {
   return function(text) {
     return text.stripHtml();
   }
-})
+}])
 
-.filter('myLongTimeFormat', function myLongTimeFormat() {
+.filter('myLongTimeFormat', [function myLongTimeFormat() {
   return function(longTime) {
     return moment(longTime).format("DD/MM/YYYY HH:mm:ss");
   }
-})
+}])
 
-.filter('videoThumb', function videoThumb(){
+.filter('videoThumb', [function videoThumb(){
   return function(url) {
     if(url && url.indexOf('www.youtube.com') > -1){
       var url = 'https://i.ytimg.com/vi/' + url.replace('https://www.youtube.com/watch?v=', '') +  '/hqdefault.jpg'  // '/sddefault_live.jpg';
@@ -135,9 +133,9 @@ angular.module('app')
       return {};
     }
   }
-})
+}])
 
-.filter('bgImageLink', function pvimageLink(TRIX) {
+.filter('bgImageLink', ['TRIX', function pvimageLink(TRIX) {
   return function(post, size) {
     if(post && (post.featuredImage || post.featuredImageHash || post.imageHash)){
       var hash = ((post.featuredImageHash) ? post.featuredImageHash : post.imageHash ? post.imageHash : post.featuredImage.originalHash)
@@ -146,9 +144,9 @@ angular.module('app')
     else
       return {};
   }
-})
+}])
 
-.filter('imageLink', function imageLink(TRIX) {
+.filter('imageLink', ['TRIX', function imageLink(TRIX) {
   return function(post, size) {
     if(post && (post.featuredImage || post.featuredImageHash || post.imageHash)){
       var hash = ((post.featuredImageHash) ? post.featuredImageHash : post.imageHash ? post.imageHash : post.featuredImage.originalHash)
@@ -156,34 +154,34 @@ angular.module('app')
     }else
       return "";
   }
-})
+}])
 
-.filter('getImagesPerson', function getImagesPerson(TRIX, trix) {
+.filter('getImagesPerson', ['TRIX', 'trix', function getImagesPerson(TRIX, trix) {
   return function(id, size, type, bg) {
     if(bg)
       return {'background-image': 'url( '+ trix.getImagesPerson(id, size, type) + ')'};
     return trix.getImagesPerson(id, size, type);
   }
-})
+}])
 
-.filter('getPostsImage', function getPostsImage(TRIX, trix) {
+.filter('getPostsImage', ['TRIX', 'trix', function getPostsImage(TRIX, trix) {
   return function(id, size, bg) {
     if(bg)
       return {'background-image': 'url( '+ trix.getImagesPost(id, size, type) + ')'};
     return trix.getImagesPost(id, size);
   }
-})
+}])
 
-.filter('fileLink', function imageLink(TRIX) {
+.filter('fileLink', ['TRIX', function imageLink(TRIX) {
   return function(hash, size) {
     if(hash)
       return TRIX.baseUrl + "/api/files/get/"+ hash;
 
     return "";
   }
-})
+}])
 
-.filter('coverImage', function imageLink(TRIX) {
+.filter('coverImage', ['TRIX', function imageLink(TRIX) {
   return function(person, size) {
     if(person && (person.coverHash || person.coverOriginalHash)){
       if(!person.coverHash)
@@ -197,9 +195,9 @@ angular.module('app')
 
     return "";
   }
-})
+}])
 
-.filter('categoryImage', function imageLink(TRIX) {
+.filter('categoryImage', ['TRIX', function imageLink(TRIX) {
   return function(category, size, bg) {
     var hash = null;
     if(category)
@@ -218,9 +216,9 @@ angular.module('app')
     }
     return null;
   }
-})
+}])
 
-.filter('userImage', function imageLink(TRIX) {
+.filter('userImage', ['TRIX', function imageLink(TRIX) {
   return function(person, size) {
     if(person && (person.imageHash || person.imageOriginalHash)){
       if(!person.imageHash)
@@ -230,18 +228,18 @@ angular.module('app')
 
     return "";
   }
-})
+}])
 
-.filter('default_user_image', function imageLink(TRIX) {
+.filter('default_user_image', ['TRIX', function imageLink(TRIX) {
   return function(imgId) {
     if(imgId)
       return TRIX.baseUrl + "/api/files/"+ imgId +"/contents";
 
     return "";
   }
-})
+}])
 
-.filter('bgimg2', function bgimg(){
+.filter('bgimg2', [function bgimg(){
   return function(img){
     if(img){
       return {"background-image": "url(" + img + ")"};
@@ -249,9 +247,9 @@ angular.module('app')
       return "";
     }
   }
-})
+}])
 
-.filter('bgimg', function bgimg(){
+.filter('bgimg', [function bgimg(){
   return function(img){
     if(img){
       return {"background-image": "url(" + img + ")"};
@@ -259,9 +257,9 @@ angular.module('app')
       return {"background-image": "url(img/default-user.png)"};
     }
   }
-})
+}])
 
-.filter('characters', function () {
+.filter('characters', [function () {
   return function (input, chars, breakOnWord) {
     if (isNaN(chars)) return input;
     if (chars <= 0) return '';
@@ -283,8 +281,8 @@ angular.module('app')
             }
             return input;
         };
-    })
-.filter('splitcharacters', function() {
+    }])
+.filter('splitcharacters', [function() {
   return function (input, chars) {
     if (isNaN(chars)) return input;
     if (chars <= 0) return '';
@@ -295,8 +293,8 @@ angular.module('app')
     }
     return input;
   };
-})
-.filter('words', function () {
+}])
+.filter('words', [function () {
   return function (input, words) {
     if (isNaN(words)) return input;
     if (words <= 0) return '';
@@ -308,6 +306,6 @@ angular.module('app')
     }
     return input;
   };
-})
+}])
 
 ;
