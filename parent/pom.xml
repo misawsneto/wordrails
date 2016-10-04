@@ -916,6 +916,12 @@
 				<version>3.0.1</version>
 			</dependency>
 
+			<dependency>
+				<groupId>com.ullink.slack</groupId>
+				<artifactId>simpleslackapi</artifactId>
+				<version>0.6.0</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 </project>
