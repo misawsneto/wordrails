@@ -40,6 +40,9 @@ public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 	@Autowired
 	private HttpServletRequest request;
 
+	@Autowired
+	private SlackBot slackBot;
+
 	@ExceptionHandler(SubdomainNotFoundException.class)
 	public ResponseEntity<Object> handleSubdomainNotFoundException(SubdomainNotFoundException e, WebRequest req) throws
 			JsonProcessingException {
@@ -256,10 +259,12 @@ public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	private void logError(Throwable e) {
-		log.error("LOG FATAL ERROR\n" +
-						"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
-						"MESSAGE: " + e.getMessage() + "\n" +
-						"URL: " + request.getRequestURL(),
-				e);
+		String message = "LOG FATAL ERROR\n" +
+				"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
+				"MESSAGE: " + e.getMessage() + "\n" +
+				"URL: " + request.getRequestURL();
+
+		log.error(message, e);
+		slackBot.logError(message);
 	}
 }

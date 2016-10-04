@@ -629,5 +629,10 @@
 			<artifactId>firebase-server-sdk</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.ullink.slack</groupId>
+			<artifactId>simpleslackapi</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>
