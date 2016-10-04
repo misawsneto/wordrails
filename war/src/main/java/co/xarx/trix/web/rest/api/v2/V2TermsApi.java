@@ -6,7 +6,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/v2/terms")
 @Produces(MediaType.APPLICATION_JSON)
-public interface V2TermsApis {
+public interface V2TermsApi {
 
     @PUT
     @Path("/{id}/seen")
