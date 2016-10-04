@@ -1,4 +1,4 @@
-angular.module('app').service('trixService', function(){
+app.service('trixService', [function(){
 	var that = this;
 
 	/**
@@ -120,4 +120,4 @@ angular.module('app').service('trixService', function(){
 		 	return initData.personPermissions.stationPermissions;
 	 }
 
-	});
+	}]);

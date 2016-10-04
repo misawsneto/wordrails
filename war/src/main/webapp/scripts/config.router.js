@@ -7,7 +7,7 @@
  * # Config
  * Config for the router
  */
-angular.module('app')
+app
   .run(
     [           '$rootScope', '$state', '$stateParams',
       function ( $rootScope,   $state,   $stateParams ) {
@@ -52,22 +52,22 @@ angular.module('app')
           });
         }
 
-        var stationDep = function($stateParams, trix){
-          var stationObj = null;
+        var stationDep = ['$stateParams', 'trix', function($stateParams, trix){
+                  var stationObj = null;
+        
+                  initData.stations.forEach(function(station){
+                    if(station.stationSlug == $stateParams.stationSlug)
+                      stationObj = station;
+                  })
+        
+                  if(stationObj)
+                    return stationObj;
+                  else
+                    document.location.href = '/404';
+                  return stationObj;
+                }]
 
-          initData.stations.forEach(function(station){
-            if(station.stationSlug == $stateParams.stationSlug)
-              stationObj = station;
-          })
-
-          if(stationObj)
-            return stationObj;
-          else
-            document.location.href = '/404';
-
-           
-          return stationObj;
-        }
+                var stationDepFunc = stationDep[2];
 
         var createSettingsRoutes = function(){
           $urlRouterProvider
@@ -77,15 +77,15 @@ angular.module('app')
             .state('app', {
               abstract: true,
               resolve: {
-                appData: function($stateParams, $q, trix){
-                  var deferred = $q.defer();
-                  if(initData && initData.person.id == 0){
-                    document.location.href = '/access/signin?next=/settings';
-                  }else{
-                    deferred.resolve(initData);
-                  }
-                  return deferred.promise;
-                },
+                appData: ['$stateParams', '$q', 'trix', function($stateParams, $q, trix){
+                                  var deferred = $q.defer();
+                                  if(initData && initData.person.id == 0){
+                                    document.location.href = '/access/signin?next=/settings';
+                                  }else{
+                                    deferred.resolve(initData);
+                                  }
+                                  return deferred.promise;
+                                }],
                 deps:load( ['/styles/home.css?' + GLOBAL_URL_HASH, '720kb.socialshare', 'infinite-scroll', 'angularFileUpload', '/scripts/services/trix.js?' + GLOBAL_URL_HASH , '/libs/theming/tinycolor/tinycolor.js?' + GLOBAL_URL_HASH , 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize', 'perfect_scrollbar', 'monospaced.elastic'] ).deps
               },
               url: '/settings',
@@ -118,22 +118,22 @@ angular.module('app')
                 templateUrl: '/views/pages/read.html?' + GLOBAL_URL_HASH,
                 data : { titleTranslate: 'titles.POST', title: 'Publicação', folded: true },
                 resolve: {
-                  post: function($stateParams, $q, trix){
-                    var deferred = $q.defer();
-                    if($stateParams.id){
-                      trix.getPost($stateParams.id, 'postProjection').success(function(post){
-                        deferred.resolve(post);
-                      }).error(function(){
-                        return deferred.reject('Error loadin post');
-                      })
-                    }
-                    return deferred.promise;
-                  },
-                  station: function($stateParams, $q, trix){
-                    var deferred = $q.defer();
-                    deferred.resolve(null);
-                    return deferred.promise;
-                  },
+                  post: ['$stateParams', '$q', 'trix', function($stateParams, $q, trix){
+                                      var deferred = $q.defer();
+                                      if($stateParams.id){
+                                        trix.getPost($stateParams.id, 'postProjection').success(function(post){
+                                          deferred.resolve(post);
+                                        }).error(function(){
+                                          return deferred.reject('Error loadin post');
+                                        })
+                                      }
+                                      return deferred.promise;
+                                    }],
+                  station: ['$stateParams', '$q', 'trix', function($stateParams, $q, trix){
+                                      var deferred = $q.defer();
+                                      deferred.resolve(null);
+                                      return deferred.promise;
+                                    }],
                   deps:load(['wu.masonry', '/scripts/controllers/app/read.js?' + GLOBAL_URL_HASH , '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css?' + GLOBAL_URL_HASH, 'videosharing-embed']).deps
                 },
                 controller: 'ReadCtrl'
@@ -268,16 +268,16 @@ angular.module('app')
                 templateUrl: '/views/pages/dashboard.html?' + GLOBAL_URL_HASH,
                 data : { title: 'Dashboard', folded: false },
                 resolve: {
-                  dashboard: function(){
-                    var isColaboratorOnly = true
-                    initData.permissions.stationPermissions.forEach(function(perm){
-                      if(perm.write && isColaboratorOnly)
-                        isColaboratorOnly = false;
-                    })
-                    if(isColaboratorOnly && path !== '/settings/profile')
-                      document.location.href = '/settings/profile';
-                    return true
-                  },
+                  dashboard: [function(){
+                                      var isColaboratorOnly = true
+                                      initData.permissions.stationPermissions.forEach(function(perm){
+                                        if(perm.write && isColaboratorOnly)
+                                          isColaboratorOnly = false;
+                                      })
+                                      if(isColaboratorOnly && path !== '/settings/profile')
+                                        document.location.href = '/settings/profile';
+                                      return true
+                                    }],
                   deps: load(['/scripts/controllers/settings/settings-dashboard.js?' + GLOBAL_URL_HASH ]).deps
                 },
                 controller: 'DashboardCtrl'
@@ -714,15 +714,15 @@ angular.module('app')
             .state('app', {
               abstract: true,
               resolve: {
-                appData: function($stateParams, $q, trix){
-                  var deferred = $q.defer();
-                  // if(initData.person.id == 0){
-                  //   document.location.href = '/';
-                  // }else{
-                    deferred.resolve(initData);
-                  // }
-                  return deferred.promise;
-                },
+                appData: ['$stateParams', '$q', 'trix', function($stateParams, $q, trix){
+                                  var deferred = $q.defer();
+                                  // if(initData.person.id == 0){
+                                  //   document.location.href = '/';
+                                  // }else{
+                                    deferred.resolve(initData);
+                                  // }
+                                  return deferred.promise;
+                                }],
                 //deps:load( ['digitalfondue.dftabmenu','720kb.socialshare','monospaced.elastic','angularFileUpload','infinite-scroll', '/scripts/services/trix.js?' + GLOBAL_URL_HASH , '/libs/theming/tinycolor/tinycolor.js?' + GLOBAL_URL_HASH , 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize','perfect_scrollbar'] ).deps
                 deps:load( ['/scripts/home.all.js?' + GLOBAL_URL_HASH , '/styles/home.all.min.css?' + GLOBAL_URL_HASH, 'angularFileUpload'] ).deps
               },
@@ -757,7 +757,7 @@ angular.module('app')
                 templateUrl: '/views/pages/home.html?' + GLOBAL_URL_HASH,
                 data : { title: 'Home', folded: false },
                 resolve: {
-                  station: function(){return null;},
+                  station: [function(){return null;}],
                   deps:load(['/scripts/controllers/app/page.js?' + GLOBAL_URL_HASH , '/scripts/custom-pgwslider.js?' + GLOBAL_URL_HASH , '/libs/jquery/pgwslider/pgwslider.min.css?' + GLOBAL_URL_HASH, 'angular-carousel']).deps
                 },
                 controller: 'PageCtrl'
@@ -774,17 +774,17 @@ angular.module('app')
                 data : { title: 'Home', folded: false },
                 controller: 'StationCtrl',
                 resolve: {
-                  termPerspectiveView: function($stateParams, trix, $q){
-                    var deferred = $q.defer()
-                    var station = stationDep($stateParams);
-                    trix.findPerspectiveView(station.defaultPerspectiveId, null, null, 0, 10).success(function(termPerspective){
-                      termPerspective.station = station;
-                      deferred.resolve(termPerspective);
-                    }).error(function(){
-                      document.location.href = '/404';
-                    })          
-                    return deferred.promise;
-                  },
+                  termPerspectiveView: ['$stateParams', 'trix', '$q', function($stateParams, trix, $q){
+                                      var deferred = $q.defer()
+                                      var station = stationDepFunc($stateParams, trix);
+                                      trix.findPerspectiveView(station.defaultPerspectiveId, null, null, 0, 10).success(function(termPerspective){
+                                        termPerspective.station = station;
+                                        deferred.resolve(termPerspective);
+                                      }).error(function(){
+                                        document.location.href = '/404';
+                                      })          
+                                      return deferred.promise;
+                                    }],
                   deps:load(['/scripts/controllers/app/station.js?' + GLOBAL_URL_HASH ]).deps
                 }
               })
@@ -804,20 +804,20 @@ angular.module('app')
                 data : { title: 'Category', folded: false },
                 controller: 'CategoryCtrl',
                 resolve: {
-                  category: function($stateParams, $q, trix){
-                    var deferred = $q.defer();
-                     initData.stations.forEach(function(station){
-                        if(station.stationSlug == $stateParams.stationSlug)
-                          station.categories && station.categories.forEach(function(category){
-                            if(category.name == $stateParams.name){
-                              category.station = station;
-                              deferred.resolve(category);
-                            }
-                          })
-                     })
-                     
-                    return deferred.promise;
-                  },
+                  category: ['$stateParams', '$q', 'trix', function($stateParams, $q, trix){
+                                      var deferred = $q.defer();
+                                       initData.stations.forEach(function(station){
+                                          if(station.stationSlug == $stateParams.stationSlug)
+                                            station.categories && station.categories.forEach(function(category){
+                                              if(category.name == $stateParams.name){
+                                                category.station = station;
+                                                deferred.resolve(category);
+                                              }
+                                            })
+                                       })
+                                       
+                                      return deferred.promise;
+                                    }],
                   deps:load(['/scripts/controllers/app/category.js?' + GLOBAL_URL_HASH ]).deps
                 }
               })
@@ -1220,21 +1220,21 @@ angular.module('app')
             controller: 'BookmarksCtrl',
             resolve: {
 
-              person: function($stateParams, $q, trix){
-                var deferred = $q.defer();
-                if(initData && initData.person.id == 0){
-                  document.location.href = '/access/signin';
-                  window.console && console.error('user is not logged')
-                }else if(initData.person.username !== $stateParams.username){
-                  document.location.href = '/';
-                  window.console && console.error('user is not owner')
-                }else if(initData.person.username === $stateParams.username){
-                  deferred.resolve(initData.person)
-                }else{
-                  document.location.href = '/404';
-                }
-                return deferred.promise;
-              },
+              person: ['$stateParams', '$q', 'trix', function($stateParams, $q, trix){
+                              var deferred = $q.defer();
+                              if(initData && initData.person.id == 0){
+                                document.location.href = '/access/signin';
+                                window.console && console.error('user is not logged')
+                              }else if(initData.person.username !== $stateParams.username){
+                                document.location.href = '/';
+                                window.console && console.error('user is not owner')
+                              }else if(initData.person.username === $stateParams.username){
+                                deferred.resolve(initData.person)
+                              }else{
+                                document.location.href = '/404';
+                              }
+                              return deferred.promise;
+                            }],
               deps:load(['wu.masonry', '/scripts/controllers/app/bookmarks.js?' + GLOBAL_URL_HASH ]).deps
             }
           })
@@ -1245,18 +1245,18 @@ angular.module('app')
             controller: 'ProfileCtrl',
             resolve: {
 
-              person: function($stateParams, $q, trix){
-                var deferred = $q.defer();
-                trix.findByUsername($stateParams.username, 'personProjection').success(function(response){
-                  if(response.persons && response.persons.length > 0)
-                    deferred.resolve(response.persons[0])
-                  else
-                    document.location.href = '/404';
-                }).error(function(){
-                  document.location.href = '/404';
-                });
-                return deferred.promise;
-              },
+              person: ['$stateParams', '$q', 'trix', function($stateParams, $q, trix){
+                              var deferred = $q.defer();
+                              trix.findByUsername($stateParams.username, 'personProjection').success(function(response){
+                                if(response.persons && response.persons.length > 0)
+                                  deferred.resolve(response.persons[0])
+                                else
+                                  document.location.href = '/404';
+                              }).error(function(){
+                                document.location.href = '/404';
+                              });
+                              return deferred.promise;
+                            }],
               deps:load(['wu.masonry', '/scripts/controllers/app/profile.js?' + GLOBAL_URL_HASH ]).deps
             }
           })
@@ -1264,15 +1264,15 @@ angular.module('app')
             url: '/access',
             templateUrl: '/views/pages/access.html?' + GLOBAL_URL_HASH,
             resolve: {
-              appData: function($stateParams, $q, trix){
-                var deferred = $q.defer();
-                // if(initData.person.id == 0){
-                //   document.location.href = '/';
-                // }else{
-                  deferred.resolve(initData);
-                // }
-                return deferred.promise;
-              },
+              appData: ['$stateParams', '$q', 'trix', function($stateParams, $q, trix){
+                              var deferred = $q.defer();
+                              // if(initData.person.id == 0){
+                              //   document.location.href = '/';
+                              // }else{
+                                deferred.resolve(initData);
+                              // }
+                              return deferred.promise;
+                            }],
               deps:load( ['angularFileUpload', '/scripts/services/trix.js?' + GLOBAL_URL_HASH , '/libs/theming/tinycolor/tinycolor.js?' + GLOBAL_URL_HASH , 'mdPickers', 'afkl.lazyImage', 'perfect_scrollbar', 'angularMoment'] ).deps
             },
             controller: 'AppDataCtrl'
@@ -1326,22 +1326,22 @@ angular.module('app')
 
           if(!isSettigns){
 
-            var postDep = function($stateParams, $q, trix){
-              var deferred = $q.defer();
-
-              trix.findBySlug($stateParams.postSlug, "postProjection")
-              .success(function(response){
-                if(response.posts && response.posts.length > 0)
-                  deferred.resolve(response.posts[0]);
-                else
-                  document.location.href = '/404';
-              })
-              .error(function(){
-                document.location.href = '/404';
-              })
-
-              return deferred.promise;
-            }
+            var postDep = ['$stateParams', '$q', 'trix', function($stateParams, $q, trix){
+                          var deferred = $q.defer();
+            
+                          trix.findBySlug($stateParams.postSlug, "postProjection")
+                          .success(function(response){
+                            if(response.posts && response.posts.length > 0)
+                              deferred.resolve(response.posts[0]);
+                            else
+                              document.location.href = '/404';
+                          })
+                          .error(function(){
+                            document.location.href = '/404';
+                          })
+            
+                          return deferred.promise;
+                        }]
 
             $stateProvider
             .state('app.station.read', {

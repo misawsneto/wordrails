@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-angular
+var app = angular
   .module('app', [
     'ngAnimate',
     'ngAria',

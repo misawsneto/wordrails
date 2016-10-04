@@ -25,9 +25,9 @@ module.exports = {
   'libs/angular/angular-translate-storage-cookie/angular-translate-storage-cookie.js',
   'libs/angular/angular-translate-storage-local/angular-translate-storage-local.js',
   'libs/angular/angular-loading-bar/build/loading-bar.js',
-  'libs/angular/satellizer/satellizer.min.js',
+  'libs/angular/satellizer/satellizer.js',
 
-  'libs/jquery/moment/min/moment-with-locales.min.js',
+  'libs/jquery/moment/min/moment-with-locales.js',
 
   'js/BaseTrix.js',
   'scripts/app.js',

@@ -1,6 +1,6 @@
 // lazyload config
 
-angular.module('app')
+app
   .constant('MODULE_CONFIG', [
       {
           name: 'dndLists',

@@ -3,7 +3,7 @@ Facade(facade, entities) ::=
 <<$entities:{entity | $Dto(entity)$}; separator="\n\n"$
 var TRIX_BACKEND = null;
 var trix = angular.module('trix', [])
-.provider('trix', function trixProvider(\$httpProvider) {
+.provider('trix', ['\$httpProvider', function (\$httpProvider) {
 
 	var username = null;
 
@@ -26,7 +26,7 @@ var trix = angular.module('trix', [])
 
 	\$httpProvider.defaults.useXDomain = true;
 	\$httpProvider.defaults.withCredentials = true;
-	\$httpProvider.interceptors.push(function trix_httpInterceptor(\$q, \$rootScope) {
+	\$httpProvider.interceptors.push(['\$q', '\$rootScope', function (\$q, \$rootScope) {
 		var requestInterceptor = {
 		responseError: function(rejection){
 			\$rootScope.\$broadcast('HTTP_ERROR',rejection);
@@ -71,7 +71,7 @@ var trix = angular.module('trix', [])
 		}
 		};
 		return requestInterceptor;
-	})
+	}])
 
 	delete \$httpProvider.defaults.headers.common['X-Requested-With'];
 
@@ -730,14 +730,14 @@ var trix = angular.module('trix', [])
 	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$
   }
 
-  provider.\$get = function(\$http){
+  provider.\$get = ['\$http', function(\$http){
 	var instance = new Trix(\$http)
 	if(_config.username && _config.password)
 		instance.login(_config.username, _config.password)
 	return instance;
-  }
+  }]
 
   return provider;
-});
+}]);
 
 >>
