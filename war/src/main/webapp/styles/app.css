@@ -9125,3 +9125,7 @@ ul.pgwSlider > li,
   margin-right: auto;
   margin-left: auto;
 }
+
+.df-tab-menu > li.df-tab-menu-active > a {
+  opacity: inherit;
+}
