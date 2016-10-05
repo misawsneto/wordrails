@@ -164,5 +164,12 @@ module.exports = {
       'libs/angular/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js'
     ],
     dest:'scripts/home.all.js'
+  },
+  appcss:{
+    src:[
+      'libs/angular/angular-material/angular-material.min.css',
+      'styles/app.min.css'
+    ],
+    dest: 'styles/app.min.css'
   }
 }

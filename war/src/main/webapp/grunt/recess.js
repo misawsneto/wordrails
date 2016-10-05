@@ -15,7 +15,6 @@ module.exports = {
                 // 'libs/jquery/bootstrap/dist/css/bootstrap.css',
                 // 'styles/font.css',
                 // 'styles/app.css'
-
               'libs/assets/animate.css/animate.css',
               'libs/assets/font-awesome/css/font-awesome.css',
 
