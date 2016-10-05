@@ -304,7 +304,7 @@ app
           })
         }
         
-        $scope.app.defaultDialog = function(scope, $mdDialog) {
+        $scope.app.defaultDialog = ['scope', '$mdDialog', function(scope, $mdDialog) {
           scope.app = $scope.app;
 
           scope.hide = function() {
@@ -314,7 +314,7 @@ app
           scope.cancel = function() {
             $mdDialog.cancel();
           }
-        };
+        }];
 
         $scope.app.cancelDialog = function() {
           $mdDialog.cancel();
@@ -994,7 +994,7 @@ app
         if($scope.app.person.id === 0){$scope.app.showSigninDialog();}
       }
 
-      $scope.app.showSigninDialog = function(event){
+      $scope.app.showSigninDialog = function(){
         // show term alert
         $scope.app.loading = false;
         $mdDialog.show({
@@ -1006,7 +1006,6 @@ app
           controller: $scope.app.defaultDialog,
           templateUrl: 'signin-signup-dialog.html',
           parent: angular.element(document.body),
-          targetEvent: event,
           clickOutsideToClose:true
           // onComplete: function(){
 
