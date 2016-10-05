@@ -9127,5 +9127,5 @@ ul.pgwSlider > li,
 }
 
 .df-tab-menu > li.df-tab-menu-active > a {
-  opacity: inherit;
+  opacity: inherit!important;
 }
