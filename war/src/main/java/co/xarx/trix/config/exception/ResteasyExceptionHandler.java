@@ -89,7 +89,13 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 	}
 
 	private void logError(String message, Throwable throwable){
-		log.error(message, throwable);
-		slackBot.logError(message);
+		String tenant = TenantContextHolder.getCurrentTenantId();
+		String logMessage = message + "\nUser-Agent: " + request.getHeader("User-Agent");
+		log.error(logMessage, throwable);
+
+		//POG -- This is bad code. Don't repeat that at home, kids
+		if(tenant.equals("pd")) return;
+
+		slackBot.logError(logMessage);
 	}
 }
