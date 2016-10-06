@@ -262,9 +262,11 @@ public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 		String message = "LOG FATAL ERROR\n" +
 				"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
 				"MESSAGE: " + e.getMessage() + "\n" +
-				"URL: " + request.getRequestURL();
+				"URL: " + request.getRequestURL() + "\n" +
+				"User-Agent: " + request.getHeader("User-Agent");
 
 		log.error(message, e);
+		if(TenantContextHolder.getCurrentTenantId().equals("pd")) return;
 		slackBot.logError(message);
 	}
 }
