@@ -2,8 +2,8 @@ Facade(facade, entities) ::=
 
 <<$entities:{entity | $Dto(entity)$}; separator="\n\n"$
 var TRIX_BACKEND = null;
-var trix = angular.module('trix', [])
-.provider('trix', ['\$httpProvider', function (\$httpProvider) {
+var trix = angular.module('trix', []);
+trix.provider('trix', ['\$httpProvider', function (\$httpProvider) {
 
 	var username = null;
 

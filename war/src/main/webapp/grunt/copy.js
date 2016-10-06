@@ -17,6 +17,7 @@ module.exports = {
                     'angular-loading-bar/build/**',
                     'angular-material/angular-material.js',
                     'angular-material/angular-material.css',
+                    'angular-material/angular-material.min.css',
                     'angular-smart-table/dist/**',
                     'angular-translate/angular-translate.js',
                     'angular-translate-loader-static-files/angular-translate-loader-static-files.js',
