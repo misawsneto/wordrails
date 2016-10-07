@@ -46,4 +46,13 @@ public class RequestWrapper {
     public String getHeader(String headerName){
         return headers.get(headerName);
     }
+
+    public String getAllHeaders(){
+        StringBuilder allHeaders = new StringBuilder();
+
+        for(String header: headers.keySet()){
+            allHeaders.append(header + ": " + headers.get(header) + "\n");
+        }
+        return allHeaders.toString();
+    }
 }
