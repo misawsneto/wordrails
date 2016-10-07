@@ -11,12 +11,16 @@ import java.util.Map;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class RequestWrapper {
     Map<String, String> headers;
     Map<String, String> parameters;
     String localName;
     String remoteAddr;
+
+    public RequestWrapper(){
+        headers = new HashMap<>();
+        parameters = new HashMap<>();
+    }
 
     public RequestWrapper(HttpServletRequest request){
         headers = new HashMap<>();
