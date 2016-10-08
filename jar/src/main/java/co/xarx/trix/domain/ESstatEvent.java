@@ -32,6 +32,8 @@ public class ESstatEvent implements ElasticSearchEntity {
 
     public String type;
 
+    public String action;
+
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     public String clientip;
 
