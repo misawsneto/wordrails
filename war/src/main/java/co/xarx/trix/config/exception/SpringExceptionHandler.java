@@ -3,6 +3,7 @@ package co.xarx.trix.config.exception;
 import co.xarx.trix.api.v2.ErrorData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.exception.*;
+import co.xarx.trix.services.analytics.RequestWrapper;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -262,9 +263,13 @@ public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 		String message = "LOG FATAL ERROR\n" +
 				"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
 				"MESSAGE: " + e.getMessage() + "\n" +
-				"URL: " + request.getRequestURL();
+				"URL: " + request.getRequestURL() + "\n" +
+				"User-Agent: " + request.getHeader("User-Agent") + "\n";
+
+		if(e instanceof IllegalArgumentException) message += new RequestWrapper(request).getAllHeaders();
 
 		log.error(message, e);
+		if(TenantContextHolder.getCurrentTenantId().equals("pd")) return;
 		slackBot.logError(message);
 	}
 }

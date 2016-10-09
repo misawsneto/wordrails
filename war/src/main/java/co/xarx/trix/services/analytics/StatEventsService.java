@@ -28,21 +28,21 @@ public class StatEventsService {
     @Async(value = "myExecuter")
     public void newRecommendEvent(Post post, RequestWrapper request){
         ESstatEvent recommend = newEvent(post, request);
-        recommend.setType(Constants.StatsEventType.POST_RECOMMEND);
+        recommend.setAction(Constants.StatsEventType.POST_RECOMMEND);
         statEventRepository.save(recommend);
     }
 
     @Async(value = "myExecuter")
     public void newBookmarkEvent(Post post, RequestWrapper request){
         ESstatEvent bookmark = newEvent(post, request);
-        bookmark.setType(Constants.StatsEventType.POST_BOOKMARK);
+        bookmark.setAction(Constants.StatsEventType.POST_BOOKMARK);
         statEventRepository.save(bookmark);
     }
 
     @Async(value = "myExecuter")
     public void newCommentEvent(Comment comment){
         ESstatEvent event = newEvent(comment.getPost(), new RequestWrapper());
-        event.setType(Constants.StatsEventType.POST_COMMENT);
+        event.setAction(Constants.StatsEventType.POST_COMMENT);
         event.setPersonId(comment.getAuthor().getId());
         statEventRepository.save(event);
     }
@@ -51,7 +51,7 @@ public class StatEventsService {
     public void newPostreadEvent(Post post, RequestWrapper request, Integer timeReading, Date date){
 		ESstatEvent postread = newEvent(post, request);
 
-        postread.setType(Constants.StatsEventType.POST_READ);
+        postread.setAction(Constants.StatsEventType.POST_READ);
         postread.setTimestamp(date);
         postread.setTimeReading(timeReading);
 
@@ -66,7 +66,7 @@ public class StatEventsService {
         event.setTermId(term.getId());
         event.setTimeReading(timeReading);
         event.setTenantId(term.getTenantId());
-        event.setType(Constants.StatsEventType.TERM_READ);
+        event.setAction(Constants.StatsEventType.TERM_READ);
 
         statEventRepository.save(newEvent(request, event));
     }

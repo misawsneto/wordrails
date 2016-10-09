@@ -49,10 +49,10 @@ public class ESQueries {
 	private Map loadRequestSearchFields() {
 		Map fields = new HashMap<Class<?>, String>();
 
-		fields.put(Post.class, Constants.ObjectType.ANALYTICS_INDEX_TYPE + ".postId");
-		fields.put(Person.class, Constants.ObjectType.ANALYTICS_INDEX_TYPE + ".authorId");
-		fields.put(Station.class, Constants.ObjectType.ANALYTICS_INDEX_TYPE + ".stationId");
-		fields.put(Network.class, Constants.ObjectType.ANALYTICS_INDEX_TYPE + ".tenantId");
+		fields.put(Post.class, "postId");
+		fields.put(Person.class, "authorId");
+		fields.put(Station.class, "stationId");
+		fields.put(Network.class, "tenantId");
 
 		return fields;
 	}
@@ -124,7 +124,7 @@ public class ESQueries {
 
 		BoolQueryBuilder query = new BoolQueryBuilder();
 		query.must(termQuery(fieldName, id));
-		query.must(termQuery("type", Constants.StatsEventType.POST_READ));
+		query.must(termQuery("action", Constants.StatsEventType.POST_READ));
 
 		return generalCounter(queryName, query, "timestamp");
 	}
@@ -136,7 +136,7 @@ public class ESQueries {
 
 		BoolQueryBuilder query = new BoolQueryBuilder();
 		query.must(termQuery(fieldName, id));
-		query.must(termQuery("type", Constants.StatsEventType.POST_RECOMMEND));
+		query.must(termQuery("action", Constants.StatsEventType.POST_RECOMMEND));
 
 		return generalCounter(queryName, query, "timestamp");
 	}
@@ -148,7 +148,7 @@ public class ESQueries {
 
 		BoolQueryBuilder query = new BoolQueryBuilder();
 		query.must(termQuery(fieldName, id));
-		query.must(termQuery("type", Constants.StatsEventType.POST_COMMENT));
+		query.must(termQuery("action", Constants.StatsEventType.POST_COMMENT));
 
 		return generalCounter(queryName, query, "timestamp");
 	}
@@ -195,17 +195,17 @@ public class ESQueries {
 		return buckets;
 	}
 
-	public Integer countActionsByEntity(String type, AnalyticsEntity entity){
+	public Integer countActionsByEntity(String action, AnalyticsEntity entity){
 		String fieldName = requestSearchFields.get(entity.getClass());
 		Object id = getEntityIdentifier(entity);
 
-		return countTotals(id, fieldName, type);
+		return countTotals(id, fieldName, action);
 	}
 
-	public Integer countTotals(Object id, String field, String type) {
+	public Integer countTotals(Object id, String field, String action) {
 		BoolQueryBuilder boolQuery = new BoolQueryBuilder();
 		boolQuery.must(termQuery(field, id));
-		boolQuery.must(termQuery("type", type));
+		boolQuery.must(termQuery("action", action));
 
 		SearchRequestBuilder search = client.prepareSearch(accessIndex);
 		search.setQuery(boolQuery);

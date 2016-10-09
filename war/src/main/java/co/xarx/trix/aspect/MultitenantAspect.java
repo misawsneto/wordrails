@@ -44,7 +44,7 @@ public class MultitenantAspect {
 			for(MultiTenantEntity mte : getFields(MultiTenantEntity.class, entity)) {
 				checkMultitenantEntity(mte);
 			}
-			log.info("@ checkMultitenantEntity " + entity.getClass().getSimpleName() + " - saving " + tenantId);
+			log.debug("@ checkMultitenantEntity " + entity.getClass().getSimpleName() + " - saving " + tenantId);
 		}
 	}
 
