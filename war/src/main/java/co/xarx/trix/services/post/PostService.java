@@ -119,13 +119,6 @@ public class PostService {
 		for (MobileNotification n : mobileNotifications) {
 			n.setPostId(post.getId());
 			mobileNotificationRepository.save(n);
-
-			//Ugly but saves our server
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-                e.printStackTrace();
-			}
 		}
 
 		List<String> devicesToDelete = new ArrayList<>();
