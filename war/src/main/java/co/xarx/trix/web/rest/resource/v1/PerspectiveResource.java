@@ -190,7 +190,8 @@ public class PerspectiveResource implements PerspectiveApi {
 				rowView = new RowView();
 				if(row.type != null && row.type.equals(Row.ORDINARY_ROW)) {
 					rowView.type = Row.ORDINARY_ROW;
-					cells = perspectiveService.fillPostsNotPositionedInRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+					cells = perspectiveService.fillPostsNotPositionedInRows(row, termPerspective.perspective.station
+							.id, page, size, lowerLimit, upperLimit, withBody != null ? withBody : false);
 				}else if(row.type != null && row.type.equals(Row.HOME_ROW)) {
 					rowView.type = Row.HOME_ROW;
 					List<Integer> excluded = getFeaturedPostsFromRow(featuredRow);
@@ -207,7 +208,7 @@ public class PerspectiveResource implements PerspectiveApi {
 				StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
 				if(stationPerspective != null){
 					rowView = perspectiveService.convertTermToRow(term, perspectiveService.loadTermsIds(term),
-							stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size, withBody);
+							stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size, withBody != null ? withBody : false);
 				}
 			}
 		}else if(stationPerspectiveId != null){
@@ -224,7 +225,8 @@ public class PerspectiveResource implements PerspectiveApi {
 				rowView = new RowView();
 				if(row.type != null && row.type.equals(Row.ORDINARY_ROW.toString())) {
 					rowView.type = Row.ORDINARY_ROW;
-					cells = perspectiveService.fillPostsNotPositionedInRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+					cells = perspectiveService.fillPostsNotPositionedInRows(row, termPerspective.perspective.station
+							.id, page, size, lowerLimit, upperLimit, withBody != null ? withBody : false);
 				}else if(row.type != null && row.type.equals(Row.HOME_ROW.toString())) {
 					rowView.type = Row.HOME_ROW;
 					List<Integer> excluded = getFeaturedPostsFromRow(featuredRow);
@@ -240,7 +242,7 @@ public class PerspectiveResource implements PerspectiveApi {
 			}else{
 				rowView = perspectiveService.convertTermToRow(null, termRepository.findTermIdsByTaxonomyId
 						(stationPerspective
-						.taxonomyId), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size, withBody);
+						.taxonomyId), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size, withBody != null ? withBody : false);
 			}
 		}
 		return rowView;
