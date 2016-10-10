@@ -111,8 +111,10 @@ public class PerspectiveService {
 	private TermPerspectiveView convertRowsToTermView(TermPerspective termPerspective, List<Row> rows, int page, int
 			size, int lowerLimit, int upperLimit, boolean withBody) {
 		TermPerspectiveView termView = new TermPerspectiveView();
-		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertTo(termPerspective.splashedRow) : null);
-		termView.featuredRow = (termPerspective.featuredRow != null ? rowConverter.convertTo(termPerspective.featuredRow) : null);
+		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertToView(termPerspective
+				.splashedRow, withBody) : null);
+		termView.featuredRow = (termPerspective.featuredRow != null ? rowConverter.convertToView(termPerspective
+				.featuredRow, withBody) : null);
 		termView.ordinaryRows = fillPostsNotPositionedInRows(termPerspective.term, rows, termPerspective.perspective
 				.station.id, page, size, lowerLimit, upperLimit, withBody);
 		List<Integer> featuredIds = getFeaturedPostsFromRow(termView.featuredRow);
@@ -121,7 +123,7 @@ public class PerspectiveService {
 						termPerspective.stationId, 0, Row.HOME_ROW, page, size, withBody) :
 				fillPostsNotPositionedInHomeRow(termPerspective.homeRow, termPerspective.perspective.station.id,
 						featuredIds,
-						page, size, lowerLimit, upperLimit);
+						page, size, lowerLimit, upperLimit, withBody);
 		termView.homeRow.termPerspectiveId = termPerspective.id;
 		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);
 		termView.stationId = termPerspective.stationId;
@@ -146,10 +148,10 @@ public class PerspectiveService {
 	private RowView fillPostsNotPositionedInHomeRow(Row row, Integer stationId, List<Integer> featuredIds, int page,
 													int size,
 													int lowerLimit,
-													int upperLimit) {
+													int upperLimit, boolean withBody) {
 		RowView rowView;
 		row.cells = fillPostsNotPositionedInHomeRows(row, stationId, featuredIds, page, size, lowerLimit, upperLimit);
-		rowView = rowConverter.convertTo(row);
+		rowView = rowConverter.convertToView(row, withBody);
 		return rowView;
 	}
 
@@ -274,13 +276,14 @@ public class PerspectiveService {
 			rowsView.add(convertTermToRow(term, loadTermsIds(term), stationId, 0, Row.ORDINARY_ROW, page, size, withBody));
 		}
 		for (Row row : rows) {
-			row.cells = fillPostsNotPositionedInRows(row, stationId, page, size, lowerLimit, upperLimit);
-			rowsView.add(rowConverter.convertTo(row));
+			row.cells = fillPostsNotPositionedInRows(row, stationId, page, size, lowerLimit, upperLimit, withBody);
+			rowsView.add(rowConverter.convertToView(row, withBody));
 		}
 		return rowsView;
 	}
 
-	public List<Cell> fillPostsNotPositionedInRows(Row row, Integer stationId, int page, int size, int lowerLimit, int upperLimit) {
+	public List<Cell> fillPostsNotPositionedInRows(Row row, Integer stationId, int page, int size, int lowerLimit,
+												   int upperLimit, boolean withBody) {
 		List<Cell> positionedCells = cellRepository.findCellsPositioned(row.id, lowerLimit, upperLimit);
 
 		List<Cell> cells = null;
