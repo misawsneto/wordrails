@@ -46,7 +46,6 @@ public class PerspectiveService {
 	@Autowired
 	private CellRepository cellRepository;
 
-	@Cacheable(value = "termPerspectiveView", key = "#hash")
 	public TermPerspectiveView termPerspectiveView(Integer termPerspectiveId, Integer termId, Integer
 			stationPerspectiveId, int page, int size, boolean withBody)  {
 		TermPerspectiveView termView = new TermPerspectiveView();
