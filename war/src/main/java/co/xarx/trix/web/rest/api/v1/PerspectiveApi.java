@@ -27,7 +27,7 @@ public interface PerspectiveApi {
 											   @QueryParam("termId") Integer termId,
 											   @QueryParam("stationPerspectiveId") Integer stationPerspectiveId,
 											   @QueryParam("page") int page,
-											   @QueryParam("size") int size);
+											   @QueryParam("size") int size, @QueryParam("withBody") Boolean withBody);
 
 	@GET
 	@Path("/termPerspectiveDefinitions/{id}")

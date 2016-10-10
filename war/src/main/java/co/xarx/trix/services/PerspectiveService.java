@@ -46,9 +46,8 @@ public class PerspectiveService {
 	@Autowired
 	private CellRepository cellRepository;
 
-	@Cacheable(value = "termPerspectiveView", key = "#hash")
 	public TermPerspectiveView termPerspectiveView(Integer termPerspectiveId, Integer termId, Integer
-			stationPerspectiveId, int page, int size, String hash)  {
+			stationPerspectiveId, int page, int size, boolean withBody)  {
 		TermPerspectiveView termView = new TermPerspectiveView();
 		StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
 
@@ -70,7 +69,7 @@ public class PerspectiveService {
 
 				List<Row> rows = rowRepository.findByPerspective(termPerspective);
 				Collections.sort(rows);
-				termView = convertRowsToTermView(termPerspective, rows, page, size, lowerLimit, upperLimit);
+				termView = convertRowsToTermView(termPerspective, rows, page, size, lowerLimit, upperLimit, withBody);
 				termView.stationPerspectiveId = termPerspective.perspective.id;
 				termView.stationId = termPerspective.stationId;
 			}else{
@@ -84,7 +83,7 @@ public class PerspectiveService {
 				}else{
 					terms = termRepository.findRoots(stationPerspective.taxonomy.id);
 				}
-				termView = convertRowsToTermViewDefault(term, stationPerspective.station.id, terms, page, size);
+				termView = convertRowsToTermViewDefault(term, stationPerspective.station.id, terms, page, size, withBody);
 				termView.stationPerspectiveId = stationPerspective.id;
 				termView.stationId = stationPerspective.stationId;
 			}
@@ -97,24 +96,29 @@ public class PerspectiveService {
 		return termView;
 	}
 
-	private TermPerspectiveView convertRowsToTermViewDefault(Term term, Integer stationId, List<Term> terms, int page, int size) {
+	private TermPerspectiveView convertRowsToTermViewDefault(Term term, Integer stationId, List<Term> terms, int
+			page, int size, boolean withBody) {
 		TermPerspectiveView termView = new TermPerspectiveView();
-		termView.ordinaryRows = convertTermsToRows(term, terms, stationId, Row.ORDINARY_ROW, page, size);
+		termView.ordinaryRows = convertTermsToRows(term, terms, stationId, Row.ORDINARY_ROW, page, size, withBody);
 		if (term != null)
-			termView.homeRow = convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(term.taxonomyId), stationId, 0, Row.HOME_ROW, page, size);
+			termView.homeRow = convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(term.taxonomyId),
+					stationId, 0, Row.HOME_ROW, page, size, withBody);
 		termView.termId = (term != null ? term.id : null);
 
 		return termView;
 	}
 
-	private TermPerspectiveView convertRowsToTermView(TermPerspective termPerspective, List<Row> rows, int page, int size, int lowerLimit, int upperLimit) {
+	private TermPerspectiveView convertRowsToTermView(TermPerspective termPerspective, List<Row> rows, int page, int
+			size, int lowerLimit, int upperLimit, boolean withBody) {
 		TermPerspectiveView termView = new TermPerspectiveView();
 		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertTo(termPerspective.splashedRow) : null);
 		termView.featuredRow = (termPerspective.featuredRow != null ? rowConverter.convertTo(termPerspective.featuredRow) : null);
-		termView.ordinaryRows = fillPostsNotPositionedInRows(termPerspective.term, rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+		termView.ordinaryRows = fillPostsNotPositionedInRows(termPerspective.term, rows, termPerspective.perspective
+				.station.id, page, size, lowerLimit, upperLimit, withBody);
 		List<Integer> featuredIds = getFeaturedPostsFromRow(termView.featuredRow);
 		termView.homeRow = termPerspective.homeRow == null ?
-				convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(termPerspective.taxonomyId), termPerspective.stationId, 0, Row.HOME_ROW, page, size) :
+				convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(termPerspective.taxonomyId),
+						termPerspective.stationId, 0, Row.HOME_ROW, page, size, withBody) :
 				fillPostsNotPositionedInHomeRow(termPerspective.homeRow, termPerspective.perspective.station.id,
 						featuredIds,
 						page, size, lowerLimit, upperLimit);
@@ -263,10 +267,11 @@ public class PerspectiveService {
 		}
 	}
 
-	private List<RowView> fillPostsNotPositionedInRows(Term term, List<Row> rows, Integer stationId, int page, int size, int lowerLimit, int upperLimit) {
+	private List<RowView> fillPostsNotPositionedInRows(Term term, List<Row> rows, Integer stationId, int page, int
+			size, int lowerLimit, int upperLimit, boolean withBody) {
 		List<RowView> rowsView = new ArrayList<RowView>(rows.size() + 1);
 		if (term != null) {
-			rowsView.add(convertTermToRow(term, loadTermsIds(term), stationId, 0, Row.ORDINARY_ROW, page, size));
+			rowsView.add(convertTermToRow(term, loadTermsIds(term), stationId, 0, Row.ORDINARY_ROW, page, size, withBody));
 		}
 		for (Row row : rows) {
 			row.cells = fillPostsNotPositionedInRows(row, stationId, page, size, lowerLimit, upperLimit);
@@ -361,18 +366,19 @@ public class PerspectiveService {
 		return ids;
 	}
 
-	private List<RowView> convertTermsToRows(Term term, List<Term> terms, Integer stationId, String rowType, int page, int size) {
+	private List<RowView> convertTermsToRows(Term term, List<Term> terms, Integer stationId, String rowType, int
+			page, int size, boolean withBody) {
 		List<RowView> rowsView = new ArrayList<RowView>(terms.size() + 1);
 
 		if (term != null) {
 			List<Integer> ids = new ArrayList<Integer>(1);
 			ids.add(term.id);
-			rowsView.add(convertTermToRow(term, ids, stationId, 0, Row.ORDINARY_ROW, page, size));
+			rowsView.add(convertTermToRow(term, ids, stationId, 0, Row.ORDINARY_ROW, page, size, withBody));
 		}
 
 		int index = 0;
 		for (Term childTerm : terms) {
-			rowsView.add(convertTermToRow(childTerm, loadTermsIds(childTerm), stationId, index, rowType, page, size));
+			rowsView.add(convertTermToRow(childTerm, loadTermsIds(childTerm), stationId, index, rowType, page, size, withBody));
 			index++;
 		}
 		return rowsView;
@@ -396,7 +402,8 @@ public class PerspectiveService {
 		}
 	}
 
-	public RowView convertTermToRow(Term term, List<Integer> termsIds, Integer stationId, int index, String rowType, int page, int size) {
+	public RowView convertTermToRow(Term term, List<Integer> termsIds, Integer stationId, int index, String rowType,
+									int page, int size, boolean withBody) {
 		Pageable pageable = new PageRequest(page, size);
 
 		List<Post> posts = termsIds != null && termsIds.size() > 0 ? postRepository.findPostsPublished(stationId, termsIds, pageable) : new ArrayList<Post>();
@@ -407,7 +414,7 @@ public class PerspectiveService {
 		row.type = rowType;
 
 		RowView rowView = new RowView();
-		rowView.cells = cellConverter.convertToViews(convertPostsToCells(row, posts));
+		rowView.cells = cellConverter.convertToViews(convertPostsToCells(row, posts), withBody);
 		rowView.termId = term != null ? term.id : null;
 		rowView.termName = term != null ? term.name : null;
 		rowView.type = rowType;

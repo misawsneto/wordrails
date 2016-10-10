@@ -130,15 +130,15 @@ public class PerspectiveResource implements PerspectiveApi {
 													  Integer termId,
 													  Integer stationPerspectiveId,
 													  int page,
-													  int size){
+													  int size, Boolean withBody){
 
-		String hash = termPerspectiveId + "_" + termId + "_" + stationPerspectiveId + "_" + page + "_" + size;
+		String hash = termPerspectiveId + "_" + termId + "_" + stationPerspectiveId + "_" + page + "_" + size + "_" + withBody;
 
 		TermPerspectiveView termPerspectiveView = cacheManager.getCache("termPerspectiveView").get(hash, TermPerspectiveView.class);
 
 		if(termPerspectiveView == null){
 			termPerspectiveView = perspectiveService.termPerspectiveView(termPerspectiveId,
-					termId, stationPerspectiveId, page, size, hash);
+					termId, stationPerspectiveId, page, size, withBody != null ? withBody : false);
 			if(termPerspectiveView != null){
 				cacheManager.getCache("termPerspectiveView").put(hash, termPerspectiveView);
 			}
@@ -206,7 +206,8 @@ public class PerspectiveResource implements PerspectiveApi {
 			}else{
 				StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
 				if(stationPerspective != null){
-					rowView = perspectiveService.convertTermToRow(term, perspectiveService.loadTermsIds(term), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size);
+					rowView = perspectiveService.convertTermToRow(term, perspectiveService.loadTermsIds(term),
+							stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size, withBody);
 				}
 			}
 		}else if(stationPerspectiveId != null){
@@ -239,7 +240,7 @@ public class PerspectiveResource implements PerspectiveApi {
 			}else{
 				rowView = perspectiveService.convertTermToRow(null, termRepository.findTermIdsByTaxonomyId
 						(stationPerspective
-						.taxonomyId), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size);
+						.taxonomyId), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size, withBody);
 			}
 		}
 		return rowView;

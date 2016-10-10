@@ -14,6 +14,7 @@ public class PersonData implements Serializable {
 	public StationView defaultStation;
 	public PersonPermissions personPermissions;
 	public UserPermissionData permissions;
+	public TermPerspectiveView perspective;
 
 	public Date lastLogin;
 
