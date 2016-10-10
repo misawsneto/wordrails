@@ -99,7 +99,8 @@ public class SessionConfig extends CachingConfigurerSupport {
 		templates.put("postsIds", new HashMap<RedisTemplate, Integer>(){{put(postsIdsRedisTemplate, 600);}});
 		templates.put("postViewById", new HashMap<RedisTemplate, Integer>(){{put(postViewByIdRedisTemplate, 600);}});
 		templates.put("postViewBySlug", new HashMap<RedisTemplate, Integer>(){{put(postViewBySlugRedisTemplate, 600);}});
-		templates.put("termPerspectiveView", new HashMap<RedisTemplate, Integer>(){{put(termPerspectiveViewRedisTemplate, 600);}});
+		templates.put("termPerspectiveView", new HashMap<RedisTemplate, Integer>(){{put
+				(termPerspectiveViewRedisTemplate, 30);}});
 		templates.put("postsByTerm", new HashMap<RedisTemplate, Integer>(){{put(postsByTermRedisTemplate, 600);}});
 
 		return new MultitenantCacheManager(templates);
