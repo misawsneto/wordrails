@@ -88,10 +88,10 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	    })
 	}
 
-	var start = null;
+	var start = moment().subtract(360,'d').format('YYYY-MM-DD');
 	var startTime = start;
 	var end = moment().format('YYYY-MM-DD');
-	var endTime = new Date().getTime();
+	var endTime = end;
 	var field = 'authorId';
 	var page = 0;
 	var size = 100;
@@ -106,8 +106,8 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 
     })
 
-    //@Path("/popularNetworks")
-    trix.getPopularNetworks(page,size).success(function(response){
+    // @Path("/popularNetworks")
+    trix.getPopularNetworks(startTime,endTime,page,size).success(function(response){
         
     })
 
