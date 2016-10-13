@@ -623,11 +623,11 @@ trix.provider('trix', ['\$httpProvider', function (\$httpProvider) {
     }
 
     //@Path("/getMostPopular")
-    this.getMostCommonTerm = function(startTime,endTime,field,page,size){
+    this.getMostCommonTerm = function(start,end,field,page,size){
         var config = {};
         config.params = {
-            startTime: startTime,
-            endTime: endTime,
+            start: start,
+            end: end,
             field: field,
             page: page,
             size: size
@@ -637,9 +637,11 @@ trix.provider('trix', ['\$httpProvider', function (\$httpProvider) {
     }
 
     //@Path("/popularNetworks")
-    this.getPopularNetworks = function(page,size){
+    this.getPopularNetworks = function(start, end, page,size){
         var config = {};
         config.params = {
+            start: start,
+            end: end,
             page: page,
             size: size
         }
