@@ -65,9 +65,15 @@ public class AnalyticsSearchService {
 		StatsData statsData = new StatsData();
 		List<MobileStats> mobileStats = analyticsQueries.getMobileStats(network.getTenantId(), interval);
 
+		MobileStats androidStats = getByType(mobileStats, Constants.MobilePlatform.ANDROID);
+		MobileStats appleStats = getByType(mobileStats, Constants.MobilePlatform.APPLE);
+
+		MobileStats fcmAndroidStatus = getByType(mobileStats, Constants.MobilePlatform.FCM_ANDROID);
+		MobileStats fcmAppleStatus = getByType(mobileStats, Constants.MobilePlatform.FCM_APPLE);
+
 		statsData.generalStatsJson = getGeneralStatus(network);
-		statsData.generalStatsJson.add(getByType(mobileStats, Constants.MobilePlatform.ANDROID).currentInstallations);
-		statsData.generalStatsJson.add(getByType(mobileStats, Constants.MobilePlatform.APPLE).currentInstallations);
+		statsData.generalStatsJson.add(androidStats.currentInstallations + fcmAndroidStatus.currentInstallations);
+		statsData.generalStatsJson.add(appleStats.currentInstallations + fcmAppleStatus.currentInstallations);
 		statsData.dateStatsJson = getHistogram(network, interval);
 
 		// repeting data. Ideal: remove generalStatus list and use Key-Value

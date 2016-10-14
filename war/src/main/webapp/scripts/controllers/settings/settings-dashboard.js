@@ -88,7 +88,7 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	    })
 	}
 
-	var start = moment().subtract(360,'d').format('YYYY-MM-DD');
+	var start = moment().subtract(20,'d').format('YYYY-MM-DD');
 	var startTime = start;
 	var end = moment().format('YYYY-MM-DD');
 	var endTime = end;
