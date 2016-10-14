@@ -16,8 +16,8 @@ public interface V2StatisticsApi {
 	@GET
 	@Path("/getMostPopular")
 	@Produces(MediaType.APPLICATION_JSON)
-	Response getMostPopular(@QueryParam("page") Integer page,
-							@QueryParam("size") Integer size,
+	Response getMostPopular(@QueryParam("page") @DefaultValue("0") Integer page,
+							@QueryParam("size") @DefaultValue("20") Integer size,
 							@QueryParam("start") String startTime,
 							@QueryParam("end") String endTime,
 							@QueryParam("field") String field,
@@ -27,8 +27,8 @@ public interface V2StatisticsApi {
 	@GET
 	@Path("/popularNetworks")
 	@PreAuthorize("isAuthenticated()")
-	Response getPopularNetworks(@QueryParam("page") Integer page,
-								@QueryParam("size") Integer size,
+	Response getPopularNetworks(@QueryParam("page") @DefaultValue("0") Integer page,
+								@QueryParam("size") @DefaultValue("20") Integer size,
 								@QueryParam("start") String start,
 								@QueryParam("end") String end);
 

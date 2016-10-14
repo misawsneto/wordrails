@@ -40,9 +40,9 @@ public class StatisticsService {
         this.commentRepository = commentRepository;
 	}
 
-	public Map getMostPopular(String field, String byField, Object byValue, String start, String end, Integer size){
+	public Map getMostPopular(String field, String byField, Object byValue, String start, String end, Integer size, Integer page){
 		Interval interval = getInterval(end, start);
-		return analyticsSearchService.findMostPopular(field, byField, byValue, interval, size);
+		return analyticsSearchService.findMostPopular(field, byField, byValue, interval, size, page);
 	}
 
 	public StatsData getPostStats(String date, Integer postId){

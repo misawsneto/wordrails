@@ -107,9 +107,9 @@ public class AnalyticsSearchService {
 		return generalStatus;
 	}
 
-	public Map findMostPopular(String field, String byField, Object byValue, Interval interval, Integer size){
+	public Map findMostPopular(String field, String byField, Object byValue, Interval interval, Integer size, Integer page){
 		try {
-			return esQueries.findMostPopular(field, byField, byValue, interval, size);
+			return esQueries.findMostPopular(field, byField, byValue, interval, size, page);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new HashMap();
