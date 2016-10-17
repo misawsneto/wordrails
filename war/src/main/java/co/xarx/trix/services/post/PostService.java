@@ -137,6 +137,7 @@ public class PostService {
 		NotificationView notification = new NotificationView(post.title, post.title, hash, false);
 		notification.type = MobileNotification.Type.POST_ADDED.toString();
 		notification.post = postConverter.convertTo(post);
+		notification.post.featuredImageHash = post.getImageHash();
 		notification.postId = post.id;
 		notification.postTitle = post.title;
 		notification.postSnippet = StringUtil.simpleSnippet(post.body);
