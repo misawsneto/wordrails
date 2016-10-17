@@ -199,7 +199,7 @@ public class ESQueries {
 	private Object getEntityIdentifier(AnalyticsEntity entity) {
 		String field = requestSearchFields.get(entity.getClass());
 		Object id;
-		if(field.equals(Constants.ObjectType.ANALYTICS_INDEX_TYPE + ".tenantId")){
+		if(field.equals("tenantId")){
 			id = entity.getTenantId();
 		} else {
 			id = entity.getId();
