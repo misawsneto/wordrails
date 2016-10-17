@@ -71,9 +71,12 @@ public class AnalyticsSearchService {
 		MobileStats fcmAndroidStatus = getByType(mobileStats, Constants.MobilePlatform.FCM_ANDROID);
 		MobileStats fcmAppleStatus = getByType(mobileStats, Constants.MobilePlatform.FCM_APPLE);
 
+		MobileStats androidStatsJoined = joinMobileStats(fcmAndroidStatus, androidStats);
+		MobileStats appleStatsJoined = joinMobileStats(fcmAppleStatus, appleStats);
+
 		statsData.generalStatsJson = getGeneralStatus(network);
-		statsData.generalStatsJson.add(androidStats.currentInstallations + fcmAndroidStatus.currentInstallations);
-		statsData.generalStatsJson.add(appleStats.currentInstallations + fcmAppleStatus.currentInstallations);
+		statsData.generalStatsJson.add(androidStatsJoined.currentInstallations);
+		statsData.generalStatsJson.add(appleStatsJoined.currentInstallations);
 		statsData.dateStatsJson = getHistogram(network, interval);
 
 		// repeting data. Ideal: remove generalStatus list and use Key-Value
@@ -82,6 +85,17 @@ public class AnalyticsSearchService {
 		statsData.fileSpace = analyticsQueries.getFileStats();
 
 		return statsData;
+	}
+
+	private MobileStats joinMobileStats(MobileStats fcmStats, MobileStats oldStats){
+		MobileStats joined = new MobileStats();
+		joined.currentInstallations = fcmStats.currentInstallations + oldStats.currentInstallations;
+		joined.monthlyActiveUsers = fcmStats.monthlyActiveUsers = oldStats.monthlyActiveUsers;
+		joined.weeklyActiveUsers = fcmStats.weeklyActiveUsers + oldStats.weeklyActiveUsers;
+		joined.monthlyDownloads = fcmStats.monthlyDownloads + oldStats.monthlyDownloads;
+		joined.type = oldStats.type;
+
+		return joined;
 	}
 
 	public TreeMap<Long, ReadsCommentsRecommendsCountData> getHistogram(AnalyticsEntity entity, Interval interval){
