@@ -80,8 +80,8 @@ public class AnalyticsSearchService {
 		statsData.dateStatsJson = getHistogram(network, interval);
 
 		// repeting data. Ideal: remove generalStatus list and use Key-Value
-		statsData.androidStore = getByType(mobileStats, Constants.MobilePlatform.ANDROID);
-		statsData.iosStore = getByType(mobileStats, Constants.MobilePlatform.APPLE);
+		statsData.androidStore = androidStatsJoined;
+		statsData.iosStore = appleStatsJoined;
 		statsData.fileSpace = analyticsQueries.getFileStats();
 
 		return statsData;

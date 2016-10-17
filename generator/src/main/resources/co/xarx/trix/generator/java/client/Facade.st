@@ -503,12 +503,12 @@ public class $facade$ {
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-	public TermPerspectiveView getTermPerspectiveView(Integer termPerspectiveId, Integer termId, Integer stationPerspectiveId, int page, int size){
-		return _facade.getTermPerspectiveView(termPerspectiveId, termId, stationPerspectiveId, page, size);
+	public TermPerspectiveView getTermPerspectiveView(Integer termPerspectiveId, Integer termId, Integer stationPerspectiveId, int page, int size, boolean withBody){
+		return _facade.getTermPerspectiveView(termPerspectiveId, termId, stationPerspectiveId, page, size, withBody);
 	}
 
-	public void getTermPerspectiveView(Integer termPerspectiveId, Integer termId, Integer stationPerspectiveId, int page, int size, Callback<TermPerspectiveView> _callback){
-		_facade.getTermPerspectiveView(termPerspectiveId, termId, stationPerspectiveId, page, size, _callback);
+	public void getTermPerspectiveView(Integer termPerspectiveId, Integer termId, Integer stationPerspectiveId, int page, int size, boolean withBody, Callback<TermPerspectiveView> _callback){
+		_facade.getTermPerspectiveView(termPerspectiveId, termId, stationPerspectiveId, page, size, withBody, _callback);
 	}
 
 	public TermPerspectiveView getTermPerspectiveDefinition(Integer id){

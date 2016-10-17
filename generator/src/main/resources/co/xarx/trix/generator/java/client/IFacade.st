@@ -211,12 +211,12 @@ interface I$facade$ {
 	@GET("/perspectives/termPerspectiveViews")
 	TermPerspectiveView getTermPerspectiveView(@Query("termPerspectiveId") Integer termPerspectiveId, 
 				@Query("termId") Integer termId, @Query("stationPerspectiveId") Integer stationPerspectiveId, 
-				@Query("page") int page, @Query("size") int size);
+				@Query("page") int page, @Query("size") int size, @Query("withBody") Boolean withBody);
 	
 	@GET("/perspectives/termPerspectiveViews")
 	void getTermPerspectiveView(@Query("termPerspectiveId") Integer termPerspectiveId, 
 				@Query("termId") Integer termId, @Query("stationPerspectiveId") Integer stationPerspectiveId, 
-				@Query("page") int page, @Query("size") int size, Callback<TermPerspectiveView> _callback);
+				@Query("page") int page, @Query("size") int size, @Query("withBody") Boolean withBody, Callback<TermPerspectiveView> _callback);
 				
 				
 	@GET("/perspectives/rowViews")
