@@ -17,9 +17,9 @@ import java.io.Serializable;
 public class MobileStats implements Serializable {
 //	public float averageRaiting;
 //	public Integer downloads;
-	public Integer currentInstallations;
-	public Integer weeklyActiveUsers;
-	public Integer monthlyActiveUsers;
-	public Integer monthlyDownloads;
+	public Integer currentInstallations = 0;
+	public Integer weeklyActiveUsers = 0;
+	public Integer monthlyActiveUsers = 0;
+	public Integer monthlyDownloads = 0;
 	public Constants.MobilePlatform type;
 }

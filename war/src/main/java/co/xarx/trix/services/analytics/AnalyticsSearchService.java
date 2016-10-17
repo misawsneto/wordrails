@@ -91,8 +91,9 @@ public class AnalyticsSearchService {
 		MobileStats joined = new MobileStats();
 		joined.currentInstallations = fcmStats.currentInstallations + oldStats.currentInstallations;
 		joined.monthlyActiveUsers = fcmStats.monthlyActiveUsers = oldStats.monthlyActiveUsers;
-		joined.weeklyActiveUsers = fcmStats.weeklyActiveUsers + oldStats.weeklyActiveUsers;
-		joined.monthlyDownloads = fcmStats.monthlyDownloads + oldStats.monthlyDownloads;
+		joined.weeklyActiveUsers = (fcmStats.weeklyActiveUsers == null? 0 : fcmStats.weeklyActiveUsers) + oldStats.weeklyActiveUsers;
+		joined.monthlyDownloads = (fcmStats.monthlyDownloads == null ? 0 : fcmStats.monthlyDownloads) + oldStats
+				.monthlyDownloads;
 		joined.type = oldStats.type;
 
 		return joined;
