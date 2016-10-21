@@ -72,7 +72,9 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 			logError("LOG FATAL ERROR\n" +
 							"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
 							"MESSAGE: " + throwable.getMessage() + "\n" +
-							"URL: " + request.getRequestURL(),
+							"URL: " + request.getRequestURL() + "\n" +
+							"METHOD :" + request.getMethod() + "\n" +
+							"User-Agent: " + request.getHeader("User-Agent") + "\n",
 					throwable);
 		}
 

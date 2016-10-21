@@ -133,6 +133,14 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
       $scope.showStationConfigDialog(event)
     }
 
+    $scope.adminStations = [];
+
+   $scope.app.permissions.stationPermissions.forEach(function(perm){
+      if(perm.administration){
+        $scope.adminStations.push($scope.app.getStationById(perm.stationId))
+      }
+    });
+
 
     settingsStationsCtrl = $scope;
 	}])
@@ -508,6 +516,8 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   		$scope.app.openSplash('confirm_bulk_delete_persons.html');
   }
 
-		// $scope.changePersonStation
+  settingsStationUsersCtrl = $scope;
 
-	}]);
+}]);
+
+var settingsStationUsersCtrl = null;

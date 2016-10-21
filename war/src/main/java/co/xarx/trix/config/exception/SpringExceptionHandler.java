@@ -263,6 +263,7 @@ public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 		String message = "LOG FATAL ERROR\n" +
 				"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
 				"MESSAGE: " + e.getMessage() + "\n" +
+				"METHOD :" + request.getMethod() +
 				"URL: " + request.getRequestURL() + "\n" +
 				"User-Agent: " + request.getHeader("User-Agent") + "\n";
 

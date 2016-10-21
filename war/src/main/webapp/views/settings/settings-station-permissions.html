@@ -29,9 +29,9 @@
 														<md-checkbox aria-label="nothing" class="no-margin" ng-model="toggleSelectValue" ng-change="toggleAll(toggleSelectValue)">
 														</md-checkbox>
 													</th>
-													<th class="text-l-c">{{'titles.USERS' | translate}}</th>
-                          <th class="text-l-c text-center">{{'titles.PERMISSIONS' | translate}}</th>
-													<th style="min-width:170px;" class="text-center display-t-c v-m no-padding">{{'titles.LAST_LOGIN' | translate}}</th>
+													<th class="text-l-c">{{::('titles.USERS' | translate)}}</th>
+                          <th class="text-l-c text-center">{{::('titles.PERMISSIONS' | translate)}}</th>
+													<th style="min-width:170px;" class="text-center display-t-c v-m no-padding">{{::('titles.LAST_LOGIN' | translate)}}</th>
 													<th style="width:30px;"></th>
 												</tr>
 											</thead>
@@ -49,15 +49,15 @@
 															</div>
 							              </span>
 								              <span class="clear">
-								                <span class="text-md font-bold">{{permission.person.name}}</span>
-								                <div class="text-muted clear text-ellipsis">{{permission.person.username}} | {{permission.person.email}}</div>
+								                <span class="text-md font-bold">{{::permission.person.name}}</span>
+								                <div class="text-muted clear text-ellipsis">{{::permission.person.username}} | {{::permission.person.email}}</div>
 								              </span>
 													</td>
                           <td class="display-t-c v-m text-center">
                             <md-button ng-disabled="permission.person.id == app.person.id" ng-click="showChangePermissions(permission)"> {{getPermissionText(permission)}} </md-button>
                           </td>
 													<td class="display-t-c v-m text-center" ng-if="!permission.person.lastLogin"> - </td>
-													<td class="display-t-c v-m text-center" ng-if="permission.person.lastLogin">{{app.getLocalTime(permission.person.lastLogin)}}</td>
+													<td class="display-t-c v-m text-center" ng-if="permission.person.lastLogin">{{::app.getLocalTime(permission.person.lastLogin)}}</td>
 													<td class="display-t-c v-m">
                             <div ng-if="permission.person.id != app.person.id" class="dropdown hidden-sm">
                               <md-button class="md-icon-button" data-toggle="dropdown" ng-click="showDeletePersonPermission($event, permission.person)">
@@ -283,15 +283,17 @@
 		<md-content class="md-background-hue-1 background">
 			<div class="w-700">
 
-				<div class="p text-u-c font-bold text-md-l">
-					<i class="mdi2-key-plus p-r-sm i-24 icon v-m"></i>{{'settings.users.ADD_PERMISSION' | translate}}
-				</div>
+        <div class="md-primary-hue-1 background">
+          <div class="p text-u-c font-bold text-md-l">
+            <i class="mdi2-key-plus p-r-sm i-24 icon v-m"></i>{{'settings.users.ADD_PERMISSION' | translate}}
+          </div>
 
-				<div class="search-with-filter m-r m-l md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2 m-b-md">
-					<form ng-submit="doSearchUsers()">
-						<input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-md-l bg-t" ng-model="searchUsers">
-					</form>
-				</div>
+          <div class="search-with-filter md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
+            <form ng-submit="doSearchUsers()">
+              <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t" ng-model="searchUsers">
+            </form>
+          </div>
+        </div>
 
 				<div class="b-t">
 					<div id="users-search-results" class="b-b md-background-hue-1 background pos-rlt w-full inline" style="height:230px; max-height:230px; overflow: auto; box-shadow: inset 0px 0px 25px -10px rgba(0,0,0,0.5);">
@@ -321,8 +323,8 @@
 															</div>
 							              </span>
 											<span class="clear">
-								                <span class="text-md font-bold">{{person.name}}</span>
-								                <div class="text-muted clear text-ellipsis">{{person.username}} | {{person.email}}</div>
+								                <span class="text-md font-bold">{{::person.name}}</span>
+								                <div class="text-muted clear text-ellipsis">{{::person.username}} | {{::person.email}}</div>
 								              </span>
 										</td>
 									</tr>
