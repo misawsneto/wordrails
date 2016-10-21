@@ -136,7 +136,7 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
     $scope.adminStations = [];
 
    $scope.app.permissions.stationPermissions.forEach(function(perm){
-      if(perm.administration){
+      if(perm.administration || $scope.app.isAdmin){
         $scope.adminStations.push($scope.app.getStationById(perm.stationId))
       }
     });
