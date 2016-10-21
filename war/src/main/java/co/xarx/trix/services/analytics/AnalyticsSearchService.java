@@ -65,17 +65,38 @@ public class AnalyticsSearchService {
 		StatsData statsData = new StatsData();
 		List<MobileStats> mobileStats = analyticsQueries.getMobileStats(network.getTenantId(), interval);
 
+		MobileStats androidStats = getByType(mobileStats, Constants.MobilePlatform.ANDROID);
+		MobileStats appleStats = getByType(mobileStats, Constants.MobilePlatform.APPLE);
+
+		MobileStats fcmAndroidStatus = getByType(mobileStats, Constants.MobilePlatform.FCM_ANDROID);
+		MobileStats fcmAppleStatus = getByType(mobileStats, Constants.MobilePlatform.FCM_APPLE);
+
+		MobileStats androidStatsJoined = joinMobileStats(fcmAndroidStatus, androidStats);
+		MobileStats appleStatsJoined = joinMobileStats(fcmAppleStatus, appleStats);
+
 		statsData.generalStatsJson = getGeneralStatus(network);
-		statsData.generalStatsJson.add(getByType(mobileStats, Constants.MobilePlatform.ANDROID).currentInstallations);
-		statsData.generalStatsJson.add(getByType(mobileStats, Constants.MobilePlatform.APPLE).currentInstallations);
+		statsData.generalStatsJson.add(androidStatsJoined.currentInstallations);
+		statsData.generalStatsJson.add(appleStatsJoined.currentInstallations);
 		statsData.dateStatsJson = getHistogram(network, interval);
 
 		// repeting data. Ideal: remove generalStatus list and use Key-Value
-		statsData.androidStore = getByType(mobileStats, Constants.MobilePlatform.ANDROID);
-		statsData.iosStore = getByType(mobileStats, Constants.MobilePlatform.APPLE);
+		statsData.androidStore = androidStatsJoined;
+		statsData.iosStore = appleStatsJoined;
 		statsData.fileSpace = analyticsQueries.getFileStats();
 
 		return statsData;
+	}
+
+	private MobileStats joinMobileStats(MobileStats fcmStats, MobileStats oldStats){
+		MobileStats joined = new MobileStats();
+		joined.currentInstallations = fcmStats.currentInstallations + oldStats.currentInstallations;
+		joined.monthlyActiveUsers = fcmStats.monthlyActiveUsers = oldStats.monthlyActiveUsers;
+		joined.weeklyActiveUsers = (fcmStats.weeklyActiveUsers == null? 0 : fcmStats.weeklyActiveUsers) + oldStats.weeklyActiveUsers;
+		joined.monthlyDownloads = (fcmStats.monthlyDownloads == null ? 0 : fcmStats.monthlyDownloads) + oldStats
+				.monthlyDownloads;
+		joined.type = oldStats.type;
+
+		return joined;
 	}
 
 	public TreeMap<Long, ReadsCommentsRecommendsCountData> getHistogram(AnalyticsEntity entity, Interval interval){
@@ -101,9 +122,9 @@ public class AnalyticsSearchService {
 		return generalStatus;
 	}
 
-	public Map findMostPopular(String field, String byField, Object byValue, Interval interval, Integer size){
+	public Map findMostPopular(String field, String byField, Object byValue, Interval interval, Integer size, Integer page){
 		try {
-			return esQueries.findMostPopular(field, byField, byValue, interval, size);
+			return esQueries.findMostPopular(field, byField, byValue, interval, size, page);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new HashMap();

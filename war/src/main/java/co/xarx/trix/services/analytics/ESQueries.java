@@ -1,5 +1,6 @@
 package co.xarx.trix.services.analytics;
 
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.util.Constants;
 import org.apache.lucene.queryparser.xml.builders.BooleanQueryBuilder;
@@ -27,6 +28,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
@@ -55,48 +57,6 @@ public class ESQueries {
 		fields.put(Network.class, "tenantId");
 
 		return fields;
-	}
-
-	private List<String> getIndexFields(String fieldName, Map<String, Object> mapProperties) {
-		List<String> fieldList = new ArrayList<>();
-		Map<String, Object> map = (Map<String, Object>) mapProperties.get("properties");
-		Set<String> keys = map.keySet();
-		for (String key : keys) {
-			if (((Map<String, Object>) map.get(key)).containsKey("type")) {
-				fieldList.add(fieldName + "" + key);
-			} else {
-				List<String> tempList = getIndexFields(fieldName + "" + key + ".", (Map<String, Object>) map.get(key));
-				fieldList.addAll(tempList);
-			}
-		}
-		return fieldList;
-	}
-
-	public boolean isValidField(String field) throws Exception {
-		if (getNginxFields().contains(field)) {
-			return true;
-		} else return false;
-	}
-
-
-	public List<String> getNginxFields() throws Exception {
-		ClusterState cs = client.admin().cluster().prepareState().setIndices(accessIndex).execute().actionGet().getState();
-
-		IndexMetaData indexMetaData = cs.getMetaData().index(accessIndex);
-		if (indexMetaData == null) {
-			throw new Exception("The data cannot be retrived: No index metadata");
-		}
-
-		MappingMetaData mappingMetaData = indexMetaData.mapping(Constants.ObjectType.ANALYTICS_INDEX_TYPE);
-		Map<String, Object> map = null;
-
-		try {
-			map = mappingMetaData.getSourceAsMap();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return getIndexFields("", map);
 	}
 
 	private Map<Long, Long> generalCounter(String queryName, QueryBuilder query, String orderField) {
@@ -153,9 +113,13 @@ public class ESQueries {
 		return generalCounter(queryName, query, "timestamp");
 	}
 
-	private SearchRequestBuilder prepareRangkingQuery(String field, Interval interval, Integer size, String term, BoolQueryBuilder must){
+	private SearchRequestBuilder prepareRangkingQuery(String field, Interval interval, String term, BoolQueryBuilder must, Integer size, Integer page){
 		SearchRequestBuilder search = client.prepareSearch();
-		search.setTypes(Constants.ObjectType.ANALYTICS_INDEX_TYPE).addAggregation(AggregationBuilders.terms(term).field(field).size(size));
+		search.addAggregation(AggregationBuilders
+				.terms(term)
+				.field(field)
+				// page should be bigger than zero
+				.size(size * (page + 1)));
 		search.addAggregation(AggregationBuilders.range("timestamp")
 				.field("timestamp").addRange(interval.getStart().getMillis(), interval.getEnd().getMillis()));
 
@@ -164,36 +128,55 @@ public class ESQueries {
 		return search;
 	}
 
-	public Map findMostPopular(String field, String byField, Object byValue, Interval interval, Integer size) throws Exception {
-		if (!isValidField(field)) {
-			throw new Exception("Invalid field in nginx: " + field);
-		}
+	public Map findMostPopular(String field, String byField, Object byValue, Interval interval, Integer size, Integer page) throws Exception {
 		String term = "popular_" + field;
-		BoolQueryBuilder must = null;
+		BoolQueryBuilder must = new BoolQueryBuilder();
+        must.must(termQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
 
 		if(byField != null && !byField.isEmpty() && byValue != null){
-			if(!isValidField(byField)) throw new Exception("Invalid field in nginx: " + byField);
-
-			must = new BoolQueryBuilder();
 			must.must(termQuery(byField, byValue));
 			term += "_by_" + byField;
 		}
 
-		SearchRequestBuilder search = prepareRangkingQuery(field, interval, size, term, must);
+		SearchRequestBuilder search = prepareRangkingQuery(field, interval, term, must, size, page);
 		SearchResponse response = search.execute().actionGet();
 
 		Terms terms = response.getAggregations().get(term);
-		return parseRanking(terms);
+		return parseRanking((List) terms.getBuckets(), size, page);
 	}
 
-	private Map parseRanking(Terms results){
+	private Map parseRanking(List<Terms.Bucket> results, Integer size, Integer page){
 		Map buckets = new HashMap();
-		for (Terms.Bucket b : results.getBuckets()) {
+
+		int start = (size + 1) * page;
+		int end = results.size();
+
+		for (Terms.Bucket b : results.subList(start, end)) {
 			buckets.put(b.getKey(), b.getDocCount());
 		}
-
-		return buckets;
+		return sortByValue(buckets);
 	}
+
+	private Map<String, Long> sortByValue(Map<String, Long> unsortMap) {
+
+		LinkedList<Map.Entry<String, Long>> list =
+				new LinkedList<Map.Entry<String, Long>>(unsortMap.entrySet());
+
+		Collections.sort(list, new Comparator<Map.Entry<String, Long>>() {
+			public int compare(Map.Entry<String, Long> o1,
+							   Map.Entry<String, Long> o2) {
+				return (o1.getValue()).compareTo(o2.getValue());
+			}
+		});
+
+		Map<String, Long> sortedMap = new LinkedHashMap<String, Long>();
+		for (Map.Entry<String, Long> entry : list) {
+			sortedMap.put(entry.getKey(), entry.getValue());
+		}
+
+		return sortedMap;
+	}
+
 
 	public Integer countActionsByEntity(String action, AnalyticsEntity entity){
 		String fieldName = requestSearchFields.get(entity.getClass());
@@ -216,7 +199,7 @@ public class ESQueries {
 	private Object getEntityIdentifier(AnalyticsEntity entity) {
 		String field = requestSearchFields.get(entity.getClass());
 		Object id;
-		if(field.equals(Constants.ObjectType.ANALYTICS_INDEX_TYPE + ".tenantId")){
+		if(field.equals("tenantId")){
 			id = entity.getTenantId();
 		} else {
 			id = entity.getId();

@@ -12,6 +12,7 @@ import co.xarx.trix.services.notification.GCMClient;
 import co.xarx.trix.services.notification.MobileNotificationSender;
 import co.xarx.trix.services.notification.FCMClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.android.gcm.server.Sender;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
@@ -61,7 +62,9 @@ public class ApplicationConfig implements AsyncConfigurer{
 
 	@Bean
 	public ObjectMapper simpleMapper() {
-		return new ObjectMapper();
+		ObjectMapper result = new ObjectMapper();
+		result.disable(SerializationFeature.INDENT_OUTPUT);
+		return result;
 	}
 
 	@Bean

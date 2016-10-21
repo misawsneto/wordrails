@@ -32,17 +32,13 @@ public class V2StatisticsResource implements V2StatisticsApi {
 		checkSize(size);
 
 		Map map;
-		map = statisticsService.getMostPopular(field, byField, byValue, startTime, endTime, size);
+		map = statisticsService.getMostPopular(field, byField, byValue, startTime, endTime, size, page);
 		return ok(map);
 	}
 
 	@Override
 	public Response getPopularNetworks(Integer page, Integer size, String start, String end){
-		checkSize(size);
-		Map popular;
-
-		popular = statisticsService.getMostPopular("tenantId", null, null, start, end, size);
-		return ok(popular);
+		return ok(statisticsService.getMostPopular("tenantId", null, null, start, end, size, page));
 	}
 
 	@Override

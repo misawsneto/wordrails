@@ -1,6 +1,8 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.NetworkCreate;
+import co.xarx.trix.persistence.NetworkCreateRepository;
 import co.xarx.trix.persistence.NetworkRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,10 +22,12 @@ public class NetworkServiceTest {
 
 	private NetworkService networkService;
 	private NetworkRepository networkRepository;
+	private NetworkCreateRepository networkCreateRepository;
 
 	@Before
 	public void setUp() throws Exception {
 		networkRepository = mock(NetworkRepository.class);
+		networkCreateRepository = mock(NetworkCreateRepository.class);
 
 		List<Object[]> networkList = new ArrayList<>();
 		Object[] network1 = new Object[3];
@@ -39,7 +43,7 @@ public class NetworkServiceTest {
 
 		when(networkRepository.findIdsAndDomain()).thenReturn(networkList);
 
-		networkService = new NetworkService(networkRepository);
+		networkService = new NetworkService(networkRepository, networkCreateRepository);
 	}
 
 	@Test

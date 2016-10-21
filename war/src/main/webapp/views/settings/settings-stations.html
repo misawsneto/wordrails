@@ -6,7 +6,7 @@
 <div id="settings-stations">
   <div class="m-b-xxl p-b">
     <div class="row">
-      <div class="col-lg-3 col-sm-4" ng-repeat="station in app.stations">
+      <div class="col-lg-3 col-sm-4" ng-repeat="station in adminStations">
         <div class="md-list md-whiteframe-z1 md-background-hue-1 background m-b animated zoomIn">
 
           <div class="md-list-item list-group-item b-n text-md font-bold">
@@ -49,7 +49,7 @@
           </a>-->
 
           <div class="md-list-item list-group-item b-n p-sm">
-            <div class="md-list-item-content">
+            <div class="md-list-item-content" ng-if="app.isAdmin">
               <div class="m-t-xs p-sm text-left">
                 <md-checkbox ng-model=" station.main" ng-change="setMainStation(station)">
                 {{'titles.DEFAULT_STATION' | translate}}
@@ -68,7 +68,7 @@
   </div>
 </div>
 
-<md-button aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg" ng-click="createNewStation($event)">
+<md-button ng-if="app.isAdmin" aria-label="nothing" aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg" ng-click="createNewStation($event)">
     <i class="mdi-content-add i-24"></i>
 </md-button>
 

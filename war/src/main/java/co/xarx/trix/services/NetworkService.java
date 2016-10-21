@@ -2,6 +2,8 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.NetworkCreate;
+import co.xarx.trix.persistence.NetworkCreateRepository;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.FileUtil;
@@ -20,14 +22,16 @@ import java.util.Objects;
 @Service
 public class NetworkService {
 
+	private NetworkCreateRepository networkCreateRepository;
 	private Map<String, Integer> tenantIds; //key=tenantId, value=networkId
 	private Map<String, Integer> domains; //key=domain, value=networkId
 
 	private NetworkRepository networkRepository;
 
 	@Autowired
-	public NetworkService(NetworkRepository networkRepository) {
+	public NetworkService(NetworkRepository networkRepository, NetworkCreateRepository networkCreateRepository) {
 		this.networkRepository = networkRepository;
+		this.networkCreateRepository = networkCreateRepository;
 		tenantIds = Maps.newConcurrentMap();
 		domains = Maps.newConcurrentMap();
 
@@ -146,5 +150,10 @@ public class NetworkService {
 			network.setInvitationMessage(message);
 		}
 		return network.getInvitationMessage();
+	}
+
+
+	public void addNetworkCreateRequest(NetworkCreate networkCreate) {
+		networkCreateRepository.save(networkCreate);
 	}
 }

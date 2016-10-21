@@ -88,38 +88,38 @@ app.controller('DashboardCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	    })
 	}
 
-	var start = null;
+	var start = moment().subtract(20,'d').format('YYYY-MM-DD');
 	var startTime = start;
 	var end = moment().format('YYYY-MM-DD');
-	var endTime = new Date().getTime();
-	// var field = 'authorId';
-	// var page = 0;
-	// var size = 100;
-	// var authorId = 51;
-	// var postIds = [6017];
-	// var postId = 6017;
-	// var stationId = 11;
+	var endTime = end;
+	var field = 'authorId';
+	var page = 0;
+	var size = 100;
+	var authorId = 51;
+	var postIds = [9186];
+	var postId = 9186;
+	var stationId = 11;
 
-	// $scope.networkStats = {};
+	$scope.networkStats = {};
 
-	// trix.getMostCommonTerm(startTime,endTime,field,page,size).success(function(response){
+	trix.getMostCommonTerm(startTime,endTime,field,page,size).success(function(response){
 
- //    })
+    })
 
- //    //@Path("/popularNetworks")
- //    trix.getPopularNetworks(page,size).success(function(response){
+    // @Path("/popularNetworks")
+    trix.getPopularNetworks(startTime,endTime,page,size).success(function(response){
         
- //    })
+    })
 
- //        //@Path("/post")
- //    trix.postStats(end, start, postId).success(function(response){
+        //@Path("/post")
+    trix.postStats(end, start, postId).success(function(response){
         
- //    })
+    })
 
- //    //@Path("/author")
- //    trix.authorStats(end, start, authorId).success(function(response){
+    //@Path("/author")
+    trix.authorStats(end, start, authorId).success(function(response){
         
- //    })
+    })
 
     //@Path("/network")
     $scope.loadingNetworkStats = true;

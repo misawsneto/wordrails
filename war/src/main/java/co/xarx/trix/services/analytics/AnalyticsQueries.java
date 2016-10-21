@@ -34,17 +34,12 @@ public class AnalyticsQueries {
     private FileRepository fileRepository;
 	private MobileDeviceRepository deviceRepository;
     private PersonPermissionService personPermissionService;
-    private Map<Constants.MobilePlatform, String> mobileTypesMapToString;
 
 	@Autowired
 	public AnalyticsQueries(MobileDeviceRepository deviceRepository, FileRepository fileRepository, PersonPermissionService personPermissionService){
 		this.deviceRepository = deviceRepository;
 		this.fileRepository = fileRepository;
 		this.personPermissionService = personPermissionService;
-
-		mobileTypesMapToString = new HashMap<>();
-		mobileTypesMapToString.put(Constants.MobilePlatform.ANDROID, "ANDROID");
-		mobileTypesMapToString.put(Constants.MobilePlatform.APPLE, "APPLE");
 	}
 
 	public List<MobileStats> getMobileStats(String tenantId, Interval interval){

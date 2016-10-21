@@ -11,15 +11,21 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true, value = {"type"})
 public class MobileStats implements Serializable {
 //	public float averageRaiting;
 //	public Integer downloads;
-	public Integer currentInstallations;
-	public Integer weeklyActiveUsers;
-	public Integer monthlyActiveUsers;
-	public Integer monthlyDownloads;
+	public Integer currentInstallations = 0;
+	public Integer weeklyActiveUsers = 0;
+	public Integer monthlyActiveUsers = 0;
+	public Integer monthlyDownloads = 0;
 	public Constants.MobilePlatform type;
+
+	public MobileStats(){
+		currentInstallations = 0;
+		weeklyActiveUsers = 0;
+		monthlyActiveUsers = 0;
+		monthlyDownloads = 0;
+	}
 }

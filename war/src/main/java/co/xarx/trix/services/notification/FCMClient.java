@@ -5,6 +5,7 @@ import co.xarx.trix.domain.MobileNotification;
 import co.xarx.trix.domain.NotificationType;
 import co.xarx.trix.services.notification.NotificationResult;
 import co.xarx.trix.services.notification.NotificationServerClient;
+import co.xarx.trix.util.StringUtil;
 import com.google.android.gcm.server.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -69,7 +70,7 @@ public class FCMClient implements NotificationServerClient {
     public Message createMessage(NotificationView notificationView){
         Notification notification = new Notification.Builder(notificationView.post.featuredImageHash)
                 .title(notificationView.title)
-                .body(notificationView.message)
+                .body(notificationView.postSnippet)
                 .build();
 
         return new Message.Builder()
