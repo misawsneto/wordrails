@@ -1,9 +1,13 @@
 package co.xarx.trix.services.analytics;
 
+import co.xarx.trix.api.v2.MobileStats;
+import co.xarx.trix.api.v2.ReadsCommentsRecommendsCountData;
 import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.page.query.statement.StatStatement;
 import co.xarx.trix.persistence.*;
+import co.xarx.trix.util.Constants;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,125 +15,131 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static co.xarx.trix.util.AnalyticsUtil.getInterval;
-import static co.xarx.trix.util.Logger.debug;
-import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+import static co.xarx.trix.util.AnalyticsUtil.*;
 
 @Service
 public class StatisticsService {
 
-	private PostRepository postRepository;
-	private PersonRepository personRepository;
-	private NetworkRepository networkRepository;
+	private ESQueries esQueries;
 	private CommentRepository commentRepository;
-	private StationRepository stationRepository;
-    private AnalyticsSearchService analyticsSearchService;
 
 	@Autowired
-	public StatisticsService(
-			PostRepository postRepository,
-			PersonRepository personRepository,
-			NetworkRepository networkRepository, CommentRepository commentRepository,
-			StationRepository stationRepository,
-			AnalyticsSearchService analyticsSearchService) {
-		this.postRepository = postRepository;
-		this.personRepository = personRepository;
-		this.networkRepository = networkRepository;
-		this.stationRepository = stationRepository;
-		this.analyticsSearchService = analyticsSearchService;
-        this.commentRepository = commentRepository;
+	public StatisticsService(ESQueries esQueries, CommentRepository commentRepository) {
+		this.esQueries = esQueries;
+		this.commentRepository = commentRepository;
 	}
 
-	public Map getMostPopular(String field, String byField, Object byValue, String start, String end, Integer size, Integer page){
-		Interval interval = getInterval(end, start);
-		return analyticsSearchService.findMostPopular(field, byField, byValue, interval, size, page);
+	public Map getMostPopular(StatStatement statement){
+		try {
+			return esQueries.findMostPopular(statement);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new HashMap();
+		}
 	}
 
-	public StatsData getPostStats(String date, Integer postId){
-	    Interval interval = getInterval(date, 30);
-        Post post = postRepository.findOne(postId);
+	public StatsData getSimpleStats(StatStatement statement){
+		List<Integer> generalStatus = getGeneralStatus(statement);
+		TreeMap<Long, ReadsCommentsRecommendsCountData> histogram = getHistogram(statement);
 
-		if (post == null) return null;
+		StatsData response = new StatsData();
+		response.generalStatsJson = generalStatus;
+		response.dateStatsJson = histogram;
 
-        return analyticsSearchService.getPostStats(post, interval);
-    }
-
-	public StatsData getPostStats(String end, String beginning, Integer postId){
-		Interval interval = getInterval(end, beginning);
-		Post post = postRepository.findOne(postId);
-
-		if (post == null) return null;
-
-		return analyticsSearchService.getPostStats(post, interval);
+		return response;
 	}
+	
+	public StatsData getNetworkStats(StatStatement statement){
+		StatsData statsData = new StatsData();
+		List<MobileStats> mobileStats = esQueries.getMobileStats(statement.getFieldId(), statement.getInterval().getEnd());
 
-    public StatsData getAuthorStats(String date, Integer authorId) {
-        Interval interval = getInterval(date, 30);
-        Person person = personRepository.findOne(authorId);
+		MobileStats androidStats = getByType(mobileStats, Constants.MobilePlatform.ANDROID);
+		MobileStats appleStats = getByType(mobileStats, Constants.MobilePlatform.APPLE);
 
-		if (person == null) return null;
+		MobileStats fcmAndroidStatus = getByType(mobileStats, Constants.MobilePlatform.FCM_ANDROID);
+		MobileStats fcmAppleStatus = getByType(mobileStats, Constants.MobilePlatform.FCM_APPLE);
 
-        return analyticsSearchService.getPersonStats(person, interval);
-    }
+		MobileStats androidStatsJoined = joinMobileStats(fcmAndroidStatus, androidStats);
+		MobileStats appleStatsJoined = joinMobileStats(fcmAppleStatus, appleStats);
 
-	public StatsData getAuthorStats(String end, String start, Integer authorId) {
-		Interval interval = getInterval(end, start);
-		Person person = personRepository.findOne(authorId);
+		statsData.generalStatsJson = getGeneralStatus(statement);
+		statsData.generalStatsJson.add(androidStatsJoined.currentInstallations);
+		statsData.generalStatsJson.add(appleStatsJoined.currentInstallations);
+		statsData.dateStatsJson = getHistogram(statement);
 
-		if (person == null) return null;
+		// repeting data. Ideal: remove generalStatus list and use Key-Value JSON
+		statsData.androidStore = androidStatsJoined;
+		statsData.iosStore = appleStatsJoined;
+		statsData.fileSpace = getFileStats();
 
-		return analyticsSearchService.getPersonStats(person, interval);
-	}
-
-	public StatsData getStationStats(String end, String start, Integer stationId){
-		Interval interval = getInterval(end, start);
-		Station station = stationRepository.findOne(stationId);
-
-		if (station == null) return null;
-
-		return analyticsSearchService.getStationStats(station, interval);
-	}
-
-	public StatsData getNetworkStats(String end, String start){
-		Interval interval = getInterval(end, start);
-
-		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
-		if (network == null) return null;
-
-		network.setTenantId(TenantContextHolder.getCurrentTenantId());
-		return analyticsSearchService.getNetworkStats(network, interval);
+		return statsData;
 	}
 
 	public Map<Integer, Integer> getPostReads(List<Integer> postIds){
-	    List<Post> posts = postRepository.findAll(postIds);
+		Map postReads = new HashMap();
 
-		if(posts == null || posts.isEmpty()) return null;
+		postIds.forEach( id -> {
+			postReads.put(id, esQueries.countTotals(id, "postId", Constants.StatsEventType.POST_READ));
+		});
 
-		return analyticsSearchService.getPostReads(posts);
+		return postReads;
 	}
 
 	public Map<String, Integer> getFileStats(){
-        return analyticsSearchService.getFileStats();
+        return esQueries.getFileStats();
 	}
 
 	public Map<String, Integer> getStationReaders(Integer stationId){
-	    Station station = stationRepository.findOne(stationId);
-		if (station == null) return null;
+		Integer total = esQueries.getPersonIdsFromStation(stationId).size();
+		if (total == null || total == 0) return new HashMap<>();
 
-        Map stationReaders = analyticsSearchService.getReadersByStation(station);
-		stationReaders.put("stationId", stationId);
+		Interval interval = new Interval(DateTime.now().minusDays(1), DateTime.now());
+		List<MobileStats> mobileStats = esQueries.getMobileStats(TenantContextHolder.getCurrentTenantId(), interval.getEnd());
 
-		return stationReaders;
+		Integer totalAndroid = getByType(mobileStats, Constants.MobilePlatform.ANDROID).currentInstallations;
+		Integer totalIos = getByType(mobileStats, Constants.MobilePlatform.APPLE).currentInstallations;
+
+		Map readers = new HashMap();
+		readers.put("total", total);
+		readers.put("ios", totalIos);
+		readers.put("android", totalAndroid);
+		readers.put("stationId", stationId);
+
+		return readers;
 	}
 
 	public Map<String,Integer> dashboardStats() {
 		Map<String, Integer> ret = new LinkedHashMap<>();
-		Long posts = postRepository.countByState(Post.STATE_PUBLISHED);
+//		Long posts = postRepository.countByState(Post.STATE_PUBLISHED);
 		Long comments = commentRepository.count();
 
-		ret.put("post", posts != null ? posts.intValue() : 0);
+//		ret.put("post", posts != null ? posts.intValue() : 0);
 		ret.put("comment", comments.intValue());
 
 		return ret;
+	}
+
+	public TreeMap<Long, ReadsCommentsRecommendsCountData> getHistogram(StatStatement statement){
+		Map<Long, Long> reads, comments, recommends;
+		reads = esQueries.getReadsByEntity(statement);
+		comments = esQueries.getCommentsByEntity(statement);
+		recommends = esQueries.getRecommendsByEntity(statement);
+
+		return makeHistogram(reads, comments, recommends, statement.getInterval());
+	}
+
+
+	public List<Integer> getGeneralStatus(StatStatement statement) {
+		List<Integer> generalStatus = new ArrayList<>();
+
+		Integer totalReads = esQueries.countTotals(statement.getFieldId(), statement.getField() + "Id" , Constants.StatsEventType.POST_READ);
+		Integer totalComments = esQueries.countTotals(statement.getFieldId(), statement.getField() + "Id", Constants.StatsEventType.POST_COMMENT);
+		Integer totalRecommends = esQueries.countTotals(statement.getFieldId(), statement.getField() + "Id", Constants.StatsEventType.POST_RECOMMEND);
+
+		generalStatus.add(totalReads); // 1st reads
+		generalStatus.add(totalComments); // 2nd comments
+		generalStatus.add(totalRecommends); // 3rd recommends
+
+		return generalStatus;
 	}
 }
