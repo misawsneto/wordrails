@@ -21,8 +21,8 @@ public interface V2StatisticsApi {
 							@QueryParam("start") String startTime,
 							@QueryParam("end") String endTime,
 							@QueryParam("field") String field,
-							@QueryParam("byField") List<String> byFields,
-							@QueryParam("byValue") List<String> byValues);
+							@QueryParam("byFields") List<String> byFields,
+							@QueryParam("byValues") List<String> byValues);
 
 	@GET
 	@Path("/popularNetworks")

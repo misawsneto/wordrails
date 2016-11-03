@@ -5,6 +5,7 @@ import co.xarx.trix.persistence.ObjectStatementRepository;
 import com.amazonaws.services.apigateway.model.BadRequestException;
 import lombok.Getter;
 import lombok.Setter;
+import org.eclipse.persistence.jpa.jpql.Assert;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
@@ -45,6 +46,8 @@ public class StatStatement extends AbstractStatement {
         this.byFields = byFields;
         this.byValues = byValues;
         this.interval = getInterval(endDate, startDate);
+
+        Assert.isTrue(byFields.size() == byValues.size(), "The number of fields (in byFields) and values (in byValues) must be the same");
     }
 
     public Interval getInterval(DateTime endDate, Integer size) {

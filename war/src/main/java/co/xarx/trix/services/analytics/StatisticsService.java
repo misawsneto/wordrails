@@ -48,7 +48,7 @@ public class StatisticsService {
 
 		return response;
 	}
-	
+
 	public StatsData getNetworkStats(StatStatement statement){
 		StatsData statsData = new StatsData();
 		List<MobileStats> mobileStats = esQueries.getMobileStats(statement.getFieldId(), statement.getInterval().getEnd());

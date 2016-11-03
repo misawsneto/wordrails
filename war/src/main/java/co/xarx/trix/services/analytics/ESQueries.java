@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 @Service
@@ -93,14 +94,12 @@ public class ESQueries {
 		return generalCounter("comments_by_" + statement.getField(), query, "timestamp");
 	}
 
-	private SearchRequestBuilder prepareRangkingQuery(String field, Interval interval, String term, BoolQueryBuilder must, Integer size, Integer page){
+	private SearchRequestBuilder prepareRangkingQuery(String field, String term, BoolQueryBuilder must, Integer size, Integer page){
 		SearchRequestBuilder search = client.prepareSearch();
 		search.addAggregation(AggregationBuilders
 				.terms(term)
 				.field(field)
 				.size(size * (page + 1)));
-		search.addAggregation(AggregationBuilders.range("timestamp")
-				.field("timestamp").addRange(interval.getStart().getMillis(), interval.getEnd().getMillis()));
 
 		if(must != null) search.setQuery(must);
 
@@ -108,7 +107,13 @@ public class ESQueries {
 	}
 
 	private void joinMusts(BoolQueryBuilder must, StatStatement statement){
-		Assert.isTrue(statement.getByFields().size() == statement.getByValues().size(), "");
+		must.must(termQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
+		must.must(rangeQuery("timestamp")
+				.from(statement.getInterval().getStart().getMillis())
+				.to(statement.getInterval().getEnd().getMillis())
+				.includeLower(true)
+				.includeUpper(true));
+
 		for(int i = 0; i < statement.getByFields().size(); i++){
 			must.must(termQuery(statement.getByFields().get(i), statement.getByValues().get(i)));
 		}
@@ -117,11 +122,10 @@ public class ESQueries {
 	public Map findMostPopular(StatStatement statement) throws Exception {
 		String term = "popular_" + statement.getField();
 		BoolQueryBuilder must = new BoolQueryBuilder();
-        must.must(termQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
 
 		joinMusts(must, statement);
 
-		SearchRequestBuilder search = prepareRangkingQuery(statement.getField(), statement.getInterval(), term, must, statement.getSize(), statement.getPage());
+		SearchRequestBuilder search = prepareRangkingQuery(statement.getField(), term, must, statement.getSize(), statement.getPage());
 		SearchResponse response = search.execute().actionGet();
 
 		Terms terms = response.getAggregations().get(term);
