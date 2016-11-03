@@ -95,7 +95,7 @@ public class ESQueries {
 	}
 
 	private SearchRequestBuilder prepareRangkingQuery(String field, String term, BoolQueryBuilder must, Integer size, Integer page){
-		SearchRequestBuilder search = client.prepareSearch();
+		SearchRequestBuilder search = client.prepareSearch(accessIndex);
 		search.addAggregation(AggregationBuilders
 				.terms(term)
 				.field(field)

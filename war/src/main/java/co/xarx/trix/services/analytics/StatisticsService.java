@@ -21,11 +21,13 @@ import static co.xarx.trix.util.AnalyticsUtil.*;
 public class StatisticsService {
 
 	private ESQueries esQueries;
+	private PostRepository postRepository;
 	private CommentRepository commentRepository;
 
 	@Autowired
-	public StatisticsService(ESQueries esQueries, CommentRepository commentRepository) {
+	public StatisticsService(ESQueries esQueries, PostRepository postRepository, CommentRepository commentRepository) {
 		this.esQueries = esQueries;
+		this.postRepository = postRepository;
 		this.commentRepository = commentRepository;
 	}
 
@@ -72,6 +74,11 @@ public class StatisticsService {
 		statsData.iosStore = appleStatsJoined;
 		statsData.fileSpace = getFileStats();
 
+		Map<String,Integer> dashboard = dashboardStats();
+
+		statsData.stats.put("comment", dashboard.get("comment"));
+		statsData.stats.put("post", dashboard.get("post"));
+
 		return statsData;
 	}
 
@@ -110,10 +117,10 @@ public class StatisticsService {
 
 	public Map<String,Integer> dashboardStats() {
 		Map<String, Integer> ret = new LinkedHashMap<>();
-//		Long posts = postRepository.countByState(Post.STATE_PUBLISHED);
+		Long posts = postRepository.countByState(Post.STATE_PUBLISHED);
 		Long comments = commentRepository.count();
 
-//		ret.put("post", posts != null ? posts.intValue() : 0);
+		ret.put("post", posts != null ? posts.intValue() : 0);
 		ret.put("comment", comments.intValue());
 
 		return ret;

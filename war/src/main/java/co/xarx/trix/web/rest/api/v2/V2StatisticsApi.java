@@ -15,6 +15,7 @@ public interface V2StatisticsApi {
 
 	@GET
 	@Path("/getMostPopular")
+	@PreAuthorize("isAuthenticated()")
 	@Produces(MediaType.APPLICATION_JSON)
 	Response getMostPopular(@QueryParam("page") @DefaultValue("0") Integer page,
 							@QueryParam("size") @DefaultValue("20") Integer size,
