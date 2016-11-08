@@ -131,8 +131,8 @@ public class PostsResource extends AbstractResource implements PostApi {
 	}
 
 	@Transactional
-	public PostView getPostViewById(Integer postId, Boolean withBody) throws ServletException, IOException {
-		PostView postView = cacheManager.getCache("postViewById").get(postId, PostView.class);
+		public PostView getPostViewById(Integer postId, Boolean withBody) throws ServletException, IOException {
+			PostView postView = cacheManager.getCache("postViewById").get(postId, PostView.class);
 		if(postView == null){
 			Post post = postRepository.findOne(postId);
 			if (post != null) {
