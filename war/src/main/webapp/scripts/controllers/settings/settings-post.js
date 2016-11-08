@@ -69,7 +69,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
         // Allow to upload any file.
         fileAllowedTypes: ['*'],
-        //toolbarSticky: true
+        toolbarSticky: false
     }
 
 
