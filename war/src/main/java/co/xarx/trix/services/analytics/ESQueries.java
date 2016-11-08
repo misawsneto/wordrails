@@ -1,35 +1,33 @@
 package co.xarx.trix.services.analytics;
 
+import co.xarx.trix.api.v2.MobileStats;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.config.security.Permissions;
 import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.page.query.statement.StatStatement;
+import co.xarx.trix.persistence.FileRepository;
+import co.xarx.trix.persistence.MobileDeviceRepository;
+import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
-import org.apache.lucene.queryparser.xml.builders.BooleanQueryBuilder;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.TermQuery;
-import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
+import org.eclipse.persistence.jpa.jpql.Assert;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.cluster.ClusterState;
-import org.elasticsearch.cluster.metadata.IndexMetaData;
-import org.elasticsearch.cluster.metadata.MappingMetaData;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogram;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 @Service
@@ -37,26 +35,20 @@ public class ESQueries {
 
 	private Client client;
 	private String accessIndex;
-	private Map<Class<?>, String> requestSearchFields;
+
+	private FileRepository fileRepository;
+	private MobileDeviceRepository deviceRepository;
+	private PersonPermissionService personPermissionService;
 
 	@Autowired
 	public ESQueries(Client client,
-					  @Value("${elasticsearch.access_index}") String accessIndex){
+					 @Value("${elasticsearch.access_index}") String accessIndex, FileRepository fileRepository, MobileDeviceRepository deviceRepository, PersonPermissionService personPermissionService){
 
 		this.client = client;
 		this.accessIndex = accessIndex;
-		this.requestSearchFields = loadRequestSearchFields();
-	}
-
-	private Map loadRequestSearchFields() {
-		Map fields = new HashMap<Class<?>, String>();
-
-		fields.put(Post.class, "postId");
-		fields.put(Person.class, "authorId");
-		fields.put(Station.class, "stationId");
-		fields.put(Network.class, "tenantId");
-
-		return fields;
+		this.fileRepository = fileRepository;
+		this.deviceRepository = deviceRepository;
+		this.personPermissionService = personPermissionService;
 	}
 
 	private Map<Long, Long> generalCounter(String queryName, QueryBuilder query, String orderField) {
@@ -77,72 +69,110 @@ public class ESQueries {
 		return hist;
 	}
 
-	public Map<Long, Long> getReadsByEntity(AnalyticsEntity entity){
-		String fieldName = requestSearchFields.get(entity.getClass());
-		String queryName = "reads_by_" + fieldName;
-		Object id = getEntityIdentifier(entity);
-
+	public Map<Long, Long> getReadsByEntity(StatStatement statement){
 		BoolQueryBuilder query = new BoolQueryBuilder();
-		query.must(termQuery(fieldName, id));
+		query.must(termQuery(statement.getESFieldName(), statement.getFieldId()));
 		query.must(termQuery("action", Constants.StatsEventType.POST_READ));
 
-		return generalCounter(queryName, query, "timestamp");
+		return generalCounter("reads_by_" + statement.getField(), query, "timestamp");
 	}
 
-	public Map<Long, Long> getRecommendsByEntity(AnalyticsEntity entity){
-		String fieldName = requestSearchFields.get(entity.getClass());
-		String queryName = "comments_by_" + fieldName;
-		Object id = getEntityIdentifier(entity);
-
+	public Map<Long, Long> getRecommendsByEntity(StatStatement statement){
 		BoolQueryBuilder query = new BoolQueryBuilder();
-		query.must(termQuery(fieldName, id));
+		query.must(termQuery(statement.getESFieldName(), statement.getFieldId()));
 		query.must(termQuery("action", Constants.StatsEventType.POST_RECOMMEND));
 
-		return generalCounter(queryName, query, "timestamp");
+		return generalCounter("comments_by_" + statement.getField(), query, "timestamp");
 	}
 
-	public Map<Long, Long> getCommentsByEntity(AnalyticsEntity entity){
-		String fieldName = requestSearchFields.get(entity.getClass());
-		String queryName = "comments_by_" + fieldName;
-		Object id = getEntityIdentifier(entity);
+	public Map<Long, Long> getCommentsByEntity(StatStatement statement){
 
 		BoolQueryBuilder query = new BoolQueryBuilder();
-		query.must(termQuery(fieldName, id));
+		query.must(termQuery(statement.getESFieldName(), statement.getFieldId()));
 		query.must(termQuery("action", Constants.StatsEventType.POST_COMMENT));
 
-		return generalCounter(queryName, query, "timestamp");
+		return generalCounter("comments_by_" + statement.getField(), query, "timestamp");
 	}
 
-	private SearchRequestBuilder prepareRangkingQuery(String field, Interval interval, String term, BoolQueryBuilder must, Integer size, Integer page){
-		SearchRequestBuilder search = client.prepareSearch();
+	private SearchRequestBuilder prepareRangkingQuery(String field, String term, BoolQueryBuilder must, Integer size, Integer page){
+		SearchRequestBuilder search = client.prepareSearch(accessIndex);
 		search.addAggregation(AggregationBuilders
 				.terms(term)
 				.field(field)
-				// page should be bigger than zero
 				.size(size * (page + 1)));
-		search.addAggregation(AggregationBuilders.range("timestamp")
-				.field("timestamp").addRange(interval.getStart().getMillis(), interval.getEnd().getMillis()));
 
 		if(must != null) search.setQuery(must);
 
 		return search;
 	}
 
-	public Map findMostPopular(String field, String byField, Object byValue, Interval interval, Integer size, Integer page) throws Exception {
-		String term = "popular_" + field;
-		BoolQueryBuilder must = new BoolQueryBuilder();
-        must.must(termQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
+	private void joinMusts(BoolQueryBuilder must, StatStatement statement){
+		must.must(termQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
+		must.must(rangeQuery("timestamp")
+				.from(statement.getInterval().getStart().getMillis())
+				.to(statement.getInterval().getEnd().getMillis())
+				.includeLower(true)
+				.includeUpper(true));
 
-		if(byField != null && !byField.isEmpty() && byValue != null){
-			must.must(termQuery(byField, byValue));
-			term += "_by_" + byField;
+		for(int i = 0; i < statement.getByFields().size(); i++){
+			must.must(termQuery(statement.getByFields().get(i), statement.getByValues().get(i)));
 		}
+	}
 
-		SearchRequestBuilder search = prepareRangkingQuery(field, interval, term, must, size, page);
+	public Map findMostPopular(StatStatement statement) throws Exception {
+		String term = "popular_" + statement.getField();
+		BoolQueryBuilder must = new BoolQueryBuilder();
+
+		joinMusts(must, statement);
+
+		SearchRequestBuilder search = prepareRangkingQuery(statement.getField(), term, must, statement.getSize(), statement.getPage());
 		SearchResponse response = search.execute().actionGet();
 
 		Terms terms = response.getAggregations().get(term);
-		return parseRanking((List) terms.getBuckets(), size, page);
+		return parseRanking((List) terms.getBuckets(), statement.getSize(), statement.getPage());
+	}
+
+	public List<MobileStats> getMobileStats(Object tenantId, DateTime date){
+		List<MobileStats> stats = new ArrayList<>();
+
+		Interval week = new Interval(date.minusDays(7), date);
+		Interval month = new Interval(date.minusDays(30), date);
+
+		for(Constants.MobilePlatform app: Constants.MobilePlatform.values()){
+			MobileStats appStats = new MobileStats();
+
+			appStats.type = app;
+			appStats.currentInstallations = (int) (long) deviceRepository.countDevicesByTenantIdAndType((String) tenantId, app);
+			appStats.weeklyActiveUsers = getActiveUserByInterval(week, app);
+			appStats.monthlyActiveUsers = getActiveUserByInterval(month, app);
+
+			stats.add(appStats);
+		}
+
+		return stats;
+	}
+
+
+	public Integer getActiveUserByInterval(Interval interval, Constants.MobilePlatform type){
+		return (int) (long) deviceRepository.countActiveDevices(
+				TenantContextHolder.getCurrentTenantId(),
+				type, interval.getStart().toString(),
+				interval.getEnd().toString());
+	}
+
+	public Map<String, Integer> getFileStats(){
+		List<Object[]> mimeSums = fileRepository.sumFilesSizeByMime(TenantContextHolder.getCurrentTenantId());
+		Map<String, Integer> map = new HashMap<>();
+
+		mimeSums.stream().filter(tuple -> tuple[0] != null && tuple[1] != null)
+				.forEach(tuple -> map.put((String) tuple[0], (int) (long) tuple[1]));
+
+		return map;
+	}
+
+	public List<Integer> getPersonIdsFromStation(Integer stationId){
+		List<Person> persons = personPermissionService.getPersonFromStation(stationId, Permissions.READ);
+		return persons.stream().map(Person::getId).collect(Collectors.toList());
 	}
 
 	private Map parseRanking(List<Terms.Bucket> results, Integer size, Integer page){
@@ -177,14 +207,6 @@ public class ESQueries {
 		return sortedMap;
 	}
 
-
-	public Integer countActionsByEntity(String action, AnalyticsEntity entity){
-		String fieldName = requestSearchFields.get(entity.getClass());
-		Object id = getEntityIdentifier(entity);
-
-		return countTotals(id, fieldName, action);
-	}
-
 	public Integer countTotals(Object id, String field, String action) {
 		BoolQueryBuilder boolQuery = new BoolQueryBuilder();
 		boolQuery.must(termQuery(field, id));
@@ -195,16 +217,4 @@ public class ESQueries {
 
 		return (int) search.execute().actionGet().getHits().getTotalHits();
 	}
-
-	private Object getEntityIdentifier(AnalyticsEntity entity) {
-		String field = requestSearchFields.get(entity.getClass());
-		Object id;
-		if(field.equals("tenantId")){
-			id = entity.getTenantId();
-		} else {
-			id = entity.getId();
-		}
-		return id;
-	}
-
 }

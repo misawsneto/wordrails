@@ -15,14 +15,15 @@ public interface V2StatisticsApi {
 
 	@GET
 	@Path("/getMostPopular")
+	@PreAuthorize("isAuthenticated()")
 	@Produces(MediaType.APPLICATION_JSON)
 	Response getMostPopular(@QueryParam("page") @DefaultValue("0") Integer page,
 							@QueryParam("size") @DefaultValue("20") Integer size,
 							@QueryParam("start") String startTime,
 							@QueryParam("end") String endTime,
 							@QueryParam("field") String field,
-							@QueryParam("byField") String byField,
-							@QueryParam("byValue") String byValue);
+							@QueryParam("byFields") List<String> byFields,
+							@QueryParam("byValues") List<String> byValues);
 
 	@GET
 	@Path("/popularNetworks")

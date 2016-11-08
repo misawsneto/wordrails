@@ -1,6 +1,8 @@
 package co.xarx.trix.web.rest.resource.v2;
 
 import co.xarx.trix.api.v2.StatsData;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.domain.page.query.statement.StatStatement;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.web.rest.api.v2.V2StatisticsApi;
@@ -26,33 +28,37 @@ public class V2StatisticsResource implements V2StatisticsApi {
 								   String startTime,
 								   String endTime,
 								   String field,
-								   String byField,
-								   String byValue){
+								   List<String> byFields,
+								   List<String> byValues){
 		if(field == null || field.isEmpty()) return badRequest("field", "must be defined");
 		checkSize(size);
 
 		Map map;
-		map = statisticsService.getMostPopular(field, byField, byValue, startTime, endTime, size, page);
+		StatStatement statement = new StatStatement(field, byFields, byValues, startTime, endTime, size, page);
+		map = statisticsService.getMostPopular(statement);
 		return ok(map);
 	}
 
 	@Override
 	public Response getPopularNetworks(Integer page, Integer size, String start, String end){
-		return ok(statisticsService.getMostPopular("tenantId", null, null, start, end, size, page));
+		StatStatement statement = new StatStatement("tenant", TenantContextHolder.getCurrentTenantId(), start, end);
+		return ok(statisticsService.getMostPopular(statement));
 	}
 
 	@Override
 	public Response postStats(String end, String start, Integer postId) {
+		StatStatement statement = new StatStatement("post", postId, start, end);
+
 		checkDate(end);
-		StatsData statsData = statisticsService.getPostStats(end, start, postId);
+		StatsData statsData = statisticsService.getSimpleStats(statement);
 		if(statsData == null) return notFound("post");
 		return ok(statsData);
 	}
 
 	@Override
 	public Response authorStats(String end, String start, Integer authorId) throws IOException {
-		checkDate(end);
-		StatsData statsData = statisticsService.getAuthorStats(end, start, authorId);
+		StatStatement statement = new StatStatement("author", authorId, start, end);
+		StatsData statsData = statisticsService.getSimpleStats(statement);
 		if(statsData == null) return notFound("author");
 
 		return ok(statsData);
@@ -60,8 +66,8 @@ public class V2StatisticsResource implements V2StatisticsApi {
 
 	@Override
 	public Response networkStats(String end, String start) throws IOException {
-		checkDate(end);
-		StatsData networkData = statisticsService.getNetworkStats(end, start);
+		StatStatement statement = new StatStatement("tenant", TenantContextHolder.getCurrentTenantId(), start, end);
+		StatsData networkData = statisticsService.getNetworkStats(statement);
 		if(networkData == null) return notFound("network");
 
 		return ok(networkData);
@@ -69,8 +75,8 @@ public class V2StatisticsResource implements V2StatisticsApi {
 
 	@Override
 	public Response stationStats(String end, String start, Integer stationId) throws IOException {
-		checkDate(end);
-		StatsData stationData = statisticsService.getStationStats(end, start, stationId);
+		StatStatement statement = new StatStatement("station", stationId, start, end);
+		StatsData stationData = statisticsService.getSimpleStats(statement);
 		if(stationData == null) return notFound("station");
 
 		return ok(stationData);

@@ -4,6 +4,7 @@ import co.xarx.trix.annotation.IgnoreMultitenancy;
 import co.xarx.trix.api.*;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.page.query.statement.StatStatement;
 import co.xarx.trix.eventhandler.PostEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
@@ -380,9 +381,10 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 
 	@Override
 	public Response networkStats(String date, String beginning) throws JsonProcessingException {
+		StatStatement statement = new StatStatement("network", TenantContextHolder.getCurrentTenantId(), beginning, date);
 		return Response
 				.status(Status.OK)
-				.entity(objectMapper.writeValueAsString(statisticsService.getNetworkStats(date, beginning)))
+				.entity(objectMapper.writeValueAsString(statisticsService.getNetworkStats(statement)))
 				.build();
 	}
 

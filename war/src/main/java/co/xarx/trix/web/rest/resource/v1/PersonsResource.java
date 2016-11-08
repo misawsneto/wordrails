@@ -11,6 +11,7 @@ import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.User;
+import co.xarx.trix.domain.page.query.statement.StatStatement;
 import co.xarx.trix.eventhandler.PersonEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
@@ -503,9 +504,11 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	public StatsData personStats(String date, Integer postId) throws JsonProcessingException {
 		if (postId == null) {
 			Person person = authProvider.getLoggedPerson();
-			return statisticsService.getAuthorStats(date, person.getId());
+			StatStatement statStatement = new StatStatement("person", person.getId(), null, date);
+			return statisticsService.getSimpleStats(statStatement);
 		} else {
-			return statisticsService.getPostStats(date, postId);
+			StatStatement statStatement = new StatStatement("post", postId, null, date);
+			return statisticsService.getSimpleStats(statStatement);
 		}
 	}
 
