@@ -126,7 +126,7 @@ public class PathEntityFilter implements Filter {
 		html = html + "<meta property=\"og:url\" content=\"" + request.getRequestURL() + "\" />";
 		html = html + "<meta property=\"og:title\" content=\"" + post.title + "\" />";
 		html = html + "<meta property=\"og:description\" content=\"" + StringUtil.simpleSnippet(post.body) + "\" />";
-		if (post.featuredImage != null)
+		if (post.getImageLargeHash() != null)
 			html = html + "<meta property=\"og:image\" content=\"" + amazonCloudService.getPublicImageURL(post.getImageLargeHash()) +
 					"\" />";
 
