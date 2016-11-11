@@ -124,7 +124,8 @@ module.exports = {
                     'slimScroll/jquery.slimscroll.min.js',
                     'jquery-focuspoint/**',
                     'jcrop/**',
-                    'pgwslider/**'
+                    'pgwslider/**',
+                    'gilbitron/carouFredSel/**'
                 ],
 
 

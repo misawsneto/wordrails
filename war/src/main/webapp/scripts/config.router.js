@@ -758,7 +758,7 @@ app
                 data : { title: 'Home', folded: false },
                 resolve: {
                   station: [function(){return null;}],
-                  deps:load(['/scripts/controllers/app/page.js?' + GLOBAL_URL_HASH , '/scripts/custom-pgwslider.js?' + GLOBAL_URL_HASH , '/libs/jquery/pgwslider/pgwslider.min.css?' + GLOBAL_URL_HASH, 'angular-carousel']).deps
+                  deps:load(['/scripts/controllers/app/page.js?' + GLOBAL_URL_HASH , '/scripts/custom-pgwslider.js?' + GLOBAL_URL_HASH , '/libs/jquery/pgwslider/pgwslider.min.css?' + GLOBAL_URL_HASH, 'angular-carousel', '/libs/jquery/gilbitron/carouFredSel/jquery.carouFredSel-6.2.1-packed.js?' + GLOBAL_URL_HASH]).deps
                 },
                 controller: 'PageCtrl'
               })

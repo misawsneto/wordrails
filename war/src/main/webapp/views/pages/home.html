@@ -1,7 +1,34 @@
 <div class="m-b">
+   <div id="cc-wrapper" class="m-b-lg" style="margin-top: -16px;">
+      <div id="cc-slider">
+      
+         <div class="slide bg-cover-no-trans" style="background-image: url(http://d3a3w0au60g0o7.cloudfront.net/demo/images/9ac9e151ff8049cc51d7640a39d5b8ad);">
+            <div class="slide-block">
+               <h4>Ice Age</h4>
+               <p>Heading south to avoid a bad case of global frostbite, a group of migrating misfit creatures embark on a hilarious quest to reunite a human baby with his tribe.</p>
+            </div>
+         </div>
+    
+         <div class="slide bg-cover-no-trans" style="background-image: url(http://d3a3w0au60g0o7.cloudfront.net/demo/images/9e5b291ca966fac1a6ebcfc4833b4702);">
+            <div class="slide-block">
+               <h4>For The Birds</h4>
+               <p>For the Birds is an animated short film, produced by Pixar Animation Studios released in 2000. It is shown in a theatrical release of the 2001 Pixar feature film Monsters, Inc.</p>
+            </div>
+         </div>
+    
+         <div class="slide bg-cover-no-trans" style="background-image: url(http://d3a3w0au60g0o7.cloudfront.net/demo/images/08110dd5ed361bd1ab6b797d460ec8ad);">
+            <div class="slide-block">
+               <h4>UP</h4>
+               <p>A comedy adventure in which 78-year-old Carl Fredricksen fulfills his dream of a great adventure when he ties thousands of balloons to his house and flies away to the wilds of South America.</p>
+            </div>
+         </div>
+    
+      </div>
+   </div>
    <div class="container">
       <div class="pos-rlt">
-         <div class="clear pos-rlt m-b-lg p-sm animated fadeIn" ng-if="app.termPerspectiveView.featuredRow.cells.length > 0 && $mdMedia('gt-sm')">
+
+         <div ng-if="false" class="clear pos-rlt m-b-lg p-sm animated fadeIn" ng-if="app.termPerspectiveView.featuredRow.cells.length > 0 && $mdMedia('gt-sm')">
             <ul class="pgwSlider" pgw-slider="{verticalCentering:true, maxHeight: 500, selectionMode: 'click', intervalDuration: 7000 }">
                <li ng-repeat="cell in app.termPerspectiveView.featuredRow.cells" class="md-whiteframe-z1">
                   <a ng-href="{{::('/' + app.getStationById(cell.postView.stationId).stationSlug + '/' + cell.postView.slug)}}">
