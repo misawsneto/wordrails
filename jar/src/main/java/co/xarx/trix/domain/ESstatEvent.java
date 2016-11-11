@@ -59,6 +59,8 @@ public class ESstatEvent implements ElasticSearchEntity {
 
     public Integer stationId;
 
+    public Integer termId;
+
     public List<Integer> terms;
 
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
