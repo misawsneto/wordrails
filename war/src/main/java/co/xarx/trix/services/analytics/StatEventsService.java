@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class StatEventsService {
@@ -80,6 +81,14 @@ public class StatEventsService {
         event.setTenantId(post.getTenantId());
         event.setAuthorId(post.getAuthor().getId());
         event.setStationId(post.getStation().getId());
+
+        List<Integer> terms = new ArrayList<>();
+        Iterator<Term> it = post.getTerms().iterator();
+        while(it.hasNext()){
+            terms.add(it.next().getId());
+        }
+
+        event.setTerms(terms);
 
         return newEvent(request, event);
     }

@@ -146,10 +146,6 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	List<Post> findAllPosts();
 
 	@RestResource(exported = false)
-	@Query(value = "SELECT term FROM Term term where :postId in posts")
-	List<Term> findTermByPostId(@Param("postId") Integer postId);
-
-	@RestResource(exported = false)
 	Long countByState(String state);
 
 	String findStateById(@Param("id") Integer id);

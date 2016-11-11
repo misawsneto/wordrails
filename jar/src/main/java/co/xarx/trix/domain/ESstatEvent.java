@@ -8,7 +8,9 @@ import org.springframework.data.elasticsearch.annotations.*;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -18,6 +20,7 @@ public class ESstatEvent implements ElasticSearchEntity {
 
     public ESstatEvent(){
         this.id = new BigInteger(UUID.randomUUID().toString().getBytes()).intValue();
+        this.terms = new ArrayList<>();
     }
 
     @Id
@@ -56,7 +59,7 @@ public class ESstatEvent implements ElasticSearchEntity {
 
     public Integer stationId;
 
-    public Integer termId;
+    public List<Integer> terms;
 
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     public String tenantId;

@@ -6,9 +6,11 @@ import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.ESPost;
 import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.Term;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.persistence.TermRepository;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.analytics.RequestWrapper;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -40,6 +43,7 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	private AuditService auditService;
 	private PostConverter postConverter;
 	private PostRepository postRepository;
+	private TermRepository termRepository;
 	private PostSearchService postSearchService;
 	private StatEventsService statEventsService;
 	private ElasticSearchService elasticSearchService;
@@ -49,10 +53,11 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	@Autowired
 	public V2PostsResource(PostModerationService postModerationService, PostPermissionService postPermissionService,
 						   PostSearchService postSearchService, PostRepository postRepository, PostConverter
-									   postConverter, AuditService auditService, StatEventsService statEventsService, ElasticSearchService
+									   postConverter, AuditService auditService, TermRepository termRepository, StatEventsService statEventsService, ElasticSearchService
 									   elasticSearchService){
 		this.postModerationService = postModerationService;
 		this.postPermissionService = postPermissionService;
+		this.termRepository = termRepository;
 		this.elasticSearchService = elasticSearchService;
 		this.statEventsService = statEventsService;
 
@@ -180,6 +185,8 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 
 		RequestWrapper rw = new RequestWrapper(request);
 		Date date = timestamp != null ? new Date(timestamp) : new Date();
+		List<Term> terms = termRepository.findTermsByPostId(postId);
+		post.setTerms(new HashSet<>(terms));
 		statEventsService.newPostreadEvent(post, rw, timeReading, date);
 		return Response.ok().build();
 	}
