@@ -147,7 +147,7 @@ public class Network extends BaseEntity implements Serializable, AnalyticsEntity
 	@SdkInclude
 	public Integer getLoginImageId(){
 		if(splashImage != null)
-			return loginImage.getId();
+			return loginImage != null ? loginImage.getId() : null;
 		return null;
 	}
 
