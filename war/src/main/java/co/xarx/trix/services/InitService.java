@@ -125,7 +125,7 @@ public class InitService {
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkData.class);
-		initData.network.facebookUrlRedirect = network.domain != null ? String.format("http://%s.trix.rocks/",
+		initData.network.facebookUrlRedirect = network.domain == null ? String.format("http://%s.trix.rocks/",
 				network.tenantId) : java.lang.String.format("http://%s/", network.domain);
 		initData.network.logoImageId = network.getLogoImageId();
 		initData.network.loginImageId = network.getLoginImageId();
