@@ -104,7 +104,6 @@ public class Network extends BaseEntity implements Serializable, AnalyticsEntity
 
 	@Column(columnDefinition="varchar(255) DEFAULT '#FFFFFF'")
 	public String splashBgColor = "#FFFFFF";
-
 	public String backgroundColor = "#F3F5F9";
 	public String navbarColor = "#242424";
 	public String navbarSecondaryColor  = "#505050";
