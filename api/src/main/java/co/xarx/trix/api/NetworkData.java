@@ -11,6 +11,7 @@ public class NetworkData {
 	public boolean allowSocialLogin;
 	public boolean allowSponsors;
 	public java.lang.String appleStoreAddress;
+	public java.lang.String splashBgColor;
 	public java.lang.String backgroundColor;
 	public java.util.Map<java.lang.String, java.lang.String> backgroundColors;
 	public java.lang.Integer categoriesTaxonomyId;
