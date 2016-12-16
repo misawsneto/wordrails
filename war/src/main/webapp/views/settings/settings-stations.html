@@ -174,14 +174,37 @@
             </md-radio-button>
           </md-radio-group>
           <!-- <div class="line line-dashed b-b line-lg pull-in"></div> -->
-          <!-- <div class="m-b text-muted text-md text-u-c">{{'settings.station.STATION_LOGO' | translate}}</div>
-          <div class="bg-cover text-center" src="img/img-stub.png">
-            <div ng-if="logoImage.link" class="text-center w-xxl m-auto">
+          <div class="m-b text-muted text-md text-u-c">{{'settings.station.STATION_LOGO' | translate}}</div>
+          <div>
+            <!-- <div ng-if="logoImage.link" class="text-center w-xxl m-auto">
               <img class="img-responsive bg-header p-sm r-3x" style="display:block; margin:auto; max-height: 80px;" ng-src="{{logoImage.link}}">
               <div class="pull-right m-r-n-md m-t-n-xxl">
                 <a ng-click="logoImage.link = null;"><i class="mdi mdi-close-circle-outline text-2x"></i></a>
               </div>
             </div> -->
+            <div class="display-t-c v-middle">
+              <div class="b b-a thumb-xl">
+                <img ng-src="{{logoImage.link ? logoImage.link : '/images/img-stub.png'}}" class="p-xs bg-white img-responsive" alt="...">
+              </div>
+            </div>
+            <div class="clear display-t-c v-middle p-l">
+              <span class="font-bold">Splash</span>
+              <small class="text-muted clear text-ellipsis">
+              {{'settings.network.SPLASH_DEFINITION' | translate}}</small>
+              <!-- <input type="file" nv-file-select="" uploader="splash" name="contents" accept="image/*"/> -->
+              <div ng-if="!logoImage.link" aria-label="menu" md-ink-ripple class="md-btn m-t-sm" ng-click="loadImageConfigFromStorage();">
+                <input id="image-upload" type="file" nv-file-select="" uploader="splash" name="contents" accept="image/*"/>
+                <md-tooltip md-direction="top">
+                  {{'actions.UPLOAD_IMAGE' | translate}}
+                </md-tooltip>
+                <!-- <i class="mdi mdi2-image-area i-20 v-m icon" style="vertical-align: 20%"></i> -->
+                {{'titles.UPLOAD' | translate}}
+              </div>
+              <md-button aria-label="nothing" class="md-mini m-0" ng-if="logoImage.link" ng-click="removeSplash();">
+                <i class="mdi2-delete i-20 v-m icon"></i>
+                {{'titles.REMOVE' | translate}}
+              </md-button>
+            </div>
           </div>
         </div>
       </div>

@@ -61,7 +61,7 @@ public interface PersonsApi {
 	@PUT
 	@Path("/update")
 	@Transactional
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Response update(Person person);
 
 	@PUT
@@ -206,7 +206,6 @@ public interface PersonsApi {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@PreAuthorize("permitAll()")
 	Response updateLocation2(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String
-			device,
-						 @FormParam("lat") Double lat, @FormParam("lng") Double lng) throws IOException;
+			device, @FormParam("lat") Double lat, @FormParam("lng") Double lng) throws IOException;
 
 }

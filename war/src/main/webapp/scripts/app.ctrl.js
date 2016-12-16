@@ -263,8 +263,8 @@ app
 
         $scope.app.showErrorToast = function(content) {
           $mdToast.show({
-            template: '<md-toast class="md-warn-default"><div class="md-toast-content"><i class="mdi2-close-circle i-28 p-r"></i>'+content+'</div></md-toast>',
-            hideDelay: 3000,
+            template: '<md-toast class="md-warn-default"><div class="md-warn-default background"><i class="mdi2-close-circle i-28 p-r"></i>'+content+'</div></md-toast>',
+            hideDelay: 30000,
             position: $scope.getToastPosition()
           });
         };
