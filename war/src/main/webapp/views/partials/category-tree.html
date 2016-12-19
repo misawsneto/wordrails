@@ -8,6 +8,9 @@
 	    <!-- <i class="{{ switcher( isLeaf(node), '', 'fa fa-remove' ) }}"></i> -->
 	    {{showNode(node)}}
     </div>
+    <md-tooltip md-direction="left">
+        <span class="text-md">#{{node.id}}</span>
+    </md-tooltip>
     <form class="p-h-sm p-b-sm m-t inline v-t" ng-submit="updateCategory(node)" ng-if="node.editing">
     	<input id="category-{{node.id}}" ng-blur="node.editing=!node.editing; node.editingName = node.name;" style="padding:0; background-color: transparent;" ng-click="$event.stopPropagation();"
     	ng-model="node.editingName" type="text" class="no-border" placeholder="Nome da categoria" />
