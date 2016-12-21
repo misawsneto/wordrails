@@ -68,12 +68,12 @@ public class NetworkData {
 
 	public java.lang.String facebookUrlRedirect = java.lang.String.format("http://%s.trix.rocks/", subdomain);
 	public final java.lang.String facebookUrlToken = "https://graph.facebook.com/v2.6/oauth/access_token";
-	public final java.lang.String facebookUrlAuthorization = "https://www.facebook.com/v2.6/dialog/oauth?scope=public_profile,email&";
+	public final java.lang.String facebookUrlAuthorization = "https://www.facebook.com/v2.6/dialog/oauth?scope=public_profile,email&user_friends&";
 
 	public final java.lang.String googleUrlRedirect = "urn:ietf:wg:oauth:2.0:oob:auto";
 	public final java.lang.String googleUrlToken = "https://www.googleapis.com/oauth2/v4/token";
 	public final java.lang.String googleUrlAuthorization = "https://accounts.google" +
-			".com/o/oauth2/v2/auth?scope=email%20profile&";
+			".com/o/oauth2/v2/auth?scope=email%20profile&plus.login&";
 
 	public final java.lang.String facebookUrlRevoke = "https://graph.facebook.com/v2.6/me/permissions";
 	public final java.lang.String googleUrlRevoke = "https://accounts.google.com/o/oauth2/revoke";
