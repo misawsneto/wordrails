@@ -220,6 +220,7 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 		}else
 			$scope.network.favicon = null;
 
+		$scope.network.language = 'pt';
 		trix.putNetwork($scope.network).success(function(response){
 			$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 			$scope.disabled = false;
