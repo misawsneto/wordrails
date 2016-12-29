@@ -70,7 +70,7 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 
 		if (item == null) {
 			return Response.noContent().build();
-		} else if (!fileService.validate(item, FileService.MAX_SIZE_8)) {
+		} else if (!fileService.validate(item, FileService.MAX_SIZE_32)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 
