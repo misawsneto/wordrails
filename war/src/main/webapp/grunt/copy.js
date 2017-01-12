@@ -89,7 +89,9 @@ module.exports = {
                     'angular-scroll/**',
                     'angular-carousel/dist/**',
                     'angular-drag-and-drop-lists/**',
-                    'satellizer/**'
+                    'satellizer/**',
+                    'angulartics/dist/**',
+                    'angulartics-google-analytics/dist/**'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

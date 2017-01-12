@@ -26,7 +26,9 @@
     defaultMargin: 0
   })
 
-  .config(['$translateProvider', function($translateProvider){
+  .config(['$translateProvider', '$analyticsProvider', function($translateProvider, $analyticsProvider){
+    $analyticsProvider.firstPageview(true);
+    $analyticsProvider.withBase(true)
     // Register a loader for the static files
     // So, the module will search missing translation tables under the specified urls.
     // Those urls are [prefix][langKey][suffix].

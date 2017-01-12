@@ -111,6 +111,7 @@
     "froala-image-caption": "^1.0.2",
     "angular-slick": "^0.2.1",
     "angular-drag-and-drop-lists": "^1.4.0",
-    "angulartics": "^1.3.0"
+    "angulartics": "^1.3.0",
+    "angulartics-google-analytics": "^0.4.0"
   }
 }

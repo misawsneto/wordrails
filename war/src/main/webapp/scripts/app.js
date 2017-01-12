@@ -30,5 +30,7 @@ var app = angular
     'angular-loading-bar',
     'trix',
     'material.core.colors',
-    'satellizer'
+    'satellizer',
+    'angulartics', 
+    'angulartics.google.analytics'
   ]);

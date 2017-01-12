@@ -29,6 +29,9 @@ module.exports = {
 
   'libs/jquery/moment/min/moment-with-locales.js',
 
+  'libs/angular/angulartics/dist/angulartics.min.js',
+  'libs/angular/angulartics-google-analytics/dist/angulartics-ga.min.js',
+
   'js/BaseTrix.js',
   'scripts/app.js',
   'scripts/config.js',
