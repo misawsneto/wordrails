@@ -72,8 +72,8 @@
   <script src="/libs/angular/angular-loading-bar/build/loading-bar.js"></script>
   <script src="/libs/angular/satellizer/satellizer.min.js"></script>
 
-  <script src="/libs/angular/angulartics/dist/angulartics.min.js"/>
-  <script src="/libs/angular/angulartics-google-analytics/dist/angulartics-ga.min.js"/>
+  <script src="/libs/angular/angulartics/dist/angulartics.min.js"></script>
+  <script src="/libs/angular/angulartics-google-analytics/dist/angulartics-ga.min.js"></script>
 
 <!-- App -->
   <script src="/js/BaseTrix.js"></script>
