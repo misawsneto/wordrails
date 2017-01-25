@@ -255,6 +255,20 @@ app
                 },
                 controller: 'SettingsMediaLibraryCtrl'
               })
+              .state('app.notifications', {
+                url: '/media',
+                reloadOnSearch: false,
+                templateUrl: '/views/settings/notifications.html?' + GLOBAL_URL_HASH,
+                data : { titleTranslate: 'titles.COMMENTS', title: 'Comentários', folded: false },
+                // resolve: load(['/scripts/controllers/settings/settings-publications.js?' + GLOBAL_URL_HASH ]),
+                resolve: {
+                  deps: ['$ocLazyLoad', '$templateCache',
+                    function( $ocLazyLoad, $templateCache ){
+                      return $ocLazyLoad.load(['/scripts/controllers/settings/settings-media-library.js?' + GLOBAL_URL_HASH ])
+                  }]
+                },
+                controller: 'SettingsMediaLibraryCtrl'
+              })
               .state('app.colors', {
                 url: '/colors',
                 templateUrl: '/views/settings/settings-colors.html?' + GLOBAL_URL_HASH,

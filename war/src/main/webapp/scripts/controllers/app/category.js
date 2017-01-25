@@ -14,6 +14,7 @@ app.controller('CategoryCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$md
  //      	allLoaded = true;
  //    })
 
+ 	$scope.menu2.navigationState = category.id;
     $scope.paginate = function(){
     	if(!loading && !allLoaded){
     		loading = true;

@@ -109,7 +109,13 @@ app
         $window.history.back();
       }
 
+      $scope.app.setSeenStations = function(){
+        $scope.app.setting.seenStations = true;
+        $localStorage.appSetting = $scope.app.setting;
+      }
+
       $scope.openAside = function () {
+        $scope.app.setSeenStations();
         $timeout(function() { $mdSidenav('aside').open(); });
       }
       $scope.closeAside = function () {
@@ -566,6 +572,8 @@ app
       }
 
       startApp();
+
+      $scope.menu2 = {navigationState: 'home'};
 
       $scope.app.isLogged = function(){
         if($scope.app.person.id === 0)

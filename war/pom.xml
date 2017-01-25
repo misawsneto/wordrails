@@ -84,7 +84,7 @@
 						<configuration>
 							<mainClass>co.xarx.trix.generator.generator.JavaScriptClientGenerator</mainClass>
 							<arguments>
-								<argument>${basedir}/src/main/webapp/js</argument>
+								<argument>${basedir}/src/main/webapp/js/jquery</argument>
 							</arguments>
 							<includePluginDependencies>true</includePluginDependencies>
 						</configuration>

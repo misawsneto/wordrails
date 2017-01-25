@@ -9129,3 +9129,41 @@ ul.pgwSlider > li,
 .df-tab-menu > li.df-tab-menu-active > a {
   opacity: inherit!important;
 }
+
+.pulse-button {
+  position: absolute;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(235, 235, 235, 0.7);
+  -webkit-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+     -moz-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+      -ms-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+          animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+@-webkit-keyframes pulse {
+  to {
+    box-shadow: 0 0 0 45px rgba(235, 235, 235, 0);
+  }
+}
+
+@-moz-keyframes pulse {
+  to {
+    box-shadow: 0 0 0 45px rgba(235, 235, 235, 0);
+  }
+}
+
+@-ms-keyframes pulse {
+  to {
+    box-shadow: 0 0 0 45px rgba(235, 235, 235, 0);
+  }
+}
+
+@keyframes pulse {
+  to {
+    box-shadow: 0 0 0 45px rgba(235, 235, 235, 0);
+  }
+}

@@ -57,6 +57,12 @@ public class PersonDataFilter implements Filter{
 			request.setAttribute("personDataObject", data);
 			request.setAttribute("personData", simpleMapper.writeValueAsString(data));
 			request.setAttribute("networkName", data.network.name);
+			request.setAttribute("trackingId",
+			data.network.trackingId != null ? "(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){" +
+				"(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),"+
+					"m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)"+
+			"})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');"+
+			"ga('create', '" + data.network.trackingId + "', 'auto')" : "");
 		}
 
 		chain.doFilter(request, res);
