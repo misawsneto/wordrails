@@ -141,9 +141,9 @@ public class AmazonCloudService {
 	}
 
 	protected void uploadFile(java.io.File file, Long lenght, String keyName, ObjectMetadata metadata, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
-		if("dev".equals(profile) && !("demo".equals(TenantContextHolder.getCurrentTenantId()) || "test".equals(TenantContextHolder.getCurrentTenantId()))) {
-			throw new OperationNotSupportedException("Can't upload images in dev profile in network that is not demo");
-		}
+//		if("dev".equals(profile) && !("demo".equals(TenantContextHolder.getCurrentTenantId()) || "test".equals(TenantContextHolder.getCurrentTenantId()))) {
+//			throw new OperationNotSupportedException("Can't upload images in dev profile in network that is not demo");
+//		}
 
 		log.debug("uploading file of lenght " + lenght);
 
