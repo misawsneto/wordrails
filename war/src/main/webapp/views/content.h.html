@@ -189,7 +189,7 @@
 
             <li class="material-top-menu-item animated fadeIn" md-ink-ripple ng-if="app.perspectiveTerms"
               data-menu-item="{{'home'}}">
-              <a ng-href="/" style="padding: 12px; padding-bottom: 16px;" data-ng-click="menu2.navigationState = 'home'">
+              <a ng-href="{{::('/' + app.getStationById(app.termPerspectiveView.stationId).stationSlug) + '/home'}}" style="padding: 12px; padding-bottom: 16px;" data-ng-click="menu2.navigationState = 'home'">
                 <i class="mdi2-home i-24" style="vertical-align: -14%"></i>&nbsp;&nbsp;
                 <span>{{app.getStationById(app.termPerspectiveView.stationId).name}}</span>
               </a>
