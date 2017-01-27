@@ -32,16 +32,8 @@
                      ng-style="{'background-position': postView.focusX + '% ' + postView.focusY + '%'}">
                         <!-- <img class="responsive-img materialboxed" ng-src="{{postView | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
                      </div>
-                     <div ng-if="::(!app.hasImage(postView))" class="black-grad w-full text-lg pos-abt bottom-0 text-white text-shadow p">{{::postView.title}}</div>
+                     <div class="black-grad w-full text-lg pos-abt bottom-0 text-white text-shadow p">{{::postView.title}}</div>
                   </div>
-               </a>
-            </div>
-            <!-- News Description -->
-            <div class="news-description p-t p-b-sm p-h" style="min-height: 89px;">
-               <a ng-href="{{::'/' + app.getStationById(postView.stationId).stationSlug + '/' + postView.slug}}">
-                 <div class="news-title o-f-h" ng-if="::(app.hasImage(postView))" style="height: 66px">
-                   <p clamp="2">{{::postView.title}}</p>
-                 </div>
                </a>
             </div>
          </div>
