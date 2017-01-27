@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import javax.servlet.ServletException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
 
@@ -19,6 +20,13 @@ import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public interface PostApi {
 
+	class CopyPostsDto {
+		public List<Integer> postIds;
+		public Integer stationId;
+		public List<Integer> termIds;
+		public boolean keepAuthor;
+	}
+
 	@GET
 	@Path("/")
 	void getPosts() throws ServletException, IOException;
@@ -26,6 +34,10 @@ public interface PostApi {
 	@GET
 	@Path("/search/findBySlug")
 	void findBySlug() throws ServletException, IOException;
+
+	@PUT
+	@Path("/copyToStation")
+	Response copyToStation(CopyPostsDto copyPostsDto) throws ServletException, IOException;
 
 	@GET
 	@Path("/{postId}/comments")

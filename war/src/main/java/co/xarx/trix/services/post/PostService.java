@@ -19,6 +19,7 @@ import co.xarx.trix.services.security.PersonPermissionService;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.StringUtil;
+import co.xarx.trix.web.rest.api.v1.PostApi;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -89,6 +90,9 @@ public class PostService {
 
 	@PersistenceContext
 	private EntityManager em;
+
+	@Autowired
+	private TermRepository termRepository;
 
 	@Async(value = "myExecuter")
 	public void asyncSendNewPostNotification(Post post, String tentantId) throws NotificationException {
@@ -281,5 +285,42 @@ public class PostService {
 			postView.body = null;
 		}
 		return postView;
+	}
+
+	public boolean copyToStation(PostApi.CopyPostsDto copyPostsDto) {
+		Assert.isNotNull(copyPostsDto, "invalid parameter");
+		Assert.isNotNull(copyPostsDto.postIds, "invalid posts");
+		Assert.isNotNull(copyPostsDto.stationId, "invalid station");
+		Assert.isNotNull(copyPostsDto.termIds, "invalid terms");
+
+		List<Post> posts = postRepository.findAll(copyPostsDto.postIds);
+		List<Term> terms = termRepository.findAll(copyPostsDto.termIds);
+		Station station = stationRepository.findOne(copyPostsDto.stationId);
+
+		List<Station> stations = personPermissionService.getStationsWithPermission(Permissions.WRITE);
+
+		Assert.isTrue(stations.contains(station), "user does not have write permissions");
+
+		Person person = authProvider.getLoggedPerson();
+
+		boolean termsFromStation = true;
+
+		for (Term term: terms) {
+			if(!term.taxonomy.id.equals(station.categoriesTaxonomyId)) {
+				termsFromStation = false; break;
+			}
+		}
+
+		Assert.isTrue(termsFromStation, "term not from station");
+
+		for (Post post :
+				posts) {
+			post.id = null;
+			post.station = station;
+			post.terms = new HashSet<>(terms);
+			postRepository.save(post);
+		}
+
+		return true;
 	}
 }

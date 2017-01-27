@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -78,6 +79,11 @@ public class PostsResource extends AbstractResource implements PostApi {
 	@Override
 	public void findBySlug() throws ServletException, IOException {
 		forward();
+	}
+
+	public Response copyToStation(CopyPostsDto copyPostsDto) throws ServletException, IOException{
+		boolean success = postService.copyToStation(copyPostsDto);
+		return  success ? Response.status(Response.Status.OK).build() : Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 	}
 
 	@Override
