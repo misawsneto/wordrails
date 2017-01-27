@@ -1,4 +1,5 @@
 <nav ui-nav>
+	<div class="text-sm p-sm"><i class="mdi2-radio-tower"></i> {{'titles.STATIONS' | translate}}</div>
   <ul class="nav">
     <li ui-sref-active="active" ng-repeat="station in app.stations">
       <a md-ink-ripple ui-sref="app.station.stationHome({'stationSlug': station.stationSlug})">
@@ -6,4 +7,14 @@
       </a>
     </li>
   </ul>
+  <md-divider ng-if="app.network.subdomain === 'oabpe'"></md-divider>
+  <div ng-if="app.network.subdomain === 'oabpe'" class="text-sm p-sm"><i class="mdi2-exit-to-app"></i> Serviços</div>
+  <ul ng-if="app.network.subdomain === 'oabpe'" class="nav">
+    <li ui-sref-active="active" ng-repeat="section in app.sections">
+      <a md-ink-ripple ng-href="{{::section.anonymousUrl}}" target="_blank">
+        <span class="font-normal text-base">{{::section.name}}</span>
+      </a>
+    </li>
+  </ul>
+
 </nav>
