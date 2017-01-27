@@ -31,8 +31,8 @@ import java.util.Set;
 	public final String CREDENTIALS_TEMPLATE_FILENAME = "credentials-email.html";
 
 	private final String NO_REPLY = "noreply@trix.rocks";
-	private final String USERNAME = "AKIAJKZJWC7NU3RF3URQ";
-	private final String PASSWORD = "2knHnAfeG5uVXmCXcLjquUUiNnxyWjJcIuCp2mxg";
+	private final String USERNAME = "AKIAJC2VQWTGHUNSOT6A";
+	private final String PASSWORD = "WX1n3BMrOIVDt9QVNtHtZ8NoaPM6hh99I6A5v57T";
 
 	@Async
 	public void sendSimpleMail(String emailTo, String subject, String emailBody) {
