@@ -563,6 +563,12 @@ app
             $scope.app.totalPending = c.totalElements;
           });
 
+        if($scope.app.network.subdomain === 'oabpe')
+          $scope.app.stations.forEach(function(station){
+            if(station.stationSlug.indexOf('sub-') > -1)
+              station.sub=true;
+          })
+
       } // end of startApp
 
       if(!appData.network){

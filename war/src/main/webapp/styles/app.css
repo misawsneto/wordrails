@@ -9167,3 +9167,7 @@ ul.pgwSlider > li,
     box-shadow: 0 0 0 45px rgba(235, 235, 235, 0);
   }
 }
+
+.auto .text-active {
+  display: inline-block !important;
+}
