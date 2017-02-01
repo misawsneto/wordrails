@@ -1,5 +1,43 @@
 app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$filter',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $filter){
+
+    var splash = $scope.splash = new FileUploader({
+      url: TRIX.baseUrl + "/api/images/upload?imageType=SPLASH"
+    });
+
+    splash.onAfterAddingFile = function(fileItem) {
+      $scope.logoImage = null;
+      splash.uploadAll();
+    };
+
+    splash.onSuccessItem = function(fileItem, response, status, headers) {
+      if(response.filelink){
+        $scope.logoImage = response;
+        $mdToast.hide();
+      }
+    };
+
+    splash.onErrorItem = function(fileItem, response, status, headers) {
+      if(status == 413)
+        $scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
+      else
+        $scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+    }
+
+    splash.onProgressItem = function(fileItem, progress) {
+      cfpLoadingBar.start();
+      cfpLoadingBar.set(progress/100)
+      if(progress == 100){
+        cfpLoadingBar.complete()
+        toastPromise = $mdToast.show(
+          $mdToast.simple()
+          .content('Processando...')
+          .position('top right')
+          .hideDelay(false)
+        );
+      }
+    };
+
 		$scope.app.lastSettingState = "app.settings.stations";
 
 		$scope.setMainStation = function(station){
@@ -36,9 +74,10 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 
         // }
       })
+      $scope.slugFocused = false;
     }
 
-    $scope.slugFocused = false
+    $scope.slugFocused = false;
 
     $scope.app.stationNameChange = function(station){
       if(!station.id && !$scope.slugFocused){
@@ -62,7 +101,16 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
           $scope.app.showSuccessToast($filter('translate')('settings.station.STATION_CREATION_SUCCESS'))
           $mdDialog.cancel();
           trix.getStation(st.id).success(function(stationResponse){
+            if(!$scope.app.permissions.stationPermissions)
+              $scope.app.permissions.stationPermissions = []
+            
             $scope.app.stations.push(stationResponse);
+
+            $scope.app.permissions.stationPermissions.push({
+              administration: true,
+              stationId: stationResponse.id
+            });
+            setAdminStations();
           })
         });
       }else{
@@ -113,11 +161,12 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
       trix.forceDeleteStation(id).success(function(response){
         $scope.app.showSuccessToast($filter('translate')('settings.station.STATION_REMOVED_SUCCESS'))
         $mdDialog.cancel();
-        for(var i = $scope.app.stations.length - 1; i >= 0; i--) {
-            if($scope.app.stations[i].id === id) {
-              $scope.app.stations.splice(i, 1);
+        for(var i = $scope.app.permissions.stationPermissions.length - 1; i >= 0; i--) {
+            if($scope.app.permissions.stationPermissions[i].stationId === id) {
+              $scope.app.permissions.stationPermissions.splice(i, 1);
             }
         }
+        setAdminStations();
       });
     }
 
@@ -133,14 +182,17 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
       $scope.showStationConfigDialog(event)
     }
 
-    $scope.adminStations = [];
 
-   $scope.app.permissions.stationPermissions.forEach(function(perm){
-      if(perm.administration || $scope.app.isAdmin){
-        $scope.adminStations.push($scope.app.getStationById(perm.stationId))
-      }
-    });
+    function setAdminStations(){
+      $scope.adminStations = [];
+      $scope.app.permissions.stationPermissions.forEach(function(perm){
+        if(perm.administration || $scope.app.isAdmin){
+          $scope.adminStations.push($scope.app.getStationById(perm.stationId))
+        }
+      });
+    }
 
+    setAdminStations();
 
     settingsStationsCtrl = $scope;
 	}])

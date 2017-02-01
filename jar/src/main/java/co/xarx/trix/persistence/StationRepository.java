@@ -45,7 +45,6 @@ public interface StationRepository extends StationRepositoryCustom, JpaRepositor
 	void delete(Station user);
 
 	@RestResource(exported = false)
-	@Cacheable(value = "stationsIds", key = "#p0")
 	@Query("select station.id from Station station where station.tenantId = :tenantId")
 	List<Integer> findIds(@Param("tenantId") String tenantId);
 

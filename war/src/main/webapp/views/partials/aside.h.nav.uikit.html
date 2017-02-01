@@ -6,6 +6,103 @@
         <span class="font-normal text-md">{{::station.name}}</span>
       </a>
     </li>
+    <li ng-if="app.network.subdomain === 'oabpe'">
+      <a href="" class="auto">
+        <span class="pull-right text-muted">
+          <i class="fa fa-fw fa-angle-right text"></i>
+          <i class="fa fa-fw fa-angle-down text-active"></i>
+        </span>
+        <i class="glyphicon glyphicon-briefcase icon"></i>
+        <span translate="aside.nav.components.ui_kits.UI_KITS" class="ng-scope">UI Kits</span>
+      </a>
+      <ul class="nav nav-sub dk">
+        <li class="nav-sub-header">
+          <a href="">
+            <span translate="aside.nav.components.ui_kits.UI_KITS" class="ng-scope">UI Kits</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="app.ui.buttons" href="#/app/ui/buttons">
+            <span translate="aside.nav.components.ui_kits.BUTTONS" class="ng-scope">Buttons</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="app.ui.icons" href="#/app/ui/icons">
+            <b class="badge bg-info pull-right">3</b>
+            <span translate="aside.nav.components.ui_kits.ICONS" class="ng-scope">Icons</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="app.ui.grid" href="#/app/ui/grid">
+            <span translate="aside.nav.components.ui_kits.GRID" class="ng-scope">Grid</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="app.ui.widgets" href="#/app/ui/widgets">
+            <b class="badge bg-success pull-right">13</b>
+            <span translate="aside.nav.WIDGETS" class="ng-scope">Widgets</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="app.ui.bootstrap" href="#/app/ui/bootstrap">
+            <b class="badge bg-primary pull-right">16</b>
+            <span translate="aside.nav.components.ui_kits.BOOTSTRAP" class="ng-scope">Bootstrap</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="app.ui.sortable" href="#/app/ui/sortable">
+            <span translate="aside.nav.components.ui_kits.SORTABLE" class="ng-scope">Sortable</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="app.ui.scroll" href="#/app/ui/scroll">
+            <span>Scroll</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="app.ui.portlet" href="#/app/ui/portlet">
+            <span translate="aside.nav.components.ui_kits.PORTLET" class="ng-scope">Portlet</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="app.ui.timeline" href="#/app/ui/timeline">
+            <span translate="aside.nav.components.ui_kits.TIMELINE" class="ng-scope">Timeline</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="app.ui.tree" href="#/app/ui/tree">
+            <span>Tree</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="app.ui.toaster" href="#/app/ui/toaster">
+            <span>Toaster</span>
+          </a>
+        </li>
+        <li>
+          <a href="" class="auto">
+            <span class="pull-right text-muted">
+              <i class="fa fa-fw fa-angle-right text"></i>
+              <i class="fa fa-fw fa-angle-down text-active"></i>
+            </span>
+            <b class="label bg-info pull-right">2</b>
+            <span>Maps</span>
+          </a>
+          <ul class="nav dker">
+            <li ui-sref-active="active">
+              <a ui-sref="app.ui.jvectormap" href="#/app/ui/jvectormap">
+                <span translate="aside.nav.components.ui_kits.VECTOR_MAP" class="ng-scope">Vector Map</span>
+              </a>
+            </li>
+            <li ui-sref-active="active">
+              <a ui-sref="app.ui.googlemap" href="#/app/ui/googlemap">
+                <span>Google Map</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
   </ul>
   <md-divider ng-if="app.network.subdomain === 'oabpe'"></md-divider>
   <div ng-if="app.network.subdomain === 'oabpe'" class="text-sm p-sm"><i class="mdi2-exit-to-app"></i> Serviços</div>
