@@ -123,12 +123,23 @@ public class PathEntityFilter implements Filter {
 	public String postMetaTagsBuilder(PostView post) throws IOException {
 		String html = "";
 
+		//facebook
 		html = html + "<meta property=\"og:url\" content=\"" + request.getRequestURL() + "\" />";
 		html = html + "<meta property=\"og:title\" content=\"" + post.title + "\" />";
 		html = html + "<meta property=\"og:description\" content=\"" + StringUtil.simpleSnippet(post.body) + "\" />";
-		if (post.getImageLargeHash() != null)
-			html = html + "<meta property=\"og:image\" content=\"" + amazonCloudService.getPublicImageURL(post.getImageLargeHash()) +
-					"\" />";
+		// twitter
+		html = html + "<meta name=\"twitter:card\" content=\"product\">";
+		html = html + "<meta name=\"twitter:site\" content=\"@PoraquiNews\">";
+		html = html + "<meta name=\"twitter:creator\" content=\"@PoraquiNews\">";
+		html = html + "<meta name=\"twitter:title\" content=\"" + post.title + "\">";
+		html = html + "<meta name=\"twitter:description\" content=\""+StringUtil.simpleSnippet(post.body)+"\">";
+
+		if (post.getImageLargeHash() != null) {
+			// facebook
+			html = html + "<meta property=\"og:image\" content=\"" + amazonCloudService.getPublicImageURL(post.getImageLargeHash()) + "\" />";
+			// twitter
+			html = html + "<meta name=\"twitter:image\" content=\"" + amazonCloudService.getPublicImageURL(post.getImageLargeHash()) + "\">";
+		}
 
 		return html;
 	}
