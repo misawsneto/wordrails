@@ -1,8 +1,13 @@
 <nav ui-nav>
-	<div class="text-sm p-sm"><i class="mdi2-radio-tower"></i> {{'titles.STATIONS' | translate}}</div>
   <ul class="nav">
     <li ui-sref-active="active" ng-repeat="station in app.stations" ng-if="!station.sub">
-      <a md-ink-ripple ui-sref="app.station.stationHome({'stationSlug': station.stationSlug})">
+      <a ng-if="app.network.subdomain !== 'oabpe'" md-ink-ripple ui-sref="app.station.stationHome({'stationSlug': station.stationSlug})">
+        <span class="font-normal text-md">{{::station.name}}</span>
+      </a>
+      <a ng-if="station.id === 326" md-ink-ripple ng-href="{{::('/' + app.getStationById(station.id).stationSlug + '/cat?name=Institucional')}}">
+        <span class="font-normal text-md">{{::station.name}}</span>
+      </a>
+      <a ng-if="station.id === 380" md-ink-ripple ng-href="{{::('/' + app.getStationById(station.id).stationSlug + '/cat?name=Comissões')}}">
         <span class="font-normal text-md">{{::station.name}}</span>
       </a>
     </li>
@@ -15,7 +20,7 @@
       </a>
       <ul class="nav nav-sub dk">
         <li ng-repeat="station in app.stations" ng-if="station.sub">
-          <a md-ink-ripple style="padding-left: 42px;" ui-sref="app.station.stationHome({'stationSlug': station.stationSlug})">
+          <a md-ink-ripple style="padding-left: 42px;" ng-href="{{::('/' + app.getStationById(station.id).stationSlug + '/cat?name=Diretoria')}}">
             <span >{{station.name}}</span>
           </a>
         </li>

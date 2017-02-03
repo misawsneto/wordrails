@@ -99,4 +99,14 @@ public class V2PersonsResource extends AbstractResource implements V2PersonsApi 
 		}
 
 	}
+
+	@Override
+	public Response notifyStations(StationsDto stationsDto) {
+		return null;
+	}
+
+	@Override
+	public Response notifyAllStaitons() {
+		return null;
+	}
 }

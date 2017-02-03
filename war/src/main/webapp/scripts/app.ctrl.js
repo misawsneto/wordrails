@@ -683,9 +683,15 @@ app
         $scope.app.activeCategory = null;
       })
 
-      $scope.app.loadPerspective = function(station){
+      $scope.app.loadPerspective = function(station, callback){
         trix.findPerspectiveView(station.defaultPerspectiveId, null, null, 0, 10).success(function(termPerspective){
           $scope.app.termPerspectiveView = termPerspective;
+          if($scope.app.network.subdomain === 'oabpe'){
+            $scope.app.termPerspectiveView.homeRow = null;
+            callback();
+            return;
+          }
+
           if($scope.app.termPerspectiveView.homeRow && $scope.app.termPerspectiveView.homeRow.cells){
             $scope.app.termPerspectiveView.homeRow.allLoaded = false;
             var length = $scope.app.termPerspectiveView.homeRow.cells.length >= 10 ? 10 : $scope.app.termPerspectiveView.homeRow.cells.length;

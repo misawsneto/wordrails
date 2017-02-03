@@ -16,6 +16,14 @@ app.controller('StationCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$mdD
         $scope.app.termPerspectiveView.homeRow.cells = $scope.app.termPerspectiveView.homeRow.cells.slice(0,length);
     }
 
+    // if($scope.app.network.subdomain === 'oabpe' && $scope.app.termPerspectiveView.ordinaryRows && $scope.app.termPerspectiveView.ordinaryRows.length > 0){
+    //   // var url = $scope.app.getStationById(app.termPerspectiveView.stationId).stationSlug + '/cat?name=' + $scope.app.getEscapedCategory(category.name);
+    //   $state.go('app.station.categoryPage', {
+    //     stationSlug: $scope.app.getStationById($scope.app.termPerspectiveView.stationId),
+    //     name: $scope.app.termPerspectiveView.ordinaryRows[0].termName
+    //   }, {location: 'replace', notify: false});
+    // }
+
     $timeout(function(){
     $('#scroll-box').animate({scrollTop: 0}, 0, 'easeOutQuint');
   })

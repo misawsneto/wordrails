@@ -8,7 +8,7 @@
     </a>
     <!-- / -->
     <div class="navbar-header pull-left">
-      <a class="navbar-brand" ng-href="/">
+      <a class="navbar-brand" ng-href="{{::(app.network.subdomain !== 'oabpe' ? '/' : '/oab-pe/cat?name=Institucional')}}">
         <!-- <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve" style="
               width: 24px; height: 24px;">
             <path d="M 50 0 L 100 14 L 92 80 Z" fill="rgba(139, 195, 74, 0.5)"></path>
@@ -187,7 +187,7 @@
         <div class="custom-header container" style="min-height: 50px;">
           <ul class="nav nav-lines nav-md no-bg animated text-base material-top-menu" ng-class="{'o-f-h fadeOut': app.loadingTabs}" df-tab-menu menu-control="{{menu2.navigationState}}" style="height: 52px">
 
-            <li class="material-top-menu-item animated fadeIn" md-ink-ripple ng-if="app.perspectiveTerms"
+            <li class="material-top-menu-item animated fadeIn" md-ink-ripple ng-if="app.perspectiveTerms && app.network.subdomain != 'oabpe'"
               data-menu-item="{{'home'}}">
               <a ng-href="{{::('/' + app.getStationById(app.termPerspectiveView.stationId).stationSlug) + '/home'}}" style="padding: 12px; padding-bottom: 16px;" data-ng-click="menu2.navigationState = 'home'">
                 <i class="mdi2-home i-24" style="vertical-align: -14%"></i>&nbsp;&nbsp;

@@ -14,6 +14,10 @@ import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public interface V2PersonsApi {
 
+	class StationsDto {
+		public List<Integer> stationsIds;
+	}
+
 	@GET
 	@Path("/search")
 	Response searchPersons(@QueryParam("q") String query,
@@ -41,6 +45,14 @@ public interface V2PersonsApi {
 	@GET
 	@Path("/{username}/timeline")
 	Response getPersonTimeline(@PathParam("username") String username);
+
+	@PUT
+	@Path("/notify/stations")
+	Response notifyStations(StationsDto stationsDto);
+
+	@PUT
+	@Path("/notify/all")
+	Response notifyAllStaitons();
 
 //	@GET
 //	@Path("{username}/permissions/station")
