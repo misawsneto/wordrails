@@ -20,7 +20,7 @@ app.controller('CategoryCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$md
     $scope.paginate = function(){
     	if(!loading && !allLoaded){
     		loading = true;
-	    	trix.findPostsByTerm(category.termId, $scope.postsPage, 20, null).success(function(response){
+	    	trix.findPostsByTerm(category.termId, $scope.postsPage, category.id === 1981 ? 100: 20, null).success(function(response){
 	    		if(!$scope.postViews)
 	    			$scope.postViews = []
 		      if(response && response.length > 0){
