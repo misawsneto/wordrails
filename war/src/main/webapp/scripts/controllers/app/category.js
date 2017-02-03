@@ -14,7 +14,7 @@ app.controller('CategoryCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$md
  //      	allLoaded = true;
  //    })
 
- 	$scope.servicesCat = category.id == 1974 ||  category.id == 1973 || category.id == 1970 || category.id == 1953;
+ 	$scope.servicesCat = category.id == 1974 ||  category.id == 1973 || category.id == 1970 || category.id == 1953 || category.id == 1981;
 
  	$scope.menu2.navigationState = category.id;
     $scope.paginate = function(){
