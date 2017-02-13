@@ -233,6 +233,7 @@ public class PostsResource extends AbstractResource implements PostApi {
 
 	@Override
 	public void putPostTerms(Integer id) throws IOException {
+		cacheManager.getCache("postViewById").evict(id);
 		forward();
 	}
 }
