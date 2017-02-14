@@ -58,6 +58,7 @@ public class NetworkService {
 			network.name = "Settings";
 			network.tenantId = "settings";
 			network.id = 0;
+			return network;
 		}
 
 		return networkRepository.findByTenantId(tenantId);

@@ -37,6 +37,10 @@ public class NetworkDomainFilter implements Filter {
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
+
+		HttpSession session = request.getSession();
+		request.setAttribute("personData", "{}");
+
 		String host = request.getHeader("Host");
 		String path = request.getRequestURI().substring(request.getContextPath().length()).replaceAll("[/]+$", "");
 		boolean appliedPath = APPLIED_PATHS.contains(path) || APPLIED_PATHS.stream().anyMatch(p ->
@@ -69,7 +73,7 @@ public class NetworkDomainFilter implements Filter {
 						return;
 					}
 
-					HttpSession session = request.getSession();
+
 					session.setAttribute("userAgent", request.getHeader("User-Agent"));
 					session.setAttribute("tenantId", tenantId);
 					request.setAttribute("personData", "{}");
