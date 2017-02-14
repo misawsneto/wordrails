@@ -161,6 +161,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 					errors.add(error);
 				}
 
+				e.printStackTrace();
+
 				return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + objectMapper.writeValueAsString(errors) +"}").build();
 			} catch (org.springframework.dao.DataIntegrityViolationException e){
 
@@ -169,6 +171,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 
 					return Response.status(Status.BAD_REQUEST).entity("{\"error\": {" + "\"message\": \"" + ex.getCause().getMessage() + "\"}" + "}").build();
 				}
+
+				e.printStackTrace();
 
 				throw e;
 			}
@@ -210,6 +214,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 					errors.add(error);
 				}
 
+				e.printStackTrace();
+
 				networkRepository.delete(network);
 
 				return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + objectMapper.writeValueAsString(errors) +"}").build();
@@ -221,6 +227,8 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 
 					return Response.status(Status.BAD_REQUEST).entity("{\"error\": {" + "\"mensage\": \"" + ex.getCause().getMessage() + "\"}" + "}").build();
 				}
+
+				e.printStackTrace();
 
 				throw e;
 			}catch (Exception e){

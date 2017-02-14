@@ -37,7 +37,6 @@ public interface NetworkApi {
 	Response updateTheme (ThemeView themeView);
 
 	@POST
-	@IgnoreMultitenancy
 	@Path("/createNetwork")
 	Response createNetwork (NetworkCreateDto networkCreateDto)
 			throws ConflictException, BadRequestException, IOException;
