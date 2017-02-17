@@ -49,15 +49,22 @@ public class MobileNotificationService {
 		Future<List<MobileNotification>> futureFcmAndroidNotifications = null;
 		Future<List<MobileNotification>> futureFcmAppleNotifications = null;
 		try {
-			futureAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-					() -> notificationBatchPublisher.sendNotifications(androidNS, notification, androidDevices, MobileNotification.DeviceType.ANDROID));
-			futureAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-					() -> notificationBatchPublisher.sendNotifications(appleNS, notification, appleDevices, MobileNotification.DeviceType.APPLE));
-			futureFcmAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-					() -> notificationBatchPublisher.sendNotifications(androidFcmNS, notification, fcmAndroidDevices, MobileNotification.DeviceType.FCM_ANDROID));
-			futureFcmAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-					() -> notificationBatchPublisher.sendNotifications(appleFcmNS, notification, fcmAppleDevices,
-							MobileNotification.DeviceType.FCM_APPLE));
+			if(androidDevices != null && !androidDevices.isEmpty())
+				futureAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
+						() -> notificationBatchPublisher.sendNotifications(androidNS, notification, androidDevices, MobileNotification.DeviceType.ANDROID));
+
+			if(appleDevices != null && !appleDevices.isEmpty())
+				futureAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
+						() -> notificationBatchPublisher.sendNotifications(appleNS, notification, appleDevices, MobileNotification.DeviceType.APPLE));
+
+			if(fcmAndroidDevices != null && !fcmAndroidDevices.isEmpty())
+				futureFcmAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
+						() -> notificationBatchPublisher.sendNotifications(androidFcmNS, notification, fcmAndroidDevices, MobileNotification.DeviceType.FCM_ANDROID));
+
+			if(fcmAppleDevices != null && !fcmAppleDevices.isEmpty())
+				futureFcmAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
+						() -> notificationBatchPublisher.sendNotifications(appleFcmNS, notification, fcmAppleDevices,
+								MobileNotification.DeviceType.FCM_APPLE));
 		} catch (Exception e) {
 			if (futureAndroidNotifications != null)
 				futureAndroidNotifications.cancel(true);
