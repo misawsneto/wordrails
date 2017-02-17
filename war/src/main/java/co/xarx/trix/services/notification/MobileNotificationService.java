@@ -74,28 +74,32 @@ public class MobileNotificationService {
 		List<MobileNotification> mobileNotifications = new ArrayList<>();
 
 		try {
-			mobileNotifications.addAll(futureAndroidNotifications.get());
+			if(futureAndroidNotifications != null)
+				mobileNotifications.addAll(futureAndroidNotifications.get());
 		} catch (InterruptedException | ExecutionException e) {
 			mobileNotifications = notificationBatchPublisher.getErrorNotifications(androidDevices,
 					notification, e, MobileNotification.DeviceType.ANDROID);
 		}
 
 		try {
-			mobileNotifications.addAll(futureAppleNotifications.get());
+			if(futureAppleNotifications != null)
+				mobileNotifications.addAll(futureAppleNotifications.get());
 		} catch (InterruptedException | ExecutionException e) {
 			mobileNotifications.addAll(notificationBatchPublisher.getErrorNotifications(appleDevices,
 					notification, e, MobileNotification.DeviceType.APPLE));
 		}
 
 		try {
-			mobileNotifications.addAll(futureFcmAndroidNotifications.get());
+			if(futureFcmAndroidNotifications != null)
+				mobileNotifications.addAll(futureFcmAndroidNotifications.get());
 		} catch (InterruptedException | ExecutionException e) {
 			mobileNotifications = notificationBatchPublisher.getErrorNotifications(fcmAndroidDevices,
 					notification, e, MobileNotification.DeviceType.FCM_ANDROID);
 		}
 
 		try {
-			mobileNotifications.addAll(futureFcmAppleNotifications.get());
+			if(futureFcmAppleNotifications != null)
+				mobileNotifications.addAll(futureFcmAppleNotifications.get());
 		} catch (InterruptedException | ExecutionException e) {
 			mobileNotifications = notificationBatchPublisher.getErrorNotifications(fcmAppleDevices,
 					notification, e, MobileNotification.DeviceType.FCM_APPLE);
