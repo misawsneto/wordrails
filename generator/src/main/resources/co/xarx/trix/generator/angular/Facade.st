@@ -456,15 +456,15 @@ trix.provider('trix', ['\$httpProvider', function (\$httpProvider) {
 		return \$http.put(_config.url + "/api/stations/"+stationId+"/setDefaultPerspective", \$.param({"perspectiveId": perspectiveId}), config)
 	};
 
-	this.getRowView = function(stationPerspectiveId, termPerspectiveId, childTermId, stationId, _page, _size){
+	this.getRowView = function(stationPerspectiveId, termPerspectiveId, childTermId, _page, _size, stationId){
 		var config = {
 			"params": {
 				"stationPerspectiveId": stationPerspectiveId,
 				"termPerspectiveId": termPerspectiveId,
 				"childTermId": childTermId,
-				"stationId": stationId,
 				"page": _page,
 				"size": _size,
+				"stationId": stationId
 			}
 		}
 	  return \$http.get(_config.url + "/api/perspectives/rowViews", config)
