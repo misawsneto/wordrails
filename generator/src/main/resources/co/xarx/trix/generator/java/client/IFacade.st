@@ -77,12 +77,12 @@ interface I$facade$ {
 		
 	@GET("/terms/termTree")
 	void getTermTree(@Query("perspectiveId") Integer perspectiveId, Callback<ContentResponse<List<TermDto\>\>\> _callback);
-		
+
 	@GET("/terms/allTerms")
-	ContentResponse<List<TermView\>\> getAllTerms(@Query("taxonomyId")Integer taxonomyId, @Query("perspectiveId") Integer perspectiveId);
-		
+	ContentResponse<List<TermView\>\> getAllTerms(@Query("taxonomyId")Integer taxonomyId, @Query("perspectiveId") Integer perspectiveId, @Query("stationId") Integer stationId);
+
 	@GET("/terms/allTerms")
-	void getAllTerms(@Query("taxonomyId")Integer taxonomyId, @Query("perspectiveId") Integer perspectiveId, Callback<ContentResponse<List<TermView\>\>\> _callback);
+	void getAllTerms(@Query("taxonomyId")Integer taxonomyId, @Query("perspectiveId") Integer perspectiveId, @Query("stationId") Integer stationId, Callback<ContentResponse<List<TermView\>\>\> _callback);
 		
 	@GET("/posts/{stationId}/recent")
 	ContentResponse<List<PostView\>\> findRecentPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size);
@@ -211,21 +211,21 @@ interface I$facade$ {
 	@GET("/perspectives/termPerspectiveViews")
 	TermPerspectiveView getTermPerspectiveView(@Query("termPerspectiveId") Integer termPerspectiveId, 
 				@Query("termId") Integer termId, @Query("stationPerspectiveId") Integer stationPerspectiveId, 
-				@Query("page") int page, @Query("size") int size, @Query("withBody") Boolean withBody);
+				@Query("page") int page, @Query("size") int size, @Query("withBody") Boolean withBody, @Query("stationId") Integer stationId);
 	
 	@GET("/perspectives/termPerspectiveViews")
 	void getTermPerspectiveView(@Query("termPerspectiveId") Integer termPerspectiveId, 
 				@Query("termId") Integer termId, @Query("stationPerspectiveId") Integer stationPerspectiveId, 
-				@Query("page") int page, @Query("size") int size, @Query("withBody") Boolean withBody, Callback<TermPerspectiveView> _callback);
+				@Query("page") int page, @Query("size") int size, @Query("withBody") Boolean withBody, @Query("stationId") Integer stationId, Callback<TermPerspectiveView> _callback);
 				
 				
 	@GET("/perspectives/rowViews")
 	RowView getRowView(@Query("stationPerspectiveId") Integer stationPerspectiveId, @Query("termPerspectiveId") Integer termPerspectiveId,
-			@Query("childTermId") Integer childTermId, @Query("page") int page, @Query("size") int size);				
+			@Query("childTermId") Integer childTermId, @Query("stationId") Integer stationId, @Query("page") int page, @Query("size") int size);
 				
 	@GET("/perspectives/rowViews")
 	void getRowView(@Query("stationPerspectiveId") Integer stationPerspectiveId, @Query("termPerspectiveId") Integer termPerspectiveId,
-			@Query("childTermId") Integer childTermId, @Query("page") int page, @Query("size") int size, Callback<RowView> _callback);				
+			@Query("childTermId") Integer childTermId, @Query("stationId") Integer stationId, @Query("page") int page, @Query("size") int size, Callback<RowView> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -238,22 +238,22 @@ interface I$facade$ {
 	void putPassword(@Field("oldPassword") String oldPassword, @Field("newPassword") String newPassword, Callback<Response> _callback);
 
 	@GET("/posts/{postId}/getPostViewById")
-	PostView getPostViewById(@Path("postId") Integer postId, @Query("withBody") Boolean withBody);
+	PostView getPostViewById(@Path("postId") Integer postId, @Query("withBody") Boolean withBody, @Query("stationId") Integer stationId);
 
 	@GET("/posts/{postId}/getPostViewById")
-	void getPostViewById(@Path("postId") Integer postId, @Query("withBody") Boolean withBody, Callback<PostView> _callback);
+	void getPostViewById(@Path("postId") Integer postId, @Query("withBody") Boolean withBody, @Query("stationId") Integer stationId, Callback<PostView> _callback);
 
 	@GET("/posts/getPostViewBySlug")
-	PostView getPostViewBySlug(@Query("slug") String slug, @Query("withBody") Boolean withBody);
+	PostView getPostViewBySlug(@Query("slug") String slug, @Query("withBody") Boolean withBody, @Query("stationId") Integer stationId);
 
 	@GET("/posts/getPostViewBySlug")
-	void getPostViewBySlug(@Query("slug") String slug,  @Query("withBody") Boolean withBody, Callback<PostView> _callback);
+	void getPostViewBySlug(@Query("slug") String slug,  @Query("withBody") Boolean withBody, @Query("stationId") Integer stationId, Callback<PostView> _callback);
 
 	@GET("/posts/{postId}/body")
-	StringResponse getPostBody(@Path("postId") Integer postId);
+	StringResponse getPostBody(@Path("postId") Integer postId, @Query("stationId") Integer stationId);
 
 	@GET("/posts/{postId}/body")
-	void getPostBody(@Path("postId") Integer postId, Callback<StringResponse> _callback);
+	void getPostBody(@Path("postId") Integer postId, @Query("stationId") Integer stationId, Callback<StringResponse> _callback);
 
 	@PUT("/v2/bookmarks/toggle/{postId}")
 	BooleanResponse toggleBookmark(@Path("postId") Integer postId, @Body String body);
@@ -352,10 +352,10 @@ interface I$facade$ {
 /*---------------------------------------------------------------------------*/
 
     @PUT("/v2/posts/{postId}/seen")
-    Response putPostSeen(@Path("postId") Integer postId, @Query("timeReading") Integer timeReading, @Query("date") Long date, @Body String str);
+    Response putPostSeen(@Path("postId") Integer postId, @Query("timeReading") Integer timeReading, @Query("date") Long date, @Query("stationId") Integer stationId, @Body String str);
 
     @PUT("/v2/posts/{postId}/seen")
-    void putPostSeen(@Path("postId") Integer postId, @Query("timeReading") Integer timeReading, @Query("date") Long date, @Body String str, Callback<Response> _callback);
+    void putPostSeen(@Path("postId") Integer postId, @Query("timeReading") Integer timeReading, @Query("date") Long date, @Query("stationId") Integer stationId, @Body String str, Callback<Response> _callback);
 
     @PUT("/v2/notifications/seen")
     Response putNotificationSeen(@Body MessageFCM messageFcm);
@@ -364,10 +364,10 @@ interface I$facade$ {
     void putNotificationSeen(@Body MessageFCM messageFcm, Callback<Response> _callback);
 
     @PUT("/v2/terms/{termId}/seen")
-    Response putTermSeen(@Path("termId") Integer termId, @Query("timeReading") Integer timeReading, @Query("date") Long date, @Body String str);
+    Response putTermSeen(@Path("termId") Integer termId, @Query("timeReading") Integer timeReading, @Query("date") Long date, @Query("stationId") Integer stationId, @Body String str);
 
     @PUT("/v2/terms/{termId}/seen")
-    void putTermSeen(@Path("termId") Integer termId, @Query("timeReading") Integer timeReading, @Query("date") Long date, @Body String str, Callback<Response> _callback);
+    void putTermSeen(@Path("termId") Integer termId, @Query("timeReading") Integer timeReading, @Query("date") Long date, @Query("stationId") Integer stationId, @Body String str, Callback<Response> _callback);
 
 /*---------------------------------------------------------------------------*/
 

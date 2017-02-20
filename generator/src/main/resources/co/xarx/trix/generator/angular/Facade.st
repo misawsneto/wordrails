@@ -456,12 +456,13 @@ trix.provider('trix', ['\$httpProvider', function (\$httpProvider) {
 		return \$http.put(_config.url + "/api/stations/"+stationId+"/setDefaultPerspective", \$.param({"perspectiveId": perspectiveId}), config)
 	};
 
-	this.getRowView = function(stationPerspectiveId, termPerspectiveId, childTermId, _page, _size){
+	this.getRowView = function(stationPerspectiveId, termPerspectiveId, childTermId, stationId, _page, _size){
 		var config = {
 			"params": {
 				"stationPerspectiveId": stationPerspectiveId,
 				"termPerspectiveId": termPerspectiveId,
 				"childTermId": childTermId,
+				"stationId": stationId,
 				"page": _page,
 				"size": _size,
 			}
@@ -479,11 +480,12 @@ trix.provider('trix', ['\$httpProvider', function (\$httpProvider) {
 	  return \$http.get(_config.url + "/api/terms/termTree", config)
 	}
 
-	this.getAllTerms = function(perspectiveId, taxonomyId) {
+	this.getAllTerms = function(perspectiveId, taxonomyId, stationId) {
 		var config = {
 			"params": {
 				"perspectiveId": perspectiveId,
-				"taxonomyId": taxonomyId
+				"taxonomyId": taxonomyId,
+				"stationId": stationId
 			}
 		}
 	  return \$http.get(_config.url + "/api/terms/allTerms", config)
@@ -499,10 +501,11 @@ trix.provider('trix', ['\$httpProvider', function (\$httpProvider) {
 	  return \$http.get(_config.url + "/api/posts/getPostViewBySlug", config)
 	}
 
-	this.getPostViewById = function(postId, withBody) {
+	this.getPostViewById = function(postId, withBody, stationId) {
 		var config = {
 			"params": {
-				"withBody": withBody
+				"withBody": withBody,
+				"stationId": stationId
 			}
 		}
 	  return \$http.get(_config.url + "/api/posts/" + postId + "/getPostViewById", config)

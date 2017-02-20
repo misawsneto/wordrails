@@ -252,12 +252,12 @@ public class $facade$ {
 		});
 	}
 
-	public List<TermView> getAllTerms(Integer taxonomyId, Integer perspectiveId){
-		return _facade.getAllTerms(taxonomyId, perspectiveId).content;
+	public List<TermView> getAllTerms(Integer taxonomyId, Integer perspectiveId, Integer stationId){
+		return _facade.getAllTerms(taxonomyId, perspectiveId, stationId).content;
 	}
 
-	public void getAllTerms(Integer taxonomyId, Integer perspectiveId, final Callback<List<TermView\>\> _callback){
-		_facade.getAllTerms(taxonomyId, perspectiveId, new Callback<ContentResponse<List<TermView\>\>\>() {
+	public void getAllTerms(Integer taxonomyId, Integer perspectiveId, Integer stationId, final Callback<List<TermView\>\> _callback){
+		_facade.getAllTerms(taxonomyId, perspectiveId, stationId, new Callback<ContentResponse<List<TermView\>\>\>() {
 			@Override
 			public void success(ContentResponse<List<TermView\>\> _t, Response _response) {
 				_callback.success(_t.content, _response);
@@ -503,12 +503,12 @@ public class $facade$ {
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-	public TermPerspectiveView getTermPerspectiveView(Integer termPerspectiveId, Integer termId, Integer stationPerspectiveId, int page, int size, boolean withBody){
-		return _facade.getTermPerspectiveView(termPerspectiveId, termId, stationPerspectiveId, page, size, withBody);
+	public TermPerspectiveView getTermPerspectiveView(Integer termPerspectiveId, Integer termId, Integer stationPerspectiveId, int page, int size, boolean withBody, Integer stationId ){
+		return _facade.getTermPerspectiveView(termPerspectiveId, termId, stationPerspectiveId, page, size, withBody, stationId);
 	}
 
-	public void getTermPerspectiveView(Integer termPerspectiveId, Integer termId, Integer stationPerspectiveId, int page, int size, boolean withBody, Callback<TermPerspectiveView> _callback){
-		_facade.getTermPerspectiveView(termPerspectiveId, termId, stationPerspectiveId, page, size, withBody, _callback);
+	public void getTermPerspectiveView(Integer termPerspectiveId, Integer termId, Integer stationPerspectiveId, int page, int size, boolean withBody, Integer stationId, Callback<TermPerspectiveView> _callback){
+		_facade.getTermPerspectiveView(termPerspectiveId, termId, stationPerspectiveId, page, size, withBody, stationId, _callback);
 	}
 
 	public TermPerspectiveView getTermPerspectiveDefinition(Integer id){
@@ -519,12 +519,12 @@ public class $facade$ {
 		_facade.getTermPerspectiveDefinition(id, _callback);
 	}
 
-	public RowView getRowView(Integer stationPerspectiveId, Integer termPerspectiveId, Integer childTermId, int page, int size){
-		return _facade.getRowView(stationPerspectiveId, termPerspectiveId, childTermId, page, size);
+	public RowView getRowView(Integer stationPerspectiveId, Integer termPerspectiveId, Integer childTermId, Integer stationId, int page, int size){
+		return _facade.getRowView(stationPerspectiveId, termPerspectiveId, childTermId, stationId, page, size);
 	}
 
-	public void getRowView(Integer stationPerspectiveId, Integer termPerspectiveId, Integer childTermId, int page, int size, Callback<RowView> _callback){
-		_facade.getRowView(stationPerspectiveId, termPerspectiveId, childTermId, page, size, _callback);
+	public void getRowView(Integer stationPerspectiveId, Integer termPerspectiveId, Integer childTermId, Integer stationId, int page, int size, Callback<RowView> _callback){
+		_facade.getRowView(stationPerspectiveId, termPerspectiveId, childTermId, stationId, page, size, _callback);
 	}
 /*---------------------------------------------------------------------------*/
 
@@ -537,28 +537,27 @@ public class $facade$ {
 		_facade.putPassword(oldPassword, newPassword, _callback);
 	}
 
-	public PostView getPostViewBySlug(String slug, Boolean withBody){
-    	return _facade.getPostViewBySlug(slug, withBody);
+	public PostView getPostViewBySlug(String slug, Boolean withBody, Integer stationId){
+    	return _facade.getPostViewBySlug(slug, withBody, stationId);
 	}
 
-	public void getPostViewBySlug(String slug, Boolean withBody, Callback<PostView> _callback){
-		_facade.getPostViewBySlug(slug, withBody, _callback);
+	public void getPostViewBySlug(String slug, Boolean withBody, Integer stationId, Callback<PostView> _callback){
+		_facade.getPostViewBySlug(slug, withBody, stationId, _callback);
 	}
 
-	public PostView getPostViewById(Integer postId, Boolean withBody){
-		return _facade.getPostViewById(postId, withBody);
+	public PostView getPostViewById(Integer postId, Boolean withBody, Integer stationId){
+		return _facade.getPostViewById(postId, withBody, stationId);
+	}
+	public void getPostViewById(Integer postId, Boolean withBody, Integer stationId, Callback<PostView> _callback){
+		_facade.getPostViewById(postId, withBody, stationId, _callback);
 	}
 
-	public void getPostViewById(Integer postId, Boolean withBody, Callback<PostView> _callback){
-		_facade.getPostViewById(postId, withBody, _callback);
+	public StringResponse getPostBody(Integer postId, Integer stationId){
+		return _facade.getPostBody(postId, stationId);
 	}
 
-	public StringResponse getPostBody(Integer postId){
-		return _facade.getPostBody(postId);
-	}
-
-	public void getPostBody(Integer postId, Callback<StringResponse> _callback){
-		_facade.getPostBody(postId, _callback);
+	public void getPostBody(Integer postId, Integer stationId, Callback<StringResponse> _callback){
+		_facade.getPostBody(postId, stationId, _callback);
 	}
 
 	public BooleanResponse toggleBookmark(Integer postId){
@@ -668,12 +667,12 @@ public class $facade$ {
 
 /*---------------------------------------------------------------------------*/
 
-	public Response putPostSeen(Integer postId, Integer timeReading, Long date) {
-        return _facade.putPostSeen(postId, timeReading, date, "");
+	public Response putPostSeen(Integer postId, Integer timeReading, Long date, Integer stationId) {
+        return _facade.putPostSeen(postId, timeReading, date, stationId, "");
     }
 
-    public void putPostSeen(Integer postId, Integer timeReading, Long date, Callback<Response> _callback) {
-    	_facade.putPostSeen(postId, timeReading, date, "", _callback);
+    public void putPostSeen(Integer postId, Integer timeReading, Long date, Integer stationId, Callback<Response> _callback) {
+    	_facade.putPostSeen(postId, timeReading, date, stationId, "", _callback);
     }
 
 	public Response putNotificationSeen(MessageFCM messageFcm) {
@@ -684,12 +683,12 @@ public class $facade$ {
     	_facade.putNotificationSeen(messageFcm, _callback);
     }
 
-	public Response putTermSeen(Integer termId, Integer timeReading, Long date) {
-        return _facade.putTermSeen(termId, timeReading, date, "");
+	public Response putTermSeen(Integer termId, Integer timeReading, Long date, Integer stationId) {
+        return _facade.putTermSeen(termId, timeReading, date, stationId, "");
     }
 
-    public void putTermSeen(Integer termId, Integer timeReading, Long date, Callback<Response> _callback) {
-    	_facade.putTermSeen(termId, timeReading, date, "", _callback);
+    public void putTermSeen(Integer termId, Integer timeReading, Long date, Integer stationId, Callback<Response> _callback) {
+    	_facade.putTermSeen(termId, timeReading, date, stationId, "", _callback);
     }
 
 /*---------------------------------------------------------------------------*/
