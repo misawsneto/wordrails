@@ -34,6 +34,11 @@ public class PostView implements Serializable, Identifiable {
 	public String imageMediumHash;
 	public String imageLargeHash;
 
+	public String imageUrl;
+	public String imageLargeUrl;
+	public String imageMediumUrl;
+	public String imageSmallUrl;
+
 	public Set<CategoryData> categories;
 	public Set<String> tags;
     public List<TermView> terms;
@@ -63,8 +68,11 @@ public class PostView implements Serializable, Identifiable {
 
 	public String authorCoverMediumHash;
 	public String authorImageSmallHash;
+
 	public String authorCoverUrl;
 	public String authorImageUrl;
+	public String authorImageSmallUrl;
+	public String authorCoverMediumUrl;
 
 	public String stationName;
 	public Integer stationId;

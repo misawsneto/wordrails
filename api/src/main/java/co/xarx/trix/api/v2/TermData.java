@@ -41,5 +41,7 @@ public class TermData{
 
 	public Image image;
 
+	public String imageUrl;
+
 	public String description;
 }

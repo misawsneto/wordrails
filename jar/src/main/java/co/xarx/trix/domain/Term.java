@@ -58,6 +58,8 @@ public class Term extends BaseEntity implements Serializable, Comparable<Term>{
 	@ManyToOne(cascade = CascadeType.ALL)
 	public Image image;
 
+	String imageUrl;
+
 	@Lob
 	public String description;
 

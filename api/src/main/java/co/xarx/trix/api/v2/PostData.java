@@ -45,6 +45,11 @@ public class PostData implements Serializable, Identifiable {
 	private String authorImageHash;
 	private String authorCoverHash;
 
+	public String authorCoverUrl;
+	public String authorImageUrl;
+	public String authorImageSmallUrl;
+	public String authorCoverMediumUrl;
+
 	private Integer stationId;
 	private String stationName;
 

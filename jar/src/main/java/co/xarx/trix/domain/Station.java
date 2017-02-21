@@ -112,6 +112,8 @@ public class Station extends BaseEntity implements Serializable, AnalyticsEntity
 	@OneToOne
 	public Image logo;
 
+	public String logoUrl;
+
 	public Integer defaultPerspectiveId;
 
 	@ElementCollection()

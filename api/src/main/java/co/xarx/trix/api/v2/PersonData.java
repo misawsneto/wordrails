@@ -30,4 +30,7 @@ public class PersonData implements Serializable, Identifiable {
 	private String coverHash;
 	private String imageHash;
 	private Date lastLogin;
+
+	public String coverUrl;
+	public String imageUrl;
 }

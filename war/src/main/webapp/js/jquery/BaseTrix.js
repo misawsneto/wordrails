@@ -1,10 +1,11 @@
-function AudioDto(id, duration, identifier, image, imageHash, provider, title) {
+function AudioDto(id, duration, identifier, image, imageHash, imageUrl, provider, title) {
 	return {
 		id: id,
 		duration: duration,
 		identifier: identifier,
 		image: image,
 		imageHash: imageHash,
+		imageUrl: imageUrl,
 		provider: provider,
 		title: title
 	};
@@ -68,7 +69,7 @@ function DocumentDto(id, identifier, provider, title, url) {
 	};
 }
 
-function ImageDto(id, caption, credits, externalImageUrl, hashes, largeHash, mediumHash, originalHash, smallHash, title, vertical) {
+function ImageDto(id, caption, credits, externalImageUrl, hashes, largeHash, mediumHash, originalHash, originalUrl, smallHash, title, vertical) {
 	return {
 		id: id,
 		caption: caption,
@@ -78,6 +79,7 @@ function ImageDto(id, caption, credits, externalImageUrl, hashes, largeHash, med
 		largeHash: largeHash,
 		mediumHash: mediumHash,
 		originalHash: originalHash,
+		originalUrl: originalUrl,
 		smallHash: smallHash,
 		title: title,
 		vertical: vertical
@@ -94,7 +96,7 @@ function MenuEntryDto(id, anonymousUrl, content, loggedInUrl, name) {
 	};
 }
 
-function NetworkDto(id, addStationRolesOnSignup, alertColors, allowSignup, allowSocialLogin, allowSponsors, appleStoreAddress, backgroundColor, backgroundColors, categoriesTaxonomyId, configured, defaultOrientationMode, defaultReadMode, domain, emailSignUpValidationEnabled, facebookAppID, facebookLink, facebookLoginAllowed, faviconHash, faviconId, flurryAppleKey, flurryKey, googleAppID, googleLoginAllowed, googlePlusLink, homeTabName, info, instagramLink, invitationMessage, language, linkedInLink, loginFooterMessage, loginImageHash, loginImageId, loginImageSmallHash, logoImageHash, logoImageId, mainColor, name, navbarColor, navbarSecondaryColor, networkCreationToken, newsFontSize, pinterestLink, playStoreAddress, primaryColors, primaryFont, secondaryColors, secondaryFont, splashBgColor, splashImageHash, splashImageId, stationMenuName, subdomain, titleFontSize, trackingId, twitterLink, validationMessage, webFooter, youtubeLink) {
+function NetworkDto(id, addStationRolesOnSignup, alertColors, allowSignup, allowSocialLogin, allowSponsors, appleStoreAddress, backgroundColor, backgroundColors, categoriesTaxonomyId, configured, defaultOrientationMode, defaultReadMode, domain, emailSignUpValidationEnabled, facebookAppID, facebookLink, facebookLoginAllowed, faviconHash, faviconId, faviconUrl, flurryAppleKey, flurryKey, googleAppID, googleLoginAllowed, googlePlusLink, homeTabName, info, instagramLink, invitationMessage, language, linkedInLink, loginFooterMessage, loginImageHash, loginImageId, loginImageSmallHash, loginImageUrl, logoImageHash, logoImageId, logoImageUrl, mainColor, name, navbarColor, navbarSecondaryColor, networkCreationToken, newsFontSize, pinterestLink, playStoreAddress, primaryColors, primaryFont, secondaryColors, secondaryFont, splashBgColor, splashImageHash, splashImageId, splashImageUrl, stationMenuName, subdomain, titleFontSize, trackingId, twitterLink, validationMessage, webFooter, youtubeLink) {
 	return {
 		id: id,
 		addStationRolesOnSignup: addStationRolesOnSignup,
@@ -116,6 +118,7 @@ function NetworkDto(id, addStationRolesOnSignup, alertColors, allowSignup, allow
 		facebookLoginAllowed: facebookLoginAllowed,
 		faviconHash: faviconHash,
 		faviconId: faviconId,
+		faviconUrl: faviconUrl,
 		flurryAppleKey: flurryAppleKey,
 		flurryKey: flurryKey,
 		googleAppID: googleAppID,
@@ -131,8 +134,10 @@ function NetworkDto(id, addStationRolesOnSignup, alertColors, allowSignup, allow
 		loginImageHash: loginImageHash,
 		loginImageId: loginImageId,
 		loginImageSmallHash: loginImageSmallHash,
+		loginImageUrl: loginImageUrl,
 		logoImageHash: logoImageHash,
 		logoImageId: logoImageId,
+		logoImageUrl: logoImageUrl,
 		mainColor: mainColor,
 		name: name,
 		navbarColor: navbarColor,
@@ -148,6 +153,7 @@ function NetworkDto(id, addStationRolesOnSignup, alertColors, allowSignup, allow
 		splashBgColor: splashBgColor,
 		splashImageHash: splashImageHash,
 		splashImageId: splashImageId,
+		splashImageUrl: splashImageUrl,
 		stationMenuName: stationMenuName,
 		subdomain: subdomain,
 		titleFontSize: titleFontSize,
@@ -210,7 +216,7 @@ function PersonDto(id, bio, bookmarkPosts, coverHash, coverLargeHash, coverMediu
 	};
 }
 
-function PostDto(id, author, body, bookmarksCount, commentsCount, date, externalVideoUrl, featuredAudio, featuredAudioHash, featuredImage, featuredVideo, featuredVideoHash, focusX, focusY, imageCredits, imageHash, imageId, imageLandscape, imageLargeHash, imageMediumHash, imageSmallHash, lastModificationDate, lat, lng, mediaAudio, mediaGallery, mediaImage, mediaVideo, notify, originalSlug, readTime, recommendsCount, scheduledDate, slug, sponsored, state, station, stationId, subheading, tags, title, topper, unpublishDate) {
+function PostDto(id, author, body, bookmarksCount, commentsCount, date, externalVideoUrl, featuredAudio, featuredAudioHash, featuredImage, featuredVideo, featuredVideoHash, focusX, focusY, imageCredits, imageHash, imageId, imageLandscape, imageLargeHash, imageLargeUrl, imageMediumHash, imageMediumUrl, imageSmallHash, imageSmallUrl, imageUrl, lastModificationDate, lat, lng, mediaAudio, mediaGallery, mediaImage, mediaVideo, notify, originalSlug, readTime, recommendsCount, scheduledDate, slug, sponsored, state, station, stationId, subheading, tags, title, topper, unpublishDate) {
 	return {
 		id: id,
 		author: author,
@@ -231,8 +237,12 @@ function PostDto(id, author, body, bookmarksCount, commentsCount, date, external
 		imageId: imageId,
 		imageLandscape: imageLandscape,
 		imageLargeHash: imageLargeHash,
+		imageLargeUrl: imageLargeUrl,
 		imageMediumHash: imageMediumHash,
+		imageMediumUrl: imageMediumUrl,
 		imageSmallHash: imageSmallHash,
+		imageSmallUrl: imageSmallUrl,
+		imageUrl: imageUrl,
 		lastModificationDate: lastModificationDate,
 		lat: lat,
 		lng: lng,
@@ -267,7 +277,7 @@ function RowDto(id, index, maxPosts, type) {
 	};
 }
 
-function StationDto(id, alertColors, allowComments, allowSocialShare, allowWritersToAddSponsors, allowWritersToNotify, backgroundColor, backgroundColors, categoriesTaxonomyId, defaultPerspectiveId, logoHash, main, name, navbarColor, postsTitleSize, primaryColor, primaryColors, secondaryColors, showAuthorData, showAuthorSocialData, sponsored, stationPerspectives, stationSlug, subheading, topper, visibility, writable) {
+function StationDto(id, alertColors, allowComments, allowSocialShare, allowWritersToAddSponsors, allowWritersToNotify, backgroundColor, backgroundColors, categoriesTaxonomyId, defaultPerspectiveId, logoHash, logoUrl, main, name, navbarColor, postsTitleSize, primaryColor, primaryColors, secondaryColors, showAuthorData, showAuthorSocialData, sponsored, stationPerspectives, stationSlug, subheading, topper, visibility, writable) {
 	return {
 		id: id,
 		alertColors: alertColors,
@@ -280,6 +290,7 @@ function StationDto(id, alertColors, allowComments, allowSocialShare, allowWrite
 		categoriesTaxonomyId: categoriesTaxonomyId,
 		defaultPerspectiveId: defaultPerspectiveId,
 		logoHash: logoHash,
+		logoUrl: logoUrl,
 		main: main,
 		name: name,
 		navbarColor: navbarColor,
@@ -318,12 +329,13 @@ function TaxonomyDto(id, name, type) {
 	};
 }
 
-function TermDto(id, color, description, imageHash, name, name_parent, taxonomyId, taxonomyName) {
+function TermDto(id, color, description, imageHash, imageUrl, name, name_parent, taxonomyId, taxonomyName) {
 	return {
 		id: id,
 		color: color,
 		description: description,
 		imageHash: imageHash,
+		imageUrl: imageUrl,
 		name: name,
 		name_parent: name_parent,
 		taxonomyId: taxonomyId,
@@ -350,7 +362,7 @@ function UserDto(id, enabled, username) {
 	};
 }
 
-function VideoDto(id, duration, externalVideoUrl, identifier, image, imageHash, provider, title, type) {
+function VideoDto(id, duration, externalVideoUrl, identifier, image, imageHash, imageUrl, provider, title, type) {
 	return {
 		id: id,
 		duration: duration,
@@ -358,6 +370,7 @@ function VideoDto(id, duration, externalVideoUrl, identifier, image, imageHash, 
 		identifier: identifier,
 		image: image,
 		imageHash: imageHash,
+		imageUrl: imageUrl,
 		provider: provider,
 		title: title,
 		type: type
@@ -2567,17 +2580,36 @@ function BaseTrix(_url, _username, _password) {
 		});
 	};
 
-	if (that.findPersons) {
-		console.log("findPersons");
+	if (that.findByUsernameAndTenantId) {
+		console.log("findByUsernameAndTenantId");
 	}
-	that.findPersons = function(usernameOrEmailOrName, page, size, sort, _success, _error, _complete, projection) {
+	that.findByUsernameAndTenantId = function(tenantId, _success, _error, _complete, projection) {
 		return that._ajax({
-			url: _url + "/api/persons/search/findPersons",
+			url: _url + "/api/persons/search/findByUsernameAndTenantId",
 			data: {
-				usernameOrEmailOrName: usernameOrEmailOrName,
-				page: page,
-				size: size,
-				sort: sort,
+				tenantId: tenantId,
+
+				projection: projection
+			},
+			success: function(_data, _textStatus, _jqXHR) {
+				if (_success) {
+					_success(_data.content, _textStatus, _jqXHR);
+				}
+			},
+			error: _error,
+			complete: _complete
+		});
+	};
+
+	if (that.findByUsernamesAndRoles) {
+		console.log("findByUsernamesAndRoles");
+	}
+	that.findByUsernamesAndRoles = function(roles, tenantId, _success, _error, _complete, projection) {
+		return that._ajax({
+			url: _url + "/api/persons/search/findByUsernamesAndRoles",
+			data: {
+				roles: roles,
+				tenantId: tenantId,
 
 				projection: projection
 			},
@@ -2612,36 +2644,17 @@ function BaseTrix(_url, _username, _password) {
 		});
 	};
 
-	if (that.findByUsernameAndTenantId) {
-		console.log("findByUsernameAndTenantId");
+	if (that.findPersons) {
+		console.log("findPersons");
 	}
-	that.findByUsernameAndTenantId = function(tenantId, _success, _error, _complete, projection) {
+	that.findPersons = function(usernameOrEmailOrName, page, size, sort, _success, _error, _complete, projection) {
 		return that._ajax({
-			url: _url + "/api/persons/search/findByUsernameAndTenantId",
+			url: _url + "/api/persons/search/findPersons",
 			data: {
-				tenantId: tenantId,
-
-				projection: projection
-			},
-			success: function(_data, _textStatus, _jqXHR) {
-				if (_success) {
-					_success(_data.content, _textStatus, _jqXHR);
-				}
-			},
-			error: _error,
-			complete: _complete
-		});
-	};
-
-	if (that.findByUsernamesAndRoles) {
-		console.log("findByUsernamesAndRoles");
-	}
-	that.findByUsernamesAndRoles = function(tenantId, roles, _success, _error, _complete, projection) {
-		return that._ajax({
-			url: _url + "/api/persons/search/findByUsernamesAndRoles",
-			data: {
-				tenantId: tenantId,
-				roles: roles,
+				usernameOrEmailOrName: usernameOrEmailOrName,
+				page: page,
+				size: size,
+				sort: sort,
 
 				projection: projection
 			},
@@ -2986,12 +2999,61 @@ function BaseTrix(_url, _username, _password) {
 	if (that.updateState) {
 		console.log("updateState");
 	}
-	that.updateState = function(state, postId, _success, _error, _complete, projection) {
+	that.updateState = function(postId, state, _success, _error, _complete, projection) {
 		return that._ajax({
 			url: _url + "/api/posts/search/updateState",
 			data: {
-				state: state,
 				postId: postId,
+				state: state,
+
+				projection: projection
+			},
+			success: function(_data, _textStatus, _jqXHR) {
+				if (_success) {
+					_success(_data.content, _textStatus, _jqXHR);
+				}
+			},
+			error: _error,
+			complete: _complete
+		});
+	};
+
+	if (that.findPostsOrderByDateDesc) {
+		console.log("findPostsOrderByDateDesc");
+	}
+	that.findPostsOrderByDateDesc = function(stationId, page, size, sort, _success, _error, _complete, projection) {
+		return that._ajax({
+			url: _url + "/api/posts/search/findPostsOrderByDateDesc",
+			data: {
+				stationId: stationId,
+				page: page,
+				size: size,
+				sort: sort,
+
+				projection: projection
+			},
+			success: function(_data, _textStatus, _jqXHR) {
+				if (_success) {
+					_success(_data.content, _textStatus, _jqXHR);
+				}
+			},
+			error: _error,
+			complete: _complete
+		});
+	};
+
+	if (that.findPostsPublished) {
+		console.log("findPostsPublished");
+	}
+	that.findPostsPublished = function(termsIds, stationId, page, size, sort, _success, _error, _complete, projection) {
+		return that._ajax({
+			url: _url + "/api/posts/search/findPostsPublished",
+			data: {
+				termsIds: termsIds,
+				stationId: stationId,
+				page: page,
+				size: size,
+				sort: sort,
 
 				projection: projection
 			},
@@ -3029,12 +3091,12 @@ function BaseTrix(_url, _username, _password) {
 		});
 	};
 
-	if (that.findBySlug) {
-		console.log("findBySlug");
+	if (that.findPostBySlug) {
+		console.log("findPostBySlug");
 	}
-	that.findBySlug = function(slug, _success, _error, _complete, projection) {
+	that.findPostBySlug = function(slug, _success, _error, _complete, projection) {
 		return that._ajax({
-			url: _url + "/api/posts/search/findBySlug",
+			url: _url + "/api/posts/search/findPostBySlug",
 			data: {
 				slug: slug,
 
@@ -3050,12 +3112,12 @@ function BaseTrix(_url, _username, _password) {
 		});
 	};
 
-	if (that.findPostBySlug) {
-		console.log("findPostBySlug");
+	if (that.findBySlug) {
+		console.log("findBySlug");
 	}
-	that.findPostBySlug = function(slug, _success, _error, _complete, projection) {
+	that.findBySlug = function(slug, _success, _error, _complete, projection) {
 		return that._ajax({
-			url: _url + "/api/posts/search/findPostBySlug",
+			url: _url + "/api/posts/search/findBySlug",
 			data: {
 				slug: slug,
 
@@ -3100,55 +3162,6 @@ function BaseTrix(_url, _username, _password) {
 			url: _url + "/api/posts/search/updatePostAuthor",
 			data: {
 				newAuthorId: newAuthorId,
-
-				projection: projection
-			},
-			success: function(_data, _textStatus, _jqXHR) {
-				if (_success) {
-					_success(_data.content, _textStatus, _jqXHR);
-				}
-			},
-			error: _error,
-			complete: _complete
-		});
-	};
-
-	if (that.findPostsPublished) {
-		console.log("findPostsPublished");
-	}
-	that.findPostsPublished = function(stationId, termsIds, page, size, sort, _success, _error, _complete, projection) {
-		return that._ajax({
-			url: _url + "/api/posts/search/findPostsPublished",
-			data: {
-				stationId: stationId,
-				termsIds: termsIds,
-				page: page,
-				size: size,
-				sort: sort,
-
-				projection: projection
-			},
-			success: function(_data, _textStatus, _jqXHR) {
-				if (_success) {
-					_success(_data.content, _textStatus, _jqXHR);
-				}
-			},
-			error: _error,
-			complete: _complete
-		});
-	};
-
-	if (that.findPostsOrderByDateDesc) {
-		console.log("findPostsOrderByDateDesc");
-	}
-	that.findPostsOrderByDateDesc = function(stationId, page, size, sort, _success, _error, _complete, projection) {
-		return that._ajax({
-			url: _url + "/api/posts/search/findPostsOrderByDateDesc",
-			data: {
-				stationId: stationId,
-				page: page,
-				size: size,
-				sort: sort,
 
 				projection: projection
 			},
@@ -4685,17 +4698,14 @@ function BaseTrix(_url, _username, _password) {
 		});
 	};
 
-	if (that.findRootsPage) {
-		console.log("findRootsPage");
+	if (that.findByPerspectiveId) {
+		console.log("findByPerspectiveId");
 	}
-	that.findRootsPage = function(taxonomyId, page, size, sort, _success, _error, _complete, projection) {
+	that.findByPerspectiveId = function(perspectiveId, _success, _error, _complete, projection) {
 		return that._ajax({
-			url: _url + "/api/terms/search/findRootsPage",
+			url: _url + "/api/terms/search/findByPerspectiveId",
 			data: {
-				taxonomyId: taxonomyId,
-				page: page,
-				size: size,
-				sort: sort,
+				perspectiveId: perspectiveId,
 
 				projection: projection
 			},
@@ -4709,14 +4719,56 @@ function BaseTrix(_url, _username, _password) {
 		});
 	};
 
-	if (that.findRoots) {
-		console.log("findRoots");
+	if (that.findTermsByPostSlug) {
+		console.log("findTermsByPostSlug");
 	}
-	that.findRoots = function(taxonomyId, _success, _error, _complete, projection) {
+	that.findTermsByPostSlug = function(slug, _success, _error, _complete, projection) {
 		return that._ajax({
-			url: _url + "/api/terms/search/findRoots",
+			url: _url + "/api/terms/search/findTermsByPostSlug",
 			data: {
-				taxonomyId: taxonomyId,
+				slug: slug,
+
+				projection: projection
+			},
+			success: function(_data, _textStatus, _jqXHR) {
+				if (_success) {
+					_success(_data.content, _textStatus, _jqXHR);
+				}
+			},
+			error: _error,
+			complete: _complete
+		});
+	};
+
+	if (that.findTermsByPostId) {
+		console.log("findTermsByPostId");
+	}
+	that.findTermsByPostId = function(postId, _success, _error, _complete, projection) {
+		return that._ajax({
+			url: _url + "/api/terms/search/findTermsByPostId",
+			data: {
+				postId: postId,
+
+				projection: projection
+			},
+			success: function(_data, _textStatus, _jqXHR) {
+				if (_success) {
+					_success(_data.content, _textStatus, _jqXHR);
+				}
+			},
+			error: _error,
+			complete: _complete
+		});
+	};
+
+	if (that.countTerms) {
+		console.log("countTerms");
+	}
+	that.countTerms = function(termsIds, _success, _error, _complete, projection) {
+		return that._ajax({
+			url: _url + "/api/terms/search/countTerms",
+			data: {
+				termsIds: termsIds,
 
 				projection: projection
 			},
@@ -4736,30 +4788,6 @@ function BaseTrix(_url, _username, _password) {
 	that.findTermsByParentId = function(termId, page, size, sort, _success, _error, _complete, projection) {
 		return that._ajax({
 			url: _url + "/api/terms/search/findTermsByParentId",
-			data: {
-				termId: termId,
-				page: page,
-				size: size,
-				sort: sort,
-
-				projection: projection
-			},
-			success: function(_data, _textStatus, _jqXHR) {
-				if (_success) {
-					_success(_data.content, _textStatus, _jqXHR);
-				}
-			},
-			error: _error,
-			complete: _complete
-		});
-	};
-
-	if (that.findPostsByTerm) {
-		console.log("findPostsByTerm");
-	}
-	that.findPostsByTerm = function(termId, page, size, sort, _success, _error, _complete, projection) {
-		return that._ajax({
-			url: _url + "/api/terms/search/findPostsByTerm",
 			data: {
 				termId: termId,
 				page: page,
@@ -4799,14 +4827,17 @@ function BaseTrix(_url, _username, _password) {
 		});
 	};
 
-	if (that.countTerms) {
-		console.log("countTerms");
+	if (that.findPostsByTerm) {
+		console.log("findPostsByTerm");
 	}
-	that.countTerms = function(termsIds, _success, _error, _complete, projection) {
+	that.findPostsByTerm = function(termId, page, size, sort, _success, _error, _complete, projection) {
 		return that._ajax({
-			url: _url + "/api/terms/search/countTerms",
+			url: _url + "/api/terms/search/findPostsByTerm",
 			data: {
-				termsIds: termsIds,
+				termId: termId,
+				page: page,
+				size: size,
+				sort: sort,
 
 				projection: projection
 			},
@@ -4820,14 +4851,17 @@ function BaseTrix(_url, _username, _password) {
 		});
 	};
 
-	if (that.findByPerspectiveId) {
-		console.log("findByPerspectiveId");
+	if (that.findRootsPage) {
+		console.log("findRootsPage");
 	}
-	that.findByPerspectiveId = function(perspectiveId, _success, _error, _complete, projection) {
+	that.findRootsPage = function(taxonomyId, page, size, sort, _success, _error, _complete, projection) {
 		return that._ajax({
-			url: _url + "/api/terms/search/findByPerspectiveId",
+			url: _url + "/api/terms/search/findRootsPage",
 			data: {
-				perspectiveId: perspectiveId,
+				taxonomyId: taxonomyId,
+				page: page,
+				size: size,
+				sort: sort,
 
 				projection: projection
 			},
@@ -4841,35 +4875,14 @@ function BaseTrix(_url, _username, _password) {
 		});
 	};
 
-	if (that.findTermsByPostId) {
-		console.log("findTermsByPostId");
+	if (that.findRoots) {
+		console.log("findRoots");
 	}
-	that.findTermsByPostId = function(postId, _success, _error, _complete, projection) {
+	that.findRoots = function(taxonomyId, _success, _error, _complete, projection) {
 		return that._ajax({
-			url: _url + "/api/terms/search/findTermsByPostId",
+			url: _url + "/api/terms/search/findRoots",
 			data: {
-				postId: postId,
-
-				projection: projection
-			},
-			success: function(_data, _textStatus, _jqXHR) {
-				if (_success) {
-					_success(_data.content, _textStatus, _jqXHR);
-				}
-			},
-			error: _error,
-			complete: _complete
-		});
-	};
-
-	if (that.findTermsByPostSlug) {
-		console.log("findTermsByPostSlug");
-	}
-	that.findTermsByPostSlug = function(slug, _success, _error, _complete, projection) {
-		return that._ajax({
-			url: _url + "/api/terms/search/findTermsByPostSlug",
-			data: {
-				slug: slug,
+				taxonomyId: taxonomyId,
 
 				projection: projection
 			},

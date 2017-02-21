@@ -62,6 +62,8 @@ public class Video extends BaseEntity implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	public Image image;
 
+	public String imageUrl;
+
 	@SdkInclude
 	public String getImageHash() {
 		if (image != null) return image.getOriginalHash();

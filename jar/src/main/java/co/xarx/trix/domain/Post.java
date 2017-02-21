@@ -101,6 +101,15 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public Image featuredImage;
 
 	@SdkInclude
+	public String imageUrl;
+	@SdkInclude
+	public String imageLargeUrl;
+	@SdkInclude
+	public String imageMediumUrl;
+	@SdkInclude
+	public String imageSmallUrl;
+
+	@SdkInclude
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Video featuredVideo;
 

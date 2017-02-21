@@ -126,6 +126,8 @@ public class Network extends BaseEntity implements Serializable, AnalyticsEntity
 	@OneToOne
 	public Image favicon;
 
+	public String faviconUrl;
+
 	@SdkInclude
 	public Integer getFaviconId(){
 		if(favicon != null)
@@ -135,6 +137,8 @@ public class Network extends BaseEntity implements Serializable, AnalyticsEntity
 	
 	@OneToOne
 	public Image splashImage;
+
+	public String splashImageUrl;
 
 	@SdkInclude
 	public Integer getSplashImageId(){
@@ -146,6 +150,8 @@ public class Network extends BaseEntity implements Serializable, AnalyticsEntity
 	@OneToOne
 	public Image loginImage;
 
+	public String loginImageUrl;
+
 	@SdkInclude
 	public Integer getLoginImageId(){
 		if(splashImage != null)
@@ -155,6 +161,8 @@ public class Network extends BaseEntity implements Serializable, AnalyticsEntity
 
 	@OneToOne
 	public Image logoImage;
+
+	public String logoImageUrl;
 
 	@SdkInclude
 	public Integer getLogoImageId(){

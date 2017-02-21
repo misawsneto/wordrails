@@ -152,6 +152,8 @@ public class Image extends BaseEntity implements Serializable {
 
 	private String originalHash;
 
+	private String originalUrl;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "image_hash",
 			joinColumns = @JoinColumn(name = "image_id"),
