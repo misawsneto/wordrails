@@ -19,6 +19,7 @@ public class StationView implements Serializable {
 	public java.lang.Integer defaultPerspectiveId;
 	public Map<String, String> logo;
 	public String logoHash;
+	public String logoUrl;
 	public boolean main;
 	public java.lang.String name;
 	public java.lang.String navbarColor;
@@ -253,6 +254,10 @@ public class StationView implements Serializable {
 			return logoHash;
 		}
 		return null;
+	}
+
+	public String getLogoUrl(){
+		return logoUrl;
 	}
 
 	public int postsTitleSize;

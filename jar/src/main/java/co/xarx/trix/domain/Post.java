@@ -100,14 +100,10 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Image featuredImage;
 
-	@SdkInclude
-	public String imageUrl;
-	@SdkInclude
-	public String imageLargeUrl;
-	@SdkInclude
-	public String imageMediumUrl;
-	@SdkInclude
-	public String imageSmallUrl;
+//	public String imageUrl;
+//	public String imageLargeUrl;
+//	public String imageMediumUrl;
+//	public String imageSmallUrl;
 
 	@SdkInclude
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -333,6 +329,26 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 		Image featuredImage = getFeaturedImage();
 		if (featuredImage != null) return featuredImage.getHashes().get("small");
 
+		return null;
+	}
+
+	@SdkInclude
+	public String getImageUrl() {
+		return null;
+	}
+
+	@SdkInclude
+	public String getImageSmallUrl() {
+		return null;
+	}
+
+	@SdkInclude
+	public String getImageMediumUrl() {
+		return null;
+	}
+
+	@SdkInclude
+	public String getImageLargeUrl() {
 		return null;
 	}
 

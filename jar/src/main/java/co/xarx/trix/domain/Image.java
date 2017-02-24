@@ -154,6 +154,25 @@ public class Image extends BaseEntity implements Serializable {
 
 	private String originalUrl;
 
+	@SdkInclude
+	public String getImageUrl(){
+		return null;
+	}
+
+	@SdkInclude
+	private String getImageSmallUrl(){
+		return null;
+	}
+	@SdkInclude
+	private String getMeidumUrl(){
+		return  null;
+	};
+	@SdkInclude
+	private String getLargeUrl(){
+		return null;
+	};
+
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "image_hash",
 			joinColumns = @JoinColumn(name = "image_id"),
