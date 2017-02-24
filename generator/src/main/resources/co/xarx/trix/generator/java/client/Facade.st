@@ -541,6 +541,290 @@ public class $facade$ {
     	return _facade.getPostViewBySlug(slug, withBody, stationId);
 	}
 
+			public PostDto findBySlug(String slug, Integer stationId) {
+        		List<PostDto> posts = _facade.findBySlug(slug, stationId).content;
+        		if (posts.isEmpty()) {
+        			return null;
+        		} else {
+        			return posts.get(0);
+        		}
+        	}
+
+        	public void findBySlug(String slug, Integer stationId, final Callback<PostDto> _callback) {
+        		_facade.findBySlug(slug, stationId, new Callback<ContentResponse<List<PostDto>\>\>() {
+        			@Override
+        			public void success(ContentResponse<List<PostDto>\> _t, Response _response) {
+        				List<PostDto> posts = _t.content;
+        				if (posts.isEmpty()) {
+        					_callback.success(null, _response);
+        				} else {
+        					_callback.success(posts.get(0), _response);
+        				}
+        			}
+
+        			@Override
+        			public void failure(RetrofitError _error) {
+        				_callback.failure(_error);
+        			}
+        		});
+        	}
+
+            public PostProjectionDto findBySlug_PostProjection(String slug, Integer stationId) {
+                List<PostProjectionDto> posts = _facade.findBySlug_PostProjection(slug, stationId, "postProjection").content;
+                if (posts.isEmpty()) {
+                    return null;
+                } else {
+                    return posts.get(0);
+                }
+            }
+
+            public void findBySlug_PostProjection(String slug, Integer stationId, final Callback<PostProjectionDto> _callback) {
+                _facade.findBySlug_PostProjection(slug, "postProjection", stationId, new Callback<ContentResponse<List<PostProjectionDto>\>\>() {
+                    @Override
+                    public void success(ContentResponse<List<PostProjectionDto>\> _t, Response _response) {
+                        List<PostProjectionDto> posts = _t.content;
+                        if (posts.isEmpty()) {
+                            _callback.success(null, _response);
+                        } else {
+                            _callback.success(posts.get(0), _response);
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError _error) {
+                        _callback.failure(_error);
+                    }
+                });
+            }
+
+            public PostDto getPost(java.lang.Integer id, Integer stationId) {
+                return _facade.getPost(id, stationId);
+            }
+
+            public void getPost(java.lang.Integer id, Integer stationId, Callback<PostDto> _callback) {
+                _facade.getPost(id, stationId, _callback);
+            }
+
+            public java.util.List<TermDto> getPostTerms(java.lang.Integer id, java.lang.Integer stationId) {
+                return _facade.getPostTerms(id, stationId).content;
+            }
+
+            public void getPostTerms(java.lang.Integer id, java.lang.Integer stationId, final Callback<java.util.List<TermDto>\> _callback) {
+                _facade.getPostTerms(id, stationId, new Callback<ContentResponse<java.util.List<TermDto>\>\>() {
+                    @Override
+                    public void success(ContentResponse<java.util.List<TermDto>\> _t, Response _response) {
+                        _callback.success(_t.content, _response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError _error) {
+                        _callback.failure(_error);
+                    }
+                });
+            }
+
+            public java.lang.Integer postPost(PostDto post, Integer stationId) {
+                Response _response = _facade.postPost(post, stationId);
+                int _status = _response.getStatus();
+                if (_status != 201) {
+                    throw new RuntimeException();
+                }
+                for (Header _header : _response.getHeaders()) {
+                    String _name = _header.getName();
+                    if ("Location".equals(_name)) {
+                        String _value = _header.getValue();
+                        post.setSelf(_value);
+                        int _index = _value.lastIndexOf('/');
+                        String _suffix = _value.substring(_index + 1);
+                        java.lang.Integer id = new java.lang.Integer(_suffix);
+                        post.id = id;
+                        return id;
+                    }
+                }
+                throw new RuntimeException();
+            }
+
+            public void postPost(PostDto post, Integer stationId, final Callback<java.lang.Integer> _callback) {
+                _facade.postPost(post, stationId, new Callback<Void>() {
+                    @Override
+                    public void success(Void _t, Response _response) {
+                        int _status = _response.getStatus();
+                        if (_status != 201) {
+                            RetrofitError _error = RetrofitError.unexpectedError(null, new RuntimeException());
+                            _callback.failure(_error);
+                        }
+                        for (Header _header : _response.getHeaders()) {
+                            String _name = _header.getName();
+                            if ("Location".equals(_name)) {
+                                String _value = _header.getValue();
+                                int _index = _value.lastIndexOf('/');
+                                String _suffix = _value.substring(_index + 1);
+                                java.lang.Integer id = new java.lang.Integer(_suffix);
+                                _callback.success(id, _response);
+                                return;
+                            }
+                        }
+                        RetrofitError _error = RetrofitError.unexpectedError(null, new RuntimeException());
+                        _callback.failure(_error);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        _callback.failure(error);
+                    }
+                });
+            }
+
+            public CommentDto postComment(Integer postId, CommentDto comment, Integer stationId) {
+                return _facade.postComment(postId, comment, stationId);
+            }
+
+            public void postComment(Integer postId, CommentDto comment, Integer stationId, final Callback<CommentDto> _callback) {
+                _facade.postComment(postId, comment, stationId, _callback);
+            }
+
+            public void putPostTerms(java.lang.Integer id, List<String> terms, Integer stationId) {
+                StringBuilder _uris = new StringBuilder();
+                for (String _uri : terms) {
+                    _uris.append(_uri);
+                    _uris.append('\n');
+                }
+                Response _response = _facade.putPostTerms(id, new TypedString(_uris.toString()), stationId);
+                int status = _response.getStatus();
+                if (status != 204) {
+                    throw new RuntimeException();
+                }
+            }
+
+            public void putPostTerms(java.lang.Integer id, List<String> terms, Integer stationId, final Callback<Void> _callback) {
+                StringBuilder _uris = new StringBuilder();
+                for (String _uri : terms) {
+                    _uris.append(_uri);
+                    _uris.append('\n');
+                }
+                _facade.putPostTerms(id, new TypedString(_uris.toString()), stationId, new Callback<Void>() {
+                    @Override
+                    public void success(Void _t, Response _response) {
+                        int _status = _response.getStatus();
+                        if (_status != 204) {
+                            RetrofitError _error = RetrofitError.unexpectedError(null, new RuntimeException());
+                            _callback.failure(_error);
+                            return;
+                        }
+                        _callback.success(null, _response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        _callback.failure(error);
+                    }
+                });
+            }
+
+            public void putPostFeaturedImage(java.lang.Integer id, String featuredImage, Integer stationId) {
+                Response _response;
+                if (featuredImage == null) {
+                    _response = _facade.deletePostFeaturedImage(id, stationId);
+                } else {
+                    _response = _facade.putPostFeaturedImage(id, new TypedString(featuredImage), stationId);
+                }
+                int _status = _response.getStatus();
+                if (_status != 204) {
+                    throw new RuntimeException();
+                }
+            }
+
+            public void putPostFeaturedImage(java.lang.Integer id, String featuredImage, Integer stationId, final Callback<Void> _callback) {
+                Callback<Void> _callback2 = new Callback<Void>() {
+                    @Override
+                    public void success(Void _t, Response _response) {
+                        int _status = _response.getStatus();
+                        if (_status != 204) {
+                            RetrofitError _error = RetrofitError.unexpectedError(null, new RuntimeException());
+                            _callback.failure(_error);
+                            return;
+                        }
+                        _callback.success(null, _response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        _callback.failure(error);
+                    }
+                };
+                if (featuredImage == null) {
+                    _facade.deletePostFeaturedImage(id, stationId, _callback2);
+                } else {
+                    _facade.putPostFeaturedImage(id, new TypedString(featuredImage), stationId, _callback2);
+                }
+            }
+
+            public void patchPostTerms(java.lang.Integer id, List<String> terms, Integer stationId) {
+                StringBuilder _uris = new StringBuilder();
+                for (String _uri : terms) {
+                    _uris.append(_uri);
+                    _uris.append('\n');
+                }
+                Response _response = _facade.patchPostTerms(id, new TypedString(_uris.toString()), stationId);
+                int status = _response.getStatus();
+                if (status != 204) {
+                    throw new RuntimeException();
+                }
+            }
+
+            public void patchPostTerms(java.lang.Integer id, List<String> terms, Integer stationId, final Callback<Void> _callback) {
+                StringBuilder _uris = new StringBuilder();
+                for (String _uri : terms) {
+                    _uris.append(_uri);
+                    _uris.append('\n');
+                }
+                _facade.patchPostTerms(id, new TypedString(_uris.toString()), stationId, new Callback<Void>() {
+                    @Override
+                    public void success(Void _t, Response _response) {
+                        int _status = _response.getStatus();
+                        if (_status != 204) {
+                            RetrofitError _error = RetrofitError.unexpectedError(null, new RuntimeException());
+                            _callback.failure(_error);
+                            return;
+                        }
+                        _callback.success(null, _response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        _callback.failure(error);
+                    }
+                });
+            }
+
+            public void deletePost(java.lang.Integer id, Integer stationId) {
+                Response _response = _facade.deletePost(id, stationId);
+                int _status = _response.getStatus();
+                if (_status != 204) {
+                    throw new RuntimeException();
+                }
+            }
+
+            public void deletePost(java.lang.Integer id, Integer stationId, final Callback<Void> _callback) {
+                _facade.deletePost(id, stationId, new Callback<Void>() {
+                    @Override
+                    public void success(Void _t, Response _response) {
+                        int _status = _response.getStatus();
+                        if (_status != 204) {
+                            RetrofitError _error = RetrofitError.unexpectedError(null, new RuntimeException());
+                            _callback.failure(_error);
+                            return;
+                        }
+                        _callback.success(null, _response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        _callback.failure(error);
+                    }
+                });
+            }
+
 	public void getPostViewBySlug(String slug, Boolean withBody, Integer stationId, Callback<PostView> _callback){
 		_facade.getPostViewBySlug(slug, withBody, stationId, _callback);
 	}

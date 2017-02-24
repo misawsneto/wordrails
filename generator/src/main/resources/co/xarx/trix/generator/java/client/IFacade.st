@@ -249,6 +249,80 @@ interface I$facade$ {
 	@GET("/posts/getPostViewBySlug")
 	void getPostViewBySlug(@Query("slug") String slug,  @Query("withBody") Boolean withBody, @Query("stationId") Integer stationId, Callback<PostView> _callback);
 
+		@GET("/posts/search/findBySlug")
+    	ContentResponse<List<PostDto>\> findBySlug(@Query("slug") String slug, @Query("stationId") Integer stationId);
+
+    	@GET("/posts/search/findBySlug")
+    	void findBySlug(@Query("slug") String slug, @Query("stationId") Integer stationId, Callback<ContentResponse<List<PostDto>\>\> _callback);
+
+    	@GET("/posts/search/findBySlug")
+    	ContentResponse<List<PostProjectionDto>\> findBySlug_PostProjection(@Query("slug") String slug, @Query("stationId") Integer stationId, @Query("projection") String projection);
+
+    	@GET("/posts/search/findBySlug")
+    	void findBySlug_PostProjection(@Query("slug") String slug, @Query("projection") String projection, @Query("stationId") Integer stationId, Callback<ContentResponse<List<PostProjectionDto>\>\> _callback);
+
+    	@GET("/posts/{id}")
+        PostDto getPost(@Path("id") java.lang.Integer id, @Query("stationId") Integer stationId);
+
+        @GET("/posts/{id}")
+        void getPost(@Path("id") java.lang.Integer id, @Query("stationId") Integer stationId, Callback<PostDto> _callback);
+
+        @GET("/posts/{id}/terms")
+        ContentResponse<java.util.List<TermDto>\> getPostTerms(@Path("id") java.lang.Integer id, @Query("stationId") Integer stationId);
+
+        @GET("/posts/{id}/terms")
+        void getPostTerms(@Path("id") java.lang.Integer id, @Query("stationId") Integer stationId, Callback<ContentResponse<java.util.List<TermDto>\>\> _callback);
+
+        @POST("/posts")
+        Response postPost(@Body PostDto post, @Query("stationId") Integer stationId);
+
+        @POST("/posts")
+        void postPost(@Body PostDto post, @Query("stationId") Integer stationId, Callback<Void> _callback);
+
+        @POST("/posts/{postId}/comments")
+        CommentDto postComment(@Path("postId") Integer postId, @Body CommentDto comment, @Query("stationId") Integer stationId);
+
+        @POST("/posts/{postId}/comments")
+        void postComment(@Path("postId") Integer postId, @Body CommentDto comment, @Query("stationId") Integer stationId, Callback<CommentDto> _callback);
+
+        @PUT("/posts/{id}/terms")
+        @Headers("Content-Type: text/uri-list")
+        Response putPostTerms(@Path("id") java.lang.Integer id, @Body TypedString terms, @Query("stationId") Integer stationId);
+
+        @PUT("/posts/{id}/terms")
+        @Headers("Content-Type: text/uri-list")
+        void putPostTerms(@Path("id") java.lang.Integer id, @Body TypedString terms, @Query("stationId") Integer stationId, Callback<Void> _callback);
+
+        @PUT("/posts/{id}/featuredImage")
+        @Headers("Content-Type: text/uri-list")
+        Response putPostFeaturedImage(@Path("id") java.lang.Integer id, @Body TypedString featuredImage, @Query("stationId") Integer stationId);
+
+        @PUT("/posts/{id}/featuredImage")
+        @Headers("Content-Type: text/uri-list")
+        void putPostFeaturedImage(@Path("id") java.lang.Integer id, @Body TypedString featuredImage, @Query("stationId") Integer stationId, Callback<Void> _callback);
+
+        @PATCH("/posts/{id}/terms")
+        @Headers("Content-Type: text/uri-list")
+        Response patchPostTerms(@Path("id") java.lang.Integer id, @Body TypedString terms, @Query("stationId") Integer stationId);
+
+        @PATCH("/posts/{id}/terms")
+        @Headers("Content-Type: text/uri-list")
+        void patchPostTerms(@Path("id") java.lang.Integer id, @Body TypedString terms, @Query("stationId") Integer stationId, Callback<Void> _callback);
+
+		@DELETE("/posts/{id}")
+        Response deletePost(@Path("id") java.lang.Integer id, @Query("stationId") Integer stationId);
+
+        @DELETE("/posts/{id}")
+        void deletePost(@Path("id") java.lang.Integer id, @Query("stationId") Integer stationId, Callback<Void> _callback);
+
+        @DELETE("/posts/{id}/featuredImage")
+        Response deletePostFeaturedImage(@Path("id") java.lang.Integer id, @Query("stationId") Integer stationId);
+
+        @DELETE("/posts/{id}/featuredImage")
+        void deletePostFeaturedImage(@Path("id") java.lang.Integer id, @Query("stationId") Integer stationId, Callback<Void> _callback);
+
+
+
 	@GET("/posts/{postId}/body")
 	StringResponse getPostBody(@Path("postId") Integer postId, @Query("stationId") Integer stationId);
 
