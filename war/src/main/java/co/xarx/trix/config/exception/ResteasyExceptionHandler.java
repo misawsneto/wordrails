@@ -37,8 +37,8 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 	@Autowired
 	private HttpServletRequest request;
 
-	@Autowired
-	private SlackBot slackBot;
+//	@Autowired
+//	private SlackBot slackBot;
 
 	@Override
 	public Response toResponse(Throwable throwable) {
@@ -98,6 +98,6 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 		//POG -- This is bad code. Don't repeat that at home, kids
 		if(tenant.equals("pd")) return;
 
-		slackBot.logError(logMessage);
+//		slackBot.logError(logMessage);
 	}
 }

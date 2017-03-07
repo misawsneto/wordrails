@@ -12,10 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
 
 @Service
 public class AuditService {
@@ -62,7 +61,8 @@ public class AuditService {
 				f.setAccessible(true);
 				f.set(post, f.getType().cast(value));
 			}
-			Long date = snapshot.getCommitMetadata().getCommitDate().toDate().getTime();
+			LocalDateTime l = snapshot.getCommitMetadata().getCommitDate();
+			Long date = Date.from(l.toInstant(ZoneOffset.UTC)).getTime();
 			versions.put(date, post);
 		}
 		return versions;
