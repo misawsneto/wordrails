@@ -977,22 +977,24 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	// -------- autoSave
 	var AUTO_SAVE = null;
-	$scope.$watch('app.editingPost', function(newVal, oldVal) {
-	    if(oldVal && (('title' in oldVal) || ('body' in oldVal))){
+	var checkChanges = function(newVal, oldVal){
+		if(oldVal && (('title' in oldVal) || ('body' in oldVal))){
 	      // post has been edited
 
 	      var newBody = newVal && newVal.body ? newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
 	      var oldBody = oldVal && oldVal.body ? oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
 
-	      if(newVal && (newVal.title !== oldVal.title || newBody !== oldBody)){
-	        
+	      if(newVal != null && newVal != "" && (newVal.title !== oldVal.title || newBody !== oldBody)){
 	        autoSaveDraft();
 	      }
 	    }
+	}
+	$scope.$watch('app.editingPost', function(newVal, oldVal) {
+	    checkChanges(newVal, oldVal);
 	  }, true);
 
 	$scope.$watch('selectedStation', function(newVal, oldVal) {
-		autoSaveDraft();
+		checkChanges(newVal, oldVal);
 	});
 
 	var autoSaveDraft = function(){
@@ -1001,10 +1003,18 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	    	if(AUTO_SAVE){
 	    		$timeout.cancel(AUTO_SAVE);
 	    	}
+
 	    	if(($scope.app.checkState() == 2 || $scope.app.checkState() == 5) && $scope.automaticSave){
 	    		AUTO_SAVE = $timeout(function(){
-	    			var body = $scope.app.editingPost.body && $scope.app.editingPost.body ? $scope.app.editingPost.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
-	    			if($scope.automaticSave && ($scope.selectedStation && $scope.app.getTermList($scope.selectedStation.termTree).length > 0) && body && $scope.app.editingPost.title != null){
+	    			var body = $scope.app.editingPost.body != null && $scope.app.editingPost.body != "" ?
+	    			 $scope.app.editingPost.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") : null;
+
+	    			if($scope.automaticSave && 
+	    				($scope.selectedStation && 
+	    					$scope.app.getTermList($scope.selectedStation.termTree).length > 0)
+	    					 && body != null && body != "" &&
+	    						$scope.app.editingPost.title != null){
+
 	    				if($scope.app.checkState() == 2)
 	    					$scope.saveAsDraft(null, true)
 	    				else if($scope.app.checkState() == 5)

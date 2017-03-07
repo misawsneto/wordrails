@@ -1,6 +1,6 @@
 package co.xarx.trix.eventhandler;
 
-import co.xarx.trix.config.exception.SlackBot;
+//import co.xarx.trix.config.exception.SlackBot;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.domain.page.AbstractSection;
 import co.xarx.trix.domain.page.Page;
@@ -60,8 +60,8 @@ public class StationEventHandler {
 	private ObjectStatementRepository statementRepository;
 	@Autowired
 	private PageableQueryRepository pageableQueryRepository;
-	@Autowired
-	private SlackBot slackBot;
+//	@Autowired
+//	private SlackBot slackBot;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
@@ -95,7 +95,7 @@ public class StationEventHandler {
 
 	@HandleAfterCreate
 	public void handleAfterCreate(Station station){
-		slackBot.sendMessage("New station created: " + station.getName() + " tenantId:" + station.getTenantId());
+//		slackBot.sendMessage("New station created: " + station.getName() + " tenantId:" + station.getTenantId());
 
 		Term term1 = new Term();
 		term1.name = "Categoria 1";

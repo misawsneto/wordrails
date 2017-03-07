@@ -153,16 +153,16 @@ public class ApplicationConfig implements AsyncConfigurer{
 		return executor;
 	}
 
-	@Bean
-	public SlackSession slackSession() {
-		SlackSession session = SlackSessionFactory.createWebSocketSlackSession(slackToken);
-		try {
-			session.connect();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return session;
-	}
+//	@Bean
+//	public SlackSession slackSession() {
+//		SlackSession session = SlackSessionFactory.createWebSocketSlackSession(slackToken);
+//		try {
+//			session.connect();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		return session;
+//	}
 
 	@Override
 	public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {

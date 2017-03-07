@@ -41,8 +41,8 @@ public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 	@Autowired
 	private HttpServletRequest request;
 
-	@Autowired
-	private SlackBot slackBot;
+//	@Autowired
+//	private SlackBot slackBot;
 
 	@ExceptionHandler(SubdomainNotFoundException.class)
 	public ResponseEntity<Object> handleSubdomainNotFoundException(SubdomainNotFoundException e, WebRequest req) throws
@@ -271,6 +271,6 @@ public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 
 		log.error(message, e);
 		if(TenantContextHolder.getCurrentTenantId().equals("pd")) return;
-		slackBot.logError(message);
+//		slackBot.logError(message);
 	}
 }
