@@ -62,10 +62,10 @@
                      {{::category.name}}
                      </span>
                   </div>
-                  <div class="text-lg text-white text-shadow">
+                  <div class="text-lg text-white text-shadow-sm">
                      <p clamp="3">{{::postView.title}}</p>
                   </div>
-                  <div class="text-md text-white text-shadow">
+                  <div class="text-md text-white text-shadow-sm">
                      <p clamp="2">{{::postView.snippet}}</p>
                   </div>
                </div>
@@ -155,7 +155,7 @@
                   ng-style="{'background-position': postView.focusX + '% ' + postView.focusY + '%'}">
                      <!-- <img class="responsive-img materialboxed" ng-src="{{postView | imageLink:'medium'}}" alt="news Image" style="opacity: 0"> -->
                   </div>
-                  <div ng-if="::(!app.hasImage(postView))" class="black-grad w-full text-lg pos-abt bottom-0 text-white text-shadow p">{{::postView.title}}</div>
+                  <div ng-if="::(!app.hasImage(postView))" class="black-grad w-full text-lg pos-abt bottom-0 text-white text-shadow-sm p">{{::postView.title}}</div>
                </div>
             </a>
          </div>
