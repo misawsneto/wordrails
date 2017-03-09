@@ -2,6 +2,7 @@ package co.xarx.trix.services.notification;
 
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.domain.MobileNotification;
+import co.xarx.trix.services.AmazonCloudService;
 import com.google.android.gcm.server.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,9 @@ public class FCM2Client implements NotificationServerClient {
 	private Map<String, NotificationResult> errorDevices;
 	private Map<String, NotificationResult> successDevices;
 	private FCMSender sender;
+
+	@Autowired
+	private AmazonCloudService amazonCloudService;
 
 	@Autowired
 	public FCM2Client(FCMSender sender){
@@ -64,18 +68,34 @@ public class FCM2Client implements NotificationServerClient {
 	}
 
 	public Message createMessage(NotificationView notificationView){
-		Notification notification = new Notification.Builder(notificationView.post.getImageLargeHash())
+		Notification notification = new Notification.Builder(notificationView.post.featuredImageHash)
 				.title(notificationView.title)
 				.body(notificationView.postSnippet)
 				.build();
 
-		return new Message.Builder()
-				.notification(notification)
+
+
+		Message.Builder builder = new Message.Builder()
+//				.notification(notification)
+				.addData("title", notificationView.title)
+				.addData("body", notificationView.postSnippet)
 				.addData("type", notificationView.type)
+
 				.addData("entityId", String.valueOf(notificationView.postId))
 				.delayWhileIdle(true)
 				.priority(Message.Priority.HIGH)
-				.timeToLive(0).build();
+				.timeToLive(0);
+
+		String image;
+		try {
+			image = amazonCloudService.getPublicImageURL(notificationView.post.getImageLargeHash());
+			builder.addData("imageUrl", image);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+		return builder.build();
 
 	}
 }
