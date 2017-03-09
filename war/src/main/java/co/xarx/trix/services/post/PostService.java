@@ -151,7 +151,7 @@ public class PostService {
 	public NotificationView getCreatePostNotification(Post post) {
 		String hash = StringUtil.generateRandomString(10, "Aa#");
 		NotificationView notification = new NotificationView(post.title, post.title, hash, false);
-		notification.type = NotificationType.POST_ADDED;
+		notification.type = NotificationType.POST_ADDED.toString();
 		notification.post = postConverter.convertTo(post);
 		notification.post.featuredImageHash = post.getImageHash();
 		notification.postId = post.id;
