@@ -45,7 +45,12 @@ public class NotificationRequest extends BaseEntity {
 	@JoinTable(name = "notificationrequest_station", joinColumns = @JoinColumn(name = "notification_id"))
 	private List<Integer> stationsIds;
 
-	private Integer postId;
+	@Column(name = "entity_id")
+	private Integer entityId;
 
+	@Column(name = "schedule_date")
 	private Date scheduledDate;
+
+	@Column(name = "send_notification")
+	private boolean sendNotification;
 }

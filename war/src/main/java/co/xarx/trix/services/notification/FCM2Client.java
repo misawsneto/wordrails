@@ -2,35 +2,29 @@ package co.xarx.trix.services.notification;
 
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.domain.MobileNotification;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import co.xarx.trix.services.AmazonCloudService;
 import com.google.android.gcm.server.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
-public class GCMClient implements NotificationServerClient {
-
-	private ObjectMapper mapper;
-	private Sender sender;
+public class FCM2Client implements NotificationServerClient {
 
 	private Map<String, NotificationResult> errorDevices;
 	private Map<String, NotificationResult> successDevices;
+	private FCMSender sender;
 
 	@Autowired
-	public GCMClient(@Qualifier("gcmSender") Sender sender) {
+	private AmazonCloudService amazonCloudService;
+
+	@Autowired
+	public FCM2Client(FCMSender sender){
+		this.sender = sender;
 		this.errorDevices = new HashMap<>();
 		this.successDevices = new HashMap<>();
-		this.sender = sender;
-		this.mapper = new ObjectMapper();
-		mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-		mapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
-		mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 	}
 
 	@Override
@@ -38,20 +32,18 @@ public class GCMClient implements NotificationServerClient {
 		return errorDevices;
 	}
 
-	@Deprecated
 	@Override
 	public Map<String, NotificationResult> getSuccessDevices() {
 		return successDevices;
 	}
 
 	@Override
-	public void send(NotificationView notification, Collection<String> d) throws IOException {
+	public void send(NotificationView notificationView, Collection<String> d) throws IOException {
 		MulticastResult multicastResult;
 
 		List<String> devices = new ArrayList<>(d);
 
-		String notificationJson = mapper.valueToTree(notification).toString();
-		Message message = new Message.Builder().addData("message", notificationJson).delayWhileIdle(true).timeToLive(86400).build();
+		Message message = createMessage(notificationView);
 
 		multicastResult = sender.send(message, devices, 5);
 
@@ -73,5 +65,37 @@ public class GCMClient implements NotificationServerClient {
 				successDevices.put(devices.get(i), notificationResult);
 			}
 		}
+	}
+
+	public Message createMessage(NotificationView notificationView){
+		Notification notification = new Notification.Builder(notificationView.post.featuredImageHash)
+				.title(notificationView.title)
+				.body(notificationView.postSnippet)
+				.build();
+
+
+
+		Message.Builder builder = new Message.Builder()
+//				.notification(notification)
+				.addData("title", notificationView.title)
+				.addData("body", notificationView.postSnippet)
+				.addData("type", notificationView.type)
+
+				.addData("entityId", String.valueOf(notificationView.postId))
+				.delayWhileIdle(true)
+				.priority(Message.Priority.HIGH)
+				.timeToLive(0);
+
+		String image;
+		try {
+			image = amazonCloudService.getPublicImageURL(notificationView.post.getImageLargeHash());
+			builder.addData("imageUrl", image);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+		return builder.build();
+
 	}
 }

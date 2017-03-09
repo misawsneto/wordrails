@@ -50,7 +50,7 @@ public class PersonalNotificationService {
 			notification.setSentAt(new Date());
 			notification.setRequest(request);
 			notification.setType(request.getType());
-			notification.setPostId(request.getPostId());
+			notification.setPostId(request.getEntityId());
 
 			personalNotificationRepository.save(notification);
 
