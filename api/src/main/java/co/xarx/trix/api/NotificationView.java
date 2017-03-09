@@ -1,6 +1,7 @@
 package co.xarx.trix.api;
 
 import co.xarx.trix.domain.MobileNotification;
+import co.xarx.trix.domain.NotificationType;
 import co.xarx.trix.util.StringUtil;
 
 import java.io.Serializable;
@@ -21,7 +22,7 @@ public class NotificationView implements Serializable {
 	public static NotificationView of(PostView post) {
 		String hash = StringUtil.generateRandomString(10, "Aa#");
 		NotificationView notification = new NotificationView(post.title, post.title, hash, false);
-		notification.type = MobileNotification.Type.POST_ADDED.toString();
+		notification.type = NotificationType.POST_ADDED;
 		notification.post = post;
 		notification.postId = (int) post.getId();
 		notification.postTitle = post.title;
@@ -30,7 +31,7 @@ public class NotificationView implements Serializable {
 	}
 
 	public int id;
-	public String type;
+	public NotificationType type;
 	public String title;
 	public String message;
 	public String hash;

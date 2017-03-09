@@ -100,6 +100,14 @@ public class PostService {
 		sendNewPostNotification(post);
 	}
 
+//	public void createPostAddedNotification(Post post){
+//		Notification notification = new Notification();
+//		notification.setType(NotificationType.POST_ADDED);
+//		notification.setPostId(post.getId());
+//		notification.setMessage();
+//		notificationRepository.save(notification);
+//	}
+
 	public void sendNewPostNotification(Post post) throws NotificationException {
 		List<MobileDevice> mobileDevices;
 		if (stationRepository.isUnrestricted(post.getStationId())) {
@@ -143,7 +151,7 @@ public class PostService {
 	public NotificationView getCreatePostNotification(Post post) {
 		String hash = StringUtil.generateRandomString(10, "Aa#");
 		NotificationView notification = new NotificationView(post.title, post.title, hash, false);
-		notification.type = MobileNotification.Type.POST_ADDED.toString();
+		notification.type = NotificationType.POST_ADDED;
 		notification.post = postConverter.convertTo(post);
 		notification.post.featuredImageHash = post.getImageHash();
 		notification.postId = post.id;

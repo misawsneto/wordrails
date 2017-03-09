@@ -49,6 +49,7 @@ public class APNSClient implements NotificationServerClient {
 				.alertTitle(notification.post.stationName)
 				.customField("stationName", notification.post.stationName)
 				.customField("postId", notification.postId)
+				.customField("id", notification.id)
 				.forNewsstand()
 				.shrinkBody("...")
 				.instantDeliveryOrSilentNotification()

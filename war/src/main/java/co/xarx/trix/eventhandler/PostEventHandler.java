@@ -10,6 +10,7 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.NotificationTargetService;
 import co.xarx.trix.services.notification.NotificationService;
 import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.services.security.PostPermissionService;
@@ -41,7 +42,6 @@ public class PostEventHandler {
 	private ElasticSearchService elasticSearchService;
 	@Autowired
 	private ESPostRepository esPostRepository;
-
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
@@ -50,6 +50,8 @@ public class PostEventHandler {
 	private AuditService auditService;
 	@Autowired
 	private QueryPersistence queryPersistence;
+	@Autowired
+	private NotificationTargetService targetService;
 
 	@Autowired
 	private NotificationService notificationService;
@@ -130,6 +132,7 @@ public class PostEventHandler {
 	public void handleAfterCreate(Post post) {
 		elasticSearchService.mapThenSave(post, ESPost.class);
 		notificationCheck(post);
+		targetService.postCheckTarget(post);
 	}
 
 	public void notificationCheck(Post post) {
@@ -147,6 +150,7 @@ public class PostEventHandler {
 	@HandleAfterSave
 	public void handleAfterSave(Post post) {
 		notificationCheck(post);
+		targetService.postCheckTarget(post);
 		auditService.saveChange(post);
 		elasticSearchService.mapThenSave(post, ESPost.class);
 	}

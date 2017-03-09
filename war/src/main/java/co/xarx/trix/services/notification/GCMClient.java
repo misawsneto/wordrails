@@ -38,6 +38,7 @@ public class GCMClient implements NotificationServerClient {
 		return errorDevices;
 	}
 
+	@Deprecated
 	@Override
 	public Map<String, NotificationResult> getSuccessDevices() {
 		return successDevices;
