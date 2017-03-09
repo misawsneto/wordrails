@@ -30,7 +30,9 @@ public class MobileNotification extends BaseEntity {
 		ANDROID,
 		APPLE,
 		FCM_ANDROID,
-		FCM_APPLE
+		FCM_APPLE,
+		FCM_ANDROID2,
+		FCM_APPLE2
 	}
 
 	public enum Status {

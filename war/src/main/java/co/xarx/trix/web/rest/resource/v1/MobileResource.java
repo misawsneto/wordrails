@@ -32,9 +32,13 @@ public class MobileResource extends AbstractResource implements MobileApi {
 
 		Constants.MobilePlatform platform;
 
-		if (fcm != null && fcm && isAndroid(userAgent, device)){
+		if (fcm != null && fcm && isAndroid2(device)){
+			platform = Constants.MobilePlatform.FCM_ANDROID2;
+		} else if (fcm != null && fcm && isIOs2(device)){
+			platform = Constants.MobilePlatform.FCM_APPLE2;
+		} else if (fcm != null && fcm && isAndroid(userAgent, device)){
 			platform = Constants.MobilePlatform.FCM_ANDROID;
-		} else if (fcm != null && fcm && isIOs(userAgent, device)){
+		} else if (fcm != null && fcm && isIOs(userAgent, device)) {
 			platform = Constants.MobilePlatform.FCM_APPLE;
 		} else if (isIOs(userAgent, device)) {
 			platform = Constants.MobilePlatform.APPLE;
@@ -53,6 +57,14 @@ public class MobileResource extends AbstractResource implements MobileApi {
 
 	private boolean isAndroid(String userAgent, String device){
 		return device.equals("android") || userAgent.contains("OkHttp");
+	}
+
+	private boolean isIOs2(String device){
+		return device.equals("apple2") || device.equals("ios2");
+	}
+
+	private boolean isAndroid2(String device){
+		return device.equals("android2");
 	}
 
 	private Response updateMobile(String token, Double lat, Double lng, Constants.MobilePlatform type) {

@@ -57,7 +57,9 @@ public final class Constants {
 		APPLE,
 		ANDROID,
 		FCM_ANDROID,
-		FCM_APPLE
+		FCM_ANDROID2,
+		FCM_APPLE,
+		FCM_APPLE2
 	}
 
 	public static class StatsEventType {

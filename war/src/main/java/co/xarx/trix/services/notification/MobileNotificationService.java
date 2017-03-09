@@ -28,17 +28,26 @@ public class MobileNotificationService {
 	private MobileNotificationSender androidFcmNS;
 	private MobileNotificationSender appleFcmNS;
 
+	private MobileNotificationSender android2FcmNS;
+	private MobileNotificationSender apple2FcmNS;
+
 	@Autowired
 	public MobileNotificationService(NotificationBatchPublisher notificationBatchPublisher,
 									 AsyncService asyncService,
 									 MobileNotificationSender appleNS, MobileNotificationSender androidNS,
-									 MobileNotificationSender androidFcmNS, MobileNotificationSender appleFcmNS) {
+									 MobileNotificationSender androidFcmNS, MobileNotificationSender appleFcmNS,
+
+									 MobileNotificationSender android2FcmNS, MobileNotificationSender apple2FcmNS) {
+
 		this.notificationBatchPublisher = notificationBatchPublisher;
 		this.asyncService = asyncService;
 		this.appleNS = appleNS;
 		this.androidNS = androidNS;
 		this.androidFcmNS = androidFcmNS;
 		this.appleFcmNS = appleFcmNS;
+
+		this.android2FcmNS = android2FcmNS;
+		this.apple2FcmNS = apple2FcmNS;
 	}
 
 //	@AccessGroup(tenants = {"demo"}, profiles = {"prod"}, inclusion = true)
@@ -103,6 +112,44 @@ public class MobileNotificationService {
 		} catch (InterruptedException | ExecutionException e) {
 			mobileNotifications = notificationBatchPublisher.getErrorNotifications(fcmAppleDevices,
 					notification, e, MobileNotification.DeviceType.FCM_APPLE);
+		}
+
+		return mobileNotifications;
+	}
+
+	public List<MobileNotification> sendNotifications2(NotificationView notification, Collection fcm2AndroidDevices, Collection fcm2AppleDevices) {
+		Future<List<MobileNotification>> futureFcm2AndroidNotifications = null;
+		Future<List<MobileNotification>> futureFcm2AppleNotifications = null;
+		try {
+			if(fcm2AndroidDevices != null && !fcm2AndroidDevices.isEmpty())
+				futureFcm2AndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
+						() -> notificationBatchPublisher.sendNotifications(android2FcmNS, notification, fcm2AndroidDevices,
+								MobileNotification.DeviceType.FCM_ANDROID2));
+
+			if(fcm2AppleDevices != null && !fcm2AppleDevices.isEmpty())
+				futureFcm2AppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
+						() -> notificationBatchPublisher.sendNotifications(apple2FcmNS, notification, fcm2AppleDevices,
+								MobileNotification.DeviceType.FCM_APPLE2));
+		} catch (Exception e) {
+			throw new NotificationException(e);
+		}
+
+		List<MobileNotification> mobileNotifications = new ArrayList<>();
+
+		try {
+			if(futureFcm2AndroidNotifications != null)
+				mobileNotifications.addAll(futureFcm2AndroidNotifications.get());
+		} catch (InterruptedException | ExecutionException e) {
+			mobileNotifications = notificationBatchPublisher.getErrorNotifications(fcm2AndroidDevices,
+					notification, e, MobileNotification.DeviceType.FCM_ANDROID2);
+		}
+
+		try {
+			if(futureFcm2AppleNotifications != null)
+				mobileNotifications.addAll(futureFcm2AppleNotifications.get());
+		} catch (InterruptedException | ExecutionException e) {
+			mobileNotifications = notificationBatchPublisher.getErrorNotifications(fcm2AppleDevices,
+					notification, e, MobileNotification.DeviceType.FCM_APPLE2);
 		}
 
 		return mobileNotifications;

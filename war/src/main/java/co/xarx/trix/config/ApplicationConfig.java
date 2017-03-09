@@ -6,11 +6,7 @@ import co.xarx.trix.config.multitenancy.TenantProvider;
 import co.xarx.trix.elasticsearch.mapper.*;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.AsyncService;
-import co.xarx.trix.services.notification.APNSClient;
-import co.xarx.trix.services.notification.FCMSender;
-import co.xarx.trix.services.notification.GCMClient;
-import co.xarx.trix.services.notification.MobileNotificationSender;
-import co.xarx.trix.services.notification.FCMClient;
+import co.xarx.trix.services.notification.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.android.gcm.server.Sender;
@@ -101,6 +97,17 @@ public class ApplicationConfig implements AsyncConfigurer{
 	public MobileNotificationSender appleFcmNS(FCMClient client) {
 		return new MobileNotificationSender(client, 1000);
 	}
+
+	@Bean
+	public MobileNotificationSender android2FcmNS(FCM2Client client) {
+		return new MobileNotificationSender(client, 1000);
+	}
+
+	@Bean
+	public MobileNotificationSender apple2FcmNS(FCM2Client client) {
+		return new MobileNotificationSender(client, 1000);
+	}
+
 
 	@Bean
 	public ModelMapper modelMapper() {
