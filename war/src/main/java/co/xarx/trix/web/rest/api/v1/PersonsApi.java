@@ -75,23 +75,23 @@ public interface PersonsApi {
 	@Transactional
 	void updatePerson(@PathParam("id") Integer id) throws ServletException, IOException;
 
-	@Deprecated
-	@PUT
-	@Path("/me/regId")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	Response putRegId(@FormParam("regId") String regId,
-					  @FormParam("networkId") Integer networkId,
-					  @FormParam("lat") Double lat,
-					  @FormParam("lng") Double lng);
-
-	@Deprecated
-	@PUT
-	@Path("/me/token")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	Response putToken(@FormParam("token") String token,
-					  @FormParam("networkId") Integer networkId,
-					  @FormParam("lat") Double lat,
-					  @FormParam("lng") Double lng);
+//	@Deprecated
+//	@PUT
+//	@Path("/me/regId")
+//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+//	Response putRegId(@FormParam("regId") String regId,
+//					  @FormParam("networkId") Integer networkId,
+//					  @FormParam("lat") Double lat,
+//					  @FormParam("lng") Double lng);
+//
+//	@Deprecated
+//	@PUT
+//	@Path("/me/token")
+//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+//	Response putToken(@FormParam("token") String token,
+//					  @FormParam("networkId") Integer networkId,
+//					  @FormParam("lat") Double lat,
+//					  @FormParam("lng") Double lng);
 
 	@POST
 	@Path("/tokenSignin")
@@ -201,11 +201,11 @@ public interface PersonsApi {
 	 */
 	void findPersons() throws IOException;
 
-	@PUT
-	@Path("/me/location")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@PreAuthorize("permitAll()")
-	Response updateLocation2(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String
-			device, @FormParam("lat") Double lat, @FormParam("lng") Double lng) throws IOException;
+//	@PUT
+//	@Path("/me/location")
+//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+//	@PreAuthorize("permitAll()")
+//	Response updateLocation2(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String
+//			device, @FormParam("lat") Double lat, @FormParam("lng") Double lng) throws IOException;
 
 }

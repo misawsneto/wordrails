@@ -90,13 +90,13 @@ public class MobileNotificationService {
 					notification, e, MobileNotification.DeviceType.ANDROID);
 		}
 
-		try {
-			if(futureAppleNotifications != null)
-				mobileNotifications.addAll(futureAppleNotifications.get());
-		} catch (InterruptedException | ExecutionException e) {
-			mobileNotifications.addAll(notificationBatchPublisher.getErrorNotifications(appleDevices,
-					notification, e, MobileNotification.DeviceType.APPLE));
-		}
+//		try {
+//			if(futureAppleNotifications != null)
+//				mobileNotifications.addAll(futureAppleNotifications.get());
+//		} catch (InterruptedException | ExecutionException e) {
+//			mobileNotifications.addAll(notificationBatchPublisher.getErrorNotifications(appleDevices,
+//					notification, e, MobileNotification.DeviceType.APPLE));
+//		}
 
 		try {
 			if(futureFcmAndroidNotifications != null)
@@ -126,10 +126,10 @@ public class MobileNotificationService {
 						() -> notificationBatchPublisher.sendNotifications(android2FcmNS, notification, fcm2AndroidDevices,
 								MobileNotification.DeviceType.FCM_ANDROID2));
 
-			if(fcm2AppleDevices != null && !fcm2AppleDevices.isEmpty())
-				futureFcm2AppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-						() -> notificationBatchPublisher.sendNotifications(apple2FcmNS, notification, fcm2AppleDevices,
-								MobileNotification.DeviceType.FCM_APPLE2));
+//			if(fcm2AppleDevices != null && !fcm2AppleDevices.isEmpty())
+//				futureFcm2AppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
+//						() -> notificationBatchPublisher.sendNotifications(apple2FcmNS, notification, fcm2AppleDevices,
+//								MobileNotification.DeviceType.FCM_APPLE2));
 		} catch (Exception e) {
 			throw new NotificationException(e);
 		}
