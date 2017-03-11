@@ -77,8 +77,8 @@ public class FCM2Client implements NotificationServerClient {
 
 		Message.Builder builder = new Message.Builder()
 //				.notification(notification)
-				.addData("title", notificationView.title)
-				.addData("body", notificationView.postSnippet)
+				.addData("title", notificationView.post.stationName)
+				.addData("body", notificationView.post.title)
 				.addData("type", notificationView.type)
 
 				.addData("entityId", String.valueOf(notificationView.postId))
