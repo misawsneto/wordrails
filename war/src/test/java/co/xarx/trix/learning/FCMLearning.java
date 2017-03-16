@@ -1,6 +1,6 @@
 package co.xarx.trix.learning;
 
-import com.google.android.gcm.server.*;
+import co.xarx.trix.services.notification.client.*;
 
 import java.io.IOException;
 import java.util.ArrayList;

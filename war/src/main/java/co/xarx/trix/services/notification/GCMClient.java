@@ -2,9 +2,9 @@ package co.xarx.trix.services.notification;
 
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.domain.MobileNotification;
+import co.xarx.trix.services.notification.client.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.android.gcm.server.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

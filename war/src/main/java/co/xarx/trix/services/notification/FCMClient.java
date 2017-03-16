@@ -2,12 +2,8 @@ package co.xarx.trix.services.notification;
 
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.domain.MobileNotification;
-import co.xarx.trix.domain.NotificationType;
 import co.xarx.trix.services.AmazonCloudService;
-import co.xarx.trix.services.notification.NotificationResult;
-import co.xarx.trix.services.notification.NotificationServerClient;
-import co.xarx.trix.util.StringUtil;
-import com.google.android.gcm.server.*;
+import co.xarx.trix.services.notification.client.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -77,6 +73,8 @@ public class FCMClient implements NotificationServerClient {
 				.build();
 
 		Message.Builder builder = new Message.Builder()
+				.contentAvailable(true)
+				.mutableContent(true)
 				.notification(notification)
 				.addData("type", notificationView.type)
 				.addData("entityId", String.valueOf(notificationView.postId))

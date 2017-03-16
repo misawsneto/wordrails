@@ -3,7 +3,7 @@ package co.xarx.trix.services.notification;
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.domain.MobileNotification;
 import co.xarx.trix.services.AmazonCloudService;
-import com.google.android.gcm.server.*;
+import co.xarx.trix.services.notification.client.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -77,6 +77,8 @@ public class FCM2Client implements NotificationServerClient {
 
 		Message.Builder builder = new Message.Builder()
 //				.notification(notification)
+				.contentAvailable(true)
+				.mutableContent(true)
 				.addData("title", notificationView.post.stationName)
 				.addData("body", notificationView.post.title)
 				.addData("type", notificationView.type)
