@@ -102,13 +102,13 @@ public class PostEventHandler {
 	@HandleBeforeSave
 	public void handleBeforeSave(Post post) {
 		if (post.date == null) {
-			if(post.scheduledDate == null)
+			if(post.scheduledDate == null) // if no date is set and no scheduled date is set, set date
 				post.date = new Date();
 			else
-				post.date = new Date(post.scheduledDate.getTime());
-		}else{
-			if (post.scheduledDate != null && post.date.after(post.scheduledDate))
-				post.date = new Date(post.scheduledDate.getTime());
+				post.date = new Date(post.scheduledDate.getTime()); // if no date is set and scheduled date is set, set date by scheduled date
+		}else{ // if date is set
+			if (post.scheduledDate != null && post.date.after(post.scheduledDate)) // if scheduled date is before date
+				post.date = new Date(post.scheduledDate.getTime()); // set date with scheduled date
 		}
 
 		if(post.featuredVideo != null){
