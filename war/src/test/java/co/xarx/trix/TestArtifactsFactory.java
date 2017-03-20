@@ -180,7 +180,7 @@ public class TestArtifactsFactory {
 	public static NotificationView createNotification() {
 		Post post = createPost();
 		NotificationView notification = new NotificationView(post.title, post.title, "ab157cb227", false);
-		notification.type = MobileNotification.Type.POST_ADDED.toString();
+		notification.type = NotificationType.POST_ADDED.toString();
 		notification.post = new PostConverter(null, null).convertTo(post);
 		notification.postId = post.id;
 		notification.postTitle = post.title;

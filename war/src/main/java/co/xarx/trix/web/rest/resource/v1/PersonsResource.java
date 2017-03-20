@@ -225,24 +225,24 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			throw new BadRequestException();
 	}
 
-	@Override
-	@Deprecated
-	public Response putRegId(String regId, Integer networkId, Double lat, Double lng) {
-		return updateMobile(regId, lat, lng, Constants.MobilePlatform.ANDROID);
-	}
+//	@Override
+//	@Deprecated
+//	public Response putRegId(String regId, Integer networkId, Double lat, Double lng) {
+//		return updateMobile(regId, lat, lng, Constants.MobilePlatform.ANDROID);
+//	}
+//
+//	@Override
+//	@Deprecated
+//	public Response putToken(String token, Integer networkId, Double lat, Double lng) {
+//		return updateMobile(token, lat, lng, Constants.MobilePlatform.APPLE);
+//	}
 
-	@Override
-	@Deprecated
-	public Response putToken(String token, Integer networkId, Double lat, Double lng) {
-		return updateMobile(token, lat, lng, Constants.MobilePlatform.APPLE);
-	}
-
-	private Response updateMobile(String token, Double lat, Double lng, Constants.MobilePlatform type) {
-		Person person = authProvider.getLoggedPerson();
-		Logger.info("Updating " + type.toString() + " device " + token + " for person " + person.id);
-		mobileService.updateDevice(person.getId(), token, lat, lng, type);
-		return Response.status(Response.Status.OK).build();
-	}
+//	private Response updateMobile(String token, Double lat, Double lng, Constants.MobilePlatform type) {
+//		Person person = authProvider.getLoggedPerson();
+//		Logger.info("Updating " + type.toString() + " device " + token + " for person " + person.id);
+//		mobileService.updateDevice(person.getId(), token, lat, lng, type);
+//		return Response.status(Response.Status.OK).build();
+//	}
 
 	@Override
 	public Response tokenSignin(String token) {
@@ -523,10 +523,10 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 		forward();
 	}
 
-	public Response updateLocation2(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String
-			device, @FormParam("lat") Double lat, @FormParam("lng") Double lng) throws IOException {
-		return updateMobile(token, lat, lng, "apple".equals(device) ? Constants.MobilePlatform.APPLE : Constants
-				.MobilePlatform.ANDROID);
-	}
+//	public Response updateLocation2(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String
+//			device, @FormParam("lat") Double lat, @FormParam("lng") Double lng) throws IOException {
+//		return updateMobile(token, lat, lng, "apple".equals(device) ? Constants.MobilePlatform.APPLE : Constants
+//				.MobilePlatform.ANDROID);
+//	}
 
 }

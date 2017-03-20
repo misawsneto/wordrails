@@ -156,8 +156,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.gcm</groupId>
-			<artifactId>gcm-server</artifactId>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
 		</dependency>
 
 		<dependency>

@@ -63,9 +63,6 @@ public class AuditService {
 				f.setAccessible(true);
 				f.set(post, f.getType().cast(value));
 			}
-
-//			Long date = snapshot.getCommitMetadata().getCommitDate().getLong(ChronoField.INSTANT_SECONDS);
-
 			LocalDateTime l = snapshot.getCommitMetadata().getCommitDate();
 			Long date = Date.from(l.toInstant(ZoneOffset.UTC)).getTime();
 			versions.put(date, post);

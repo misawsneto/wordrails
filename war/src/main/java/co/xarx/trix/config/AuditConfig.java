@@ -36,6 +36,7 @@ public class AuditConfig {
 	public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableRepositoryAspect(PlatformTransactionManager txManager) {
 		return new JaversSpringDataAuditableRepositoryAspect(javers(txManager), authorProvider());
 	}
+
 	@Bean
 	public JaversAuditableAspect javersAuditableAspect(PlatformTransactionManager txManager) {
 		return new JaversAuditableAspect(javers(txManager), authorProvider());

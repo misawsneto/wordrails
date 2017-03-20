@@ -32,9 +32,13 @@ public class MobileResource extends AbstractResource implements MobileApi {
 
 		Constants.MobilePlatform platform;
 
-		if (fcm != null && fcm && isAndroid(userAgent, device)){
+		if (fcm != null && fcm && isAndroid2(device)){
+			platform = Constants.MobilePlatform.FCM_ANDROID2;
+//		} else if (fcm != null && fcm && isIOs2(device)){
+//			platform = Constants.MobilePlatform.FCM_APPLE2;
+		} else if (fcm != null && fcm && isAndroid(userAgent, device)){
 			platform = Constants.MobilePlatform.FCM_ANDROID;
-		} else if (fcm != null && fcm && isIOs(userAgent, device)){
+		} else if (fcm != null && fcm && isIOs(userAgent, device)) {
 			platform = Constants.MobilePlatform.FCM_APPLE;
 		} else if (isIOs(userAgent, device)) {
 			platform = Constants.MobilePlatform.APPLE;
@@ -55,10 +59,19 @@ public class MobileResource extends AbstractResource implements MobileApi {
 		return device.equals("android") || userAgent.contains("OkHttp");
 	}
 
+//	private boolean isIOs2(String device){
+//		return device.equals("apple2") || device.equals("ios2");
+//	}
+
+	private boolean isAndroid2(String device){
+		return device.equals("android2");
+	}
+
 	private Response updateMobile(String token, Double lat, Double lng, Constants.MobilePlatform type) {
 		Person person = authService.getLoggedPerson();
-		Logger.info("Updating " + type.toString() + " device " + token + " for person " + person.id);
-		mobileService.updateDevice(person.getId(), token, lat, lng, type);
+		Integer id = person != null ? person.getId() : 0;
+		Logger.info("Updating " + type.toString() + " device " + token + " for person " + id);
+		mobileService.updateDevice(id, token, lat, lng, type);
 		return Response.status(Response.Status.OK).build();
 	}
 }

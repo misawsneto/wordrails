@@ -10,6 +10,7 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.AuditService;
 import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.NotificationTargetService;
 import co.xarx.trix.services.notification.NotificationService;
 import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.services.security.PostPermissionService;
@@ -41,7 +42,6 @@ public class PostEventHandler {
 	private ElasticSearchService elasticSearchService;
 	@Autowired
 	private ESPostRepository esPostRepository;
-
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
@@ -50,6 +50,8 @@ public class PostEventHandler {
 	private AuditService auditService;
 	@Autowired
 	private QueryPersistence queryPersistence;
+	@Autowired
+	private NotificationTargetService targetService;
 
 	@Autowired
 	private NotificationService notificationService;
@@ -100,13 +102,13 @@ public class PostEventHandler {
 	@HandleBeforeSave
 	public void handleBeforeSave(Post post) {
 		if (post.date == null) {
-			if(post.scheduledDate == null)
+			if(post.scheduledDate == null) // if no date is set and no scheduled date is set, set date
 				post.date = new Date();
 			else
-				post.date = new Date(post.scheduledDate.getTime());
-		}else{
-			if (post.scheduledDate != null && post.date.after(post.scheduledDate))
-				post.date = new Date(post.scheduledDate.getTime());
+				post.date = new Date(post.scheduledDate.getTime()); // if no date is set and scheduled date is set, set date by scheduled date
+		}else{ // if date is set
+			if (post.scheduledDate != null && post.date.after(post.scheduledDate)) // if scheduled date is before date
+				post.date = new Date(post.scheduledDate.getTime()); // set date with scheduled date
 		}
 
 		if(post.featuredVideo != null){
@@ -130,6 +132,7 @@ public class PostEventHandler {
 	public void handleAfterCreate(Post post) {
 		elasticSearchService.mapThenSave(post, ESPost.class);
 		notificationCheck(post);
+		targetService.postCheckTarget(post);
 	}
 
 	public void notificationCheck(Post post) {
@@ -147,6 +150,7 @@ public class PostEventHandler {
 	@HandleAfterSave
 	public void handleAfterSave(Post post) {
 		notificationCheck(post);
+		targetService.postCheckTarget(post);
 		auditService.saveChange(post);
 		elasticSearchService.mapThenSave(post, ESPost.class);
 	}

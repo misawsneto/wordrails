@@ -1221,7 +1221,7 @@ app
 
         $stateProvider
         .state('app.search', {
-                url: '/s?q',
+                url: '/s?q?tag?stationId',
                 templateUrl: '/views/pages/search.html?' + GLOBAL_URL_HASH,
                 data : { titleTranslate: 'titles.SEARCH', title: 'Busca', folded: true },
                 resolve: load(['/scripts/controllers/app/search.js?' + GLOBAL_URL_HASH , 'wu.masonry']),

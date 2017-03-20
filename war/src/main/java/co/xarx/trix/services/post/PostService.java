@@ -100,6 +100,14 @@ public class PostService {
 		sendNewPostNotification(post);
 	}
 
+//	public void createPostAddedNotification(Post post){
+//		Notification notification = new Notification();
+//		notification.setType(NotificationType.POST_ADDED);
+//		notification.setPostId(post.getId());
+//		notification.setMessage();
+//		notificationRepository.save(notification);
+//	}
+
 	public void sendNewPostNotification(Post post) throws NotificationException {
 		List<MobileDevice> mobileDevices;
 		if (stationRepository.isUnrestricted(post.getStationId())) {
@@ -113,25 +121,29 @@ public class PostService {
 			mobileDevices = mobileDeviceRepository.findByPersonIds(personIds);
 		}
 
-		Collection appleDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.APPLE);
+		Collection appleDevices = new ArrayList(); // mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.APPLE);
 		Collection androidDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.ANDROID);
 		Collection fcmAndroidDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.FCM_ANDROID);
 		Collection fcmAppleDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.FCM_APPLE);
 
+		Collection fcm2AndroidDevices = mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.FCM_ANDROID2);
+		Collection fcm2AppleDevices = new ArrayList(); //mobileService.getDeviceCodes(mobileDevices, Constants.MobilePlatform.FCM_APPLE2);
+
 		NotificationView notification = getCreatePostNotification(post);
 		List<MobileNotification> mobileNotifications = mobileNotificationService.sendNotifications(notification, androidDevices, appleDevices, fcmAndroidDevices, fcmAppleDevices);
-		for (MobileNotification n : mobileNotifications) {
-			n.setPostId(post.getId());
-			mobileNotificationRepository.save(n);
-		}
-
-		List<String> devicesToDelete = new ArrayList<>();
-		for (MobileNotification noti : mobileNotifications) {
-			if (noti.getErrorCodeName() != null) {
-				devicesToDelete.add(noti.getRegId());
-			}
-		}
-
+		List<MobileNotification> mobileNotifications2 = mobileNotificationService.sendNotifications2(notification, fcm2AndroidDevices, fcm2AppleDevices);
+//		for (MobileNotification n : mobileNotifications) {
+//			n.setPostId(post.getId());
+//			mobileNotificationRepository.save(n);
+//		}
+//
+//		List<String> devicesToDelete = new ArrayList<>();
+//		for (MobileNotification noti : mobileNotifications) {
+//			if (noti.getErrorCodeName() != null) {
+//				devicesToDelete.add(noti.getRegId());
+//			}
+//		}
+//
 //		mobileDeviceRepository.deleteByDeviceCode(devicesToDelete);
 	}
 
@@ -139,7 +151,7 @@ public class PostService {
 	public NotificationView getCreatePostNotification(Post post) {
 		String hash = StringUtil.generateRandomString(10, "Aa#");
 		NotificationView notification = new NotificationView(post.title, post.title, hash, false);
-		notification.type = MobileNotification.Type.POST_ADDED.toString();
+		notification.type = NotificationType.POST_ADDED.toString();
 		notification.post = postConverter.convertTo(post);
 		notification.post.featuredImageHash = post.getImageHash();
 		notification.postId = post.id;

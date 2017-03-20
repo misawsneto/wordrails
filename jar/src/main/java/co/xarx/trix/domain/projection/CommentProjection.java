@@ -18,4 +18,6 @@ public interface CommentProjection {
 	String getBody();
 
 	Person getAuthor();
+
+	Integer stationId();
 }

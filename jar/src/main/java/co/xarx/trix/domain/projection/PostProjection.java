@@ -104,4 +104,9 @@ public interface PostProjection {
 	Boolean getMediaVideo();
 
 	Boolean getMediaGallery();
+
+	String getImageUrl();
+	String getImageLargeUrl();
+	String getImageMediumUrl();
+	String getImageSmallUrl();
 }
