@@ -28,6 +28,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer>, Quer
 	@RestResource(exported = true)
 	Comment save(Comment entity);
 
+	@SdkExclude // this method has a facade generated source implementation for the sdk
 	@RestResource(exported = true)
 	@Query("SELECT comment FROM Comment comment WHERE comment.post.id = :postId ORDER BY comment.date DESC")
 	List<Comment> findPostCommentsOrderByDate( @Param("postId")  Integer  postId, Pageable  pageable);

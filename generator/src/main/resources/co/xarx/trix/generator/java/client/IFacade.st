@@ -421,6 +421,18 @@ interface I$facade$ {
 	@POST("/posts/{postId}/comments")
 	void postComment(@Path("postId") Integer postId, @Body CommentDto comment, Callback<CommentDto> _callback);
 
+	@GET("/comments/search/findPostCommentsOrderByDate")
+    ContentResponse<List<CommentDto\>\> findPostCommentsOrderByDate(@Query("postId") Integer postId, @Query("stationId") Integer stationId, @Query("page") Integer page, @Query("size") Integer size, @Query("sort") List<String> sort);
+
+    @GET("/comments/search/findPostCommentsOrderByDate")
+    void findPostCommentsOrderByDate(@Query("postId") Integer postId, @Query("stationId") Integer stationId, @Query("page") Integer page, @Query("size") Integer size, @Query("sort") List<String> sort, Callback<ContentResponse<List<CommentDto\>\>\> _callback);
+
+    @GET("/comments/search/findPostCommentsOrderByDate")
+    ContentResponse<List<CommentProjectionDto\>\> findPostCommentsOrderByDate_CommentProjection(@Query("postId") Integer postId, @Query("stationId") Integer stationId, @Query("page") Integer page, @Query("size") Integer size, @Query("sort") List<String> sort, @Query("projection") String projection);
+
+    @GET("/comments/search/findPostCommentsOrderByDate")
+    void findPostCommentsOrderByDate_CommentProjection(@Query("postId") Integer postId, @Query("stationId") Integer stationId, @Query("page") Integer page, @Query("size") Integer size, @Query("sort") List<String> sort, @Query("projection") String projection, Callback<ContentResponse<List<CommentProjectionDto\>\>\> _callback);
+
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/

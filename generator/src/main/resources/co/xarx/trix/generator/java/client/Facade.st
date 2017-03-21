@@ -947,6 +947,42 @@ public class $facade$ {
     	_facade.postComment(postId, comment, _callback);
     }
 
+    public List<CommentDto> findPostCommentsOrderByDate(Integer postId, Integer stationId, Integer page, Integer size, List<String> sort) {
+    	return _facade.findPostCommentsOrderByDate(postId, stationId, page, size, sort).content;
+    }
+
+    public void findPostCommentsOrderByDate(Integer postId, Integer stationId, Integer page, Integer size, List<String> sort, final Callback<List<CommentDto\>\> _callback) {
+    	_facade.findPostCommentsOrderByDate(postId, stationId, page, size, sort, new Callback<ContentResponse<List<CommentDto\>\>\>() {
+    		@Override
+    		public void success(ContentResponse<List<CommentDto\>\> _t, Response _response) {
+    			_callback.success(_t.content, _response);
+    		}
+
+    		@Override
+    		public void failure(RetrofitError _error) {
+    			_callback.failure(_error);
+    		}
+    	});
+    }
+
+    public List<CommentProjectionDto> findPostCommentsOrderByDate_CommentProjection(Integer postId, Integer stationId, Integer page, Integer size, List<String> sort) {
+    	return _facade.findPostCommentsOrderByDate_CommentProjection(postId, stationId, page, size, sort, "commentProjection").content;
+    }
+
+    public void findPostCommentsOrderByDate_CommentProjection(Integer postId, Integer stationId, Integer page, Integer size, List<String> sort, final Callback<List<CommentProjectionDto\>\> _callback) {
+    	_facade.findPostCommentsOrderByDate_CommentProjection(postId, stationId, page, size, sort, "commentProjection", new Callback<ContentResponse<List<CommentProjectionDto\>\>\>() {
+    		@Override
+    		public void success(ContentResponse<List<CommentProjectionDto\>\> _t, Response _response) {
+    			_callback.success(_t.content, _response);
+    		}
+
+    		@Override
+    		public void failure(RetrofitError _error) {
+    			_callback.failure(_error);
+    		}
+    	});
+    }
+
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
