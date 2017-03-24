@@ -7,6 +7,7 @@ import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.ESPost;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
+import co.xarx.trix.eventhandler.PostEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AuditService;
@@ -45,6 +46,7 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	private ElasticSearchService elasticSearchService;
 	private PostModerationService postModerationService;
 	private PostPermissionService postPermissionService;
+	private PostEventHandler postEventHandler;
 
 	@Autowired
 	public V2PostsResource(PostModerationService postModerationService, PostPermissionService postPermissionService,
@@ -190,7 +192,7 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 		if(post != null && post.state.equals(Post.STATE_PUBLISHED)){
 			post.notified = false;
 			post.notify = true;
-			postRepository.save(post);
+			postEventHandler.handleAfterSave(post);
 		}
 
 		return Response.ok().build();
