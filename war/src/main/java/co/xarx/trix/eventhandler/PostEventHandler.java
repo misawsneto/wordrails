@@ -136,7 +136,7 @@ public class PostEventHandler {
 	}
 
 	public void notificationCheck(Post post) {
-		if (post.state.equals(Post.STATE_PUBLISHED) && post.notify && !post.notified && post.getVersion() == 0
+		if (post.state.equals(Post.STATE_PUBLISHED) && post.notify && !post.notified
 				&& (post.scheduledDate == null || (post.scheduledDate != null && post.scheduledDate.before(new Date())) )
 				) {
 			Logger.info("Start sending notifications");

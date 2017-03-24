@@ -67,4 +67,8 @@ public interface V2PostsApi {
 	Response setPostSeen(@PathParam("postId") Integer postId,
 						 @QueryParam("timeReading") Integer timeReading,
 						 @QueryParam("date") Long timestamp);
+
+	@GET
+	@Path("/{postId}/notify")
+	Response postNotify(@PathParam("postId") Integer postId);
 }

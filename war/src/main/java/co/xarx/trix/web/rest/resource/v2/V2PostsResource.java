@@ -183,4 +183,16 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 		statEventsService.newPostreadEvent(post, rw, timeReading, date);
 		return Response.ok().build();
 	}
+
+	@Override
+	public Response postNotify(Integer postId) {
+		Post post = postRepository.findOne(postId);
+		if(post != null && post.state.equals(Post.STATE_PUBLISHED)){
+			post.notified = false;
+			post.notify = true;
+			postRepository.save(post);
+		}
+
+		return Response.ok().build();
+	}
 }
