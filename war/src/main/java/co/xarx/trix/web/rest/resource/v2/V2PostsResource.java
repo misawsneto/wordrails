@@ -52,7 +52,7 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 	public V2PostsResource(PostModerationService postModerationService, PostPermissionService postPermissionService,
 						   PostSearchService postSearchService, PostRepository postRepository, PostConverter
 									   postConverter, AuditService auditService, StatEventsService statEventsService, ElasticSearchService
-									   elasticSearchService){
+									   elasticSearchService, PostEventHandler postEventHandler){
 		this.postModerationService = postModerationService;
 		this.postPermissionService = postPermissionService;
 		this.elasticSearchService = elasticSearchService;
@@ -62,6 +62,7 @@ public class V2PostsResource extends AbstractResource implements V2PostsApi {
 		this.postRepository = postRepository;
 		this.postConverter = postConverter;
 		this.auditService = auditService;
+		this.postEventHandler = postEventHandler;
 	}
 
 	@Override
