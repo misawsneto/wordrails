@@ -2,6 +2,8 @@ Facade(package, facade, entities) ::=
 
 <<package $package$;
 
+import android.content.Context;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
@@ -41,7 +43,8 @@ public class $facade$ {
 	private I$facade$ _facade;
 	AuthenticationRequestInterceptor _interceptor;
 	
-	public $facade$(IConnectivityManager _manager,
+	public $facade$(Context _context, 
+					 IConnectivityManager _manager,
 					 File _cacheDirectory, 
 					 long _cacheMaxSize,
 					 String _url, 
@@ -49,6 +52,7 @@ public class $facade$ {
 					 String _password, 
 					 LogLevel _level) throws IOException {
 		_interceptor = new AuthenticationRequestInterceptor();
+		_interceptor.context = _context;
 		_interceptor.manager = _manager;
 		_interceptor.baseUrl = _url + "/api";
 		_interceptor.username = _username;
@@ -58,7 +62,8 @@ public class $facade$ {
 		initWordRails(_manager, _cacheDirectory, _cacheMaxSize, _url, _level);
 	}
 	
-	public $facade$(IConnectivityManager _manager,
+	public $facade$(Context _context, 
+					 IConnectivityManager _manager,
 					 File _cacheDirectory, 
 					 long _cacheMaxSize,
 					 String _url, 
@@ -67,6 +72,7 @@ public class $facade$ {
 					 String _accessToken, 
 					 LogLevel _level) throws IOException {
 		_interceptor = new AuthenticationRequestInterceptor();
+		_interceptor.context = _context;
 		_interceptor.manager = _manager;
 		_interceptor.baseUrl = _url + "/api";
 		_interceptor.provider = _provider;

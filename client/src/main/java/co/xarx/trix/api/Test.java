@@ -9,6 +9,7 @@ public class Test {
 
 	private static Trix getLocal() throws IOException {
 		return new Trix(
+				null,
 				new MockConnectivityManager(true),
 				new File("."), 0,
 				"http://sport.xarxlocal.com", "sport", "Sport@dmiN",

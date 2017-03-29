@@ -2,7 +2,8 @@ AuthenticationRequestInterceptor(package) ::=
 
 <<package $package$;
 
-import android.util.Log;
+import android.content.Context;
+import android.preference.PreferenceManager;
 
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -20,8 +21,11 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 
     private static final CookieManager COOKIE_MANAGER = new CookieManager();
     private static final OkHttpClient OK_HTTP = new OkHttpClient().setCookieHandler(COOKIE_MANAGER);
+    private static final String PREF_TRIX_COOKIE = "TRIX_COOKIE";
 
 	IConnectivityManager manager;
+    Context context;
+
 	String baseUrl;
 	String cookie;
 	boolean isSocialLogin;
@@ -40,6 +44,10 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 		request.addHeader("User-Agent", "OkHttp");
         request.addHeader("x-username", isAnonymous() ? "*" : username);
 
+        if (cookie == null && context != null) {
+            cookie = PreferenceManager.getDefaultSharedPreferences(context)
+                    .getString(PREF_TRIX_COOKIE, null);
+        }
         if(cookie != null) {
             request.addHeader("Cookie", "JSESSIONID=" + cookie);
         }
@@ -86,6 +94,12 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
                 for (HttpCookie cookie : COOKIE_MANAGER.getCookieStore().getCookies()) {
                     if (cookie.getName().equals("JSESSIONID")) {
                         this.cookie = cookie.getValue();
+                        if(context != null) {
+                            PreferenceManager.getDefaultSharedPreferences(context)
+                                    .edit()
+                                    .putString(PREF_TRIX_COOKIE, this.cookie)
+                                    .apply();
+                        }
                         break;
                     }
                 }
@@ -106,6 +120,12 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
             e.printStackTrace();
         } finally {
             cookie = null;
+            if(context != null) {
+                PreferenceManager.getDefaultSharedPreferences(context)
+                        .edit()
+                        .remove(PREF_TRIX_COOKIE)
+                        .apply();
+            }
         }
 	}
 
