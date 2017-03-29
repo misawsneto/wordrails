@@ -2,30 +2,27 @@ AuthenticationRequestInterceptor(package) ::=
 
 <<package $package$;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import android.util.Log;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.BasicHttpContext;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 
+import java.net.CookieManager;
+import java.net.HttpCookie;
+
+import co.xarx.trix.api.IConnectivityManager;
 import retrofit.RequestInterceptor;
 
 class AuthenticationRequestInterceptor implements RequestInterceptor {
+
+    private static final CookieManager COOKIE_MANAGER = new CookieManager();
+    private static final OkHttpClient OK_HTTP = new OkHttpClient().setCookieHandler(COOKIE_MANAGER);
+
 	IConnectivityManager manager;
-	String url;
+	String baseUrl;
 	String cookie;
 	boolean isSocialLogin;
 	
@@ -41,83 +38,78 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 	@Override
 	public synchronized void intercept(RequestFacade request) {
 		request.addHeader("User-Agent", "OkHttp");
-		request.addHeader("x-username", username != null && !username.equals("wordrails") ? username : "*");
-		if (cookie != null) {
-			request.addHeader("Cookie", "JSESSIONID=" + cookie);
-		}
-		if (manager.isConnectedOrConnecting()) {
-			int maxAge = 0;
-			request.addHeader("Cache-Control", "public, max-age=" + maxAge);
-		} else {
-			int maxStale = Integer.MAX_VALUE;
-			request.addHeader("Cache-Control", "public, only-if-cached, max-stale=" + maxStale);
-		}
+        request.addHeader("x-username", isAnonymous() ? "*" : username);
+
+        if(cookie != null) {
+            request.addHeader("Cookie", "JSESSIONID=" + cookie);
+        }
+
+        if(manager.isConnectedOrConnecting()) {
+            byte maxAge = 0;
+            request.addHeader("Cache-Control", "public, max-age=" + maxAge);
+        } else {
+            int maxStale = 2147483647;
+            request.addHeader("Cache-Control", "public, only-if-cached, max-stale=" + maxStale);
+        }
 	}
 
 	synchronized void setUsername(String username) {
 		this.username = username;
 	}
 	
-	synchronized void logOut() {
-		HttpGet request = new HttpGet(url + "/j_spring_security_logout");
-		BasicHttpContext context = new BasicHttpContext();
-		RequestConfig requestConfig = RequestConfig.custom().build();
-		CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
-				
-		try {
-			client.execute(request, context).getEntity().getContent().close();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		
-		cookie = null;
-	}
-	
 	synchronized void logIn() {
-		List<NameValuePair\> form = new ArrayList<NameValuePair\>(2);
-		
-		if(isSocialLogin){
-			form = new ArrayList<NameValuePair\>(3);
-			form.add(new BasicNameValuePair("provider", provider));
-			form.add(new BasicNameValuePair("userId", userId));
-			form.add(new BasicNameValuePair("accessToken", accessToken));
-		} else {
-			form = new ArrayList<NameValuePair\>(2);
-			form.add(new BasicNameValuePair("username", username));
-			form.add(new BasicNameValuePair("password", password));
+		if(isAnonymous()){
+			return;
 		}
+		
+		MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+        RequestBody body;
+        String url;
+        if(isSocialLogin){
+            url = baseUrl + "/auth/signin";
+            body = RequestBody.create(mediaType,
+                    String.format("userId=%s&accessToken=%s&provider=%s", userId, accessToken, provider));
+        } else {
+            url = baseUrl + "/persons/login";
+            body = RequestBody.create(mediaType,
+                    String.format("username=%s&password=%s", username, password));
+        }
 
-		UrlEncodedFormEntity entity;
-		try {
-			entity = new UrlEncodedFormEntity(form, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-	
-		String requestEndpoint = isSocialLogin ? "/api/auth/signin" : "/api/persons/login";
-		HttpPost request = new HttpPost(url + requestEndpoint);
-		request.setEntity(entity);
-		
-		BasicCookieStore store = new BasicCookieStore();
-	
-		BasicHttpContext context = new BasicHttpContext();
-		context.setAttribute(ClientContext.COOKIE_STORE, store);		
-	
-		RequestConfig requestConfig = RequestConfig.custom().build();
-		CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
-
-		try {
-			client.execute(request, context).getEntity().getContent().close();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
-		for (Iterator<Cookie\> i = store.getCookies().iterator(); i.hasNext(); ) {
-			Cookie cookie = i.next(); 
-			String name = cookie.getName();
-			if ("JSESSIONID".equals(name)) {
-				this.cookie = cookie.getValue();
-			}
-		}
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .addHeader("content-type", "application/x-www-form-urlencoded")
+                .build();
+        try {
+            Response response = OK_HTTP.newCall(request).execute();
+            if(response.isSuccessful()) {
+                for (HttpCookie cookie : COOKIE_MANAGER.getCookieStore().getCookies()) {
+                    if (cookie.getName().equals("JSESSIONID")) {
+                        this.cookie = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 	}	
+	
+	synchronized void logOut() {
+		Request request = new Request.Builder()
+                .url(baseUrl + "/j_spring_security_logout")
+                .get()
+                .build();
+        try {
+            OK_HTTP.newCall(request).execute();
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            cookie = null;
+        }
+	}
+
+	synchronized private boolean isAnonymous(){
+		return username == null || username.equals("wordrails");
+	}
 }>>

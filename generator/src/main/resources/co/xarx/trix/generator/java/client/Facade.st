@@ -50,7 +50,7 @@ public class $facade$ {
 					 LogLevel _level) throws IOException {
 		_interceptor = new AuthenticationRequestInterceptor();
 		_interceptor.manager = _manager;
-		_interceptor.url = _url;
+		_interceptor.baseUrl = _url + "/api";
 		_interceptor.username = _username;
 		_interceptor.password = _password;
 		_interceptor.isSocialLogin = false;
@@ -68,7 +68,7 @@ public class $facade$ {
 					 LogLevel _level) throws IOException {
 		_interceptor = new AuthenticationRequestInterceptor();
 		_interceptor.manager = _manager;
-		_interceptor.url = _url;
+		_interceptor.baseUrl = _url + "/api";
 		_interceptor.provider = _provider;
 		_interceptor.userId = _userId;
 		_interceptor.accessToken = _accessToken;
@@ -89,8 +89,6 @@ public class $facade$ {
 		Converter _converter = new GsonConverter(_gson);
 
 		OkHttpClient _okHttpClient = new OkHttpClient();
-	    _okHttpClient.setConnectTimeout(10, TimeUnit.MINUTES);
-	    _okHttpClient.setReadTimeout(10, TimeUnit.MINUTES);
 
 		if(_cacheMaxSize > 0){
 			Cache _cache = new Cache(_cacheDirectory, _cacheMaxSize);
