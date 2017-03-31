@@ -151,16 +151,16 @@ interface I$facade$ {
     Callback<ContentResponse<List<PostData\>\>\> _callback);
 
 	@GET("/v2/bookmarks/search")
-	ContentResponse<List<PostView\>\> searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size);
+	ContentResponse<List<PostView\>\> searchBookmarks(@Query("query") String query, @Query("stationId") int stationId, @Query("page") int page, @Query("size") int size);
 	
 	@GET("/v2/bookmarks/search")
-	void searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+	void searchBookmarks(@Query("query") String query, @Query("stationId") int stationId, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
 	@GET("/v2/recommends/search")
-	ContentResponse<List<PostView\>\> searchRecommends(@Query("query") String query, @Query("page") int page, @Query("size") int size);
+	ContentResponse<List<PostView\>\> searchRecommends(@Query("query") String query, @Query("stationId") int stationId, @Query("page") int page, @Query("size") int size);
 	
 	@GET("/v2/recommends/search")
-	void searchRecommends(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+	void searchRecommends(@Query("query") String query, @Query("stationId") int stationId, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
 	@GET("/notifications/searchNotifications")
 	ContentResponse<List<PersonalNotificationData\>\> searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size);
@@ -330,16 +330,16 @@ interface I$facade$ {
 	void getPostBody(@Path("postId") Integer postId, @Query("stationId") Integer stationId, Callback<StringResponse> _callback);
 
 	@PUT("/v2/bookmarks/toggle/{postId}")
-	BooleanResponse toggleBookmark(@Path("postId") Integer postId, @Body String body);
+	BooleanResponse toggleBookmark(@Path("postId") Integer postId, @Query("stationId") Integer stationId, @Body String body);
 	
 	@PUT("/v2/bookmarks/toggle/{postId}")
-	void toggleBookmark(@Path("postId") Integer postId, @Body String body, Callback<BooleanResponse> _callback);
+	void toggleBookmark(@Path("postId") Integer postId, @Query("stationId") Integer stationId, @Body String body, Callback<BooleanResponse> _callback);
 	
 	@PUT("/v2/recommends/toggle/{postId}")
-	BooleanResponse toggleRecommend(@Path("postId") Integer postId, @Body String body);
+	BooleanResponse toggleRecommend(@Path("postId") Integer postId, @Query("stationId") Integer stationId, @Body String body);
 	
 	@PUT("/v2/recommends/toggle/{postId}")
-	void toggleRecommend(@Path("postId") Integer postId, @Body String body, Callback<BooleanResponse> _callback);
+	void toggleRecommend(@Path("postId") Integer postId, @Query("stationId") Integer stationId, @Body String body, Callback<BooleanResponse> _callback);
 	
 	@PUT("/persons/me/regId")
 	@FormUrlEncoded

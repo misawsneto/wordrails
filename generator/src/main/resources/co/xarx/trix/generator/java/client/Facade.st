@@ -395,12 +395,12 @@ public class $facade$ {
         });
     }
 
-	public List<PostView\> searchBookmarks(String query, int page, int size){
-		return _facade.searchBookmarks(query, page, size).content;
+	public List<PostView\> searchBookmarks(String query, int stationId, int page, int size){
+		return _facade.searchBookmarks(query, stationId, page, size).content;
 	}
 
-	public void searchBookmarks(String query, int page, int size, final Callback<List<PostView\>\> _callback){
-		_facade.searchBookmarks(query, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+	public void searchBookmarks(String query, int stationId, int page, int size, final Callback<List<PostView\>\> _callback){
+		_facade.searchBookmarks(query, stationId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
 			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
 				_callback.success(_t.content, _response);
@@ -413,12 +413,12 @@ public class $facade$ {
 		});
 	}
 
-	public List<PostView\> searchRecommends(String query, int page, int size){
-		return _facade.searchRecommends(query, page, size).content;
+	public List<PostView\> searchRecommends(String query, int stationId, int page, int size){
+		return _facade.searchRecommends(query, stationId, page, size).content;
 	}
 
-	public void searchRecommends(String query, int page, int size, final Callback<List<PostView\>\> _callback){
-		_facade.searchRecommends(query, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+	public void searchRecommends(String query, int stationId, int page, int size, final Callback<List<PostView\>\> _callback){
+		_facade.searchRecommends(query, stationId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
 			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
 				_callback.success(_t.content, _response);
@@ -848,20 +848,20 @@ public class $facade$ {
 		_facade.getPostBody(postId, stationId, _callback);
 	}
 
-	public BooleanResponse toggleBookmark(Integer postId){
-		return _facade.toggleBookmark(postId, "");
+	public BooleanResponse toggleBookmark(Integer postId, Integer stationId){
+		return _facade.toggleBookmark(postId, stationId, "");
 	}
 	
-	public void toggleBookmark(Integer postId, Callback<BooleanResponse> _callback){
-		_facade.toggleBookmark(postId, "", _callback);
+	public void toggleBookmark(Integer postId, Integer stationId, Callback<BooleanResponse> _callback){
+		_facade.toggleBookmark(postId, stationId, "", _callback);
 	}
 	
-	public BooleanResponse toggleRecommend(Integer postId){
-		return _facade.toggleRecommend(postId, "");
+	public BooleanResponse toggleRecommend(Integer postId, Integer stationId){
+		return _facade.toggleRecommend(postId, stationId, "");
 	}
 	
-	public void toggleRecommend(Integer postId, Callback<BooleanResponse> _callback){
-		_facade.toggleRecommend(postId, "", _callback);
+	public void toggleRecommend(Integer postId, Integer stationId, Callback<BooleanResponse> _callback){
+		_facade.toggleRecommend(postId, stationId, "", _callback);
 	}
 	
 	public Response putRegId(String regId, Integer networkId, Double lat, Double lng){
