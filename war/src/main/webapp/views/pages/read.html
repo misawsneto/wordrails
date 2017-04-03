@@ -1,7 +1,7 @@
 <div ng-if="::(!hasVideo && app.hasImage(post) && post.imageLandscape)" preload-bg-image="{{::(app.getImageLink(post, 'large'))}}" class="pos-rlt display-table animated5x fadeIn w-full bg-cover md-whiteframe-z2 h-500 text-center animated fadeIn" ng-class="{'h-500': $mdMedia('gt-sm'),'h-400': !$mdMedia('gt-sm')}" style="margin-top: -16px;" style="background-position: {{::post.focusX + '% '}} {{::post.focusY + '%'}}" ng-style="{'background-position': post.focusX + '% ' + post.focusY + '%'}">
 </div>
 
-<div class="container">
+<div ng-class="{'container': !$mdMedia('xs')}" style="word-wrap: break-word;">
   <div class="row no-margin">
       <div class="col l12 pos-rlt" ng-class="{'m-t-n-80': app.hasImage(post) && post.imageLandscape}">
           <md-button ng-if="::(post.author.id == app.person.id && (!app.hasImage(post) || (app.hasImage(post) && post.imageLandscape)))" ng-href="{{'/settings/post?id=' + post.id}}" target="_blank" aria-label="menu" class="md-fab md-accent pos-abt right-0 top-0 m-r-md m-t"
