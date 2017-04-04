@@ -351,11 +351,11 @@ interface I$facade$ {
 	
 	@PUT("/mobile/location")
 	@FormUrlEncoded
-	Response putLocation(@Field("deviceCode") String deviceCode, @Field("device") String device, @Field("lat") Double lat, @Field("lng") Double lng, @Field("fcm") Boolean fcm);
+	Response putLocation(@Field("deviceCode") String deviceCode, @Field("deviceName") String deviceName, @Field("device") String device, @Field("lat") Double lat, @Field("lng") Double lng, @Field("fcm") Boolean fcm);
 	
 	@PUT("/mobile/location")
 	@FormUrlEncoded
-	void putLocation(@Field("deviceCode") String deviceCode, @Field("device") String device, @Field("lat") Double lat, @Field("lng") Double lng, @Field("fcm") Boolean fcm, Callback<Response> _callback);
+	void putLocation(@Field("deviceCode") String deviceCode, @Field("deviceName") String deviceName, @Field("device") String device, @Field("lat") Double lat, @Field("lng") Double lng, @Field("fcm") Boolean fcm, Callback<Response> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/

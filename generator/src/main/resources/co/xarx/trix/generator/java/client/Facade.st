@@ -872,12 +872,12 @@ public class $facade$ {
 		_facade.putRegId(regId, networkId, lat, lng, _callback);
 	}
 
-	public Response putLocation(String deviceCode, String device, Double lat, Double lng, Boolean fcm){
-		return _facade.putLocation(deviceCode, device, lat, lng, fcm);
+	public Response putLocation(String deviceCode, String deviceName, String device, Double lat, Double lng, Boolean fcm){
+		return _facade.putLocation(deviceCode, deviceName, device, lat, lng, fcm);
 	}
 
-	public void putLocation(String deviceCode, String device, Double lat, Double lng, Boolean fcm, Callback<Response> _callback){
-		_facade.putLocation(deviceCode, device, lat, lng, fcm, _callback);
+	public void putLocation(String deviceCode, String deviceName, String device, Double lat, Double lng, Boolean fcm, Callback<Response> _callback){
+		_facade.putLocation(deviceCode, deviceName, device, lat, lng, fcm, _callback);
 	}
 /*---------------------------------------------------------------------------*/
 
