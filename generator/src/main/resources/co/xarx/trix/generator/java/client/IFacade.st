@@ -370,6 +370,12 @@ interface I$facade$ {
 	
 	@GET("/persons/init")
 	void getInitialData(Callback<PersonData> _callback);
+
+	@GET("/persons/search/findByUsername")
+    PersonDto findByUsername(@Query("username") String username);
+
+	@GET("/persons/search/findByUsername")
+    void findByUsername(@Query("username") String username, Callback<PersonDto\> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/

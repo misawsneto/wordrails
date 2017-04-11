@@ -1,9 +1,6 @@
 package co.xarx.trix.web.rest.resource.v1;
 
-import co.xarx.trix.api.ContentResponse;
-import co.xarx.trix.api.IdsList;
-import co.xarx.trix.api.PersonData;
-import co.xarx.trix.api.PostView;
+import co.xarx.trix.api.*;
 import co.xarx.trix.api.v2.StatsData;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
@@ -26,8 +23,6 @@ import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.security.Authenticator;
 import co.xarx.trix.services.security.StationPermissionService;
 import co.xarx.trix.services.user.UserAlreadyExistsException;
-import co.xarx.trix.util.Constants;
-import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.v1.PersonsApi;
@@ -35,6 +30,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import org.apache.http.util.Asserts;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,8 +43,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.servlet.ServletException;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -97,6 +91,8 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	private AuthService authProvider;
 	@Autowired
 	private Authenticator authenticator;
+	@Autowired
+	ModelMapper modelMapper;
 
 	@Override
 	public void getPersons() throws IOException {
@@ -109,9 +105,9 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 		forward();
 	}
 
-	@Override
-	public void findPersonByUsername() throws IOException {
-		forward();
+	public PersonDto findPersonByUsername(String username) throws IOException {
+		Person person = personRepository.findByUsername(username);
+		return modelMapper.map(person, PersonDto.class);
 	}
 
 	@Override

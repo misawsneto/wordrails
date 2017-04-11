@@ -897,6 +897,15 @@ public class $facade$ {
 	public void getInitialData(Callback<PersonData> _callback){
 		_facade.getInitialData(_callback);
 	}
+
+	public PersonDto findByUsername(String username) {
+        PersonDto person = _facade.findByUsername(username);
+        return person;
+    }
+
+	public void findByUsername(String username, Callback<PersonDto\> _callback) {
+        _facade.findByUsername(username, _callback);
+    }
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/

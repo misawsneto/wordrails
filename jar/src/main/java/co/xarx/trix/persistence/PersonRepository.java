@@ -32,6 +32,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 			roles, @Param("tenantId") String tenantId);
 
 	@Cacheable(value = "person", key = "#p0")
+	@SdkExclude
 	Person findByUsername(@Param("username") String username);
 
 	Person findByUsernameAndTenantId(@Param("username") String username, @Param("tenantId") String tenantId);

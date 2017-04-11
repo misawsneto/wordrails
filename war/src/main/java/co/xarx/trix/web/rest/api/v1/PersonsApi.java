@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -56,7 +55,7 @@ public interface PersonsApi {
 	@GET
 	@Path("/search/findByUsername")
 	@Transactional
-	void findPersonByUsername() throws IOException;
+	PersonDto findPersonByUsername(@QueryParam("username") String username) throws IOException;
 
 	@PUT
 	@Path("/update")
