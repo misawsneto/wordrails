@@ -26,5 +26,6 @@ public class NotificationData {
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	private Date scheduledDate;
 	private String title;
+	private String type;
 	private String geo;
 }
