@@ -151,16 +151,16 @@ interface I$facade$ {
     Callback<ContentResponse<List<PostData\>\>\> _callback);
 
 	@GET("/v2/bookmarks/search")
-	ContentResponse<List<PostView\>\> searchBookmarks(@Query("query") String query, @Query("stationId") int stationId, @Query("page") int page, @Query("size") int size);
+	ContentResponse<List<PostView\>\> searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size);
 	
 	@GET("/v2/bookmarks/search")
-	void searchBookmarks(@Query("query") String query, @Query("stationId") int stationId, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+	void searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
 	@GET("/v2/recommends/search")
-	ContentResponse<List<PostView\>\> searchRecommends(@Query("query") String query, @Query("stationId") int stationId, @Query("page") int page, @Query("size") int size);
+	ContentResponse<List<PostView\>\> searchRecommends(@Query("query") String query, @Query("page") int page, @Query("size") int size);
 	
 	@GET("/v2/recommends/search")
-	void searchRecommends(@Query("query") String query, @Query("stationId") int stationId, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+	void searchRecommends(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
 	@GET("/notifications/searchNotifications")
 	ContentResponse<List<PersonalNotificationData\>\> searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size);
@@ -378,10 +378,18 @@ interface I$facade$ {
     void findByUsername(@Query("username") String username, Callback<PersonDto\> _callback);
 
     @GET("/persons/notifications")
-    NotificationData getNotifications(@Query("page") Integer page, @Query("page") Integer size);
+    List<NotificationData\> getNotifications(@Query("page") Integer page, @Query("page") Integer size);
 
     @GET("/persons/notifications")
-    void getNotifications(@Query("page") Integer page, @Query("page") Integer size, Callback<NotificationData\> _callback);
+    void getNotifications(@Query("page") Integer page, @Query("page") Integer size, Callback<List<NotificationData\>\> _callback);
+	
+	@POST("/persons/create")
+	@FormUrlEncoded
+	PersonDto postCreatePerson(@Body PersonCreateDto personCreate);
+	
+	@POST("/persons/create")
+	@FormUrlEncoded
+	void postCreatePerson(@Body PersonCreateDto personCreate, Callback<PersonDto> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -466,6 +474,14 @@ interface I$facade$ {
 
     @PUT("/v2/terms/{termId}/seen")
     void putTermSeen(@Path("termId") Integer termId, @Query("timeReading") Integer timeReading, @Query("date") Long date, @Query("stationId") Integer stationId, @Body String str, Callback<Response> _callback);
+
+/*---------------------------------------------------------------------------*/
+
+	@GET("/stations/follow")
+	List<StationView\> putFollowingStations(@Query("stationIds") List<Integer\> stationsIds);
+
+	@GET("/stations/follow")
+	void putFollowingStations(@Query("stationIds") List<Integer\> stationsIds, Callback<List<StationView\>\> _callback);
 
 /*---------------------------------------------------------------------------*/
 
