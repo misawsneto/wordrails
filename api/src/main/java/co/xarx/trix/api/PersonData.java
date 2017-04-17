@@ -33,5 +33,5 @@ public class PersonData implements Serializable {
 
 	public boolean isAdmin = false;
 	public boolean noPassword = false;
+	public List<Integer> followingStations;
 }
-
