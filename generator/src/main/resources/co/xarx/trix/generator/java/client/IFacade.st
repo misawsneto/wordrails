@@ -376,6 +376,12 @@ interface I$facade$ {
 
 	@GET("/persons/search/findByUsername")
     void findByUsername(@Query("username") String username, Callback<PersonDto\> _callback);
+
+    @GET("/persons/notifications")
+    NotificationData getNotifications(@Query("page") Integer page, @Query("page") Integer size);
+
+    @GET("/persons/notifications")
+    void getNotifications(@Query("page") Integer page, @Query("page") Integer size, Callback<NotificationData\> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/

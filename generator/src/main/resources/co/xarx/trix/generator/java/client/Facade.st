@@ -906,6 +906,14 @@ public class $facade$ {
 	public void findByUsername(String username, Callback<PersonDto\> _callback) {
         _facade.findByUsername(username, _callback);
     }
+
+    public NotificationData getNotifications(Integer page, Integer size) {
+        return _facade.getNotifications(page, size);
+    }
+
+    public void getNotifications(Integer page, Integer size, Callback<NotificationData\> _callback) {
+        _facade.getNotifications(page, size, _callback);
+    }
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
