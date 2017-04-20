@@ -35,9 +35,9 @@ public class PostView implements Serializable, Identifiable {
 	public String imageLargeHash;
 
 	public String imageUrl;
-	public String imageLargeUrl;
-	public String imageMediumUrl;
-	public String imageSmallUrl;
+	public String largeImageUrl;
+	public String mediumImageUrl;
+	public String smallImageSmallUrl;
 
 	public Set<CategoryData> categories;
 	public Set<String> tags;
