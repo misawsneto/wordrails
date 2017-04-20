@@ -87,6 +87,8 @@ public class PostData implements Serializable, Identifiable {
 	private Date scheduledDate;
 	private Date unpublishDate;
 	private Boolean notified = false;
+	private String authorCoverUrl;
+	private String authorImageUrl;
 
 	public void setBody(String body) {
 		this.body = body;

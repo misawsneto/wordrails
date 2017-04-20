@@ -259,6 +259,7 @@ public class StationView implements Serializable {
 	public String getLogoUrl(){
 		return logoUrl;
 	}
+	public String getCoverImageUrl (){ return getLogoUrl(); }
 
 	public int postsTitleSize;
 	public java.lang.String primaryColor;

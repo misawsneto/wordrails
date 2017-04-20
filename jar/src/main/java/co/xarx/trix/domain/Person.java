@@ -214,4 +214,14 @@ public class Person extends BaseEntity implements Serializable, AnalyticsEntity 
 		}
 	}
 
+	@SdkInclude
+	public String getCoverImageURL() {
+		return null;
+	}
+
+	@SdkInclude
+	public String profileImageURL() {
+		return null;
+	}
+
 }
