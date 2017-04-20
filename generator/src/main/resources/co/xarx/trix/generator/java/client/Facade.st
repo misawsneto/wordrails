@@ -395,12 +395,12 @@ public class $facade$ {
         });
     }
 
-	public List<PostView\> searchBookmarks(String query, int stationId, int page, int size){
-		return _facade.searchBookmarks(query, stationId, page, size).content;
+	public List<PostView\> searchBookmarks(String query, int page, int size){
+		return _facade.searchBookmarks(query, page, size).content;
 	}
 
-	public void searchBookmarks(String query, int stationId, int page, int size, final Callback<List<PostView\>\> _callback){
-		_facade.searchBookmarks(query, stationId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+	public void searchBookmarks(String query, int page, int size, final Callback<List<PostView\>\> _callback){
+		_facade.searchBookmarks(query, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
 			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
 				_callback.success(_t.content, _response);
@@ -413,12 +413,12 @@ public class $facade$ {
 		});
 	}
 
-	public List<PostView\> searchRecommends(String query, int stationId, int page, int size){
-		return _facade.searchRecommends(query, stationId, page, size).content;
+	public List<PostView\> searchRecommends(String query, int page, int size){
+		return _facade.searchRecommends(query, page, size).content;
 	}
 
-	public void searchRecommends(String query, int stationId, int page, int size, final Callback<List<PostView\>\> _callback){
-		_facade.searchRecommends(query, stationId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+	public void searchRecommends(String query, int page, int size, final Callback<List<PostView\>\> _callback){
+		_facade.searchRecommends(query, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
 			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
 				_callback.success(_t.content, _response);
@@ -907,13 +907,21 @@ public class $facade$ {
         _facade.findByUsername(username, _callback);
     }
 
-    public NotificationData getNotifications(Integer page, Integer size) {
+    public List<NotificationData\> getNotifications(Integer page, Integer size) {
         return _facade.getNotifications(page, size);
     }
 
-    public void getNotifications(Integer page, Integer size, Callback<NotificationData\> _callback) {
+    public void getNotifications(Integer page, Integer size, Callback<List<NotificationData\>\> _callback) {
         _facade.getNotifications(page, size, _callback);
     }
+
+	public PersonDto postCreatePerson(PersonCreateDto personCreate){
+		return _facade.postCreatePerson(personCreate);
+	}
+	
+	public void postCreatePerson(PersonCreateDto personCreate, Callback<PersonDto> _callback){
+		_facade.postCreatePerson(personCreate, _callback);
+	}
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -1031,6 +1039,16 @@ public class $facade$ {
     public void putTermSeen(Integer termId, Integer timeReading, Long date, Integer stationId, Callback<Response> _callback) {
     	_facade.putTermSeen(termId, timeReading, date, stationId, "", _callback);
     }
+
+/*---------------------------------------------------------------------------*/
+	
+	public List<StationView\> putFollowingStations(List<Integer\> stationIds){
+		return _facade.putFollowingStations(stationIds);
+	}
+	
+	public void putFollowingStations(List<Integer\> stationIds, Callback<List<StationView\>\> _callback){
+		_facade.putFollowingStations(stationIds, _callback);
+	}
 
 /*---------------------------------------------------------------------------*/
 
