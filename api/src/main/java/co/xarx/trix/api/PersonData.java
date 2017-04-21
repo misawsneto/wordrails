@@ -5,7 +5,6 @@ import co.xarx.trix.api.v2.UserPermissionData;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class PersonData implements Serializable {
 	private static final long serialVersionUID = 2078630211043976635L;
@@ -22,6 +21,11 @@ public class PersonData implements Serializable {
 	public String imageHash;
 	public String coverHash;
 
+	public List<Integer> bookmarks;
+	public List<Integer> recommends;
+
+	public List<StationPostDto> bookmarkedPosts;
+	public List<StationPostDto> recommendPosts;
 
 	public List<MenuEntryDto> sections;
 	public List<MenuEntryDto> menuEntries;
@@ -32,8 +36,5 @@ public class PersonData implements Serializable {
 
 	public boolean isAdmin = false;
 	public boolean noPassword = false;
-
-	public Map<Integer, List<Integer>> bookmarks;
-	public Map<Integer, List<Integer>> recommends;
 	public List<Integer> followingStations;
 }
