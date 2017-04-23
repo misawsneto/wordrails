@@ -25,7 +25,7 @@ public class PersonData implements Serializable {
 	public List<Integer> recommends;
 
 	public List<StationPostDto> bookmarkedPosts;
-	public List<StationPostDto> recommendPosts;
+	public List<StationPostDto> recommendedPosts;
 
 	public List<MenuEntryDto> sections;
 	public List<MenuEntryDto> menuEntries;
