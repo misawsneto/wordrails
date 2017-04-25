@@ -4,6 +4,7 @@ import co.xarx.trix.api.v2.CategoryData;
 import co.xarx.trix.domain.Identifiable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
@@ -11,9 +12,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-
 @lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostView implements Serializable, Identifiable {
 
 	private static final long serialVersionUID = -1474032487285763669L;
