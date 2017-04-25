@@ -95,7 +95,10 @@ public class $facade$ {
 		Converter _converter = new GsonConverter(_gson);
 
 		OkHttpClient _okHttpClient = new OkHttpClient();
-
+		_okHttpClient.setReadTimeout(1, TimeUnit.MINUTES);
+		_okHttpClient.setWriteTimeout(1, TimeUnit.MINUTES);
+		_okHttpClient.setConnectTimeout(1, TimeUnit.MINUTES);
+		
 		if(_cacheMaxSize > 0){
 			Cache _cache = new Cache(_cacheDirectory, _cacheMaxSize);
 			_okHttpClient.setCache(_cache);
