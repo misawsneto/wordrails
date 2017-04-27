@@ -82,8 +82,12 @@ public class FCM2Client implements NotificationServerClient {
 				.addData("title", notificationView.post.stationName)
 				.addData("body", notificationView.post.title)
 				.addData("type", notificationView.type)
-
+				.addData("type", notificationView.type)
+				.addData("hash", notificationView.hash)
 				.addData("entityId", String.valueOf(notificationView.postId))
+				.addData("stationId", notificationView.post.stationId + "")
+				.addData("stationName", notificationView.post.stationName)
+				.addData("entityType", "POST")
 				.delayWhileIdle(true)
 				.priority(Message.Priority.HIGH)
 				.timeToLive(0);
