@@ -11,41 +11,39 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StationView implements Serializable {
     private static final long serialVersionUID = 2504331733945628049L;
-	public Integer id;
-	public java.util.Map<String, String> alertColors;
+	public java.lang.Integer id;
+	public java.util.Map<java.lang.String, java.lang.String> alertColors;
 	public boolean allowComments;
 	public boolean allowSocialShare;
 	public boolean allowWritersToAddSponsors;
 	public boolean allowWritersToNotify;
-	public String backgroundColor;
-	public java.util.Map<String, String> backgroundColors;
-	public Integer categoriesTaxonomyId;
-	public Integer defaultPerspectiveId;
+	public java.lang.String backgroundColor;
+	public java.util.Map<java.lang.String, java.lang.String> backgroundColors;
+	public java.lang.Integer categoriesTaxonomyId;
+	public java.lang.Integer defaultPerspectiveId;
 	public Map<String, String> logo;
 	public String logoHash;
-	public String logoUrl;
 	public boolean main;
-	public String name;
-	public String navbarColor;
-	public int postsTitleSize;
-	public String primaryColor;
-	public java.util.Map<String, String> primaryColors;
-	public java.util.Map<String, String> secondaryColors;
-	public boolean showAuthorData;
-	public boolean showAuthorSocialData;
-	public boolean sponsored;
-	public java.util.Set<String> stationPerspectives;
-	public String stationSlug;
-	public boolean subheading;
-	public Integer tagsTaxonomyId;
-	public boolean topper;
-	public String visibility;
-	public boolean writable;
-	public List<TermView> categories;
-	public Integer commentsCount;
-	public String email;
-	public Integer followersCount;
-	public String coverImageUrl;
+	public java.lang.String name;
+	public java.lang.String navbarColor;
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public void setLogoHash(String logoHash) {
+		this.logoHash = logoHash;
+	}
+
+	public List<MetaDto> getMetas() {
+		return metas;
+	}
+
+	public void setMetas(List<MetaDto> metas) {
+		this.metas = metas;
+	}
+
+	public List<MetaDto> metas;
 
 	public String getName() {
 		return name;
@@ -279,10 +277,23 @@ public class StationView implements Serializable {
 		return null;
 	}
 
-	public String getLogoUrl(){
-		return logoUrl;
-	}
-	public String getCoverImageUrl (){ return getLogoUrl(); }
+	public int postsTitleSize;
+	public java.lang.String primaryColor;
+	public java.util.Map<java.lang.String, java.lang.String> primaryColors;
+	public java.util.Map<java.lang.String, java.lang.String> secondaryColors;
+	public boolean showAuthorData;
+	public boolean showAuthorSocialData;
+	public boolean sponsored;
+	public java.util.Set<java.lang.String> stationPerspectives;
+	public java.lang.String stationSlug;
+	public boolean subheading;
+	public java.lang.Integer tagsTaxonomyId;
+	public boolean topper;
+	public java.lang.String visibility;
+	public boolean writable;
+	public List<TermView> categories;
+
+
 
 	public Map<String, String> getLogo() {
 		return logo;
