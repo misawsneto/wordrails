@@ -4,7 +4,11 @@ import co.xarx.trix.domain.Row;
 
 import java.io.Serializable;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RowView implements Serializable, Comparable<RowView> {
 	private static final long serialVersionUID = 8344796806642658494L;
 

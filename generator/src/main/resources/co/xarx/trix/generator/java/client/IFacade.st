@@ -378,10 +378,10 @@ interface I$facade$ {
     void findByUsername(@Query("username") String username, Callback<PersonDto\> _callback);
 
     @GET("/persons/notifications")
-    List<NotificationData\> getNotifications(@Query("page") Integer page, @Query("page") Integer size);
+    List<NotificationData\> getNotifications(@Query("page") Integer page, @Query("size") Integer size);
 
     @GET("/persons/notifications")
-    void getNotifications(@Query("page") Integer page, @Query("page") Integer size, Callback<List<NotificationData\>\> _callback);
+    void getNotifications(@Query("page") Integer page, @Query("size") Integer size, Callback<List<NotificationData\>\> _callback);
 	
 	@POST("/persons/create")
 	@FormUrlEncoded

@@ -3,7 +3,11 @@ package co.xarx.trix.api;
 import co.xarx.trix.domain.Row;
 
 import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CellView implements Serializable, Comparable<CellView>{
 	private static final long serialVersionUID = -9007636043152596902L;
 
