@@ -544,6 +544,14 @@ public class $facade$ {
 		_facade.putPassword(oldPassword, newPassword, _callback);
 	}
 
+	public Response postPasswordRecovery(PasswordRecoveryDto passwordRecoveryDto){
+		return _facade.postPasswordRecovery(passwordRecoveryDto);
+	}
+
+	public void postPasswordRecovery(PasswordRecoveryDto passwordRecoveryDto, Callback<Response> _callback){
+		_facade.postPasswordRecovery(passwordRecoveryDto, _callback);
+	}
+
 	public PostView getPostViewBySlug(String slug, Boolean withBody, Integer stationId){
     	return _facade.getPostViewBySlug(slug, withBody, stationId);
 	}

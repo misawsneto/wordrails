@@ -237,6 +237,12 @@ interface I$facade$ {
 	@FormUrlEncoded
 	void putPassword(@Field("oldPassword") String oldPassword, @Field("newPassword") String newPassword, Callback<Response> _callback);
 
+	@POST("/persons/password/recovery")
+    Response postPasswordRecovery(@Body PasswordRecoveryDto body);
+
+    @POST("/persons/password/recovery")
+    void postPasswordRecovery(@Body PasswordRecoveryDto body, Callback<Response> _callback);
+
 	@GET("/posts/{postId}/getPostViewById")
 	PostView getPostViewById(@Path("postId") Integer postId, @Query("withBody") Boolean withBody, @Query("stationId") Integer stationId);
 
@@ -384,11 +390,9 @@ interface I$facade$ {
     void getNotifications(@Query("page") Integer page, @Query("size") Integer size, Callback<List<NotificationData\>\> _callback);
 	
 	@POST("/persons/create")
-	@FormUrlEncoded
 	PersonDto postCreatePerson(@Body PersonCreateDto personCreate);
 	
 	@POST("/persons/create")
-	@FormUrlEncoded
 	void postCreatePerson(@Body PersonCreateDto personCreate, Callback<PersonDto> _callback);
 /*---------------------------------------------------------------------------*/
 

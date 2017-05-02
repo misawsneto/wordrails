@@ -1,16 +1,11 @@
 package co.xarx.trix.api;
 
-import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Data
-public class PersonCreateDto {
-    public String firstName;
-    public String lastName;
-    public String user_login;
+public class PasswordRecoveryDto {
+	private static final long serialVersionUID = -278630211043976636L;
 	public String email;
-    public String password;
 }
