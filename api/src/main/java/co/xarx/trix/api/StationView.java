@@ -11,7 +11,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StationView implements Serializable {
     private static final long serialVersionUID = 2504331733945628049L;
+
 	public java.lang.Integer id;
+	public Integer followersCount;
+	public String logoUrl;
+	public String coverImageUrl;
+	public Integer commentsCount;
+	public String email;
 	public java.util.Map<java.lang.String, java.lang.String> alertColors;
 	public boolean allowComments;
 	public boolean allowSocialShare;
@@ -26,6 +32,21 @@ public class StationView implements Serializable {
 	public boolean main;
 	public java.lang.String name;
 	public java.lang.String navbarColor;
+	public int postsTitleSize;
+	public java.lang.String primaryColor;
+	public java.util.Map<java.lang.String, java.lang.String> primaryColors;
+	public java.util.Map<java.lang.String, java.lang.String> secondaryColors;
+	public java.util.Set<java.lang.String> stationPerspectives;
+	public java.lang.String stationSlug;
+	public java.lang.Integer tagsTaxonomyId;
+	public java.lang.String visibility;
+	public List<TermView> categories;
+	public boolean writable;
+	public boolean showAuthorData;
+	public boolean showAuthorSocialData;
+	public boolean sponsored;
+	public boolean subheading;
+	public boolean topper;
 
 	public static long getSerialVersionUID() {
 		return serialVersionUID;
@@ -277,23 +298,45 @@ public class StationView implements Serializable {
 		return null;
 	}
 
-	public int postsTitleSize;
-	public java.lang.String primaryColor;
-	public java.util.Map<java.lang.String, java.lang.String> primaryColors;
-	public java.util.Map<java.lang.String, java.lang.String> secondaryColors;
-	public boolean showAuthorData;
-	public boolean showAuthorSocialData;
-	public boolean sponsored;
-	public java.util.Set<java.lang.String> stationPerspectives;
-	public java.lang.String stationSlug;
-	public boolean subheading;
-	public java.lang.Integer tagsTaxonomyId;
-	public boolean topper;
-	public java.lang.String visibility;
-	public boolean writable;
-	public List<TermView> categories;
+	public Integer getFollowersCount() {
+		return followersCount;
+	}
 
+	public void setFollowersCount(Integer followersCount) {
+		this.followersCount = followersCount;
+	}
 
+	public String getLogoUrl() {
+		return logoUrl;
+	}
+
+	public void setLogoUrl(String logoUrl) {
+		this.logoUrl = logoUrl;
+	}
+
+	public String getCoverImageUrl() {
+		return coverImageUrl;
+	}
+
+	public void setCoverImageUrl(String coverImageUrl) {
+		this.coverImageUrl = coverImageUrl;
+	}
+
+	public Integer getCommentsCount() {
+		return commentsCount;
+	}
+
+	public void setCommentsCount(Integer commentsCount) {
+		this.commentsCount = commentsCount;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
 	public Map<String, String> getLogo() {
 		return logo;
