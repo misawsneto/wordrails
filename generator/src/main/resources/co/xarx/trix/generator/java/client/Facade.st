@@ -416,12 +416,12 @@ public class $facade$ {
 		});
 	}
 
-	public List<PostView\> searchRecommends(String query, int page, int size){
-		return _facade.searchRecommends(query, page, size).content;
+	public List<PostView\> searchRecommends(Integer userId, String query, int page, int size){
+		return _facade.searchRecommends(userId, query, page, size).content;
 	}
 
-	public void searchRecommends(String query, int page, int size, final Callback<List<PostView\>\> _callback){
-		_facade.searchRecommends(query, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+	public void searchRecommends(Integer userId, String query, int page, int size, final Callback<List<PostView\>\> _callback){
+		_facade.searchRecommends(userId, query, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
 			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
 				_callback.success(_t.content, _response);
