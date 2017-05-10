@@ -89,9 +89,9 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 
 		// Add a default palette
 		
-		$scope.addPaletteFromObject(themeProvider.extendPalette('myPrimary',{}), $filter('translate')('settings.COLOR_PRIMARY'))
-		$scope.addPaletteFromObject(themeProvider.extendPalette('myAccent',{}), $filter('translate')('settings.COLOR_ACCENT'))
-		$scope.addPaletteFromObject(themeProvider.extendPalette('myWarn',{}), $filter('translate')('settings.COLOR_WARN'))
+		// $scope.addPaletteFromObject(themeProvider.extendPalette('myPrimary',{}), $filter('translate')('settings.COLOR_PRIMARY'))
+		// $scope.addPaletteFromObject(themeProvider.extendPalette('myAccent',{}), $filter('translate')('settings.COLOR_ACCENT'))
+		// $scope.addPaletteFromObject(themeProvider.extendPalette('myWarn',{}), $filter('translate')('settings.COLOR_WARN'))
 
 		// $scope.calcPalette(0);
 		// $scope.calcPalette(1);
