@@ -157,10 +157,10 @@ interface I$facade$ {
 	void searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
 	@GET("/v2/recommends/search")
-	ContentResponse<List<PostView\>\> searchRecommends(@Query("query") String query, @Query("page") int page, @Query("size") int size);
+	ContentResponse<List<PostView\>\> searchRecommends(@Query("userId") Integer userId, @Query("query") String query, @Query("page") int page, @Query("size") int size);
 	
 	@GET("/v2/recommends/search")
-	void searchRecommends(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+	void searchRecommends(@Query("userId") Integer userId, @Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
 	@GET("/notifications/searchNotifications")
 	ContentResponse<List<PersonalNotificationData\>\> searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size);
