@@ -1,70 +1,71 @@
 package co.xarx.trix.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+@Data
 public class StationView implements Serializable {
-    private static final long serialVersionUID = 2504331733945628049L;
 
-	public java.lang.Integer id;
-	public Integer followersCount;
-	public String logoUrl;
-	public String coverImageUrl;
-	public Integer commentsCount;
-	public String email;
-	public java.util.Map<java.lang.String, java.lang.String> alertColors;
+	private static final long serialVersionUID = 2504331733945628049L;
+
+	public Integer id;
+	public Map<String, String> alertColors;
 	public boolean allowComments;
 	public boolean allowSocialShare;
 	public boolean allowWritersToAddSponsors;
 	public boolean allowWritersToNotify;
-	public java.lang.String backgroundColor;
-	public java.util.Map<java.lang.String, java.lang.String> backgroundColors;
-	public java.lang.Integer categoriesTaxonomyId;
-	public java.lang.Integer defaultPerspectiveId;
+	public String backgroundColor;
+	public Map<String, String> backgroundColors;
+	public Integer categoriesTaxonomyId;
+	public Integer defaultPerspectiveId;
 	public Map<String, String> logo;
 	public String logoHash;
+	public String logoUrl;
 	public boolean main;
-	public java.lang.String name;
-	public java.lang.String navbarColor;
+	public String name;
+	public String navbarColor;
+	public String stationGroup;
 	public int postsTitleSize;
-	public java.lang.String primaryColor;
-	public java.util.Map<java.lang.String, java.lang.String> primaryColors;
-	public java.util.Map<java.lang.String, java.lang.String> secondaryColors;
-	public java.util.Set<java.lang.String> stationPerspectives;
-	public java.lang.String stationSlug;
-	public java.lang.Integer tagsTaxonomyId;
-	public java.lang.String visibility;
-	public List<TermView> categories;
-	public boolean writable;
+	public String primaryColor;
+	public Map<String, String> primaryColors;
+	public Map<String, String> secondaryColors;
 	public boolean showAuthorData;
 	public boolean showAuthorSocialData;
 	public boolean sponsored;
+	public Set<String> stationPerspectives;
+	public String stationSlug;
 	public boolean subheading;
+	public Integer tagsTaxonomyId;
 	public boolean topper;
+	public String visibility;
+	public boolean writable;
+	public List<TermView> categories;
+	public Integer commentsCount;
+	public String email;
+	public int followersCount;
+	public String coverImageUrl;
+	public String geo;
 
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
-
-	public void setLogoHash(String logoHash) {
-		this.logoHash = logoHash;
-	}
-
-	public List<MetaDto> getMetas() {
-		return metas;
-	}
-
-	public void setMetas(List<MetaDto> metas) {
-		this.metas = metas;
-	}
-
-	public List<MetaDto> metas;
+	public String description;
+	public String adminEmail;
+	public String adminBio;
+	public String adminName;
+	public String logoId;
+	public String coverImageId;
+	public String adminLogo;
 
 	public String getName() {
 		return name;
@@ -297,13 +298,8 @@ public class StationView implements Serializable {
 		}
 		return null;
 	}
-
-	public Integer getFollowersCount() {
-		return followersCount;
-	}
-
-	public void setFollowersCount(Integer followersCount) {
-		this.followersCount = followersCount;
+	public Map<String, String> getLogo() {
+		return logo;
 	}
 
 	public String getLogoUrl() {
@@ -312,36 +308,5 @@ public class StationView implements Serializable {
 
 	public void setLogoUrl(String logoUrl) {
 		this.logoUrl = logoUrl;
-	}
-
-	public String getCoverImageUrl() {
-		return coverImageUrl;
-	}
-
-	public void setCoverImageUrl(String coverImageUrl) {
-		this.coverImageUrl = coverImageUrl;
-	}
-
-	public Integer getCommentsCount() {
-		return commentsCount;
-	}
-
-	public void setCommentsCount(Integer commentsCount) {
-		this.commentsCount = commentsCount;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Map<String, String> getLogo() {
-		return logo;
-	}
-	public void setLogo(Map<String, String> logo) {
-		this.logo = logo;
 	}
 }
