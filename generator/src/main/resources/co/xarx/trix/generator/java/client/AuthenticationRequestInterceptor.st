@@ -41,7 +41,7 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 	
 	@Override
 	public synchronized void intercept(RequestFacade request) {
-		request.addHeader("User-Agent", "OkHttp");
+		request.addHeader("User-Agent", "android2");
         request.addHeader("x-username", isAnonymous() ? "*" : username);
 
         if (cookie == null && context != null) {
