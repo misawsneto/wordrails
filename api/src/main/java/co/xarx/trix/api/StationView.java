@@ -58,6 +58,7 @@ public class StationView implements Serializable {
 	public int followersCount;
 	public String coverImageUrl;
 	public String geo;
+	public String footer;
 
 	public String description;
 	public String adminEmail;
