@@ -82,7 +82,7 @@ public class Person extends BaseEntity implements Serializable, AnalyticsEntity 
 	public Image image;
 
 	@SdkInclude
-	public String profileImageURL, coverImageURL, imageLargeUrl, imageMediumUrl, imageSmallUrl,
+	public String imageURL, profileImageURL, coverImageURL, imageLargeUrl, imageMediumUrl, imageSmallUrl,
 			coverUrl, coverLargeUrl, coverMediumUrl;
 
 	@ManyToOne

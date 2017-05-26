@@ -41,7 +41,7 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 	
 	@Override
 	public synchronized void intercept(RequestFacade request) {
-		request.addHeader("User-Agent", "OkHttp");
+		request.addHeader("User-Agent", "android2");
         request.addHeader("x-username", isAnonymous() ? "*" : username);
 
         if (cookie == null && context != null) {
@@ -56,7 +56,7 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
             byte maxAge = 0;
             request.addHeader("Cache-Control", "public, max-age=" + maxAge);
         } else {
-            int maxStale = 2147483647;
+            int maxStale = Integer.MAX_VALUE;
             request.addHeader("Cache-Control", "public, only-if-cached, max-stale=" + maxStale);
         }
 	}

@@ -28,6 +28,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.Request;
 
 import co.xarx.trix.api.ImageUploadResponse;
 import co.xarx.trix.api.v2.PostData;
@@ -83,7 +85,7 @@ public class $facade$ {
 		initWordRails(_manager, _cacheDirectory, _cacheMaxSize, _url, _level);
 	}
 	
-	private void initWordRails(IConnectivityManager _manager,
+	private void initWordRails(final IConnectivityManager _manager,
 					 File _cacheDirectory, 
 					 long _cacheMaxSize,
 					 String _url, 
@@ -98,6 +100,35 @@ public class $facade$ {
 		_okHttpClient.setReadTimeout(1, TimeUnit.MINUTES);
 		_okHttpClient.setWriteTimeout(1, TimeUnit.MINUTES);
 		_okHttpClient.setConnectTimeout(1, TimeUnit.MINUTES);
+		_okHttpClient.networkInterceptors().add(new Interceptor() {
+			@Override
+			public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+				com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+				String cacheControl = originalResponse.header("Cache-Control");
+				if (cacheControl == null || cacheControl.contains("no-store") || cacheControl.contains("no-cache") ||
+						cacheControl.contains("must-revalidate") || cacheControl.contains("max-age=0")) {
+					return originalResponse.newBuilder()
+							.removeHeader("Pragma")
+							.header("Cache-Control", "public, max-age=" + Integer.MAX_VALUE)
+							.build();
+				} else {
+					return originalResponse;
+				}
+			}
+		});
+		_okHttpClient.interceptors().add(new Interceptor() {
+			@Override
+			public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+				Request request = chain.request();
+				if (!_manager.isConnectedOrConnecting()) {
+					request = request.newBuilder()
+							.removeHeader("Pragma")
+							.header("Cache-Control", "public, only-if-cached")
+							.build();
+				}
+				return chain.proceed(request);
+			}
+		});
 		
 		if(_cacheMaxSize > 0){
 			Cache _cache = new Cache(_cacheDirectory, _cacheMaxSize);
