@@ -1084,12 +1084,12 @@ public class $facade$ {
 
 /*---------------------------------------------------------------------------*/
 	
-	public List<StationView\> putFollowingStations(List<Integer\> stationIds){
-		return _facade.putFollowingStations(stationIds);
+	public List<StationView\> postFollowingStations(List<Integer\> stationIds){
+		return _facade.postFollowingStations(stationIds);
 	}
 	
-	public void putFollowingStations(List<Integer\> stationIds, Callback<List<StationView\>\> _callback){
-		_facade.putFollowingStations(stationIds, _callback);
+	public void postFollowingStations(List<Integer\> stationIds, Callback<List<StationView\>\> _callback){
+		_facade.postFollowingStations(stationIds, _callback);
 	}
 
 /*---------------------------------------------------------------------------*/

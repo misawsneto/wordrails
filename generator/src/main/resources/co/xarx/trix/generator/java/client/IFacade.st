@@ -481,11 +481,11 @@ interface I$facade$ {
 
 /*---------------------------------------------------------------------------*/
 
-	@GET("/stations/follow")
-	List<StationView\> putFollowingStations(@Query("stationIds") List<Integer\> stationsIds);
+	@POST("/stations/follow")
+	List<StationView\> postFollowingStations(@Body List<Integer\> stationsIds);
 
-	@GET("/stations/follow")
-	void putFollowingStations(@Query("stationIds") List<Integer\> stationsIds, Callback<List<StationView\>\> _callback);
+	@POST("/stations/follow")
+	void postFollowingStations(@Body List<Integer\> stationsIds, Callback<List<StationView\>\> _callback);
 
 /*---------------------------------------------------------------------------*/
 
