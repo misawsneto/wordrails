@@ -69,17 +69,19 @@ public class $facade$ {
 					 File _cacheDirectory, 
 					 long _cacheMaxSize,
 					 String _url, 
-					 String _provider, 
 					 String _userId, 
+					 String _username, 
 					 String _accessToken, 
+					 String _provider, 
 					 LogLevel _level) throws IOException {
 		_interceptor = new AuthenticationRequestInterceptor();
 		_interceptor.context = _context;
 		_interceptor.manager = _manager;
 		_interceptor.baseUrl = _url + "/api";
-		_interceptor.provider = _provider;
 		_interceptor.userId = _userId;
+		_interceptor.username = _username;
 		_interceptor.accessToken = _accessToken;
+		_interceptor.provider = _provider;
 		_interceptor.isSocialLogin = true;
 		
 		initWordRails(_manager, _cacheDirectory, _cacheMaxSize, _url, _level);

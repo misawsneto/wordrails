@@ -30,11 +30,8 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 	String cookie;
 	boolean isSocialLogin;
 	
-	// Traditional Login
 	String username;
 	String password;
-	
-	// Social Login
 	String provider;
 	String userId;
 	String accessToken;
@@ -72,13 +69,11 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 		
 		MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
         RequestBody body;
-        String url;
+        String url = baseUrl + "/persons/login";
         if(isSocialLogin){
-            url = baseUrl + "/auth/signin";
             body = RequestBody.create(mediaType,
-                    String.format("userId=%s&accessToken=%s&provider=%s", userId, accessToken, provider));
+                    String.format("social-userId=%s&social-token=%s&username=%s", userId, accessToken, username));
         } else {
-            url = baseUrl + "/persons/login";
             body = RequestBody.create(mediaType,
                     String.format("username=%s&password=%s", username, password));
         }
@@ -87,7 +82,9 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
                 .url(url)
                 .post(body)
                 .addHeader("content-type", "application/x-www-form-urlencoded")
+                .addHeader("provider", provider)
                 .build();
+                
         try {
             Response response = OK_HTTP.newCall(request).execute();
             if(response.isSuccessful()) {
