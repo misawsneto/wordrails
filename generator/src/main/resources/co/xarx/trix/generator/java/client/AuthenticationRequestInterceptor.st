@@ -82,7 +82,7 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
                 .url(url)
                 .post(body)
                 .addHeader("content-type", "application/x-www-form-urlencoded")
-                .addHeader("provider", provider)
+                .addHeader("provider", provider == null ? "" : provider)
                 .build();
                 
         try {
