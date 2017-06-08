@@ -101,10 +101,15 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
                     }
                 }
             }
+            try {
+                response.body().close();
+            } catch(Exception e){
+                e.printStackTrace();
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
-	}	
+	}
 	
 	synchronized void logOut() {
 		Request request = new Request.Builder()
