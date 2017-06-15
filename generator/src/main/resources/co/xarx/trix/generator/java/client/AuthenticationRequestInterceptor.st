@@ -78,12 +78,14 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
                     String.format("username=%s&password=%s", username, password));
         }
 
-        Request request = new Request.Builder()
+        Request.Builder requestBuilder = new Request.Builder()
                 .url(url)
                 .post(body)
-                .addHeader("content-type", "application/x-www-form-urlencoded")
-                .addHeader("provider", provider == null ? "" : provider)
-                .build();
+                .addHeader("content-type", "application/x-www-form-urlencoded");
+        if(provider != null){
+            requestBuilder.addHeader("provider", provider);
+        }
+        Request request = requestBuilder.build();
                 
         try {
             Response response = OK_HTTP.newCall(request).execute();
