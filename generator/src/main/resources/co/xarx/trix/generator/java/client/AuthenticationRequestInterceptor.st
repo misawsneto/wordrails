@@ -10,6 +10,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.FormEncodingBuilder;
 
 import java.net.CookieManager;
 import java.net.HttpCookie;
@@ -67,23 +68,28 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 			return;
 		}
 		
-		MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
         RequestBody body;
         String url = baseUrl + "/persons/login";
         if(isSocialLogin){
-            body = RequestBody.create(mediaType,
-                    String.format("social-userId=%s&social-token=%s&username=%s", userId, accessToken, username));
+            body = new FormEncodingBuilder()
+            			.add("username", username)
+            			.add("social-userId", userId)
+            			.add("social-token", accessToken)
+            			.build();
         } else {
-            body = RequestBody.create(mediaType,
-                    String.format("username=%s&password=%s", username, password));
+            body = new FormEncodingBuilder()
+            			.add("username", username)
+            			.add("password", password)
+            			.build();
         }
 
-        Request request = new Request.Builder()
+        Request.Builder requestBuilder = new Request.Builder()
                 .url(url)
-                .post(body)
-                .addHeader("content-type", "application/x-www-form-urlencoded")
-                .addHeader("provider", provider == null ? "" : provider)
-                .build();
+                .post(body);
+        if(provider != null){
+            requestBuilder.addHeader("provider", provider);
+        }
+        Request request = requestBuilder.build();
                 
         try {
             Response response = OK_HTTP.newCall(request).execute();
