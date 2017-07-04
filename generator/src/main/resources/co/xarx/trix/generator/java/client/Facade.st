@@ -409,15 +409,15 @@ public class $facade$ {
 	}
 	
 	public List<PostData\> searchPosts(String q, List<Integer\> aIds, List<Integer\> sIds, String st, String from,
-                                  String until, List<Integer\> cIds, List<String\> tags, Integer page, Integer size,
+                                  String until, List<Integer\> cIds, List<String\> tags, List<Integer\> excludePostIds, Integer page, Integer size,
                                   List<String\> orders, List<String\> embeds, String snippet){
-        return _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, page, size, orders, embeds, snippet).content;
+        return _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, excludePostIds, page, size, orders, embeds, snippet).content;
     }
 
     public void searchPosts(String q, List<Integer\> aIds, List<Integer\> sIds, String st, String from,
-                            String until, List<Integer\> cIds, List<String\> tags, Integer page, Integer size,
+                            String until, List<Integer\> cIds, List<String\> tags, List<Integer\> excludePostIds, Integer page, Integer size,
                             List<String\> orders, List<String\> embeds, String snippet, final Callback<List<PostData\>\> _callback){
-        _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, page, size, orders, embeds, snippet, new
+        _facade.searchPosts(q, aIds, sIds, st, from, until, cIds, tags, excludePostIds, page, size, orders, embeds, snippet, new
         Callback<ContentResponse<List<PostData\>\>\>() {
             @Override
             public void success(ContentResponse<List<PostData\>\> _t, Response _response) {
