@@ -23,6 +23,7 @@ import retrofit.converter.Converter;
 import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedInput;
 import retrofit.mime.TypedString;
+import com.google.gson.JsonObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -585,6 +586,14 @@ public class $facade$ {
 		_facade.postPasswordRecovery(passwordRecoveryDto, _callback);
 	}
 
+	public Response postPasswordUpdate(JsonObject body){
+		return _facade.postPasswordUpdate(body);
+	}
+
+	public void postPasswordUpdate(JsonObject body, Callback<Response> _callback){
+		_facade.postPasswordUpdate(body, _callback);
+	}
+
 	public PostView getPostViewBySlug(String slug, Boolean withBody, Integer stationId){
     	return _facade.getPostViewBySlug(slug, withBody, stationId);
 	}
@@ -965,6 +974,14 @@ public class $facade$ {
 	
 	public void postCreatePerson(PersonCreateDto personCreate, Callback<PersonDto> _callback){
 		_facade.postCreatePerson(personCreate, _callback);
+	}
+
+	public Response postPersonUpdate(int userId, String username, String fullName, String bio, TypedInput binaryImage){
+		return _facade.postPersonUpdate(userId, username, fullName, bio, binaryImage);
+	}
+	
+	public void postPersonUpdate(int userId, String username, String fullName, String bio, TypedInput binaryImage, Callback<Response> _callback){
+		_facade.postPersonUpdate(userId, username, fullName, bio, binaryImage, _callback);
 	}
 /*---------------------------------------------------------------------------*/
 

@@ -21,6 +21,7 @@ import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.mime.TypedInput;
 import retrofit.mime.TypedString;
+import com.google.gson.JsonObject;
 
 import co.xarx.trix.api.ImageUploadResponse;
 import co.xarx.trix.api.v2.PostData;
@@ -242,6 +243,12 @@ interface I$facade$ {
 
     @POST("/persons/password/recovery")
     void postPasswordRecovery(@Body PasswordRecoveryDto body, Callback<Response> _callback);
+	
+	@POST("/persons/password/update")
+    Response postPasswordUpdate(@Body JsonObject body);
+    
+    @POST("/persons/password/update")
+    void postPasswordUpdate(@Body JsonObject body, Callback<Response> _callback);
 
 	@GET("/posts/{postId}/getPostViewById")
 	PostView getPostViewById(@Path("postId") Integer postId, @Query("withBody") Boolean withBody, @Query("stationId") Integer stationId);
@@ -394,6 +401,14 @@ interface I$facade$ {
 	
 	@POST("/persons/create")
 	void postCreatePerson(@Body PersonCreateDto personCreate, Callback<PersonDto> _callback);
+	
+	@POST("/persons/update")
+	@Multipart
+	Response postPersonUpdate(@Part("user_id") int userId, @Part("username") String username, @Part("fullName") String fullName, @Part("bio") String bio, @Part("binaryImage") TypedInput binaryImage);
+	
+	@POST("/persons/update")
+	@Multipart
+	void postPersonUpdate(@Part("user_id") int userId, @Part("username") String username, @Part("fullName") String fullName, @Part("bio") String bio, @Part("binaryImage") TypedInput binaryImage, Callback<Response> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
