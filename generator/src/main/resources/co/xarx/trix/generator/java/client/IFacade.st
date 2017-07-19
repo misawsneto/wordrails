@@ -460,6 +460,12 @@ interface I$facade$ {
 	@POST("/posts/{postId}/comments")
 	void postComment(@Path("postId") Integer postId, @Body CommentDto comment, Callback<CommentDto> _callback);
 
+	@DELETE("/comments/remove")
+	Response deleteComment(@Query("commentId") Integer commentId, @Query("stationId") Integer stationId);
+
+	@DELETE("/comments/remove")
+	void deleteComment(@Query("commentId") Integer commentId, @Query("stationId") Integer stationId, Callback<Response> _callback);
+
 	@GET("/comments/search/findPostCommentsOrderByDate")
     ContentResponse<List<CommentDto\>\> findPostCommentsOrderByDate(@Query("postId") Integer postId, @Query("stationId") Integer stationId, @Query("page") Integer page, @Query("size") Integer size, @Query("sort") List<String> sort);
 

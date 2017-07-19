@@ -740,6 +740,14 @@ public class $facade$ {
                 _facade.postComment(postId, comment, stationId, _callback);
             }
 
+            public Response deleteComment(Integer commentId, Integer stationId) {
+                return _facade.deleteComment(commentId, stationId);
+            }
+
+            public void deleteComment(Integer commentId, Integer stationId, final Callback<Response> _callback) {
+                _facade.deleteComment(commentId, stationId, _callback);
+            }
+
             public void putPostTerms(java.lang.Integer id, List<String> terms, Integer stationId) {
                 StringBuilder _uris = new StringBuilder();
                 for (String _uri : terms) {
