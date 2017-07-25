@@ -50,6 +50,11 @@ public class Station extends BaseEntity implements Serializable, AnalyticsEntity
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean main = false;
 
+	@SdkInclude
+	@NotNull
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean hideHome = false;
+
 	@NotNull
 	public String visibility;
 

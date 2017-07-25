@@ -59,6 +59,7 @@ public class StationView implements Serializable {
 	public String coverImageUrl;
 	public String geo;
 	public String footer;
+	public boolean hideHome;
 
 	public String description;
 	public String adminEmail;
