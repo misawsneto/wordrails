@@ -140,12 +140,14 @@ interface I$facade$ {
 
 	@GET("/v2/posts/search")
     ContentResponse<List<PostData\>\> searchPosts(@Query("q") String q, @Query("authorId") List<Integer> aIds, @Query
-    ("stationId") List<Integer\> sIds, @Query("state") String st, @Query("from") String from, @Query("until") String
+    ("stationId") Integer sId, @Query
+    ("stationIds") List<Integer\> sIds, @Query("state") String st, @Query("from") String from, @Query("until") String
     until, @Query("categoryId") List<Integer\> cIds, @Query("tags") List<String\> tags, @Query("excludePostIds") List<Integer\> excludePostIds, @Query("page") Integer page,
     @Query("size") Integer size, @Query("order") List<String\> orders, @Query("embed") List<String\> embeds, @Query("snippet") String snippet);
 
     @GET("/v2/posts/search")
-    void searchPosts(@Query("q") String q, @Query("authorId") List<Integer\> aIds, @Query("stationId") List<Integer\>
+    void searchPosts(@Query("q") String q, @Query("authorId") List<Integer\> aIds, @Query
+    ("stationId") Integer sId, @Query("stationIds") List<Integer\>
     sIds, @Query("state") String st, @Query("from") String from, @Query("until") String until, @Query("categoryId")
     List<Integer\> cIds, @Query("tags") List<String\> tags, @Query("excludePostIds") List<Integer\> excludePostIds, @Query("page") Integer page, @Query("size") Integer size,
     @Query("order") List<String\> orders, @Query("embed") List<String\> embeds, @Query("snippet") String snippet, 
