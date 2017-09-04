@@ -933,12 +933,12 @@ public class $facade$ {
 		_facade.putRegId(regId, networkId, lat, lng, _callback);
 	}
 
-	public Response putLocation(String deviceCode, String deviceName, String device, Double lat, Double lng, Boolean fcm){
-		return _facade.putLocation(deviceCode, deviceName, device, lat, lng, fcm);
+	public Response putLocation(String deviceCode, String deviceName, String device, Double lat, Double lng){
+		return _facade.putLocation(deviceCode, deviceName, device, lat, lng);
 	}
 
-	public void putLocation(String deviceCode, String deviceName, String device, Double lat, Double lng, Boolean fcm, Callback<Response> _callback){
-		_facade.putLocation(deviceCode, deviceName, device, lat, lng, fcm, _callback);
+	public void putLocation(String deviceCode, String deviceName, String device, Double lat, Double lng, Callback<Response> _callback){
+		_facade.putLocation(deviceCode, deviceName, device, lat, lng, _callback);
 	}
 /*---------------------------------------------------------------------------*/
 
@@ -1111,12 +1111,32 @@ public class $facade$ {
 
 /*---------------------------------------------------------------------------*/
 	
+	public GeoAreasView getStationGeoAreas(Integer stationId){
+		return _facade.getStationGeoAreas(stationId);
+	}
+	
+	public void getStationGeoAreas(Integer stationId, Callback<GeoAreasView\> _callback){
+		_facade.getStationGeoAreas(stationId, _callback);
+	}
+
 	public List<StationView\> postFollowingStations(List<Integer\> stationIds){
 		return _facade.postFollowingStations(stationIds);
 	}
 	
 	public void postFollowingStations(List<Integer\> stationIds, Callback<List<StationView\>\> _callback){
 		_facade.postFollowingStations(stationIds, _callback);
+	}
+
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+	
+	public ContentResponse<List<ClassifiedView\>\> getClassifieds(int stationId, String title, String order, List<String\> paymentMethods, int page, int size){
+		return _facade.getClassifieds(stationId, title, order, paymentMethods, page, size);
+	}
+	
+	public void getClassifieds(int stationId, String title, String order, List<String\> paymentMethods, int page, int size, Callback<ContentResponse<List<ClassifiedView\>\>\> _callback){
+		_facade.getClassifieds(stationId, title, order, paymentMethods, page, size, _callback);
 	}
 
 /*---------------------------------------------------------------------------*/

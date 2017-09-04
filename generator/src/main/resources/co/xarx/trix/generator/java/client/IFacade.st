@@ -366,11 +366,11 @@ interface I$facade$ {
 	
 	@PUT("/mobile/location")
 	@FormUrlEncoded
-	Response putLocation(@Field("deviceCode") String deviceCode, @Field("deviceName") String deviceName, @Field("device") String device, @Field("lat") Double lat, @Field("lng") Double lng, @Field("fcm") Boolean fcm);
+	Response putLocation(@Field("deviceCode") String deviceCode, @Field("deviceName") String deviceName, @Field("device") String device, @Field("lat") Double lat, @Field("lng") Double lng);
 	
 	@PUT("/mobile/location")
 	@FormUrlEncoded
-	void putLocation(@Field("deviceCode") String deviceCode, @Field("deviceName") String deviceName, @Field("device") String device, @Field("lat") Double lat, @Field("lng") Double lng, @Field("fcm") Boolean fcm, Callback<Response> _callback);
+	void putLocation(@Field("deviceCode") String deviceCode, @Field("deviceName") String deviceName, @Field("device") String device, @Field("lat") Double lat, @Field("lng") Double lng, Callback<Response> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -504,11 +504,27 @@ interface I$facade$ {
 
 /*---------------------------------------------------------------------------*/
 
-	@POST("/stations/follow")
-	List<StationView\> postFollowingStations(@Body List<Integer\> stationsIds);
+  @GET("/stations/{stationId}/geoAreas")
+  GeoAreasView getStationGeoAreas(@Path("stationId") Integer stationId);
 
-	@POST("/stations/follow")
-	void postFollowingStations(@Body List<Integer\> stationsIds, Callback<List<StationView\>\> _callback);
+  @GET("/stations/{stationId}/geoAreas")
+  void getStationGeoAreas(@Path("stationId") Integer stationId, Callback<GeoAreasView\> _callback);
+
+  @POST("/stations/follow")
+  List<StationView\> postFollowingStations(@Body List<Integer\> stationsIds);
+
+  @POST("/stations/follow")
+  void postFollowingStations(@Body List<Integer\> stationsIds, Callback<List<StationView\>\> _callback);
+
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+
+  @GET("/ads/search")
+  ContentResponse<List<ClassifiedView\>\> getClassifieds(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("paymentMethods") List<String\> paymentMethods, @Query("page") int page, @Query("size") int size);
+
+  @GET("/ads/search")
+  void getClassifieds(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("paymentMethods") List<String\> paymentMethods, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<ClassifiedView\>\>\> _callback);
 
 /*---------------------------------------------------------------------------*/
 
