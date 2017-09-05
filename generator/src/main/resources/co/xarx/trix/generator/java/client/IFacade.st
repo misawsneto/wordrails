@@ -526,6 +526,12 @@ interface I$facade$ {
   @GET("/ads/search")
   void getClassifieds(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("paymentMethods") List<String\> paymentMethods, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<ClassifiedView\>\>\> _callback);
 
+  @PUT("/ads/rating")
+  Response putRateClassified(@Query("stationId") Integer stationId, @Body RateClassifiedView body);
+
+  @PUT("/ads/rating")
+  void putRateClassified(@Query("stationId") Integer stationId, @Body RateClassifiedView body, Callback<Response\> _callback);
+
 /*---------------------------------------------------------------------------*/
 
 $entities:IFacadeMethods(); separator="\n\n"$

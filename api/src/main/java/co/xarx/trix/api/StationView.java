@@ -60,6 +60,7 @@ public class StationView implements Serializable {
 	public String geo;
 	public String footer;
 	public boolean hideHome;
+	public GeoPointView geoPointDto;
 
 	public String description;
 	public String adminEmail;

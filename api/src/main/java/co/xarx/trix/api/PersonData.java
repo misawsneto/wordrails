@@ -43,4 +43,5 @@ public class PersonData implements Serializable {
 	public List<Integer> followingStations;
 
 	public List<String> adsCategories;
+	public List<RateClassifiedView> adsRating;
 }
