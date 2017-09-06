@@ -17,9 +17,12 @@ public class ClassifiedView {
   public String instagramPage;
   public String twitterPage;
   public String videoUrl;
+  public String smallImageUrl;
+  public String mediumImageUrl;
+  public String largeImageUrl;
   public List<String> imageList;
   public List<Integer> displayInStations;
-  public List<ClassifiedExpedientView> adsExpedients;
+  public List<ClassifiedExpedientView> classifiedExpedients;
   public Integer totalVotes;
   public Float rating;
   public Boolean enableRating;

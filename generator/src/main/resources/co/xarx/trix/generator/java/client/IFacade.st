@@ -520,17 +520,17 @@ interface I$facade$ {
 
 /*---------------------------------------------------------------------------*/
 
-  @GET("/ads/search")
+  @GET("/classifieds/search")
   ContentResponse<List<ClassifiedView\>\> getClassifieds(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("paymentMethods") List<String\> paymentMethods, @Query("page") int page, @Query("size") int size);
 
-  @GET("/ads/search")
+  @GET("/classifieds/search")
   void getClassifieds(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("paymentMethods") List<String\> paymentMethods, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<ClassifiedView\>\>\> _callback);
 
-  @PUT("/ads/rating")
-  Response putRateClassified(@Query("stationId") Integer stationId, @Body RateClassifiedView body);
+  @PUT("/classifieds/rating")
+  RateClassifiedView putRateClassified(@Query("stationId") Integer stationId, @Body RateClassifiedView body);
 
-  @PUT("/ads/rating")
-  void putRateClassified(@Query("stationId") Integer stationId, @Body RateClassifiedView body, Callback<Response\> _callback);
+  @PUT("/classifieds/rating")
+  void putRateClassified(@Query("stationId") Integer stationId, @Body RateClassifiedView body, Callback<RateClassifiedView\> _callback);
 
 /*---------------------------------------------------------------------------*/
 

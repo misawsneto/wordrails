@@ -1139,11 +1139,11 @@ public class $facade$ {
 		_facade.getClassifieds(stationId, title, order, paymentMethods, page, size, _callback);
 	}
 
-	public Response putRateClassified(int stationId, RateClassifiedView body){
+	public RateClassifiedView putRateClassified(int stationId, RateClassifiedView body){
 		return _facade.putRateClassified(stationId, body);
 	}
 	
-	public void putRateClassified(int stationId, RateClassifiedView body, Callback<Response\> _callback){
+	public void putRateClassified(int stationId, RateClassifiedView body, Callback<RateClassifiedView\> _callback){
 		_facade.putRateClassified(stationId, body, _callback);
 	}
 
