@@ -42,6 +42,6 @@ public class PersonData implements Serializable {
 	public boolean noPassword = false;
 	public List<Integer> followingStations;
 
-	public List<String> adsCategories;
-	public List<RateClassifiedView> adsRating;
+	public List<String> classifiedCategories;
+	public List<RateClassifiedView> classifiedRating;
 }
