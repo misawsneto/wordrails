@@ -5,6 +5,7 @@ AuthenticationRequestInterceptor(package) ::=
 import android.content.Context;
 import android.preference.PreferenceManager;
 
+import co.xarx.trix.api.v2.ErrorData;
 import com.squareup.okhttp.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -164,7 +165,9 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
                     PersonData result = new ObjectMapper().readValue(personData, PersonData.class);
                     callback.success(result,null);
                 }else{
-                    RetrofitError error = RetrofitError.unexpectedError(null, new RuntimeException());
+                    String errorMsg = response.body().string();
+                    ErrorData errorData = new ObjectMapper().readValue(errorMsg, ErrorData.class);
+                    RetrofitError error = RetrofitError.unexpectedError(null, new RuntimeException(errorData.getMessage()));
                     callback.failure(error);
                 }
                 try {
