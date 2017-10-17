@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.squareup.okhttp.*;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RestAdapter.LogLevel;
@@ -27,10 +28,6 @@ import com.google.gson.JsonObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.Request;
 
 import co.xarx.trix.api.ImageUploadResponse;
 import co.xarx.trix.api.v2.PostData;
@@ -40,6 +37,7 @@ import co.xarx.trix.api.v2.response.FileUpload;
 import co.xarx.trix.api.v2.request.MessageFCM;
 import co.xarx.trix.api.TermPerspectiveView;
 import co.xarx.trix.api.RowView;
+
 
 public class $facade$ {
 	private String _url;
@@ -171,6 +169,10 @@ public class $facade$ {
 	public void login(){
 		_interceptor.logIn();
 	}
+
+	public void login(String deviceCode, String deviceName, String device, Double lat, Double lng, Callback<PersonData> callback){
+    		_interceptor.logIn(deviceCode, deviceName, device, lat, lng, callback);
+    }
 
 	public void logout(){
 		_interceptor.logOut();

@@ -5,18 +5,17 @@ AuthenticationRequestInterceptor(package) ::=
 import android.content.Context;
 import android.preference.PreferenceManager;
 
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.CookieManager;
 import java.net.HttpCookie;
 
 import co.xarx.trix.api.IConnectivityManager;
 import retrofit.RequestInterceptor;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import org.json.simple.parser.JSONParser;
 
 class AuthenticationRequestInterceptor implements RequestInterceptor {
 
@@ -116,6 +115,67 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
             e.printStackTrace();
         }
 	}
+
+	synchronized void logIn(String deviceCode, String deviceName, String device, Double lat, Double lng, Callback<PersonData> callback) {
+    		if(isAnonymous()){
+    			return;
+    		}
+
+            RequestBody body;
+            String url = baseUrl + "/persons/login?deviceCode=" + deviceCode + "&deviceName=" + deviceName + "&device=" + device + "&lat=" + lat + "&lng=" + lng;
+            if(isSocialLogin){
+                body = new FormEncodingBuilder()
+                			.add("username", username)
+                			.add("social-userId", userId)
+                			.add("social-token", accessToken)
+                			.build();
+            } else {
+                body = new FormEncodingBuilder()
+                			.add("username", username)
+                			.add("password", password)
+                			.build();
+            }
+
+            Request.Builder requestBuilder = new Request.Builder()
+                    .url(url)
+                    .post(body);
+            if(provider != null){
+                requestBuilder.addHeader("provider", provider);
+            }
+            Request request = requestBuilder.build();
+
+            try {
+                Response response = OK_HTTP.newCall(request).execute();
+                if(response.isSuccessful()) {
+                    for (HttpCookie cookie : COOKIE_MANAGER.getCookieStore().getCookies()) {
+                        if (cookie.getName().equals("JSESSIONID")) {
+                            this.cookie = cookie.getValue();
+                            if(context != null) {
+                                PreferenceManager.getDefaultSharedPreferences(context)
+                                        .edit()
+                                        .putString(PREF_TRIX_COOKIE, this.cookie)
+                                        .apply();
+                            }
+                            break;
+                        }
+                    }
+
+                    String personData = response.body().string();
+                    PersonData result = new ObjectMapper().readValue(personData, PersonData.class);
+                    callback.success(result,null);
+                }else{
+                    RetrofitError error = RetrofitError.unexpectedError(null, new RuntimeException());
+                    callback.failure(error);
+                }
+                try {
+                    response.body().close();
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+    	}
 	
 	synchronized void logOut() {
 		Request request = new Request.Builder()
