@@ -27,7 +27,7 @@ public class ClassifiedView {
   public Float rating;
   public Boolean enableRating;
   public Boolean enableLocation;
-  public ClassifiedLocationView location;
+  public LocationData location;
 
   public Integer postId;
   public Integer stationId;

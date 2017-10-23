@@ -1151,5 +1151,22 @@ public class $facade$ {
 
 /*---------------------------------------------------------------------------*/
 
+/*---------------------------------------------------------------------------*/
+
+    public ContentResponse<List<TrixAlertView\>\> getTrixAlerts(int page, int size, String deviceCode){
+		return _facade.getTrixAlerts(page, size, deviceCode);
+	}
+
+	public void getTrixAlerts(int page, int size, String deviceCode, Callback<ContentResponse<List<TrixAlertView\>\>\> _callback){
+		_facade.getTrixAlerts(page, size, deviceCode, _callback);
+	}
+
+	public void putSeenTrixAlert(int siteId,int stationId,int postId, String deviceCode, Callback<Response> _callback){
+	    _facade.putSeenTrixAlert(siteId, stationId, postId, deviceCode, _callback);
+	}
+
+/*---------------------------------------------------------------------------*/
+
+
 $entities:FacadeMethods(); separator="\n\n"$
 }>>

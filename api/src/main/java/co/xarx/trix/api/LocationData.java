@@ -3,7 +3,7 @@ package co.xarx.trix.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ClassifiedLocationView {
+public class LocationData {
 	public String zip;
   public String street;
   public String number;

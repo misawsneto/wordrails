@@ -534,5 +534,18 @@ interface I$facade$ {
 
 /*---------------------------------------------------------------------------*/
 
+/*---------------------------------------------------------------------------*/
+
+  @GET("/trixalerts/search")
+  ContentResponse<List<TrixAlertView\>\> getTrixAlerts(@Query("page") int page, @Query("size") int size, @Query("deviceCode") String deviceCode);
+
+  @GET("/trixalerts/search")
+  void getTrixAlerts(@Query("page") int page, @Query("size") int size, @Query("deviceCode") String deviceCode, Callback<ContentResponse<List<TrixAlertView\>\>\> _callback);
+
+  @PUT("/trixalerts/seen")
+  void putSeenTrixAlert(@Query("siteId") int siteId, @Query("stationId") int stationId, @Query("postId") int postId, @Query("deviceCode") String deviceCode, Callback<Response> _callback);
+
+/*---------------------------------------------------------------------------*/
+
 $entities:IFacadeMethods(); separator="\n\n"$
 }>>
