@@ -53,6 +53,9 @@ public class PostView implements Serializable, Identifiable {
 	public int recommendsCount;
 	public int commentsCount;
 
+	public boolean bookmarked;
+	public boolean recommended;
+
 	public Integer readTime;
 
 	public boolean imageLandscape;

@@ -543,7 +543,7 @@ interface I$facade$ {
   void getTrixAlerts(@Query("page") int page, @Query("size") int size, @Query("deviceCode") String deviceCode, Callback<ContentResponse<List<TrixAlertView\>\>\> _callback);
 
   @PUT("/trixalerts/seen")
-  void putSeenTrixAlert(@Query("siteId") int siteId, @Query("stationId") int stationId, @Query("postId") int postId, @Query("deviceCode") String deviceCode, Callback<Response> _callback);
+  void putSeenTrixAlert(@Body TrixSeenAlertview body, Callback<Response> _callback);
 
 /*---------------------------------------------------------------------------*/
 

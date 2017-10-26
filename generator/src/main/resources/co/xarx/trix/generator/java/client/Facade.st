@@ -1161,8 +1161,8 @@ public class $facade$ {
 		_facade.getTrixAlerts(page, size, deviceCode, _callback);
 	}
 
-	public void putSeenTrixAlert(int siteId,int stationId,int postId, String deviceCode, Callback<Response> _callback){
-	    _facade.putSeenTrixAlert(siteId, stationId, postId, deviceCode, _callback);
+	public void putSeenTrixAlert(TrixSeenAlertview body, Callback<Response> _callback){
+	    _facade.putSeenTrixAlert(body, _callback);
 	}
 
 /*---------------------------------------------------------------------------*/
