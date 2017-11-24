@@ -29,6 +29,7 @@ public class StationView implements Serializable {
 	public boolean allowSocialShare;
 	public boolean allowWritersToAddSponsors;
 	public boolean allowWritersToNotify;
+	public boolean allowClassifieds;
 	public String backgroundColor;
 	public Map<String, String> backgroundColors;
 	public Integer categoriesTaxonomyId;
