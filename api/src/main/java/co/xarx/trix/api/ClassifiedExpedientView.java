@@ -6,6 +6,6 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ClassifiedExpedientView {
   public String day;
-  public boolean isActive;
+  public boolean active;
   public List<ClassifiedTimesView> times;
 }
