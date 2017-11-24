@@ -11,6 +11,7 @@ public class NetworkData {
 	public boolean allowSignup;
 	public Boolean allowSocialLogin;
 	public Boolean allowSponsors;
+	public boolean allowTrixAlert;
 	public String appleStoreAddress;
 	public String splashBgColor;
 	public String backgroundColor;
