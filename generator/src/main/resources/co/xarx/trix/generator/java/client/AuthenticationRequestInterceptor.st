@@ -7,16 +7,18 @@ import android.preference.PreferenceManager;
 
 import co.xarx.trix.api.v2.ErrorData;
 import com.squareup.okhttp.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.CookieManager;
 import java.net.HttpCookie;
+import java.util.Date;
 
 import co.xarx.trix.api.IConnectivityManager;
 import retrofit.RequestInterceptor;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import org.json.simple.parser.JSONParser;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 class AuthenticationRequestInterceptor implements RequestInterceptor {
 
@@ -145,6 +147,11 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
             }
             Request request = requestBuilder.build();
 
+            Gson _gson = new GsonBuilder()
+                        .registerTypeAdapter(Date.class, new DateJsonSerializer())
+                        .registerTypeAdapter(Date.class, new DateJsonDeserializer())
+                        .create();
+
             try {
                 Response response = OK_HTTP.newCall(request).execute();
                 if(response.isSuccessful()) {
@@ -162,11 +169,12 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
                     }
 
                     String personData = response.body().string();
-                    PersonData result = new ObjectMapper().readValue(personData, PersonData.class);
+
+                    PersonData result = _gson.fromJson(personData,PersonData.class);
                     callback.success(result,null);
                 }else{
                     String errorMsg = response.body().string();
-                    ErrorData errorData = new ObjectMapper().readValue(errorMsg, ErrorData.class);
+                    ErrorData errorData = _gson.fromJson(errorMsg, ErrorData.class);
                     RetrofitError error = RetrofitError.unexpectedError(null, new RuntimeException(errorData.getMessage()));
                     callback.failure(error);
                 }
