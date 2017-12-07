@@ -521,10 +521,10 @@ interface I$facade$ {
 /*---------------------------------------------------------------------------*/
 
   @GET("/classifieds/search")
-  ContentResponse<List<ClassifiedView\>\> getClassifieds(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("paymentMethods") List<String\> paymentMethods, @Query("page") int page, @Query("size") int size);
+  ContentResponse<List<ClassifiedView\>\> getClassifieds(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("paymentMethods") List<String\> paymentMethods, @Query("page") int page, @Query("size") int size, @Query("id") Integer id, @Query("lon") Double lon, @Query("lat") Double lat, @Query("radius") Double radius, @Query("unitOfLength") String unitOfLength);
 
   @GET("/classifieds/search")
-  void getClassifieds(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("paymentMethods") List<String\> paymentMethods, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<ClassifiedView\>\>\> _callback);
+  void getClassifieds(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("paymentMethods") List<String\> paymentMethods, @Query("page") int page, @Query("size") int size, @Query("id") Integer id, @Query("lon") Double lon, @Query("lat") Double lat, @Query("radius") Double radius, @Query("unitOfLength") String unitOfLength, Callback<ContentResponse<List<ClassifiedView\>\>\> _callback);
 
   @PUT("/classifieds/rating")
   RateClassifiedView putRateClassified(@Query("stationId") Integer stationId, @Body RateClassifiedView body);

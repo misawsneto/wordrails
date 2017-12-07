@@ -1132,13 +1132,13 @@ public class $facade$ {
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-	
-	public ContentResponse<List<ClassifiedView\>\> getClassifieds(int stationId, String title, String order, List<String\> paymentMethods, int page, int size){
-		return _facade.getClassifieds(stationId, title, order, paymentMethods, page, size);
+
+	public ContentResponse<List<ClassifiedView\>\> getClassifieds(int stationId, String title, String order, List<String\> paymentMethods, int page, int size, Integer id, Double lon, Double lat, Double radius, String unitOfLength){
+		return _facade.getClassifieds(stationId, title, order, paymentMethods, page, size, id, lon, lat, radius, unitOfLength);
 	}
 	
-	public void getClassifieds(int stationId, String title, String order, List<String\> paymentMethods, int page, int size, Callback<ContentResponse<List<ClassifiedView\>\>\> _callback){
-		_facade.getClassifieds(stationId, title, order, paymentMethods, page, size, _callback);
+	public void getClassifieds(int stationId, String title, String order, List<String\> paymentMethods, int page, int size, Integer id, Double lon, Double lat, Double radius, String unitOfLength,Callback<ContentResponse<List<ClassifiedView\>\>\> _callback){
+		_facade.getClassifieds(stationId, title, order, paymentMethods, page, size, id, lon, lat, radius, unitOfLength, _callback);
 	}
 
 	public RateClassifiedView putRateClassified(int stationId, RateClassifiedView body){
