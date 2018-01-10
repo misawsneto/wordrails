@@ -12,7 +12,7 @@ public class NetworkData {
 	public Boolean allowSocialLogin;
 	public Boolean allowSponsors;
 	public boolean allowTrixAlert;
-	public boolean isCarnival;
+	public boolean carnival;
 	public String appleStoreAddress;
 	public String splashBgColor;
 	public String backgroundColor;
