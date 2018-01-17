@@ -16,6 +16,7 @@ public class NetworkData {
 	public String urlCarnival;
 	public String appleStoreAddress;
 	public String splashBgColor;
+	public String bgSplashLogo;
 	public String backgroundColor;
 	public java.util.Map<String, String> backgroundColors;
 	public Integer categoriesTaxonomyId;
