@@ -380,10 +380,10 @@ interface I$facade$ {
 	@GET("/networks/{id}/permissions")
 	void getNetworkPersonPermissions(@Path("id") Integer id, Callback<PersonPermissions> _callback);
 	
-	@GET("/persons/init")
+	@GET("/persons/init?version=2.2.0")
 	PersonData getInitialData();
 	
-	@GET("/persons/init")
+	@GET("/persons/init?version=2.2.0")
 	void getInitialData(Callback<PersonData> _callback);
 
 	@GET("/persons/search/findByUsername")
