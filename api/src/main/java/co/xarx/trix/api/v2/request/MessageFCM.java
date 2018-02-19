@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MessageFCM {
     public String id;
+    public String deviceCode;
 }
