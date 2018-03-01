@@ -154,10 +154,10 @@ interface I$facade$ {
     Callback<ContentResponse<List<PostData\>\>\> _callback);
 
 	@GET("/v2/bookmarks/search")
-	ContentResponse<List<PostView\>\> searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size);
+	ContentResponse<List<PostView\>\> searchBookmarks(@Query("userId") Integer userId, @Query("query") String query, @Query("page") int page, @Query("size") int size);
 	
 	@GET("/v2/bookmarks/search")
-	void searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+	void searchBookmarks(@Query("userId") Integer userId, @Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
 	@GET("/v2/recommends/search")
 	ContentResponse<List<PostView\>\> searchRecommends(@Query("userId") Integer userId, @Query("query") String query, @Query("page") int page, @Query("size") int size);
