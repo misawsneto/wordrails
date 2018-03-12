@@ -103,6 +103,9 @@ public class PostView implements Serializable, Identifiable {
 	public Date scheduledDate;
 	public Date unpublishDate;
 	public boolean notify;
+	public String cardType;
+
+	public List<PostView> related;
 
 	public ImageView featuredImage;
 
