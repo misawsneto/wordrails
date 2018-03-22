@@ -153,6 +153,22 @@ interface I$facade$ {
     @Query("order") List<String\> orders, @Query("embed") List<String\> embeds, @Query("snippet") String snippet, 
     Callback<ContentResponse<List<PostData\>\>\> _callback);
 
+    @GET("/events/search")
+    List<EventView\> searchEvents(@Query("title") String title, @Query("period") String period, @Query("city") String city, @Query("page") Integer page,
+    @Query("size") Integer size);
+
+    @GET("/events/search")
+    void searchEvents(@Query("title") String title, @Query("period") String period, @Query("city") String city, @Query("page") Integer page,
+    @Query("size") Integer size, Callback<List<EventView\>\> _callback);
+
+
+    @GET("/events/bookmarks")
+    List<EventView\> searchEventBookmarks(@Query("page") Integer page, @Query("size") Integer size, @Query("userId") Integer userId);
+
+    @GET("/events/bookmarks")
+    void searchEventBookmarks(@Query("page") Integer page, @Query("size") Integer size, @Query("userId") Integer userId, Callback<List<EventView\>\> _callback);
+
+
 	@GET("/v2/bookmarks/search")
 	ContentResponse<List<PostView\>\> searchBookmarks(@Query("userId") Integer userId, @Query("query") String query, @Query("page") int page, @Query("size") int size);
 	

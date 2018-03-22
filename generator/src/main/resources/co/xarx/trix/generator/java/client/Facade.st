@@ -434,6 +434,43 @@ public class $facade$ {
         });
     }
 
+    public List<EventView\> searchEvents(String title, String period, String city, Integer page, Integer size){
+            return _facade.searchEvents(title, period, city, page, size);
+    }
+
+    public void searchEvents(String title, String period, String city, Integer page, Integer size, final Callback<List<EventView\>\> _callback){
+            _facade.searchEvents(title, period, city, page, size, new
+            Callback<List<EventView\>\>() {
+                @Override
+                public void success(List<EventView\> _t, Response _response) {
+                    _callback.success(_t, _response);
+                }
+
+                @Override
+                public void failure(RetrofitError _error) {
+                    _callback.failure(_error);
+                }
+            });
+        }
+
+    public List<EventView\> searchEventBookmarks(Integer page, Integer size, Integer userId){
+    		return _facade.searchEventBookmarks(page, size, userId);
+    }
+
+    public void searchEventBookmarks(Integer page, Integer size, Integer userId, final Callback<List<EventView\>\> _callback){
+        _facade.searchEventBookmarks(page, size, userId, new Callback<List<EventView\>\>() {
+            @Override
+            public void success(List<EventView\> _t, Response _response) {
+                _callback.success(_t, _response);
+            }
+
+            @Override
+            public void failure(RetrofitError _error) {
+                _callback.failure(_error);
+            }
+        });
+    }
+
 	public List<PostView\> searchBookmarks(Integer userId, String query, int page, int size){
 		return _facade.searchBookmarks(userId, query, page, size).content;
 	}
