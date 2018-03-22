@@ -155,11 +155,11 @@ interface I$facade$ {
 
     @GET("/events/search")
     List<EventView\> searchEvents(@Query("title") String title, @Query("period") String period, @Query("city") String city, @Query("page") Integer page,
-    @Query("size") Integer size);
+    @Query("size") Integer size, @Query("stationId") Integer stationId);
 
     @GET("/events/search")
     void searchEvents(@Query("title") String title, @Query("period") String period, @Query("city") String city, @Query("page") Integer page,
-    @Query("size") Integer size, Callback<List<EventView\>\> _callback);
+    @Query("size") Integer size, @Query("stationId") Integer stationId, Callback<List<EventView\>\> _callback);
 
 
     @GET("/events/bookmarks")
