@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class NetworkData {
 
 	public Integer id;
+	public Integer scheduleId;
 	public boolean addStationRolesOnSignup;
 	public java.util.Map<String, String> alertColors;
 	public boolean allowSignup;
