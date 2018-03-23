@@ -434,15 +434,15 @@ public class $facade$ {
         });
     }
 
-    public List<EventView\> searchEvents(String title, String period, String city, Integer page, Integer size, Integer stationId){
+    public ResultEventSearch searchEvents(String title, String period, String city, Integer page, Integer size, Integer stationId){
             return _facade.searchEvents(title, period, city, page, size, stationId);
     }
 
-    public void searchEvents(String title, String period, String city, Integer page, Integer size, Integer stationId, final Callback<List<EventView\>\> _callback){
+    public void searchEvents(String title, String period, String city, Integer page, Integer size, Integer stationId, final Callback<ResultEventSearch\> _callback){
             _facade.searchEvents(title, period, city, page, size, stationId, new
-            Callback<List<EventView\>\>() {
+            Callback<ResultEventSearch\>() {
                 @Override
-                public void success(List<EventView\> _t, Response _response) {
+                public void success(ResultEventSearch _t, Response _response) {
                     _callback.success(_t, _response);
                 }
 
