@@ -29,6 +29,7 @@ public class PostData implements Serializable, Identifiable {
 	private String snippet;
 	private String body;
 	private String subheading;
+	public String cardType;
 	private String topper;
 	private String state;
 
