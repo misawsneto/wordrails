@@ -434,12 +434,12 @@ public class $facade$ {
         });
     }
 
-    public ResultEventSearch searchEvents(String title, String period, String city, Integer page, Integer size, Integer stationId){
-            return _facade.searchEvents(title, period, city, page, size, stationId);
+    public ResultEventSearch searchEvents(String title, String period, String city, Integer categorieId,Integer page, Integer size, Integer stationId){
+            return _facade.searchEvents(title, period, city, categorieId, page, size, stationId);
     }
 
-    public void searchEvents(String title, String period, String city, Integer page, Integer size, Integer stationId, final Callback<ResultEventSearch\> _callback){
-            _facade.searchEvents(title, period, city, page, size, stationId, new
+    public void searchEvents(String title, String period, String city, Integer categorieId, Integer page, Integer size, Integer stationId, final Callback<ResultEventSearch\> _callback){
+            _facade.searchEvents(title, period, city, categorieId, page, size, stationId, new
             Callback<ResultEventSearch\>() {
                 @Override
                 public void success(ResultEventSearch _t, Response _response) {
@@ -451,7 +451,25 @@ public class $facade$ {
                     _callback.failure(_error);
                 }
             });
-        }
+    }
+
+    public EventView searchEventById(Integer eventId, Integer stationId){
+    		return _facade.searchEventById(eventId,stationId);
+    }
+
+    public void searchEventById(Integer eventId,Integer stationId, final Callback<EventView\> _callback){
+        _facade.searchEventById(eventId, stationId, new Callback<EventView\>() {
+            @Override
+            public void success(EventView _t, Response _response) {
+                _callback.success(_t, _response);
+            }
+
+            @Override
+            public void failure(RetrofitError _error) {
+                _callback.failure(_error);
+            }
+        });
+    }
 
     public List<EventView\> searchEventBookmarks(Integer page, Integer size, Integer userId){
     		return _facade.searchEventBookmarks(page, size, userId);

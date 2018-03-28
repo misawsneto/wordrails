@@ -2,10 +2,10 @@ package co.xarx.trix.api;
 
 public class EventDate {
 
-    private String date;
-    private int hour;
-    private int minutes;
-    private String ampm;
-    private Integer seconds;
+    public String date;
+    public int hour;
+    public int minutes;
+    public String ampm;
+    public Integer seconds;
 
 }

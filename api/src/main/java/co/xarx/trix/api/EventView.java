@@ -4,19 +4,19 @@ import java.util.List;
 
 public class EventView extends PostView {
 
-    private String excerpt;
-    private String moreInfo;
-    private String eventLink;
+    public String excerpt;
+    public String moreInfo;
+    public String eventLink;
 
-    private boolean showMap;
-    private String cost;
-    private String color;
+    public boolean showMap;
+    public String cost;
+    public String color;
 
-    private EventDate start;
-    private EventDate end;
+    public EventDate start;
+    public EventDate end;
 
-    private List<EventSchedule> schedule;
-    private Organizer mainOrganizer;
-    private List<Organizer> additionalOrganizers;
-    private EventAddress address;
+    public List<EventSchedule> schedule;
+    public Organizer mainOrganizer;
+    public List<Organizer> additionalOrganizers;
+    public EventAddress address;
 }
