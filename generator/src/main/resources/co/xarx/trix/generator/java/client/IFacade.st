@@ -160,12 +160,12 @@ interface I$facade$ {
     void searchEventHighlights(@Query("page") Integer page, @Query("size") Integer size, @Query("stationId") Integer stationId, Callback<List<EventView\>\> _callback);
 
     @GET("/events/search")
-    ResultEventSearch searchEvents(@Query("title") String title, @Query("period") String period, @Query("city") String city, @Query("categorieId") Integer categorieId, @Query("page") Integer page,
+    List<EventView> searchEvents(@Query("title") String title, @Query("period") String period, @Query("city") String city, @Query("categorieId") Integer categorieId, @Query("page") Integer page,
     @Query("size") Integer size, @Query("stationId") Integer stationId);
 
     @GET("/events/search")
     void searchEvents(@Query("title") String title, @Query("period") String period, @Query("city") String city, @Query("categorieId") Integer categorieId, @Query("page") Integer page,
-    @Query("size") Integer size, @Query("stationId") Integer stationId, Callback<ResultEventSearch\> _callback);
+    @Query("size") Integer size, @Query("stationId") Integer stationId, Callback<List<EventView\>\> _callback);
 
     @GET("/events/{eventId}")
     EventView searchEventById(@Path("eventId") Integer postId, @Query("stationId") Integer stationId);
