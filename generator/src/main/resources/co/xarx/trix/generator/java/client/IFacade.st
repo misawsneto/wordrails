@@ -153,6 +153,12 @@ interface I$facade$ {
     @Query("order") List<String\> orders, @Query("embed") List<String\> embeds, @Query("snippet") String snippet, 
     Callback<ContentResponse<List<PostData\>\>\> _callback);
 
+    @GET("/events/highlights")
+    List<EventView> searchEventHighlights(@Query("page") Integer page, @Query("size") Integer size, @Query("stationId") Integer stationId);
+
+    @GET("/events/highlights")
+    void searchEventHighlights(@Query("page") Integer page, @Query("size") Integer size, @Query("stationId") Integer stationId, Callback<List<EventView\>\> _callback);
+
     @GET("/events/search")
     ResultEventSearch searchEvents(@Query("title") String title, @Query("period") String period, @Query("city") String city, @Query("categorieId") Integer categorieId, @Query("page") Integer page,
     @Query("size") Integer size, @Query("stationId") Integer stationId);

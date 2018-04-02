@@ -434,6 +434,24 @@ public class $facade$ {
         });
     }
 
+    public List<EventView> searchEventHighlights(Integer page, Integer size, Integer stationId){
+           return _facade.searchEventHighlights(page, size, stationId);
+    }
+
+    public void searchEventHighlights(Integer page, Integer size, Integer stationId, final Callback<List<EventView\>\> _callback){
+             _facade.searchEventHighlights(page, size, stationId, new Callback<List<EventView\>\>() {
+                  @Override
+                  public void success(List<EventView> _t, Response _response) {
+                      _callback.success(_t, _response);
+                  }
+
+                  @Override
+                  public void failure(RetrofitError _error) {
+                      _callback.failure(_error);
+                  }
+              });
+    }
+
     public ResultEventSearch searchEvents(String title, String period, String city, Integer categorieId,Integer page, Integer size, Integer stationId){
             return _facade.searchEvents(title, period, city, categorieId, page, size, stationId);
     }
