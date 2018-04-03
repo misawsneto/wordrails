@@ -45,5 +45,7 @@ public class PersonData implements Serializable {
 	public List<String> classifiedCategories;
 	public List<RateClassifiedView> classifiedRating;
 
+	public boolean showEvents = false;
 	public List<Category> eventCategories;
+
 }
