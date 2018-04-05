@@ -14,6 +14,7 @@ public class EventView extends PostView {
 
     public EventDate start;
     public EventDate end;
+    public boolean pastEvent;
 
     public List<EventSchedule> schedule;
     public Organizer mainOrganizer;

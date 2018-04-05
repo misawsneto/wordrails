@@ -2,11 +2,15 @@ package co.xarx.trix.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NetworkData {
 
 	public Integer id;
-	public Integer scheduleId;
+	public Integer stationScheduleId;
+	public String stationScheduleName;
+	public boolean showEvents = false;
 	public boolean addStationRolesOnSignup;
 	public java.util.Map<String, String> alertColors;
 	public boolean allowSignup;
@@ -96,6 +100,7 @@ public class NetworkData {
 	public String namingTags;
 	public String namingStation;
 	public String namingStations;
+	public List<Category> eventCategories;
 
 	@Override
 	public String toString() {
