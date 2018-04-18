@@ -167,6 +167,12 @@ interface I$facade$ {
     void searchEvents(@Query("title") String title, @Query("period") String period, @Query("city") String city, @Query("categorieId") Integer categorieId, @Query("page") Integer page,
     @Query("size") Integer size, @Query("stationId") Integer stationId, Callback<List<EventView\>\> _callback);
 
+    @GET("/events/getEventBySlug")
+    EventView getEventBySlug(@Query("slug") String slug, @Query("stationId") Integer stationId);
+
+    @GET("/events/getEventBySlug")
+    void getEventBySlug(@Query("slug") String slug, @Query("stationId") Integer stationId, Callback<EventView\> _callback);
+
     @GET("/events/{eventId}")
     EventView searchEventById(@Path("eventId") Integer postId, @Query("stationId") Integer stationId);
 
@@ -544,6 +550,14 @@ interface I$facade$ {
   void postFollowingStations(@Body List<Integer\> stationsIds, Callback<List<StationView\>\> _callback);
 
 /*---------------------------------------------------------------------------*/
+  @GET("/coupons/search")
+  ContentResponse<List<CouponView\>\> getCoupons(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("categoryNames") List<String\> categoryNames, @Query("page") int page, @Query("size") int size, @Query("id") Integer id, @Query("lon") Double lon, @Query("lat") Double lat, @Query("radius") Double radius, @Query("unitOfLength") String unitOfLength);
+
+  @GET("/coupons/search")
+  void getCoupons(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("categoryNames") List<String\> categoryNames, @Query("page") int page, @Query("size") int size, @Query("id") Integer id, @Query("lon") Double lon, @Query("lat") Double lat, @Query("radius") Double radius, @Query("unitOfLength") String unitOfLength, Callback<ContentResponse<List<CouponView\>\>\> _callback);
+
+
+
 
 /*---------------------------------------------------------------------------*/
 

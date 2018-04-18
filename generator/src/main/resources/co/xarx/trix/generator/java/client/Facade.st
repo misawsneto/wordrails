@@ -471,6 +471,24 @@ public class $facade$ {
             });
     }
 
+    public EventView getEventBySlug(String slug, Integer stationId){
+            return _facade.getEventBySlug(slug,stationId);
+    }
+
+    public void getEventBySlug(String slug,Integer stationId, final Callback<EventView\> _callback){
+        _facade.getEventBySlug(slug, stationId, new Callback<EventView\>() {
+            @Override
+            public void success(EventView _t, Response _response) {
+                _callback.success(_t, _response);
+            }
+
+            @Override
+            public void failure(RetrofitError _error) {
+                _callback.failure(_error);
+            }
+        });
+    }
+
     public EventView searchEventById(Integer eventId, Integer stationId){
     		return _facade.searchEventById(eventId,stationId);
     }
@@ -1203,6 +1221,15 @@ public class $facade$ {
 	}
 
 /*---------------------------------------------------------------------------*/
+
+    public ContentResponse<List<CouponView\>\> getCoupons(int stationId, String title, String order, List<String\> categoryNames, int page, int size, Integer id, Double lon, Double lat, Double radius, String unitOfLength){
+		return _facade.getCoupons(stationId, title, order, categoryNames, page, size, id, lon, lat, radius, unitOfLength);
+	}
+
+	public void getCoupons(int stationId, String title, String order, List<String\> categoryNames, int page, int size, Integer id, Double lon, Double lat, Double radius, String unitOfLength,Callback<ContentResponse<List<CouponView\>\>\> _callback){
+		_facade.getCoupons(stationId, title, order, categoryNames, page, size, id, lon, lat, radius, unitOfLength, _callback);
+	}
+
 
 /*---------------------------------------------------------------------------*/
 
