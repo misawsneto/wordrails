@@ -14,6 +14,7 @@ public class CouponView {
     Long siteId;
 
     String title;
+    String body;
     Date date;
 
     Date useDate;
@@ -49,5 +50,6 @@ public class CouponView {
     Integer usageLimitToXItem;
     int usageLimitPerUser;
 
+    ClassifiedView classified;
     LocationData location;
 }
