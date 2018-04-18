@@ -1230,12 +1230,20 @@ public class $facade$ {
 		_facade.getCoupons(stationId, title, order, categoryNames, page, size, id, lon, lat, radius, unitOfLength, _callback);
 	}
 
-	public ContentResponse<List<CouponView\>\> getCoupons(int stationId, String title, String order, List<String\> categoryNames, int page, int size, Integer id, Double lon, Double lat, Double radius, String unitOfLength){
-        return _facade.getCoupons(stationId, title, order, categoryNames, page, size, id, lon, lat, radius, unitOfLength);
+	public List<CouponView\> getConsumedCoupons(int page, int size, Integer userId){
+        return _facade.getConsumedCoupons(page,size,userId);
     }
 
-    public void getCoupons(int stationId, String title, String order, List<String\> categoryNames, int page, int size, Integer id, Double lon, Double lat, Double radius, String unitOfLength,Callback<ContentResponse<List<CouponView\>\>\> _callback){
-        _facade.getCoupons(stationId, title, order, categoryNames, page, size, id, lon, lat, radius, unitOfLength, _callback);
+    public void getConsumedCoupons(int page, int size, Integer userId, Callback<List<CouponView\>\> _callback){
+        _facade.getConsumedCoupons(page,size,userId, _callback);
+    }
+
+    public ResponseRequest consumeCoupon(ConsumeCoupon consumeCoupon) {
+        return _facade.consumeCoupon(consumeCoupon);
+    }
+
+    public void consumeCoupon(ConsumeCoupon consumeCoupon, final Callback<ResponseRequest> _callback) {
+        _facade.consumeCoupon(consumeCoupon, _callback);
     }
 
 

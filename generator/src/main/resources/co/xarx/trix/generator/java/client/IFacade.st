@@ -560,9 +560,13 @@ interface I$facade$ {
   List<CouponView\> getConsumedCoupons(@Query("page") int page, @Query("size") int size, @Query("userId") Integer userId);
 
   @GET("/coupons/consumedCoupons")
-  void getConsumedCoupons(@Query("page") int page, @Query("size") int size, @Query("userId") Integer userId, Callback<List<CouponView\>\> _callback););
+  void getConsumedCoupons(@Query("page") int page, @Query("size") int size, @Query("userId") Integer userId, Callback<List<CouponView\>\> _callback);
 
+  @POST("/coupons/consume")
+  ResponseRequest consumeCoupon(@Body ConsumeCoupon consumeCoupon);
 
+  @POST("/coupons/consume")
+  void consumeCoupon(@Body ConsumeCoupon consumeCoupon, Callback<ResponseRequest> _callback);
 
 /*---------------------------------------------------------------------------*/
 
