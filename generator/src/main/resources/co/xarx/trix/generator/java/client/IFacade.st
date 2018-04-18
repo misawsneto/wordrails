@@ -556,6 +556,11 @@ interface I$facade$ {
   @GET("/coupons/search")
   void getCoupons(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("categoryNames") List<String\> categoryNames, @Query("page") int page, @Query("size") int size, @Query("id") Integer id, @Query("lon") Double lon, @Query("lat") Double lat, @Query("radius") Double radius, @Query("unitOfLength") String unitOfLength, Callback<ContentResponse<List<CouponView\>\>\> _callback);
 
+  @GET("/coupons/consumedCoupons")
+  List<CouponView\> getConsumedCoupons(@Query("page") int page, @Query("size") int size, @Query("userId") Integer userId);
+
+  @GET("/coupons/consumedCoupons")
+  void getConsumedCoupons(@Query("page") int page, @Query("size") int size, @Query("userId") Integer userId, Callback<List<CouponView\>\> _callback););
 
 
 

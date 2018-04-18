@@ -1230,6 +1230,14 @@ public class $facade$ {
 		_facade.getCoupons(stationId, title, order, categoryNames, page, size, id, lon, lat, radius, unitOfLength, _callback);
 	}
 
+	public ContentResponse<List<CouponView\>\> getCoupons(int stationId, String title, String order, List<String\> categoryNames, int page, int size, Integer id, Double lon, Double lat, Double radius, String unitOfLength){
+        return _facade.getCoupons(stationId, title, order, categoryNames, page, size, id, lon, lat, radius, unitOfLength);
+    }
+
+    public void getCoupons(int stationId, String title, String order, List<String\> categoryNames, int page, int size, Integer id, Double lon, Double lat, Double radius, String unitOfLength,Callback<ContentResponse<List<CouponView\>\>\> _callback){
+        _facade.getCoupons(stationId, title, order, categoryNames, page, size, id, lon, lat, radius, unitOfLength, _callback);
+    }
+
 
 /*---------------------------------------------------------------------------*/
 
