@@ -582,6 +582,12 @@ interface I$facade$ {
   @GET("/classifieds/search")
   void getClassifieds(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("paymentMethods") List<String\> paymentMethods, @Query("categoryNames") List<String\> categoryNames, @Query("page") int page, @Query("size") int size, @Query("id") Integer id, @Query("lon") Double lon, @Query("lat") Double lat, @Query("radius") Double radius, @Query("unitOfLength") String unitOfLength, Callback<ContentResponse<List<ClassifiedView\>\>\> _callback);
 
+  @GET("/classifieds/findBySlug")
+  ClassifiedView findClassifiedBySlug(@Query("slug") String slug);
+
+  @GET("/classifieds/findBySlug")
+  void findClassifiedBySlug(@Query("slug") String slug, Callback<ClassifiedView\> _callback);
+
   @PUT("/classifieds/rating")
   RateClassifiedView putRateClassified(@Query("stationId") Integer stationId, @Body RateClassifiedView body);
 

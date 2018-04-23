@@ -1265,6 +1265,14 @@ public class $facade$ {
 		_facade.getClassifieds(stationId, title, order, paymentMethods, categoryNames, page, size, id, lon, lat, radius, unitOfLength, _callback);
 	}
 
+	public ClassifiedView findClassifiedBySlug(String slug){
+        return _facade.findClassifiedBySlug(slug);
+    }
+
+    public void findClassifiedBySlug(String slug,Callback<ClassifiedView\> _callback){
+        _facade.findClassifiedBySlug(slug, _callback);
+    }
+
 	public RateClassifiedView putRateClassified(int stationId, RateClassifiedView body){
 		return _facade.putRateClassified(stationId, body);
 	}
