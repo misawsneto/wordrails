@@ -1230,6 +1230,14 @@ public class $facade$ {
 		_facade.getCoupons(stationId, title, slug, order, categoryNames, page, size, id, lon, lat, radius, unitOfLength, _callback);
 	}
 
+    public CouponView findCouponBySlug(String slug){
+        return _facade.findCouponBySlug(slug);
+    }
+
+    public void findCouponBySlug(String slug, Callback<CouponView\> _callback){
+        _facade.findCouponBySlug(slug, _callback);
+    }
+
 	public List<CouponView\> getConsumedCoupons(int page, int size, Integer userId){
         return _facade.getConsumedCoupons(page,size,userId);
     }
