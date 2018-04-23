@@ -1222,12 +1222,12 @@ public class $facade$ {
 
 /*---------------------------------------------------------------------------*/
 
-    public ContentResponse<List<CouponView\>\> getCoupons(int stationId, String title, String order, List<String\> categoryNames, int page, int size, Integer id, Double lon, Double lat, Double radius, String unitOfLength){
-		return _facade.getCoupons(stationId, title, order, categoryNames, page, size, id, lon, lat, radius, unitOfLength);
+    public ContentResponse<List<CouponView\>\> getCoupons(int stationId, String title, String slug , String order, List<String\> categoryNames, int page, int size, Integer id, Double lon, Double lat, Double radius, String unitOfLength){
+		return _facade.getCoupons(stationId, title, slug, order, categoryNames, page, size, id, lon, lat, radius, unitOfLength);
 	}
 
-	public void getCoupons(int stationId, String title, String order, List<String\> categoryNames, int page, int size, Integer id, Double lon, Double lat, Double radius, String unitOfLength,Callback<ContentResponse<List<CouponView\>\>\> _callback){
-		_facade.getCoupons(stationId, title, order, categoryNames, page, size, id, lon, lat, radius, unitOfLength, _callback);
+	public void getCoupons(int stationId, String title, String slug, String order, List<String\> categoryNames, int page, int size, Integer id, Double lon, Double lat, Double radius, String unitOfLength,Callback<ContentResponse<List<CouponView\>\>\> _callback){
+		_facade.getCoupons(stationId, title, slug, order, categoryNames, page, size, id, lon, lat, radius, unitOfLength, _callback);
 	}
 
 	public List<CouponView\> getConsumedCoupons(int page, int size, Integer userId){

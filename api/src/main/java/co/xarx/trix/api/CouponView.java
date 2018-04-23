@@ -9,47 +9,47 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CouponView {
     public String eSId;
-    Integer postId;
-    Integer stationId;
-    Long siteId;
+    public Integer postId;
+    public Integer stationId;
+    public Long siteId;
 
-    String title;
-    String body;
-    Date date;
+    public String title;
+    public String body;
+    public String slug;
+    public Date date;
 
-    Date useDate;
-    String user;
+    public Date useDate;
+    public String user;
 
-    Integer classifiedId;
+    public Integer classifiedId;
 
-    String smallImageUrl;
-    String mediumImageUrl;
-    String largeImageUrl;
+    public String smallImageUrl;
+    public String mediumImageUrl;
+    public String largeImageUrl;
 
-    Integer authorId;
-    String authorName;
-    String authorEmail;
+    public Integer authorId;
+    public String authorName;
+    public String authorEmail;
 
-    String discountType;
-    int amount;
-    boolean freeShipping;
-    Date expiryDate;
-    int minimumSpend;
-    int maximumSpend;
-    boolean individualUse;
-    boolean excludeSalesItem;
-    int usageLimit;
-    int usageCount;
+    public String discountType;
+    public int amount;
+    public boolean freeShipping;
+    public Date expiryDate;
+    public int minimumSpend;
+    public int maximumSpend;
+    public boolean individualUse;
+    public boolean excludeSalesItem;
+    public int usageLimit;
+    public int usageCount;
 
     //private Integer product;  Not using yet
     //private List<Integer> excludeProducts; Not using yet
-    List<String> productCategories;
-    List<Integer> excludeCategories;
+    public List<String> productCategories;
+    public List<Integer> excludeCategories;
 
-    String emailRestriction;
-    Integer usageLimitToXItem;
-    int usageLimitPerUser;
+    public String emailRestriction;
+    public Integer usageLimitToXItem;
+    public int usageLimitPerUser;
 
-    ClassifiedView classified;
-    LocationData location;
+    public ClassifiedView classified;
 }

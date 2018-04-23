@@ -551,10 +551,16 @@ interface I$facade$ {
 
 /*---------------------------------------------------------------------------*/
   @GET("/coupons/search")
-  ContentResponse<List<CouponView\>\> getCoupons(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("categoryNames") List<String\> categoryNames, @Query("page") int page, @Query("size") int size, @Query("id") Integer id, @Query("lon") Double lon, @Query("lat") Double lat, @Query("radius") Double radius, @Query("unitOfLength") String unitOfLength);
+  ContentResponse<List<CouponView\>\> getCoupons(@Query("stationId") Integer stationId, @Query("title") String title, @Query("slug") String slug, @Query("order") String order, @Query("categoryNames") List<String\> categoryNames, @Query("page") int page, @Query("size") int size, @Query("id") Integer id, @Query("lon") Double lon, @Query("lat") Double lat, @Query("radius") Double radius, @Query("unitOfLength") String unitOfLength);
 
   @GET("/coupons/search")
-  void getCoupons(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("categoryNames") List<String\> categoryNames, @Query("page") int page, @Query("size") int size, @Query("id") Integer id, @Query("lon") Double lon, @Query("lat") Double lat, @Query("radius") Double radius, @Query("unitOfLength") String unitOfLength, Callback<ContentResponse<List<CouponView\>\>\> _callback);
+  void getCoupons(@Query("stationId") Integer stationId, @Query("title") String title, @Query("slug") String slug, @Query("order") String order, @Query("categoryNames") List<String\> categoryNames, @Query("page") int page, @Query("size") int size, @Query("id") Integer id, @Query("lon") Double lon, @Query("lat") Double lat, @Query("radius") Double radius, @Query("unitOfLength") String unitOfLength, Callback<ContentResponse<List<CouponView\>\>\> _callback);
+
+  @GET("/coupons/findBySlug")
+  CouponView findBySlug(@Query("slug") String slug);
+
+  @GET("/coupons/findBySlug")
+  void findBySlug(@Query("slug") String slug, Callback<CouponView\> _callback);
 
   @GET("/coupons/consumedCoupons")
   List<CouponView\> getConsumedCoupons(@Query("page") int page, @Query("size") int size, @Query("userId") Integer userId);
