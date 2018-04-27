@@ -10,15 +10,10 @@ public class NetworkData {
 	public Integer id;
 	public Integer stationScheduleId;
 	public String stationScheduleName;
-	public boolean showEvents = false;
 	public boolean addStationRolesOnSignup;
 	public java.util.Map<String, String> alertColors;
-	public boolean allowSignup;
-	public Boolean allowSocialLogin;
-	public Boolean allowSponsors;
-	public boolean allowTrixAlert;
-	public boolean carnival;
 	public String urlCarnival;
+	public String urlTermsOfUse;
 	public String appleStoreAddress;
 	public String splashBgColor;
 	public String bgSplashLogo;
@@ -33,7 +28,6 @@ public class NetworkData {
 	public String facebookAppID;
 	public String facebookAppSecret;
 	public String facebookLink;
-	public boolean facebookLoginAllowed;
 	public String faviconHash;
 	public String faviconUrl;
 	public Integer faviconId;
@@ -41,7 +35,6 @@ public class NetworkData {
 	public String flurryKey;
 	public String googleAppID;
 	public String googleAppSecret;
-	public boolean googleLoginAllowed;
 	public String googlePlusLink;
 	public String homeTabName;
 	public String info;
@@ -100,7 +93,26 @@ public class NetworkData {
 	public String namingTags;
 	public String namingStation;
 	public String namingStations;
-	public List<Category> eventCategories;
+	public List<String> categoriesEvent;
+	public List<String> categoriesClassified;
+
+	public boolean carnival;
+	public boolean allowCarnival;
+
+	public boolean showEvents = false;
+	public boolean allowEvents;
+
+	public boolean facebookLoginAllowed;
+	public boolean allowFacebooklogin;
+
+	public boolean googleLoginAllowed;
+	public boolean allowGoogleLogin;
+
+	public boolean allowSignup;
+	public Boolean allowSocialLogin;
+	public Boolean allowSponsors;
+	public boolean allowTrixAlert;
+	public boolean allowTrixNow;
 
 	@Override
 	public String toString() {

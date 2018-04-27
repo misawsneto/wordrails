@@ -42,10 +42,7 @@ public class PersonData implements Serializable {
 	public boolean noPassword = false;
 	public List<Integer> followingStations;
 
-	public List<String> classifiedCategories;
 	public List<RateClassifiedView> classifiedRating;
-	public Configs configs;
-
 
 
 }
