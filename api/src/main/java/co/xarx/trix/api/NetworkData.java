@@ -113,6 +113,7 @@ public class NetworkData {
 	public Boolean allowSponsors;
 	public boolean allowTrixAlert;
 	public boolean allowTrixNow;
+	public boolean allowCoupon;
 
 	@Override
 	public String toString() {
