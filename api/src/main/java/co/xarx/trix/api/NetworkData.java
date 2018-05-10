@@ -114,6 +114,7 @@ public class NetworkData {
 	public boolean allowTrixAlert;
 	public boolean allowTrixNow;
 	public boolean allowCoupon;
+	public boolean privateApp;
 
 	@Override
 	public String toString() {
