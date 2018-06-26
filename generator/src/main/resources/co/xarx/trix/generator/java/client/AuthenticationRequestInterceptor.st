@@ -189,10 +189,22 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
     	}
 	
 	synchronized void logOut() {
-		Request request = new Request.Builder()
-                .url(baseUrl + "/j_spring_security_logout")
-                .get()
-                .build();
+		Request request = null;
+
+        if(this.cookie != null) {
+            request = new Request.Builder()
+                    .url(baseUrl + "/j_spring_security_logout")
+                    .get()
+                    .addHeader("Cookie", "JSESSIONID=" + this.cookie)
+                    .build();
+        }else{
+            request = new Request.Builder()
+                    .url(baseUrl + "/j_spring_security_logout")
+                    .get()
+                    .build();
+        }
+
+
         try {
             OK_HTTP.newCall(request).execute();
         } catch (Exception e){
