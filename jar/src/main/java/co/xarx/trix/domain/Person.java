@@ -104,6 +104,8 @@ public class Person extends BaseEntity implements Serializable, AnalyticsEntity 
 
 	public String twitterHandle;
 
+	public boolean renewPassword;
+
 	@SdkInclude
 	public String getImageHash() {
 		if (image != null) return image.getOriginalHash();
