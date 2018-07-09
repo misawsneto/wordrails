@@ -73,6 +73,7 @@ public class StationView implements Serializable {
 	public String coverImageId;
 	public String adminLogo;
 	public boolean privateStation;
+	public boolean show;
 
 	public String getName() {
 		return name;
