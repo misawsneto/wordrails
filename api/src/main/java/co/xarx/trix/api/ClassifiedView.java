@@ -11,6 +11,7 @@ public class ClassifiedView {
   public ClassifiedPaymentMethodView paymentMethods;
   public String primaryPhone;
   public String secondaryPhone;
+  public String slug;
   public String email;
   public String facebookPage;
   public String googlePage;
@@ -43,4 +44,5 @@ public class ClassifiedView {
 
   public List<String> tags = new ArrayList<>();
   public List<ClassifiedCategoryView> categories = new ArrayList<>();
+  public CouponView lastCoupon;
 }

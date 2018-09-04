@@ -116,6 +116,8 @@ public class PostView implements Serializable, Identifiable {
 	public boolean mediaVideo;
 
 	public boolean mediaGallery;
+	public boolean allowComments;
+	public boolean allowShare;
 
 	@Override
 	public Serializable getId() {

@@ -116,6 +116,7 @@ public class NetworkData {
 	public boolean allowCoupon;
 	public boolean allowClassifieds;
 	public boolean privateApp;
+	public boolean allowLateralMenu;
 
 	@Override
 	public String toString() {

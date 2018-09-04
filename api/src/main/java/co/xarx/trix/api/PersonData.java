@@ -14,7 +14,9 @@ public class PersonData implements Serializable {
 	private static final long serialVersionUID = 2078630211043976635L;
 	public PersonDto person;
 	public NetworkData network;
+	public MenuView menu;
 	public List<StationView> stations;
+	public List<StationView> blogs;
 	public StationView defaultStation;
 	public PersonPermissions personPermissions;
 	public UserPermissionData permissions;
@@ -43,6 +45,5 @@ public class PersonData implements Serializable {
 	public List<Integer> followingStations;
 
 	public List<RateClassifiedView> classifiedRating;
-
 
 }

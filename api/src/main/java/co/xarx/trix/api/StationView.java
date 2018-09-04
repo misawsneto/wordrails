@@ -24,6 +24,7 @@ public class StationView implements Serializable {
 	private static final long serialVersionUID = 2504331733945628049L;
 
 	public Integer id;
+	public Integer blogId;
 	public Map<String, String> alertColors;
 	public boolean allowComments;
 	public boolean allowSocialShare;

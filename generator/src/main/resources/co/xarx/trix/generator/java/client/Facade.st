@@ -653,12 +653,12 @@ public class $facade$ {
 		_facade.getTermPerspectiveDefinition(id, _callback);
 	}
 
-	public RowView getRowView(Integer stationPerspectiveId, Integer termPerspectiveId, Integer childTermId, Integer stationId, int page, int size){
-		return _facade.getRowView(stationPerspectiveId, termPerspectiveId, childTermId, stationId, page, size);
+	public RowView getRowView(Integer stationPerspectiveId, Integer termPerspectiveId, Integer childTermId, Integer stationId, Integer blogId, int page, int size){
+		return _facade.getRowView(stationPerspectiveId, termPerspectiveId, childTermId, stationId, blogId, page, size);
 	}
 
-	public void getRowView(Integer stationPerspectiveId, Integer termPerspectiveId, Integer childTermId, Integer stationId, int page, int size, Callback<RowView> _callback){
-		_facade.getRowView(stationPerspectiveId, termPerspectiveId, childTermId, stationId, page, size, _callback);
+	public void getRowView(Integer stationPerspectiveId, Integer termPerspectiveId, Integer childTermId, Integer stationId, Integer blogId, int page, int size, Callback<RowView> _callback){
+		_facade.getRowView(stationPerspectiveId, termPerspectiveId, childTermId, stationId, blogId, page, size, _callback);
 	}
 /*---------------------------------------------------------------------------*/
 
@@ -1202,6 +1202,14 @@ public class $facade$ {
     	_facade.putTermSeen(termId, timeReading, date, stationId, "", _callback);
     }
 
+    public Response ackNotification(MessageFCM messageFcm) {
+        return _facade.ackNotification(messageFcm);
+    }
+
+    public void ackNotification(MessageFCM messageFcm, Callback<Response> _callback) {
+        _facade.ackNotification(messageFcm, _callback);
+    }
+
 /*---------------------------------------------------------------------------*/
 	
 	public GeoAreasView getStationGeoAreas(Integer stationId){
@@ -1257,6 +1265,14 @@ public class $facade$ {
 
 /*---------------------------------------------------------------------------*/
 
+    public ClassifiedSectionView getSections(Double lon, Double lat, Double radius, String unitOfLength, Integer size){
+        return _facade.getSections(lon, lat, radius, unitOfLength, size);
+    }
+
+    public void getSections(Double lon, Double lat, Double radius, String unitOfLength, Integer size, Callback<ClassifiedSectionView\> _callback){
+        _facade.getSections(lon, lat, radius, unitOfLength, size, _callback);
+    }
+
 	public ContentResponse<List<ClassifiedView\>\> getClassifieds(int stationId, String title, String order, List<String\> paymentMethods, List<String\> categoryNames, int page, int size, Integer id, Double lon, Double lat, Double radius, String unitOfLength){
 		return _facade.getClassifieds(stationId, title, order, paymentMethods, categoryNames, page, size, id, lon, lat, radius, unitOfLength);
 	}
@@ -1280,6 +1296,14 @@ public class $facade$ {
 	public void putRateClassified(int stationId, RateClassifiedView body, Callback<RateClassifiedView\> _callback){
 		_facade.putRateClassified(stationId, body, _callback);
 	}
+
+    public List<RateClassifiedView> getRatings(int stationId, int postId, int page, int size){
+        return _facade.getRatings(stationId, postId, page, size);
+    }
+
+    public void getRatings(int stationId, int postId, int page, int size, Callback<List<RateClassifiedView\>\> _callback){
+        _facade.getRatings(stationId, postId, page, size, _callback);
+    }
 
 /*---------------------------------------------------------------------------*/
 

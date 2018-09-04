@@ -257,11 +257,11 @@ interface I$facade$ {
 				
 	@GET("/perspectives/rowViews")
 	RowView getRowView(@Query("stationPerspectiveId") Integer stationPerspectiveId, @Query("termPerspectiveId") Integer termPerspectiveId,
-			@Query("childTermId") Integer childTermId, @Query("stationId") Integer stationId, @Query("page") int page, @Query("size") int size);
+			@Query("childTermId") Integer childTermId, @Query("stationId") Integer stationId, @Query("blogId") Integer blogId, @Query("page") int page, @Query("size") int size);
 				
 	@GET("/perspectives/rowViews")
 	void getRowView(@Query("stationPerspectiveId") Integer stationPerspectiveId, @Query("termPerspectiveId") Integer termPerspectiveId,
-			@Query("childTermId") Integer childTermId, @Query("stationId") Integer stationId, @Query("page") int page, @Query("size") int size, Callback<RowView> _callback);
+			@Query("childTermId") Integer childTermId, @Query("stationId") Integer stationId, @Query("blogId") Integer blogId, @Query("page") int page, @Query("size") int size, Callback<RowView> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -535,6 +535,12 @@ interface I$facade$ {
     @PUT("/v2/terms/{termId}/seen")
     void putTermSeen(@Path("termId") Integer termId, @Query("timeReading") Integer timeReading, @Query("date") Long date, @Query("stationId") Integer stationId, @Body String str, Callback<Response> _callback);
 
+    @POST("/v2/notifications/ack")
+    Response ackNotification(@Body MessageFCM messageFcm);
+
+    @POST("/v2/notifications/ack")
+    void ackNotification(@Body MessageFCM messageFcm, Callback<Response> _callback);
+
 /*---------------------------------------------------------------------------*/
 
   @GET("/stations/{stationId}/geoAreas")
@@ -576,6 +582,12 @@ interface I$facade$ {
 
 /*---------------------------------------------------------------------------*/
 
+  @GET("/classifieds/sections")
+  ClassifiedSectionView getSections(@Query("lon") Double lon, @Query("lat") Double lat, @Query("radius") Double radius, @Query("unitOfLength") String unitOfLength, @Query("size") Integer size);
+
+  @GET("/classifieds/sections")
+  void getSections(@Query("lon") Double lon, @Query("lat") Double lat, @Query("radius") Double radius, @Query("unitOfLength") String unitOfLength, @Query("size") Integer size, Callback<ClassifiedSectionView\> _callback);
+
   @GET("/classifieds/search")
   ContentResponse<List<ClassifiedView\>\> getClassifieds(@Query("stationId") Integer stationId, @Query("title") String title, @Query("order") String order, @Query("paymentMethods") List<String\> paymentMethods, @Query("categoryNames") List<String\> categoryNames, @Query("page") int page, @Query("size") int size, @Query("id") Integer id, @Query("lon") Double lon, @Query("lat") Double lat, @Query("radius") Double radius, @Query("unitOfLength") String unitOfLength);
 
@@ -593,6 +605,12 @@ interface I$facade$ {
 
   @PUT("/classifieds/rating")
   void putRateClassified(@Query("stationId") Integer stationId, @Body RateClassifiedView body, Callback<RateClassifiedView\> _callback);
+
+  @GET("/classifieds/rating")
+  List<RateClassifiedView> getRatings(@Query("stationId") Integer stationId, @Query("postId") Integer postId, @Query("page") Integer page, @Query("size") Integer size);
+
+  @GET("/classifieds/rating")
+  void getRatings(@Query("stationId") Integer stationId, @Query("postId") Integer postId, @Query("page") Integer page, @Query("size") Integer size, Callback<List<RateClassifiedView \>\> _callback);
 
 /*---------------------------------------------------------------------------*/
 
