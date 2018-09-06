@@ -75,6 +75,7 @@ public class StationView implements Serializable {
 	public String adminLogo;
 	public boolean privateStation;
 	public boolean show;
+	public boolean following;
 
 	public String getName() {
 		return name;
@@ -317,5 +318,13 @@ public class StationView implements Serializable {
 
 	public void setLogoUrl(String logoUrl) {
 		this.logoUrl = logoUrl;
+	}
+
+	public boolean isFollowing() {
+		return following;
+	}
+
+	public void setFollowing(boolean following) {
+		this.following = following;
 	}
 }

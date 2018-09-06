@@ -1228,6 +1228,14 @@ public class $facade$ {
 		_facade.postFollowingStations(stationIds, _callback);
 	}
 
+	public List<StationView\> postFollowingBlogStations(List<Integer\> stationIds){
+        return _facade.postFollowingBlogStations(stationIds);
+    }
+
+    public void postFollowingBlogStations(List<Integer\> stationIds, Callback<List<StationView\>\> _callback){
+        _facade.postFollowingBlogStations(stationIds, _callback);
+    }
+
 /*---------------------------------------------------------------------------*/
 
     public ContentResponse<List<CouponView\>\> getCoupons(int stationId, String title, String slug , String order, List<String\> categoryNames, int page, int size, Integer id, Double lon, Double lat, Double radius, String unitOfLength){

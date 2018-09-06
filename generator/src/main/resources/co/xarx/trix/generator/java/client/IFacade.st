@@ -555,6 +555,12 @@ interface I$facade$ {
   @POST("/stations/follow")
   void postFollowingStations(@Body List<Integer\> stationsIds, Callback<List<StationView\>\> _callback);
 
+  @POST("/stations/followblogs")
+  List<StationView\> postFollowingBlogStations(@Body List<Integer\> stationsIds);
+
+  @POST("/stations/followblogs")
+  void postFollowingBlogStations(@Body List<Integer\> stationsIds, Callback<List<StationView\>\> _callback);
+
 /*---------------------------------------------------------------------------*/
   @GET("/coupons/search")
   ContentResponse<List<CouponView\>\> getCoupons(@Query("stationId") Integer stationId, @Query("title") String title, @Query("slug") String slug, @Query("order") String order, @Query("categoryNames") List<String\> categoryNames, @Query("page") int page, @Query("size") int size, @Query("id") Integer id, @Query("lon") Double lon, @Query("lat") Double lat, @Query("radius") Double radius, @Query("unitOfLength") String unitOfLength);
