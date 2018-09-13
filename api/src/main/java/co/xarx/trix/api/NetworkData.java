@@ -115,6 +115,7 @@ public class NetworkData {
 	public boolean allowTrixNow;
 	public boolean allowCoupon;
 	public boolean allowClassifieds;
+	public boolean allowBlogStations;
 	public boolean privateApp;
 	public boolean allowLateralMenu;
 
