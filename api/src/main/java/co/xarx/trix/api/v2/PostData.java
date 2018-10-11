@@ -25,6 +25,10 @@ public class PostData implements Serializable, Identifiable {
 	@Id
 	private Integer id;
 
+	public Integer postId;
+	public int blogId;
+	public int siteId;
+
 	private String title;
 	private String snippet;
 	private String body;
@@ -93,6 +97,12 @@ public class PostData implements Serializable, Identifiable {
 	private Boolean notified = false;
 	private String authorCoverUrl;
 	private String authorImageUrl;
+
+	public boolean allowComments;
+	public boolean allowShare;
+
+	public String urlContent;
+	public boolean loadFromUrl;
 
 	public void setBody(String body) {
 		this.body = body;

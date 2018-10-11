@@ -28,6 +28,8 @@ public class PostView implements Serializable, Identifiable {
 	@Id
 	@JsonProperty("postId")
 	public Integer postId;
+	public Integer blogId;
+	public Integer siteId;
 
 	public String featuredImageHash;
 
@@ -118,6 +120,10 @@ public class PostView implements Serializable, Identifiable {
 	public boolean mediaGallery;
 	public boolean allowComments;
 	public boolean allowShare;
+
+	public String urlContent;
+	public boolean loadFromUrl;
+
 
 	@Override
 	public Serializable getId() {

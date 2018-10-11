@@ -4,6 +4,7 @@ Facade(package, facade, entities) ::=
 
 import android.content.Context;
 
+import co.xarx.trix.api.v2.EventCategory;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
@@ -411,7 +412,7 @@ public class $facade$ {
 		});
 	}
 	
-	public List<PostData\> searchPosts(String q, List<Integer\> aIds, Integer sId, List<Integer\> sIds, String st, String from,
+	public List<PostView\> searchPosts(String q, List<Integer\> aIds, Integer sId, List<Integer\> sIds, String st, String from,
                                   String until, List<Integer\> cIds, List<String\> tags, List<Integer\> excludePostIds, Integer page, Integer size,
                                   List<String\> orders, List<String\> embeds, String snippet){
         return _facade.searchPosts(q, aIds, sId, sIds, st, from, until, cIds, tags, excludePostIds, page, size, orders, embeds, snippet).content;
@@ -419,11 +420,11 @@ public class $facade$ {
 
     public void searchPosts(String q, List<Integer\> aIds, Integer sId, List<Integer\> sIds, String st, String from,
                             String until, List<Integer\> cIds, List<String\> tags, List<Integer\> excludePostIds, Integer page, Integer size,
-                            List<String\> orders, List<String\> embeds, String snippet, final Callback<List<PostData\>\> _callback){
+                            List<String\> orders, List<String\> embeds, String snippet, final Callback<List<PostView\>\> _callback){
         _facade.searchPosts(q, aIds, sId, sIds, st, from, until, cIds, tags, excludePostIds, page, size, orders, embeds, snippet, new
-        Callback<ContentResponse<List<PostData\>\>\>() {
+        Callback<ContentResponse<List<PostView\>\>\>() {
             @Override
-            public void success(ContentResponse<List<PostData\>\> _t, Response _response) {
+            public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
                 _callback.success(_t.content, _response);
             }
 
@@ -461,6 +462,24 @@ public class $facade$ {
             Callback<List<EventView\>\>() {
                 @Override
                 public void success(List<EventView> _t, Response _response) {
+                    _callback.success(_t, _response);
+                }
+
+                @Override
+                public void failure(RetrofitError _error) {
+                    _callback.failure(_error);
+                }
+            });
+    }
+
+     public List<EventCategory> getCategories(){
+            return _facade.getCategories();
+     }
+
+     public void getCategories(final Callback<List<EventCategory\>\> _callback){
+            _facade.getCategories(new Callback<List<EventCategory\>\>() {
+                @Override
+                public void success(List<EventCategory> _t, Response _response) {
                     _callback.success(_t, _response);
                 }
 
@@ -1033,6 +1052,15 @@ public class $facade$ {
 	public void putLocation(String deviceCode, String deviceName, String device, Double lat, Double lng, Callback<Response> _callback){
 		_facade.putLocation(deviceCode, deviceName, device, lat, lng, _callback);
 	}
+
+    public Response updatePostHit(Integer blogId, Integer postId, Integer siteId, String device){
+        return _facade.updatePostHit(blogId, postId, siteId, device);
+    }
+
+    public void updatePostHit(Integer blogId, Integer postId, Integer siteId, String device, Callback<Response> _callback){
+        _facade.updatePostHit(blogId, postId, siteId, device, _callback);
+    }
+
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/

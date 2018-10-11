@@ -4,6 +4,7 @@ IFacade(package, facade, entities) ::=
 
 import java.util.List;
 
+import co.xarx.trix.api.v2.EventCategory;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
@@ -139,7 +140,7 @@ interface I$facade$ {
 	void convertPost(@Path("postId") Integer postId, @Field("state") String state, Callback<ContentResponse<PostView\>\> _callback);
 
 	@GET("/v2/posts/search")
-    ContentResponse<List<PostData\>\> searchPosts(@Query("q") String q, @Query("authorId") List<Integer> aIds, @Query
+    ContentResponse<List<PostView\>\> searchPosts(@Query("q") String q, @Query("authorId") List<Integer> aIds, @Query
     ("stationId") Integer sId, @Query
     ("stationIds") List<Integer\> sIds, @Query("state") String st, @Query("from") String from, @Query("until") String
     until, @Query("categoryId") List<Integer\> cIds, @Query("tags") List<String\> tags, @Query("excludePostIds") List<Integer\> excludePostIds, @Query("page") Integer page,
@@ -151,7 +152,7 @@ interface I$facade$ {
     sIds, @Query("state") String st, @Query("from") String from, @Query("until") String until, @Query("categoryId")
     List<Integer\> cIds, @Query("tags") List<String\> tags, @Query("excludePostIds") List<Integer\> excludePostIds, @Query("page") Integer page, @Query("size") Integer size,
     @Query("order") List<String\> orders, @Query("embed") List<String\> embeds, @Query("snippet") String snippet, 
-    Callback<ContentResponse<List<PostData\>\>\> _callback);
+    Callback<ContentResponse<List<PostView\>\>\> _callback);
 
     @GET("/events/highlights")
     List<EventView> searchEventHighlights(@Query("page") Integer page, @Query("size") Integer size, @Query("stationId") Integer stationId);
@@ -186,6 +187,13 @@ interface I$facade$ {
     void searchEventBookmarks(@Query("page") Integer page, @Query("size") Integer size, @Query("userId") Integer userId, Callback<List<EventView\>\> _callback);
 
 
+    @GET("/events/getcategories")
+    List<EventCategory> getCategories();
+
+    @GET("/events/getcategories")
+    void getCategories(Callback<List<EventCategory\>\> _callback);
+
+
 	@GET("/v2/bookmarks/search")
 	ContentResponse<List<PostView\>\> searchBookmarks(@Query("userId") Integer userId, @Query("query") String query, @Query("page") int page, @Query("size") int size);
 	
@@ -217,7 +225,15 @@ interface I$facade$ {
 	
 	@GET("/posts/{stationId}/postRead")
 	void getPostReadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId, Callback<ContentResponse<List<PostView\>\>\> _callback);
-	
+
+
+	@GET("/posts/updateposthit")
+    Response updatePostHit(@Query("blogId")Integer blogId,
+    @Query("postId")Integer postId, @Query("siteId")Integer siteId, @Query("device") String device);
+
+    @GET("/posts/updateposthit")
+    void updatePostHit(@Query("blogId")Integer blogId,
+    @Query("postId")Integer postId, @Query("siteId")Integer siteId, @Query("device") String device, Callback<Response> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
