@@ -119,6 +119,8 @@ public class NetworkData {
 	public boolean privateApp;
 	public boolean allowLateralMenu;
 
+	public List<NavigationMenu> mobileNavigationMenu;
+
 	@Override
 	public String toString() {
 		return "[" + id + ", " + addStationRolesOnSignup + ", " + alertColors + ", " + allowSignup + ", " + allowSocialLogin + ", " + allowSponsors + ", " + appleStoreAddress + ", " + backgroundColor + ", " + backgroundColors + ", " + categoriesTaxonomyId + ", " + configured + ", " + defaultOrientationMode + ", " + defaultReadMode + ", " + domain + ", " + emailSignUpValidationEnabled + ", " + facebookAppID + ", " + facebookLink + ", " + facebookLoginAllowed + ", " + faviconHash + ", " + faviconId + ", " + flurryAppleKey + ", " + flurryKey + ", " + googleAppID + ", " + googleLoginAllowed + ", " + googlePlusLink + ", " + homeTabName + ", " + info + ", " + instagramLink + ", " + invitationMessage + ", " + linkedInLink + ", " + loginFooterMessage + ", " + loginImageHash + ", " + loginImageId + ", " + loginImageSmallHash + ", " + logoImageHash + ", " + logoImageId + ", " + mainColor + ", " + name + ", " + navbarColor + ", " + navbarSecondaryColor + ", " + networkCreationToken + ", " + newsFontSize + ", " + pinterestLink + ", " + playStoreAddress + ", " + primaryColors + ", " + primaryFont + ", " + secondaryColors + ", " + secondaryFont + ", " + splashImageHash + ", " + splashImageId + ", " + stationMenuName + ", " + subdomain + ", " + titleFontSize + ", " + trackingId + ", " + twitterLink + ", " + validationMessage + ", " + webFooter + ", " + youtubeLink + "]";

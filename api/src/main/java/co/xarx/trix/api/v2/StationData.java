@@ -40,4 +40,5 @@ public class StationData implements Serializable, Identifiable {
 
 	public boolean showAuthorSocialData;
 	public boolean privateStation;
+	public boolean following;
 }
