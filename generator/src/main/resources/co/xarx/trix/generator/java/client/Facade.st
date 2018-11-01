@@ -4,6 +4,7 @@ Facade(package, facade, entities) ::=
 
 import android.content.Context;
 
+import co.xarx.trix.api.v2.CategoryData;
 import co.xarx.trix.api.v2.EventCategory;
 import java.io.File;
 import java.io.IOException;
@@ -489,6 +490,26 @@ public class $facade$ {
                 }
             });
     }
+
+     public List<CategoryData> getSegments(){
+                return _facade.getSegments();
+     }
+
+     public void getSegments(final Callback<List<CategoryData\>\> _callback){
+            _facade.getSegments(new Callback<List<CategoryData\>\>() {
+                @Override
+                public void success(List<CategoryData> _t, Response _response) {
+                    _callback.success(_t, _response);
+                }
+
+                @Override
+                public void failure(RetrofitError _error) {
+                    _callback.failure(_error);
+                }
+            });
+    }
+
+
 
     public EventView getEventBySlug(String slug, Integer stationId){
             return _facade.getEventBySlug(slug,stationId);

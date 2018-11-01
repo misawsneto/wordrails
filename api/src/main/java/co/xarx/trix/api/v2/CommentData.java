@@ -28,6 +28,7 @@ public class CommentData implements Serializable, Identifiable {
 	private Integer postId;
 	private Integer authorId;
 	private Integer stationId;
+	public int commentsCount;
 
 	private PersonData author;
 }

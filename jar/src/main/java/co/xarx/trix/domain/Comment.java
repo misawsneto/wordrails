@@ -22,6 +22,7 @@ public class Comment extends BaseEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
+	public int commentsCount;
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@NotNull

@@ -4,6 +4,7 @@ IFacade(package, facade, entities) ::=
 
 import java.util.List;
 
+import co.xarx.trix.api.v2.CategoryData;
 import co.xarx.trix.api.v2.EventCategory;
 import retrofit.Callback;
 import retrofit.client.Response;
@@ -192,6 +193,13 @@ interface I$facade$ {
 
     @GET("/events/getcategories")
     void getCategories(Callback<List<EventCategory\>\> _callback);
+
+
+    @GET("/store/segments")
+    List<CategoryData> getSegments();
+
+    @GET("/store/segments")
+    void getSegments(Callback<List<CategoryData\>\> _callback);
 
 
 	@GET("/v2/bookmarks/search")
