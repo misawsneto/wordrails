@@ -44,5 +44,12 @@ public class ClassifiedView {
 
   public List<String> tags = new ArrayList<>();
   public List<ClassifiedCategoryView> categories = new ArrayList<>();
+
+  public String telephone;
+  public String urlSite;
+  public String floor;
+  public String luc;
+  public String indoorMapUrl;
+
   public CouponView lastCoupon;
 }

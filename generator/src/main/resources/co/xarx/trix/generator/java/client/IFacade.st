@@ -202,6 +202,16 @@ interface I$facade$ {
     void getSegments(Callback<List<CategoryData\>\> _callback);
 
 
+    @GET("/store/search")
+    List<ClassifiedView\> searchStore(@Query("query") String query, @Query("segmentId") Integer segmentId, @Query("page") Integer page, @Query("size") Integer size);
+
+    @GET("/store/search")
+    void searchStore(@Query("query") String query, @Query("segmentId") Integer segmentId, @Query("page") Integer page, @Query("size") Integer size, Callback<List<ClassifiedView\>\> _callback);
+
+
+
+
+
 	@GET("/v2/bookmarks/search")
 	ContentResponse<List<PostView\>\> searchBookmarks(@Query("userId") Integer userId, @Query("query") String query, @Query("page") int page, @Query("size") int size);
 	

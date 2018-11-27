@@ -509,6 +509,24 @@ public class $facade$ {
             });
     }
 
+    public List<ClassifiedView> searchStore(String query, Integer segmentId, Integer page, Integer size){
+            return _facade.searchStore(query, segmentId, page, size);
+        }
+
+    public void searchStore(String query, Integer segmentId, Integer page, Integer size, final Callback<List<ClassifiedView\>\> _callback){
+            _facade.searchStore(query, segmentId, page, size, new Callback<List<ClassifiedView\>\>() {
+                @Override
+                public void success(List<ClassifiedView> _t, Response _response) {
+                    _callback.success(_t, _response);
+                }
+
+                @Override
+                public void failure(RetrofitError _error) {
+                    _callback.failure(_error);
+                }
+            });
+    }
+
 
 
     public EventView getEventBySlug(String slug, Integer stationId){

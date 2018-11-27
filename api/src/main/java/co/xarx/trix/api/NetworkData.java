@@ -118,6 +118,8 @@ public class NetworkData {
 	public boolean allowBlogStations;
 	public boolean privateApp;
 	public boolean allowLateralMenu;
+	public boolean useAPIStore;
+	public String indoorMapUrl;
 
 	public List<NavigationMenu> mobileNavigationMenu;
 
