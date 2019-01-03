@@ -10,6 +10,7 @@ import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 
 @Getter
@@ -29,6 +30,9 @@ public class CommentData implements Serializable, Identifiable {
 	private Integer authorId;
 	private Integer stationId;
 	public int commentsCount;
+	public Long parent;
 
 	private PersonData author;
+
+	public List<CommentData> children;
 }

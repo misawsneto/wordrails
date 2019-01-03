@@ -209,6 +209,17 @@ interface I$facade$ {
     void searchStore(@Query("query") String query, @Query("segmentId") Integer segmentId, @Query("page") Integer page, @Query("size") Integer size, Callback<List<ClassifiedView\>\> _callback);
 
 
+    @GET("/movie/sessions")
+    List<MovieView> getMovieSessions();
+
+    @GET("/movie/sessions")
+    void getMovieSessions(Callback<List<MovieView\>\> _callback);
+
+    @GET("/movie/getMovieBySlug")
+    MovieView getMovieBySlug(@Query("slug") String slug);
+
+    @GET("/movie/getMovieBySlug")
+    void getMovieBySlug(@Query("slug") String slug, Callback<MovieView\> _callback);
 
 
 

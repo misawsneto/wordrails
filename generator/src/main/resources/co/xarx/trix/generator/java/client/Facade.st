@@ -6,6 +6,7 @@ import android.content.Context;
 
 import co.xarx.trix.api.v2.CategoryData;
 import co.xarx.trix.api.v2.EventCategory;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
@@ -508,6 +509,54 @@ public class $facade$ {
                 }
             });
     }
+
+
+
+
+
+    //
+
+    public List<MovieView> getMovieSessions(){
+            return _facade.getMovieSessions();
+     }
+
+     public void getMovieSessions(final Callback<List<MovieView\>\> _callback){
+            _facade.getMovieSessions(new Callback<List<MovieView\>\>() {
+                @Override
+                public void success(List<MovieView> _t, Response _response) {
+                    _callback.success(_t, _response);
+                }
+
+                @Override
+                public void failure(RetrofitError _error) {
+                    _callback.failure(_error);
+                }
+            });
+    }
+
+
+    public MovieView getMovieBySlug(String slug){
+            return _facade.getMovieBySlug(slug);
+     }
+
+     public void getMovieBySlug(String slug, final Callback<MovieView\> _callback){
+            _facade.getMovieBySlug(slug, new Callback<MovieView\>() {
+                @Override
+                public void success(MovieView _t, Response _response) {
+                    _callback.success(_t, _response);
+                }
+
+                @Override
+                public void failure(RetrofitError _error) {
+                    _callback.failure(_error);
+                }
+            });
+    }
+
+    //
+
+
+
 
     public List<ClassifiedView> searchStore(String query, Integer segmentId, Integer page, Integer size){
             return _facade.searchStore(query, segmentId, page, size);

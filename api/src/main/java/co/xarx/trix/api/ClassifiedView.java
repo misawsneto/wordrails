@@ -50,6 +50,7 @@ public class ClassifiedView {
   public String floor;
   public String luc;
   public String indoorMapUrl;
+  public String whatsApp;
 
   public CouponView lastCoupon;
 }
