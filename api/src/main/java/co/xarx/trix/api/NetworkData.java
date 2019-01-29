@@ -121,13 +121,21 @@ public class NetworkData {
 	public boolean useAPIStore;
 	public String indoorMapUrl;
 
+	public boolean showTutorial;
 	public boolean requestLocationNews;
 	public boolean classifiedRequestLocation;
 	public Double classifiedSearchRadius;
-	public boolean showTutorial;
+
+	public String classifiedSearchText;
+	public boolean showClassifiedPaymentMethod;
+	public boolean showClassifiedExpedient;
 	public boolean showClassifiedRating;
+
+
 	public String toolbarColor;
 	public String toolbarTextColor;
+	public boolean allowPasswordRecovery;
+	public String storageUrl;
 
 
 	public List<NavigationMenu> mobileNavigationMenu;

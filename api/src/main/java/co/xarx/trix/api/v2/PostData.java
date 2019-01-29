@@ -103,6 +103,7 @@ public class PostData implements Serializable, Identifiable {
 
 	public String urlContent;
 	public boolean loadFromUrl;
+	public String sharedLink;
 
 	public void setBody(String body) {
 		this.body = body;

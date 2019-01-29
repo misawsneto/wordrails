@@ -32,6 +32,9 @@ public class MovieView {
   public String trailerDescription;
   public boolean movie3d;
 
+  public boolean dubbed;
+  public boolean subtitled;
+  public String sharedLink;
 
   public boolean bookmarked;
   public List<SessionView> sessions;

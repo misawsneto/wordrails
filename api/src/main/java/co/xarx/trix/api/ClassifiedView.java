@@ -52,5 +52,7 @@ public class ClassifiedView {
   public String indoorMapUrl;
   public String whatsApp;
 
+  public String sharedLink;
+
   public CouponView lastCoupon;
 }

@@ -49,6 +49,9 @@ public class Comment extends BaseEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(updatable=false)
 	public Post post;
+
+	@SdkInclude
+	public Long parent;
 	
 	@PrePersist
 	public void onCreate() {

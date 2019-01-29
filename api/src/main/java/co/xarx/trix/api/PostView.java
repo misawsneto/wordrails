@@ -123,6 +123,7 @@ public class PostView implements Serializable, Identifiable {
 
 	public String urlContent;
 	public boolean loadFromUrl;
+	public String sharedLink;
 
 
 	@Override
