@@ -6,6 +6,7 @@ import java.util.List;
 
 import co.xarx.trix.api.v2.CategoryData;
 import co.xarx.trix.api.v2.EventCategory;
+
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
@@ -26,6 +27,7 @@ import retrofit.mime.TypedString;
 import com.google.gson.JsonObject;
 
 import co.xarx.trix.api.ImageUploadResponse;
+import co.xarx.trix.api.v2.CustomHomeView;
 import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.api.v2.PersonalNotificationData;
 import co.xarx.trix.api.v2.response.FileUpload;
@@ -663,6 +665,15 @@ interface I$facade$ {
   @GET("/classifieds/rating")
   void getRatings(@Query("stationId") Integer stationId, @Query("postId") Integer postId, @Query("page") Integer page, @Query("size") Integer size, Callback<List<RateClassifiedView \>\> _callback);
 
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+
+ @GET("/home")
+ List<CustomHomeView> getHome();
+
+ @GET("/home")
+ void getHome(Callback<List<CustomHomeView \>\> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/

@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import co.xarx.trix.api.ImageUploadResponse;
+import co.xarx.trix.api.v2.CustomHomeView;
 import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.api.v2.PersonalNotificationData;
 import co.xarx.trix.api.v2.response.FileUpload;
@@ -1430,6 +1431,19 @@ public class $facade$ {
     }
 
 /*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+
+    public List<CustomHomeView> getHome(){
+        return _facade.getHome();
+    }
+
+    public void getHome(Callback<List<CustomHomeView\>\> _callback){
+        _facade.getHome(_callback);
+    }
+
+/*---------------------------------------------------------------------------*/
+
 
 /*---------------------------------------------------------------------------*/
 
