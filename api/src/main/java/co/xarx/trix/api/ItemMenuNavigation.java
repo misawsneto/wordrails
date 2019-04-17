@@ -4,5 +4,6 @@ public class ItemMenuNavigation {
 
     public String key;
     public String name;
+    public String url;
 
 }
