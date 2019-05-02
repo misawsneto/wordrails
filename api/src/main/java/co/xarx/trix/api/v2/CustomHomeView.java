@@ -9,6 +9,9 @@ public class CustomHomeView {
 
   public String type;
   public String name;
+  public String categoryId;
+  public String categoryName;
+  public String categorySlug;
   public boolean horizontal;
   public List<Object> items;
 
